@@ -361,6 +361,25 @@ block|; }
 block|;  struct
 name|Header
 block|{
+comment|/// Version number of the symtab format. This number should be incremented
+comment|/// when the format changes, but it does not need to be incremented if a
+comment|/// change to LLVM would cause it to create a different symbol table.
+name|Word
+name|Version
+block|;   enum
+block|{
+name|kCurrentVersion
+operator|=
+literal|0
+block|}
+block|;
+comment|/// The producer's version string (LLVM_VERSION_STRING " " LLVM_REVISION).
+comment|/// Consumers should rebuild the symbol table from IR if the producer's
+comment|/// version does not match the consumer's version due to potential differences
+comment|/// in symbol table format, symbol enumeration order and so on.
+name|Str
+name|Producer
+block|;
 name|Range
 operator|<
 name|Module
@@ -953,6 +972,18 @@ name|symbols
 argument_list|()
 specifier|const
 expr_stmt|;
+name|size_t
+name|getNumModules
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Modules
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
 comment|/// Returns a slice of the symbol table for the I'th module in the file.
 comment|/// The symbols enumerated by this method are ephemeral, but they can be
 comment|/// copied into an irsymtab::Symbol object.

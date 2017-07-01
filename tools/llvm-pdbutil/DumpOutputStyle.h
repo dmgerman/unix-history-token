@@ -133,14 +133,6 @@ name|dumpStreamSummary
 argument_list|()
 block|;
 name|Error
-name|dumpBlockRanges
-argument_list|()
-block|;
-name|Error
-name|dumpStreamBytes
-argument_list|()
-block|;
-name|Error
 name|dumpStringTable
 argument_list|()
 block|;

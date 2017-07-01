@@ -51,6 +51,9 @@ name|class
 name|MCAsmBackend
 decl_stmt|;
 name|class
+name|MCContext
+decl_stmt|;
+name|class
 name|MCFixup
 decl_stmt|;
 name|class

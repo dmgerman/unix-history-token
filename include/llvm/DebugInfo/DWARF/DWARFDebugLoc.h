@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
+file|"llvm/DebugInfo/DWARF/DWARFDataExtractor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataExtractor.h"
+file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
 end_include
 
 begin_include
@@ -133,45 +133,27 @@ comment|/// the locations in which the variable is stored.
 name|LocationLists
 name|Locations
 decl_stmt|;
-comment|/// A map used to resolve binary relocations.
-specifier|const
-name|RelocAddrMap
-modifier|&
-name|RelocMap
-decl_stmt|;
 name|public
 label|:
-name|DWARFDebugLoc
-argument_list|(
-specifier|const
-name|RelocAddrMap
-operator|&
-name|LocRelocMap
-argument_list|)
-operator|:
-name|RelocMap
-argument_list|(
-argument|LocRelocMap
-argument_list|)
-block|{}
 comment|/// Print the location lists found within the debug_loc section.
 name|void
 name|dump
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 comment|/// Parse the debug_loc section accessible via the 'data' parameter using the
-comment|/// specified address size to interpret the address ranges.
+comment|/// address size also given in 'data' to interpret the address ranges.
 name|void
 name|parse
 parameter_list|(
-name|DataExtractor
+specifier|const
+name|DWARFDataExtractor
+modifier|&
 name|data
-parameter_list|,
-name|unsigned
-name|AddressSize
 parameter_list|)
 function_decl|;
 block|}

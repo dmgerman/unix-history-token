@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IndexedMap.h"
 end_include
 
@@ -208,9 +214,8 @@ comment|/// in live range splitting (which is ok, since the live ranges of these
 comment|/// registers do not overlap), but the defined/undefined information must
 comment|/// be kept separate for each individual range.
 comment|/// By convention, EntryInfoMap[&LR] = { Defined, Undefined }.
-name|std
-operator|::
-name|map
+typedef|typedef
+name|DenseMap
 operator|<
 name|LiveRange
 operator|*
@@ -225,6 +230,9 @@ name|BitVector
 operator|>>
 name|EntryInfoMap
 expr_stmt|;
+name|EntryInfoMap
+name|EntryInfos
+decl_stmt|;
 comment|/// Map each basic block where a live range is live out to the live-out value
 comment|/// and its defining block.
 comment|///

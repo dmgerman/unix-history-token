@@ -112,18 +112,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cstddef>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cstdint>
 end_include
 
@@ -644,6 +632,11 @@ decl_stmt|;
 block|}
 struct|;
 name|BinaryAnnotationIterator
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|BinaryAnnotationIterator
 argument_list|(
 name|ArrayRef
 operator|<
@@ -657,11 +650,6 @@ argument_list|(
 argument|Annotations
 argument_list|)
 block|{}
-name|BinaryAnnotationIterator
-argument_list|()
-operator|=
-expr|default
-expr_stmt|;
 name|BinaryAnnotationIterator
 argument_list|(
 specifier|const
@@ -1513,8 +1501,6 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|llvm
-operator|::
 name|iterator_range
 operator|<
 name|BinaryAnnotationIterator
@@ -1524,8 +1510,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|make_range
 argument_list|(
 name|BinaryAnnotationIterator
@@ -3761,25 +3745,27 @@ block|; }
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|CVSymbol
+init|=
 name|CVRecord
 operator|<
 name|SymbolKind
 operator|>
-name|CVSymbol
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|CVSymbolArray
+init|=
 name|VarStreamArray
 operator|<
 name|CVSymbol
 operator|>
-name|CVSymbolArray
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|}

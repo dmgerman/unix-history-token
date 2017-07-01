@@ -130,6 +130,22 @@ operator|&
 name|Refs
 argument_list|)
 decl_stmt|;
+name|void
+name|discoverTypeIndices
+argument_list|(
+specifier|const
+name|CVType
+operator|&
+name|Type
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|TypeIndex
+operator|>
+operator|&
+name|Indices
+argument_list|)
+decl_stmt|;
 comment|/// Discover type indices in symbol records. Returns false if this is an unknown
 comment|/// record.
 name|bool

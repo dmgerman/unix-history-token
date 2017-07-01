@@ -59,68 +59,60 @@ block|{
 enum|enum
 name|Fixups
 block|{
-comment|// fixup_arm_ldst_pcrel_12 - 12-bit PC relative relocation for symbol
-comment|// addresses
+comment|// 12-bit PC relative relocation for symbol addresses
 name|fixup_arm_ldst_pcrel_12
 init|=
 name|FirstTargetFixupKind
 block|,
-comment|// fixup_t2_ldst_pcrel_12 - Equivalent to fixup_arm_ldst_pcrel_12, with
-comment|// the 16-bit halfwords reordered.
+comment|// Equivalent to fixup_arm_ldst_pcrel_12, with the 16-bit halfwords reordered.
 name|fixup_t2_ldst_pcrel_12
 block|,
-comment|// fixup_arm_pcrel_10_unscaled - 10-bit PC relative relocation for symbol
-comment|// addresses used in LDRD/LDRH/LDRB/etc. instructions. All bits are encoded.
+comment|// 10-bit PC relative relocation for symbol addresses used in
+comment|// LDRD/LDRH/LDRB/etc. instructions. All bits are encoded.
 name|fixup_arm_pcrel_10_unscaled
 block|,
-comment|// fixup_arm_pcrel_10 - 10-bit PC relative relocation for symbol addresses
-comment|// used in VFP instructions where the lower 2 bits are not encoded
-comment|// (so it's encoded as an 8-bit immediate).
+comment|// 10-bit PC relative relocation for symbol addresses used in VFP instructions
+comment|// where the lower 2 bits are not encoded (so it's encoded as an 8-bit
+comment|// immediate).
 name|fixup_arm_pcrel_10
 block|,
-comment|// fixup_t2_pcrel_10 - Equivalent to fixup_arm_pcrel_10, accounting for
-comment|// the short-swapped encoding of Thumb2 instructions.
+comment|// Equivalent to fixup_arm_pcrel_10, accounting for the short-swapped encoding
+comment|// of Thumb2 instructions.
 name|fixup_t2_pcrel_10
 block|,
-comment|// fixup_arm_pcrel_9 - 9-bit PC relative relocation for symbol addresses
-comment|// used in VFP instructions where bit 0 not encoded (so it's encoded as an
-comment|// 8-bit immediate).
+comment|// 9-bit PC relative relocation for symbol addresses used in VFP instructions
+comment|// where bit 0 not encoded (so it's encoded as an 8-bit immediate).
 name|fixup_arm_pcrel_9
 block|,
-comment|// fixup_t2_pcrel_9 - Equivalent to fixup_arm_pcrel_9, accounting for
-comment|// the short-swapped encoding of Thumb2 instructions.
+comment|// Equivalent to fixup_arm_pcrel_9, accounting for the short-swapped encoding
+comment|// of Thumb2 instructions.
 name|fixup_t2_pcrel_9
 block|,
-comment|// fixup_thumb_adr_pcrel_10 - 10-bit PC relative relocation for symbol
-comment|// addresses where the lower 2 bits are not encoded (so it's encoded as an
-comment|// 8-bit immediate).
+comment|// 10-bit PC relative relocation for symbol addresses where the lower 2 bits
+comment|// are not encoded (so it's encoded as an 8-bit immediate).
 name|fixup_thumb_adr_pcrel_10
 block|,
-comment|// fixup_arm_adr_pcrel_12 - 12-bit PC relative relocation for the ADR
-comment|// instruction.
+comment|// 12-bit PC relative relocation for the ADR instruction.
 name|fixup_arm_adr_pcrel_12
 block|,
-comment|// fixup_t2_adr_pcrel_12 - 12-bit PC relative relocation for the ADR
-comment|// instruction.
+comment|// 12-bit PC relative relocation for the ADR instruction.
 name|fixup_t2_adr_pcrel_12
 block|,
-comment|// fixup_arm_condbranch - 24-bit PC relative relocation for conditional branch
-comment|// instructions.
+comment|// 24-bit PC relative relocation for conditional branch instructions.
 name|fixup_arm_condbranch
 block|,
-comment|// fixup_arm_uncondbranch - 24-bit PC relative relocation for
-comment|// branch instructions. (unconditional)
+comment|// 24-bit PC relative relocation for branch instructions. (unconditional)
 name|fixup_arm_uncondbranch
 block|,
-comment|// fixup_t2_condbranch - 20-bit PC relative relocation for Thumb2 direct
-comment|// uconditional branch instructions.
+comment|// 20-bit PC relative relocation for Thumb2 direct uconditional branch
+comment|// instructions.
 name|fixup_t2_condbranch
 block|,
-comment|// fixup_t2_uncondbranch - 20-bit PC relative relocation for Thumb2 direct
-comment|// branch unconditional branch instructions.
+comment|// 20-bit PC relative relocation for Thumb2 direct branch unconditional branch
+comment|// instructions.
 name|fixup_t2_uncondbranch
 block|,
-comment|// fixup_arm_thumb_br - 12-bit fixup for Thumb B instructions.
+comment|// 12-bit fixup for Thumb B instructions.
 name|fixup_arm_thumb_br
 block|,
 comment|// The following fixups handle the ARM BL instructions. These can be
@@ -131,29 +123,28 @@ comment|// no conditional version; R_ARM_JUMP24 would have to insert a veneer.
 comment|//
 comment|// MachO does not draw a distinction between the two cases, so it will treat
 comment|// fixup_arm_uncondbl and fixup_arm_condbl as identical fixups.
-comment|// fixup_arm_uncondbl - Fixup for unconditional ARM BL instructions.
+comment|// Fixup for unconditional ARM BL instructions.
 name|fixup_arm_uncondbl
 block|,
-comment|// fixup_arm_condbl - Fixup for ARM BL instructions with nontrivial
-comment|// conditionalisation.
+comment|// Fixup for ARM BL instructions with nontrivial conditionalisation.
 name|fixup_arm_condbl
 block|,
-comment|// fixup_arm_blx - Fixup for ARM BLX instructions.
+comment|// Fixup for ARM BLX instructions.
 name|fixup_arm_blx
 block|,
-comment|// fixup_arm_thumb_bl - Fixup for Thumb BL instructions.
+comment|// Fixup for Thumb BL instructions.
 name|fixup_arm_thumb_bl
 block|,
-comment|// fixup_arm_thumb_blx - Fixup for Thumb BLX instructions.
+comment|// Fixup for Thumb BLX instructions.
 name|fixup_arm_thumb_blx
 block|,
-comment|// fixup_arm_thumb_cb - Fixup for Thumb branch instructions.
+comment|// Fixup for Thumb branch instructions.
 name|fixup_arm_thumb_cb
 block|,
-comment|// fixup_arm_thumb_cp - Fixup for Thumb load/store from constant pool instrs.
+comment|// Fixup for Thumb load/store from constant pool instrs.
 name|fixup_arm_thumb_cp
 block|,
-comment|// fixup_arm_thumb_bcc - Fixup for Thumb conditional branching instructions.
+comment|// Fixup for Thumb conditional branching instructions.
 name|fixup_arm_thumb_bcc
 block|,
 comment|// The next two are for the movt/movw pair
@@ -170,10 +161,10 @@ comment|// :upper16:
 name|fixup_t2_movw_lo16
 block|,
 comment|// :lower16:
-comment|// fixup_arm_mod_imm - Fixup for mod_imm
+comment|// Fixup for mod_imm
 name|fixup_arm_mod_imm
 block|,
-comment|// fixup_t2_so_imm - Fixup for Thumb2 8-bit rotated operand
+comment|// Fixup for Thumb2 8-bit rotated operand
 name|fixup_t2_so_imm
 block|,
 comment|// Marker
@@ -189,6 +180,10 @@ enum|;
 block|}
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

@@ -253,15 +253,6 @@ block|;
 name|bool
 name|useLiveIn
 block|;
-name|DenseMap
-operator|<
-name|DomTreeNode
-operator|*
-block|,
-name|unsigned
-operator|>
-name|DomLevels
-block|;
 specifier|const
 name|SmallPtrSetImpl
 operator|<

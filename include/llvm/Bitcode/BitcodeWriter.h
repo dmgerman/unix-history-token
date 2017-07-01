@@ -116,8 +116,17 @@ operator|::
 name|RAW
 block|}
 empty_stmt|;
+comment|// Owns any strings created by the irsymtab writer until we create the
+comment|// string table.
+name|BumpPtrAllocator
+name|Alloc
+decl_stmt|;
 name|bool
 name|WroteStrtab
+init|=
+name|false
+decl_stmt|,
+name|WroteSymtab
 init|=
 name|false
 decl_stmt|;
@@ -134,6 +143,15 @@ name|StringRef
 name|Blob
 parameter_list|)
 function_decl|;
+name|std
+operator|::
+name|vector
+operator|<
+name|Module
+operator|*
+operator|>
+name|Mods
+expr_stmt|;
 name|public
 label|:
 comment|/// Create a BitcodeWriter that writes to Buffer.
@@ -151,8 +169,19 @@ operator|~
 name|BitcodeWriter
 argument_list|()
 expr_stmt|;
+comment|/// Attempt to write a symbol table to the bitcode file. This must be called
+comment|/// at most once after all modules have been written.
+comment|///
+comment|/// A reader does not require a symbol table to interpret a bitcode file;
+comment|/// the symbol table is needed only to improve link-time performance. So
+comment|/// this function may decide not to write a symbol table. It may so decide
+comment|/// if, for example, the target is unregistered or the IR is malformed.
+name|void
+name|writeSymtab
+parameter_list|()
+function_decl|;
 comment|/// Write the bitcode file's string table. This must be called exactly once
-comment|/// after all modules have been written.
+comment|/// after all modules and the optional symbol table have been written.
 name|void
 name|writeStrtab
 parameter_list|()

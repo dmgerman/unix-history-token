@@ -34,14 +34,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_PDB_RAW_PDBNAMEDSTREAMMAP_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_NAMEDSTREAMMAP_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_PDB_RAW_PDBNAMEDSTREAMMAP_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_NAMEDSTREAMMAP_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
 
 begin_include
 include|#
@@ -53,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -87,11 +99,12 @@ name|namespace
 name|pdb
 block|{
 name|class
-name|NamedStreamMapBuilder
-decl_stmt|;
-name|class
 name|NamedStreamMap
 block|{
+name|friend
+name|class
+name|NamedStreamMapBuilder
+decl_stmt|;
 struct|struct
 name|FinalizationInfo
 block|{
@@ -107,9 +120,6 @@ literal|0
 decl_stmt|;
 block|}
 struct|;
-name|friend
-name|NamedStreamMapBuilder
-decl_stmt|;
 name|public
 label|:
 name|NamedStreamMap
@@ -214,7 +224,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_DEBUGINFO_PDB_RAW_PDBNAMEDSTREAMMAP_H
+comment|// LLVM_DEBUGINFO_PDB_NATIVE_NAMEDSTREAMMAP_H
 end_comment
 
 end_unit

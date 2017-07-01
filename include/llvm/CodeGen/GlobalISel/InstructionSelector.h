@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- llvm/CodeGen/GlobalISel/InstructionSelector.h -------------*- C++ -*-==//
+comment|//===- llvm/CodeGen/GlobalISel/InstructionSelector.h ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,13 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
+file|<bitset>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<bitset>
+file|<cstddef>
 end_include
 
 begin_include
@@ -91,6 +91,12 @@ directive|include
 file|<functional>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<initializer_list>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -100,9 +106,6 @@ name|MachineInstr
 decl_stmt|;
 name|class
 name|MachineInstrBuilder
-decl_stmt|;
-name|class
-name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineOperand
@@ -218,7 +221,9 @@ name|virtual
 operator|~
 name|InstructionSelector
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// Select the (possibly generic) instruction \p I to only use target-specific
 comment|/// opcodes. It is OK to insert multiple instructions, but they cannot be
 comment|/// generic pre-isel instructions.
@@ -242,7 +247,9 @@ literal|0
 block|;
 name|protected
 operator|:
-typedef|typedef
+name|using
+name|ComplexRendererFn
+operator|=
 name|std
 operator|::
 name|function
@@ -253,8 +260,7 @@ name|MachineInstrBuilder
 operator|&
 argument_list|)
 operator|>
-name|ComplexRendererFn
-expr_stmt|;
+block|;
 name|InstructionSelector
 argument_list|()
 block|;
@@ -319,18 +325,21 @@ argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|; }
-expr_stmt|;
-block|}
+block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GLOBALISEL_INSTRUCTIONSELECTOR_H
+end_comment
 
 end_unit
 

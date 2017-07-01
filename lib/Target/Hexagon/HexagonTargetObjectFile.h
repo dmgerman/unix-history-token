@@ -121,6 +121,16 @@ name|getSmallDataSize
 argument_list|()
 specifier|const
 block|;
+name|bool
+name|shouldPutJumpTableInFunctionSection
+argument_list|(
+argument|bool UsesLabelDifference
+argument_list|,
+argument|const Function&F
+argument_list|)
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 name|MCSectionELF

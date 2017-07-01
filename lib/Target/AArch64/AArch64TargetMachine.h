@@ -155,6 +155,15 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|const
+name|AArch64Subtarget
+operator|*
+name|getSubtargetImpl
+argument_list|()
+specifier|const
+operator|=
+name|delete
+block|;
 comment|// Pass Pipeline Configuration
 name|TargetPassConfig
 operator|*

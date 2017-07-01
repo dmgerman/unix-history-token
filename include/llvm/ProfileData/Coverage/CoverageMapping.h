@@ -719,6 +719,35 @@ modifier|&
 name|E
 parameter_list|)
 function_decl|;
+comment|/// Represents a term in a counter expression tree.
+struct|struct
+name|Term
+block|{
+name|unsigned
+name|CounterID
+decl_stmt|;
+name|int
+name|Factor
+decl_stmt|;
+name|Term
+argument_list|(
+argument|unsigned CounterID
+argument_list|,
+argument|int Factor
+argument_list|)
+block|:
+name|CounterID
+argument_list|(
+name|CounterID
+argument_list|)
+operator|,
+name|Factor
+argument_list|(
+argument|Factor
+argument_list|)
+block|{}
+block|}
+struct|;
 comment|/// \brief Gather the terms of the expression tree for processing.
 comment|///
 comment|/// This collects each addition and subtraction referenced by the counter into
@@ -735,14 +764,8 @@ name|Sign
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-argument_list|,
-name|int
-operator|>>
+name|Term
+operator|>
 operator|&
 name|Terms
 argument_list|)
@@ -1889,26 +1912,6 @@ name|CoverageMapping
 operator|>>
 name|load
 argument_list|(
-name|CoverageMappingReader
-operator|&
-name|CoverageReader
-argument_list|,
-name|IndexedInstrProfReader
-operator|&
-name|ProfileReader
-argument_list|)
-expr_stmt|;
-specifier|static
-name|Expected
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|CoverageMapping
-operator|>>
-name|load
-argument_list|(
 name|ArrayRef
 operator|<
 name|std
@@ -1924,42 +1927,6 @@ operator|&
 name|ProfileReader
 argument_list|)
 expr_stmt|;
-comment|/// \brief Load the coverage mapping from the given files.
-specifier|static
-name|Expected
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|CoverageMapping
-operator|>>
-name|load
-argument_list|(
-argument|StringRef ObjectFilename
-argument_list|,
-argument|StringRef ProfileFilename
-argument_list|,
-argument|StringRef Arch = StringRef()
-argument_list|)
-block|{
-return|return
-name|load
-argument_list|(
-name|ArrayRef
-operator|<
-name|StringRef
-operator|>
-operator|(
-name|ObjectFilename
-operator|)
-argument_list|,
-name|ProfileFilename
-argument_list|,
-name|Arch
-argument_list|)
-return|;
-block|}
 specifier|static
 name|Expected
 operator|<

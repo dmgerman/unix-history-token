@@ -666,24 +666,38 @@ function_decl|;
 comment|/// Returns true if Phi is a first-order recurrence. A first-order recurrence
 comment|/// is a non-reduction recurrence relation in which the value of the
 comment|/// recurrence in the current loop iteration equals a value defined in the
-comment|/// previous iteration.
+comment|/// previous iteration. \p SinkAfter includes pairs of instructions where the
+comment|/// first will be rescheduled to appear after the second if/when the loop is
+comment|/// vectorized. It may be augmented with additional pairs if needed in order
+comment|/// to handle Phi as a first-order recurrence.
 specifier|static
 name|bool
 name|isFirstOrderRecurrence
-parameter_list|(
+argument_list|(
 name|PHINode
-modifier|*
+operator|*
 name|Phi
-parameter_list|,
+argument_list|,
 name|Loop
-modifier|*
+operator|*
 name|TheLoop
-parameter_list|,
+argument_list|,
+name|DenseMap
+operator|<
+name|Instruction
+operator|*
+argument_list|,
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|SinkAfter
+argument_list|,
 name|DominatorTree
-modifier|*
+operator|*
 name|DT
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|RecurrenceKind
 name|getRecurrenceKind
 parameter_list|()

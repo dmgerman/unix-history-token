@@ -59,22 +59,19 @@ block|{
 enum|enum
 name|Fixups
 block|{
-comment|// fixup_aarch64_pcrel_adr_imm21 - A 21-bit pc-relative immediate inserted into
-comment|// an ADR instruction.
+comment|// A 21-bit pc-relative immediate inserted into an ADR instruction.
 name|fixup_aarch64_pcrel_adr_imm21
 init|=
 name|FirstTargetFixupKind
 block|,
-comment|// fixup_aarch64_pcrel_adrp_imm21 - A 21-bit pc-relative immediate inserted into
-comment|// an ADRP instruction.
+comment|// A 21-bit pc-relative immediate inserted into an ADRP instruction.
 name|fixup_aarch64_pcrel_adrp_imm21
 block|,
-comment|// fixup_aarch64_imm12 - 12-bit fixup for add/sub instructions.
-comment|//     No alignment adjustment. All value bits are encoded.
+comment|// 12-bit fixup for add/sub instructions. No alignment adjustment. All value
+comment|// bits are encoded.
 name|fixup_aarch64_add_imm12
 block|,
-comment|// fixup_aarch64_ldst_imm12_* - unsigned 12-bit fixups for load and
-comment|// store instructions.
+comment|// unsigned 12-bit fixups for load and store instructions.
 name|fixup_aarch64_ldst_imm12_scale1
 block|,
 name|fixup_aarch64_ldst_imm12_scale2
@@ -85,33 +82,30 @@ name|fixup_aarch64_ldst_imm12_scale8
 block|,
 name|fixup_aarch64_ldst_imm12_scale16
 block|,
-comment|// fixup_aarch64_ldr_pcrel_imm19 - The high 19 bits of a 21-bit pc-relative
-comment|// immediate. Same encoding as fixup_aarch64_pcrel_adrhi, except this is used by
-comment|// pc-relative loads and generates relocations directly when necessary.
+comment|// The high 19 bits of a 21-bit pc-relative immediate. Same encoding as
+comment|// fixup_aarch64_pcrel_adrhi, except this is used by pc-relative loads and
+comment|// generates relocations directly when necessary.
 name|fixup_aarch64_ldr_pcrel_imm19
 block|,
 comment|// FIXME: comment
 name|fixup_aarch64_movw
 block|,
-comment|// fixup_aarch64_pcrel_imm14 - The high 14 bits of a 21-bit pc-relative
-comment|// immediate.
+comment|// The high 14 bits of a 21-bit pc-relative immediate.
 name|fixup_aarch64_pcrel_branch14
 block|,
-comment|// fixup_aarch64_pcrel_branch19 - The high 19 bits of a 21-bit pc-relative
-comment|// immediate. Same encoding as fixup_aarch64_pcrel_adrhi, except this is use by
-comment|// b.cc and generates relocations directly when necessary.
+comment|// The high 19 bits of a 21-bit pc-relative immediate. Same encoding as
+comment|// fixup_aarch64_pcrel_adrhi, except this is use by b.cc and generates
+comment|// relocations directly when necessary.
 name|fixup_aarch64_pcrel_branch19
 block|,
-comment|// fixup_aarch64_pcrel_branch26 - The high 26 bits of a 28-bit pc-relative
-comment|// immediate.
+comment|// The high 26 bits of a 28-bit pc-relative immediate.
 name|fixup_aarch64_pcrel_branch26
 block|,
-comment|// fixup_aarch64_pcrel_call26 - The high 26 bits of a 28-bit pc-relative
-comment|// immediate. Distinguished from branch26 only on ELF.
+comment|// The high 26 bits of a 28-bit pc-relative immediate. Distinguished from
+comment|// branch26 only on ELF.
 name|fixup_aarch64_pcrel_call26
 block|,
-comment|// fixup_aarch64_tlsdesc_call - zero-space placeholder for the ELF
-comment|// R_AARCH64_TLSDESC_CALL relocation.
+comment|// zero-space placeholder for the ELF R_AARCH64_TLSDESC_CALL relocation.
 name|fixup_aarch64_tlsdesc_call
 block|,
 comment|// Marker

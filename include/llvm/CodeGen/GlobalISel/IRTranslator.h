@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/GlobalISel/IRTranslator.h - IRTranslator ---*- C++ -*-===//
+comment|//===- llvm/CodeGen/GlobalISel/IRTranslator.h - IRTranslator ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -82,19 +82,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Types.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SetVector.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -106,22 +100,54 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/GlobalISel/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Intrinsics.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Forward declarations.
+name|class
+name|AllocaInst
+decl_stmt|;
 name|class
 name|BasicBlock
+decl_stmt|;
+name|class
+name|CallInst
 decl_stmt|;
 name|class
 name|CallLowering
 decl_stmt|;
 name|class
 name|Constant
+decl_stmt|;
+name|class
+name|DataLayout
 decl_stmt|;
 name|class
 name|Instruction
@@ -136,13 +162,22 @@ name|class
 name|MachineInstr
 decl_stmt|;
 name|class
-name|OptimizationRemarkEmitter
-decl_stmt|;
-name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|OptimizationRemarkEmitter
+decl_stmt|;
+name|class
+name|PHINode
+decl_stmt|;
+name|class
 name|TargetPassConfig
+decl_stmt|;
+name|class
+name|User
+decl_stmt|;
+name|class
+name|Value
 decl_stmt|;
 comment|// Technically the pass should run on an hypothetical MachineModule,
 comment|// since it should translate Global into some sort of MachineGlobal.
@@ -196,7 +231,9 @@ comment|// BasicBlocks translated to multiple MachineBasicBlocks, MachinePreds r
 comment|// a mapping between the edges arriving at the BasicBlock to the corresponding
 comment|// created MachineBasicBlocks. Some BasicBlocks that get translated to a
 comment|// single MachineBasicBlock may also end up in this Map.
-typedef|typedef
+name|using
+name|CFGEdge
+operator|=
 name|std
 operator|::
 name|pair
@@ -204,13 +241,12 @@ operator|<
 specifier|const
 name|BasicBlock
 operator|*
-operator|,
+block|,
 specifier|const
 name|BasicBlock
 operator|*
 operator|>
-name|CFGEdge
-expr_stmt|;
+block|;
 name|DenseMap
 operator|<
 name|CFGEdge
@@ -223,7 +259,7 @@ block|,
 literal|1
 operator|>>
 name|MachinePreds
-decl_stmt|;
+block|;
 comment|// List of stubbed PHI instructions, for values and basic blocks to be filled
 comment|// in once all MachineBasicBlocks have been created.
 name|SmallVector
@@ -235,15 +271,15 @@ operator|<
 specifier|const
 name|PHINode
 operator|*
-operator|,
+block|,
 name|MachineInstr
 operator|*
 operator|>
-operator|,
+block|,
 literal|4
 operator|>
 name|PendingPHIs
-expr_stmt|;
+block|;
 comment|/// Record of what frame index has been allocated to specified allocas for
 comment|/// this function.
 name|DenseMap
@@ -251,11 +287,11 @@ operator|<
 specifier|const
 name|AllocaInst
 operator|*
-operator|,
+block|,
 name|int
 operator|>
 name|FrameIndices
-expr_stmt|;
+block|;
 comment|/// \name Methods for translating form LLVM IR to MachineInstr.
 comment|/// \see ::translate for general information on the translate methods.
 comment|/// @{
@@ -282,13 +318,13 @@ comment|///
 comment|/// \return true if the translation succeeded.
 name|bool
 name|translate
-parameter_list|(
+argument_list|(
 specifier|const
 name|Instruction
-modifier|&
+operator|&
 name|Inst
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Materialize \p C into virtual-register \p Reg. The generic instructions
 comment|/// performing this materialization will be inserted into the entry block of
 comment|/// the function.
@@ -296,234 +332,196 @@ comment|///
 comment|/// \return true if the materialization succeeded.
 name|bool
 name|translate
-parameter_list|(
-specifier|const
-name|Constant
-modifier|&
-name|C
-parameter_list|,
-name|unsigned
-name|Reg
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const Constant&C
+argument_list|,
+argument|unsigned Reg
+argument_list|)
+block|;
 comment|/// Translate an LLVM bitcast into generic IR. Either a COPY or a G_BITCAST is
 comment|/// emitted.
 name|bool
 name|translateBitCast
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Translate an LLVM load instruction into generic IR.
 name|bool
 name|translateLoad
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Translate an LLVM store instruction into generic IR.
 name|bool
 name|translateStore
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Translate an LLVM string intrinsic (memcpy, memset, ...).
 name|bool
 name|translateMemfunc
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|CI
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|,
-name|unsigned
-name|Intrinsic
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const CallInst&CI
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|,
+argument|unsigned Intrinsic
+argument_list|)
+block|;
 name|void
 name|getStackGuard
-parameter_list|(
-name|unsigned
-name|DstReg
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned DstReg
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|;
 name|bool
 name|translateOverflowIntrinsic
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|CI
-parameter_list|,
-name|unsigned
-name|Op
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const CallInst&CI
+argument_list|,
+argument|unsigned Op
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|;
 name|bool
 name|translateKnownIntrinsic
+argument_list|(
+argument|const CallInst&CI
+argument_list|,
+argument|Intrinsic::ID ID
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateInlineAsm
 argument_list|(
 specifier|const
 name|CallInst
 operator|&
 name|CI
 argument_list|,
-name|Intrinsic
-operator|::
-name|ID
-name|ID
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+comment|/// Translate call instruction.
+comment|/// \pre \p U is a call instruction.
+name|bool
+name|translateCall
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
 argument_list|,
 name|MachineIRBuilder
 operator|&
 name|MIRBuilder
 argument_list|)
-decl_stmt|;
-name|bool
-name|translateInlineAsm
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|CI
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
-function_decl|;
-comment|/// Translate call instruction.
-comment|/// \pre \p U is a call instruction.
-name|bool
-name|translateCall
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
-function_decl|;
+block|;
 name|bool
 name|translateInvoke
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateLandingPad
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Translate one of LLVM's cast instructions into MachineInstrs, with the
 comment|/// given generic Opcode.
 name|bool
 name|translateCast
-parameter_list|(
-name|unsigned
-name|Opcode
-parameter_list|,
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|;
 comment|/// Translate a phi instruction.
 name|bool
 name|translatePHI
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Translate a comparison (icmp or fcmp) instruction or constant.
 name|bool
 name|translateCompare
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Translate an integer compare instruction (or constant).
 name|bool
 name|translateICmp
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCompare
@@ -537,16 +535,11 @@ block|}
 comment|/// Translate a floating-point compare instruction (or constant).
 name|bool
 name|translateFCmp
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCompare
@@ -561,174 +554,163 @@ comment|/// Add remaining operands onto phis we've translated. Executed after al
 comment|/// MachineBasicBlocks for the function have been created.
 name|void
 name|finishPendingPhis
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// Translate \p Inst into a binary operation \p Opcode.
 comment|/// \pre \p U is a binary operation.
 name|bool
 name|translateBinaryOp
-parameter_list|(
-name|unsigned
-name|Opcode
-parameter_list|,
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|;
 comment|/// Translate branch (br) instruction.
 comment|/// \pre \p U is a branch instruction.
 name|bool
 name|translateBr
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateSwitch
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateIndirectBr
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateExtractValue
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateInsertValue
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateSelect
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateGetElementPtr
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateAlloca
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Translate return (ret) instruction.
 comment|/// The target needs to implement CallLowering::lowerReturn for
 comment|/// this to succeed.
 comment|/// \pre \p U is a return instruction.
 name|bool
 name|translateRet
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateFSub
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateAdd
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -745,16 +727,11 @@ return|;
 block|}
 name|bool
 name|translateSub
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -771,16 +748,11 @@ return|;
 block|}
 name|bool
 name|translateAnd
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -797,16 +769,11 @@ return|;
 block|}
 name|bool
 name|translateMul
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -823,16 +790,11 @@ return|;
 block|}
 name|bool
 name|translateOr
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -849,16 +811,11 @@ return|;
 block|}
 name|bool
 name|translateXor
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -875,16 +832,11 @@ return|;
 block|}
 name|bool
 name|translateUDiv
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -901,16 +853,11 @@ return|;
 block|}
 name|bool
 name|translateSDiv
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -927,16 +874,11 @@ return|;
 block|}
 name|bool
 name|translateURem
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -953,16 +895,11 @@ return|;
 block|}
 name|bool
 name|translateSRem
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -979,16 +916,11 @@ return|;
 block|}
 name|bool
 name|translateIntToPtr
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1005,16 +937,11 @@ return|;
 block|}
 name|bool
 name|translatePtrToInt
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1031,16 +958,11 @@ return|;
 block|}
 name|bool
 name|translateTrunc
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1057,16 +979,11 @@ return|;
 block|}
 name|bool
 name|translateFPTrunc
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1083,16 +1000,11 @@ return|;
 block|}
 name|bool
 name|translateFPExt
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1109,16 +1021,11 @@ return|;
 block|}
 name|bool
 name|translateFPToUI
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1135,16 +1042,11 @@ return|;
 block|}
 name|bool
 name|translateFPToSI
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1161,16 +1063,11 @@ return|;
 block|}
 name|bool
 name|translateUIToFP
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1187,16 +1084,11 @@ return|;
 block|}
 name|bool
 name|translateSIToFP
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1213,16 +1105,11 @@ return|;
 block|}
 name|bool
 name|translateUnreachable
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|true
@@ -1230,16 +1117,11 @@ return|;
 block|}
 name|bool
 name|translateSExt
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1256,16 +1138,11 @@ return|;
 block|}
 name|bool
 name|translateZExt
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateCast
@@ -1282,16 +1159,11 @@ return|;
 block|}
 name|bool
 name|translateShl
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -1308,16 +1180,11 @@ return|;
 block|}
 name|bool
 name|translateLShr
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -1334,16 +1201,11 @@ return|;
 block|}
 name|bool
 name|translateAShr
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -1360,16 +1222,11 @@ return|;
 block|}
 name|bool
 name|translateFAdd
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -1386,16 +1243,11 @@ return|;
 block|}
 name|bool
 name|translateFMul
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -1412,16 +1264,11 @@ return|;
 block|}
 name|bool
 name|translateFDiv
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -1438,16 +1285,11 @@ return|;
 block|}
 name|bool
 name|translateFRem
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|translateBinaryOp
@@ -1464,70 +1306,65 @@ return|;
 block|}
 name|bool
 name|translateVAArg
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateInsertElement
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateExtractElement
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|translateShuffleVector
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|&
+operator|&
 name|U
-parameter_list|,
+argument_list|,
 name|MachineIRBuilder
-modifier|&
+operator|&
 name|MIRBuilder
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|// Stubs to keep the compiler happy while we implement the rest of the
 comment|// translation.
 name|bool
 name|translateResume
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1535,16 +1372,11 @@ return|;
 block|}
 name|bool
 name|translateCleanupRet
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1552,16 +1384,11 @@ return|;
 block|}
 name|bool
 name|translateCatchRet
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1569,16 +1396,11 @@ return|;
 block|}
 name|bool
 name|translateCatchSwitch
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1586,16 +1408,11 @@ return|;
 block|}
 name|bool
 name|translateFence
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1603,16 +1420,11 @@ return|;
 block|}
 name|bool
 name|translateAtomicCmpXchg
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1620,16 +1432,11 @@ return|;
 block|}
 name|bool
 name|translateAtomicRMW
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1637,16 +1444,11 @@ return|;
 block|}
 name|bool
 name|translateAddrSpaceCast
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1654,16 +1456,11 @@ return|;
 block|}
 name|bool
 name|translateCleanupPad
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1671,16 +1468,11 @@ return|;
 block|}
 name|bool
 name|translateCatchPad
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1688,16 +1480,11 @@ return|;
 block|}
 name|bool
 name|translateUserOp1
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1705,16 +1492,11 @@ return|;
 block|}
 name|bool
 name|translateUserOp2
-parameter_list|(
-specifier|const
-name|User
-modifier|&
-name|U
-parameter_list|,
-name|MachineIRBuilder
-modifier|&
-name|MIRBuilder
-parameter_list|)
+argument_list|(
+argument|const User&U
+argument_list|,
+argument|MachineIRBuilder&MIRBuilder
+argument_list|)
 block|{
 return|return
 name|false
@@ -1727,33 +1509,35 @@ comment|// in the current block, it can creates block, etc., basically a kind of
 comment|// IRBuilder, but for Machine IR.
 name|MachineIRBuilder
 name|CurBuilder
-decl_stmt|;
+block|;
 comment|// Builder set to the entry block (just after ABI lowering instructions). Used
 comment|// as a convenient location for Constants.
 name|MachineIRBuilder
 name|EntryBuilder
-decl_stmt|;
+block|;
 comment|// The MachineFunction currently being translated.
 name|MachineFunction
-modifier|*
+operator|*
 name|MF
-decl_stmt|;
+block|;
 comment|/// MachineRegisterInfo used to create virtual registers.
 name|MachineRegisterInfo
-modifier|*
+operator|*
 name|MRI
-decl_stmt|;
+operator|=
+name|nullptr
+block|;
 specifier|const
 name|DataLayout
-modifier|*
+operator|*
 name|DL
-decl_stmt|;
+block|;
 comment|/// Current target configuration. Controls how the pass handles errors.
 specifier|const
 name|TargetPassConfig
-modifier|*
+operator|*
 name|TPC
-decl_stmt|;
+block|;
 comment|/// Current optimization remark emitter. Used to report failures.
 name|std
 operator|::
@@ -1762,77 +1546,74 @@ operator|<
 name|OptimizationRemarkEmitter
 operator|>
 name|ORE
-expr_stmt|;
+block|;
 comment|// * Insert all the code needed to materialize the constants
 comment|// at the proper place. E.g., Entry block or dominator block
 comment|// of each constant depending on how fancy we want to be.
 comment|// * Clear the different maps.
 name|void
 name|finalizeFunction
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// Get the VReg that represents \p Val.
 comment|/// If such VReg does not exist, it is created.
 name|unsigned
 name|getOrCreateVReg
-parameter_list|(
+argument_list|(
 specifier|const
 name|Value
-modifier|&
+operator|&
 name|Val
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Get the frame index that represents \p Val.
 comment|/// If such VReg does not exist, it is created.
 name|int
 name|getOrCreateFrameIndex
-parameter_list|(
+argument_list|(
 specifier|const
 name|AllocaInst
-modifier|&
+operator|&
 name|AI
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Get the alignment of the given memory operation instruction. This will
 comment|/// either be the explicitly specified value or the ABI-required alignment for
 comment|/// the type being accessed (according to the Module's DataLayout).
 name|unsigned
 name|getMemOpAlignment
-parameter_list|(
+argument_list|(
 specifier|const
 name|Instruction
-modifier|&
+operator|&
 name|I
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Get the MachineBasicBlock that represents \p BB. Specifically, the block
 comment|/// returned will be the head of the translated block (suitable for branch
 comment|/// destinations).
 name|MachineBasicBlock
-modifier|&
+operator|&
 name|getMBB
-parameter_list|(
+argument_list|(
 specifier|const
 name|BasicBlock
-modifier|&
+operator|&
 name|BB
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Record \p NewPred as a Machine predecessor to `Edge.second`, corresponding
 comment|/// to `Edge.first` at the IR level. This is used when IRTranslation creates
 comment|/// multiple MachineBasicBlocks for a given IR block and the CFG is no longer
 comment|/// represented simply by the IR-level CFG.
 name|void
 name|addMachineCFGPred
-parameter_list|(
-name|CFGEdge
-name|Edge
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|NewPred
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|CFGEdge Edge
+argument_list|,
+argument|MachineBasicBlock *NewPred
+argument_list|)
+block|;
 comment|/// Returns the Machine IR predecessors for the given IR CFG edge. Usually
 comment|/// this is just the single MachineBasicBlock corresponding to the predecessor
 comment|/// in the IR. More complex lowering can result in multiple MachineBasicBlocks
@@ -1841,7 +1622,7 @@ name|SmallVector
 operator|<
 name|MachineBasicBlock
 operator|*
-operator|,
+block|,
 literal|1
 operator|>
 name|getMachinePredBBs
@@ -1883,7 +1664,7 @@ literal|4
 operator|>
 operator|(
 literal|1
-operator|,
+expr|,
 operator|&
 name|getMBB
 argument_list|(
@@ -1895,24 +1676,12 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_comment
 comment|// Ctor, nothing fancy.
-end_comment
-
-begin_expr_stmt
 name|IRTranslator
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|StringRef
 name|getPassName
 argument_list|()
@@ -1923,9 +1692,6 @@ return|return
 literal|"IRTranslator"
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|getAnalysisUsage
 argument_list|(
@@ -1936,57 +1702,18 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Algo:
-end_comment
-
-begin_comment
 comment|//   CallLowering = MF.subtarget.getCallLowering()
-end_comment
-
-begin_comment
 comment|//   F = MF.getParent()
-end_comment
-
-begin_comment
 comment|//   MIRBuilder.reset(MF)
-end_comment
-
-begin_comment
 comment|//   getMBB(F.getEntryBB())
-end_comment
-
-begin_comment
 comment|//   CallLowering->translateArguments(MIRBuilder, F, ValToVReg)
-end_comment
-
-begin_comment
 comment|//   for each bb in F
-end_comment
-
-begin_comment
 comment|//     getMBB(bb)
-end_comment
-
-begin_comment
 comment|//     for each inst in bb
-end_comment
-
-begin_comment
 comment|//       if (!translate(MIRBuilder, inst, ValToVReg, ConstantToSequence))
-end_comment
-
-begin_comment
 comment|//         report_fatal_error("Don't know how to translate input");
-end_comment
-
-begin_comment
 comment|//   finalize()
-end_comment
-
-begin_decl_stmt
 name|bool
 name|runOnMachineFunction
 argument_list|(
@@ -1996,17 +1723,26 @@ name|MF
 argument_list|)
 name|override
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};  }
-comment|// End namespace llvm.
+unit|}
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GLOBALISEL_IRTRANSLATOR_H
+end_comment
 
 end_unit
 

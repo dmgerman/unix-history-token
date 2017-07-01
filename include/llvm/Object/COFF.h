@@ -5116,7 +5116,6 @@ end_expr_stmt
 
 begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(

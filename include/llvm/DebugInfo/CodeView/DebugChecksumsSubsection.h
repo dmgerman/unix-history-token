@@ -58,6 +58,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/CodeView.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/DebugSubsection.h"
 end_include
 
@@ -82,7 +94,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Endian.h"
+file|"llvm/Support/BinaryStreamRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -116,13 +146,7 @@ comment|// The bytes of the checksum.
 block|}
 struct|;
 block|}
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
+comment|// end namespace codeview
 name|template
 operator|<
 operator|>
@@ -136,10 +160,11 @@ operator|>
 block|{
 name|public
 operator|:
-typedef|typedef
-name|void
+name|using
 name|ContextType
-typedef|;
+operator|=
+name|void
+block|;
 name|Error
 name|operator
 argument_list|()
@@ -157,21 +182,8 @@ name|FileChecksumEntry
 operator|&
 name|Item
 operator|)
+block|; }
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-unit|}  namespace
-name|llvm
-end_macro
-
-begin_block
-block|{
 name|namespace
 name|codeview
 block|{
@@ -182,23 +194,25 @@ range|:
 name|public
 name|DebugSubsectionRef
 block|{
-typedef|typedef
+name|using
+name|FileChecksumArray
+operator|=
 name|VarStreamArray
 operator|<
 name|codeview
 operator|::
 name|FileChecksumEntry
 operator|>
-name|FileChecksumArray
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|Iterator
+operator|=
 name|FileChecksumArray
 operator|::
 name|Iterator
-name|Iterator
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|DebugChecksumsSubsectionRef
 argument_list|()
 operator|:
@@ -239,18 +253,16 @@ return|;
 block|}
 name|Error
 name|initialize
-parameter_list|(
-name|BinaryStreamReader
-name|Reader
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|BinaryStreamReader Reader
+argument_list|)
+block|;
 name|Error
 name|initialize
-parameter_list|(
-name|BinaryStreamRef
-name|Stream
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|BinaryStreamRef Stream
+argument_list|)
+block|;
 name|Iterator
 name|begin
 argument_list|()
@@ -287,12 +299,11 @@ name|Checksums
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|FileChecksumArray
 name|Checksums
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 name|class
 name|DebugChecksumsSubsection
 name|final
@@ -378,8 +389,6 @@ name|SerializedSize
 operator|=
 literal|0
 block|;
-name|llvm
-operator|::
 name|BumpPtrAllocator
 name|Storage
 block|;
@@ -393,13 +402,22 @@ name|Checksums
 block|; }
 decl_stmt|;
 block|}
-end_block
+comment|// end namespace codeview
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_DEBUGCHECKSUMSSUBSECTION_H
+end_comment
 
 end_unit
 

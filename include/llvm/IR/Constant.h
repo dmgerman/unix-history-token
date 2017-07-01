@@ -282,7 +282,6 @@ argument_list|()
 block|;
 comment|//// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

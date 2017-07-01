@@ -298,7 +298,7 @@ comment|/// - \a scheduleMapAppendingVariable()
 comment|/// - \a scheduleMapGlobalAliasee()
 comment|/// - \a scheduleRemapFunction()
 comment|///
-comment|/// Sometimes a callback needs a diferent mapping context.  Such a context can
+comment|/// Sometimes a callback needs a different mapping context.  Such a context can
 comment|/// be registered using \a registerAlternateMappingContext(), which takes an
 comment|/// alternate \a ValueToValueMapTy and \a ValueMaterializer and returns a ID to
 comment|/// pass into the schedule*() functions.

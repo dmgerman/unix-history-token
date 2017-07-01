@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
+file|"llvm/DebugInfo/DWARF/DWARFDataExtractor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataExtractor.h"
+file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
 end_include
 
 begin_include
@@ -155,26 +155,19 @@ name|struct
 name|HeaderData
 name|HdrData
 decl_stmt|;
-name|DataExtractor
+name|DWARFDataExtractor
 name|AccelSection
 decl_stmt|;
 name|DataExtractor
 name|StringSection
 decl_stmt|;
-specifier|const
-name|RelocAddrMap
-modifier|&
-name|Relocs
-decl_stmt|;
 name|public
 label|:
 name|DWARFAcceleratorTable
 argument_list|(
-argument|DataExtractor AccelSection
+argument|const DWARFDataExtractor&AccelSection
 argument_list|,
 argument|DataExtractor StringSection
-argument_list|,
-argument|const RelocAddrMap&Relocs
 argument_list|)
 block|:
 name|AccelSection
@@ -184,12 +177,7 @@ argument_list|)
 operator|,
 name|StringSection
 argument_list|(
-name|StringSection
-argument_list|)
-operator|,
-name|Relocs
-argument_list|(
-argument|Relocs
+argument|StringSection
 argument_list|)
 block|{}
 name|bool
@@ -211,6 +199,43 @@ function_decl|;
 name|uint32_t
 name|getHeaderDataLength
 parameter_list|()
+function_decl|;
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|HeaderData
+operator|::
+name|AtomType
+operator|,
+name|HeaderData
+operator|::
+name|Form
+operator|>>
+name|getAtomsDesc
+argument_list|()
+expr_stmt|;
+name|bool
+name|validateForms
+parameter_list|()
+function_decl|;
+comment|/// Return information related to the DWARF DIE we're looking for when
+comment|/// performing a lookup by name.
+comment|///
+comment|/// \param HashDataOffset an offset into the hash data table
+comment|/// \returns DIEOffset the offset into the .debug_info section for the DIE
+comment|/// related to the input hash data offset. Currently this function returns
+comment|/// only the DIEOffset but it can be modified to return more data regarding
+comment|/// the DIE
+name|uint32_t
+name|readAtoms
+parameter_list|(
+name|uint32_t
+modifier|&
+name|HashDataOffset
+parameter_list|)
 function_decl|;
 name|void
 name|dump

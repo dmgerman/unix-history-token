@@ -332,7 +332,6 @@ name|DL
 argument_list|)
 argument_list|)
 return|;
-empty_stmt|;
 block|}
 end_function
 

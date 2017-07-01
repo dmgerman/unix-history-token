@@ -288,7 +288,9 @@ name|DWARFSection
 modifier|*
 name|AOS
 parameter_list|,
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|&
 name|LS
 parameter_list|,
 name|bool
@@ -493,7 +495,9 @@ name|DWARFSection
 modifier|*
 name|AOS
 parameter_list|,
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|&
 name|LS
 parameter_list|,
 name|bool
@@ -667,7 +671,9 @@ decl_stmt|;
 name|uint32_t
 name|RangeSectionBase
 decl_stmt|;
-name|StringRef
+specifier|const
+name|DWARFSection
+modifier|&
 name|LineSection
 decl_stmt|;
 name|StringRef
@@ -870,7 +876,7 @@ argument|const DWARFSection&SOS
 argument_list|,
 argument|const DWARFSection *AOS
 argument_list|,
-argument|StringRef LS
+argument|const DWARFSection&LS
 argument_list|,
 argument|bool LE
 argument_list|,
@@ -896,7 +902,9 @@ return|return
 name|Context
 return|;
 block|}
-name|StringRef
+specifier|const
+name|DWARFSection
+operator|&
 name|getLineSection
 argument_list|()
 specifier|const
@@ -987,7 +995,6 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// FIXME: Result should be uint64_t in DWARF64.
 name|bool
 name|getStringOffsetSectionItem
 argument_list|(
@@ -1000,25 +1007,15 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
-name|uint64_t
-name|getStringOffsetSectionRelocation
-argument_list|(
-name|uint32_t
-name|Index
-argument_list|)
-decl|const
-decl_stmt|;
-name|DataExtractor
+name|DWARFDataExtractor
 name|getDebugInfoExtractor
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DataExtractor
+name|DWARFDataExtractor
 argument_list|(
 name|InfoSection
-operator|.
-name|Data
 argument_list|,
 name|isLittleEndian
 argument_list|,

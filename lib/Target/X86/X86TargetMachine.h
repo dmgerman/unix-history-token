@@ -176,6 +176,15 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|const
+name|X86Subtarget
+operator|*
+name|getSubtargetImpl
+argument_list|()
+specifier|const
+operator|=
+name|delete
+block|;
 name|TargetIRAnalysis
 name|getTargetIRAnalysis
 argument_list|()

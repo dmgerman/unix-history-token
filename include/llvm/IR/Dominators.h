@@ -141,6 +141,9 @@ name|raw_ostream
 decl_stmt|;
 extern|extern template class DomTreeNodeBase<BasicBlock>;
 extern|extern template class DominatorTreeBase<BasicBlock>;
+name|namespace
+name|DomTreeBuilder
+block|{
 extern|extern template void Calculate<Function
 operator|,
 extern|BasicBlock *>(     DominatorTreeBaseByGraphTraits<GraphTraits<BasicBlock *>>&DT
@@ -148,14 +151,17 @@ operator|,
 extern|Function&F
 block|)
 decl_stmt|;
-end_decl_stmt
-
-begin_extern
 extern|extern template void Calculate<Function
 operator|,
 extern|Inverse<BasicBlock *>>(     DominatorTreeBaseByGraphTraits<GraphTraits<Inverse<BasicBlock *>>>&DT
 operator|,
 extern|Function&F
+block|)
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern template bool Verify<BasicBlock *>(     const DominatorTreeBaseByGraphTraits<GraphTraits<BasicBlock *>>&DT
 end_extern
 
 begin_empty_stmt
@@ -163,16 +169,30 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_decl_stmt
-name|using
+begin_extern
+extern|extern template bool Verify<Inverse<BasicBlock *>>(     const DominatorTreeBaseByGraphTraits<GraphTraits<Inverse<BasicBlock *>>>&DT
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+unit|}
+comment|// namespace DomTreeBuilder
+end_comment
+
+begin_expr_stmt
+unit|using
 name|DomTreeNode
-init|=
+operator|=
 name|DomTreeNodeBase
 operator|<
 name|BasicBlock
 operator|>
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|class

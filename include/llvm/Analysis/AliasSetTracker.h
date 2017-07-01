@@ -307,13 +307,25 @@ name|AAInfo
 operator|=
 name|NewAAInfo
 expr_stmt|;
-elseif|else
+else|else
+block|{
+name|AAMDNodes
+name|Intersection
+argument_list|(
+name|AAInfo
+operator|.
+name|intersect
+argument_list|(
+name|NewAAInfo
+argument_list|)
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
-name|AAInfo
-operator|!=
-name|NewAAInfo
+operator|!
+name|Intersection
 condition|)
+block|{
 comment|// NewAAInfo conflicts with AAInfo.
 name|AAInfo
 operator|=
@@ -325,6 +337,15 @@ operator|::
 name|getTombstoneKey
 argument_list|()
 expr_stmt|;
+return|return
+name|SizeChanged
+return|;
+block|}
+name|AAInfo
+operator|=
+name|Intersection
+expr_stmt|;
+block|}
 return|return
 name|SizeChanged
 return|;
@@ -377,13 +398,11 @@ name|AAInfo
 return|;
 block|}
 name|AliasSet
-modifier|*
+operator|*
 name|getAliasSet
-parameter_list|(
-name|AliasSetTracker
-modifier|&
-name|AST
-parameter_list|)
+argument_list|(
+argument|AliasSetTracker&AST
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -391,7 +410,7 @@ name|AS
 operator|&&
 literal|"No AliasSet yet!"
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|AS
@@ -433,11 +452,9 @@ return|;
 block|}
 name|void
 name|setAliasSet
-parameter_list|(
-name|AliasSet
-modifier|*
-name|as
-parameter_list|)
+argument_list|(
+argument|AliasSet *as
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -446,15 +463,14 @@ name|AS
 operator|&&
 literal|"Already have an alias set!"
 argument_list|)
-expr_stmt|;
+block|;
 name|AS
 operator|=
 name|as
-expr_stmt|;
-block|}
+block|;     }
 name|void
 name|eraseFromList
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -470,7 +486,7 @@ operator|*
 name|PrevInList
 operator|=
 name|NextInList
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|AS

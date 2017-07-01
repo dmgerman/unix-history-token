@@ -331,6 +331,17 @@ decl_stmt|;
 comment|// A value to add to the symbol.
 block|}
 struct|;
+struct|struct
+name|WasmLinkingData
+block|{
+name|uint32_t
+name|DataSize
+decl_stmt|;
+name|uint32_t
+name|DataAlignment
+decl_stmt|;
+block|}
+struct|;
 enum_decl|enum :
 name|unsigned
 block|{
@@ -540,6 +551,14 @@ block|,
 name|WASM_SYMBOL_INFO
 init|=
 literal|0x2
+block|,
+name|WASM_DATA_SIZE
+init|=
+literal|0x3
+block|,
+name|WASM_DATA_ALIGNMENT
+init|=
+literal|0x4
 block|, }
 enum_decl|;
 enum_decl|enum :

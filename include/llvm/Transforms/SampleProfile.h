@@ -88,6 +88,24 @@ name|ModuleAnalysisManager
 operator|&
 name|AM
 argument_list|)
+block|;
+name|SampleProfileLoaderPass
+argument_list|(
+argument|std::string File =
+literal|""
+argument_list|)
+operator|:
+name|ProfileFileName
+argument_list|(
+argument|File
+argument_list|)
+block|{}
+name|private
+operator|:
+name|std
+operator|::
+name|string
+name|ProfileFileName
 block|; }
 decl_stmt|;
 block|}

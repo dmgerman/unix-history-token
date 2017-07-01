@@ -224,7 +224,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -254,7 +253,6 @@ name|false
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -318,7 +316,6 @@ specifier|const
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -353,7 +350,6 @@ return|;
 block|}
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -483,7 +479,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -502,7 +497,6 @@ name|dbg_declare
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -663,7 +657,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -682,7 +675,6 @@ name|dbg_value
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -765,7 +757,6 @@ specifier|const
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -875,7 +866,6 @@ return|;
 block|}
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1333,7 +1323,6 @@ name|V
 argument_list|)
 block|;     }
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1352,7 +1341,6 @@ name|memcpy_element_unordered_atomic
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1704,7 +1692,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1744,7 +1731,6 @@ return|;
 block|}
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1861,7 +1847,6 @@ argument_list|)
 block|;     }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1880,7 +1865,6 @@ name|memset
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2036,7 +2020,6 @@ argument_list|)
 block|;     }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2064,7 +2047,6 @@ name|memmove
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2105,7 +2087,6 @@ name|public
 operator|:
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2124,7 +2105,6 @@ name|memcpy
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2165,7 +2145,6 @@ name|public
 operator|:
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2184,7 +2163,6 @@ name|memmove
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2224,7 +2202,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2243,7 +2220,6 @@ name|vastart
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2303,7 +2279,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2322,7 +2297,6 @@ name|vaend
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2382,7 +2356,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2401,7 +2374,6 @@ name|vacopy
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2481,7 +2453,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2500,7 +2471,6 @@ name|instrprof_increment
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2651,7 +2621,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2670,7 +2639,6 @@ name|instrprof_increment_step
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2710,7 +2678,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2729,7 +2696,6 @@ name|instrprof_value_profile
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

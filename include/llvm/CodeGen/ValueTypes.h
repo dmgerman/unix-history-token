@@ -76,7 +76,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -105,43 +123,37 @@ name|private
 label|:
 name|MVT
 name|V
+init|=
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
 decl_stmt|;
 name|Type
 modifier|*
 name|LLVMTy
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|constexpr
 name|EVT
-argument_list|()
-operator|:
-name|V
-argument_list|(
-name|MVT
-operator|::
-name|INVALID_SIMPLE_VALUE_TYPE
-argument_list|)
-operator|,
-name|LLVMTy
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+parameter_list|()
+init|=
+init|default
+function_decl|;
 name|constexpr
 name|EVT
 argument_list|(
-argument|MVT::SimpleValueType SVT
-argument_list|)
-operator|:
-name|V
-argument_list|(
+name|MVT
+operator|::
+name|SimpleValueType
 name|SVT
 argument_list|)
-operator|,
-name|LLVMTy
+range|:
+name|V
 argument_list|(
-argument|nullptr
+argument|SVT
 argument_list|)
 block|{}
 name|constexpr
@@ -152,12 +164,7 @@ argument_list|)
 operator|:
 name|V
 argument_list|(
-name|S
-argument_list|)
-operator|,
-name|LLVMTy
-argument_list|(
-argument|nullptr
+argument|S
 argument_list|)
 block|{}
 name|bool
@@ -1879,13 +1886,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_VALUETYPES_H
+end_comment
 
 end_unit
 

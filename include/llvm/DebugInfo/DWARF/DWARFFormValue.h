@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataExtractor.h"
+file|"llvm/DebugInfo/DWARF/DWARFDataExtractor.h"
 end_include
 
 begin_include
@@ -427,18 +427,17 @@ decl|const
 decl_stmt|;
 comment|/// Extracts a value in \p Data at offset \p *OffsetPtr.
 comment|///
-comment|/// The passed DWARFUnit is allowed to be nullptr, in which
-comment|/// case no relocation processing will be performed and some
+comment|/// The passed DWARFUnit is allowed to be nullptr, in which case some
 comment|/// kind of forms that depend on Unit information are disallowed.
-comment|/// \param Data The DataExtractor to use.
-comment|/// \param OffsetPtr The offset within DataExtractor where the data starts.
+comment|/// \param Data The DWARFDataExtractor to use.
+comment|/// \param OffsetPtr The offset within \p Data where the data starts.
 comment|/// \param U The optional DWARFUnit supplying information for some forms.
 comment|/// \returns whether the extraction succeeded.
 name|bool
 name|extractValue
 parameter_list|(
 specifier|const
-name|DataExtractor
+name|DWARFDataExtractor
 modifier|&
 name|Data
 parameter_list|,

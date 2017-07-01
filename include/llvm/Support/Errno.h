@@ -71,6 +71,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -97,12 +103,83 @@ argument_list|(
 argument|int errnum
 argument_list|)
 expr_stmt|;
+name|template
+operator|<
+name|typename
+name|FailT
+operator|,
+name|typename
+name|Fun
+operator|,
+name|typename
+operator|...
+name|Args
+operator|>
+specifier|inline
+name|auto
+name|RetryAfterSignal
+argument_list|(
+specifier|const
+name|FailT
+operator|&
+name|Fail
+argument_list|,
+specifier|const
+name|Fun
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|Args
+operator|&
+operator|...
+name|As
+argument_list|)
+operator|->
+name|decltype
+argument_list|(
+argument|F(As...)
+argument_list|)
+block|{
+name|decltype
+argument_list|(
+argument|F(As...)
+argument_list|)
+name|Res
+block|;
+do|do
+name|Res
+operator|=
+name|F
+argument_list|(
+name|As
+operator|...
+argument_list|)
+expr_stmt|;
+do|while
+condition|(
+name|Res
+operator|==
+name|Fail
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+do|;
+return|return
+name|Res
+return|;
 block|}
-comment|// namespace sys
 block|}
 end_decl_stmt
 
 begin_comment
+comment|// namespace sys
+end_comment
+
+begin_comment
+unit|}
 comment|// namespace llvm
 end_comment
 

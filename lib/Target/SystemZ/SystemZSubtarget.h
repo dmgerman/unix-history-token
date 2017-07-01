@@ -164,7 +164,13 @@ name|bool
 name|HasPopulationCount
 block|;
 name|bool
+name|HasMessageSecurityAssist3
+block|;
+name|bool
 name|HasMessageSecurityAssist4
+block|;
+name|bool
+name|HasResetReferenceBitsMultiple
 block|;
 name|bool
 name|HasFastSerialization
@@ -189,6 +195,9 @@ name|HasProcessorAssist
 block|;
 name|bool
 name|HasDFPZonedConversion
+block|;
+name|bool
+name|HasEnhancedDAT2
 block|;
 name|bool
 name|HasVector
@@ -420,6 +429,17 @@ name|HasPopulationCount
 return|;
 block|}
 comment|// Return true if the target has the message-security-assist
+comment|// extension facility 3.
+name|bool
+name|hasMessageSecurityAssist3
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMessageSecurityAssist3
+return|;
+block|}
+comment|// Return true if the target has the message-security-assist
 comment|// extension facility 4.
 name|bool
 name|hasMessageSecurityAssist4
@@ -428,6 +448,16 @@ specifier|const
 block|{
 return|return
 name|HasMessageSecurityAssist4
+return|;
+block|}
+comment|// Return true if the target has the reset-reference-bits-multiple facility.
+name|bool
+name|hasResetReferenceBitsMultiple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasResetReferenceBitsMultiple
 return|;
 block|}
 comment|// Return true if the target has the fast-serialization facility.
@@ -508,6 +538,16 @@ specifier|const
 block|{
 return|return
 name|HasDFPZonedConversion
+return|;
+block|}
+comment|// Return true if the target has the enhanced-DAT facility 2.
+name|bool
+name|hasEnhancedDAT2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasEnhancedDAT2
 return|;
 block|}
 comment|// Return true if the target has the load-and-zero-rightmost-byte facility.

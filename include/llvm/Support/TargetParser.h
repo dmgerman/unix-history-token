@@ -74,6 +74,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -550,6 +556,18 @@ name|parseArchVersion
 parameter_list|(
 name|StringRef
 name|Arch
+parameter_list|)
+function_decl|;
+name|StringRef
+name|computeDefaultTargetABI
+parameter_list|(
+specifier|const
+name|Triple
+modifier|&
+name|TT
+parameter_list|,
+name|StringRef
+name|CPU
 parameter_list|)
 function_decl|;
 block|}

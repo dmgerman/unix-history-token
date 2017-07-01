@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- CodeViewYAMLTypes.h - CodeView YAMLIO Type Record implementation ---===//
+comment|//==- CodeViewYAMLTypes.h - CodeView YAMLIO Type implementation --*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/CodeView.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -78,13 +78,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/YAML.h"
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -98,6 +122,7 @@ name|class
 name|TypeTableBuilder
 decl_stmt|;
 block|}
+comment|// end namespace codeview
 name|namespace
 name|CodeViewYAML
 block|{
@@ -111,6 +136,7 @@ struct_decl|struct
 name|MemberRecordBase
 struct_decl|;
 block|}
+comment|// end namespace detail
 struct|struct
 name|MemberRecord
 block|{
@@ -201,12 +227,12 @@ name|Alloc
 argument_list|)
 expr_stmt|;
 block|}
-comment|// namespace CodeViewYAML
+comment|// end namespace CodeViewYAML
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_macro
@@ -241,6 +267,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_CODEVIEWYAMLTYPES_H
+end_comment
 
 end_unit
 

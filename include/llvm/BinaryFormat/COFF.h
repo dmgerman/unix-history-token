@@ -1373,7 +1373,7 @@ name|IMAGE_REL_ARM64_BRANCH26
 init|=
 literal|0x0003
 block|,
-name|IMAGE_REL_ARM64_PAGEBASE_REL2
+name|IMAGE_REL_ARM64_PAGEBASE_REL21
 init|=
 literal|0x0004
 block|,

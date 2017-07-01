@@ -345,6 +345,7 @@ extern|extern llvm::cl::opt<bool> DumpTypes;
 extern|extern llvm::cl::opt<bool> DumpTypeData;
 extern|extern llvm::cl::opt<bool> DumpTypeExtras;
 extern|extern llvm::cl::list<uint32_t> DumpTypeIndex;
+extern|extern llvm::cl::opt<bool> DumpTypeDependents;
 extern|extern llvm::cl::opt<bool> DumpIds;
 extern|extern llvm::cl::opt<bool> DumpIdData;
 extern|extern llvm::cl::opt<bool> DumpIdExtras;

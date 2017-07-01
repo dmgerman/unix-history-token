@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- llvm/CodeGen/GlobalISel/LegalizerInfo.h -------------------*- C++ -*-==//
+comment|//===- llvm/CodeGen/GlobalISel/LegalizerInfo.h ------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_GLOBALISEL_MACHINELEGALIZER_H
+name|LLVM_CODEGEN_GLOBALISEL_LEGALIZERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_GLOBALISEL_MACHINELEGALIZER_H
+name|LLVM_CODEGEN_GLOBALISEL_LEGALIZERINFO_H
 end_define
 
 begin_include
@@ -72,7 +72,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/LowLevelType.h"
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/LowLevelTypeImpl.h"
 end_include
 
 begin_include
@@ -90,16 +114,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<functional>
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tuple>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|LLVMContext
-decl_stmt|;
 name|class
 name|MachineInstr
 decl_stmt|;
@@ -108,12 +141,6 @@ name|MachineIRBuilder
 decl_stmt|;
 name|class
 name|MachineRegisterInfo
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
-name|class
-name|VectorType
 decl_stmt|;
 comment|/// Legalization is decided based on an instruction's opcode, which type slot
 comment|/// we're considering, and what the existing type is. These aspects are gathered
@@ -126,6 +153,8 @@ name|Opcode
 decl_stmt|;
 name|unsigned
 name|Idx
+init|=
+literal|0
 decl_stmt|;
 name|LLT
 name|Type
@@ -140,11 +169,6 @@ block|:
 name|Opcode
 argument_list|(
 name|Opcode
-argument_list|)
-operator|,
-name|Idx
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|Type
@@ -284,6 +308,44 @@ name|void
 name|computeTables
 parameter_list|()
 function_decl|;
+specifier|static
+name|bool
+name|needsLegalizingToDifferentSize
+parameter_list|(
+specifier|const
+name|LegalizeAction
+name|Action
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|Action
+condition|)
+block|{
+case|case
+name|NarrowScalar
+case|:
+case|case
+name|WidenScalar
+case|:
+case|case
+name|FewerElements
+case|:
+case|case
+name|MoreElements
+case|:
+case|case
+name|Unsupported
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
 comment|/// More friendly way to set an action for common types that have an LLT
 comment|/// representation.
 name|void
@@ -453,7 +515,7 @@ name|Optional
 operator|<
 name|LLT
 operator|>
-name|findLegalType
+name|findLegalizableSize
 argument_list|(
 argument|const InstrAspect&Aspect
 argument_list|,
@@ -560,9 +622,10 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+name|needsLegalizingToDifferentSize
+argument_list|(
 name|Action
-operator|!=
-name|Legal
+argument_list|)
 condition|)
 empty_stmt|;
 do|return Ty;   }
@@ -783,16 +846,19 @@ name|TargetOpcode
 operator|::
 name|PRE_ISEL_GENERIC_OPCODE_END
 decl_stmt|;
-typedef|typedef
+name|using
+name|TypeMap
+init|=
 name|DenseMap
 operator|<
 name|LLT
-operator|,
+decl_stmt|,
 name|LegalizeAction
-operator|>
-name|TypeMap
-expr_stmt|;
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|SIVActionMap
+init|=
 name|DenseMap
 operator|<
 name|std
@@ -800,14 +866,13 @@ operator|::
 name|pair
 operator|<
 name|unsigned
-operator|,
+decl_stmt|,
 name|LLT
-operator|>
-operator|,
+decl|>
+decl_stmt|,
 name|LegalizeAction
-operator|>
-name|SIVActionMap
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|SmallVector
 operator|<
 name|TypeMap
@@ -851,6 +916,8 @@ name|DefaultActions
 expr_stmt|;
 name|bool
 name|TablesInitialized
+init|=
+name|false
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -861,13 +928,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GLOBALISEL_LEGALIZERINFO_H
+end_comment
 
 end_unit
 

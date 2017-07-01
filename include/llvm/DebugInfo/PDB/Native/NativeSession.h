@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_PDB_RAW_RAWSESSION_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_NATIVESESSION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_PDB_RAW_RAWSESSION_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_NATIVESESSION_H
 end_define
 
 begin_include
@@ -53,6 +53,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/PDB/IPDBSession.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/Native/DbiModuleDescriptor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/Native/NativeRawSymbol.h"
 end_include
 
 begin_include
@@ -125,6 +137,17 @@ argument_list|(
 argument|StringRef Path
 argument_list|,
 argument|std::unique_ptr<IPDBSession>&Session
+argument_list|)
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PDBSymbolCompiland
+operator|>
+name|createCompilandSymbol
+argument_list|(
+argument|DbiModuleDescriptor MI
 argument_list|)
 block|;
 name|uint64_t
@@ -361,6 +384,18 @@ operator|<
 name|BumpPtrAllocator
 operator|>
 name|Allocator
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|NativeRawSymbol
+operator|>>
+name|SymbolCache
 block|; }
 decl_stmt|;
 block|}

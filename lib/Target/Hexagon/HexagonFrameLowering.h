@@ -179,6 +179,33 @@ return|return
 name|true
 return|;
 block|}
+name|bool
+name|hasReservedCallFrame
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// We always reserve call frame as a part of the initial stack allocation.
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|canSimplifyCallFramePseudos
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// Override this function to avoid calling hasFP before CSI is set
+comment|// (the default implementation calls hasFP).
+return|return
+name|true
+return|;
+block|}
 name|MachineBasicBlock
 operator|::
 name|iterator
@@ -513,6 +540,23 @@ argument_list|(
 name|MachineBasicBlock
 operator|&
 name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|insertAllocframe
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|InsertPt
+argument_list|,
+name|unsigned
+name|NumBytes
 argument_list|)
 decl|const
 decl_stmt|;
@@ -995,6 +1039,7 @@ decl_stmt|;
 name|bool
 name|shouldInlineCSR
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|MF
@@ -1009,6 +1054,7 @@ decl_stmt|;
 name|bool
 name|useSpillFunction
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|MF
@@ -1023,6 +1069,7 @@ decl_stmt|;
 name|bool
 name|useRestoreFunction
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|MF

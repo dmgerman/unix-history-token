@@ -7193,9 +7193,14 @@ init|=
 name|false
 decl_stmt|;
 name|bool
-name|DiagnosticHotnessRequested
+name|DiagnosticsHotnessRequested
 init|=
 name|false
+decl_stmt|;
+name|uint64_t
+name|DiagnosticsHotnessThreshold
+init|=
+literal|0
 decl_stmt|;
 name|std
 operator|::

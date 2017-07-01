@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- EnumTables.h Enum to string conversion tables ------------*- C++ -*-===//
+comment|//===- EnumTables.h - Enum to string conversion tables ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -245,12 +245,12 @@ name|getImageSectionCharacteristicNames
 argument_list|()
 expr_stmt|;
 block|}
-comment|// namespace codeview
+comment|// end namespace codeview
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

@@ -81,6 +81,12 @@ directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -793,6 +799,8 @@ block|}
 enum|;
 name|SimpleValueType
 name|SimpleTy
+init|=
+name|INVALID_SIMPLE_VALUE_TYPE
 decl_stmt|;
 comment|// A class to represent the number of elements in a vector
 comment|//
@@ -926,19 +934,16 @@ block|}
 empty_stmt|;
 name|constexpr
 name|MVT
-argument_list|()
-operator|:
-name|SimpleTy
-argument_list|(
-argument|INVALID_SIMPLE_VALUE_TYPE
-argument_list|)
-block|{}
+parameter_list|()
+init|=
+init|default
+function_decl|;
 name|constexpr
 name|MVT
 argument_list|(
 argument|SimpleValueType SVT
 argument_list|)
-operator|:
+block|:
 name|SimpleTy
 argument_list|(
 argument|SVT
@@ -4483,13 +4488,14 @@ block|}
 block|}
 struct|;
 comment|/// A range of the MVT::SimpleValueType enum.
-typedef|typedef
+name|using
+name|mvt_range
+init|=
 name|iterator_range
 operator|<
 name|mvt_iterator
 operator|>
-name|mvt_range
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 comment|/// SimpleValueType Iteration
@@ -4711,13 +4717,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEVALUETYPE_H
+end_comment
 
 end_unit
 

@@ -1401,6 +1401,10 @@ name|Loop
 operator|*
 name|L
 argument_list|,
+name|ScalarEvolution
+operator|&
+name|SE
+argument_list|,
 name|TTI
 operator|::
 name|UnrollingPreferences

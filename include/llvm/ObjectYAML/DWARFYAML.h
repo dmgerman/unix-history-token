@@ -70,13 +70,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/BinaryFormat/Dwarf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/YAML.h"
+file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -285,17 +303,9 @@ struct|;
 struct|struct
 name|PubSection
 block|{
-name|PubSection
-argument_list|()
-operator|:
-name|IsGNUStyle
-argument_list|(
-argument|false
-argument_list|)
-block|{}
 name|InitialLength
 name|Length
-expr_stmt|;
+decl_stmt|;
 name|uint16_t
 name|Version
 decl_stmt|;
@@ -307,6 +317,8 @@ name|UnitSize
 decl_stmt|;
 name|bool
 name|IsGNUStyle
+init|=
+name|false
 decl_stmt|;
 name|std
 operator|::
@@ -596,32 +608,18 @@ expr_stmt|;
 block|}
 struct|;
 block|}
-comment|// namespace llvm::DWARFYAML
+comment|// end namespace DWARFYAML
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
-
-begin_macro
-name|LLVM_YAML_IS_FLOW_SEQUENCE_VECTOR
-argument_list|(
-argument|uint8_t
-argument_list|)
-end_macro
 
 begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
 argument|llvm::yaml::Hex64
-argument_list|)
-end_macro
-
-begin_macro
-name|LLVM_YAML_IS_SEQUENCE_VECTOR
-argument_list|(
-argument|llvm::StringRef
 argument_list|)
 end_macro
 
@@ -1435,18 +1433,22 @@ block|;   }
 block|}
 expr_stmt|;
 block|}
-comment|// namespace llvm::yaml
+comment|// end namespace yaml
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_DWARFYAML_H
+end_comment
 
 end_unit
 

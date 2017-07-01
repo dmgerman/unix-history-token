@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MacroFusion.h - Macro Fusion ------------------------===//
+comment|//===- MacroFusion.h - Macro Fusion -----------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -51,6 +51,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_CODEGEN_MACROFUSION_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_CODEGEN_MACROFUSION_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -60,23 +72,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineScheduler.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MachineInstr
+decl_stmt|;
+name|class
+name|ScheduleDAGMutation
+decl_stmt|;
+name|class
+name|TargetInstrInfo
+decl_stmt|;
+name|class
+name|TargetSubtargetInfo
+decl_stmt|;
 comment|/// \brief Check if the instr pair, FirstMI and SecondMI, should be fused
 comment|/// together. Given SecondMI, when FirstMI is unspecified, then check if
 comment|/// SecondMI may be part of a fused pair at all.
-typedef|typedef
+name|using
+name|ShouldSchedulePredTy
+init|=
 name|std
 operator|::
 name|function
@@ -104,8 +124,7 @@ operator|&
 name|SecondMI
 argument_list|)
 operator|>
-name|ShouldSchedulePredTy
-expr_stmt|;
+decl_stmt|;
 comment|/// \brief Create a DAG scheduling mutation to pair instructions back to back
 comment|/// for instructions that benefit according to the target-specific
 comment|/// shouldScheduleAdjacent predicate function.
@@ -139,6 +158,15 @@ end_decl_stmt
 
 begin_comment
 comment|// end namespace llvm
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACROFUSION_H
 end_comment
 
 end_unit

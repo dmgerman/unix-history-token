@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/CodeView.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/DebugSubsection.h"
 end_include
 
@@ -76,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -85,12 +91,6 @@ name|llvm
 block|{
 name|class
 name|BinaryStreamReader
-decl_stmt|;
-name|class
-name|BinaryStreamRef
-decl_stmt|;
-name|class
-name|BinaryStreamWriter
 decl_stmt|;
 name|namespace
 name|codeview
@@ -296,13 +296,22 @@ literal|1
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace codeview
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_DEBUGSTRINGTABLESUBSECTION_H
+end_comment
 
 end_unit
 

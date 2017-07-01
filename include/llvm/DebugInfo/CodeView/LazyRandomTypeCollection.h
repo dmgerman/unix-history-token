@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- LazyRandomTypeCollection.h ---------------------------- *- C++ --*-===//
+comment|//===- LazyRandomTypeCollection.h -------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,6 +46,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/TypeCollection.h"
 end_include
 
@@ -70,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/BinaryStreamArray.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Error.h"
 end_include
 
@@ -77,6 +101,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/StringSaver.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -114,14 +150,14 @@ range|:
 name|public
 name|TypeCollection
 block|{
-typedef|typedef
+name|using
+name|PartialOffsetArray
+operator|=
 name|FixedStreamArray
 operator|<
 name|TypeIndexOffset
 operator|>
-name|PartialOffsetArray
-expr_stmt|;
-block|struct
+block|;    struct
 name|CacheEntry
 block|{
 name|CVType
@@ -133,30 +169,29 @@ block|;
 name|StringRef
 name|Name
 block|;   }
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|explicit
 name|LazyRandomTypeCollection
-parameter_list|(
-name|uint32_t
-name|RecordCountHint
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|uint32_t RecordCountHint
+argument_list|)
+block|;
 name|LazyRandomTypeCollection
 argument_list|(
 argument|StringRef Data
 argument_list|,
 argument|uint32_t RecordCountHint
 argument_list|)
-empty_stmt|;
+block|;
 name|LazyRandomTypeCollection
 argument_list|(
 argument|ArrayRef<uint8_t> Data
 argument_list|,
 argument|uint32_t RecordCountHint
 argument_list|)
-empty_stmt|;
+block|;
 name|LazyRandomTypeCollection
 argument_list|(
 argument|const CVTypeArray&Types
@@ -165,78 +200,67 @@ argument|uint32_t RecordCountHint
 argument_list|,
 argument|PartialOffsetArray PartialOffsets
 argument_list|)
-empty_stmt|;
+block|;
 name|LazyRandomTypeCollection
 argument_list|(
 argument|const CVTypeArray&Types
 argument_list|,
 argument|uint32_t RecordCountHint
 argument_list|)
-empty_stmt|;
+block|;
 name|void
 name|reset
 argument_list|(
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-name|Data
+argument|ArrayRef<uint8_t> Data
 argument_list|,
-name|uint32_t
-name|RecordCountHint
+argument|uint32_t RecordCountHint
 argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|reset
-parameter_list|(
-name|StringRef
-name|Data
-parameter_list|,
-name|uint32_t
-name|RecordCountHint
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef Data
+argument_list|,
+argument|uint32_t RecordCountHint
+argument_list|)
+block|;
 name|uint32_t
 name|getOffsetOfType
-parameter_list|(
-name|TypeIndex
-name|Index
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TypeIndex Index
+argument_list|)
+block|;
 name|CVType
 name|getType
 argument_list|(
-name|TypeIndex
-name|Index
+argument|TypeIndex Index
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|StringRef
 name|getTypeName
 argument_list|(
-name|TypeIndex
-name|Index
+argument|TypeIndex Index
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|contains
 argument_list|(
-name|TypeIndex
-name|Index
+argument|TypeIndex Index
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|uint32_t
 name|size
 argument_list|()
 name|override
-expr_stmt|;
+block|;
 name|uint32_t
 name|capacity
 argument_list|()
 name|override
-expr_stmt|;
+block|;
 name|Optional
 operator|<
 name|TypeIndex
@@ -244,7 +268,7 @@ operator|>
 name|getFirst
 argument_list|()
 name|override
-expr_stmt|;
+block|;
 name|Optional
 operator|<
 name|TypeIndex
@@ -254,75 +278,68 @@ argument_list|(
 argument|TypeIndex Prev
 argument_list|)
 name|override
-expr_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|Error
 name|ensureTypeExists
-parameter_list|(
-name|TypeIndex
-name|Index
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TypeIndex Index
+argument_list|)
+block|;
 name|void
 name|ensureCapacityFor
-parameter_list|(
-name|TypeIndex
-name|Index
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TypeIndex Index
+argument_list|)
+block|;
 name|Error
 name|visitRangeForType
-parameter_list|(
-name|TypeIndex
-name|TI
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TypeIndex TI
+argument_list|)
+block|;
 name|Error
 name|fullScanForType
-parameter_list|(
-name|TypeIndex
-name|TI
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TypeIndex TI
+argument_list|)
+block|;
 name|void
 name|visitRange
-parameter_list|(
-name|TypeIndex
-name|Begin
-parameter_list|,
-name|uint32_t
-name|BeginOffset
-parameter_list|,
-name|TypeIndex
-name|End
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TypeIndex Begin
+argument_list|,
+argument|uint32_t BeginOffset
+argument_list|,
+argument|TypeIndex End
+argument_list|)
+block|;
 comment|/// Number of actual records.
 name|uint32_t
 name|Count
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// The largest type index which we've visited.
 name|TypeIndex
 name|LargestTypeIndex
-init|=
+operator|=
 name|TypeIndex
 operator|::
 name|None
 argument_list|()
-decl_stmt|;
+block|;
 name|BumpPtrAllocator
 name|Allocator
-decl_stmt|;
+block|;
 name|StringSaver
 name|NameStorage
-decl_stmt|;
+block|;
 comment|/// The type array to allow random access visitation of.
 name|CVTypeArray
 name|Types
-decl_stmt|;
+block|;
 name|std
 operator|::
 name|vector
@@ -330,25 +347,21 @@ operator|<
 name|CacheEntry
 operator|>
 name|Records
-expr_stmt|;
+block|;
 comment|/// An array of index offsets for the given type stream, allowing log(N)
 comment|/// lookups of a type record by index.  Similar to KnownOffsets but only
 comment|/// contains offsets for some type indices, some of which may not have
 comment|/// ever been visited.
 name|PartialOffsetArray
 name|PartialOffsets
+block|; }
 decl_stmt|;
 block|}
-empty_stmt|;
+comment|// end namespace codeview
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace codeview
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

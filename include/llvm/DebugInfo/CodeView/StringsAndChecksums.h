@@ -34,19 +34,31 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_CODEVIEW_STRINGS_AND_CHECKSUMS_H
+name|LLVM_DEBUGINFO_CODEVIEW_STRINGSANDCHECKSUMS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_CODEVIEW_STRINGS_AND_CHECKSUMS_H
+name|LLVM_DEBUGINFO_CODEVIEW_STRINGSANDCHECKSUMS_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/CodeView/CodeView.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/DebugChecksumsSubsection.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/DebugStringTableSubsection.h"
 end_include
 
 begin_include
@@ -68,21 +80,6 @@ block|{
 name|namespace
 name|codeview
 block|{
-name|class
-name|DebugSubsectionRecord
-decl_stmt|;
-name|class
-name|DebugChecksumsSubsectionRef
-decl_stmt|;
-name|class
-name|DebugStringTableSubsectionRef
-decl_stmt|;
-name|class
-name|DebugChecksumsSubsection
-decl_stmt|;
-name|class
-name|DebugStringTableSubsection
-decl_stmt|;
 name|class
 name|StringsAndChecksumsRef
 block|{
@@ -331,7 +328,9 @@ decl_stmt|;
 comment|// If no subsections are known about initially, we find as much as we can.
 name|StringsAndChecksums
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|setStrings
 parameter_list|(
@@ -415,18 +414,22 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
-comment|// namespace codeview
+comment|// end namespace codeview
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_STRINGSANDCHECKSUMS_H
+end_comment
 
 end_unit
 

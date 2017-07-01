@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_PDB_RAW_DBIMODULELIST_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_DBIMODULELIST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_PDB_RAW_DBIMODULELIST_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_DBIMODULELIST_H
 end_define
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/DebugChecksumsSubsection.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -94,7 +94,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_include
@@ -107,9 +119,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|namespace
-name|codeview
-block|{}
 name|namespace
 name|pdb
 block|{
@@ -134,19 +143,20 @@ decl_stmt|,
 name|StringRef
 decl|>
 block|{
-typedef|typedef
+name|using
+name|BaseType
+init|=
 name|iterator_facade_base
 operator|<
 name|DbiModuleSourceFilesIterator
-operator|,
+decl_stmt|,
 name|std
-operator|::
+decl|::
 name|random_access_iterator_tag
-operator|,
+decl_stmt|,
 name|StringRef
-operator|>
-name|BaseType
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|public
 label|:
 name|DbiModuleSourceFilesIterator
@@ -454,8 +464,13 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace pdb
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
@@ -463,7 +478,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_DEBUGINFO_PDB_RAW_DBIMODULELIST_H
+comment|// LLVM_DEBUGINFO_PDB_NATIVE_DBIMODULELIST_H
 end_comment
 
 end_unit

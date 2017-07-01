@@ -595,7 +595,6 @@ decl_stmt|;
 comment|// Methods for support type inquiry through isa, cast, and
 comment|// dyn_cast
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -1010,7 +1009,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1252,7 +1250,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1466,7 +1463,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2204,7 +2200,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(

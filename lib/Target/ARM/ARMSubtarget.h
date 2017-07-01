@@ -599,6 +599,14 @@ name|HasRetAddrStack
 operator|=
 name|false
 block|;
+comment|/// HasBranchPredictor - True if the subtarget has a branch predictor. Having
+comment|/// a branch predictor or not changes the expected cost of taking a branch
+comment|/// which affects the choice of whether to use predicated instructions.
+name|bool
+name|HasBranchPredictor
+operator|=
+name|true
+block|;
 comment|/// HasMPExtension - True if the subtarget supports Multiprocessing
 comment|/// extension (ARMv7 only).
 name|bool
@@ -1784,6 +1792,15 @@ specifier|const
 block|{
 return|return
 name|HasRetAddrStack
+return|;
+block|}
+name|bool
+name|hasBranchPredictor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasBranchPredictor
 return|;
 block|}
 name|bool

@@ -272,9 +272,6 @@ name|bool
 name|DisableUnrollLoops
 decl_stmt|;
 name|bool
-name|BBVectorize
-decl_stmt|;
-name|bool
 name|SLPVectorize
 decl_stmt|;
 name|bool

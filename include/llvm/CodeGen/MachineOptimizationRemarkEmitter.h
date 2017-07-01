@@ -436,7 +436,7 @@ comment|/// The optimization diagnostic interface.
 comment|///
 comment|/// It allows reporting when optimizations are performed and when they are not
 comment|/// along with the reasons for it.  Hotness information of the corresponding
-comment|/// code region can be included in the remark if DiagnosticHotnessRequested is
+comment|/// code region can be included in the remark if DiagnosticsHotnessRequested is
 comment|/// enabled in the LLVM context.
 name|class
 name|MachineOptimizationRemarkEmitter

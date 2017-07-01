@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- symbolSerializer.h ---------------------------------------*- C++ -*-===//
+comment|//===- SymbolSerializer.h ---------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,6 +46,30 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/CodeView.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/RecordSerialization.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/SymbolRecord.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/SymbolRecordMapping.h"
 end_include
 
@@ -53,36 +77,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/CodeView/SymbolVisitorCallbacks.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/Optional.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -109,13 +103,22 @@ directive|include
 file|"llvm/Support/Error.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|BinaryStreamWriter
-decl_stmt|;
 name|namespace
 name|codeview
 block|{
@@ -197,6 +200,13 @@ return|;
 block|}
 name|public
 label|:
+name|SymbolSerializer
+argument_list|(
+argument|BumpPtrAllocator&Storage
+argument_list|,
+argument|CodeViewContainer Container
+argument_list|)
+empty_stmt|;
 name|template
 operator|<
 name|typename
@@ -274,14 +284,6 @@ return|return
 name|Result
 return|;
 block|}
-name|SymbolSerializer
-argument_list|(
-argument|BumpPtrAllocator&Storage
-argument_list|,
-argument|CodeViewContainer Container
-argument_list|)
-empty_stmt|;
-name|virtual
 name|Error
 name|visitSymbolBegin
 argument_list|(
@@ -291,7 +293,6 @@ name|Record
 argument_list|)
 name|override
 decl_stmt|;
-name|virtual
 name|Error
 name|visitSymbolEnd
 argument_list|(
@@ -312,7 +313,7 @@ parameter_list|,
 name|Name
 parameter_list|)
 define|\
-value|virtual Error visitKnownRecord(CVSymbol&CVR, Name&Record) override {       \     return visitKnownRecordImpl(CVR, Record);                                  \   }
+value|Error visitKnownRecord(CVSymbol&CVR, Name&Record) override {               \     return visitKnownRecordImpl(CVR, Record);                                  \   }
 define|#
 directive|define
 name|SYMBOL_RECORD_ALIAS
@@ -359,11 +360,23 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
+comment|// end namespace codeview
+end_comment
+
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_SYMBOLSERIALIZER_H
+end_comment
 
 end_unit
 

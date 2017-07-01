@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/CodeView.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/DebugSubsection.h"
 end_include
 
@@ -58,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/BinaryStreamReader.h"
+file|"llvm/Support/Endian.h"
 end_include
 
 begin_include
@@ -67,10 +73,25 @@ directive|include
 file|"llvm/Support/Error.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|BinaryStreamReader
+decl_stmt|;
 name|namespace
 name|codeview
 block|{
@@ -83,27 +104,25 @@ name|DebugSubsectionRef
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|ArrayType
+operator|=
 name|FixedStreamArray
 operator|<
 name|support
 operator|::
 name|ulittle32_t
 operator|>
-name|ArrayType
-expr_stmt|;
+block|;
 name|DebugSymbolRVASubsectionRef
 argument_list|()
-decl_stmt|;
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|DebugSubsectionRef
-modifier|*
-name|S
-parameter_list|)
+argument_list|(
+argument|const DebugSubsectionRef *S
+argument_list|)
 block|{
 return|return
 name|S
@@ -146,19 +165,18 @@ return|;
 block|}
 name|Error
 name|initialize
-parameter_list|(
+argument_list|(
 name|BinaryStreamReader
-modifier|&
+operator|&
 name|Reader
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|private
-label|:
+operator|:
 name|ArrayType
 name|RVAs
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 name|class
 name|DebugSymbolRVASubsection
 name|final
@@ -235,21 +253,22 @@ name|RVAs
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace codeview
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace codeview
-end_comment
-
-begin_comment
-unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_DEBUGSYMBOLRVASUBSECTION_H
+end_comment
 
 end_unit
 

@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/BinaryFormat/Wasm.h"
 end_include
 
@@ -77,6 +83,30 @@ begin_include
 include|#
 directive|include
 file|"llvm/ObjectYAML/YAML.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -330,19 +360,15 @@ struct|;
 struct|struct
 name|Signature
 block|{
-name|Signature
-argument_list|()
-operator|:
-name|Form
-argument_list|(
-argument|wasm::WASM_TYPE_FUNC
-argument_list|)
-block|{}
 name|uint32_t
 name|Index
-expr_stmt|;
+decl_stmt|;
 name|SignatureForm
 name|Form
+init|=
+name|wasm
+operator|::
+name|WASM_TYPE_FUNC
 decl_stmt|;
 name|std
 operator|::
@@ -547,6 +573,12 @@ operator|<
 name|SymbolInfo
 operator|>
 name|SymbolInfos
+block|;
+name|uint32_t
+name|DataSize
+block|;
+name|uint32_t
+name|DataAlignment
 block|; }
 decl_stmt|;
 name|struct
@@ -1104,13 +1136,6 @@ begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
 argument|llvm::WasmYAML::SymbolInfo
-argument_list|)
-end_macro
-
-begin_macro
-name|LLVM_YAML_IS_FLOW_SEQUENCE_VECTOR
-argument_list|(
-argument|uint32_t
 argument_list|)
 end_macro
 
@@ -1764,6 +1789,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_WASMYAML_H
+end_comment
 
 end_unit
 

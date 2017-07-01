@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- NativeRawSymbol.h - Native implementation of IPDBRawSymbol - C++ -*-===//
+comment|//==- NativeRawSymbol.h - Native implementation of IPDBRawSymbol -*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -47,6 +47,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/PDB/IPDBRawSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -162,7 +174,7 @@ block|;
 name|void
 name|getDataBytes
 argument_list|(
-argument|llvm::SmallVector<uint8_t
+argument|SmallVector<uint8_t
 argument_list|,
 literal|32
 argument|>&Bytes
@@ -1184,13 +1196,22 @@ name|SymbolId
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace pdb
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_PDB_NATIVE_NATIVERAWSYMBOL_H
+end_comment
 
 end_unit
 

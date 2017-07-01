@@ -78,7 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/YAML.h"
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -95,6 +107,7 @@ struct_decl|struct
 name|SymbolRecordBase
 struct_decl|;
 block|}
+comment|// end namespace detail
 struct|struct
 name|SymbolRecord
 block|{
@@ -132,12 +145,12 @@ expr_stmt|;
 block|}
 struct|;
 block|}
-comment|// namespace CodeViewYAML
+comment|// end namespace CodeViewYAML
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_macro
@@ -158,6 +171,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_CODEVIEWYAMLSYMBOLS_H
+end_comment
 
 end_unit
 

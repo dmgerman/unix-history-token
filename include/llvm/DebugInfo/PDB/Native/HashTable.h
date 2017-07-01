@@ -34,20 +34,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_PDB_RAW_HASHTABLE_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_HASHTABLE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_PDB_RAW_HASHTABLE_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_HASHTABLE_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
 
 begin_include
 include|#
@@ -58,31 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/iterator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/BinaryStreamArray.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/BinaryStreamReader.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/BinaryStreamWriter.h"
 end_include
 
 begin_include
@@ -100,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MathExtras.h"
+file|<cstdint>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstdint>
+file|<iterator>
 end_include
 
 begin_include
@@ -115,10 +85,22 @@ directive|include
 file|<utility>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|BinaryStreamReader
+decl_stmt|;
+name|class
+name|BinaryStreamWriter
+decl_stmt|;
 name|namespace
 name|pdb
 block|{
@@ -147,7 +129,9 @@ name|Capacity
 expr_stmt|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|BucketList
+init|=
 name|std
 operator|::
 name|vector
@@ -157,11 +141,10 @@ operator|::
 name|pair
 operator|<
 name|uint32_t
-operator|,
+decl_stmt|,
 name|uint32_t
-operator|>>
-name|BucketList
-expr_stmt|;
+decl|>>
+decl_stmt|;
 name|public
 label|:
 name|HashTable
@@ -485,7 +468,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_DEBUGINFO_PDB_RAW_HASHTABLE_H
+comment|// LLVM_DEBUGINFO_PDB_NATIVE_HASHTABLE_H
 end_comment
 
 end_unit

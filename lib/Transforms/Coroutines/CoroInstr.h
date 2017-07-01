@@ -234,7 +234,6 @@ return|;
 block|}
 comment|// Methods to support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -253,7 +252,6 @@ name|coro_subfn_addr
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -295,7 +293,6 @@ name|public
 operator|:
 comment|// Methods to support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -314,7 +311,6 @@ name|coro_alloc
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -866,7 +862,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -891,7 +886,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -941,7 +935,6 @@ name|public
 operator|:
 comment|// Methods to support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -960,7 +953,6 @@ name|coro_frame
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1021,7 +1013,6 @@ return|;
 block|}
 comment|// Methods to support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1040,7 +1031,6 @@ name|coro_free
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1120,7 +1110,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1139,7 +1128,6 @@ name|coro_begin
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1181,7 +1169,6 @@ name|public
 operator|:
 comment|// Methods to support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1200,7 +1187,6 @@ name|coro_save
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1292,7 +1278,6 @@ return|;
 block|}
 comment|// Methods to support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1311,7 +1296,6 @@ name|coro_promise
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1427,7 +1411,6 @@ return|;
 block|}
 comment|// Methods to support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1446,7 +1429,6 @@ name|coro_suspend
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1488,7 +1470,6 @@ name|public
 operator|:
 comment|// Methods to support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1507,7 +1488,6 @@ name|coro_size
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1587,7 +1567,6 @@ return|;
 block|}
 comment|// Methods to support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1606,7 +1585,6 @@ name|coro_end
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

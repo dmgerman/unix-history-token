@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/BinaryFormat/MachO.h"
 end_include
 
@@ -82,7 +88,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/YAML.h"
+file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -359,48 +383,15 @@ struct|;
 struct|struct
 name|ExportEntry
 block|{
-name|ExportEntry
-argument_list|()
-operator|:
-name|TerminalSize
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NodeOffset
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Name
-argument_list|()
-operator|,
-name|Flags
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Address
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Other
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ImportName
-argument_list|()
-operator|,
-name|Children
-argument_list|()
-block|{}
 name|uint64_t
 name|TerminalSize
-expr_stmt|;
+init|=
+literal|0
+decl_stmt|;
 name|uint64_t
 name|NodeOffset
+init|=
+literal|0
 decl_stmt|;
 name|std
 operator|::
@@ -413,6 +404,8 @@ name|yaml
 operator|::
 name|Hex64
 name|Flags
+operator|=
+literal|0
 expr_stmt|;
 name|llvm
 operator|::
@@ -420,6 +413,8 @@ name|yaml
 operator|::
 name|Hex64
 name|Address
+operator|=
+literal|0
 expr_stmt|;
 name|llvm
 operator|::
@@ -427,6 +422,8 @@ name|yaml
 operator|::
 name|Hex64
 name|Other
+operator|=
+literal|0
 expr_stmt|;
 name|std
 operator|::
@@ -630,12 +627,12 @@ expr_stmt|;
 block|}
 struct|;
 block|}
-comment|// namespace llvm::MachOYAML
+comment|// end namespace MachOYAML
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_macro
@@ -649,13 +646,6 @@ begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
 argument|llvm::MachOYAML::Section
-argument_list|)
-end_macro
-
-begin_macro
-name|LLVM_YAML_IS_FLOW_SEQUENCE_VECTOR
-argument_list|(
-argument|int64_t
 argument_list|)
 end_macro
 
@@ -712,6 +702,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 name|namespace
 name|yaml
 block|{
@@ -1273,13 +1266,14 @@ block|;   }
 block|}
 expr_stmt|;
 comment|// This trait is used for 16-byte chars in Mach structures used for strings
-typedef|typedef
-name|char
+name|using
 name|char_16
+init|=
+name|char
 index|[
 literal|16
 index|]
-typedef|;
+decl_stmt|;
 name|template
 operator|<
 operator|>
@@ -1301,8 +1295,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|Out
@@ -1329,13 +1321,14 @@ block|; }
 expr_stmt|;
 comment|// This trait is used for UUIDs. It reads and writes them matching otool's
 comment|// formatting style.
-typedef|typedef
-name|uint8_t
+name|using
 name|uuid_t
+init|=
+name|uint8_t
 index|[
 literal|16
 index|]
-typedef|;
+decl_stmt|;
 name|template
 operator|<
 operator|>
@@ -1357,8 +1350,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|Out
@@ -1505,18 +1496,22 @@ argument_list|)
 block|; }
 expr_stmt|;
 block|}
-comment|// namespace llvm::yaml
+comment|// end namespace yaml
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_MACHOYAML_H
+end_comment
 
 end_unit
 

@@ -577,6 +577,12 @@ comment|/// folded into a load or other instruction, but if they are used in som
 comment|/// other context they may not be folded. This routine can distinguish such
 comment|/// cases.
 comment|///
+comment|/// \p Operands is a list of operands which can be a result of transformations
+comment|/// of the current operands. The number of the operands on the list must equal
+comment|/// to the number of the current operands the IR user has. Their order on the
+comment|/// list must be the same as the order of the current operands the IR user
+comment|/// has.
+comment|///
 comment|/// The returned cost is defined in terms of \c TargetCostConstants, see its
 comment|/// comments for a detailed explanation of the cost values.
 name|int
@@ -586,9 +592,59 @@ specifier|const
 name|User
 operator|*
 name|U
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Operands
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief This is a helper function which calls the two-argument getUserCost
+comment|/// with \p Operands which are the current operands U has.
+name|int
+name|getUserCost
+argument_list|(
+specifier|const
+name|User
+operator|*
+name|U
+argument_list|)
+decl|const
+block|{
+name|SmallVector
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+literal|4
+operator|>
+name|Operands
+argument_list|(
+name|U
+operator|->
+name|value_op_begin
+argument_list|()
+argument_list|,
+name|U
+operator|->
+name|value_op_end
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|getUserCost
+argument_list|(
+name|U
+argument_list|,
+name|Operands
+argument_list|)
+return|;
+block|}
 comment|/// \brief Return true if branch divergence exists.
 comment|///
 comment|/// Branch divergence has a significantly negative impact on GPU performance
@@ -827,6 +883,9 @@ argument_list|(
 name|Loop
 operator|*
 name|L
+argument_list|,
+name|ScalarEvolution
+operator|&
 argument_list|,
 name|UnrollingPreferences
 operator|&
@@ -2340,6 +2399,14 @@ specifier|const
 name|User
 operator|*
 name|U
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Operands
 argument_list|)
 operator|=
 literal|0
@@ -2401,6 +2468,9 @@ argument_list|(
 name|Loop
 operator|*
 name|L
+argument_list|,
+name|ScalarEvolution
+operator|&
 argument_list|,
 name|UnrollingPreferences
 operator|&
@@ -3546,6 +3616,8 @@ name|int
 name|getUserCost
 argument_list|(
 argument|const User *U
+argument_list|,
+argument|ArrayRef<const Value *> Operands
 argument_list|)
 name|override
 block|{
@@ -3555,6 +3627,8 @@ operator|.
 name|getUserCost
 argument_list|(
 name|U
+argument_list|,
+name|Operands
 argument_list|)
 return|;
 block|}
@@ -3635,6 +3709,8 @@ name|getUnrollingPreferences
 argument_list|(
 argument|Loop *L
 argument_list|,
+argument|ScalarEvolution&SE
+argument_list|,
 argument|UnrollingPreferences&UP
 argument_list|)
 name|override
@@ -3645,6 +3721,8 @@ operator|.
 name|getUnrollingPreferences
 argument_list|(
 name|L
+argument_list|,
+name|SE
 argument_list|,
 name|UP
 argument_list|)

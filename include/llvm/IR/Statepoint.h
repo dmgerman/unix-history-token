@@ -1492,7 +1492,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1520,7 +1519,6 @@ name|experimental_gc_result
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1705,7 +1703,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1724,7 +1721,6 @@ name|experimental_gc_relocate
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1863,7 +1859,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1882,7 +1877,6 @@ name|experimental_gc_result
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
