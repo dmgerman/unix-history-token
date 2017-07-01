@@ -465,7 +465,7 @@ name|len
 decl_stmt|,
 name|offset
 decl_stmt|;
-name|ssize_t
+name|size_t
 name|resid
 decl_stmt|;
 name|wdc_append_serial_name
@@ -668,6 +668,9 @@ argument_list|,
 name|resid
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|resid
 condition|)
 name|err
