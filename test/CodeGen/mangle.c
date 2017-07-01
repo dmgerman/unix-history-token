@@ -56,6 +56,24 @@ block|{}
 end_decl_stmt
 
 begin_comment
+comment|// Unless it's unmarked.
+end_comment
+
+begin_comment
+comment|// CHECK: @f0
+end_comment
+
+begin_function
+name|void
+name|f0
+parameter_list|(
+name|float
+name|b
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
 comment|// CHECK: @bar
 end_comment
 

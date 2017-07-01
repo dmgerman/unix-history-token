@@ -1319,8 +1319,10 @@ name|PP
 decl_stmt|;
 comment|/// \brief The AST context into which we'll read the AST files.
 name|ASTContext
-modifier|&
-name|Context
+modifier|*
+name|ContextObj
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// \brief The AST consumer.
 name|ASTConsumer
@@ -3387,6 +3389,9 @@ decl_stmt|;
 name|bool
 name|Transient
 decl_stmt|;
+name|bool
+name|TopLevelModuleMap
+decl_stmt|;
 block|}
 struct|;
 comment|/// \brief Reads the stored information about an input file.
@@ -4651,7 +4656,7 @@ comment|/// \param Context the AST context that this precompiled header will be
 end_comment
 
 begin_comment
-comment|/// loaded into.
+comment|/// loaded into, if any.
 end_comment
 
 begin_comment
@@ -4783,7 +4788,7 @@ name|ASTReader
 argument_list|(
 argument|Preprocessor&PP
 argument_list|,
-argument|ASTContext&Context
+argument|ASTContext *Context
 argument_list|,
 argument|const PCHContainerReader&PCHContainerRdr
 argument_list|,
@@ -9015,8 +9020,16 @@ modifier|&
 name|getContext
 parameter_list|()
 block|{
+name|assert
+argument_list|(
+name|ContextObj
+operator|&&
+literal|"requested AST context when not loading AST"
+argument_list|)
+expr_stmt|;
 return|return
-name|Context
+operator|*
+name|ContextObj
 return|;
 block|}
 end_function
@@ -9212,6 +9225,40 @@ argument_list|(
 argument|const serialization::InputFile&IF
 argument_list|,
 argument|bool isSystem
+argument_list|)
+operator|>
+name|Visitor
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Visit all the top-level module maps loaded when building the given module
+end_comment
+
+begin_comment
+comment|/// file.
+end_comment
+
+begin_decl_stmt
+name|void
+name|visitTopLevelModuleMaps
+argument_list|(
+name|serialization
+operator|::
+name|ModuleFile
+operator|&
+name|MF
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
 argument_list|)
 operator|>
 name|Visitor

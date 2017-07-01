@@ -5719,6 +5719,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Determine if \p D and \p Suggested have a structurally compatible
+end_comment
+
+begin_comment
+comment|/// layout as described in C11 6.2.7/1.
+end_comment
+
+begin_function_decl
+name|bool
+name|hasStructuralCompatLayout
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|,
+name|Decl
+modifier|*
+name|Suggested
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Determine if \p D has a visible definition. If not, suggest a declaration
 end_comment
 
@@ -6291,7 +6314,17 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|CheckSameAsPrevious
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Previous
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|New
 argument_list|(
 argument|nullptr
 argument_list|)
@@ -6299,9 +6332,16 @@ block|{}
 name|bool
 name|ShouldSkip
 expr_stmt|;
+name|bool
+name|CheckSameAsPrevious
+decl_stmt|;
 name|NamedDecl
 modifier|*
 name|Previous
+decl_stmt|;
+name|NamedDecl
+modifier|*
+name|New
 decl_stmt|;
 block|}
 struct|;
@@ -9767,6 +9807,37 @@ parameter_list|,
 name|Decl
 modifier|*
 name|TagDecl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Perform ODR-like check for C/ObjC when merging tag types from modules.
+end_comment
+
+begin_comment
+comment|/// Differently from C++, actually parse the body and reject / error out
+end_comment
+
+begin_comment
+comment|/// in case of a structural mismatch.
+end_comment
+
+begin_function_decl
+name|bool
+name|ActOnDuplicateDefinition
+parameter_list|(
+name|DeclSpec
+modifier|&
+name|DS
+parameter_list|,
+name|Decl
+modifier|*
+name|Prev
+parameter_list|,
+name|SkipBodyInfo
+modifier|&
+name|SkipBody
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15056,7 +15127,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// Helper for delayed proccessing of attributes.
+comment|// Helper for delayed processing of attributes.
 end_comment
 
 begin_function_decl
@@ -39752,7 +39823,7 @@ name|bool
 name|checkOpenCLDisabledDecl
 parameter_list|(
 specifier|const
-name|Decl
+name|NamedDecl
 modifier|&
 name|D
 parameter_list|,
@@ -50010,6 +50081,17 @@ name|E
 parameter_list|,
 name|SourceLocation
 name|CC
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|CheckForIntOverflow
+parameter_list|(
+name|Expr
+modifier|*
+name|E
 parameter_list|)
 function_decl|;
 end_function_decl

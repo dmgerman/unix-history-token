@@ -48,6 +48,110 @@ comment|// CHECK-VERSION-IOS3: "armv6k-apple-ios3.0.0"
 end_comment
 
 begin_comment
+comment|// RUN: env IPHONEOS_DEPLOYMENT_TARGET=11.0 \
+end_comment
+
+begin_comment
+comment|// RUN:   %clang -target armv7-apple-ios9.0 -c -### %s 2> %t.err
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --input-file=%t.err --check-prefix=CHECK-VERSION-IOS4 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-IOS4: invalid iOS deployment version 'IPHONEOS_DEPLOYMENT_TARGET=11.0'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-apple-ios9.0 -miphoneos-version-min=11.0 -c -### %s 2> %t.err
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --input-file=%t.err --check-prefix=CHECK-VERSION-IOS5 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-IOS5: invalid iOS deployment version '-miphoneos-version-min=11.0'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-darwin -mios-simulator-version-min=11.0 -c -### %s 2> %t.err
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --input-file=%t.err --check-prefix=CHECK-VERSION-IOS6 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-IOS6: invalid iOS deployment version '-mios-simulator-version-min=11.0'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-apple-ios11.1 -c -### %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-VERSION-IOS7 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-IOS7: thumbv7-apple-ios10.99.99
+end_comment
+
+begin_comment
+comment|// RUN: env IPHONEOS_DEPLOYMENT_TARGET=11.0 \
+end_comment
+
+begin_comment
+comment|// RUN:   %clang -target arm64-apple-ios11.0 -c -### %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=CHECK-VERSION-IOS8 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-IOS8: arm64-apple-ios11.0.0
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64-apple-ios11.0 -miphoneos-version-min=11.0 -c -### %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-VERSION-IOS9 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-IOS9: arm64-apple-ios11.0.0
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin -mios-simulator-version-min=11.0 -c -### %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-VERSION-IOS10 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-IOS10: x86_64-apple-ios11.0.0
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64-apple-ios11.1 -c -### %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-VERSION-IOS11 %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-IOS11: arm64-apple-ios11.1.0
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target i686-apple-darwin8 -c %s -### 2>&1 | \
 end_comment
 

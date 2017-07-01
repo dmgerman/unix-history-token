@@ -644,30 +644,6 @@ comment|// CHECK-NO-SLP-VECTORIZE-NOT: "-vectorize-slp"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -S -fslp-vectorize-aggressive %s 2>&1 | FileCheck -check-prefix=CHECK-SLP-VECTORIZE-AGG %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -S -fno-slp-vectorize-aggressive -fslp-vectorize-aggressive %s 2>&1 | FileCheck -check-prefix=CHECK-SLP-VECTORIZE-AGG %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -S -fno-slp-vectorize-aggressive %s 2>&1 | FileCheck -check-prefix=CHECK-NO-SLP-VECTORIZE-AGG %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -S -fslp-vectorize-aggressive -fno-slp-vectorize-aggressive %s 2>&1 | FileCheck -check-prefix=CHECK-NO-SLP-VECTORIZE-AGG %s
-end_comment
-
-begin_comment
-comment|// CHECK-SLP-VECTORIZE-AGG: "-vectorize-slp-aggressive"
-end_comment
-
-begin_comment
-comment|// CHECK-NO-SLP-VECTORIZE-AGG-NOT: "-vectorize-slp-aggressive"
-end_comment
-
-begin_comment
 comment|// RUN: %clang -### -S -fextended-identifiers %s 2>&1 | FileCheck -check-prefix=CHECK-EXTENDED-IDENTIFIERS %s
 end_comment
 

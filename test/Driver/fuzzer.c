@@ -51,6 +51,26 @@ begin_comment
 comment|// CHECK-LIBCXX-DARWIN: -lc++
 end_comment
 
+begin_comment
+comment|// Check that we don't link in libFuzzer.a when producing a shared object.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=fuzzer %s -shared -o %t.so -### 2>&1 | FileCheck --check-prefixes=CHECK-NOLIB-SO %s
+end_comment
+
+begin_comment
+comment|// CHECK-NOLIB-SO-NOT: libLLVMFuzzer.a
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=fuzzer -fsanitize-coverage=trace-pc %s -### 2>&1 | FileCheck --check-prefixes=CHECK-MSG %s
+end_comment
+
+begin_comment
+comment|// CHECK-MSG-NOT: argument unused during compilation
+end_comment
+
 begin_function
 name|int
 name|LLVMFuzzerTestOneInput

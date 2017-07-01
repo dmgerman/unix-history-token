@@ -1017,9 +1017,11 @@ operator|+
 literal|1
 decl_stmt|;
 comment|// expected-warning@+1 2{{overflow in expression; result is 536870912 with type 'int'}}
-name|int
-name|j1
-init|=
+call|(
+name|void
+call|)
+argument_list|(
+operator|(
 name|i
 condition|?
 operator|(
@@ -1037,33 +1039,11 @@ literal|1024
 operator|*
 literal|1024
 operator|)
-decl_stmt|;
-comment|// expected-warning@+1 {{overflow in expression; result is 536870912 with type 'int'}}
-name|int
-name|j2
-init|=
-operator|-
-operator|(
-literal|4608
-operator|*
-literal|1024
-operator|*
-literal|1024
 operator|)
-decl_stmt|;
-comment|// expected-warning@+1 {{overflow in expression; result is 536870912 with type 'int'}}
-name|uint64_t
-name|j3
-init|=
-name|b
-index|[
-literal|4608
-operator|*
-literal|1024
-operator|*
-literal|1024
-index|]
-decl_stmt|;
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 comment|// expected-warning@+1 2{{overflow in expression; result is 536870912 with type 'int'}}
 return|return
 operator|(

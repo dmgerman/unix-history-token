@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_analyze_cc1 -triple x86_64-unknown-unknown -analyzer-checker=alpha.security.MallocOverflow,unix -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_analyze_cc1 -triple x86_64-unknown-unknown -analyzer-checker=alpha.security.MallocOverflow,unix,optin.portability -DPORTABILITY -verify %s
+end_comment
+
 begin_typedef
 typedef|typedef
 name|__typeof__
@@ -231,7 +235,12 @@ name|int
 argument_list|)
 argument_list|)
 return|;
-comment|// expected-warning {{Call to 'malloc' has an allocation size of 0 bytes}}
+ifdef|#
+directive|ifdef
+name|PORTABILITY
+comment|// expected-warning@-2{{Call to 'malloc' has an allocation size of 0 bytes}}
+endif|#
+directive|endif
 block|}
 end_function
 

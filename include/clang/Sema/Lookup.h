@@ -75,6 +75,12 @@ directive|include
 file|"clang/Sema/Sema.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -1022,7 +1028,7 @@ argument_list|()
 operator|&&
 name|ND
 operator|->
-name|isExternallyVisible
+name|hasExternalFormalLinkage
 argument_list|()
 operator|)
 return|;
@@ -1584,9 +1590,14 @@ block|}
 block|}
 else|else
 block|{
+name|llvm
+operator|::
+name|Optional
+operator|<
 name|AmbiguityKind
+operator|>
 name|SavedAK
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|WasAmbiguous
 init|=
@@ -1637,6 +1648,9 @@ expr_stmt|;
 name|Ambiguity
 operator|=
 name|SavedAK
+operator|.
+name|getValue
+argument_list|()
 expr_stmt|;
 block|}
 elseif|else

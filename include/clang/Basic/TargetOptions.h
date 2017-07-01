@@ -81,6 +81,12 @@ directive|include
 file|"clang/Basic/OpenCLOptions.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetOptions.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -123,9 +129,9 @@ name|string
 name|ABI
 expr_stmt|;
 comment|/// The EABI version to use
-name|std
+name|llvm
 operator|::
-name|string
+name|EABI
 name|EABIVersion
 expr_stmt|;
 comment|/// If given, the version string of the linker in use.

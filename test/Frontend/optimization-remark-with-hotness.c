@@ -68,7 +68,11 @@ comment|// RUN:     -Rpass-analysis=inline -Rpass-missed=inline \
 end_comment
 
 begin_comment
-comment|// RUN:     -fdiagnostics-show-hotness -verify
+comment|// RUN:     -fdiagnostics-show-hotness -fdiagnostics-hotness-threshold=10 \
+end_comment
+
+begin_comment
+comment|// RUN:     -verify
 end_comment
 
 begin_comment
@@ -88,7 +92,11 @@ comment|// RUN:     -Rpass-analysis=inline -Rpass-missed=inline \
 end_comment
 
 begin_comment
-comment|// RUN:     -fdiagnostics-show-hotness -Xclang -verify
+comment|// RUN:     -fdiagnostics-show-hotness -fdiagnostics-hotness-threshold=10 \
+end_comment
+
+begin_comment
+comment|// RUN:     -Xclang -verify
 end_comment
 
 begin_comment
@@ -120,7 +128,7 @@ comment|// RUN:     -fprofile-instrument-use-path=%t.profdata -Rpass=inline \
 end_comment
 
 begin_comment
-comment|// RUN:     -Rpass-analysis=inline -Rno-pass-with-hotness  2>&1 | FileCheck \
+comment|// RUN:     -Rpass-analysis=inline -Rno-pass-with-hotness 2>&1 | FileCheck \
 end_comment
 
 begin_comment
@@ -136,7 +144,35 @@ comment|// RUN:     optimization-remark-with-hotness.c %s -emit-llvm-only \
 end_comment
 
 begin_comment
-comment|// RUN:     -Rpass=inline -Rpass-analysis=inline -fdiagnostics-show-hotness  2>&1 \
+comment|// RUN:     -fprofile-instrument-use-path=%t.profdata -Rpass=inline \
+end_comment
+
+begin_comment
+comment|// RUN:     -Rpass-analysis=inline -fdiagnostics-show-hotness \
+end_comment
+
+begin_comment
+comment|// RUN:     -fdiagnostics-hotness-threshold=100 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     | FileCheck -allow-empty -check-prefix=THRESHOLD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name \
+end_comment
+
+begin_comment
+comment|// RUN:     optimization-remark-with-hotness.c %s -emit-llvm-only \
+end_comment
+
+begin_comment
+comment|// RUN:     -Rpass=inline -Rpass-analysis=inline \
+end_comment
+
+begin_comment
+comment|// RUN:     -fdiagnostics-show-hotness -fdiagnostics-hotness-threshold=10 2>&1 \
 end_comment
 
 begin_comment
@@ -200,7 +236,10 @@ parameter_list|)
 block|{
 comment|// HOTNESS_OFF: foo inlined into bar
 comment|// HOTNESS_OFF-NOT: hotness:
+comment|// THRESHOLD-NOT: inlined
+comment|// THRESHOLD-NOT: hotness
 comment|// NO_PGO: '-fdiagnostics-show-hotness' requires profile-guided optimization information
+comment|// NO_PGO: '-fdiagnostics-hotness-threshold=' requires profile-guided optimization information
 comment|// expected-remark@+2 {{foo should always be inlined (cost=always) (hotness: 30)}}
 comment|// expected-remark@+1 {{foo inlined into bar (hotness: 30)}}
 name|sum

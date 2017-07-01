@@ -195,6 +195,8 @@ argument_list|,
 argument|bool StrictTypeSpelling = false
 argument_list|,
 argument|bool Complain = true
+argument_list|,
+argument|bool ErrorOnTagTypeMismatch = false
 argument_list|)
 block|:
 name|FromCtx
@@ -215,6 +217,11 @@ operator|,
 name|StrictTypeSpelling
 argument_list|(
 name|StrictTypeSpelling
+argument_list|)
+operator|,
+name|ErrorOnTagTypeMismatch
+argument_list|(
+name|ErrorOnTagTypeMismatch
 argument_list|)
 operator|,
 name|Complain

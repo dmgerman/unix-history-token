@@ -1343,5 +1343,36 @@ directive|include
 file|"Inputs/diagnose-if-warn-system-header.h"
 end_include
 
+begin_comment
+comment|// Bug: we would complain about `a` being undeclared if this was spelled
+end_comment
+
+begin_comment
+comment|// __diagnose_if__.
+end_comment
+
+begin_function_decl
+name|void
+name|underbarName
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__diagnose_if__
+parameter_list|(
+name|a
+parameter_list|,
+function_decl|""
+operator|,
+function_decl|"warning"
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
 end_unit
 

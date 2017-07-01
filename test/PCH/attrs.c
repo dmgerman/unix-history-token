@@ -100,6 +100,15 @@ directive|else
 end_else
 
 begin_function_decl
+name|float
+name|f
+parameter_list|(
+name|float
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|double
 name|f
 parameter_list|(
@@ -113,7 +122,7 @@ comment|// expected-error{{overloadable}}
 end_comment
 
 begin_comment
-comment|// expected-note@11{{previous overload}}
+comment|// expected-note@-2{{previous unmarked overload}}
 end_comment
 
 begin_function

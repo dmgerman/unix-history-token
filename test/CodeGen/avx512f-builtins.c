@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target
 end_comment
 
 begin_comment
+comment|// FIXME: It's wrong to check LLVM IR transformations from clang. This run should be removed and tests added to the appropriate LLVM pass.
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target-feature +avx512f -O2 -emit-llvm -o - -Wall -Werror | FileCheck %s -check-prefix=O2
 end_comment
 
@@ -37942,10 +37946,10 @@ parameter_list|)
 block|{
 comment|// O2-LABEL: @test_mm_mask_move_ss
 comment|// O2: %[[M:.*]] = and i8 %__U, 1
-comment|// O2: %[[M2:.*]] = icmp ne i8 %[[M]], 0
-comment|// O2: %[[ELM1:.*]] = extractelement<4 x float> %__B, i32 0
-comment|// O2: %[[ELM2:.*]] = extractelement<4 x float> %__W, i32 0
-comment|// O2: %[[SEL:.*]] = select i1 %[[M2]], float %[[ELM1]], float %[[ELM2]]
+comment|// O2: %[[M2:.*]] = icmp
+comment|// O2: %[[ELM1:.*]] = extractelement<4 x float>
+comment|// O2: %[[ELM2:.*]] = extractelement<4 x float>
+comment|// O2: %[[SEL:.*]] = select i1 %[[M2]]
 comment|// O2: %[[RES:.*]] = insertelement<4 x float> %__A, float %[[SEL]], i32 0
 comment|// O2: ret<4 x float> %[[RES]]
 return|return
@@ -37979,9 +37983,9 @@ parameter_list|)
 block|{
 comment|// O2-LABEL: @test_mm_maskz_move_ss
 comment|// O2: %[[M:.*]] = and i8 %__U, 1
-comment|// O2: %[[M2:.*]] = icmp ne i8 %[[M]], 0
+comment|// O2: %[[M2:.*]] = icmp
 comment|// O2: %[[ELM1:.*]] = extractelement<4 x float> %__B, i32 0
-comment|// O2: %[[SEL:.*]] = select i1 %[[M2]], float %[[ELM1]], float 0.0
+comment|// O2: %[[SEL:.*]] = select i1 %[[M2]]
 comment|// O2: %[[RES:.*]] = insertelement<4 x float> %__A, float %[[SEL]], i32 0
 comment|// O2: ret<4 x float> %[[RES]]
 return|return
@@ -38016,10 +38020,10 @@ parameter_list|)
 block|{
 comment|// O2-LABEL: @test_mm_mask_move_sd
 comment|// O2: %[[M:.*]] = and i8 %__U, 1
-comment|// O2: %[[M2:.*]] = icmp ne i8 %[[M]], 0
-comment|// O2: %[[ELM1:.*]] = extractelement<2 x double> %__B, i32 0
-comment|// O2: %[[ELM2:.*]] = extractelement<2 x double> %__W, i32 0
-comment|// O2: %[[SEL:.*]] = select i1 %[[M2]], double %[[ELM1]], double %[[ELM2]]
+comment|// O2: %[[M2:.*]] = icmp
+comment|// O2: %[[ELM1:.*]] = extractelement<2 x double>
+comment|// O2: %[[ELM2:.*]] = extractelement<2 x double>
+comment|// O2: %[[SEL:.*]] = select i1 %[[M2]]
 comment|// O2: %[[RES:.*]] = insertelement<2 x double> %__A, double %[[SEL]], i32 0
 comment|// O2: ret<2 x double> %[[RES]]
 return|return
@@ -38053,9 +38057,9 @@ parameter_list|)
 block|{
 comment|// O2-LABEL: @test_mm_maskz_move_sd
 comment|// O2: %[[M:.*]] = and i8 %__U, 1
-comment|// O2: %[[M2:.*]] = icmp ne i8 %[[M]], 0
+comment|// O2: %[[M2:.*]] = icmp
 comment|// O2: %[[ELM1:.*]] = extractelement<2 x double> %__B, i32 0
-comment|// O2: %[[SEL:.*]] = select i1 %[[M2]], double %[[ELM1]], double 0.0
+comment|// O2: %[[SEL:.*]] = select i1 %[[M2]]
 comment|// O2: %[[RES:.*]] = insertelement<2 x double> %__A, double %[[SEL]], i32 0
 comment|// O2: ret<2 x double> %[[RES]]
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_analyze_cc1 -triple x86_64-apple-darwin10 -analyzer-checker=core,unix.API,osx.API %s -analyzer-store=region -analyzer-output=plist -analyzer-eagerly-assume -analyzer-config faux-bodies=true -analyzer-config path-diagnostics-alternate=false -fblocks -verify -o %t.plist
+comment|// RUN: %clang_analyze_cc1 -triple x86_64-apple-darwin10 -analyzer-checker=core,unix.API,osx.API,optin.portability %s -analyzer-store=region -analyzer-output=plist -analyzer-eagerly-assume -analyzer-config faux-bodies=true -analyzer-config path-diagnostics-alternate=false -fblocks -verify -o %t.plist
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: mkdir -p %t.dir
 end_comment
 
 begin_comment
-comment|// RUN: %clang_analyze_cc1 -analyzer-checker=core,unix.API,osx.API -analyzer-output=html -analyzer-config faux-bodies=true -fblocks -o %t.dir %s
+comment|// RUN: %clang_analyze_cc1 -analyzer-checker=core,unix.API,osx.API,optin.portability -analyzer-output=html -analyzer-config faux-bodies=true -fblocks -o %t.dir %s
 end_comment
 
 begin_comment

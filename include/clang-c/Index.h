@@ -214,6 +214,38 @@ decl_stmt|;
 block|}
 name|CXVersion
 typedef|;
+comment|/**  * \brief Describes the exception specification of a cursor.  *  * A negative value indicates that the cursor is not a function declaration.  */
+enum|enum
+name|CXCursor_ExceptionSpecificationKind
+block|{
+comment|/**    * \brief The cursor has no exception specification.    */
+name|CXCursor_ExceptionSpecificationKind_None
+block|,
+comment|/**    * \brief The cursor has exception specification throw()    */
+name|CXCursor_ExceptionSpecificationKind_DynamicNone
+block|,
+comment|/**    * \brief The cursor has exception specification throw(T1, T2)    */
+name|CXCursor_ExceptionSpecificationKind_Dynamic
+block|,
+comment|/**    * \brief The cursor has exception specification throw(...).    */
+name|CXCursor_ExceptionSpecificationKind_MSAny
+block|,
+comment|/**    * \brief The cursor has exception specification basic noexcept.    */
+name|CXCursor_ExceptionSpecificationKind_BasicNoexcept
+block|,
+comment|/**    * \brief The cursor has exception specification computed noexcept.    */
+name|CXCursor_ExceptionSpecificationKind_ComputedNoexcept
+block|,
+comment|/**    * \brief The exception specification has not yet been evaluated.    */
+name|CXCursor_ExceptionSpecificationKind_Unevaluated
+block|,
+comment|/**    * \brief The exception specification has not yet been instantiated.    */
+name|CXCursor_ExceptionSpecificationKind_Uninstantiated
+block|,
+comment|/**    * \brief The exception specification has not been parsed yet.    */
+name|CXCursor_ExceptionSpecificationKind_Unparsed
+block|}
+enum|;
 comment|/**  * \brief Provides a shared context for creating translation units.  *  * It provides two options:  *  * - excludeDeclarationsFromPCH: When non-zero, allows enumeration of "local"  * declarations (when loading any new translation units). A "local" declaration  * is one that belongs in the translation unit itself and not in a precompiled  * header that was used by the translation unit. If zero, all declarations  * will be enumerated.  *  * Here is an example:  *  * \code  *   // excludeDeclsFromPCH = 1, displayDiagnostics=1  *   Idx = clang_createIndex(1, 1);  *  *   // IndexTest.pch was produced with the following command:  *   // "clang -x c IndexTest.h -emit-ast -o IndexTest.pch"  *   TU = clang_createTranslationUnit(Idx, "IndexTest.pch");  *  *   // This will load all the symbols from 'IndexTest.pch'  *   clang_visitChildren(clang_getTranslationUnitCursor(TU),  *                       TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  *  *   // This will load all the symbols from 'IndexTest.c', excluding symbols  *   // from 'IndexTest.pch'.  *   char *args[] = { "-Xclang", "-include-pch=IndexTest.pch" };  *   TU = clang_createTranslationUnitFromSourceFile(Idx, "IndexTest.c", 2, args,  *                                                  0, 0);  *   clang_visitChildren(clang_getTranslationUnitCursor(TU),  *                       TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  * \endcode  *  * This process of creating the 'pch', loading it separately, and using it (via  * -include-pch) allows 'excludeDeclsFromPCH' to remove redundant callbacks  * (which gives the indexer the same performance benefit as the compiler).  */
 name|CINDEX_LINKAGE
 name|CXIndex
@@ -4014,6 +4046,15 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Retrieve the exception specification type associated with a function type.  *  * If a non-function type is passed in, an error code of -1 is returned.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_getExceptionSpecificationType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Retrieve the number of non-variadic parameters associated with a  * function type.  *  * If a non-function type is passed in, -1 is returned.  */
 name|CINDEX_LINKAGE
 name|int
@@ -4048,6 +4089,15 @@ comment|/**  * \brief Retrieve the return type associated with a given cursor.  
 name|CINDEX_LINKAGE
 name|CXType
 name|clang_getCursorResultType
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the exception specification type associated with a given cursor.  *  * This only returns a valid result if the cursor refers to a function or method.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_getCursorExceptionSpecificationType
 parameter_list|(
 name|CXCursor
 name|C

@@ -931,7 +931,33 @@ comment|///                   }
 comment|/// \endcode
 comment|///
 name|bool
-name|SplitEmptyFunctionBody
+name|SplitEmptyFunction
+decl_stmt|;
+comment|/// \brief If ``false``, empty record (e.g. class, struct or union) body
+comment|/// can be put on a single line. This option is used only if the opening
+comment|/// brace of the record has already been wrapped, i.e. the `AfterClass`
+comment|/// (for classes) brace wrapping mode is set.
+comment|/// \code
+comment|///   class Foo   vs.  class Foo
+comment|///   {}               {
+comment|///                    }
+comment|/// \endcode
+comment|///
+name|bool
+name|SplitEmptyRecord
+decl_stmt|;
+comment|/// \brief If ``false``, empty namespace body can be put on a single line.
+comment|/// This option is used only if the opening brace of the namespace has
+comment|/// already been wrapped, i.e. the `AfterNamespace` brace wrapping mode is
+comment|/// set.
+comment|/// \code
+comment|///   namespace Foo   vs.  namespace Foo
+comment|///   {}                   {
+comment|///                        }
+comment|/// \endcode
+comment|///
+name|bool
+name|SplitEmptyNamespace
 decl_stmt|;
 block|}
 struct|;
@@ -1242,7 +1268,7 @@ comment|/// \code{.yaml}
 comment|///   IncludeCategories:
 comment|///     - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
 comment|///       Priority:        2
-comment|///     - Regex:           '^(<|"(gtest|isl|json)/)'
+comment|///     - Regex:           '^(<|"(gtest|gmock|isl|json)/)'
 comment|///       Priority:        3
 comment|///     - Regex:           '.*'
 comment|///       Priority:        1

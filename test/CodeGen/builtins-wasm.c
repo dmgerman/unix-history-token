@@ -50,5 +50,45 @@ comment|// WEBASSEMBLY64: call i64 @llvm.wasm.grow.memory.i64(i64 %{{.*}})
 block|}
 end_function
 
+begin_function
+name|void
+name|f3
+parameter_list|(
+name|unsigned
+name|int
+name|tag
+parameter_list|,
+name|void
+modifier|*
+name|obj
+parameter_list|)
+block|{
+return|return
+name|__builtin_wasm_throw
+argument_list|(
+name|tag
+argument_list|,
+name|obj
+argument_list|)
+return|;
+comment|// WEBASSEMBLY32: call void @llvm.wasm.throw(i32 %{{.*}}, i8* %{{.*}})
+comment|// WEBASSEMBLY64: call void @llvm.wasm.throw(i32 %{{.*}}, i8* %{{.*}})
+block|}
+end_function
+
+begin_function
+name|void
+name|f4
+parameter_list|()
+block|{
+return|return
+name|__builtin_wasm_rethrow
+argument_list|()
+return|;
+comment|// WEBASSEMBLY32: call void @llvm.wasm.rethrow()
+comment|// WEBASSEMBLY64: call void @llvm.wasm.rethrow()
+block|}
+end_function
+
 end_unit
 

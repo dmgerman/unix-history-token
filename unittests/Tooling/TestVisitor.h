@@ -196,7 +196,14 @@ name|Args
 operator|.
 name|push_back
 argument_list|(
-literal|"-std=c99"
+literal|"-x"
+argument_list|)
+expr_stmt|;
+name|Args
+operator|.
+name|push_back
+argument_list|(
+literal|"c"
 argument_list|)
 expr_stmt|;
 break|break;

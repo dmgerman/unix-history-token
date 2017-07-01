@@ -1528,6 +1528,10 @@ comment|// CHECK-V82A: #define __ARM_ARCH_PROFILE 'A'
 end_comment
 
 begin_comment
+comment|// CHECK-V82A: #define __ARM_FEATURE_QRDMX 1
+end_comment
+
+begin_comment
 comment|// CHECK-V82A: #define __ARM_FP 0xE
 end_comment
 

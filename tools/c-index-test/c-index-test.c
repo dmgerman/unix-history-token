@@ -4110,6 +4110,74 @@ argument_list|(
 literal|" (@optional)"
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|clang_getCursorExceptionSpecificationType
+argument_list|(
+name|Cursor
+argument_list|)
+condition|)
+block|{
+case|case
+name|CXCursor_ExceptionSpecificationKind_None
+case|:
+break|break;
+case|case
+name|CXCursor_ExceptionSpecificationKind_DynamicNone
+case|:
+name|printf
+argument_list|(
+literal|" (noexcept dynamic none)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CXCursor_ExceptionSpecificationKind_Dynamic
+case|:
+name|printf
+argument_list|(
+literal|" (noexcept dynamic)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CXCursor_ExceptionSpecificationKind_MSAny
+case|:
+name|printf
+argument_list|(
+literal|" (noexcept dynamic any)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CXCursor_ExceptionSpecificationKind_BasicNoexcept
+case|:
+name|printf
+argument_list|(
+literal|" (noexcept)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CXCursor_ExceptionSpecificationKind_ComputedNoexcept
+case|:
+name|printf
+argument_list|(
+literal|" (computed-noexcept)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CXCursor_ExceptionSpecificationKind_Unevaluated
+case|:
+case|case
+name|CXCursor_ExceptionSpecificationKind_Uninstantiated
+case|:
+case|case
+name|CXCursor_ExceptionSpecificationKind_Unparsed
+case|:
+break|break;
+block|}
 block|{
 name|CXString
 name|language

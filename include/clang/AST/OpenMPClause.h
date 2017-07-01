@@ -91,6 +91,12 @@ directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/MapVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -11216,7 +11222,7 @@ comment|// expression. Original expressions are always the first component of th
 comment|// mappable component list.
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 name|ValueDecl
 operator|*

@@ -2075,6 +2075,19 @@ argument_list|,
 argument|bool UserFilesAreVolatile
 argument_list|)
 expr_stmt|;
+enum|enum
+name|WhatToLoad
+block|{
+comment|/// Load options and the preprocessor state.
+name|LoadPreprocessorOnly
+block|,
+comment|/// Load the AST, but do not restore Sema state.
+name|LoadASTOnly
+block|,
+comment|/// Load everything, including Sema.
+name|LoadEverything
+block|}
+enum|;
 comment|/// \brief Create a ASTUnit from an AST file.
 comment|///
 comment|/// \param Filename - The AST file to load.
@@ -2097,6 +2110,8 @@ argument_list|(
 argument|const std::string&Filename
 argument_list|,
 argument|const PCHContainerReader&PCHContainerRdr
+argument_list|,
+argument|WhatToLoad ToLoad
 argument_list|,
 argument|IntrusiveRefCntPtr<DiagnosticsEngine> Diags
 argument_list|,

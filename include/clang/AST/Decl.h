@@ -8268,11 +8268,20 @@ comment|///    void operator delete[](void *, const std::nothrow_t&) noexcept;
 comment|/// These functions have special behavior under C++1y [expr.new]:
 comment|///    An implementation is allowed to omit a call to a replaceable global
 comment|///    allocation function. [...]
+comment|///
+comment|/// If this function is an aligned allocation/deallocation function, return
+comment|/// true through IsAligned.
 name|bool
 name|isReplaceableGlobalAllocationFunction
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|bool
+operator|*
+name|IsAligned
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Compute the language linkage.
 name|LanguageLinkage
 name|getLanguageLinkage

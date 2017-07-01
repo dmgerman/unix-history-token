@@ -256,11 +256,15 @@ comment|// CHECK-NEON: __ARM_NEON_FP 0xE
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64-none-eabi -march=armv8.1-a -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-V81A %s
+comment|// RUN: %clang -target aarch64-none-eabi -march=armv8.1-a -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-QRDMX %s
 end_comment
 
 begin_comment
-comment|// CHECK-V81A: __ARM_FEATURE_QRDMX 1
+comment|// RUN: %clang -target aarch64-none-eabi -march=armv8.2-a -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-QRDMX %s
+end_comment
+
+begin_comment
+comment|// CHECK-QRDMX: __ARM_FEATURE_QRDMX 1
 end_comment
 
 begin_comment

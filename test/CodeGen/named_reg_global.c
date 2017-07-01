@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -triple arm64-linux-gnu -S -emit-llvm %s -o - | FileC
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple armv7-linux-gnu -S -emit-llvm %s -o - | FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-ARM
+comment|// RUN: %clang_cc1 -triple armv7-linux-gnu -target-abi apcs-gnu -S -emit-llvm %s -o - | FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-ARM
 end_comment
 
 begin_comment

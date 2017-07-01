@@ -739,5 +739,25 @@ begin_comment
 comment|// CHECK-FRM: #define __FAST_RELAXED_MATH__ 1
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple aarch64-windows %s -E -dM -o - -x cl \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-ARM64-WIN
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64-WIN: #define _M_ARM64 1
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64-WIN: #define _WIN32 1
+end_comment
+
+begin_comment
+comment|// CHECK-ARM64-WIN: #define _WIN64 1
+end_comment
+
 end_unit
 

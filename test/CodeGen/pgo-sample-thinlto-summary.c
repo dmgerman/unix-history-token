@@ -1,10 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -O2 -fprofile-sample-use=%S/Inputs/pgo-sample-thinlto-summary.prof %s -emit-llvm -o - 2>&1 | FileCheck %s -check-prefix=O2
+comment|// RUN: %clang_cc1 -O2 -fprofile-sample-use=%S/Inputs/pgo-sample-thinlto-summary.prof %s -emit-llvm -o - 2>&1 | FileCheck %s -check-prefix=SAMPLEPGO
 end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -O2 -fprofile-sample-use=%S/Inputs/pgo-sample-thinlto-summary.prof %s -emit-llvm -flto=thin -o - 2>&1 | FileCheck %s -check-prefix=THINLTO
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -O2 -fexperimental-new-pass-manager -fprofile-sample-use=%S/Inputs/pgo-sample-thinlto-summary.prof %s -emit-llvm -o - 2>&1 | FileCheck %s -check-prefix=SAMPLEPGO
+end_comment
+
+begin_comment
+comment|// FIXME: Run the following command once LTOPreLinkDefaultPipeline is
+end_comment
+
+begin_comment
+comment|//        customized.
+end_comment
+
+begin_comment
+comment|// %clang_cc1 -O2 -fexperimental-new-pass-manager -fprofile-sample-use=%S/Inputs/pgo-sample-thinlto-summary.prof %s -emit-llvm -flto=thin -o - 2>&1 | FileCheck %s -check-prefix=THINLTO
 end_comment
 
 begin_comment
@@ -63,7 +79,7 @@ block|}
 end_function
 
 begin_comment
-comment|// O2-LABEL: define void @bar
+comment|// SAMPLEPGO-LABEL: define void @bar
 end_comment
 
 begin_comment
@@ -71,7 +87,7 @@ comment|// THINLTO-LABEL: define void @bar
 end_comment
 
 begin_comment
-comment|// O2-NOT: call{{.*}}foo
+comment|// SAMPLEPGO-NOT: call{{.*}}foo
 end_comment
 
 begin_comment
@@ -113,7 +129,7 @@ comment|// Checks if loop unroll is invoked by normal compile, but not thinlto c
 end_comment
 
 begin_comment
-comment|// O2-LABEL: define void @unroll
+comment|// SAMPLEPGO-LABEL: define void @unroll
 end_comment
 
 begin_comment
@@ -121,11 +137,11 @@ comment|// THINLTO-LABEL: define void @unroll
 end_comment
 
 begin_comment
-comment|// O2: call{{.*}}baz
+comment|// SAMPLEPGO: call{{.*}}baz
 end_comment
 
 begin_comment
-comment|// O2: call{{.*}}baz
+comment|// SAMPLEPGO: call{{.*}}baz
 end_comment
 
 begin_comment
@@ -164,11 +180,11 @@ block|}
 end_function
 
 begin_comment
-comment|// Check that icp is not invoked (both -O2 and ThinLTO).
+comment|// Checks that icp is not invoked for ThinLTO, but invoked for normal samplepgo.
 end_comment
 
 begin_comment
-comment|// O2-LABEL: define void @icp
+comment|// SAMPLEPGO-LABEL: define void @icp
 end_comment
 
 begin_comment
@@ -176,11 +192,19 @@ comment|// THINLTO-LABEL: define void @icp
 end_comment
 
 begin_comment
-comment|// O2-NOT: if.true.direct_targ
+comment|// SAMPLEPGO: if.true.direct_targ
 end_comment
 
 begin_comment
-comment|// ThinLTO-NOT: if.true.direct_targ
+comment|// FIXME: the following condition needs to be reversed once
+end_comment
+
+begin_comment
+comment|//        LTOPreLinkDefaultPipeline is customized.
+end_comment
+
+begin_comment
+comment|// THINLTO-NOT: if.true.direct_targ
 end_comment
 
 begin_function

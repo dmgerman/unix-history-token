@@ -112,7 +112,7 @@ comment|// CHECK: EnumDecl=Baz:3:6 (Definition)linkage=External
 end_comment
 
 begin_comment
-comment|// CHECK: EnumConstantDecl=Qux:3:12 (Definition)linkage=External
+comment|// CHECK: EnumConstantDecl=Qux:3:12 (Definition)linkage=NoLinkage
 end_comment
 
 begin_comment
