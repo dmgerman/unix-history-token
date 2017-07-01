@@ -4823,7 +4823,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_bus_dmamap_unload
+name|bus_dmamap_unload
 argument_list|(
 name|dmat
 argument_list|,
@@ -5444,7 +5444,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_bus_dmamap_unload
+name|bus_dmamap_unload
 argument_list|(
 name|dmat
 argument_list|,
@@ -5468,7 +5468,7 @@ end_function
 
 begin_function
 name|void
-name|__bus_dmamap_waitok
+name|_bus_dmamap_waitok
 parameter_list|(
 name|bus_dma_tag_t
 name|dmat
@@ -5566,7 +5566,7 @@ end_comment
 
 begin_function
 name|void
-name|_bus_dmamap_unload
+name|bus_dmamap_unload
 parameter_list|(
 name|bus_dma_tag_t
 name|dmat
@@ -5994,7 +5994,7 @@ end_function
 
 begin_function
 name|void
-name|_bus_dmamap_sync
+name|bus_dmamap_sync
 parameter_list|(
 name|bus_dma_tag_t
 name|dmat

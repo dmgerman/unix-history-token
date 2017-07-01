@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus_dma.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bio.h>
 end_include
 

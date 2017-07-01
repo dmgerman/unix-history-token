@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/bus_dma.h>
+file|<x86/bus_dma.h>
 end_include
 
 begin_endif
