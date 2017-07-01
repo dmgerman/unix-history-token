@@ -4895,9 +4895,13 @@ operator|+
 name|j
 argument_list|)
 expr_stmt|;
-name|vm_page_dirty
+name|MPASS
 argument_list|(
 name|mreq
+operator|->
+name|dirty
+operator|==
+name|VM_PAGE_BITS_ALL
 argument_list|)
 expr_stmt|;
 name|rtvals
