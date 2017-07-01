@@ -2020,6 +2020,13 @@ name|SANITIZER_INTERCEPT_MCHECK_MPROBE
 value|SI_LINUX_NOT_ANDROID
 end_define
 
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_WCSCAT
+value|SI_NOT_WINDOWS
+end_define
+
 begin_endif
 endif|#
 directive|endif

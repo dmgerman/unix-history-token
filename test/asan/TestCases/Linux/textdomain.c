@@ -7,6 +7,14 @@ begin_comment
 comment|// RUN: %env_asan_opts=strict_string_checks=1 %run %t
 end_comment
 
+begin_comment
+comment|// Android NDK does not have libintl.h
+end_comment
+
+begin_comment
+comment|// UNSUPPORTED: android
+end_comment
+
 begin_include
 include|#
 directive|include

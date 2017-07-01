@@ -1,18 +1,50 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_profgen=%t.profraw -o %t -O3 %s
+comment|// RUN: rm -rf %t.dir&& mkdir -p %t.dir
 end_comment
 
 begin_comment
-comment|// RUN: %run %t %t.profraw
+comment|// RUN: cd %t.dir
 end_comment
 
 begin_comment
-comment|// RUN: llvm-profdata merge -o %t.profdata %t.profraw
+comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_profuse=%t.profdata -o - -S -emit-llvm %s | FileCheck %s
+comment|// RUN: %clang_profgen=P_RAW -o %t -O3 %s
+end_comment
+
+begin_comment
+comment|// RUN: %run %t P_RAW
+end_comment
+
+begin_comment
+comment|// RUN: llvm-profdata merge -o %t.profdata P_RAW
+end_comment
+
+begin_comment
+comment|// RUN: %clang_profuse=%t.profdata -o - -S -emit-llvm %s | FileCheck %s --check-prefix=FE
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_pgogen=I_RAW -o %t.2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %run %t.2 I_RAW
+end_comment
+
+begin_comment
+comment|// RUN: llvm-profdata merge -o %t2.profdata I_RAW
+end_comment
+
+begin_comment
+comment|// RUN: %clang_profuse=%t2.profdata -o - -S -emit-llvm %s | FileCheck %s --check-prefix=IR
 end_comment
 
 begin_function
@@ -36,7 +68,8 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-comment|// CHECK: br i1 %{{.*}}, label %{{.*}}, label %{{.*}}, !prof ![[PD1:[0-9]+]]
+comment|// FE: br i1 %{{.*}}, label %{{.*}}, label %{{.*}}, !prof ![[PD1:[0-9]+]]
+comment|// IR: br i1 %{{.*}}, label %{{.*}}, label %{{.*}}, !prof ![[PD1:[0-9]+]]
 if|if
 condition|(
 name|argc
@@ -56,7 +89,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: ![[PD1]] = !{!"branch_weights", i32 1, i32 2}
+comment|// FE: ![[PD1]] = !{!"branch_weights", i32 1, i32 2}
+end_comment
+
+begin_comment
+comment|// IR: ![[PD1]] = !{!"branch_weights", i32 0, i32 1}
 end_comment
 
 end_unit

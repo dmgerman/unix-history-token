@@ -145,12 +145,14 @@ name|DieOnFailure
 block|{
 specifier|static
 name|void
+name|NORETURN
 modifier|*
 name|OnBadRequest
 parameter_list|()
 function_decl|;
 specifier|static
 name|void
+name|NORETURN
 modifier|*
 name|OnOOM
 parameter_list|()
@@ -207,9 +209,11 @@ modifier|*
 name|arg
 parameter_list|)
 function_decl|;
-comment|// Returns true if calloc(size, n) should return 0 due to overflow in size*n.
+comment|// Returns true if calloc(size, n) call overflows on size*n calculation.
+comment|// The caller should "return POLICY::OnBadRequest();" where POLICY is the
+comment|// current allocator failure handling policy.
 name|bool
-name|CallocShouldReturnNullDueToOverflow
+name|CheckForCallocOverflow
 parameter_list|(
 name|uptr
 name|size

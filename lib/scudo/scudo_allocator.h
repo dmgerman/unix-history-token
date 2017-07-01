@@ -508,6 +508,35 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|// SANITIZER_CAN_USE_ALLOCATOR64
+comment|// __sanitizer::RoundUp has a CHECK that is extraneous for us. Use our own.
+name|INLINE
+name|uptr
+name|RoundUpTo
+parameter_list|(
+name|uptr
+name|Size
+parameter_list|,
+name|uptr
+name|Boundary
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Size
+operator|+
+name|Boundary
+operator|-
+literal|1
+operator|)
+operator|&
+operator|~
+operator|(
+name|Boundary
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 include|#
 directive|include
 file|"scudo_allocator_secondary.h"

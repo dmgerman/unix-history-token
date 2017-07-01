@@ -380,7 +380,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|// test other posible NaN representation(signal NaN)
+comment|// test other possible NaN representation(signal NaN)
 elseif|else
 if|if
 condition|(
@@ -451,7 +451,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|// test other posible NaN representation(signal NaN)
+comment|// test other possible NaN representation(signal NaN)
 elseif|else
 if|if
 condition|(
@@ -522,7 +522,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|// test other posible NaN representation(signal NaN)
+comment|// test other possible NaN representation(signal NaN)
 elseif|else
 if|if
 condition|(
@@ -633,7 +633,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|// test other posible NaN representation(signal NaN)
+comment|// test other possible NaN representation(signal NaN)
 elseif|else
 if|if
 condition|(

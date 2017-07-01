@@ -27,6 +27,14 @@ begin_comment
 comment|// RUN: not %clang_asan -Dtestfunc=cfree    %s -o %t
 end_comment
 
+begin_comment
+comment|// Conflicts with BIONIC declarations.
+end_comment
+
+begin_comment
+comment|// UNSUPPORTED: android
+end_comment
+
 begin_include
 include|#
 directive|include

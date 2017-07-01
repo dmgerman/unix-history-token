@@ -250,6 +250,12 @@ operator|==
 literal|0
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|UNLIKELY
+argument_list|(
+operator|!
 name|Refill
 argument_list|(
 name|c
@@ -258,7 +264,12 @@ name|allocator
 argument_list|,
 name|class_id
 argument_list|)
-expr_stmt|;
+argument_list|)
+condition|)
+return|return
+name|nullptr
+return|;
+block|}
 name|stats_
 operator|.
 name|Add
@@ -629,7 +640,7 @@ end_function
 
 begin_function
 name|NOINLINE
-name|void
+name|bool
 name|Refill
 parameter_list|(
 name|PerClass
@@ -656,6 +667,11 @@ name|max_count
 operator|/
 literal|2
 decl_stmt|;
+if|if
+condition|(
+name|UNLIKELY
+argument_list|(
+operator|!
 name|allocator
 operator|->
 name|GetFromAllocator
@@ -671,13 +687,20 @@ name|chunks
 argument_list|,
 name|num_requested_chunks
 argument_list|)
-expr_stmt|;
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
 name|c
 operator|->
 name|count
 operator|=
 name|num_requested_chunks
 expr_stmt|;
+return|return
+name|true
+return|;
 block|}
 end_function
 
