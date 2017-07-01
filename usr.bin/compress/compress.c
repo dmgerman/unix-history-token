@@ -557,6 +557,10 @@ name|cat
 operator|==
 literal|1
 operator|&&
+name|style
+operator|==
+name|COMPRESS
+operator|&&
 name|argc
 operator|>
 literal|1
