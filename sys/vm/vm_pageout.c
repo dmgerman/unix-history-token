@@ -5803,6 +5803,9 @@ name|vmspace
 modifier|*
 name|vm
 decl_stmt|;
+name|bool
+name|breakout
+decl_stmt|;
 comment|/* 	 * We keep the process bigproc locked once we find it to keep anyone 	 * from messing with it; however, there is a possibility of 	 * deadlock if process B is bigproc and one of it's child processes 	 * attempts to propagate a signal to B while we are waiting for A's 	 * lock while walking this list.  To avoid this, we don't block on 	 * the process lock but just skip a process if it is already locked. 	 */
 name|bigproc
 operator|=
@@ -5823,9 +5826,6 @@ argument_list|(
 argument|p
 argument_list|)
 block|{
-name|int
-name|breakout
-decl_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -5892,7 +5892,7 @@ block|}
 comment|/* 		 * If the process is in a non-running type state, 		 * don't touch it.  Check all the threads individually. 		 */
 name|breakout
 operator|=
-literal|0
+name|false
 expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
@@ -5946,7 +5946,7 @@ argument_list|)
 expr_stmt|;
 name|breakout
 operator|=
-literal|1
+name|true
 expr_stmt|;
 break|break;
 block|}
