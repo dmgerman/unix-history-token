@@ -1587,6 +1587,8 @@ name|bus
 decl_stmt|;
 name|bool
 name|nostop
+decl_stmt|,
+name|started
 decl_stmt|;
 if|if
 condition|(
@@ -1656,6 +1658,10 @@ name|iicbus_get_nostop
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|started
+operator|=
+name|false
 expr_stmt|;
 for|for
 control|(
@@ -1751,7 +1757,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -1759,6 +1764,11 @@ operator|!=
 literal|0
 condition|)
 break|break;
+name|started
+operator|=
+name|true
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|msgs
@@ -1883,8 +1893,7 @@ name|error
 operator|!=
 literal|0
 operator|&&
-operator|!
-name|nostop
+name|started
 condition|)
 name|iicbus_stop
 argument_list|(

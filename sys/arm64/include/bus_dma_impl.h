@@ -298,7 +298,9 @@ parameter_list|,
 name|bus_size_t
 name|buflen
 parameter_list|,
-name|pmap_t
+name|struct
+name|pmap
+modifier|*
 name|pmap
 parameter_list|,
 name|int

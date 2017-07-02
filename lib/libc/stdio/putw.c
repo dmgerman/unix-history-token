@@ -81,6 +81,12 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_function
 name|int
 name|putw
@@ -137,7 +143,7 @@ name|uio_iovcnt
 operator|=
 literal|1
 expr_stmt|;
-name|FLOCKFILE
+name|FLOCKFILE_CANCELSAFE
 argument_list|(
 name|fp
 argument_list|)
@@ -152,10 +158,8 @@ operator|&
 name|uio
 argument_list|)
 expr_stmt|;
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
+name|FUNLOCKFILE_CANCELSAFE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

@@ -865,7 +865,7 @@ begin_define
 define|#
 directive|define
 name|atomic_clear_rel_int
-value|atomic_add_rel_32
+value|atomic_clear_rel_32
 end_define
 
 begin_define
@@ -1040,7 +1040,7 @@ begin_define
 define|#
 directive|define
 name|atomic_clear_acq_long
-value|atomic_add_acq_64
+value|atomic_clear_acq_64
 end_define
 
 begin_define
@@ -1089,7 +1089,7 @@ begin_define
 define|#
 directive|define
 name|atomic_clear_acq_ptr
-value|atomic_add_acq_64
+value|atomic_clear_acq_64
 end_define
 
 begin_define

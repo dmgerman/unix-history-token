@@ -696,7 +696,7 @@ begin_define
 define|#
 directive|define
 name|JEMALLOC_CONFIG_MALLOC_CONF
-value|""
+value|"abort_conf:false"
 end_define
 
 begin_comment

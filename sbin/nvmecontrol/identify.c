@@ -94,6 +94,14 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+name|char
+name|cbuf
+index|[
+name|UINT128_DIG
+operator|+
+literal|1
+index|]
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"Controller Capabilities/Features\n"
@@ -324,6 +332,21 @@ operator|->
 name|oacs
 operator|.
 name|firmware
+condition|?
+literal|"Supported"
+else|:
+literal|"Not Supported"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Namespace Managment:         %s\n"
+argument_list|,
+name|cdata
+operator|->
+name|oacs
+operator|.
+name|nsmgmt
 condition|?
 literal|"Supported"
 else|:
@@ -603,6 +626,79 @@ else|:
 literal|"Not Present"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cdata
+operator|->
+name|oacs
+operator|.
+name|nsmgmt
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Namespace Drive Attributes\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"==========================\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"NVM total cap:               %s\n"
+argument_list|,
+name|uint128_to_str
+argument_list|(
+name|to128
+argument_list|(
+name|cdata
+operator|->
+name|untncap
+operator|.
+name|tnvmcap
+argument_list|)
+argument_list|,
+name|cbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cbuf
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"NVM unallocated cap:         %s\n"
+argument_list|,
+name|uint128_to_str
+argument_list|(
+name|to128
+argument_list|(
+name|cdata
+operator|->
+name|untncap
+operator|.
+name|unvmcap
+argument_list|)
+argument_list|,
+name|cbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cbuf
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -14028,6 +14028,32 @@ name|type
 condition|)
 block|{
 case|case
+name|PROCSTAT_KVM
+case|:
+name|warnx
+argument_list|(
+literal|"kvm method is not supported"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+case|case
+name|PROCSTAT_SYSCTL
+case|:
+name|warnx
+argument_list|(
+literal|"sysctl method is not supported"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+case|case
 name|PROCSTAT_CORE
 case|:
 return|return

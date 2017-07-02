@@ -3121,10 +3121,12 @@ name|on
 init|=
 literal|1
 decl_stmt|;
-comment|/* Note that SOCK_LOCK(so) is same as SOCKBUF_LOCK(&so->so_rcv) */
-name|SOCK_LOCK
+name|SOCKBUF_LOCK
 argument_list|(
+operator|&
 name|so
+operator|->
+name|so_rcv
 argument_list|)
 expr_stmt|;
 name|soupcall_set
@@ -3144,9 +3146,12 @@ name|so_state
 operator||=
 name|SS_NBIO
 expr_stmt|;
-name|SOCK_UNLOCK
+name|SOCKBUF_UNLOCK
 argument_list|(
+operator|&
 name|so
+operator|->
+name|so_rcv
 argument_list|)
 expr_stmt|;
 name|sopt
@@ -4551,7 +4556,7 @@ begin_decl_stmt
 name|int
 name|c4iw_debug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 

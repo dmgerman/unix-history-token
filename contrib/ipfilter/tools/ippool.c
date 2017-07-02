@@ -581,7 +581,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-a [-dnv] [-m<name>] [-o<role>] [-t type] [-T ttl] -i<ipaddr>[/netmask]\n"
+literal|"\t-a [-dnv] -m<name> [-o<role>] [-t type] [-T ttl] -i<ipaddr>[/netmask]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
