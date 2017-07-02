@@ -7559,6 +7559,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SNS_GID_PT
+value|0x1A1
+end_define
+
+begin_define
+define|#
+directive|define
 name|SNS_RFT_ID
 value|0x217
 end_define
@@ -8053,13 +8060,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((sizeof (sns_gid_ft_rsp_t)) + ((x - 1)<< 2))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNS_RFT_ID_RESP_SIZE
-value|(sizeof (ct_hdr_t))
 end_define
 
 begin_comment
