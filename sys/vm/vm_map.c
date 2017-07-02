@@ -10662,16 +10662,13 @@ label|:
 if|if
 condition|(
 operator|(
-operator|(
 name|flags
 operator|&
 name|VM_MAP_WIRE_HOLESOK
 operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
 name|entry
 operator|->
 name|end
@@ -10697,7 +10694,6 @@ operator|>
 name|entry
 operator|->
 name|end
-operator|)
 operator|)
 condition|)
 block|{
