@@ -275,6 +275,8 @@ name|VM_GUEST_VMWARE
 block|,
 name|VM_GUEST_KVM
 block|,
+name|VM_GUEST_BHYVE
+block|,
 name|VM_LAST
 block|}
 enum|;

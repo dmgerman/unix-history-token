@@ -4494,6 +4494,22 @@ name|vm_guest
 operator|=
 name|VM_GUEST_KVM
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|hv_vendor
+argument_list|,
+literal|"bhyve bhyve"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|vm_guest
+operator|=
+name|VM_GUEST_BHYVE
+expr_stmt|;
 block|}
 return|return;
 block|}
