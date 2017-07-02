@@ -1796,7 +1796,7 @@ parameter_list|,
 name|_rw
 parameter_list|)
 define|\
-value|(((td)->td_rw_rlocks&& (_rw)& RW_LOCK_READ) || ((_rw)&	\     (RW_LOCK_READ | RW_LOCK_WRITE_WAITERS | RW_LOCK_WRITE_SPINNER)) ==	\     RW_LOCK_READ)
+value|(((_rw)& (RW_LOCK_READ | RW_LOCK_WRITE_WAITERS | RW_LOCK_WRITE_SPINNER)) ==\     RW_LOCK_READ || ((td)->td_rw_rlocks&& (_rw)& RW_LOCK_READ))
 end_define
 
 begin_function
