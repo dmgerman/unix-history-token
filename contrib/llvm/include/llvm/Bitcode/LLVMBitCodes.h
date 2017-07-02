@@ -88,7 +88,7 @@ block|{
 name|namespace
 name|bitc
 block|{
-comment|// The only top-level block types are MODULE, IDENTIFICATION and STRTAB.
+comment|// The only top-level block types are MODULE, IDENTIFICATION, STRTAB and SYMTAB.
 enum|enum
 name|BlockIDs
 block|{
@@ -132,6 +132,8 @@ block|,
 name|STRTAB_BLOCK_ID
 block|,
 name|FULL_LTO_GLOBALVAL_SUMMARY_BLOCK_ID
+block|,
+name|SYMTAB_BLOCK_ID
 block|, }
 enum|;
 comment|/// Identification block contains a string that describes the producer details,
@@ -1688,6 +1690,14 @@ enum|enum
 name|StrtabCodes
 block|{
 name|STRTAB_BLOB
+init|=
+literal|1
+block|, }
+enum|;
+enum|enum
+name|SymtabCodes
+block|{
+name|SYMTAB_BLOB
 init|=
 literal|1
 block|, }

@@ -162,7 +162,7 @@ comment|/// SrcMgr::CharacteristicKind.
 name|unsigned
 name|DirInfo
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/// \brief Whether this header file info was supplied by an external source,
 comment|/// and has not changed since.

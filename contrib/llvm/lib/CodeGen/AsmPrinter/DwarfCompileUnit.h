@@ -516,27 +516,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/// addSectionDelta - Add a label delta attribute data and value.
-end_comment
-
-begin_expr_stmt
-name|DIE
-operator|::
-name|value_iterator
-name|addSectionDelta
-argument_list|(
-argument|DIE&Die
-argument_list|,
-argument|dwarf::Attribute Attribute
-argument_list|,
-argument|const MCSymbol *Hi
-argument_list|,
-argument|const MCSymbol *Lo
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|DwarfCompileUnit
 modifier|&
@@ -666,31 +645,6 @@ name|End
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/// addSectionLabel - Add a Dwarf section label attribute data and value.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_expr_stmt
-name|DIE
-operator|::
-name|value_iterator
-name|addSectionLabel
-argument_list|(
-argument|DIE&Die
-argument_list|,
-argument|dwarf::Attribute Attribute
-argument_list|,
-argument|const MCSymbol *Label
-argument_list|,
-argument|const MCSymbol *Sec
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/// \brief Find DIE for the given subprogram and attach appropriate

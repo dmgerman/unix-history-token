@@ -129,11 +129,6 @@ function_decl|;
 comment|// SI Passes
 name|FunctionPass
 modifier|*
-name|createSITypeRewriter
-parameter_list|()
-function_decl|;
-name|FunctionPass
-modifier|*
 name|createSIAnnotateControlFlowPass
 parameter_list|()
 function_decl|;

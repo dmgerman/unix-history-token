@@ -210,12 +210,10 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Target hook to adjust the literal value of a fixup if necessary.
-comment|/// IsResolved signals whether the caller believes a relocation is needed; the
-comment|/// target can modify the value. The default does nothing.
+comment|/// Hook to check if a relocation is needed for some target specific reason.
 name|virtual
-name|void
-name|processFixupValue
+name|bool
+name|shouldForceRelocation
 parameter_list|(
 specifier|const
 name|MCAssembler
@@ -231,12 +229,12 @@ specifier|const
 name|MCValue
 modifier|&
 name|Target
-parameter_list|,
-name|bool
-modifier|&
-name|IsResolved
 parameter_list|)
-block|{}
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Apply the \p Value for given \p Fixup into the provided data fragment, at
 comment|/// the offset specified by the fixup and following the fixup kind as
 comment|/// appropriate. Errors (such as an out of range fixup value) should be

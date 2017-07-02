@@ -70,13 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/FormatProviders.h"
+file|"llvm/Support/FormatVariadic.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/FormatVariadic.h"
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -94,8 +100,6 @@ name|GuidAdapter
 name|final
 range|:
 name|public
-name|llvm
-operator|::
 name|FormatAdapter
 operator|<
 name|ArrayRef
@@ -130,13 +134,15 @@ block|;
 name|void
 name|format
 argument_list|(
-argument|llvm::raw_ostream&Stream
+argument|raw_ostream&Stream
 argument_list|,
 argument|StringRef Style
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace detail
 specifier|inline
 name|detail
 operator|::
@@ -174,6 +180,7 @@ argument_list|)
 return|;
 block|}
 block|}
+comment|// end namespace codeview
 name|template
 operator|<
 operator|>
@@ -193,7 +200,7 @@ name|format
 argument_list|(
 argument|const codeview::TypeIndex&V
 argument_list|,
-argument|llvm::raw_ostream&Stream
+argument|raw_ostream&Stream
 argument_list|,
 argument|StringRef Style
 argument_list|)
@@ -252,10 +259,18 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_FORMATTERS_H
+end_comment
 
 end_unit
 

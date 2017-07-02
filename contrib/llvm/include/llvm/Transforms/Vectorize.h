@@ -190,23 +190,6 @@ block|}
 struct|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// BBVectorize - A basic-block vectorization pass.
-comment|//
-name|BasicBlockPass
-modifier|*
-name|createBBVectorizePass
-parameter_list|(
-specifier|const
-name|VectorizeConfig
-modifier|&
-name|C
-init|=
-name|VectorizeConfig
-argument_list|()
-parameter_list|)
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// LoopVectorize - Create a loop vectorization pass.
 comment|//
 name|Pass

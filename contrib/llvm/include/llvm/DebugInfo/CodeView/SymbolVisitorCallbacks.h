@@ -97,8 +97,26 @@ return|;
 block|}
 comment|/// Paired begin/end actions for all symbols. Receives all record data,
 comment|/// including the fixed-length record prefix.  visitSymbolBegin() should
-comment|/// return
-comment|/// the type of the Symbol, or an error if it cannot be determined.
+comment|/// return the type of the Symbol, or an error if it cannot be determined.
+name|virtual
+name|Error
+name|visitSymbolBegin
+parameter_list|(
+name|CVSymbol
+modifier|&
+name|Record
+parameter_list|,
+name|uint32_t
+name|Offset
+parameter_list|)
+block|{
+return|return
+name|Error
+operator|::
+name|success
+argument_list|()
+return|;
+block|}
 name|virtual
 name|Error
 name|visitSymbolBegin

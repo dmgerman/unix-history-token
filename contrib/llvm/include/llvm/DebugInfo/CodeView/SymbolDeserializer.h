@@ -253,8 +253,26 @@ name|Error
 name|visitSymbolBegin
 argument_list|(
 argument|CVSymbol&Record
+argument_list|,
+argument|uint32_t Offset
 argument_list|)
 name|override
+block|{
+return|return
+name|visitSymbolBegin
+argument_list|(
+name|Record
+argument_list|)
+return|;
+block|}
+name|Error
+name|visitSymbolBegin
+parameter_list|(
+name|CVSymbol
+modifier|&
+name|Record
+parameter_list|)
+function|override
 block|{
 name|assert
 argument_list|(
@@ -263,7 +281,7 @@ name|Mapping
 operator|&&
 literal|"Already in a symbol mapping!"
 argument_list|)
-block|;
+expr_stmt|;
 name|Mapping
 operator|=
 name|llvm
@@ -280,7 +298,7 @@ argument_list|()
 operator|,
 name|Container
 operator|)
-block|;
+expr_stmt|;
 return|return
 name|Mapping
 operator|->

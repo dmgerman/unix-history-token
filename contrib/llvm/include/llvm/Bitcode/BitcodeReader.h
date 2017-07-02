@@ -427,12 +427,33 @@ name|BitcodeModule
 operator|>
 name|Mods
 expr_stmt|;
+name|StringRef
+name|Symtab
+decl_stmt|,
+name|StrtabForSymtab
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/// Returns the contents of a bitcode file.
+comment|/// Returns the contents of a bitcode file. This includes the raw contents of
+end_comment
+
+begin_comment
+comment|/// the symbol table embedded in the bitcode file. Clients which require a
+end_comment
+
+begin_comment
+comment|/// symbol table should prefer to use irsymtab::read instead of this function
+end_comment
+
+begin_comment
+comment|/// because it creates a reader for the irsymtab and handles upgrading bitcode
+end_comment
+
+begin_comment
+comment|/// files without a symbol table or with an old symbol table.
 end_comment
 
 begin_expr_stmt

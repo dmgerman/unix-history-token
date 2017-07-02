@@ -847,7 +847,6 @@ argument_list|)
 expr_stmt|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -955,7 +954,6 @@ name|ResultNo
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1084,7 +1082,6 @@ name|ResultNo
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1156,7 +1153,6 @@ argument|RecordMemRef
 argument_list|)
 block|{}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1217,7 +1213,6 @@ argument|CaptureGlueInput
 argument_list|)
 block|{}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1297,7 +1292,6 @@ name|ChildNo
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1370,7 +1364,6 @@ argument|MoveParent
 argument_list|)
 block|{}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1451,7 +1444,6 @@ name|MatchNumber
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1563,7 +1555,6 @@ name|MatchNumber
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1668,7 +1659,6 @@ name|Predicate
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1749,7 +1739,6 @@ argument_list|()
 specifier|const
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1846,7 +1835,6 @@ name|Opcode
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1958,7 +1946,6 @@ argument_list|()
 name|override
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2126,7 +2113,6 @@ name|ResNo
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2252,7 +2238,6 @@ argument_list|()
 name|override
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2419,7 +2404,6 @@ name|Type
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2528,7 +2512,6 @@ name|Value
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2644,7 +2627,6 @@ name|Value
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2753,7 +2735,6 @@ name|CondCodeName
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2843,7 +2824,6 @@ name|TypeName
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3011,7 +2991,6 @@ name|FirstResult
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3115,7 +3094,6 @@ name|Value
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3205,7 +3183,6 @@ name|Value
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3276,7 +3253,6 @@ argument|CheckFoldableChainNode
 argument_list|)
 block|{}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3378,7 +3354,6 @@ name|VT
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3509,7 +3484,6 @@ name|VT
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3639,7 +3613,6 @@ name|VT
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3742,7 +3715,6 @@ name|Slot
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3872,7 +3844,6 @@ index|]
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3985,7 +3956,6 @@ name|DestPhysReg
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -4108,7 +4078,6 @@ name|NodeXForm
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -4471,7 +4440,6 @@ name|NumFixedArityOperands
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -4589,7 +4557,6 @@ name|FirstResultSlot
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -4684,7 +4651,6 @@ name|Pattern
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -4801,7 +4767,6 @@ name|Pattern
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

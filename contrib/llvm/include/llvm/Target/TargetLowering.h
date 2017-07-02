@@ -7264,7 +7264,7 @@ comment|/*LoadedType*/
 argument_list|,
 name|unsigned
 operator|&
-comment|/*RequiredAligment*/
+comment|/*RequiredAlignment*/
 argument_list|)
 decl|const
 block|{
@@ -8999,7 +8999,6 @@ name|bool
 name|isDesirableToCommuteWithShift
 argument_list|(
 argument|const SDNode *N
-comment|/*Op*/
 argument_list|)
 specifier|const
 block|{

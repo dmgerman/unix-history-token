@@ -373,11 +373,11 @@ comment|/// This class should be specialized by any type that needs to be conver
 comment|/// to/from a YAML sequence.  For example:
 comment|///
 comment|///    template<>
-comment|///    struct SequenceTraits< std::vector<MyType>> {
-comment|///      static size_t size(IO&io, std::vector<MyType>&seq) {
+comment|///    struct SequenceTraits<MyContainer> {
+comment|///      static size_t size(IO&io, MyContainer&seq) {
 comment|///        return seq.size();
 comment|///      }
-comment|///      static MyType& element(IO&, std::vector<MyType>&seq, size_t index) {
+comment|///      static MyType& element(IO&, MyContainer&seq, size_t index) {
 comment|///        if ( index>= seq.size() )
 comment|///          seq.resize(index+1);
 comment|///        return seq[index];
@@ -387,6 +387,11 @@ name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|EnableIf
+operator|=
+name|void
 operator|>
 expr|struct
 name|SequenceTraits
@@ -398,6 +403,25 @@ comment|//
 comment|// The following is option and will cause generated YAML to use
 comment|// a flow sequence (e.g. [a,b,c]).
 comment|// static const bool flow = true;
+block|}
+expr_stmt|;
+comment|/// This class should be specialized by any type for which vectors of that
+comment|/// type need to be converted to/from a YAML sequence.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|EnableIf
+operator|=
+name|void
+operator|>
+expr|struct
+name|SequenceElementTraits
+block|{
+comment|// Must provide:
+comment|// static const bool flow;
 block|}
 expr_stmt|;
 comment|/// This class should be specialized by any type that needs to be converted
@@ -6234,7 +6258,6 @@ operator|=
 expr|default
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6276,7 +6299,6 @@ argument|n
 argument_list|)
 block|{ }
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6295,7 +6317,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6348,7 +6369,6 @@ name|_value
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6376,7 +6396,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6419,7 +6438,6 @@ argument|n
 argument_list|)
 block|{ }
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6438,7 +6456,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6501,7 +6518,6 @@ argument|n
 argument_list|)
 block|{ }
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6520,7 +6536,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -8199,20 +8214,64 @@ end_expr_stmt
 begin_expr_stmt
 name|template
 operator|<
+name|bool
+name|B
+operator|>
+expr|struct
+name|IsFlowSequenceBase
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|IsFlowSequenceBase
+operator|<
+name|true
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|flow
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
 name|typename
 name|T
+operator|,
+name|bool
+name|Flow
 operator|>
 expr|struct
 name|SequenceTraitsImpl
+operator|:
+name|IsFlowSequenceBase
+operator|<
+name|Flow
+operator|>
 block|{
+name|private
+operator|:
 name|using
-name|_type
+name|type
 operator|=
 name|typename
 name|T
 operator|::
 name|value_type
 block|;
+name|public
+operator|:
 specifier|static
 name|size_t
 name|size
@@ -8230,7 +8289,7 @@ argument_list|()
 return|;
 block|}
 specifier|static
-name|_type
+name|type
 operator|&
 name|element
 argument_list|(
@@ -8274,6 +8333,276 @@ begin_empty_stmt
 unit|} }
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// Simple helper to check an expression can be used as a bool-valued template
+end_comment
+
+begin_comment
+comment|// argument.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|bool
+operator|>
+expr|struct
+name|CheckIsBool
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// If T has SequenceElementTraits, then vector<T> and SmallVector<T, N> have
+end_comment
+
+begin_comment
+comment|// SequenceTraits that do the obvious thing.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|SequenceTraits
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|T
+operator|>
+operator|,
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|CheckIsBool
+operator|<
+name|SequenceElementTraits
+operator|<
+name|T
+operator|>
+operator|::
+name|flow
+operator|>
+operator|::
+name|value
+operator|>
+operator|::
+name|type
+operator|>
+operator|:
+name|SequenceTraitsImpl
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|T
+operator|>
+operator|,
+name|SequenceElementTraits
+operator|<
+name|T
+operator|>
+operator|::
+name|flow
+operator|>
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|unsigned
+name|N
+operator|>
+expr|struct
+name|SequenceTraits
+operator|<
+name|SmallVector
+operator|<
+name|T
+operator|,
+name|N
+operator|>
+operator|,
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|CheckIsBool
+operator|<
+name|SequenceElementTraits
+operator|<
+name|T
+operator|>
+operator|::
+name|flow
+operator|>
+operator|::
+name|value
+operator|>
+operator|::
+name|type
+operator|>
+operator|:
+name|SequenceTraitsImpl
+operator|<
+name|SmallVector
+operator|<
+name|T
+operator|,
+name|N
+operator|>
+operator|,
+name|SequenceElementTraits
+operator|<
+name|T
+operator|>
+operator|::
+name|flow
+operator|>
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Sequences of fundamental types use flow formatting.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|SequenceElementTraits
+operator|<
+name|T
+operator|,
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_fundamental
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|>
+operator|::
+name|type
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|flow
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Sequences of strings use block formatting.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|SequenceElementTraits
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|flow
+operator|=
+name|false
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|SequenceElementTraits
+operator|<
+name|StringRef
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|flow
+operator|=
+name|false
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|SequenceElementTraits
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|std
+operator|::
+name|string
+operator|>>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|flow
+operator|=
+name|false
+block|; }
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Implementation of CustomMappingTraits for std::map<std::string, T>.
@@ -8377,6 +8706,19 @@ unit|}
 comment|// end namespace llvm
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LLVM_YAML_IS_SEQUENCE_VECTOR_IMPL
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|FLOW
+parameter_list|)
+define|\
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   static_assert(                                                               \       !std::is_fundamental<TYPE>::value&&                                     \       !std::is_same<TYPE, std::string>::value&&                               \       !std::is_same<TYPE, llvm::StringRef>::value,                             \       "only use LLVM_YAML_IS_SEQUENCE_VECTOR for types you control");          \   template<> struct SequenceElementTraits<TYPE> {                             \     static const bool flow = FLOW;                                             \   };                                                                           \   }                                                                            \   }
+end_define
+
 begin_comment
 comment|/// Utility for declaring that a std::vector of a particular type
 end_comment
@@ -8390,10 +8732,10 @@ define|#
 directive|define
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 parameter_list|(
-name|_type
+name|type
 parameter_list|)
 define|\
-value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<>                                                                  \   struct SequenceTraits<std::vector<_type>>                                    \       : public SequenceTraitsImpl<std::vector<_type>> {};                      \   template<unsigned N>                                                        \   struct SequenceTraits<SmallVector<_type, N>>                                 \       : public SequenceTraitsImpl<SmallVector<_type, N>> {};                   \   }                                                                            \   }
+value|LLVM_YAML_IS_SEQUENCE_VECTOR_IMPL(type, false)
 end_define
 
 begin_comment
@@ -8404,35 +8746,15 @@ begin_comment
 comment|/// should be considered a YAML flow sequence.
 end_comment
 
-begin_comment
-comment|/// We need to do a partial specialization on the vector version, not a full.
-end_comment
-
-begin_comment
-comment|/// If this is a full specialization, the compiler is a bit too "smart" and
-end_comment
-
-begin_comment
-comment|/// decides to warn on -Wunused-const-variable.  This workaround can be
-end_comment
-
-begin_comment
-comment|/// removed and we can do a full specialization on std::vector<T> once
-end_comment
-
-begin_comment
-comment|/// PR28878 is fixed.
-end_comment
-
 begin_define
 define|#
 directive|define
 name|LLVM_YAML_IS_FLOW_SEQUENCE_VECTOR
 parameter_list|(
-name|_type
+name|type
 parameter_list|)
 define|\
-value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<unsigned N>                                                        \   struct SequenceTraits<SmallVector<_type, N>>                                 \       : public SequenceTraitsImpl<SmallVector<_type, N>> {                     \     static const bool flow = true;                                             \   };                                                                           \   template<typename Allocator>                                                \   struct SequenceTraits<std::vector<_type, Allocator>>                         \       : public SequenceTraitsImpl<std::vector<_type, Allocator>> {             \     static const bool flow = true;                                             \   };                                                                           \   }                                                                            \   }
+value|LLVM_YAML_IS_SEQUENCE_VECTOR_IMPL(type, true)
 end_define
 
 begin_define
@@ -8497,7 +8819,7 @@ parameter_list|(
 name|_type
 parameter_list|)
 define|\
-value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<unsigned N>                                                        \   struct DocumentListTraits<SmallVector<_type, N>>                             \       : public SequenceTraitsImpl<SmallVector<_type, N>> {};                   \   template<>                                                                  \   struct DocumentListTraits<std::vector<_type>>                                \       : public SequenceTraitsImpl<std::vector<_type>> {};                      \   }                                                                            \   }
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<unsigned N>                                                        \   struct DocumentListTraits<SmallVector<_type, N>>                             \       : public SequenceTraitsImpl<SmallVector<_type, N>, false> {};            \   template<>                                                                  \   struct DocumentListTraits<std::vector<_type>>                                \       : public SequenceTraitsImpl<std::vector<_type>, false> {};               \   }                                                                            \   }
 end_define
 
 begin_comment

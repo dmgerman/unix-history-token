@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_PDB_RAW_HASH_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_HASH_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_PDB_RAW_HASH_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_HASH_H
 end_define
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -93,13 +93,22 @@ name|Data
 argument_list|)
 decl_stmt|;
 block|}
+comment|// end namespace pdb
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_PDB_NATIVE_HASH_H
+end_comment
 
 end_unit
 

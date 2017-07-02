@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Connection.h"
+file|"lldb/Host/Socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Socket.h"
+file|"lldb/Utility/Connection.h"
 end_include
 
 begin_include

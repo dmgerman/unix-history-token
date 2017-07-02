@@ -249,7 +249,6 @@ name|UserOp1
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -263,7 +262,6 @@ name|true
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -277,7 +275,6 @@ name|true
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -437,7 +434,6 @@ literal|0
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -483,7 +479,6 @@ name|Shl
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -529,7 +524,6 @@ name|Shl
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -682,7 +676,6 @@ name|LShr
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -700,7 +693,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -718,7 +710,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1421,7 +1412,6 @@ argument_list|()
 specifier|const
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1448,7 +1438,6 @@ name|FCmp
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1475,7 +1464,6 @@ name|FCmp
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1546,7 +1534,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1563,7 +1550,6 @@ name|Opc
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1580,7 +1566,6 @@ name|Opc
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

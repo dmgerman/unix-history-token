@@ -189,18 +189,14 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// processFixupValue - Target hook to process the literal value of a fixup
-comment|/// if necessary.
-name|void
-name|processFixupValue
+name|bool
+name|shouldForceRelocation
 argument_list|(
 argument|const MCAssembler&Asm
 argument_list|,
 argument|const MCFixup&Fixup
 argument_list|,
 argument|const MCValue&Target
-argument_list|,
-argument|bool&IsResolved
 argument_list|)
 name|override
 block|;

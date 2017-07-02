@@ -73,6 +73,12 @@ directive|include
 file|"llvm/Support/YAMLTraits.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -80,6 +86,9 @@ block|{
 name|namespace
 name|yaml
 block|{
+name|class
+name|IO
+decl_stmt|;
 struct|struct
 name|YamlObjectFile
 block|{
@@ -159,18 +168,22 @@ argument_list|)
 block|; }
 expr_stmt|;
 block|}
-comment|// namespace yaml
+comment|// end namespace yaml
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_OBJECTYAML_H
+end_comment
 
 end_unit
 

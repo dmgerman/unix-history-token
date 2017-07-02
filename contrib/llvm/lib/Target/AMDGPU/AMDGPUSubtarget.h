@@ -467,7 +467,7 @@ name|bool
 name|HasSDWAMac
 block|;
 name|bool
-name|HasSDWAClampVOPC
+name|HasSDWAOutModsVOPC
 block|;
 name|bool
 name|HasDPP
@@ -1544,12 +1544,12 @@ end_expr_stmt
 
 begin_expr_stmt
 name|bool
-name|hasSDWAClampVOPC
+name|hasSDWAOutModsVOPC
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasSDWAClampVOPC
+name|HasSDWAOutModsVOPC
 return|;
 block|}
 end_expr_stmt

@@ -396,7 +396,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|ValLessThan
+name|ValCompare
 argument_list|)
 expr_stmt|;
 name|cl
@@ -418,10 +418,10 @@ expr_stmt|;
 block|}
 name|private
 label|:
-comment|// ValLessThan - Provide a sorting comparator for Values elements...
+comment|// ValCompare - Provide a sorting comparator for Values elements...
 specifier|static
 name|int
-name|ValLessThan
+name|ValCompare
 argument_list|(
 specifier|const
 name|PassNameParser
@@ -442,10 +442,13 @@ return|return
 name|VT1
 operator|->
 name|Name
-operator|<
+operator|.
+name|compare
+argument_list|(
 name|VT2
 operator|->
 name|Name
+argument_list|)
 return|;
 block|}
 block|}

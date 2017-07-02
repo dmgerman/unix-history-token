@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- llvm/CodeGen/GlobalISel/RegisterBankInfo.h ----------------*- C++ -*-==//
+comment|//===- llvm/CodeGen/GlobalISel/RegisterBankInfo.h ---------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -54,20 +54,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_GLOBALISEL_REGBANKINFO_H
+name|LLVM_CODEGEN_GLOBALISEL_REGISTERBANKINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_GLOBALISEL_REGBANKINFO_H
+name|LLVM_CODEGEN_GLOBALISEL_REGISTERBANKINFO_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/APInt.h"
-end_include
 
 begin_include
 include|#
@@ -90,18 +84,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/GlobalISel/RegisterBank.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineValueType.h"
-end_include
-
-begin_comment
-comment|// For SimpleValueType.
-end_comment
 
 begin_include
 include|#
@@ -118,12 +102,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<memory>
+file|<initializer_list>
 end_include
 
-begin_comment
-comment|// For unique_ptr.
-end_comment
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -136,13 +122,19 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|raw_ostream
+decl_stmt|;
+name|class
+name|RegisterBank
+decl_stmt|;
+name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
-name|TargetRegisterInfo
+name|TargetRegisterClass
 decl_stmt|;
 name|class
-name|raw_ostream
+name|TargetRegisterInfo
 decl_stmt|;
 comment|/// Holds all the information related to register banks.
 name|class
@@ -430,10 +422,14 @@ comment|/// This is used to communicate between the target and the optimizers
 comment|/// which mapping should be realized.
 name|unsigned
 name|ID
+init|=
+name|InvalidMappingID
 decl_stmt|;
 comment|/// Cost of this mapping.
 name|unsigned
 name|Cost
+init|=
+literal|0
 decl_stmt|;
 comment|/// Mapping of all the operands.
 specifier|const
@@ -444,6 +440,8 @@ decl_stmt|;
 comment|/// Number of operands.
 name|unsigned
 name|NumOperands
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|ValueMapping
@@ -526,22 +524,9 @@ comment|/// Default constructor.
 comment|/// Use this constructor to express that the mapping is invalid.
 name|InstructionMapping
 argument_list|()
-operator|:
-name|ID
-argument_list|(
-name|InvalidMappingID
-argument_list|)
-operator|,
-name|Cost
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumOperands
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Get the cost.
 name|unsigned
 name|getCost
@@ -678,17 +663,15 @@ empty_stmt|;
 comment|/// Convenient type to represent the alternatives for mapping an
 comment|/// instruction.
 comment|/// \todo When we move to TableGen this should be an array ref.
-typedef|typedef
+name|using
+name|InstructionMappings
+init|=
 name|SmallVector
 operator|<
 specifier|const
 name|InstructionMapping
 operator|*
-operator|,
-literal|4
-operator|>
-name|InstructionMappings
-expr_stmt|;
+decl_stmt|, 4>;
 comment|/// Helper class used to get/create the virtual registers that will be used
 comment|/// to replace the MachineOperand when applying a mapping.
 name|class
@@ -1872,13 +1855,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GLOBALISEL_REGISTERBANKINFO_H
+end_comment
 
 end_unit
 

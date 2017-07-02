@@ -224,35 +224,6 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// Reads a value from data extractor and applies a relocation to the result if
-comment|/// one exists for the given offset.
-name|uint64_t
-name|getRelocatedValue
-parameter_list|(
-specifier|const
-name|DataExtractor
-modifier|&
-name|Data
-parameter_list|,
-name|uint32_t
-name|Size
-parameter_list|,
-name|uint32_t
-modifier|*
-name|Off
-parameter_list|,
-specifier|const
-name|RelocAddrMap
-modifier|*
-name|Relocs
-parameter_list|,
-name|uint64_t
-modifier|*
-name|SecNdx
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
 comment|/// DWARFContext
 comment|/// This data structure is the top level entity that deals with dwarf debug
 comment|/// information parsing. The actual data is supplied through pure virtual
@@ -1274,6 +1245,18 @@ argument|uint64_t Address
 argument_list|)
 block|; }
 decl_stmt|;
+comment|/// Used as a return value for a error callback passed to DWARF context.
+comment|/// Callback should return Halt if client application wants to stop
+comment|/// object parsing, or should return Continue otherwise.
+name|enum
+name|class
+name|ErrorPolicy
+block|{
+name|Halt
+operator|,
+name|Continue
+block|}
+empty_stmt|;
 comment|/// DWARFContextInMemory is the simplest possible implementation of a
 comment|/// DWARFContext. It assumes all content is available in memory and stores
 comment|/// pointers to it.
@@ -1427,6 +1410,15 @@ argument_list|,
 argument|StringRef&Data
 argument_list|)
 block|;
+comment|/// Function used to handle default error reporting policy. Prints a error
+comment|/// message and returns Continue, so DWARF context ignores the error.
+specifier|static
+name|ErrorPolicy
+name|defaultErrorHandler
+argument_list|(
+argument|Error E
+argument_list|)
+block|;
 name|public
 operator|:
 name|DWARFContextInMemory
@@ -1444,6 +1436,17 @@ operator|*
 name|L
 operator|=
 name|nullptr
+argument_list|,
+name|function_ref
+operator|<
+name|ErrorPolicy
+argument_list|(
+name|Error
+argument_list|)
+operator|>
+name|HandleError
+operator|=
+name|defaultErrorHandler
 argument_list|)
 block|;
 name|DWARFContextInMemory

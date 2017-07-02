@@ -671,7 +671,6 @@ argument|StringRef()
 argument_list|)
 block|{}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -795,7 +794,6 @@ argument_list|)
 specifier|const
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -924,7 +922,6 @@ name|Value
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1037,7 +1034,6 @@ argument_list|()
 expr_stmt|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1576,7 +1572,6 @@ name|this
 argument_list|)
 block|; }
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1777,7 +1772,6 @@ name|this
 argument_list|)
 block|; }
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1879,7 +1873,6 @@ name|getTarget
 argument_list|()
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

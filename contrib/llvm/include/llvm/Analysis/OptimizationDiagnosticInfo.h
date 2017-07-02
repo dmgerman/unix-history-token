@@ -125,7 +125,7 @@ comment|/// The optimization diagnostic interface.
 comment|///
 comment|/// It allows reporting when optimizations are performed and when they are not
 comment|/// along with the reasons for it.  Hotness information of the corresponding
-comment|/// code region can be included in the remark if DiagnosticHotnessRequested is
+comment|/// code region can be included in the remark if DiagnosticsHotnessRequested is
 comment|/// enabled in the LLVM context.
 name|class
 name|OptimizationRemarkEmitter
@@ -158,10 +158,10 @@ comment|/// \brief This variant can be used to generate ORE on demand (without t
 comment|/// analysis pass).
 comment|///
 comment|/// Note that this ctor has a very different cost depending on whether
-comment|/// F->getContext().getDiagnosticHotnessRequested() is on or not.  If it's off
+comment|/// F->getContext().getDiagnosticsHotnessRequested() is on or not.  If it's off
 comment|/// the operation is free.
 comment|///
-comment|/// Whereas if DiagnosticHotnessRequested is on, it is fairly expensive
+comment|/// Whereas if DiagnosticsHotnessRequested is on, it is fairly expensive
 comment|/// operation since BFI and all its required analyses are computed.  This is
 comment|/// for example useful for CGSCC passes that can't use function analyses
 comment|/// passes in the old PM.

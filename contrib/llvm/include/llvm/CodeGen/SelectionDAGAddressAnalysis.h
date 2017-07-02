@@ -216,6 +216,11 @@ name|match
 parameter_list|(
 name|SDValue
 name|Ptr
+parameter_list|,
+specifier|const
+name|SelectionDAG
+modifier|&
+name|DAG
 parameter_list|)
 function_decl|;
 block|}

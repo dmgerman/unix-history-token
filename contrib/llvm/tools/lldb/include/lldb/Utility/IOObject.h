@@ -120,22 +120,22 @@ name|virtual
 operator|~
 name|IOObject
 argument_list|()
-block|{}
+expr_stmt|;
 name|virtual
 name|Status
 name|Read
-argument_list|(
+parameter_list|(
 name|void
-operator|*
+modifier|*
 name|buf
-argument_list|,
+parameter_list|,
 name|size_t
-operator|&
+modifier|&
 name|num_bytes
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
 name|Status
 name|Write
@@ -204,6 +204,10 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lldb_private
+end_comment
 
 begin_endif
 endif|#

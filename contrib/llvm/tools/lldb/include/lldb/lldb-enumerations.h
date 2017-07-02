@@ -1379,6 +1379,10 @@ name|eInstrumentationRuntimeTypeMainThreadChecker
 init|=
 literal|0x0003
 block|,
+name|eInstrumentationRuntimeTypeSwiftRuntimeReporting
+init|=
+literal|0x0004
+block|,
 name|eNumInstrumentationRuntimeTypes
 block|}
 enum|;

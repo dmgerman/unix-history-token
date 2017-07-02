@@ -201,6 +201,13 @@ name|DW64_CIE_ID
 init|=
 name|UINT64_MAX
 decl_stmt|;
+comment|// Identifier of an invalid DIE offset in the .debug_info section.
+specifier|const
+name|uint32_t
+name|DW_INVALID_OFFSET
+init|=
+name|UINT32_MAX
+decl_stmt|;
 enum|enum
 name|Tag
 enum|:

@@ -1266,10 +1266,7 @@ block|}
 block|;
 name|JSONParser
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|cstr
+argument|llvm::StringRef data
 argument_list|)
 block|;
 name|int

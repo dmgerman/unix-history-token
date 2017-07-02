@@ -167,6 +167,7 @@ comment|/// this basic block.
 name|void
 name|invalidateBlock
 parameter_list|(
+specifier|const
 name|BasicBlock
 modifier|*
 name|BB

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- CodeViewYAMLDebugSections.h - CodeView YAMLIO debug sections -------===//
+comment|//=- CodeViewYAMLDebugSections.h - CodeView YAMLIO debug sections -*- C++ -*-=//
 end_comment
 
 begin_comment
@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/CodeView.h"
 end_include
 
@@ -84,7 +96,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/YAML.h"
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -95,27 +131,13 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|DebugStringTableSubsection
-decl_stmt|;
-name|class
-name|DebugStringTableSubsectionRef
-decl_stmt|;
-name|class
-name|DebugChecksumsSubsectionRef
-decl_stmt|;
-name|class
-name|DebugStringTableSubsection
-decl_stmt|;
-name|class
-name|DebugChecksumsSubsection
-decl_stmt|;
-name|class
 name|StringsAndChecksums
 decl_stmt|;
 name|class
 name|StringsAndChecksumsRef
 decl_stmt|;
 block|}
+comment|// end namespace codeview
 name|namespace
 name|CodeViewYAML
 block|{
@@ -126,6 +148,7 @@ struct_decl|struct
 name|YAMLSubsectionBase
 struct_decl|;
 block|}
+comment|// end namespace detail
 struct|struct
 name|YAMLFrameData
 block|{
@@ -434,12 +457,12 @@ name|SC
 argument_list|)
 decl_stmt|;
 block|}
-comment|// namespace CodeViewYAML
+comment|// end namespace CodeViewYAML
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_macro
@@ -460,6 +483,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_CODEVIEWYAMLDEBUGSECTIONS_H
+end_comment
 
 end_unit
 

@@ -192,7 +192,7 @@ name|virtual
 name|void
 name|emitDiagnosticMessage
 argument_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 argument_list|,
 name|PresumedLoc
@@ -212,11 +212,6 @@ name|CharSourceRange
 operator|>
 name|Ranges
 argument_list|,
-specifier|const
-name|SourceManager
-operator|*
-name|SM
-argument_list|,
 name|DiagOrStoredDiag
 name|Info
 argument_list|)
@@ -227,7 +222,7 @@ name|virtual
 name|void
 name|emitDiagnosticLoc
 argument_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 argument_list|,
 name|PresumedLoc
@@ -243,11 +238,6 @@ operator|<
 name|CharSourceRange
 operator|>
 name|Ranges
-argument_list|,
-specifier|const
-name|SourceManager
-operator|&
-name|SM
 argument_list|)
 init|=
 literal|0
@@ -256,7 +246,7 @@ name|virtual
 name|void
 name|emitCodeContext
 argument_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 argument_list|,
 name|DiagnosticsEngine
@@ -276,11 +266,6 @@ operator|<
 name|FixItHint
 operator|>
 name|Hints
-argument_list|,
-specifier|const
-name|SourceManager
-operator|&
-name|SM
 argument_list|)
 init|=
 literal|0
@@ -289,16 +274,11 @@ name|virtual
 name|void
 name|emitIncludeLocation
 parameter_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 parameter_list|,
 name|PresumedLoc
 name|PLoc
-parameter_list|,
-specifier|const
-name|SourceManager
-modifier|&
-name|SM
 parameter_list|)
 init|=
 literal|0
@@ -307,7 +287,7 @@ name|virtual
 name|void
 name|emitImportLocation
 parameter_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 parameter_list|,
 name|PresumedLoc
@@ -315,11 +295,6 @@ name|PLoc
 parameter_list|,
 name|StringRef
 name|ModuleName
-parameter_list|,
-specifier|const
-name|SourceManager
-modifier|&
-name|SM
 parameter_list|)
 init|=
 literal|0
@@ -328,7 +303,7 @@ name|virtual
 name|void
 name|emitBuildingModuleLocation
 parameter_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 parameter_list|,
 name|PresumedLoc
@@ -336,11 +311,6 @@ name|PLoc
 parameter_list|,
 name|StringRef
 name|ModuleName
-parameter_list|,
-specifier|const
-name|SourceManager
-modifier|&
-name|SM
 parameter_list|)
 init|=
 literal|0
@@ -383,7 +353,7 @@ function_decl|;
 name|void
 name|emitIncludeStack
 argument_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 argument_list|,
 name|PresumedLoc
@@ -393,50 +363,30 @@ name|DiagnosticsEngine
 operator|::
 name|Level
 name|Level
-argument_list|,
-specifier|const
-name|SourceManager
-operator|&
-name|SM
 argument_list|)
 decl_stmt|;
 name|void
 name|emitIncludeStackRecursively
 parameter_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
-parameter_list|,
-specifier|const
-name|SourceManager
-modifier|&
-name|SM
 parameter_list|)
 function_decl|;
 name|void
 name|emitImportStack
 parameter_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
-parameter_list|,
-specifier|const
-name|SourceManager
-modifier|&
-name|SM
 parameter_list|)
 function_decl|;
 name|void
 name|emitImportStackRecursively
 parameter_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 parameter_list|,
 name|StringRef
 name|ModuleName
-parameter_list|,
-specifier|const
-name|SourceManager
-modifier|&
-name|SM
 parameter_list|)
 function_decl|;
 name|void
@@ -451,7 +401,7 @@ function_decl|;
 name|void
 name|emitCaret
 argument_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 argument_list|,
 name|DiagnosticsEngine
@@ -470,17 +420,12 @@ operator|<
 name|FixItHint
 operator|>
 name|Hints
-argument_list|,
-specifier|const
-name|SourceManager
-operator|&
-name|SM
 argument_list|)
 decl_stmt|;
 name|void
 name|emitSingleMacroExpansion
 argument_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 argument_list|,
 name|DiagnosticsEngine
@@ -493,17 +438,12 @@ operator|<
 name|CharSourceRange
 operator|>
 name|Ranges
-argument_list|,
-specifier|const
-name|SourceManager
-operator|&
-name|SM
 argument_list|)
 decl_stmt|;
 name|void
 name|emitMacroExpansions
 argument_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 argument_list|,
 name|DiagnosticsEngine
@@ -522,11 +462,6 @@ operator|<
 name|FixItHint
 operator|>
 name|Hints
-argument_list|,
-specifier|const
-name|SourceManager
-operator|&
-name|SM
 argument_list|)
 decl_stmt|;
 name|public
@@ -543,12 +478,10 @@ comment|/// \param Level The level of the diagnostic to be emitted.
 comment|/// \param Message The diagnostic message to emit.
 comment|/// \param Ranges The underlined ranges for this code snippet.
 comment|/// \param FixItHints The FixIt hints active for this diagnostic.
-comment|/// \param SM The SourceManager; will be null if the diagnostic came from the
-comment|///        frontend, thus \p Loc will be invalid.
 name|void
 name|emitDiagnostic
 argument_list|(
-name|SourceLocation
+name|FullSourceLoc
 name|Loc
 argument_list|,
 name|DiagnosticsEngine
@@ -570,11 +503,6 @@ operator|<
 name|FixItHint
 operator|>
 name|FixItHints
-argument_list|,
-specifier|const
-name|SourceManager
-operator|*
-name|SM
 argument_list|,
 name|DiagOrStoredDiag
 name|D
@@ -633,37 +561,31 @@ block|;
 name|void
 name|emitIncludeLocation
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|PresumedLoc PLoc
-argument_list|,
-argument|const SourceManager&SM
 argument_list|)
 name|override
 block|;
 name|void
 name|emitImportLocation
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|PresumedLoc PLoc
 argument_list|,
 argument|StringRef ModuleName
-argument_list|,
-argument|const SourceManager&SM
 argument_list|)
 name|override
 block|;
 name|void
 name|emitBuildingModuleLocation
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|PresumedLoc PLoc
 argument_list|,
 argument|StringRef ModuleName
-argument_list|,
-argument|const SourceManager&SM
 argument_list|)
 name|override
 block|;
@@ -671,11 +593,9 @@ name|virtual
 name|void
 name|emitNote
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|StringRef Message
-argument_list|,
-argument|const SourceManager *SM
 argument_list|)
 operator|=
 literal|0

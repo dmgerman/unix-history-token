@@ -259,13 +259,6 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
-name|initializeBBVectorizePass
-parameter_list|(
-name|PassRegistry
-modifier|&
-parameter_list|)
-function_decl|;
-name|void
 name|initializeBDCELegacyPassPass
 parameter_list|(
 name|PassRegistry

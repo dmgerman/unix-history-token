@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
+file|"llvm/DebugInfo/DWARF/DWARFDataExtractor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataExtractor.h"
+file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
 end_include
 
 begin_include
@@ -243,17 +243,14 @@ decl_stmt|;
 name|bool
 name|extract
 parameter_list|(
-name|DataExtractor
+specifier|const
+name|DWARFDataExtractor
+modifier|&
 name|data
 parameter_list|,
 name|uint32_t
 modifier|*
 name|offset_ptr
-parameter_list|,
-specifier|const
-name|RelocAddrMap
-modifier|&
-name|Relocs
 parameter_list|)
 function_decl|;
 specifier|const

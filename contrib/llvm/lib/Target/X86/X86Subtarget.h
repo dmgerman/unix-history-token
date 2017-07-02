@@ -224,6 +224,8 @@ block|,
 name|IntelAtom
 block|,
 name|IntelSLM
+block|,
+name|IntelGLM
 block|}
 block|;
 comment|/// X86 processor family: Intel Atom, and others

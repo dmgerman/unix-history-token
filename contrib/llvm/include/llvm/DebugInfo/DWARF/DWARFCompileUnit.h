@@ -83,7 +83,7 @@ argument|const DWARFSection&SOS
 argument_list|,
 argument|const DWARFSection *AOS
 argument_list|,
-argument|StringRef LS
+argument|const DWARFSection&LS
 argument_list|,
 argument|bool LE
 argument_list|,

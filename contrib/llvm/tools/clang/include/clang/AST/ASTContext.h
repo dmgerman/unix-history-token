@@ -9697,6 +9697,33 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Get the offset of an ObjCIvarDecl in bits.
+end_comment
+
+begin_decl_stmt
+name|uint64_t
+name|lookupFieldBitOffset
+argument_list|(
+specifier|const
+name|ObjCInterfaceDecl
+operator|*
+name|OID
+argument_list|,
+specifier|const
+name|ObjCImplementationDecl
+operator|*
+name|ID
+argument_list|,
+specifier|const
+name|ObjCIvarDecl
+operator|*
+name|Ivar
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|bool
 name|isNearlyEmpty

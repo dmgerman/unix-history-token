@@ -447,9 +447,6 @@ literal|1
 operator|>
 name|Locals
 block|;
-name|DebugLoc
-name|LastLoc
-block|;
 specifier|const
 name|MCSymbol
 operator|*

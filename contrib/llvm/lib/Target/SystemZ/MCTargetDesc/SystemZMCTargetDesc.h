@@ -209,6 +209,14 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+specifier|extern
+specifier|const
+name|unsigned
+name|CR64Regs
+index|[
+literal|16
+index|]
+decl_stmt|;
 comment|// Return the 0-based number of the first architectural register that
 comment|// contains the given LLVM register.   E.g. R1D -> 1.
 name|unsigned

@@ -136,7 +136,7 @@ comment|// createMachineScheduler(MachineSchedContext *C) {
 end_comment
 
 begin_comment
-comment|//   return new ScheduleDAGMI(C, CustomStrategy(C));
+comment|//   return new ScheduleDAGMILive(C, CustomStrategy(C));
 end_comment
 
 begin_comment

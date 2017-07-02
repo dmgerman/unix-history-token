@@ -364,7 +364,6 @@ argument|FI
 argument_list|)
 block|{}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -486,7 +485,6 @@ name|GV
 argument_list|)
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -538,7 +536,6 @@ name|ES
 argument_list|)
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

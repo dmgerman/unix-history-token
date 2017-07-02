@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeRecord.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Error.h"
 end_include
 
@@ -62,6 +56,9 @@ block|{
 name|namespace
 name|codeview
 block|{
+name|class
+name|TypeServer2Record
+decl_stmt|;
 name|class
 name|TypeVisitorCallbacks
 decl_stmt|;
@@ -74,7 +71,9 @@ name|virtual
 operator|~
 name|TypeServerHandler
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Handle a TypeServer record.  If the implementation returns true
 comment|/// the record will not be processed by the top-level visitor.  If
 comment|/// it returns false, it will be processed.  If it returns an Error,
@@ -98,13 +97,22 @@ block|}
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace codeview
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_TYPESERVERHANDLER_H
+end_comment
 
 end_unit
 

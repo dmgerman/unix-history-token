@@ -54,7 +54,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/GraphTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PostOrderIterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -102,7 +126,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
 end_include
 
 begin_include
@@ -114,7 +150,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -1685,13 +1745,14 @@ argument|BlockT *BB
 argument_list|)
 specifier|const
 block|{
-typedef|typedef
+name|using
+name|RegionT
+operator|=
 name|typename
 name|Tr
 operator|::
 name|RegionT
-name|RegionT
-expr_stmt|;
+block|;
 name|RegionT
 operator|*
 name|R
@@ -1702,10 +1763,7 @@ name|getRegionFor
 argument_list|(
 name|BB
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
+block|;
 if|if
 condition|(
 operator|!
@@ -1718,13 +1776,7 @@ condition|)
 return|return
 name|nullptr
 return|;
-end_if
-
-begin_comment
 comment|// If we pass the BB out of this region, that means our code is broken.
-end_comment
-
-begin_expr_stmt
 name|assert
 argument_list|(
 name|contains
@@ -1864,6 +1916,8 @@ operator|=
 block|{
 name|BB
 block|,
+name|llvm
+operator|::
 name|make_unique
 operator|<
 name|RegionNodeT
@@ -2063,6 +2117,8 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
+name|llvm
+operator|::
 name|find_if
 argument_list|(
 operator|*
@@ -2381,6 +2437,8 @@ operator|::
 name|iterator
 name|I
 operator|=
+name|llvm
+operator|::
 name|find_if
 argument_list|(
 name|children
@@ -3078,12 +3136,12 @@ operator|>
 operator|::
 name|RegionInfoBase
 argument_list|()
-operator|:
-name|TopLevelRegion
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -3315,13 +3373,14 @@ operator|&&
 literal|"entry and exit must not be null!"
 argument_list|)
 block|;
-typedef|typedef
+name|using
+name|DST
+operator|=
 name|typename
 name|DomFrontierT
 operator|::
 name|DomSetType
-name|DST
-expr_stmt|;
+block|;
 name|DST
 operator|*
 name|entrySuccs
@@ -3335,18 +3394,9 @@ name|entry
 argument_list|)
 operator|->
 name|second
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// Exit is the header of a loop that contains the entry. In this case,
-end_comment
-
-begin_comment
 comment|// the dominance frontier must only contain the exit.
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -3404,17 +3454,19 @@ return|return
 name|false
 return|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|true
 return|;
-block|}
-end_if
+end_return
 
-begin_decl_stmt
-name|DST
-modifier|*
+begin_expr_stmt
+unit|}    DST
+operator|*
 name|exitSuccs
-init|=
+operator|=
 operator|&
 name|DF
 operator|->
@@ -3424,8 +3476,8 @@ name|exit
 argument_list|)
 operator|->
 name|second
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// Do not allow edges leaving the region.
@@ -4099,7 +4151,9 @@ argument_list|,
 argument|BBtoBBMap *ShortCut
 argument_list|)
 block|{
-typedef|typedef
+name|using
+name|FuncPtrT
+operator|=
 name|typename
 name|std
 operator|::
@@ -4109,8 +4163,7 @@ name|FuncT
 operator|>
 operator|::
 name|type
-name|FuncPtrT
-expr_stmt|;
+block|;
 name|BlockT
 operator|*
 name|entry
@@ -4125,40 +4178,22 @@ argument_list|(
 operator|&
 name|F
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 name|DomTreeNodeT
-modifier|*
+operator|*
 name|N
-init|=
+operator|=
 name|DT
 operator|->
 name|getNode
 argument_list|(
 name|entry
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// Iterate over the dominance tree in post order to start with the small
-end_comment
-
-begin_comment
 comment|// regions from the bottom of the dominance tree.  If the small regions are
-end_comment
-
-begin_comment
 comment|// detected first, detection of bigger regions is faster, as we can jump
-end_comment
-
-begin_comment
 comment|// over the small regions.
-end_comment
-
-begin_for
 for|for
 control|(
 name|auto
@@ -4179,10 +4214,11 @@ argument_list|,
 name|ShortCut
 argument_list|)
 expr_stmt|;
-end_for
+block|}
+end_expr_stmt
 
 begin_expr_stmt
-unit|}  template
+name|template
 operator|<
 name|class
 name|Tr
@@ -5165,7 +5201,9 @@ argument_list|(
 argument|FuncT&F
 argument_list|)
 block|{
-typedef|typedef
+name|using
+name|FuncPtrT
+operator|=
 name|typename
 name|std
 operator|::
@@ -5175,17 +5213,13 @@ name|FuncT
 operator|>
 operator|::
 name|type
-name|FuncPtrT
-expr_stmt|;
+block|;
 comment|// ShortCut a function where for every BB the exit of the largest region
 comment|// starting with BB is stored. These regions can be threated as single BBS.
 comment|// This improves performance on linear CFGs.
 name|BBtoBBMap
 name|ShortCut
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|scanForRegions
 argument_list|(
 name|F
@@ -5193,14 +5227,11 @@ argument_list|,
 operator|&
 name|ShortCut
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 name|BlockT
-modifier|*
+operator|*
 name|BB
-init|=
+operator|=
 name|GraphTraits
 operator|<
 name|FuncPtrT
@@ -5211,10 +5242,7 @@ argument_list|(
 operator|&
 name|F
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+block|;
 name|buildRegionsTree
 argument_list|(
 name|DT
@@ -5226,11 +5254,10 @@ argument_list|)
 argument_list|,
 name|TopLevelRegion
 argument_list|)
-expr_stmt|;
+block|; }
 end_expr_stmt
 
 begin_undef
-unit|}
 undef|#
 directive|undef
 name|DEBUG_TYPE
@@ -5245,6 +5272,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ANALYSIS_REGIONINFOIMPL_H
+end_comment
 
 end_unit
 

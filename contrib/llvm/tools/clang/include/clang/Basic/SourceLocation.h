@@ -1226,6 +1226,175 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// \brief Represents an unpacked "presumed" location which can be presented
+comment|/// to the user.
+comment|///
+comment|/// A 'presumed' location can be modified by \#line and GNU line marker
+comment|/// directives and is always the expansion point of a normal location.
+comment|///
+comment|/// You can get a PresumedLoc from a SourceLocation with SourceManager.
+name|class
+name|PresumedLoc
+block|{
+specifier|const
+name|char
+modifier|*
+name|Filename
+decl_stmt|;
+name|unsigned
+name|Line
+decl_stmt|,
+name|Col
+decl_stmt|;
+name|SourceLocation
+name|IncludeLoc
+decl_stmt|;
+name|public
+label|:
+name|PresumedLoc
+argument_list|()
+operator|:
+name|Filename
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|PresumedLoc
+argument_list|(
+argument|const char *FN
+argument_list|,
+argument|unsigned Ln
+argument_list|,
+argument|unsigned Co
+argument_list|,
+argument|SourceLocation IL
+argument_list|)
+operator|:
+name|Filename
+argument_list|(
+name|FN
+argument_list|)
+operator|,
+name|Line
+argument_list|(
+name|Ln
+argument_list|)
+operator|,
+name|Col
+argument_list|(
+name|Co
+argument_list|)
+operator|,
+name|IncludeLoc
+argument_list|(
+argument|IL
+argument_list|)
+block|{}
+comment|/// \brief Return true if this object is invalid or uninitialized.
+comment|///
+comment|/// This occurs when created with invalid source locations or when walking
+comment|/// off the top of a \#include stack.
+name|bool
+name|isInvalid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Filename
+operator|==
+name|nullptr
+return|;
+block|}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Filename
+operator|!=
+name|nullptr
+return|;
+block|}
+comment|/// \brief Return the presumed filename of this location.
+comment|///
+comment|/// This can be affected by \#line etc.
+specifier|const
+name|char
+operator|*
+name|getFilename
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Filename
+return|;
+block|}
+comment|/// \brief Return the presumed line number of this location.
+comment|///
+comment|/// This can be affected by \#line etc.
+name|unsigned
+name|getLine
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Line
+return|;
+block|}
+comment|/// \brief Return the presumed column number of this location.
+comment|///
+comment|/// This cannot be affected by \#line, but is packaged here for convenience.
+name|unsigned
+name|getColumn
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Col
+return|;
+block|}
+comment|/// \brief Return the presumed include location of this location.
+comment|///
+comment|/// This can be affected by GNU linemarker directives.
+name|SourceLocation
+name|getIncludeLoc
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|IncludeLoc
+return|;
+block|}
+block|}
+empty_stmt|;
+name|class
+name|FileEntry
+decl_stmt|;
 comment|/// \brief A SourceLocation and its associated SourceManager.
 comment|///
 comment|/// This is useful for argument passing to functions that expect both objects.
@@ -1270,6 +1439,32 @@ argument_list|(
 argument|&SM
 argument_list|)
 block|{}
+name|bool
+name|hasManager
+argument_list|()
+specifier|const
+block|{
+name|bool
+name|hasSrcMgr
+operator|=
+name|SrcMgr
+operator|!=
+name|nullptr
+block|;
+name|assert
+argument_list|(
+name|hasSrcMgr
+operator|==
+name|isValid
+argument_list|()
+operator|&&
+literal|"FullSourceLoc has location but no manager"
+argument_list|)
+block|;
+return|return
+name|hasSrcMgr
+return|;
+block|}
 comment|/// \pre This FullSourceLoc has an associated SourceManager.
 specifier|const
 name|SourceManager
@@ -1302,6 +1497,59 @@ specifier|const
 block|;
 name|FullSourceLoc
 name|getSpellingLoc
+argument_list|()
+specifier|const
+block|;
+name|FullSourceLoc
+name|getFileLoc
+argument_list|()
+specifier|const
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|FullSourceLoc
+block|,
+name|FullSourceLoc
+operator|>
+name|getImmediateExpansionRange
+argument_list|()
+specifier|const
+block|;
+name|PresumedLoc
+name|getPresumedLoc
+argument_list|(
+argument|bool UseLineDirectives = true
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isMacroArgExpansion
+argument_list|(
+argument|FullSourceLoc *StartLoc = nullptr
+argument_list|)
+specifier|const
+block|;
+name|FullSourceLoc
+name|getImmediateMacroCallerLoc
+argument_list|()
+specifier|const
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|FullSourceLoc
+block|,
+name|StringRef
+operator|>
+name|getModuleImportLoc
+argument_list|()
+specifier|const
+block|;
+name|unsigned
+name|getFileOffset
 argument_list|()
 specifier|const
 block|;
@@ -1340,6 +1588,39 @@ name|getCharacterData
 argument_list|(
 argument|bool *Invalid = nullptr
 argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getLineNumber
+argument_list|(
+argument|bool *Invalid = nullptr
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getColumnNumber
+argument_list|(
+argument|bool *Invalid = nullptr
+argument_list|)
+specifier|const
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|FullSourceLoc
+block|,
+name|FullSourceLoc
+operator|>
+name|getExpansionRange
+argument_list|()
+specifier|const
+block|;
+specifier|const
+name|FileEntry
+operator|*
+name|getFileEntry
+argument_list|()
 specifier|const
 block|;
 comment|/// \brief Return a StringRef to the source buffer data for the
@@ -1524,173 +1805,7 @@ operator|)
 return|;
 block|}
 expr|}
-block|;
-comment|/// \brief Represents an unpacked "presumed" location which can be presented
-comment|/// to the user.
-comment|///
-comment|/// A 'presumed' location can be modified by \#line and GNU line marker
-comment|/// directives and is always the expansion point of a normal location.
-comment|///
-comment|/// You can get a PresumedLoc from a SourceLocation with SourceManager.
-name|class
-name|PresumedLoc
-block|{
-specifier|const
-name|char
-operator|*
-name|Filename
-block|;
-name|unsigned
-name|Line
-block|,
-name|Col
-block|;
-name|SourceLocation
-name|IncludeLoc
-block|;
-name|public
-operator|:
-name|PresumedLoc
-argument_list|()
-operator|:
-name|Filename
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
-name|PresumedLoc
-argument_list|(
-argument|const char *FN
-argument_list|,
-argument|unsigned Ln
-argument_list|,
-argument|unsigned Co
-argument_list|,
-argument|SourceLocation IL
-argument_list|)
-operator|:
-name|Filename
-argument_list|(
-name|FN
-argument_list|)
-block|,
-name|Line
-argument_list|(
-name|Ln
-argument_list|)
-block|,
-name|Col
-argument_list|(
-name|Co
-argument_list|)
-block|,
-name|IncludeLoc
-argument_list|(
-argument|IL
-argument_list|)
-block|{   }
-comment|/// \brief Return true if this object is invalid or uninitialized.
-comment|///
-comment|/// This occurs when created with invalid source locations or when walking
-comment|/// off the top of a \#include stack.
-name|bool
-name|isInvalid
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Filename
-operator|==
-name|nullptr
-return|;
-block|}
-name|bool
-name|isValid
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Filename
-operator|!=
-name|nullptr
-return|;
-block|}
-comment|/// \brief Return the presumed filename of this location.
-comment|///
-comment|/// This can be affected by \#line etc.
-specifier|const
-name|char
-operator|*
-name|getFilename
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isValid
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|Filename
-return|;
-block|}
-comment|/// \brief Return the presumed line number of this location.
-comment|///
-comment|/// This can be affected by \#line etc.
-name|unsigned
-name|getLine
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isValid
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|Line
-return|;
-block|}
-comment|/// \brief Return the presumed column number of this location.
-comment|///
-comment|/// This cannot be affected by \#line, but is packaged here for convenience.
-name|unsigned
-name|getColumn
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isValid
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|Col
-return|;
-block|}
-comment|/// \brief Return the presumed include location of this location.
-comment|///
-comment|/// This can be affected by GNU linemarker directives.
-name|SourceLocation
-name|getIncludeLoc
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isValid
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|IncludeLoc
-return|;
-block|}
-expr|}
-block|;   }
+block|;    }
 comment|// end namespace clang
 name|namespace
 name|llvm

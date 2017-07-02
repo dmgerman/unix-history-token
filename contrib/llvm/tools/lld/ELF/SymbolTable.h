@@ -80,9 +80,6 @@ block|{
 name|namespace
 name|elf
 block|{
-name|class
-name|Lazy
-decl_stmt|;
 struct_decl|struct
 name|Symbol
 struct_decl|;

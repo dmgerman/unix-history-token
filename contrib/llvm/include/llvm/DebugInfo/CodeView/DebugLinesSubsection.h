@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- DebugLinesSubsection.h --------------------------------*- C++ -*-===//
+comment|//===- DebugLinesSubsection.h -----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,14 +34,26 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGLINEFRAGMENT_H
+name|LLVM_DEBUGINFO_CODEVIEW_DEBUGLINESSUBSECTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGLINEFRAGMENT_H
+name|LLVM_DEBUGINFO_CODEVIEW_DEBUGLINESSUBSECTION_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/CodeView.h"
+end_include
 
 begin_include
 include|#
@@ -70,7 +82,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/BinaryStreamRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -244,35 +280,34 @@ name|friend
 name|class
 name|LineColumnExtractor
 block|;
-typedef|typedef
+name|using
+name|LineInfoArray
+operator|=
 name|VarStreamArray
 operator|<
 name|LineColumnEntry
-operator|,
+block|,
 name|LineColumnExtractor
 operator|>
-name|LineInfoArray
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|Iterator
+operator|=
 name|LineInfoArray
 operator|::
 name|Iterator
-name|Iterator
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|DebugLinesSubsectionRef
 argument_list|()
-expr_stmt|;
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|DebugSubsectionRef
-modifier|*
-name|S
-parameter_list|)
+argument_list|(
+argument|const DebugSubsectionRef *S
+argument_list|)
 block|{
 return|return
 name|S
@@ -287,11 +322,10 @@ return|;
 block|}
 name|Error
 name|initialize
-parameter_list|(
-name|BinaryStreamReader
-name|Reader
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|BinaryStreamReader Reader
+argument_list|)
+block|;
 name|Iterator
 name|begin
 argument_list|()
@@ -331,21 +365,20 @@ name|bool
 name|hasColumnInfo
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|private
-label|:
+operator|:
 specifier|const
 name|LineFragmentHeader
-modifier|*
+operator|*
 name|Header
-init|=
+operator|=
 name|nullptr
-decl_stmt|;
+block|;
 name|LineInfoArray
 name|LinesAndColumns
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 name|class
 name|DebugLinesSubsection
 name|final
@@ -517,13 +550,22 @@ name|Blocks
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace codeview
+block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_DEBUGLINESSUBSECTION_H
+end_comment
 
 end_unit
 

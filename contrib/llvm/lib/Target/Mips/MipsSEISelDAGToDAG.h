@@ -164,11 +164,17 @@ argument|bool HasHi
 argument_list|)
 block|;
 name|void
-name|selectAddE
+name|selectAddESubE
 argument_list|(
-argument|SDNode *Node
+argument|unsigned MOp
+argument_list|,
+argument|SDValue InFlag
+argument_list|,
+argument|SDValue CmpLHS
 argument_list|,
 argument|const SDLoc&DL
+argument_list|,
+argument|SDNode *Node
 argument_list|)
 specifier|const
 block|;

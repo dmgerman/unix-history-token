@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModuleDebugStream.h - PDB Module Info Stream Access ----------------===//
+comment|//===- ModuleDebugStream.h - PDB Module Info Stream Access ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,25 +34,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_PDB_RAW_MODULEDEBUGSTREAM_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_MODULEDEBUGSTREAM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_PDB_RAW_MODULEDEBUGSTREAM_H
+name|LLVM_DEBUGINFO_PDB_NATIVE_MODULEDEBUGSTREAM_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/CodeView/CVRecord.h"
 end_include
 
 begin_include
@@ -82,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/BinaryStreamArray.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/BinaryStreamRef.h"
 end_include
 
@@ -95,6 +83,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -105,22 +105,20 @@ name|namespace
 name|pdb
 block|{
 name|class
-name|PDBFile
-decl_stmt|;
-name|class
 name|DbiModuleDescriptor
 decl_stmt|;
 name|class
 name|ModuleDebugStreamRef
 block|{
-typedef|typedef
+name|using
+name|DebugSubsectionIterator
+init|=
 name|codeview
 operator|::
 name|DebugSubsectionArray
 operator|::
 name|Iterator
-name|DebugSubsectionIterator
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 name|ModuleDebugStreamRef
@@ -226,8 +224,6 @@ operator|)
 operator|=
 expr|default
 decl_stmt|;
-name|llvm
-operator|::
 name|iterator_range
 operator|<
 name|DebugSubsectionIterator
@@ -300,13 +296,22 @@ expr_stmt|;
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace pdb
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_PDB_NATIVE_MODULEDEBUGSTREAM_H
+end_comment
 
 end_unit
 

@@ -46,18 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"PDBSymbol.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"PDBTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -70,13 +58,55 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<list>
+file|"llvm/DebugInfo/PDB/PDBSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBSymbolData.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBSymbolTypeBaseClass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBSymbolTypeBuiltin.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBSymbolTypeUDT.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBSymbolTypeVTable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -85,36 +115,30 @@ directive|include
 file|<memory>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|raw_ostream
-decl_stmt|;
 name|namespace
 name|pdb
 block|{
 name|class
-name|PDBSymTypeBaseClass
-decl_stmt|;
-name|class
-name|PDBSymbolData
-decl_stmt|;
-name|class
-name|PDBSymbolTypeUDT
-decl_stmt|;
-name|class
-name|PDBSymbolTypeVTable
-decl_stmt|;
-name|class
-name|ClassLayout
-decl_stmt|;
-name|class
 name|BaseClassLayout
 decl_stmt|;
 name|class
-name|LayoutItemBase
+name|ClassLayout
 decl_stmt|;
 name|class
 name|UDTLayoutBase
@@ -143,7 +167,9 @@ name|virtual
 operator|~
 name|LayoutItemBase
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|uint32_t
 name|deepPaddingSize
 argument_list|()
@@ -352,11 +378,11 @@ argument_list|,
 argument|uint32_t Size
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|isVBPtr
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -865,11 +891,12 @@ name|UDT
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace pdb
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

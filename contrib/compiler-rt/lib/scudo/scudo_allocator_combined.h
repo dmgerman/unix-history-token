@@ -237,11 +237,16 @@ condition|(
 name|FromPrimary
 condition|)
 return|return
+name|PrimaryAllocator
+operator|::
+name|ClassIdToSize
+argument_list|(
 name|Primary
 operator|.
-name|GetActuallyAllocatedSize
+name|GetSizeClass
 argument_list|(
 name|Ptr
+argument_list|)
 argument_list|)
 return|;
 return|return

@@ -239,6 +239,15 @@ argument_list|(
 argument|ST->getTargetLowering()
 argument_list|)
 block|{}
+name|bool
+name|areInlineCompatible
+argument_list|(
+argument|const Function *Caller
+argument_list|,
+argument|const Function *Callee
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// \name Scalar TTI Implementations
 comment|/// @{
 name|using
@@ -602,6 +611,10 @@ argument_list|(
 name|Loop
 operator|*
 name|L
+argument_list|,
+name|ScalarEvolution
+operator|&
+name|SE
 argument_list|,
 name|TTI
 operator|::

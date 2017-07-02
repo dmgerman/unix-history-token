@@ -348,6 +348,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Transforms/Utils/OrderedInstructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
 end_include
 
@@ -402,9 +408,6 @@ name|LLVMContext
 decl_stmt|;
 name|class
 name|raw_ostream
-decl_stmt|;
-name|class
-name|OrderedBasicBlock
 decl_stmt|;
 enum|enum
 name|PredicateType
@@ -506,7 +509,6 @@ operator|*
 name|Condition
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -608,7 +610,6 @@ operator|=
 name|delete
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -650,7 +651,6 @@ operator|=
 name|delete
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -757,7 +757,6 @@ operator|=
 name|delete
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -846,7 +845,6 @@ operator|=
 name|delete
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1148,6 +1146,9 @@ name|AssumptionCache
 operator|&
 name|AC
 block|;
+name|OrderedInstructions
+name|OI
+block|;
 comment|// This maps from copy operands to Predicate Info. Note that it does not own
 comment|// the Predicate Info, they belong to the ValueInfo structs in the ValueInfos
 comment|// vector.
@@ -1186,21 +1187,6 @@ name|unsigned
 name|int
 operator|>
 name|ValueInfoNums
-block|;
-comment|// OrderedBasicBlocks used during sorting uses
-name|DenseMap
-operator|<
-specifier|const
-name|BasicBlock
-operator|*
-block|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|OrderedBasicBlock
-operator|>>
-name|OBBMap
 block|;
 comment|// The set of edges along which we can only handle phi uses, due to critical
 comment|// edges.

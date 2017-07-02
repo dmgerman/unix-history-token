@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/CodeView.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/DebugSubsection.h"
 end_include
 
@@ -64,7 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Endian.h"
+file|"llvm/Support/BinaryStreamRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -87,21 +105,23 @@ range|:
 name|public
 name|DebugSubsectionRef
 block|{
-typedef|typedef
+name|using
+name|ReferenceArray
+operator|=
 name|FixedStreamArray
 operator|<
 name|CrossModuleExport
 operator|>
-name|ReferenceArray
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|Iterator
+operator|=
 name|ReferenceArray
 operator|::
 name|Iterator
-name|Iterator
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|DebugCrossModuleExportsSubsectionRef
 argument_list|()
 operator|:
@@ -130,18 +150,16 @@ return|;
 block|}
 name|Error
 name|initialize
-parameter_list|(
-name|BinaryStreamReader
-name|Reader
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|BinaryStreamReader Reader
+argument_list|)
+block|;
 name|Error
 name|initialize
-parameter_list|(
-name|BinaryStreamRef
-name|Stream
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|BinaryStreamRef Stream
+argument_list|)
+block|;
 name|Iterator
 name|begin
 argument_list|()
@@ -167,15 +185,14 @@ argument_list|()
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|FixedStreamArray
 operator|<
 name|CrossModuleExport
 operator|>
 name|References
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 name|class
 name|DebugCrossModuleExportsSubsection
 name|final
@@ -247,13 +264,22 @@ name|Mappings
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace codeview
+block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_DEBUGCROSSEXSUBSECTION_H
+end_comment
 
 end_unit
 

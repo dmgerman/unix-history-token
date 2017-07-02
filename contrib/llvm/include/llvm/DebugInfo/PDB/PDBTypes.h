@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- PDBTypes.h - Defines enums for various fields contained in PDB ---*-===//
+comment|//===- PDBTypes.h - Defines enums for various fields contained in PDB ----====//
 end_comment
 
 begin_comment
@@ -46,19 +46,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Config/llvm-config.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/CodeView.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/PDB/IPDBEnumChildren.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/PDB/Native/RawTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
 end_include
 
 begin_include
@@ -87,62 +93,20 @@ name|namespace
 name|pdb
 block|{
 name|class
+name|IPDBDataStream
+decl_stmt|;
+name|class
+name|IPDBLineNumber
+decl_stmt|;
+name|class
+name|IPDBSourceFile
+decl_stmt|;
+name|class
 name|PDBSymDumper
 decl_stmt|;
 name|class
 name|PDBSymbol
 decl_stmt|;
-name|class
-name|IPDBDataStream
-decl_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|IPDBEnumChildren
-expr_stmt|;
-name|class
-name|IPDBLineNumber
-decl_stmt|;
-name|class
-name|IPDBRawSymbol
-decl_stmt|;
-name|class
-name|IPDBSession
-decl_stmt|;
-name|class
-name|IPDBSourceFile
-decl_stmt|;
-typedef|typedef
-name|IPDBEnumChildren
-operator|<
-name|PDBSymbol
-operator|>
-name|IPDBEnumSymbols
-expr_stmt|;
-typedef|typedef
-name|IPDBEnumChildren
-operator|<
-name|IPDBSourceFile
-operator|>
-name|IPDBEnumSourceFiles
-expr_stmt|;
-typedef|typedef
-name|IPDBEnumChildren
-operator|<
-name|IPDBDataStream
-operator|>
-name|IPDBEnumDataStreams
-expr_stmt|;
-typedef|typedef
-name|IPDBEnumChildren
-operator|<
-name|IPDBLineNumber
-operator|>
-name|IPDBEnumLineNumbers
-expr_stmt|;
 name|class
 name|PDBSymbolExe
 decl_stmt|;
@@ -236,6 +200,38 @@ decl_stmt|;
 name|class
 name|PDBSymbolUnknown
 decl_stmt|;
+name|using
+name|IPDBEnumSymbols
+init|=
+name|IPDBEnumChildren
+operator|<
+name|PDBSymbol
+operator|>
+decl_stmt|;
+name|using
+name|IPDBEnumSourceFiles
+init|=
+name|IPDBEnumChildren
+operator|<
+name|IPDBSourceFile
+operator|>
+decl_stmt|;
+name|using
+name|IPDBEnumDataStreams
+init|=
+name|IPDBEnumChildren
+operator|<
+name|IPDBDataStream
+operator|>
+decl_stmt|;
+name|using
+name|IPDBEnumLineNumbers
+init|=
+name|IPDBEnumChildren
+operator|<
+name|IPDBLineNumber
+operator|>
+decl_stmt|;
 comment|/// Specifies which PDB reader implementation is to be used.  Only a value
 comment|/// of PDB_ReaderType::DIA is currently supported, but Native is in the works.
 name|enum
@@ -325,12 +321,13 @@ block|}
 empty_stmt|;
 comment|/// These values correspond to the CV_CPU_TYPE_e enumeration, and are documented
 comment|/// here: https://msdn.microsoft.com/en-us/library/b2fc64ek.aspx
-typedef|typedef
+name|using
+name|PDB_Cpu
+init|=
 name|codeview
 operator|::
 name|CPUType
-name|PDB_Cpu
-expr_stmt|;
+decl_stmt|;
 name|enum
 name|class
 name|PDB_Machine
@@ -428,21 +425,22 @@ comment|/// These values correspond to the CV_call_e enumeration, and are docume
 comment|/// at the following locations:
 comment|///   https://msdn.microsoft.com/en-us/library/b2fc64ek.aspx
 comment|///   https://msdn.microsoft.com/en-us/library/windows/desktop/ms680207(v=vs.85).aspx
-comment|///
-typedef|typedef
+name|using
+name|PDB_CallingConv
+init|=
 name|codeview
 operator|::
 name|CallingConvention
-name|PDB_CallingConv
-expr_stmt|;
+decl_stmt|;
 comment|/// These values correspond to the CV_CFL_LANG enumeration, and are documented
 comment|/// here: https://msdn.microsoft.com/en-us/library/bw3aekw6.aspx
-typedef|typedef
+name|using
+name|PDB_Lang
+init|=
 name|codeview
 operator|::
 name|SourceLanguage
-name|PDB_Lang
-expr_stmt|;
+decl_stmt|;
 comment|/// These values correspond to the DataKind enumeration, and are documented
 comment|/// here: https://msdn.microsoft.com/en-us/library/b2x2t313.aspx
 name|enum
@@ -769,30 +767,20 @@ name|Variant
 block|{
 name|Variant
 argument_list|()
-operator|:
-name|Type
-argument_list|(
-argument|PDB_VariantType::Empty
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|Variant
 argument_list|(
-specifier|const
-name|Variant
-operator|&
-name|Other
-argument_list|)
-operator|:
-name|Type
-argument_list|(
-argument|PDB_VariantType::Empty
+argument|const Variant&Other
 argument_list|)
 block|{
 operator|*
 name|this
 operator|=
 name|Other
-block|;   }
+expr_stmt|;
+block|}
 operator|~
 name|Variant
 argument_list|()
@@ -814,6 +802,10 @@ decl_stmt|;
 block|}
 name|PDB_VariantType
 name|Type
+init|=
+name|PDB_VariantType
+operator|::
+name|Empty
 decl_stmt|;
 union|union
 block|{
@@ -1085,11 +1077,15 @@ end_empty_stmt
 
 begin_comment
 unit|}
+comment|// end namespace pdb
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 
 begin_decl_stmt
-unit|}
 name|namespace
 name|std
 block|{
@@ -1106,20 +1102,22 @@ operator|::
 name|PDB_SymType
 operator|>
 block|{
-typedef|typedef
+name|using
+name|argument_type
+operator|=
 name|llvm
 operator|::
 name|pdb
 operator|::
 name|PDB_SymType
-name|argument_type
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|result_type
+operator|=
 name|std
 operator|::
 name|size_t
-name|result_type
-expr_stmt|;
+block|;
 name|result_type
 name|operator
 argument_list|()
@@ -1151,15 +1149,11 @@ operator|)
 operator|)
 return|;
 block|}
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace std
 end_comment
 

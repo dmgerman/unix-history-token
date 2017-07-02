@@ -831,10 +831,6 @@ block|;  }
 comment|// End yaml namespace
 block|}
 comment|// End llvm namespace
-name|LLVM_YAML_IS_FLOW_SEQUENCE_VECTOR
-argument_list|(
-argument|uint64_t
-argument_list|)
 name|namespace
 name|llvm
 block|{
@@ -1064,10 +1060,6 @@ argument_list|)
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
 argument|FunctionSummaryYaml
-argument_list|)
-name|LLVM_YAML_IS_FLOW_SEQUENCE_VECTOR
-argument_list|(
-argument|std::string
 argument_list|)
 name|namespace
 name|llvm

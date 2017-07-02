@@ -34,14 +34,26 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_CODEVIEW_BUGINLINEELINESSUBSECTION_H
+name|LLVM_DEBUGINFO_CODEVIEW_DEBUGINLINEELINESSUBSECTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_CODEVIEW_BUGINLINEELINESSUBSECTION_H
+name|LLVM_DEBUGINFO_CODEVIEW_DEBUGINLINEELINESSUBSECTION_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/CodeView.h"
+end_include
 
 begin_include
 include|#
@@ -53,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/CodeView/Line.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/TypeIndex.h"
 end_include
 
 begin_include
@@ -70,7 +88,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/BinaryStreamRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -80,9 +122,6 @@ block|{
 name|namespace
 name|codeview
 block|{
-name|class
-name|DebugInlineeLinesSubsectionRef
-decl_stmt|;
 name|class
 name|DebugChecksumsSubsection
 decl_stmt|;
@@ -142,6 +181,7 @@ expr_stmt|;
 block|}
 struct|;
 block|}
+comment|// end namespace codeview
 name|template
 operator|<
 operator|>
@@ -187,33 +227,32 @@ range|:
 name|public
 name|DebugSubsectionRef
 block|{
-typedef|typedef
+name|using
+name|LinesArray
+operator|=
 name|VarStreamArray
 operator|<
 name|InlineeSourceLine
 operator|>
-name|LinesArray
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|Iterator
+operator|=
 name|LinesArray
 operator|::
 name|Iterator
-name|Iterator
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|DebugInlineeLinesSubsectionRef
 argument_list|()
-expr_stmt|;
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|DebugSubsectionRef
-modifier|*
-name|S
-parameter_list|)
+argument_list|(
+argument|const DebugSubsectionRef *S
+argument_list|)
 block|{
 return|return
 name|S
@@ -228,16 +267,15 @@ return|;
 block|}
 name|Error
 name|initialize
-parameter_list|(
-name|BinaryStreamReader
-name|Reader
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|BinaryStreamReader Reader
+argument_list|)
+block|;
 name|bool
 name|hasExtraFiles
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|Iterator
 name|begin
 argument_list|()
@@ -263,18 +301,17 @@ argument_list|()
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|InlineeLinesSignature
 name|Signature
-decl_stmt|;
+block|;
 name|VarStreamArray
 operator|<
 name|InlineeSourceLine
 operator|>
 name|Lines
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 name|class
 name|DebugInlineeLinesSubsection
 name|final
@@ -439,13 +476,22 @@ name|Entries
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace codeview
+block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_DEBUGINLINEELINESSUBSECTION_H
+end_comment
 
 end_unit
 

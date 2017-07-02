@@ -202,7 +202,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -274,7 +273,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -331,7 +329,6 @@ name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -374,7 +371,6 @@ name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -417,7 +413,6 @@ name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -652,7 +647,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -733,7 +727,6 @@ name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -840,7 +833,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -893,7 +885,6 @@ name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1003,7 +994,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1280,7 +1270,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1346,7 +1335,6 @@ name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1412,7 +1400,6 @@ name|public
 operator|:
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1566,7 +1553,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

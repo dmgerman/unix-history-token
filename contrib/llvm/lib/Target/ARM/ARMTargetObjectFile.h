@@ -65,12 +65,6 @@ range|:
 name|public
 name|TargetLoweringObjectFileELF
 block|{
-name|mutable
-name|bool
-name|genExecuteOnly
-operator|=
-name|false
-block|;
 name|protected
 operator|:
 specifier|const

@@ -7909,7 +7909,6 @@ argument_list|()
 specifier|const
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

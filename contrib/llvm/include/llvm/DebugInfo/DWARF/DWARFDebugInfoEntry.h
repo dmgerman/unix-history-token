@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/DWARF/DWARFDataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdint>
 end_include
 
@@ -132,7 +138,7 @@ modifier|*
 name|OffsetPtr
 parameter_list|,
 specifier|const
-name|DataExtractor
+name|DWARFDataExtractor
 modifier|&
 name|DebugInfoData
 parameter_list|,

@@ -1437,6 +1437,24 @@ name|V2
 argument_list|)
 return|;
 block|}
+comment|/// Return true if c++17 aligned allocation/deallocation functions are not
+comment|/// implemented in the c++ standard library of the deployment target we are
+comment|/// targeting.
+name|bool
+name|isAlignedAllocationUnavailable
+argument_list|()
+specifier|const
+block|;
+name|void
+name|addClangTargetOptions
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
 name|StringRef
 name|getPlatformFamily
 argument_list|()

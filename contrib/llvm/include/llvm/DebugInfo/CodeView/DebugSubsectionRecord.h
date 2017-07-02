@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- DebugSubsection.h ------------------------------------*- C++ -*-===//
+comment|//===- DebugSubsectionRecord.h ----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGFRAGMENTRECORD_H
+name|LLVM_DEBUGINFO_CODEVIEW_DEBUGSUBSECTIONRECORD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGFRAGMENTRECORD_H
+name|LLVM_DEBUGINFO_CODEVIEW_DEBUGSUBSECTIONRECORD_H
 end_define
 
 begin_include
@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/BinaryStreamWriter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Endian.h"
 end_include
 
@@ -79,10 +73,31 @@ directive|include
 file|"llvm/Support/Error.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|BinaryStreamWriter
+decl_stmt|;
 name|namespace
 name|codeview
 block|{
@@ -158,9 +173,17 @@ name|private
 label|:
 name|CodeViewContainer
 name|Container
+init|=
+name|CodeViewContainer
+operator|::
+name|ObjectFile
 decl_stmt|;
 name|DebugSubsectionKind
 name|Kind
+init|=
+name|DebugSubsectionKind
+operator|::
+name|None
 decl_stmt|;
 name|BinaryStreamRef
 name|Data
@@ -223,7 +246,7 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
-comment|// namespace codeview
+comment|// end namespace codeview
 name|template
 operator|<
 operator|>
@@ -311,19 +334,24 @@ begin_decl_stmt
 name|namespace
 name|codeview
 block|{
-typedef|typedef
+name|using
+name|DebugSubsectionArray
+init|=
 name|VarStreamArray
 operator|<
 name|DebugSubsectionRecord
 operator|>
-name|DebugSubsectionArray
-expr_stmt|;
+decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
+comment|// end namespace codeview
+end_comment
+
+begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -332,7 +360,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_DEBUGINFO_CODEVIEW_MODULEDEBUGFRAGMENTRECORD_H
+comment|// LLVM_DEBUGINFO_CODEVIEW_DEBUGSUBSECTIONRECORD_H
 end_comment
 
 end_unit

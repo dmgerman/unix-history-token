@@ -315,7 +315,6 @@ argument_list|)
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -330,7 +329,6 @@ argument_list|()
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1379,7 +1377,6 @@ argument_list|)
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1441,7 +1438,6 @@ operator|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2540,7 +2536,6 @@ argument_list|()
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2555,7 +2550,6 @@ argument_list|()
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3456,7 +3450,6 @@ argument_list|)
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3471,7 +3464,6 @@ argument_list|()
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -4147,7 +4139,6 @@ argument_list|)
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -4175,7 +4166,6 @@ name|FCmp
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -4532,7 +4522,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -4547,7 +4536,6 @@ argument_list|()
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

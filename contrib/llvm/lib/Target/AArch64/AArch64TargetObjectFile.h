@@ -153,6 +153,14 @@ specifier|const
 name|override
 block|; }
 decl_stmt|;
+comment|/// This implementation is used for AArch64 COFF targets.
+name|class
+name|AArch64_COFFTargetObjectFile
+range|:
+name|public
+name|TargetLoweringObjectFileCOFF
+block|{}
+decl_stmt|;
 block|}
 end_decl_stmt
 

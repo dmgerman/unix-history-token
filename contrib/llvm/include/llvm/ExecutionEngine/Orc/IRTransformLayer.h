@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -75,6 +81,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Module
+decl_stmt|;
 name|namespace
 name|orc
 block|{

@@ -598,17 +598,34 @@ expr_stmt|;
 comment|/// \brief Return if a code hotness metric should be included in optimization
 comment|/// diagnostics.
 name|bool
-name|getDiagnosticHotnessRequested
+name|getDiagnosticsHotnessRequested
 argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Set if a code hotness metric should be included in optimization
 comment|/// diagnostics.
 name|void
-name|setDiagnosticHotnessRequested
+name|setDiagnosticsHotnessRequested
 parameter_list|(
 name|bool
 name|Requested
+parameter_list|)
+function_decl|;
+comment|/// \brief Return the minimum hotness value a diagnostic would need in order
+comment|/// to be included in optimization diagnostics. If there is no minimum, this
+comment|/// returns None.
+name|uint64_t
+name|getDiagnosticsHotnessThreshold
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Set the minimum hotness value a diagnostic needs in order to be
+comment|/// included in optimization diagnostics.
+name|void
+name|setDiagnosticsHotnessThreshold
+parameter_list|(
+name|uint64_t
+name|Threshold
 parameter_list|)
 function_decl|;
 comment|/// \brief Return the YAML file used by the backend to save optimization

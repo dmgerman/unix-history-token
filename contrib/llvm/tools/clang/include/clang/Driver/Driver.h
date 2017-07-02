@@ -1008,6 +1008,10 @@ name|char
 operator|*
 operator|>
 name|Args
+argument_list|,
+name|bool
+operator|&
+name|ContainsError
 argument_list|)
 expr_stmt|;
 comment|/// BuildInputs - Construct the list of inputs and their types from

@@ -103,6 +103,15 @@ argument_list|)
 name|override
 block|;
 name|Error
+name|visitSymbolBegin
+argument_list|(
+argument|codeview::CVSymbol&Record
+argument_list|,
+argument|uint32_t Offset
+argument_list|)
+name|override
+block|;
+name|Error
 name|visitSymbolEnd
 argument_list|(
 argument|codeview::CVSymbol&Record

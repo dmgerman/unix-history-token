@@ -1374,7 +1374,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
