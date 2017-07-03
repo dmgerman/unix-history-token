@@ -4507,7 +4507,7 @@ begin_define
 define|#
 directive|define
 name|NFS_MAXBSIZE
-value|MAXBCACHEBUF
+value|(maxbcachebuf)
 end_define
 
 begin_endif

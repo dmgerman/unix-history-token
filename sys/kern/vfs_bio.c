@@ -706,6 +706,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|maxbcachebuf_adjust
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -1736,6 +1746,35 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Permit the use of the unmapped i/o"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|maxbcachebuf
+init|=
+name|MAXBCACHEBUF
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|maxbcachebuf
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|maxbcachebuf
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum size of a buffer cache block"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3634,6 +3673,82 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Adjust the maxbcachbuf tunable.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|maxbcachebuf_adjust
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+comment|/* 	 * maxbcachebuf must be a power of 2>= MAXBSIZE. 	 */
+name|i
+operator|=
+literal|2
+expr_stmt|;
+while|while
+condition|(
+name|i
+operator|*
+literal|2
+operator|<=
+name|maxbcachebuf
+condition|)
+name|i
+operator|*=
+literal|2
+expr_stmt|;
+name|maxbcachebuf
+operator|=
+name|i
+expr_stmt|;
+if|if
+condition|(
+name|maxbcachebuf
+operator|<
+name|MAXBSIZE
+condition|)
+name|maxbcachebuf
+operator|=
+name|MAXBSIZE
+expr_stmt|;
+if|if
+condition|(
+name|maxbcachebuf
+operator|>
+name|MAXPHYS
+condition|)
+name|maxbcachebuf
+operator|=
+name|MAXPHYS
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+operator|!=
+literal|0
+operator|&&
+name|maxbcachebuf
+operator|!=
+name|MAXBCACHEBUF
+condition|)
+name|printf
+argument_list|(
+literal|"maxbcachebuf=%d\n"
+argument_list|,
+name|maxbcachebuf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * bd_speedup - speedup the buffer cache flushing code  */
 end_comment
 
@@ -3783,6 +3898,9 @@ name|PAGE_SIZE
 operator|/
 literal|1024
 operator|)
+expr_stmt|;
+name|maxbcachebuf_adjust
+argument_list|()
 expr_stmt|;
 comment|/* 	 * The nominal buffer size (and minimum KVA allocation) is BKVASIZE. 	 * For the first 64MB of ram nominally allocate sufficient buffers to 	 * cover 1/4 of our ram.  Beyond the first 64MB allocate additional 	 * buffers to cover 1/10 of our ram over 64MB.  When auto-sizing 	 * the buffer cache we limit the eventual kva reservation to 	 * maxbcache bytes. 	 * 	 * factor represents the 1/4 x ram conversion. 	 */
 if|if
@@ -4133,11 +4251,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|CTASSERT
+name|KASSERT
 argument_list|(
-name|MAXBCACHEBUF
+name|maxbcachebuf
 operator|>=
 name|MAXBSIZE
+argument_list|,
+operator|(
+literal|"maxbcachebuf (%d) must be>= MAXBSIZE (%d)\n"
+operator|,
+name|maxbcachebuf
+operator|,
+name|MAXBSIZE
+operator|)
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -4409,7 +4535,7 @@ literal|4
 argument_list|,
 name|maxbufspace
 operator|-
-name|MAXBCACHEBUF
+name|maxbcachebuf
 operator|*
 literal|10
 argument_list|)
@@ -4450,7 +4576,7 @@ name|hibufspace
 operator|/
 literal|64
 argument_list|,
-name|MAXBCACHEBUF
+name|maxbcachebuf
 argument_list|)
 argument_list|,
 literal|16
@@ -4477,7 +4603,7 @@ operator|)
 operator|/
 literal|3
 argument_list|,
-name|MAXBCACHEBUF
+name|maxbcachebuf
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Limit the amount of malloc memory since it is wired permanently into 	 * the kernel space.  Even though this is accounted for in the buffer 	 * allocation, we don't want the malloced region to grow uncontrolled. 	 * The malloc scheme improves memory utilization significantly on 	 * average (small) directories. 	 */
@@ -13892,15 +14018,15 @@ if|if
 condition|(
 name|size
 operator|>
-name|MAXBCACHEBUF
+name|maxbcachebuf
 condition|)
 name|panic
 argument_list|(
-literal|"getblk: size(%d)> MAXBCACHEBUF(%d)\n"
+literal|"getblk: size(%d)> maxbcachebuf(%d)\n"
 argument_list|,
 name|size
 argument_list|,
-name|MAXBCACHEBUF
+name|maxbcachebuf
 argument_list|)
 expr_stmt|;
 if|if
