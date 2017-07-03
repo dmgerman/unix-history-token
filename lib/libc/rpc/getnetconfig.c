@@ -2762,9 +2762,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|tmp
-decl_stmt|,
-modifier|*
-name|tmp2
 decl_stmt|;
 name|u_int
 name|i
@@ -2821,10 +2818,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|tmp2
-operator|=
-name|tmp
-expr_stmt|;
 comment|/*      * First we dup all the data from matched netconfig buffer.  Then we      * adjust some of the member pointer to a pre-allocated buffer where      * contains part of the data.      * To follow the convention used in parse_ncp(), we store all the      * necessary information in the pre-allocated buffer and let each      * of the netconfig char pointer member point to the right address      * in the buffer.      */
 operator|*
 name|p
@@ -2981,11 +2974,6 @@ expr_stmt|;
 name|free
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|tmp2
 argument_list|)
 expr_stmt|;
 return|return
