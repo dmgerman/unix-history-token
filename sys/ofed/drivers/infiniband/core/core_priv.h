@@ -531,6 +531,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ib_cache_gid_del_all_by_netdev
+parameter_list|(
+name|struct
+name|net_device
+modifier|*
+name|ndev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|roce_gid_mgmt_init
 parameter_list|(
