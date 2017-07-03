@@ -15,11 +15,33 @@ directive|define
 name|MLX4_ABI_USER_H
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<linux/types.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<infiniband/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Increment this value if any changes that break userspace ABI  * compatibility are made.  */
