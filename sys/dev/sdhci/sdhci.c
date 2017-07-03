@@ -1869,7 +1869,7 @@ argument_list|,
 name|pwr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Turn on VDD1 power.  Note that at least some Intel controllers can 	 * fail to enable bus power on the first try after transiting from D3 	 * to D0, so we give them up to 20 ms. 	 */
+comment|/* 	 * Turn on VDD1 power.  Note that at least some Intel controllers can 	 * fail to enable bus power on the first try after transiting from D3 	 * to D0, so we give them up to 2 ms. 	 */
 name|pwr
 operator||=
 name|SDHCI_POWER_ON
