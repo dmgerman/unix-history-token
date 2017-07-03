@@ -47,7 +47,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * __FreeBSD_version numbers are documented in the Porter's Handbook.  * If you bump the version for any reason, you should update the documentation  * there.  * Currently this lives here in the doc/ repository:  *  *	head/en_US.ISO8859-1/books/porters-handbook/book.xml  *  * scheme is:<major><two digit minor>Rxx  *		'R' is in the range 0 to 4 if this is a release branch or  *		x.0-CURRENT before RELENG_*_0 is created, otherwise 'R' is  *		in the range 5 to 9.  */
+comment|/*  * __FreeBSD_version numbers are documented in the Porter's Handbook.  * If you bump the version for any reason, you should update the documentation  * there.  * Currently this lives here in the doc/ repository:  *  *	head/en_US.ISO8859-1/books/porters-handbook/book.xml  *  * scheme is:<major><two digit minor>Rxx  *		'R' is in the range 0 to 4 if this is a release branch or  *		X.0-CURRENT before releng/X.0 is created, otherwise 'R' is  *		in the range 5 to 9.  */
 end_comment
 
 begin_undef
