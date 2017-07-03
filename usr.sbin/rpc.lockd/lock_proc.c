@@ -1113,11 +1113,27 @@ operator|=
 name|geteuid
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
 name|seteuid
 argument_list|(
 literal|0
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"seteuid(0) failed"
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 comment|/* 	 * Bind the client FD to a reserved port. 	 * Some NFS servers reject any NLM request from a non-reserved port.  	 */
 name|bindresvport
 argument_list|(
@@ -1127,11 +1143,29 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Drop root privileges again. */
+if|if
+condition|(
 name|seteuid
 argument_list|(
 name|old_euid
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"seteuid(%d) failed"
+argument_list|,
+name|old_euid
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 comment|/* Success - update the cache entry */
 name|clnt_cache_ptr
 index|[
