@@ -8448,23 +8448,17 @@ name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
-operator|+
 name|swap_pager_avail
 operator|<
 name|nblks
 operator|+
 name|nswap_lowat
 condition|)
-block|{
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-block|}
 comment|/* 	 * Prevent further allocations on this device. 	 */
 name|mtx_lock
 argument_list|(
