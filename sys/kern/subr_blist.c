@@ -304,7 +304,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|daddr_t
 name|blst_leaf_fill
 parameter_list|(
 name|blmeta_t
@@ -322,7 +322,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|daddr_t
 name|blst_meta_fill
 parameter_list|(
 name|blmeta_t
@@ -445,7 +445,9 @@ block|{
 name|blist_t
 name|bl
 decl_stmt|;
-name|int
+name|daddr_t
+name|nodes
+decl_stmt|,
 name|radix
 decl_stmt|;
 name|int
@@ -497,6 +499,17 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bl
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|bl
 operator|->
 name|bl_blocks
@@ -515,9 +528,7 @@ name|bl_skip
 operator|=
 name|skip
 expr_stmt|;
-name|bl
-operator|->
-name|bl_rootblks
+name|nodes
 operator|=
 literal|1
 operator|+
@@ -525,9 +536,7 @@ name|blst_radix_init
 argument_list|(
 name|NULL
 argument_list|,
-name|bl
-operator|->
-name|bl_radix
+name|radix
 argument_list|,
 name|bl
 operator|->
@@ -542,18 +551,53 @@ name|bl_root
 operator|=
 name|malloc
 argument_list|(
+name|nodes
+operator|*
 sizeof|sizeof
 argument_list|(
 name|blmeta_t
 argument_list|)
-operator|*
-name|bl
-operator|->
-name|bl_rootblks
 argument_list|,
 name|M_SWAP
 argument_list|,
 name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bl
+operator|->
+name|bl_root
+operator|==
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|bl
+argument_list|,
+name|M_SWAP
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+name|blst_radix_init
+argument_list|(
+name|bl
+operator|->
+name|bl_root
+argument_list|,
+name|radix
+argument_list|,
+name|bl
+operator|->
+name|bl_skip
+argument_list|,
+name|blocks
 argument_list|)
 expr_stmt|;
 if|#
@@ -592,9 +636,7 @@ name|long
 name|long
 call|)
 argument_list|(
-name|bl
-operator|->
-name|bl_rootblks
+name|nodes
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -615,30 +657,11 @@ operator|(
 name|long
 name|long
 operator|)
-name|bl
-operator|->
-name|bl_rootblks
+name|nodes
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|blst_radix_init
-argument_list|(
-name|bl
-operator|->
-name|bl_root
-argument_list|,
-name|bl
-operator|->
-name|bl_radix
-argument_list|,
-name|bl
-operator|->
-name|bl_skip
-argument_list|,
-name|blocks
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|bl
@@ -842,7 +865,7 @@ comment|/*  * blist_fill() -	mark a region in the block bitmap as off-limits  *	
 end_comment
 
 begin_function
-name|int
+name|daddr_t
 name|blist_fill
 parameter_list|(
 name|blist_t
@@ -855,7 +878,7 @@ name|daddr_t
 name|count
 parameter_list|)
 block|{
-name|int
+name|daddr_t
 name|filled
 decl_stmt|;
 if|if
@@ -1397,7 +1420,7 @@ name|scan
 operator|->
 name|bm_bighint
 operator|=
-name|count
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -2502,7 +2525,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|daddr_t
 name|blst_leaf_fill
 parameter_list|(
 name|blmeta_t
@@ -2527,7 +2550,7 @@ operator|-
 literal|1
 operator|)
 decl_stmt|;
-name|int
+name|daddr_t
 name|nblks
 decl_stmt|;
 name|u_daddr_t
@@ -2614,7 +2637,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|daddr_t
 name|blst_meta_fill
 parameter_list|(
 name|blmeta_t
@@ -2652,7 +2675,7 @@ operator|/
 name|BLIST_META_RADIX
 operator|)
 decl_stmt|;
-name|int
+name|daddr_t
 name|nblks
 init|=
 literal|0
@@ -2704,7 +2727,7 @@ name|scan
 operator|->
 name|bm_bighint
 operator|=
-name|count
+literal|0
 expr_stmt|;
 return|return
 name|nblks
@@ -3918,8 +3941,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"    n=%d\n"
+literal|"    n=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blist_fill
 argument_list|(
 name|bl
