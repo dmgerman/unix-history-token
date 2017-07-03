@@ -2771,6 +2771,11 @@ modifier|*
 modifier|*
 name|p_drv
 decl_stmt|;
+name|struct
+name|periph_driver
+modifier|*
+name|drv
+decl_stmt|;
 name|cam_periph_assert
 argument_list|(
 name|periph
@@ -2849,6 +2854,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Cache a pointer to the periph_driver structure.  If a 	 * periph_driver is added or removed from the array (see 	 * periphdriver_register()) while we drop the toplogy lock 	 * below, p_drv may change.  This doesn't protect against this 	 * particular periph_driver going away.  That will require full 	 * reference counting in the periph_driver infrastructure. 	 */
+name|drv
+operator|=
+operator|*
+name|p_drv
+expr_stmt|;
 comment|/* 	 * We need to set this flag before dropping the topology lock, to 	 * let anyone who is traversing the list that this peripheral is 	 * about to be freed, and there will be no more reference count 	 * checks. 	 */
 name|periph
 operator|->
@@ -2883,10 +2894,7 @@ expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-operator|(
-operator|*
-name|p_drv
-operator|)
+name|drv
 operator|->
 name|units
 argument_list|,
@@ -2895,10 +2903,7 @@ argument_list|,
 name|unit_links
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|p_drv
-operator|)
+name|drv
 operator|->
 name|generation
 operator|++
