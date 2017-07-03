@@ -587,9 +587,13 @@ name|ip6h_nxt
 expr_stmt|;
 name|hlen
 operator|+=
+operator|(
 name|hbh
 operator|->
 name|ip6h_len
+operator|+
+literal|1
+operator|)
 operator|<<
 literal|3
 expr_stmt|;
