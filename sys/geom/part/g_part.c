@@ -4926,6 +4926,12 @@ operator|->
 name|gpe_pp
 operator|->
 name|ace
+operator|+
+name|entry
+operator|->
+name|gpe_pp
+operator|->
+name|acr
 operator|)
 operator|==
 literal|0
