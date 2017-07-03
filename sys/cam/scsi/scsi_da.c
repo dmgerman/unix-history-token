@@ -23087,6 +23087,15 @@ name|service_action
 operator|=
 name|service_action
 expr_stmt|;
+name|scsi_ulto4b
+argument_list|(
+name|dxfer_len
+argument_list|,
+name|scsi_cmd
+operator|->
+name|length
+argument_list|)
+expr_stmt|;
 name|scsi_u64to8b
 argument_list|(
 name|zone_start_lba
