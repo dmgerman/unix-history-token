@@ -356,7 +356,9 @@ begin_function_decl
 name|void
 name|tcache_flush
 parameter_list|(
-name|void
+name|tsd_t
+modifier|*
+name|tsd
 parameter_list|)
 function_decl|;
 end_function_decl

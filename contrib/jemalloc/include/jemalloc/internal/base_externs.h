@@ -44,6 +44,10 @@ begin_function_decl
 name|void
 name|base_delete
 parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
 name|base_t
 modifier|*
 name|base

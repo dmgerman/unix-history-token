@@ -177,17 +177,21 @@ init|=
 literal|1
 block|,
 comment|/* used for comparison only. */
-name|tsd_state_purgatory
+name|tsd_state_minimal_initialized
 init|=
 literal|2
 block|,
-name|tsd_state_reincarnated
+name|tsd_state_purgatory
 init|=
 literal|3
 block|,
-name|tsd_state_uninitialized
+name|tsd_state_reincarnated
 init|=
 literal|4
+block|,
+name|tsd_state_uninitialized
+init|=
+literal|5
 block|}
 enum|;
 end_enum
@@ -522,7 +526,7 @@ parameter_list|,
 name|nt
 parameter_list|)
 define|\
-value|JEMALLOC_ALWAYS_INLINE t *						\ tsd_##n##p_get(tsd_t *tsd) {						\ 	assert(tsd->state == tsd_state_nominal ||			\ 	    tsd->state == tsd_state_nominal_slow ||			\ 	    tsd->state == tsd_state_reincarnated);			\ 	return tsd_##n##p_get_unsafe(tsd);				\ }
+value|JEMALLOC_ALWAYS_INLINE t *						\ tsd_##n##p_get(tsd_t *tsd) {						\ 	assert(tsd->state == tsd_state_nominal ||			\ 	    tsd->state == tsd_state_nominal_slow ||			\ 	    tsd->state == tsd_state_reincarnated ||			\ 	    tsd->state == tsd_state_minimal_initialized);		\ 	return tsd_##n##p_get_unsafe(tsd);				\ }
 name|MALLOC_TSD
 undef|#
 directive|undef
@@ -573,7 +577,7 @@ parameter_list|,
 name|nt
 parameter_list|)
 define|\
-value|JEMALLOC_ALWAYS_INLINE void						\ tsd_##n##_set(tsd_t *tsd, t val) {					\ 	assert(tsd->state != tsd_state_reincarnated);			\ 	*tsd_##n##p_get(tsd) = val;					\ }
+value|JEMALLOC_ALWAYS_INLINE void						\ tsd_##n##_set(tsd_t *tsd, t val) {					\ 	assert(tsd->state != tsd_state_reincarnated&&			\ 	    tsd->state != tsd_state_minimal_initialized);		\ 	*tsd_##n##p_get(tsd) = val;					\ }
 name|MALLOC_TSD
 undef|#
 directive|undef
@@ -656,7 +660,7 @@ name|bool
 name|init
 parameter_list|,
 name|bool
-name|internal
+name|minimal
 parameter_list|)
 block|{
 name|tsd_t
@@ -709,7 +713,7 @@ name|tsd_fetch_slow
 argument_list|(
 name|tsd
 argument_list|,
-name|internal
+name|minimal
 argument_list|)
 return|;
 block|}
@@ -732,11 +736,15 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Get a minimal TSD that requires no cleanup.  See comments in free(). */
+end_comment
+
 begin_function
 name|JEMALLOC_ALWAYS_INLINE
 name|tsd_t
 modifier|*
-name|tsd_internal_fetch
+name|tsd_fetch_min
 parameter_list|(
 name|void
 parameter_list|)
@@ -748,6 +756,39 @@ name|true
 argument_list|,
 name|true
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* For internal background threads use only. */
+end_comment
+
+begin_function
+name|JEMALLOC_ALWAYS_INLINE
+name|tsd_t
+modifier|*
+name|tsd_internal_fetch
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|tsd_t
+modifier|*
+name|tsd
+init|=
+name|tsd_fetch_min
+argument_list|()
+decl_stmt|;
+comment|/* Use reincarnated state to prevent full initialization. */
+name|tsd
+operator|->
+name|state
+operator|=
+name|tsd_state_reincarnated
+expr_stmt|;
+return|return
+name|tsd
 return|;
 block|}
 end_function
