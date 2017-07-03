@@ -262,7 +262,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|vm_pageout_wakeup_thresh
 decl_stmt|;
 end_decl_stmt

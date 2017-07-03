@@ -491,7 +491,7 @@ comment|/* Estimated number of pages deficit */
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int
 name|vm_pageout_wakeup_thresh
 decl_stmt|;
 end_decl_stmt
