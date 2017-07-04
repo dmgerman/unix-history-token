@@ -1669,36 +1669,36 @@ literal|8
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, bounds */
+comment|/* alignment, bounds 		*/
 name|dma_space_addr
 argument_list|,
-comment|/* lowaddr */
-name|dma_space_addr
+comment|/* lowaddr of exclusion window	*/
+name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr */
+comment|/* highaddr of exclusion window	*/
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* filter, filterarg */
+comment|/* filter, filterarg 		*/
 name|maxsize
 argument_list|,
-comment|/* maxsize */
+comment|/* maxsize 			*/
 literal|1
 argument_list|,
-comment|/* nsegments */
+comment|/* nsegments 			*/
 name|maxsize
 argument_list|,
-comment|/* maxsegsize */
+comment|/* maxsegsize 			*/
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|/* flags */
+comment|/* flags 				*/
 name|NULL
 argument_list|,
-comment|/* lockfunc */
+comment|/* lockfunc 			*/
 name|NULL
 argument_list|,
-comment|/* lockarg */
+comment|/* lockarg 			*/
 operator|&
 name|dma
 operator|->
@@ -3089,7 +3089,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, bounds 	*/
+comment|/* alignment, bounds 	     */
 name|ENA_DMA_BIT_MASK
 argument_list|(
 name|adapter
@@ -3097,40 +3097,37 @@ operator|->
 name|dma_width
 argument_list|)
 argument_list|,
-comment|/* lowaddr 		*/
-name|ENA_DMA_BIT_MASK
-argument_list|(
-name|adapter
-operator|->
-name|dma_width
-argument_list|)
+comment|/* lowaddr of excl window  */
+name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr 		*/
+comment|/* highaddr of excl window */
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* filter, filterarg 	*/
+comment|/* filter, filterarg 	     */
 name|ENA_TSO_MAXSIZE
 argument_list|,
-comment|/* maxsize 		*/
+comment|/* maxsize 		     */
 name|adapter
 operator|->
 name|max_tx_sgl_size
+operator|-
+literal|1
 argument_list|,
-comment|/* nsegments 		*/
+comment|/* nsegments 		     */
 name|ENA_TSO_MAXSIZE
 argument_list|,
-comment|/* maxsegsize 	*/
+comment|/* maxsegsize 	     */
 literal|0
 argument_list|,
-comment|/* flags 		*/
+comment|/* flags 		     */
 name|NULL
 argument_list|,
-comment|/* lockfunc 		*/
+comment|/* lockfunc 		     */
 name|NULL
 argument_list|,
-comment|/* lockfuncarg 	*/
+comment|/* lockfuncarg 	     */
 operator|&
 name|adapter
 operator|->
@@ -3229,12 +3226,12 @@ operator|->
 name|pdev
 argument_list|)
 argument_list|,
-comment|/* parent */
+comment|/* parent   */
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, bounds 	*/
+comment|/* alignment, bounds 	     */
 name|ENA_DMA_BIT_MASK
 argument_list|(
 name|adapter
@@ -3242,38 +3239,33 @@ operator|->
 name|dma_width
 argument_list|)
 argument_list|,
-comment|/* lowaddr 		*/
-name|ENA_DMA_BIT_MASK
-argument_list|(
-name|adapter
-operator|->
-name|dma_width
-argument_list|)
+comment|/* lowaddr of excl window  */
+name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr 		*/
+comment|/* highaddr of excl window */
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* filter, filterarg 	*/
+comment|/* filter, filterarg 	     */
 name|MJUM16BYTES
 argument_list|,
-comment|/* maxsize 		*/
+comment|/* maxsize 		     */
 literal|1
 argument_list|,
-comment|/* nsegments 		*/
+comment|/* nsegments 		     */
 name|MJUM16BYTES
 argument_list|,
-comment|/* maxsegsize 	*/
+comment|/* maxsegsize 	     */
 literal|0
 argument_list|,
-comment|/* flags 		*/
+comment|/* flags 		     */
 name|NULL
 argument_list|,
-comment|/* lockfunc 		*/
+comment|/* lockfunc 		     */
 name|NULL
 argument_list|,
-comment|/* lockarg 		*/
+comment|/* lockarg 		     */
 operator|&
 name|adapter
 operator|->
@@ -11629,18 +11621,28 @@ operator|->
 name|if_hw_tsomax
 operator|=
 name|ENA_TSO_MAXSIZE
+operator|-
+operator|(
+name|ETHER_HDR_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
+operator|)
 expr_stmt|;
 name|ifp
 operator|->
 name|if_hw_tsomaxsegcount
 operator|=
-name|ENA_TSO_NSEGS
+name|adapter
+operator|->
+name|max_tx_sgl_size
+operator|-
+literal|1
 expr_stmt|;
 name|ifp
 operator|->
 name|if_hw_tsomaxsegsize
 operator|=
-name|MCLBYTES
+name|ENA_TSO_MAXSIZE
 expr_stmt|;
 name|if_setifheaderlen
 argument_list|(

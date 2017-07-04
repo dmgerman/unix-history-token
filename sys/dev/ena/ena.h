@@ -341,7 +341,7 @@ begin_define
 define|#
 directive|define
 name|ENA_TSO_MAXSIZE
-value|PAGE_SIZE
+value|65536
 end_define
 
 begin_define
