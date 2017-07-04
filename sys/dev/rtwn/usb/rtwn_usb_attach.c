@@ -791,7 +791,7 @@ name|uc_tx
 argument_list|,
 name|RTWN_USB_TX_LIST_COUNT
 argument_list|,
-name|RTWN_TXBUFSZ
+name|RTWN_USB_TXBUFSZ
 argument_list|)
 expr_stmt|;
 if|if
