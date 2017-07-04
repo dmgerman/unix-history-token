@@ -3556,6 +3556,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Make sure that drbr is empty */
+name|ENA_RING_MTX_LOCK
+argument_list|(
+name|tx_ring
+argument_list|)
+expr_stmt|;
 name|drbr_flush
 argument_list|(
 name|adapter
@@ -3565,6 +3570,11 @@ argument_list|,
 name|tx_ring
 operator|->
 name|br
+argument_list|)
+expr_stmt|;
+name|ENA_RING_MTX_UNLOCK
+argument_list|(
+name|tx_ring
 argument_list|)
 expr_stmt|;
 comment|/* ... and create the buffer DMA maps */
@@ -3896,6 +3906,11 @@ operator|->
 name|enqueue_tq
 argument_list|)
 expr_stmt|;
+name|ENA_RING_MTX_LOCK
+argument_list|(
+name|tx_ring
+argument_list|)
+expr_stmt|;
 comment|/* Flush buffer ring, */
 name|drbr_flush
 argument_list|(
@@ -3909,11 +3924,6 @@ name|br
 argument_list|)
 expr_stmt|;
 comment|/* Free buffer DMA maps, */
-name|ENA_RING_MTX_LOCK
-argument_list|(
-name|tx_ring
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|int
