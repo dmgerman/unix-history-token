@@ -651,6 +651,8 @@ name|sndreserve
 decl_stmt|;
 name|int
 name|pktscale
+decl_stmt|,
+name|pktscalesav
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -818,6 +820,10 @@ name|pktscale
 operator|=
 literal|64
 expr_stmt|;
+name|pktscalesav
+operator|=
+name|pktscale
+expr_stmt|;
 comment|/* 	 * soreserve() can fail if sb_max is too small, so shrink pktscale 	 * and try again if there is an error. 	 * Print a log message suggesting increasing sb_max. 	 * Creating a socket and doing this is necessary since, if the 	 * reservation sizes are too large and will make soreserve() fail, 	 * the connection will work until a large send is attempted and 	 * then it will loop in the krpc code. 	 */
 name|so
 operator|=
@@ -889,9 +895,32 @@ name|pktscale
 operator|>
 literal|2
 condition|)
+block|{
+if|if
+condition|(
+name|nmp
+operator|!=
+name|NULL
+operator|&&
+name|nrp
+operator|->
+name|nr_sotype
+operator|==
+name|SOCK_STREAM
+operator|&&
+name|pktscale
+operator|==
+name|pktscalesav
+condition|)
+name|printf
+argument_list|(
+literal|"Consider increasing kern.ipc.maxsockbuf\n"
+argument_list|)
+expr_stmt|;
 name|pktscale
 operator|--
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|nrp
@@ -968,7 +997,7 @@ operator|=
 operator|(
 name|NFS_MAXBSIZE
 operator|+
-name|NFS_MAXPKTHDR
+name|NFS_MAXXDR
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -983,7 +1012,7 @@ operator|=
 operator|(
 name|NFS_MAXBSIZE
 operator|+
-name|NFS_MAXPKTHDR
+name|NFS_MAXXDR
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -1015,6 +1044,32 @@ argument_list|,
 name|sndreserve
 argument_list|,
 name|rcvreserve
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|nmp
+operator|!=
+name|NULL
+operator|&&
+name|nrp
+operator|->
+name|nr_sotype
+operator|==
+name|SOCK_STREAM
+operator|&&
+name|pktscale
+operator|<=
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"Must increase kern.ipc.maxsockbuf or reduce"
+literal|" rsize, wsize\n"
 argument_list|)
 expr_stmt|;
 block|}
