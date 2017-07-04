@@ -10077,11 +10077,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|ena_unmask_all_io_irqs
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10368,6 +10363,11 @@ operator|->
 name|up
 operator|=
 name|true
+expr_stmt|;
+name|ena_unmask_all_io_irqs
+argument_list|(
+name|adapter
+argument_list|)
 expr_stmt|;
 block|}
 return|return
