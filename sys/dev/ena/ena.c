@@ -1184,6 +1184,25 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|ena_check_and_collapse_mbuf
+parameter_list|(
+name|struct
+name|ena_ring
+modifier|*
+name|tx_ring
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|mbuf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|ena_xmit_mbuf
 parameter_list|(
 name|struct
@@ -12305,7 +12324,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ena_check_and_defragment_mbuf
+name|ena_check_and_collapse_mbuf
 parameter_list|(
 name|struct
 name|ena_ring
@@ -12327,7 +12346,7 @@ decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
-name|defrag_mbuf
+name|collapsed_mbuf
 decl_stmt|;
 name|int
 name|num_frags
@@ -12366,24 +12385,30 @@ name|tx_ring
 operator|->
 name|tx_stats
 operator|.
-name|defragment
+name|collapse
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|defrag_mbuf
+name|collapsed_mbuf
 operator|=
-name|m_defrag
+name|m_collapse
 argument_list|(
 operator|*
 name|mbuf
 argument_list|,
 name|M_NOWAIT
+argument_list|,
+name|adapter
+operator|->
+name|max_tx_sgl_size
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|defrag_mbuf
+name|collapsed_mbuf
 operator|==
 name|NULL
 condition|)
@@ -12394,7 +12419,7 @@ name|tx_ring
 operator|->
 name|tx_stats
 operator|.
-name|defragment_err
+name|collapse_err
 argument_list|,
 literal|1
 argument_list|)
@@ -12405,11 +12430,11 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* If mbuf was defragmented succesfully, original mbuf is released. */
+comment|/* If mbuf was collapsed succesfully, original mbuf is released. */
 operator|*
 name|mbuf
 operator|=
-name|defrag_mbuf
+name|collapsed_mbuf
 expr_stmt|;
 return|return
 operator|(
@@ -12549,7 +12574,7 @@ argument_list|)
 expr_stmt|;
 name|rc
 operator|=
-name|ena_check_and_defragment_mbuf
+name|ena_check_and_collapse_mbuf
 argument_list|(
 name|tx_ring
 argument_list|,
@@ -12565,7 +12590,7 @@ name|ena_trace
 argument_list|(
 name|ENA_WARNING
 argument_list|,
-literal|"Failed to defragment mbuf! err: %d"
+literal|"Failed to collapse mbuf! err: %d"
 argument_list|,
 name|rc
 argument_list|)
