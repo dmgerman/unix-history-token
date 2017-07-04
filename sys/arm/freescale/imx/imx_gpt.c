@@ -77,12 +77,6 @@ directive|include
 file|<machine/intr.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTIDELAY
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -92,11 +86,6 @@ end_include
 begin_comment
 comment|/* For arm_set_delay */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -351,44 +340,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MULTIDELAY
-end_ifndef
-
-begin_comment
-comment|/* Global softc pointer for use in DELAY(). */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|imx_gpt_softc
-modifier|*
-name|imx_gpt_sc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Hand-calibrated delay-loop counter.  This was calibrated on an i.MX6 running  * at 792mhz.  It will delay a bit too long on slower processors -- that's  * better than not delaying long enough.  In practice this is unlikely to get  * used much since the clock driver is one of the first to start up, and once  * we're attached the delay loop switches to using the timer hardware.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|int
-name|imx_gpt_delay_count
-init|=
-literal|78
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Try to divide down an available fast clock to this frequency. */
@@ -1179,9 +1130,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MULTIDELAY
 name|arm_set_delay
 argument_list|(
 name|imx_gpt_do_delay
@@ -1189,14 +1137,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|imx_gpt_sc
-operator|=
-name|sc
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 return|return
 operator|(
@@ -1832,72 +1772,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MULTIDELAY
-end_ifndef
-
-begin_function
-name|void
-name|DELAY
-parameter_list|(
-name|int
-name|usec
-parameter_list|)
-block|{
-name|uint64_t
-name|ticks
-decl_stmt|;
-comment|/* If the timer hardware is not accessible, just use a loop. */
-if|if
-condition|(
-name|imx_gpt_sc
-operator|==
-name|NULL
-condition|)
-block|{
-while|while
-condition|(
-name|usec
-operator|--
-operator|>
-literal|0
-condition|)
-for|for
-control|(
-name|ticks
-operator|=
-literal|0
-init|;
-name|ticks
-operator|<
-name|imx_gpt_delay_count
-condition|;
-operator|++
-name|ticks
-control|)
-name|cpufunc_nullop
-argument_list|()
-expr_stmt|;
-return|return;
-block|}
-else|else
-name|imx_gpt_do_delay
-argument_list|(
-name|usec
-argument_list|,
-name|imx_gpt_sc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
