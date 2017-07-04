@@ -635,11 +635,6 @@ name|defined
 argument_list|(
 name|SMP
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|PLATFORM_SMP
-argument_list|)
 end_if
 
 begin_function
