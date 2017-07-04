@@ -456,7 +456,7 @@ operator|!=
 operator|&
 name|pdrv
 operator|->
-name|driver
+name|bsddriver
 condition|)
 return|return
 operator|(
@@ -1110,7 +1110,7 @@ argument_list|)
 expr_stmt|;
 name|pdrv
 operator|->
-name|driver
+name|bsddriver
 operator|.
 name|name
 operator|=
@@ -1120,7 +1120,7 @@ name|name
 expr_stmt|;
 name|pdrv
 operator|->
-name|driver
+name|bsddriver
 operator|.
 name|methods
 operator|=
@@ -1128,7 +1128,7 @@ name|pci_methods
 expr_stmt|;
 name|pdrv
 operator|->
-name|driver
+name|bsddriver
 operator|.
 name|size
 operator|=
@@ -1160,7 +1160,7 @@ argument_list|,
 operator|&
 name|pdrv
 operator|->
-name|driver
+name|bsddriver
 argument_list|,
 name|BUS_PASS_DEFAULT
 argument_list|,
@@ -1245,7 +1245,7 @@ argument_list|,
 operator|&
 name|pdrv
 operator|->
-name|driver
+name|bsddriver
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

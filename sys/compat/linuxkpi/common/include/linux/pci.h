@@ -966,7 +966,7 @@ parameter_list|)
 function_decl|;
 comment|/* Device shutdown */
 name|driver_t
-name|driver
+name|bsddriver
 decl_stmt|;
 name|devclass_t
 name|bsdclass
