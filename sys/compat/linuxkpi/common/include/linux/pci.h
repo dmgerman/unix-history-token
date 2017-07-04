@@ -134,6 +134,9 @@ name|uint32_t
 name|subdevice
 decl_stmt|;
 name|uint32_t
+name|class
+decl_stmt|;
+name|uint32_t
 name|class_mask
 decl_stmt|;
 name|uintptr_t
@@ -1083,7 +1086,10 @@ name|unsigned
 name|int
 name|devfn
 decl_stmt|;
-name|u8
+name|uint32_t
+name|class
+decl_stmt|;
+name|uint8_t
 name|revision
 decl_stmt|;
 block|}
