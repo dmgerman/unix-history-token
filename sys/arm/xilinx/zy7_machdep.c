@@ -243,7 +243,7 @@ literal|0
 argument_list|,
 literal|"xlnx,zynq-7000"
 argument_list|,
-literal|0
+literal|200
 argument_list|)
 expr_stmt|;
 end_expr_stmt
