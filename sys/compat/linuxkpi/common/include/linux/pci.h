@@ -1009,6 +1009,10 @@ decl_stmt|;
 name|devclass_t
 name|bsdclass
 decl_stmt|;
+name|struct
+name|device_driver
+name|driver
+decl_stmt|;
 specifier|const
 name|struct
 name|pci_error_handlers
