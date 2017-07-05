@@ -129,11 +129,14 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTIDELAY
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -196,6 +199,32 @@ include|#
 directive|include
 file|<dev/acpica/acpivar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MULTIDELAY
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|The generic timer requires MULTIDELAY on 32bit arm
+end_error
 
 begin_endif
 endif|#
@@ -1878,9 +1907,12 @@ operator|->
 name|et
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTIDELAY
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 name|arm_set_delay
 argument_list|(
 name|arm_tmr_do_delay
@@ -2222,11 +2254,14 @@ block|}
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MULTIDELAY
-end_ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+end_if
 
 begin_function
 name|void
