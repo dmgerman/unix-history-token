@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2017, Intel Corporation   All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions are met:     1. Redistributions of source code must retain the above copyright notice,       this list of conditions and the following disclaimer.     2. Redistributions in binary form must reproduce the above copyright       notice, this list of conditions and the following disclaimer in the       documentation and/or other materials provided with the distribution.     3. Neither the name of the Intel Corporation nor the names of its       contributors may be used to endorse or promote products derived from       this software without specific prior written permission.    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -31,22 +31,11 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IXGBE_LEGACY_TX
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<sys/buf_ring.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -312,35 +301,6 @@ directive|include
 file|<sys/sbuf.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCI_IOV
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/nv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/iov_schema.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/pci/pci_iov.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -365,28 +325,11 @@ directive|include
 file|"ixgbe_vf.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCI_IOV
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"ixgbe_common.h"
+file|"ixgbe_features.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"ixgbe_mbx.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Tunables */
@@ -425,7 +368,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * RxDescriptors Valid Range: 64-4096 Default Value: 256 This value is the  * number of receive descriptors allocated for each RX queue. Increasing this  * value allows the driver to buffer more incoming packets. Each descriptor  * is 16 bytes.  A receive buffer is also allocated for each descriptor.   *   * Note: with 8 rings and a dual port card, it is possible to bump up   *	against the system mbuf pool limit, you can tune nmbclusters  *	to adjust for this.  */
+comment|/*  * RxDescriptors Valid Range: 64-4096 Default Value: 256 This value is the  * number of receive descriptors allocated for each RX queue. Increasing this  * value allows the driver to buffer more incoming packets. Each descriptor  * is 16 bytes.  A receive buffer is also allocated for each descriptor.  *  * Note: with 8 rings and a dual port card, it is possible to bump up  *       against the system mbuf pool limit, you can tune nmbclusters  *       to adjust for this.  */
 end_comment
 
 begin_define
@@ -486,14 +429,20 @@ begin_define
 define|#
 directive|define
 name|IXGBE_TX_CLEANUP_THRESHOLD
-value|(adapter->num_tx_desc / 8)
+parameter_list|(
+name|_a
+parameter_list|)
+value|((_a)->num_tx_desc / 8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IXGBE_TX_OP_THRESHOLD
-value|(adapter->num_tx_desc / 32)
+parameter_list|(
+name|_a
+parameter_list|)
+value|((_a)->num_tx_desc / 32)
 end_define
 
 begin_comment
@@ -518,7 +467,7 @@ begin_define
 define|#
 directive|define
 name|IXGBE_MTU_HDR_VLAN
-value|(ETHER_HDR_LEN + ETHER_CRC_LEN + \ 				 ETHER_VLAN_ENCAP_LEN)
+value|(ETHER_HDR_LEN + ETHER_CRC_LEN + \                                ETHER_VLAN_ENCAP_LEN)
 end_define
 
 begin_define
@@ -561,7 +510,7 @@ value|0x10000
 end_define
 
 begin_comment
-comment|/*  * Used for optimizing small rx mbufs.  Effort is made to keep the copy  * small and aligned for the CPU L1 cache.  *   * MHLEN is typically 168 bytes, giving us 8-byte alignment.  Getting  * 32 byte alignment needed for the fast bcopy results in 8 bytes being  * wasted.  Getting 64 byte alignment, which _should_ be ideal for  * modern Intel CPUs, results in 40 bytes wasted and a significant drop  * in observed efficiency of the optimization, 97.9% -> 81.8%.  */
+comment|/*  * Used for optimizing small rx mbufs.  Effort is made to keep the copy  * small and aligned for the CPU L1 cache.  *  * MHLEN is typically 168 bytes, giving us 8-byte alignment.  Getting  * 32 byte alignment needed for the fast bcopy results in 8 bytes being  * wasted.  Getting 64 byte alignment, which _should_ be ideal for  * modern Intel CPUs, results in 40 bytes wasted and a significant drop  * in observed efficiency of the optimization, 97.9% -> 81.8%.  */
 end_comment
 
 begin_if
@@ -851,7 +800,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXV_EITR_DEFAULT
+name|IXGBE_EITR_DEFAULT
 value|128
 end_define
 
@@ -871,7 +820,7 @@ begin_define
 define|#
 directive|define
 name|CSUM_OFFLOAD
-value|(CSUM_IP_TSO|CSUM_IP6_TSO|CSUM_IP| \ 				 CSUM_IP_UDP|CSUM_IP_TCP|CSUM_IP_SCTP| \ 				 CSUM_IP6_UDP|CSUM_IP6_TCP|CSUM_IP6_SCTP)
+value|(CSUM_IP_TSO|CSUM_IP6_TSO|CSUM_IP| \                        CSUM_IP_UDP|CSUM_IP_TCP|CSUM_IP_SCTP| \                        CSUM_IP6_UDP|CSUM_IP6_TCP|CSUM_IP6_SCTP)
 end_define
 
 begin_elif
@@ -947,7 +896,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Interrupt Moderation parameters   */
+comment|/*  * Interrupt Moderation parameters  */
 end_comment
 
 begin_define
@@ -986,142 +935,11 @@ begin_define
 define|#
 directive|define
 name|IXGBE_LINK_ITR
-value|((IXGBE_LINK_ITR_QUANTA<< 3)& \ 				    IXGBE_EITR_ITR_INT_MASK)
+value|((IXGBE_LINK_ITR_QUANTA<< 3)& \                                 IXGBE_EITR_ITR_INT_MASK)
 end_define
 
 begin_comment
-comment|/* MAC type macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IS_X550VF
-parameter_list|(
-name|_adapter
-parameter_list|)
-define|\
-value|((_adapter->hw.mac.type == ixgbe_mac_X550_vf) || \ 	 (_adapter->hw.mac.type == ixgbe_mac_X550EM_x_vf))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IS_VF
-parameter_list|(
-name|_adapter
-parameter_list|)
-define|\
-value|(IXGBE_IS_X550VF(_adapter) || \ 	 (_adapter->hw.mac.type == ixgbe_mac_X540_vf) || \ 	 (_adapter->hw.mac.type == ixgbe_mac_82599_vf))
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCI_IOV
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VF_INDEX
-parameter_list|(
-name|vmdq
-parameter_list|)
-value|((vmdq) / 32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VF_BIT
-parameter_list|(
-name|vmdq
-parameter_list|)
-value|(1<< ((vmdq) % 32))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VT_MSG_MASK
-value|0xFFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VT_MSGINFO
-parameter_list|(
-name|msg
-parameter_list|)
-define|\
-value|(((msg)& IXGBE_VT_MSGINFO_MASK)>> IXGBE_VT_MSGINFO_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VF_GET_QUEUES_RESP_LEN
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_API_VER_1_0
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_API_VER_2_0
-value|1
-end_define
-
-begin_comment
-comment|/* Solaris API.  Not supported. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_API_VER_1_1
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_API_VER_UNKNOWN
-value|UINT16_MAX
-end_define
-
-begin_enum
-enum|enum
-name|ixgbe_iov_mode
-block|{
-name|IXGBE_64_VM
-block|,
-name|IXGBE_32_VM
-block|,
-name|IXGBE_NO_VM
-block|}
-enum|;
-end_enum
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCI_IOV */
-end_comment
-
-begin_comment
-comment|/*  *****************************************************************************  * vendor_info_array  *   * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *   *****************************************************************************  */
+comment|/************************************************************************  * vendor_info_array  *  *   Contains the list of Subvendor/Subdevice IDs on  *   which the driver should load.  ************************************************************************/
 end_comment
 
 begin_typedef
@@ -1153,6 +971,23 @@ block|}
 name|ixgbe_vendor_info_t
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|ixgbe_bp_data
+block|{
+name|u32
+name|low
+decl_stmt|;
+name|u32
+name|high
+decl_stmt|;
+name|u32
+name|log
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -1207,7 +1042,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Bus dma allocation structure used by ixgbe_dma_malloc and ixgbe_dma_free.  */
+comment|/*  * Bus dma allocation structure used by ixgbe_dma_malloc and ixgbe_dma_free  */
 end_comment
 
 begin_struct
@@ -1257,7 +1092,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* ** Driver queue struct: this is the interrupt container **  for the associated tx and rx ring. */
+comment|/*  * Driver queue struct: this is the interrupt container  *                      for the associated tx and rx ring.  */
 end_comment
 
 begin_struct
@@ -1272,7 +1107,7 @@ decl_stmt|;
 name|u32
 name|msix
 decl_stmt|;
-comment|/* This queue's MSIX vector */
+comment|/* This queue's MSI-X vector */
 name|u32
 name|eims
 decl_stmt|;
@@ -1386,9 +1221,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|IXGBE_LEGACY_TX
 name|struct
 name|buf_ring
 modifier|*
@@ -1398,19 +1230,13 @@ name|struct
 name|task
 name|txq_task
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|IXGBE_FDIR
+comment|/* Flow Director */
 name|u16
 name|atr_sample
 decl_stmt|;
 name|u16
 name|atr_count
 decl_stmt|;
-endif|#
-directive|endif
 name|u32
 name|bytes
 decl_stmt|;
@@ -1419,16 +1245,13 @@ name|u32
 name|packets
 decl_stmt|;
 comment|/* Soft Stats */
-name|unsigned
-name|long
+name|u64
 name|tso_tx
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|no_tx_map_avail
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|no_tx_dma_setup
 decl_stmt|;
 name|u64
@@ -1538,67 +1361,13 @@ decl_stmt|;
 name|u64
 name|rsc_num
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IXGBE_FDIR
+comment|/* Flow Director */
 name|u64
 name|flm
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCI_IOV
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VF_CTS
-value|(1<< 0)
-end_define
-
-begin_comment
-comment|/* VF is clear to send. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VF_CAP_MAC
-value|(1<< 1)
-end_define
-
-begin_comment
-comment|/* VF is permitted to change MAC. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VF_CAP_VLAN
-value|(1<< 2)
-end_define
-
-begin_comment
-comment|/* VF is permitted to join vlans. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VF_ACTIVE
-value|(1<< 3)
-end_define
-
-begin_comment
-comment|/* VF is active. */
-end_comment
 
 begin_define
 define|#
@@ -1655,15 +1424,6 @@ block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCI_IOV */
-end_comment
-
 begin_comment
 comment|/* Our adapter structure */
 end_comment
@@ -1698,7 +1458,7 @@ name|resource
 modifier|*
 name|msix_mem
 decl_stmt|;
-comment|/* 	 * Interrupt resources: this set is 	 * either used for legacy, or for Link 	 * when doing MSIX 	 */
+comment|/* 	 * Interrupt resources: this set is 	 * either used for legacy, or for Link 	 * when doing MSI-X 	 */
 name|void
 modifier|*
 name|tag
@@ -1717,7 +1477,7 @@ name|callout
 name|timer
 decl_stmt|;
 name|int
-name|msix
+name|link_rid
 decl_stmt|;
 name|int
 name|if_flags
@@ -1738,7 +1498,7 @@ decl_stmt|;
 name|u16
 name|num_queues
 decl_stmt|;
-comment|/* 	** Shadow VFTA table, this is needed because 	** the real vlan filter table gets cleared during 	** a soft reset and the driver needs to be able 	** to repopulate it. 	*/
+comment|/* 	 * Shadow VFTA table, this is needed because 	 * the real vlan filter table gets cleared during 	 * a soft reset and the driver needs to be able 	 * to repopulate it. 	 */
 name|u32
 name|shadow_vfta
 index|[
@@ -1746,18 +1506,11 @@ name|IXGBE_VFTA_SIZE
 index|]
 decl_stmt|;
 comment|/* Info about the interface */
-name|u32
-name|optics
-decl_stmt|;
-name|u32
-name|fc
-decl_stmt|;
-comment|/* local flow ctrl setting */
 name|int
 name|advertise
 decl_stmt|;
 comment|/* link speeds */
-name|bool
+name|int
 name|enable_aim
 decl_stmt|;
 comment|/* adaptive interrupt moderation */
@@ -1781,9 +1534,6 @@ name|vector
 decl_stmt|;
 name|u16
 name|dmac
-decl_stmt|;
-name|bool
-name|eee_enabled
 decl_stmt|;
 name|u32
 name|phy_layer
@@ -1818,20 +1568,12 @@ name|task
 name|msf_task
 decl_stmt|;
 comment|/* Multispeed Fiber */
-ifdef|#
-directive|ifdef
-name|PCI_IOV
 name|struct
 name|task
 name|mbx_task
 decl_stmt|;
 comment|/* VF -> PF mailbox interrupt */
-endif|#
-directive|endif
-comment|/* PCI_IOV */
-ifdef|#
-directive|ifdef
-name|IXGBE_FDIR
+comment|/* Flow Director */
 name|int
 name|fdir_reinit
 decl_stmt|;
@@ -1839,8 +1581,6 @@ name|struct
 name|task
 name|fdir_task
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|task
 name|phy_task
@@ -1851,13 +1591,13 @@ name|taskqueue
 modifier|*
 name|tq
 decl_stmt|;
-comment|/* 	** Queues:  	**   This is the irq holder, it has 	**   and RX/TX pair or rings associated 	**   with it. 	*/
+comment|/* 	 * Queues: 	 *   This is the irq holder, it has 	 *   and RX/TX pair or rings associated 	 *   with it. 	 */
 name|struct
 name|ix_queue
 modifier|*
 name|queues
 decl_stmt|;
-comment|/* 	 * Transmit rings: 	 *	Allocated at run time, an array of rings. 	 */
+comment|/* 	 * Transmit rings 	 *      Allocated at run time, an array of rings 	 */
 name|struct
 name|tx_ring
 modifier|*
@@ -1869,7 +1609,7 @@ decl_stmt|;
 name|u32
 name|tx_process_limit
 decl_stmt|;
-comment|/* 	 * Receive rings: 	 *	Allocated at run time, an array of rings. 	 */
+comment|/* 	 * Receive rings 	 *      Allocated at run time, an array of rings 	 */
 name|struct
 name|rx_ring
 modifier|*
@@ -1890,25 +1630,27 @@ name|ixgbe_mc_addr
 modifier|*
 name|mta
 decl_stmt|;
+comment|/* SR-IOV */
+name|int
+name|iov_mode
+decl_stmt|;
 name|int
 name|num_vfs
 decl_stmt|;
 name|int
 name|pool
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PCI_IOV
 name|struct
 name|ixgbe_vf
 modifier|*
 name|vfs
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
+comment|/* Bypass */
+name|struct
+name|ixgbe_bp_data
+name|bypass
+decl_stmt|;
+comment|/* Netmap */
 name|void
 function_decl|(
 modifier|*
@@ -1930,8 +1672,6 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
 comment|/* Misc stats maintained by the driver */
 name|unsigned
 name|long
@@ -2008,6 +1748,13 @@ name|noproto
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* Feature capable/enabled flags.  See ixgbe_features.h */
+name|u32
+name|feat_cap
+decl_stmt|;
+name|u32
+name|feat_en
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2495,7 +2242,7 @@ define|#
 directive|define
 name|IXGBE_SYSCTL_DESC_ADV_SPEED
 define|\
-value|"\nControl advertised link speed using these flags:\n" \ 	"\t0x1 - advertise 100M\n" \ 	"\t0x2 - advertise 1G\n" \ 	"\t0x4 - advertise 10G\n\n" \ 	"\t100M is only supported on certain 10GBaseT adapters.\n"
+value|"\nControl advertised link speed using these flags:\n" \         "\t0x1 - advertise 100M\n" \         "\t0x2 - advertise 1G\n" \         "\t0x4 - advertise 10G\n" \         "\t0x8 - advertise 10M\n\n" \         "\t100M and 10M are only supported on certain adapters.\n"
 end_define
 
 begin_define
@@ -2503,70 +2250,8 @@ define|#
 directive|define
 name|IXGBE_SYSCTL_DESC_SET_FC
 define|\
-value|"\nSet flow control mode using these values:\n" \ 	"\t0 - off\n" \ 	"\t1 - rx pause\n" \ 	"\t2 - tx pause\n" \ 	"\t3 - tx and rx pause"
+value|"\nSet flow control mode using these values:\n" \         "\t0 - off\n" \         "\t1 - rx pause\n" \         "\t2 - tx pause\n" \         "\t3 - tx and rx pause"
 end_define
-
-begin_function
-specifier|static
-specifier|inline
-name|bool
-name|ixgbe_is_sfp
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|type
-condition|)
-block|{
-case|case
-name|ixgbe_phy_sfp_avago
-case|:
-case|case
-name|ixgbe_phy_sfp_ftl
-case|:
-case|case
-name|ixgbe_phy_sfp_intel
-case|:
-case|case
-name|ixgbe_phy_sfp_unknown
-case|:
-case|case
-name|ixgbe_phy_sfp_passive_tyco
-case|:
-case|case
-name|ixgbe_phy_sfp_passive_unknown
-case|:
-case|case
-name|ixgbe_phy_qsfp_passive_unknown
-case|:
-case|case
-name|ixgbe_phy_qsfp_active_unknown
-case|:
-case|case
-name|ixgbe_phy_qsfp_intel
-case|:
-case|case
-name|ixgbe_phy_qsfp_unknown
-case|:
-return|return
-name|TRUE
-return|;
-default|default:
-return|return
-name|FALSE
-return|;
-block|}
-block|}
-end_function
 
 begin_comment
 comment|/* Workaround to make 8.0 buildable */
@@ -2639,7 +2324,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ** Find the number of unrefreshed RX descriptors */
+comment|/*  * Find the number of unrefreshed RX descriptors  */
 end_comment
 
 begin_function
@@ -2700,8 +2385,42 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|ixgbe_legacy_ring_empty
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|buf_ring
+modifier|*
+name|dummy
+parameter_list|)
+block|{
+name|UNREFERENCED_1PARAMETER
+argument_list|(
+name|dummy
+argument_list|)
+expr_stmt|;
+return|return
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/* ** This checks for a zero mac addr, something that will be likely ** unless the Admin on the Host has created one. */
+comment|/*  * This checks for a zero mac addr, something that will be likely  * unless the Admin on the Host has created one.  */
 end_comment
 
 begin_function
@@ -2782,15 +2501,9 @@ begin_comment
 comment|/* Shared Prototypes */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IXGBE_LEGACY_TX
-end_ifdef
-
 begin_function_decl
 name|void
-name|ixgbe_start
+name|ixgbe_legacy_start
 parameter_list|(
 name|struct
 name|ifnet
@@ -2800,28 +2513,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ixgbe_start_locked
+name|int
+name|ixgbe_legacy_start_locked
 parameter_list|(
 name|struct
-name|tx_ring
+name|ifnet
 modifier|*
 parameter_list|,
 name|struct
-name|ifnet
+name|tx_ring
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ! IXGBE_LEGACY_TX */
-end_comment
 
 begin_function_decl
 name|int
@@ -2876,32 +2580,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IXGBE_LEGACY_TX */
-end_comment
-
 begin_function_decl
 name|int
 name|ixgbe_allocate_queues
 parameter_list|(
 name|struct
 name|adapter
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ixgbe_allocate_transmit_buffers
-parameter_list|(
-name|struct
-name|tx_ring
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2924,17 +2608,6 @@ name|ixgbe_free_transmit_structures
 parameter_list|(
 name|struct
 name|adapter
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ixgbe_allocate_receive_buffers
-parameter_list|(
-name|struct
-name|rx_ring
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2984,637 +2657,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|ixgbe_dma_malloc
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|struct
-name|ixgbe_dma_alloc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"ixgbe_bypass.h"
+end_include
 
-begin_function_decl
-name|void
-name|ixgbe_dma_free
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|,
-name|struct
-name|ixgbe_dma_alloc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"ixgbe_sriov.h"
+end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCI_IOV
-end_ifdef
+begin_include
+include|#
+directive|include
+file|"ixgbe_fdir.h"
+end_include
 
-begin_function
-specifier|static
-specifier|inline
-name|boolean_t
-name|ixgbe_vf_mac_changed
-parameter_list|(
-name|struct
-name|ixgbe_vf
-modifier|*
-name|vf
-parameter_list|,
-specifier|const
-name|uint8_t
-modifier|*
-name|mac
-parameter_list|)
-block|{
-return|return
-operator|(
-name|bcmp
-argument_list|(
-name|mac
-argument_list|,
-name|vf
-operator|->
-name|ether_addr
-argument_list|,
-name|ETHER_ADDR_LEN
-argument_list|)
-operator|!=
-literal|0
-operator|)
-return|;
-block|}
-end_function
+begin_include
+include|#
+directive|include
+file|"ixgbe_rss.h"
+end_include
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|ixgbe_send_vf_msg
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|,
-name|struct
-name|ixgbe_vf
-modifier|*
-name|vf
-parameter_list|,
-name|u32
-name|msg
-parameter_list|)
-block|{
-if|if
-condition|(
-name|vf
-operator|->
-name|flags
-operator|&
-name|IXGBE_VF_CTS
-condition|)
-name|msg
-operator||=
-name|IXGBE_VT_MSGTYPE_CTS
-expr_stmt|;
-name|ixgbe_write_mbx
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-operator|&
-name|msg
-argument_list|,
-literal|1
-argument_list|,
-name|vf
-operator|->
-name|pool
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|ixgbe_send_vf_ack
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|,
-name|struct
-name|ixgbe_vf
-modifier|*
-name|vf
-parameter_list|,
-name|u32
-name|msg
-parameter_list|)
-block|{
-name|msg
-operator|&=
-name|IXGBE_VT_MSG_MASK
-expr_stmt|;
-name|ixgbe_send_vf_msg
-argument_list|(
-name|adapter
-argument_list|,
-name|vf
-argument_list|,
-name|msg
-operator||
-name|IXGBE_VT_MSGTYPE_ACK
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|ixgbe_send_vf_nack
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|,
-name|struct
-name|ixgbe_vf
-modifier|*
-name|vf
-parameter_list|,
-name|u32
-name|msg
-parameter_list|)
-block|{
-name|msg
-operator|&=
-name|IXGBE_VT_MSG_MASK
-expr_stmt|;
-name|ixgbe_send_vf_msg
-argument_list|(
-name|adapter
-argument_list|,
-name|vf
-argument_list|,
-name|msg
-operator||
-name|IXGBE_VT_MSGTYPE_NACK
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|ixgbe_process_vf_ack
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|,
-name|struct
-name|ixgbe_vf
-modifier|*
-name|vf
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|vf
-operator|->
-name|flags
-operator|&
-name|IXGBE_VF_CTS
-operator|)
-condition|)
-name|ixgbe_send_vf_nack
-argument_list|(
-name|adapter
-argument_list|,
-name|vf
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|enum
-name|ixgbe_iov_mode
-name|ixgbe_get_iov_mode
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|)
-block|{
-if|if
-condition|(
-name|adapter
-operator|->
-name|num_vfs
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|IXGBE_NO_VM
-operator|)
-return|;
-if|if
-condition|(
-name|adapter
-operator|->
-name|num_queues
-operator|<=
-literal|2
-condition|)
-return|return
-operator|(
-name|IXGBE_64_VM
-operator|)
-return|;
-elseif|else
-if|if
-condition|(
-name|adapter
-operator|->
-name|num_queues
-operator|<=
-literal|4
-condition|)
-return|return
-operator|(
-name|IXGBE_32_VM
-operator|)
-return|;
-else|else
-return|return
-operator|(
-name|IXGBE_NO_VM
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|u16
-name|ixgbe_max_vfs
-parameter_list|(
-name|enum
-name|ixgbe_iov_mode
-name|mode
-parameter_list|)
-block|{
-comment|/* 	 * We return odd numbers below because we 	 * reserve 1 VM's worth of queues for the PF. 	 */
-switch|switch
-condition|(
-name|mode
-condition|)
-block|{
-case|case
-name|IXGBE_64_VM
-case|:
-return|return
-operator|(
-literal|63
-operator|)
-return|;
-case|case
-name|IXGBE_32_VM
-case|:
-return|return
-operator|(
-literal|31
-operator|)
-return|;
-case|case
-name|IXGBE_NO_VM
-case|:
-default|default:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|ixgbe_vf_queues
-parameter_list|(
-name|enum
-name|ixgbe_iov_mode
-name|mode
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|mode
-condition|)
-block|{
-case|case
-name|IXGBE_64_VM
-case|:
-return|return
-operator|(
-literal|2
-operator|)
-return|;
-case|case
-name|IXGBE_32_VM
-case|:
-return|return
-operator|(
-literal|4
-operator|)
-return|;
-case|case
-name|IXGBE_NO_VM
-case|:
-default|default:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|ixgbe_vf_que_index
-parameter_list|(
-name|enum
-name|ixgbe_iov_mode
-name|mode
-parameter_list|,
-name|u32
-name|vfnum
-parameter_list|,
-name|int
-name|num
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|vfnum
-operator|*
-name|ixgbe_vf_queues
-argument_list|(
-name|mode
-argument_list|)
-operator|)
-operator|+
-name|num
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|ixgbe_pf_que_index
-parameter_list|(
-name|enum
-name|ixgbe_iov_mode
-name|mode
-parameter_list|,
-name|int
-name|num
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ixgbe_vf_que_index
-argument_list|(
-name|mode
-argument_list|,
-name|ixgbe_max_vfs
-argument_list|(
-name|mode
-argument_list|)
-argument_list|,
-name|num
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|ixgbe_update_max_frame
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|,
-name|int
-name|max_frame
-parameter_list|)
-block|{
-if|if
-condition|(
-name|adapter
-operator|->
-name|max_frame_size
-operator|<
-name|max_frame
-condition|)
-name|adapter
-operator|->
-name|max_frame_size
-operator|=
-name|max_frame
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|u32
-name|ixgbe_get_mrqc
-parameter_list|(
-name|enum
-name|ixgbe_iov_mode
-name|mode
-parameter_list|)
-block|{
-name|u32
-name|mrqc
-init|=
-literal|0
-decl_stmt|;
-switch|switch
-condition|(
-name|mode
-condition|)
-block|{
-case|case
-name|IXGBE_64_VM
-case|:
-name|mrqc
-operator|=
-name|IXGBE_MRQC_VMDQRSS64EN
-expr_stmt|;
-break|break;
-case|case
-name|IXGBE_32_VM
-case|:
-name|mrqc
-operator|=
-name|IXGBE_MRQC_VMDQRSS32EN
-expr_stmt|;
-break|break;
-case|case
-name|IXGBE_NO_VM
-case|:
-name|mrqc
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-default|default:
-name|panic
-argument_list|(
-literal|"Unexpected SR-IOV mode %d"
-argument_list|,
-name|mode
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|mrqc
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|u32
-name|ixgbe_get_mtqc
-parameter_list|(
-name|enum
-name|ixgbe_iov_mode
-name|mode
-parameter_list|)
-block|{
-name|uint32_t
-name|mtqc
-init|=
-literal|0
-decl_stmt|;
-switch|switch
-condition|(
-name|mode
-condition|)
-block|{
-case|case
-name|IXGBE_64_VM
-case|:
-name|mtqc
-operator||=
-name|IXGBE_MTQC_64VF
-operator||
-name|IXGBE_MTQC_VT_ENA
-expr_stmt|;
-break|break;
-case|case
-name|IXGBE_32_VM
-case|:
-name|mtqc
-operator||=
-name|IXGBE_MTQC_32VF
-operator||
-name|IXGBE_MTQC_VT_ENA
-expr_stmt|;
-break|break;
-case|case
-name|IXGBE_NO_VM
-case|:
-name|mtqc
-operator|=
-name|IXGBE_MTQC_64Q_1PB
-expr_stmt|;
-break|break;
-default|default:
-name|panic
-argument_list|(
-literal|"Unexpected SR-IOV mode %d"
-argument_list|,
-name|mode
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|mtqc
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCI_IOV */
-end_comment
+begin_include
+include|#
+directive|include
+file|"ixgbe_netmap.h"
+end_include
 
 begin_endif
 endif|#
