@@ -150,6 +150,32 @@ directive|include
 file|<arm/arm/mpcore_timervar.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PLATFORM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MULTIDELAY
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|The MPCore Timer driver requires MULTIDELAY when building with PLATFORM
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Private (per-CPU) timer register map */
 end_comment
