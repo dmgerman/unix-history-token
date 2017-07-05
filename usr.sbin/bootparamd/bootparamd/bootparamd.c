@@ -1278,9 +1278,14 @@ name|match
 init|=
 literal|0
 decl_stmt|;
-name|char
-name|info
-index|[
+define|#
+directive|define
+name|INFOLEN
+value|1343
+assert|_Static_assert
+argument_list|(
+name|INFOLEN
+operator|>=
 name|MAX_FILEID
 operator|+
 name|MAX_PATH_LEN
@@ -1288,6 +1293,16 @@ operator|+
 name|MAX_MACHINE_NAME
 operator|+
 literal|3
+argument_list|,
+literal|"INFOLEN isn't large enough"
+argument_list|)
+assert|;
+name|char
+name|info
+index|[
+name|INFOLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|bpf
@@ -1610,6 +1625,21 @@ argument_list|(
 name|fileid
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|AS_FORMAT
+parameter_list|(
+name|d
+parameter_list|)
+value|"%" #d "s"
+define|#
+directive|define
+name|REXPAND
+parameter_list|(
+name|d
+parameter_list|)
+value|AS_FORMAT(d)
+comment|/* Force another preprocessor expansion */
 while|while
 condition|(
 operator|!
@@ -1620,7 +1650,10 @@ name|fscanf
 argument_list|(
 name|bpf
 argument_list|,
-literal|"%s"
+name|REXPAND
+argument_list|(
+name|INFOLEN
+argument_list|)
 argument_list|,
 name|info
 argument_list|)
@@ -1629,7 +1662,6 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* read a string */
 name|ch
 operator|=
 name|getc
