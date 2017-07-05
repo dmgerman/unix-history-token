@@ -609,7 +609,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-l [-dv] [-m<name>] [-t<type>]\n"
+literal|"\t-l [-dv] [-m<name>] [-t<type>] [-o<role>] [-M<core>] [-N<namelist>]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
