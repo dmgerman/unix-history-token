@@ -5583,10 +5583,6 @@ condition|(
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|>
 name|vm_cnt
 operator|.
@@ -5600,10 +5596,6 @@ operator|&&
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|>
 name|vm_cnt
 operator|.
@@ -5618,10 +5610,6 @@ operator|&&
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|>
 literal|0
 operator|)
@@ -6325,10 +6313,6 @@ condition|(
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|>=
 name|npages
 operator|+
@@ -6344,10 +6328,6 @@ operator|&&
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|>=
 name|npages
 operator|+
@@ -6364,10 +6344,6 @@ operator|&&
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|>=
 name|npages
 operator|)
@@ -7167,10 +7143,6 @@ condition|(
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|>
 name|vm_cnt
 operator|.
@@ -7184,10 +7156,6 @@ operator|&&
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|>
 name|vm_cnt
 operator|.
@@ -7202,10 +7170,6 @@ operator|&&
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|>
 literal|0
 operator|)
@@ -9345,10 +9309,6 @@ operator|=
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 expr_stmt|;
 if|if
 condition|(
@@ -10366,10 +10326,6 @@ if|if
 condition|(
 name|vm_pageout_pages_needed
 operator|&&
-name|vm_cnt
-operator|.
-name|v_cache_count
-operator|+
 name|vm_cnt
 operator|.
 name|v_free_count
@@ -13300,15 +13256,6 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"vm_cnt.v_cache_count: %d\n"
-argument_list|,
-name|vm_cnt
-operator|.
-name|v_cache_count
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
 literal|"vm_cnt.v_inactive_count: %d\n"
 argument_list|,
 name|vm_cnt
@@ -13398,15 +13345,11 @@ name|dom
 decl_stmt|;
 name|db_printf
 argument_list|(
-literal|"pq_free %d pq_cache %d\n"
+literal|"pq_free %d\n"
 argument_list|,
 name|vm_cnt
 operator|.
 name|v_free_count
-argument_list|,
-name|vm_cnt
-operator|.
-name|v_cache_count
 argument_list|)
 expr_stmt|;
 for|for

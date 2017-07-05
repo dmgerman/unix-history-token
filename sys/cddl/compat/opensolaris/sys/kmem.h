@@ -396,7 +396,7 @@ begin_define
 define|#
 directive|define
 name|freemem
-value|(vm_cnt.v_free_count + vm_cnt.v_cache_count)
+value|vm_cnt.v_free_count
 end_define
 
 begin_define

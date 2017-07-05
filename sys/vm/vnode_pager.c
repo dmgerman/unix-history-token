@@ -5225,10 +5225,6 @@ condition|(
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|<
 name|vm_cnt
 operator|.
