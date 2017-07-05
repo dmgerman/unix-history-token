@@ -1611,7 +1611,7 @@ operator|(
 operator|(
 name|int32_t
 operator|)
-name|ulmin
+name|min
 argument_list|(
 name|sbavail
 argument_list|(
