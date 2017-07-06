@@ -378,7 +378,7 @@ name|bc
 parameter_list|)
 function_decl|;
 specifier|static
-name|void
+name|bool
 name|p_branch_empty
 parameter_list|(
 name|struct
@@ -2991,12 +2991,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Signal to the parser that an empty branch has been encountered; this will,  * in the future, be used to allow for more permissive behavior with empty  * branches.  */
+comment|/*  * Signal to the parser that an empty branch has been encountered; this will,  * in the future, be used to allow for more permissive behavior with empty  * branches. The return value should indicate whether parsing may continue  * or not.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|bool
 name|p_branch_empty
 parameter_list|(
 name|struct
@@ -3015,6 +3015,11 @@ argument_list|(
 name|REG_EMPTY
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 end_function
 
@@ -3063,28 +3068,39 @@ operator|(
 name|false
 operator|)
 return|;
+elseif|else
+if|if
+condition|(
 operator|(
-name|void
-operator|)
-name|REQUIRE
-argument_list|(
 name|ate
-operator|==
+operator|>
 literal|1
-operator|&&
+operator|||
 operator|(
-operator|!
 name|bc
 operator|->
 name|outer
-operator|||
+operator|&&
+operator|!
 name|MORE
 argument_list|()
 operator|)
+operator|)
+operator|&&
+operator|!
+name|p_branch_empty
+argument_list|(
+name|p
 argument_list|,
-name|REG_EMPTY
+name|bc
 argument_list|)
-expr_stmt|;
+condition|)
+comment|/* 		 * Halt parsing only if we have an empty branch and p_branch_empty 		 * indicates that we must not continue. In the future, this will not 		 * necessarily be an error. 		 */
+return|return
+operator|(
+name|false
+operator|)
+return|;
 name|p_branch_ins_offset
 argument_list|(
 name|p
