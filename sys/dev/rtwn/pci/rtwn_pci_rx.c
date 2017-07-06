@@ -189,12 +189,6 @@ directive|include
 file|<dev/rtwn/pci/rtwn_pci_rx.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/rtwn/rtl8192c/pci/r92ce_rx_desc.h>
-end_include
-
 begin_function
 name|void
 name|rtwn_pci_dma_map_addr
@@ -261,7 +255,7 @@ modifier|*
 name|pc
 parameter_list|,
 name|struct
-name|r92ce_rx_stat
+name|rtwn_rx_stat_pci
 modifier|*
 name|desc
 parameter_list|,
@@ -296,7 +290,7 @@ name|htole32
 argument_list|(
 name|SM
 argument_list|(
-name|R92C_RXDW0_PKTLEN
+name|RTWN_RXDW0_PKTLEN
 argument_list|,
 name|len
 argument_list|)
@@ -310,7 +304,7 @@ operator|-
 literal|1
 operator|)
 condition|?
-name|R92C_RXDW0_EOR
+name|RTWN_RXDW0_EOR
 else|:
 literal|0
 operator|)
@@ -350,7 +344,7 @@ name|rxdw0
 operator||=
 name|htole32
 argument_list|(
-name|R92C_RXDW0_OWN
+name|RTWN_RXDW0_OWN
 argument_list|)
 expr_stmt|;
 block|}
@@ -367,7 +361,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|r92ce_rx_stat
+name|rtwn_rx_stat_pci
 modifier|*
 name|rx_desc
 parameter_list|,
@@ -528,9 +522,9 @@ argument_list|(
 name|rxdw0
 operator|&
 operator|(
-name|R92C_RXDW0_CRCERR
+name|RTWN_RXDW0_CRCERR
 operator||
-name|R92C_RXDW0_ICVERR
+name|RTWN_RXDW0_ICVERR
 operator|)
 argument_list|)
 condition|)
@@ -548,7 +542,7 @@ name|__func__
 argument_list|,
 name|rxdw0
 operator|&
-name|R92C_RXDW0_CRCERR
+name|RTWN_RXDW0_CRCERR
 condition|?
 literal|"CRC"
 else|:
@@ -565,7 +559,7 @@ name|MS
 argument_list|(
 name|rxdw0
 argument_list|,
-name|R92C_RXDW0_PKTLEN
+name|RTWN_RXDW0_PKTLEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -609,7 +603,7 @@ name|MS
 argument_list|(
 name|rxdw0
 argument_list|,
-name|R92C_RXDW0_INFOSZ
+name|RTWN_RXDW0_INFOSZ
 argument_list|)
 operator|*
 literal|8
@@ -620,7 +614,7 @@ name|MS
 argument_list|(
 name|rxdw0
 argument_list|,
-name|R92C_RXDW0_SHIFT
+name|RTWN_RXDW0_SHIFT
 argument_list|)
 expr_stmt|;
 name|m1
@@ -1348,7 +1342,7 @@ condition|;
 control|)
 block|{
 name|struct
-name|r92ce_rx_stat
+name|rtwn_rx_stat_pci
 modifier|*
 name|rx_desc
 init|=
@@ -1371,7 +1365,7 @@ operator|->
 name|rxdw0
 argument_list|)
 operator|&
-name|R92C_RXDW0_OWN
+name|RTWN_RXDW0_OWN
 condition|)
 break|break;
 name|rtwn_pci_rx_frame

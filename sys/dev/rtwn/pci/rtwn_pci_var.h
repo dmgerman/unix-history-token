@@ -19,12 +19,6 @@ directive|define
 name|RTWN_PCI_VAR_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<dev/rtwn/rtl8192c/pci/r92ce_rx_desc.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -63,7 +57,7 @@ struct|struct
 name|rtwn_rx_ring
 block|{
 name|struct
-name|r92ce_rx_stat
+name|rtwn_rx_stat_pci
 modifier|*
 name|desc
 decl_stmt|;
