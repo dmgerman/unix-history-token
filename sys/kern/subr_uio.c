@@ -904,11 +904,6 @@ name|nofault
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|iovec
 modifier|*
 name|iov
@@ -923,10 +918,6 @@ name|newflags
 decl_stmt|,
 name|save
 decl_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -962,7 +953,7 @@ name|uio
 operator|->
 name|uio_td
 operator|==
-name|td
+name|curthread
 argument_list|,
 operator|(
 literal|"uiomove proc"
@@ -971,9 +962,32 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_USERSPACE
+condition|)
+block|{
+name|newflags
+operator|=
+name|TDP_DEADLKTREAT
+expr_stmt|;
+if|if
+condition|(
 name|nofault
 condition|)
+block|{
+comment|/* 			 * Fail if a non-spurious page fault occurs. 			 */
+name|newflags
+operator||=
+name|TDP_NOFAULTING
+operator||
+name|TDP_RESETSPUR
+expr_stmt|;
+block|}
+else|else
+block|{
 name|WITNESS_WARN
 argument_list|(
 name|WARN_GIANTOK
@@ -985,29 +999,6 @@ argument_list|,
 literal|"Calling uiomove()"
 argument_list|)
 expr_stmt|;
-comment|/* XXX does it make a sense to set TDP_DEADLKTREAT for UIO_SYSSPACE ? */
-name|newflags
-operator|=
-name|TDP_DEADLKTREAT
-expr_stmt|;
-if|if
-condition|(
-name|uio
-operator|->
-name|uio_segflg
-operator|==
-name|UIO_USERSPACE
-operator|&&
-name|nofault
-condition|)
-block|{
-comment|/* 		 * Fail if a non-spurious page fault occurs. 		 */
-name|newflags
-operator||=
-name|TDP_NOFAULTING
-operator||
-name|TDP_RESETSPUR
-expr_stmt|;
 block|}
 name|save
 operator|=
@@ -1016,6 +1007,21 @@ argument_list|(
 name|newflags
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|KASSERT
+argument_list|(
+name|nofault
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"uiomove: nofault"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|n
@@ -1213,6 +1219,14 @@ expr_stmt|;
 block|}
 name|out
 label|:
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_USERSPACE
+condition|)
 name|curthread_pflags_restore
 argument_list|(
 name|save
