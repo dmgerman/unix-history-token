@@ -820,6 +820,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IGN
+value|(CHAR_MIN - 2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISWORD
 parameter_list|(
 name|c
