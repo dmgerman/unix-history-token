@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/rpc_com.h>
 end_include
 
 begin_include
@@ -263,6 +275,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_NFSUSERDSOCK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_NFSUSERDSOCK
+value|"/var/run/nfsuserd.sock"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -400,6 +430,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|use_udpsock
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|defusertimeout
 init|=
 name|DEFUSERTIMEOUT
@@ -465,11 +503,13 @@ modifier|*
 name|grp
 decl_stmt|;
 name|int
-name|sock
+name|oldmask
 decl_stmt|,
 name|one
 init|=
 literal|1
+decl_stmt|,
+name|sock
 decl_stmt|;
 name|SVCXPRT
 modifier|*
@@ -477,6 +517,10 @@ name|udptransp
 decl_stmt|;
 name|u_short
 name|portnum
+decl_stmt|;
+name|SVCXPRT
+modifier|*
+name|xprt
 decl_stmt|;
 name|sigset_t
 name|signew
@@ -514,6 +558,10 @@ index|]
 decl_stmt|;
 name|int
 name|ngroup
+decl_stmt|;
+name|struct
+name|sockaddr_un
+name|sun
 decl_stmt|;
 if|if
 condition|(
@@ -834,6 +882,24 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-use-udpsock"
+argument_list|)
+condition|)
+block|{
+name|use_udpsock
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-usermax"
 argument_list|)
 condition|)
@@ -1038,6 +1104,17 @@ name|nfsuserdcnt
 operator|=
 name|DEFNFSUSERD
 expr_stmt|;
+if|if
+condition|(
+name|use_udpsock
+operator|==
+literal|0
+condition|)
+comment|/* For AF_LOCAL socket, only allow one server daemon. */
+name|nfsuserdcnt
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Strip off leading and trailing '.'s in domain name and map 	 * alphabetics to lower case. 	 */
 while|while
 condition|(
@@ -1220,7 +1297,14 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * Set up the service port to accept requests via UDP from 	 * localhost (127.0.0.1). 	 */
+if|if
+condition|(
+name|use_udpsock
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * Set up the service port to accept requests via UDP from 		 * localhost (127.0.0.1). 		 */
 if|if
 condition|(
 operator|(
@@ -1245,7 +1329,7 @@ argument_list|,
 literal|"cannot create udp socket"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Not sure what this does, so I'll leave it here for now. 	 */
+comment|/* 		 * Not sure what this does, so I'll leave it here for now. 		 */
 name|setsockopt
 argument_list|(
 name|sock
@@ -1283,7 +1367,7 @@ argument_list|,
 literal|"Can't set up socket"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * By not specifying a protocol, it is linked into the 	 * dispatch queue, but not registered with portmapper, 	 * which is just what I want. 	 */
+comment|/* 		 * By not specifying a protocol, it is linked into the 		 * dispatch queue, but not registered with portmapper, 		 * which is just what I want. 		 */
 if|if
 condition|(
 operator|!
@@ -1307,7 +1391,7 @@ argument_list|,
 literal|"Can't register nfsuserd"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Tell the kernel what my port# is. 	 */
+comment|/* 		 * Tell the kernel what my port# is. 		 */
 name|portnum
 operator|=
 name|htons
@@ -1351,32 +1435,23 @@ name|errno
 operator|==
 name|EPERM
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't start nfsuserd when already running"
+literal|"Can't start nfsuserd when"
+literal|" already running\nIf not running,"
+literal|" use the -force option.\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" If not running, use the -force option.\n"
-argument_list|)
-expr_stmt|;
-block|}
 else|else
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't do nfssvc() to add port\n"
+literal|"Can't do nfssvc() to add socket\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|1
@@ -1385,6 +1460,243 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+block|}
+else|else
+block|{
+comment|/* Use the AF_LOCAL socket. */
+name|memset
+argument_list|(
+operator|&
+name|sun
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|sun
+argument_list|)
+expr_stmt|;
+name|sun
+operator|.
+name|sun_family
+operator|=
+name|AF_LOCAL
+expr_stmt|;
+name|unlink
+argument_list|(
+name|_PATH_NFSUSERDSOCK
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|sun
+operator|.
+name|sun_path
+argument_list|,
+name|_PATH_NFSUSERDSOCK
+argument_list|)
+expr_stmt|;
+name|sun
+operator|.
+name|sun_len
+operator|=
+name|SUN_LEN
+argument_list|(
+operator|&
+name|sun
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|socket
+argument_list|(
+name|AF_LOCAL
+argument_list|,
+name|SOCK_STREAM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't create local nfsuserd socket"
+argument_list|)
+expr_stmt|;
+name|oldmask
+operator|=
+name|umask
+argument_list|(
+name|S_IXUSR
+operator||
+name|S_IRWXG
+operator||
+name|S_IRWXO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bind
+argument_list|(
+name|sock
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|sun
+argument_list|,
+name|sun
+operator|.
+name|sun_len
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't bind local nfsuserd socket"
+argument_list|)
+expr_stmt|;
+name|umask
+argument_list|(
+name|oldmask
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|listen
+argument_list|(
+name|sock
+argument_list|,
+name|SOMAXCONN
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't listen on local nfsuserd socket"
+argument_list|)
+expr_stmt|;
+name|xprt
+operator|=
+name|svc_vc_create
+argument_list|(
+name|sock
+argument_list|,
+name|RPC_MAXDATASIZE
+argument_list|,
+name|RPC_MAXDATASIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xprt
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't create transport for local nfsuserd socket"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|svc_reg
+argument_list|(
+name|xprt
+argument_list|,
+name|RPCPROG_NFSUSERD
+argument_list|,
+name|RPCNFSUSERD_VERS
+argument_list|,
+name|nfsuserdsrv
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't register service for local nfsuserd socket"
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Tell the kernel what the socket's path is. 		 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"sockpath=%s\n"
+argument_list|,
+name|_PATH_NFSUSERDSOCK
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|nfssvc
+argument_list|(
+name|NFSSVC_NFSUSERDPORT
+operator||
+name|NFSSVC_NEWSTRUCT
+argument_list|,
+name|_PATH_NFSUSERDSOCK
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EPERM
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't start nfsuserd when"
+literal|" already running\nIf not running,"
+literal|" use the -force option.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't do nfssvc() to add socket\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
 name|pwd
 operator|=
 name|getpwnam
@@ -2185,7 +2497,14 @@ decl_stmt|;
 name|int
 name|ngroup
 decl_stmt|;
-comment|/* 	 * Only handle requests from 127.0.0.1 on a reserved port number. 	 * (Since a reserved port # at localhost implies a client with 	 *  local root, there won't be a security breach. This is about 	 *  the only case I can think of where a reserved port # means 	 *  something.) 	 */
+if|if
+condition|(
+name|use_udpsock
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * Only handle requests from 127.0.0.1 on a reserved port 		 * number.  (Since a reserved port # at localhost implies a 		 * client with local root, there won't be a security breach. 		 * This is about the only case I can think of where a reserved 		 * port # means something.) 		 */
 name|sport
 operator|=
 name|ntohs
@@ -2233,7 +2552,8 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"req from ip=0x%x port=%d\n"
+literal|"req from ip=0x%x port=%d, consider"
+literal|" using an AF_LOCAL socket\n"
 argument_list|,
 name|saddr
 argument_list|,
@@ -2246,6 +2566,7 @@ name|transp
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 switch|switch
 condition|(
@@ -3552,7 +3873,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"usage: nfsuserd [-usermax cache_size] [-usertimeout minutes] [-verbose] [-manage-gids] [-domain domain_name] [n]"
+literal|"usage: nfsuserd [-usermax cache_size] [-usertimeout minutes]"
+literal|" [-verbose] [-manage-gids] [-use-udpsock] [-domain domain_name]"
+literal|" [n]"
 argument_list|)
 expr_stmt|;
 block|}
