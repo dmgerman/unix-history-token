@@ -463,9 +463,9 @@ name|SYSINIT
 argument_list|(
 name|acpi_taskq
 argument_list|,
-name|SI_SUB_CONFIGURE
+name|SI_SUB_KICK_SCHEDULER
 argument_list|,
-name|SI_ORDER_SECOND
+name|SI_ORDER_ANY
 argument_list|,
 name|acpi_taskq_init
 argument_list|,
