@@ -591,6 +591,18 @@ name|struct
 name|rlimit
 name|rl
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+literal|"test segfaults; PR # 220502"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rl
 operator|.
 name|rlim_cur
