@@ -147,41 +147,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTIDELAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FDT_PLATFORM_CTASSERT
-parameter_list|(
-name|delay
-parameter_list|)
-value|CTASSERT(delay> 0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FDT_PLATFORM_CTASSERT
-parameter_list|(
-name|delay
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -200,7 +165,7 @@ parameter_list|,	\
 name|delay
 parameter_list|)
 define|\
-value|FDT_PLATFORM_CTASSERT(delay);						\ static fdt_platform_def_t VAR_NAME ## _fdt_platform = {			\ 	.name = NAME_STR,						\ 	.methods = fdt_platform_methods,				\ 	.fdt_compatible = compatible,					\ };									\ static kobj_class_t VAR_NAME ## _baseclasses[] =			\ 	{ (kobj_class_t)&VAR_NAME ## _fdt_platform, NULL };		\ static platform_def_t VAR_NAME ## _platform = {				\ 	NAME_STR,							\ 	NAME ## _methods,						\ 	size,								\ 	VAR_NAME ## _baseclasses,					\ 	delay,								\ };									\ DATA_SET(platform_set, VAR_NAME ## _platform)
+value|CTASSERT(delay> 0);							\ static fdt_platform_def_t VAR_NAME ## _fdt_platform = {			\ 	.name = NAME_STR,						\ 	.methods = fdt_platform_methods,				\ 	.fdt_compatible = compatible,					\ };									\ static kobj_class_t VAR_NAME ## _baseclasses[] =			\ 	{ (kobj_class_t)&VAR_NAME ## _fdt_platform, NULL };		\ static platform_def_t VAR_NAME ## _platform = {				\ 	NAME_STR,							\ 	NAME ## _methods,						\ 	size,								\ 	VAR_NAME ## _baseclasses,					\ 	delay,								\ };									\ DATA_SET(platform_set, VAR_NAME ## _platform)
 end_define
 
 begin_define

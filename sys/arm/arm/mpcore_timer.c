@@ -99,12 +99,6 @@ directive|include
 file|<machine/intr.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTIDELAY
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -114,11 +108,6 @@ end_include
 begin_comment
 comment|/* For arm_set_delay */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -149,32 +138,6 @@ include|#
 directive|include
 file|<arm/arm/mpcore_timervar.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PLATFORM
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|MULTIDELAY
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|The MPCore Timer driver requires MULTIDELAY when building with PLATFORM
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Private (per-CPU) timer register map */
@@ -1637,7 +1600,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|MULTIDELAY
+name|PLATFORM
 comment|/* 	 * We can register as the DELAY() implementation only if we successfully 	 * set up the global timer. 	 */
 if|if
 condition|(
@@ -1928,7 +1891,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MULTIDELAY
+name|PLATFORM
 end_ifndef
 
 begin_comment
