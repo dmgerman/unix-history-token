@@ -11343,7 +11343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_page_advise  *  * 	Deactivate or do nothing, as appropriate.  *  *	The object and page must be locked.  */
+comment|/*  * vm_page_advise  *  * 	Apply the specified advice to the given page.  *  *	The object and page must be locked.  */
 end_comment
 
 begin_function
@@ -11388,7 +11388,20 @@ name|advice
 operator|!=
 name|MADV_DONTNEED
 condition|)
+block|{
+if|if
+condition|(
+name|advice
+operator|==
+name|MADV_WILLNEED
+condition|)
+name|vm_page_activate
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * Clear any references to the page.  Otherwise, the page daemon will 	 * immediately reactivate the page. 	 */
 name|vm_page_aflag_clear
 argument_list|(
