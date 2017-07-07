@@ -120,6 +120,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VM_PROT_FAULT_LOOKUP
+value|((vm_prot_t) 0x010)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_PROT_ALL
 value|(VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE)
 end_define
