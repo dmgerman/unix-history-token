@@ -146,12 +146,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/kbd/kbdtables.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/hyperv/include/hyperv.h>
 end_include
 
