@@ -28354,7 +28354,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|int
+name|uint32_t
 name|val
 decl_stmt|;
 name|u_int64_t
@@ -28373,7 +28373,7 @@ argument_list|)
 expr_stmt|;
 name|percentage
 operator|=
-literal|10000
+literal|10000ull
 operator|*
 name|val
 expr_stmt|;
@@ -28382,7 +28382,7 @@ argument_list|(
 name|stdout
 argument_list|,
 literal|"\rFormatting:  %ju.%02u %% "
-literal|"(%d/%d) done"
+literal|"(%u/%d) done"
 argument_list|,
 call|(
 name|uintmax_t
