@@ -385,12 +385,13 @@ name|data
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|int
+decl_stmt|,
 name|flags
-init|=
-literal|0
 decl_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|fmp
 operator|=
 operator|(
