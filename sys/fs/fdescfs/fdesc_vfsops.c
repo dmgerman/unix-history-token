@@ -391,11 +391,6 @@ literal|0
 expr_stmt|;
 name|fmp
 operator|=
-operator|(
-expr|struct
-name|fdescmount
-operator|*
-operator|)
 name|mp
 operator|->
 name|mnt_data
