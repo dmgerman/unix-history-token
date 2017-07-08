@@ -159,36 +159,6 @@ name|physmem
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|exec_map_entries
-init|=
-literal|16
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|exec_map_entries
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|exec_map_entries
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum number of simultaneous execs"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * System initialization  */
 end_comment
@@ -744,7 +714,37 @@ argument_list|(
 literal|"Clean map calculation incorrect"
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Allocate the pageable submaps. 	 */
+comment|/* 	 * Allocate the pageable submaps.  We may cache an exec map entry per 	 * CPU, so we therefore need to reserve space for at least ncpu+1 	 * entries to avoid deadlock.  The exec map is also used by some image 	 * activators, so we leave a fixed number of pages for their use. 	 */
+ifdef|#
+directive|ifdef
+name|__LP64__
+name|exec_map_entries
+operator|=
+literal|8
+operator|*
+name|mp_ncpus
+expr_stmt|;
+else|#
+directive|else
+name|exec_map_entries
+operator|=
+literal|2
+operator|*
+name|mp_ncpus
+operator|+
+literal|4
+expr_stmt|;
+endif|#
+directive|endif
+name|exec_map_entry_size
+operator|=
+name|round_page
+argument_list|(
+name|PATH_MAX
+operator|+
+name|ARG_MAX
+argument_list|)
+expr_stmt|;
 name|exec_map
 operator|=
 name|kmem_suballoc
@@ -759,12 +759,11 @@ name|maxaddr
 argument_list|,
 name|exec_map_entries
 operator|*
-name|round_page
-argument_list|(
-name|PATH_MAX
+name|exec_map_entry_size
 operator|+
-name|ARG_MAX
-argument_list|)
+literal|64
+operator|*
+name|PAGE_SIZE
 argument_list|,
 name|FALSE
 argument_list|)

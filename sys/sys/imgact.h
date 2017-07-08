@@ -49,6 +49,11 @@ modifier|*
 name|buf
 decl_stmt|;
 comment|/* pointer to string buffer */
+name|void
+modifier|*
+name|bufkva
+decl_stmt|;
+comment|/* cookie for string buffer KVA */
 name|char
 modifier|*
 name|begin_argv
