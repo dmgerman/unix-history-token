@@ -380,9 +380,6 @@ name|fdescmount
 modifier|*
 name|fmp
 decl_stmt|;
-name|caddr_t
-name|data
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -459,39 +456,20 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Finally, throw away the fdescmount structure. Hold the hashmtx to 	 * protect the fdescmount structure. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|fdesc_hashmtx
-argument_list|)
-expr_stmt|;
-name|data
-operator|=
-name|mp
-operator|->
-name|mnt_data
-expr_stmt|;
+comment|/* 	 * Finally, throw away the fdescmount structure. 	 */
 name|mp
 operator|->
 name|mnt_data
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|fdesc_hashmtx
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
-name|data
+name|fmp
 argument_list|,
 name|M_FDESCMNT
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 literal|0
