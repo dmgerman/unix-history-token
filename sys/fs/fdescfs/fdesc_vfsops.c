@@ -262,9 +262,6 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-operator|(
-name|qaddr_t
-operator|)
 name|fmp
 expr_stmt|;
 name|fmp
