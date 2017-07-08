@@ -235,7 +235,8 @@ name|pgprot_noncached
 parameter_list|(
 name|prot
 parameter_list|)
-value|((pgprot_t)VM_MEMATTR_UNCACHEABLE)
+define|\
+value|((prot) | cachemode2protval(VM_MEMATTR_UNCACHEABLE))
 end_define
 
 begin_define
@@ -245,7 +246,8 @@ name|pgprot_writecombine
 parameter_list|(
 name|prot
 parameter_list|)
-value|((pgprot_t)VM_MEMATTR_WRITE_COMBINING)
+define|\
+value|((prot) | cachemode2protval(VM_MEMATTR_WRITE_COMBINING))
 end_define
 
 begin_undef
