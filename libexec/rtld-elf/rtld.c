@@ -27147,7 +27147,7 @@ argument_list|(
 name|binpath
 argument_list|)
 argument_list|)
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|binpath
@@ -27174,7 +27174,7 @@ argument_list|(
 name|binpath
 argument_list|)
 argument_list|)
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|binpath
@@ -27194,7 +27194,7 @@ argument_list|(
 name|binpath
 argument_list|)
 argument_list|)
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|binpath
