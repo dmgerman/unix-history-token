@@ -186,11 +186,6 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|fdescmount
 modifier|*
@@ -207,6 +202,9 @@ name|struct
 name|vnode
 modifier|*
 name|rvp
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 if|if
 condition|(
