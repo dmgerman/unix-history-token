@@ -1189,6 +1189,12 @@ name|int
 name|mouse_signal
 decl_stmt|;
 comment|/* signal # to report with */
+specifier|const
+name|void
+modifier|*
+name|mouse_data
+decl_stmt|;
+comment|/* renderer (pixmap) data */
 name|u_short
 name|bell_duration
 decl_stmt|;
