@@ -142,6 +142,13 @@ name|TASK_PARKED
 value|0x0200
 end_define
 
+begin_define
+define|#
+directive|define
+name|TASK_COMM_LEN
+value|(MAXCOMLEN + 1)
+end_define
+
 begin_struct
 struct|struct
 name|task_struct
