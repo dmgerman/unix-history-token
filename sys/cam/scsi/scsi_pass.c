@@ -8927,6 +8927,12 @@ name|fc
 operator|==
 name|XPT_DEV_ADVINFO
 operator|)
+operator|||
+operator|(
+name|fc
+operator|==
+name|XPT_MMC_IO
+operator|)
 condition|)
 block|{
 name|bzero
