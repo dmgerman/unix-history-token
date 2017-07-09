@@ -1720,6 +1720,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LINUX_ZFS_SUPER_MAGIC
+value|0x2FC12FC1
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_DEVFS_SUPER_MAGIC
 value|0x1373L
 end_define
@@ -1765,6 +1772,12 @@ block|{
 literal|"ufs"
 block|,
 name|LINUX_UFS_SUPER_MAGIC
+block|}
+block|,
+block|{
+literal|"zfs"
+block|,
+name|LINUX_ZFS_SUPER_MAGIC
 block|}
 block|,
 block|{
