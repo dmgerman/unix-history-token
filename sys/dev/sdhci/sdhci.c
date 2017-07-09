@@ -1443,8 +1443,6 @@ operator||
 name|SDHCI_INT_RESPONSE
 operator||
 name|SDHCI_INT_ACMD12ERR
-operator||
-name|SDHCI_INT_CARD_INT
 expr_stmt|;
 if|if
 condition|(
@@ -8993,14 +8991,6 @@ operator|~
 name|SDHCI_INT_BUS_POWER
 expr_stmt|;
 block|}
-comment|/* Handle card interrupt. */
-if|if
-condition|(
-name|intmask
-operator|&
-name|SDHCI_INT_CARD_INT
-condition|)
-block|{ 		 	}
 comment|/* The rest is unknown. */
 if|if
 condition|(
