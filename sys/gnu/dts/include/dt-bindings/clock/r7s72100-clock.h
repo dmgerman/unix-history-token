@@ -112,6 +112,17 @@ value|0
 end_define
 
 begin_comment
+comment|/* MSTP6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R7S72100_CLK_RTC
+value|0
+end_define
+
+begin_comment
 comment|/* MSTP7 */
 end_comment
 
@@ -211,15 +222,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R7S72100_CLK_SDHI0
+name|R7S72100_CLK_SDHI00
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|R7S72100_CLK_SDHI1
+name|R7S72100_CLK_SDHI01
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|R7S72100_CLK_SDHI10
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|R7S72100_CLK_SDHI11
+value|0
 end_define
 
 begin_endif

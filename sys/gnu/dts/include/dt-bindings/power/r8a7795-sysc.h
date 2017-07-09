@@ -159,6 +159,10 @@ name|R8A7795_PD_A2VC0
 value|25
 end_define
 
+begin_comment
+comment|/* ES1.x only */
+end_comment
+
 begin_define
 define|#
 directive|define

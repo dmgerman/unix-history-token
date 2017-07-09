@@ -958,6 +958,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|MT7623_PIN_57_SDA1_FUNC_GPIO57
+value|(MTK_PIN_NO(57) | 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_57_SDA1_FUNC_SDA1
+value|(MTK_PIN_NO(57) | 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_58_SCL1_FUNC_GPIO58
+value|(MTK_PIN_NO(58) | 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_58_SCL1_FUNC_SCL1
+value|(MTK_PIN_NO(58) | 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MT7623_PIN_60_WB_RSTB_FUNC_GPIO60
 value|(MTK_PIN_NO(60) | 0)
 end_define
@@ -1247,6 +1275,90 @@ define|#
 directive|define
 name|MT7623_PIN_76_SCL0_FUNC_SCL0
 value|(MTK_PIN_NO(76) | 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_79_URXD0_FUNC_GPIO79
+value|(MTK_PIN_NO(79) | 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_79_URXD0_FUNC_URXD0
+value|(MTK_PIN_NO(79) | 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_79_URXD0_FUNC_UTXD0
+value|(MTK_PIN_NO(79) | 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_80_UTXD0_FUNC_GPIO80
+value|(MTK_PIN_NO(80) | 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_80_UTXD0_FUNC_UTXD0
+value|(MTK_PIN_NO(80) | 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_80_UTXD0_FUNC_URXD0
+value|(MTK_PIN_NO(80) | 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_81_URXD1_FUNC_GPIO81
+value|(MTK_PIN_NO(81) | 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_81_URXD1_FUNC_URXD1
+value|(MTK_PIN_NO(81) | 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_81_URXD1_FUNC_UTXD1
+value|(MTK_PIN_NO(81) | 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_82_UTXD1_FUNC_GPIO82
+value|(MTK_PIN_NO(82) | 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_82_UTXD1_FUNC_UTXD1
+value|(MTK_PIN_NO(82) | 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT7623_PIN_82_UTXD1_FUNC_URXD1
+value|(MTK_PIN_NO(82) | 2)
 end_define
 
 begin_define
@@ -1819,28 +1931,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|MT7623_PIN_123_GPIO123_FUNC_GPIO123
+name|MT7623_PIN_123_HTPLG_FUNC_GPIO123
 value|(MTK_PIN_NO(123) | 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MT7623_PIN_123_GPIO123_FUNC_TEST
+name|MT7623_PIN_123_HTPLG_FUNC_HTPLG
 value|(MTK_PIN_NO(123) | 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MT7623_PIN_123_GPIO123_FUNC_SCL2
+name|MT7623_PIN_123_HTPLG_FUNC_SCL2
 value|(MTK_PIN_NO(123) | 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MT7623_PIN_123_GPIO123_FUNC_UTXD0
+name|MT7623_PIN_123_HTPLG_FUNC_UTXD0
 value|(MTK_PIN_NO(123) | 5)
 end_define
 

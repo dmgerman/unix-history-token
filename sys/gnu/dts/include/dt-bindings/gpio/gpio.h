@@ -52,21 +52,39 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Open Drain/Collector is the combination of single-ended active low,  * Open Source/Emitter is the combination of single-ended active high.  */
+comment|/* Bit 2 express Open drain or open source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_LINE_OPEN_SOURCE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPIO_LINE_OPEN_DRAIN
+value|4
+end_define
+
+begin_comment
+comment|/*  * Open Drain/Collector is the combination of single-ended open drain interface.  * Open Source/Emitter is the combination of single-ended open source interface.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GPIO_OPEN_DRAIN
-value|(GPIO_SINGLE_ENDED | GPIO_ACTIVE_LOW)
+value|(GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_DRAIN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPIO_OPEN_SOURCE
-value|(GPIO_SINGLE_ENDED | GPIO_ACTIVE_HIGH)
+value|(GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_SOURCE)
 end_define
 
 begin_endif

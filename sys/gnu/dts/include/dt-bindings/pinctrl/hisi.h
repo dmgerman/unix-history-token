@@ -258,6 +258,108 @@ name|DRIVE4_10MA
 value|(6<< 4)
 end_define
 
+begin_comment
+comment|/* drive strength definition for hi3660 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRIVE6_MASK
+value|(15<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE6_04MA
+value|(0<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE6_12MA
+value|(4<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE6_19MA
+value|(8<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE6_27MA
+value|(10<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE6_32MA
+value|(15<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE7_02MA
+value|(0<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE7_04MA
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE7_06MA
+value|(2<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE7_08MA
+value|(3<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE7_10MA
+value|(4<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE7_12MA
+value|(5<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE7_14MA
+value|(6<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVE7_16MA
+value|(7<< 4)
+end_define
+
 begin_endif
 endif|#
 directive|endif

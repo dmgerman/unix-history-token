@@ -18,6 +18,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CLK_PLL_PERIPH0
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLK_BUS_MIPI_DSI
 value|28
 end_define

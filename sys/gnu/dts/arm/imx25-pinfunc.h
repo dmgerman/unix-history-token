@@ -22,13 +22,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MX25_PAD_TDO__TDO
-value|0x000 0x3e8 0x000 0x00 0x000
-end_define
-
-begin_define
-define|#
-directive|define
 name|MX25_PAD_A10__A10
 value|0x008 0x000 0x000 0x00 0x000
 end_define
@@ -297,13 +290,6 @@ define|#
 directive|define
 name|MX25_PAD_A22__GPIO_2_8
 value|0x030 0x000 0x000 0x05 0x000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MX25_PAD_A22__FEC_TDATA2
-value|0x030 0x000 0x000 0x07 0x000
 end_define
 
 begin_define
@@ -2724,6 +2710,13 @@ define|#
 directive|define
 name|MX25_PAD_RTCK__GPIO_3_14
 value|0x1ec 0x3e4 0x000 0x05 0x000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX25_PAD_TDO__TDO
+value|0x000 0x3e8 0x000 0x00 0x000
 end_define
 
 begin_define

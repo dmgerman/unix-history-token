@@ -293,6 +293,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R8A73A4_CLK_INTC_SYS
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|R8A73A4_CLK_IRQC
 value|7
 end_define
