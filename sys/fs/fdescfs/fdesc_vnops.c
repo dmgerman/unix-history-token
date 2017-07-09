@@ -558,11 +558,6 @@ expr_stmt|;
 comment|/* 	 * If a forced unmount is progressing, we need to drop it. The flags are 	 * protected by the hashmtx. 	 */
 name|fmp
 operator|=
-operator|(
-expr|struct
-name|fdescmount
-operator|*
-operator|)
 name|mp
 operator|->
 name|mnt_data
@@ -799,11 +794,6 @@ expr_stmt|;
 comment|/* 	 * If a forced unmount is progressing, we need to drop it. The flags are 	 * protected by the hashmtx. 	 */
 name|fmp
 operator|=
-operator|(
-expr|struct
-name|fdescmount
-operator|*
-operator|)
 name|mp
 operator|->
 name|mnt_data
