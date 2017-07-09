@@ -733,11 +733,22 @@ name|HI6220_CS_ATB_DIV
 value|58
 end_define
 
+begin_comment
+comment|/* gate clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HI6220_DAPB_CLK
+value|59
+end_define
+
 begin_define
 define|#
 directive|define
 name|HI6220_SYS_NR_CLKS
-value|59
+value|60
 end_define
 
 begin_comment

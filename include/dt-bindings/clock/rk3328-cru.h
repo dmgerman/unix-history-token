@@ -569,6 +569,13 @@ name|SCLK_MAC2PHY
 value|101
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCLK_MAC2IO_EXT
+value|102
+end_define
+
 begin_comment
 comment|/* dclk gates */
 end_comment

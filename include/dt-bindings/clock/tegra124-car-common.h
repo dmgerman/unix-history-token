@@ -816,9 +816,12 @@ begin_comment
 comment|/* 135 */
 end_comment
 
-begin_comment
-comment|/* 136 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA124_CLK_CEC
+value|136
+end_define
 
 begin_comment
 comment|/* 137 */
