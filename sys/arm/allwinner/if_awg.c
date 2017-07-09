@@ -687,6 +687,8 @@ init|=
 literal|1
 block|,
 name|EMAC_H3
+block|,
+name|EMAC_A64
 block|, }
 enum|;
 end_enum
@@ -709,6 +711,12 @@ block|{
 literal|"allwinner,sun8i-h3-emac"
 block|,
 name|EMAC_H3
+block|}
+block|,
+block|{
+literal|"allwinner,sun50i-a64-emac"
+block|,
+name|EMAC_A64
 block|}
 block|,
 block|{
