@@ -310,6 +310,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|intel_gtt_install_pte
+parameter_list|(
+name|u_int
+name|index
+parameter_list|,
+name|vm_paddr_t
+name|addr
+parameter_list|,
+name|u_int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|intel_gtt_map_memory
 parameter_list|(
