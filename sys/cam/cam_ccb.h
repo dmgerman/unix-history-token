@@ -1669,12 +1669,12 @@ name|struct
 name|ata_params
 name|ident_data
 decl_stmt|;
+name|dev_result_flags
+name|flags
+decl_stmt|;
 name|struct
 name|mmc_params
 name|mmc_ident_data
-decl_stmt|;
-name|dev_result_flags
-name|flags
 decl_stmt|;
 block|}
 struct|;
