@@ -5246,7 +5246,7 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
-operator|<
+operator|!=
 literal|0
 condition|)
 block|{
