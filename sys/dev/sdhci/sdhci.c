@@ -474,6 +474,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MMCCAM
+end_ifdef
+
 begin_comment
 comment|/* CAM-related */
 end_comment
@@ -572,6 +578,11 @@ name|ccb
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* helper routines */
@@ -5002,27 +5013,6 @@ name|host
 operator|.
 name|ios
 decl_stmt|;
-name|device_printf
-argument_list|(
-name|brdev
-argument_list|,
-literal|"This is a bridge device\n"
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|reqdev
-argument_list|,
-literal|"This is a request device\n"
-argument_list|)
-expr_stmt|;
-name|slot_printf
-argument_list|(
-name|slot
-argument_list|,
-literal|"<--- The locking slot is this\n"
-argument_list|)
-expr_stmt|;
 name|SDHCI_LOCK
 argument_list|(
 name|slot
@@ -5531,7 +5521,9 @@ name|slot_printf
 argument_list|(
 name|slot
 argument_list|,
-literal|"sdhci_req_done()\n"
+literal|"%s\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -8093,6 +8085,9 @@ name|mmc_data
 modifier|*
 name|data
 decl_stmt|;
+name|size_t
+name|left
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -8326,9 +8321,6 @@ name|curcmd
 operator|->
 name|data
 expr_stmt|;
-name|size_t
-name|left
-decl_stmt|;
 comment|/* Unload DMA buffer ... */
 name|left
 operator|=
@@ -9323,11 +9315,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|sdhci_debug
+operator|>
+literal|1
+condition|)
 name|slot_printf
 argument_list|(
 name|slot
 argument_list|,
-literal|"sdhci_generic_write_ivar, var=%d\n"
+literal|"%s: var=%d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|which
 argument_list|)
@@ -9608,6 +9608,9 @@ literal|0
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|MMCCAM
 comment|/* CAM-related functions */
 include|#
 directive|include
@@ -11285,6 +11288,9 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* MMCCAM */
 name|MODULE_VERSION
 argument_list|(
 name|sdhci
