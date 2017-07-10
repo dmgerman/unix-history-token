@@ -3202,15 +3202,6 @@ endif|#
 directive|endif
 comment|/* SC_NO_FONT_LOADING */
 block|{
-name|a
-operator|=
-name|vga_cursorattr_adj
-argument_list|(
-name|a
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|flip
@@ -3218,6 +3209,15 @@ condition|)
 name|a
 operator|=
 name|vga_flipattr
+argument_list|(
+name|a
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|a
+operator|=
+name|vga_cursorattr_adj
 argument_list|(
 name|a
 argument_list|,
@@ -5823,10 +5823,9 @@ name|vga_flipattr
 argument_list|(
 name|a
 argument_list|,
-name|TRUE
+name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|col1
 operator|=
 operator|(
@@ -6189,10 +6188,9 @@ name|vga_flipattr
 argument_list|(
 name|a
 argument_list|,
-name|TRUE
+name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|col1
 operator|=
 name|a
