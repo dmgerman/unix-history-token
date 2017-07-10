@@ -4721,7 +4721,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroy old address space, and allocate a new stack  *	The new stack is only SGROWSIZ large because it is grown  *	automatically in trap.c.  */
+comment|/*  * Destroy old address space, and allocate a new stack.  *	The new stack is only sgrowsiz large because it is grown  *	automatically on a page fault.  */
 end_comment
 
 begin_function
@@ -4979,6 +4979,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+name|KERN_SUCCESS
 condition|)
 block|{
 name|vm_object_deallocate
@@ -4988,7 +4990,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|vm_mmap_to_errno
+argument_list|(
 name|error
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5145,10 +5150,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+name|KERN_SUCCESS
 condition|)
 return|return
 operator|(
+name|vm_mmap_to_errno
+argument_list|(
 name|error
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * vm_ssize and vm_maxsaddr are somewhat antiquated concepts, but they 	 * are still used to enforce the stack rlimit on the process stack. 	 */
