@@ -25237,7 +25237,7 @@ name|ascq
 init|=
 literal|0
 decl_stmt|;
-comment|/* 		 * In this case, we have SCSI ATA PASS-THROUGH command, 12 		 * or 16 byte, and need to see what  		 */
+comment|/* 		 * In this case, we have SCSI ATA PASS-THROUGH command, 12 		 * or 16 byte, and need to see what 		 */
 if|if
 condition|(
 name|ccb
