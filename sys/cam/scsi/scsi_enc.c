@@ -170,7 +170,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<opt_ses.h>
+file|"opt_ses.h"
 end_include
 
 begin_expr_stmt

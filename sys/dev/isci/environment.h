@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<opt_isci.h>
+file|"opt_isci.h"
 end_include
 
 begin_typedef

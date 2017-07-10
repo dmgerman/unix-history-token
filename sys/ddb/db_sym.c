@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<opt_ddb.h>
+file|"opt_ddb.h"
 end_include
 
 begin_comment
