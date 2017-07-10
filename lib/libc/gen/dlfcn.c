@@ -17,6 +17,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|IN_LIBDL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PIC
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * Linkage to services provided by the dynamic linker.  */
 end_comment
@@ -548,6 +563,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN_LIBDL
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|pthread_once_t
@@ -742,6 +763,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -775,6 +801,9 @@ name|data
 name|__unused
 argument_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|IN_LIBDL
 name|__init_elf_aux_vector
 argument_list|()
 expr_stmt|;
@@ -813,6 +842,15 @@ name|data
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_decl_stmt
 
@@ -970,6 +1008,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(IN_LIBDL) || defined(PIC) */
+end_comment
 
 end_unit
 
