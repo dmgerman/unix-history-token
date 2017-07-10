@@ -21590,6 +21590,7 @@ block|{
 name|int
 name|level
 decl_stmt|;
+comment|/* FC-4 Type and Port Type not registered are not errors. */
 if|if
 condition|(
 name|rs
@@ -21600,13 +21601,23 @@ name|ct_reason
 operator|==
 literal|9
 operator|&&
+operator|(
 name|rs
 operator|->
 name|snscb_cthdr
 operator|.
 name|ct_explanation
 operator|==
-literal|7
+literal|0x07
+operator|||
+name|rs
+operator|->
+name|snscb_cthdr
+operator|.
+name|ct_explanation
+operator|==
+literal|0x0a
+operator|)
 condition|)
 block|{
 name|level
