@@ -34236,6 +34236,8 @@ literal|0
 decl_stmt|;
 name|uint8_t
 name|mmc_data_byte
+init|=
+literal|0
 decl_stmt|;
 comment|/* For IO_RW_EXTENDED command */
 name|uint8_t
