@@ -3689,25 +3689,6 @@ expr_stmt|;
 name|xpt_unlock_buses
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"xpt_scanner_thread is firing on path "
-argument_list|)
-expr_stmt|;
-name|xpt_print_path
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Since lock can be dropped inside and path freed 			 * by completion callback even before return here, 			 * take our own path copy for reference. 			 */
 name|xpt_copy_path
 argument_list|(
