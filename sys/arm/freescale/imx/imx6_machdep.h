@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IMX6_MP_H
+name|IMX6_MACHDEP_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|IMX6_MP_H
+name|IMX6_MACHDEP_H
 end_define
 
 begin_function_decl
@@ -39,7 +39,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IMX6_MP_H */
+comment|/* IMX6_MACHDEP_H */
 end_comment
 
 end_unit

@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ZY7_MP_H_
+name|_ZY7_MACHDEP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ZY7_MP_H_
+name|_ZY7_MACHDEP_H_
 end_define
 
 begin_function_decl
@@ -39,7 +39,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _ZY7_MP_H_ */
+comment|/* _ZY7_MACHDEP_H_ */
 end_comment
 
 end_unit

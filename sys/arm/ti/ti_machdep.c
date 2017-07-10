@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/ti/omap4/omap4_reg.h>
+file|<arm/ti/omap4/omap4_machdep.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/ti/omap4/omap4_mp.h>
+file|<arm/ti/omap4/omap4_reg.h>
 end_include
 
 begin_include

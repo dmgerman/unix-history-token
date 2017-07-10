@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/freescale/imx/imx6_mp.h>
+file|<arm/freescale/imx/imx6_machdep.h>
 end_include
 
 begin_include

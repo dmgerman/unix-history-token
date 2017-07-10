@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/xilinx/zy7_mp.h>
+file|<arm/xilinx/zy7_machdep.h>
 end_include
 
 begin_include

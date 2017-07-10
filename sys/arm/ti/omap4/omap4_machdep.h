@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_OMAP4_MP_H_
+name|_OMAP4_MACHDEP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_OMAP4_MP_H_
+name|_OMAP4_MACHDEP_H_
 end_define
 
 begin_function_decl
@@ -41,7 +41,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _OMAP4_MP_H_ */
+comment|/* _OMAP4_MACHDEP_H_ */
 end_comment
 
 end_unit
