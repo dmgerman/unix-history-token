@@ -27,6 +27,23 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_CAPSICUM
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/capsicum.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -37,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -85,6 +108,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -434,6 +463,14 @@ decl_stmt|;
 name|uint8_t
 name|v
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|WITHOUT_CAPSICUM
+name|cap_rights_t
+name|rights
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Should always be able to open /dev/random. 	 */
 name|fd
 operator|=
@@ -453,6 +490,43 @@ operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|WITHOUT_CAPSICUM
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_READ
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cap_rights_limit
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|rights
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"Unable to apply rights for sandbox"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Check that device is seeded and non-blocking. 	 */
 name|len
 operator|=
