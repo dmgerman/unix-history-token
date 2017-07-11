@@ -120,6 +120,9 @@ name|end
 decl_stmt|;
 comment|/* end address */
 name|vm_offset_t
+name|pad0
+decl_stmt|;
+name|vm_offset_t
 name|next_read
 decl_stmt|;
 comment|/* vaddr of the next sequential read */
