@@ -4090,7 +4090,10 @@ break|break;
 default|default:
 name|error
 operator|=
-name|EINVAL
+name|vop_stdpathconf
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 block|}
 return|return
