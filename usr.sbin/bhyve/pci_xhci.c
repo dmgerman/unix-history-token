@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2014 Leon Dang<ldang@nahannisys.com>  * All rights 
 end_comment
 
 begin_comment
-comment|/*    XHCI options:     -s<n>,xhci,{devices}     devices:      ums             USB tablet mouse  */
+comment|/*    XHCI options:     -s<n>,xhci,{devices}     devices:      tablet             USB tablet mouse  */
 end_comment
 
 begin_include

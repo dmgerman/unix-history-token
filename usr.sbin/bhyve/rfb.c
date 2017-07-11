@@ -4782,9 +4782,16 @@ name|sin
 operator|.
 name|sin_port
 operator|=
+name|port
+condition|?
 name|htons
 argument_list|(
 name|port
+argument_list|)
+else|:
+name|htons
+argument_list|(
+literal|5900
 argument_list|)
 expr_stmt|;
 if|if
@@ -4821,7 +4828,7 @@ name|s_addr
 operator|=
 name|htonl
 argument_list|(
-name|INADDR_ANY
+name|INADDR_LOOPBACK
 argument_list|)
 expr_stmt|;
 if|if
