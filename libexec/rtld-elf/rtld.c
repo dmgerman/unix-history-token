@@ -9397,6 +9397,11 @@ name|Obj_Entry
 modifier|*
 name|defobj
 decl_stmt|;
+specifier|const
+name|Ver_Entry
+modifier|*
+name|ve
+decl_stmt|;
 name|SymLook
 name|req
 decl_stmt|;
@@ -9482,6 +9487,10 @@ name|defobj
 operator|=
 name|NULL
 expr_stmt|;
+name|ve
+operator|=
+name|NULL
+expr_stmt|;
 comment|/*      * We don't have to do a full scale lookup if the symbol is local.      * We know it will bind to the instance in this load module; to      * which we already have a pointer (ie ref). By not doing a lookup,      * we not only improve performance, but it also avoids unresolvable      * symbols when local symbols are not in the hash table. This has      * been seen with the ia64 toolchain.      */
 if|if
 condition|(
@@ -9533,6 +9542,8 @@ name|flags
 operator|=
 name|flags
 expr_stmt|;
+name|ve
+operator|=
 name|req
 operator|.
 name|ventry
@@ -9670,13 +9681,31 @@ name|obj_rtld
 condition|)
 name|_rtld_error
 argument_list|(
-literal|"%s: Undefined symbol \"%s\""
+literal|"%s: Undefined symbol \"%s%s%s\""
 argument_list|,
 name|refobj
 operator|->
 name|path
 argument_list|,
 name|name
+argument_list|,
+name|ve
+operator|!=
+name|NULL
+condition|?
+literal|"@"
+else|:
+literal|""
+argument_list|,
+name|ve
+operator|!=
+name|NULL
+condition|?
+name|ve
+operator|->
+name|name
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -17981,9 +18010,27 @@ return|;
 block|}
 name|_rtld_error
 argument_list|(
-literal|"Undefined symbol \"%s\""
+literal|"Undefined symbol \"%s%s%s\""
 argument_list|,
 name|name
+argument_list|,
+name|ve
+operator|!=
+name|NULL
+condition|?
+literal|"@"
+else|:
+literal|""
+argument_list|,
+name|ve
+operator|!=
+name|NULL
+condition|?
+name|ve
+operator|->
+name|name
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|lock_release
