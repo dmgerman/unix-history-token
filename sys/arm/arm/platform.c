@@ -238,6 +238,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|platform_t
+name|platform_obj
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|plat_obj
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|platform_probe_and_attach
 parameter_list|(

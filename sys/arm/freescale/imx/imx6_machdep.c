@@ -131,6 +131,12 @@ directive|include
 file|"platform_if.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"platform_pl310_if.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|platform_attach_t
@@ -824,6 +830,13 @@ argument_list|)
 block|,
 endif|#
 directive|endif
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_pl310_init
+argument_list|,
+name|imx6_pl310_init
+argument_list|)
+block|,
 name|PLATFORMMETHOD_END
 block|, }
 decl_stmt|;

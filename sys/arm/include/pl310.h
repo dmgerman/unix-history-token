@@ -880,6 +880,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PLATFORM
+end_ifndef
+
 begin_function_decl
 name|void
 name|platform_pl310_init
@@ -916,6 +922,11 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

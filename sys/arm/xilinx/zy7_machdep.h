@@ -15,6 +15,12 @@ directive|define
 name|_ZY7_MACHDEP_H_
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|pl310_softc
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|zynq7_mp_setmaxid
@@ -29,6 +35,19 @@ name|void
 name|zynq7_mp_start_ap
 parameter_list|(
 name|platform_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|zynq7_pl310_init
+parameter_list|(
+name|platform_t
+parameter_list|,
+name|struct
+name|pl310_softc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

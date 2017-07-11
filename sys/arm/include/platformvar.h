@@ -192,6 +192,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Helper to get the platform object  */
+end_comment
+
+begin_function_decl
+name|platform_t
+name|platform_obj
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|bool
 name|arm_tmr_timed_wait
