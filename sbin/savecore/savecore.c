@@ -408,7 +408,7 @@ name|xo_emit_h
 argument_list|(
 name|xo
 argument_list|,
-literal|"{P:  }{Lwc:Version String}{:version_string/%s}"
+literal|"{P:  }{Lwc:Version String}{:version_string/%s}\n"
 argument_list|,
 name|h
 operator|->
