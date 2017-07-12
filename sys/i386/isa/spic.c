@@ -1362,6 +1362,13 @@ name|si_drv1
 operator|=
 name|sc
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"WARNING: This driver is deprecated and will be removed.\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

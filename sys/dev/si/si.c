@@ -2749,6 +2749,13 @@ argument_list|,
 literal|"si_control"
 argument_list|)
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"WARNING: This driver is deprecated and will be removed.\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
