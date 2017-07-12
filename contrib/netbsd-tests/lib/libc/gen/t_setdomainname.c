@@ -322,10 +322,7 @@ name|setdomainname
 argument_list|(
 name|domain
 argument_list|,
-name|strlen
-argument_list|(
-name|domain
-argument_list|)
+name|n
 argument_list|)
 operator|!=
 literal|0
