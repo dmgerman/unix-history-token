@@ -2200,7 +2200,7 @@ name|_hw_ix
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|allow_unsupported_sfp
+name|unsupported_sfp
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
