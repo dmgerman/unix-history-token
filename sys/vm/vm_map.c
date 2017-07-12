@@ -6425,6 +6425,8 @@ return|;
 operator|*
 name|addr
 operator|=
+name|hint
+operator|=
 name|min_addr
 expr_stmt|;
 block|}
