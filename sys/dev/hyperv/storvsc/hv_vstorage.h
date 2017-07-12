@@ -505,6 +505,13 @@ name|SRB_STATUS_AUTOSENSE_VALID
 value|0x80
 end_define
 
+begin_define
+define|#
+directive|define
+name|SRB_STATUS_INVALID_LUN
+value|0X20
+end_define
+
 begin_comment
 comment|/**  *  Packet flags  */
 end_comment

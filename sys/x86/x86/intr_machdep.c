@@ -2308,6 +2308,14 @@ operator|==
 literal|1
 condition|)
 return|return;
+comment|/* Does not work properly on Hyper-V. */
+if|if
+condition|(
+name|vm_guest
+operator|==
+name|VM_GUEST_HV
+condition|)
+return|return;
 comment|/* Round-robin assign a CPU to each enabled source. */
 name|mtx_lock
 argument_list|(
