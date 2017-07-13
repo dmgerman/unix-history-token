@@ -177,12 +177,6 @@ directive|include
 file|<dev/rtwn/rtl8192c/r92c_reg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/rtwn/rtl8192c/r92c_rx_desc.h>
-end_include
-
 begin_function
 name|void
 name|rtwn_get_rates
@@ -860,7 +854,7 @@ name|sc
 parameter_list|,
 specifier|const
 name|struct
-name|r92c_rx_stat
+name|rtwn_rx_stat_common
 modifier|*
 name|stat
 parameter_list|)
@@ -902,7 +896,7 @@ name|MS
 argument_list|(
 name|rxdw3
 argument_list|,
-name|R92C_RXDW3_BSSID_FIT
+name|RTWN_RXDW3_BSSID01_FIT
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1084,7 +1078,7 @@ modifier|*
 name|un
 decl_stmt|;
 name|struct
-name|r92c_rx_stat
+name|rtwn_rx_stat_common
 modifier|*
 name|stat
 decl_stmt|;
@@ -1128,7 +1122,7 @@ name|MS
 argument_list|(
 name|rxdw0
 argument_list|,
-name|R92C_RXDW0_CIPHER
+name|RTWN_RXDW0_CIPHER
 argument_list|)
 expr_stmt|;
 name|infosz
@@ -1137,7 +1131,7 @@ name|MS
 argument_list|(
 name|rxdw0
 argument_list|,
-name|R92C_RXDW0_INFOSZ
+name|RTWN_RXDW0_INFOSZ
 argument_list|)
 operator|*
 literal|8
@@ -1148,7 +1142,7 @@ name|MS
 argument_list|(
 name|rxdw0
 argument_list|,
-name|R92C_RXDW0_PKTLEN
+name|RTWN_RXDW0_PKTLEN
 argument_list|)
 expr_stmt|;
 name|shift
@@ -1157,7 +1151,7 @@ name|MS
 argument_list|(
 name|rxdw0
 argument_list|,
-name|R92C_RXDW0_SHIFT
+name|RTWN_RXDW0_SHIFT
 argument_list|)
 expr_stmt|;
 name|wh
@@ -1263,7 +1257,7 @@ operator|&&
 operator|(
 name|rxdw0
 operator|&
-name|R92C_RXDW0_PHYST
+name|RTWN_RXDW0_PHYST
 operator|)
 condition|)
 name|physt
@@ -1378,7 +1372,7 @@ if|if
 condition|(
 name|rxdw0
 operator|&
-name|R92C_RXDW0_CRCERR
+name|RTWN_RXDW0_CRCERR
 condition|)
 name|rxs
 operator|.
@@ -1465,7 +1459,7 @@ operator|&&
 operator|(
 name|rxdw0
 operator|&
-name|R92C_RXDW0_PHYST
+name|RTWN_RXDW0_PHYST
 operator|)
 condition|)
 block|{

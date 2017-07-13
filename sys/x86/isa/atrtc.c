@@ -136,6 +136,10 @@ directive|include
 file|"clock_if.h"
 end_include
 
+begin_comment
+comment|/*  * clock_lock protects low-level access to individual hardware registers.  * atrtc_time_lock protects the entire sequence of accessing multiple registers  * to read or write the date and time.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -149,6 +153,28 @@ directive|define
 name|RTC_UNLOCK
 value|do { if (!kdb_active) mtx_unlock_spin(&clock_lock); } while (0)
 end_define
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|atrtc_time_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|atrtc_lock_init
+argument_list|,
+operator|&
+name|atrtc_time_lock
+argument_list|,
+literal|"atrtc"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -542,6 +568,12 @@ operator|&
 name|ct
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|atrtc_time_lock
+argument_list|)
+expr_stmt|;
 comment|/* Disable RTC updates and interrupts. */
 name|writertc
 argument_list|(
@@ -675,6 +707,12 @@ expr_stmt|;
 name|rtcin
 argument_list|(
 name|RTC_INTR
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|atrtc_time_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1397,6 +1435,12 @@ operator|)
 return|;
 block|}
 comment|/* 	 * wait for time update to complete 	 * If RTCSA_TUP is zero, we have at least 244us before next update. 	 * This is fast enough on most hardware, but a refinement would be 	 * to make sure that no more than 240us pass after we start reading, 	 * and try again if so. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|atrtc_time_lock
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|rtcin
@@ -1517,6 +1561,12 @@ endif|#
 directive|endif
 name|critical_exit
 argument_list|()
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|atrtc_time_lock
+argument_list|)
 expr_stmt|;
 comment|/* Set dow = -1 because some clocks don't set it correctly. */
 name|ct

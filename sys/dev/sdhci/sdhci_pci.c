@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_mmccam.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1986,6 +1992,23 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+ifdef|#
+directive|ifdef
+name|MMCCAM
+name|sdhci_cam_start_slot
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|slots
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sdhci_start_slot
 argument_list|(
 operator|&
@@ -1997,6 +2020,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 return|return
 operator|(
 literal|0
@@ -2628,6 +2654,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MMCCAM
+end_ifndef
+
 begin_expr_stmt
 name|MMC_DECLARE_BRIDGE
 argument_list|(
@@ -2635,6 +2667,11 @@ name|sdhci_pci
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

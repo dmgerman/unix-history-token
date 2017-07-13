@@ -62,7 +62,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pl310.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/platformvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/ti/ti_smc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/ti/omap4/omap4_machdep.h>
 end_include
 
 begin_include
@@ -74,19 +98,16 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pl310.h>
+file|"platform_pl310_if.h"
 end_include
 
 begin_function
 name|void
-name|platform_pl310_init
+name|omap4_pl310_init
 parameter_list|(
+name|platform_t
+name|plat
+parameter_list|,
 name|struct
 name|pl310_softc
 modifier|*
@@ -162,8 +183,11 @@ end_function
 
 begin_function
 name|void
-name|platform_pl310_write_ctrl
+name|omap4_pl310_write_ctrl
 parameter_list|(
+name|platform_t
+name|plat
+parameter_list|,
 name|struct
 name|pl310_softc
 modifier|*
@@ -187,8 +211,11 @@ end_function
 
 begin_function
 name|void
-name|platform_pl310_write_debug
+name|omap4_pl310_write_debug
 parameter_list|(
+name|platform_t
+name|plat
+parameter_list|,
 name|struct
 name|pl310_softc
 modifier|*

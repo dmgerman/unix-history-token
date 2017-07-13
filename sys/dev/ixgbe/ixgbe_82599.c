@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2017, Intel Corporation   All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions are met:     1. Redistributions of source code must retain the above copyright notice,       this list of conditions and the following disclaimer.     2. Redistributions in binary form must reproduce the above copyright       notice, this list of conditions and the following disclaimer in the       documentation and/or other materials provided with the distribution.     3. Neither the name of the Intel Corporation nor the names of its       contributors may be used to endorse or promote products derived from       this software without specific prior written permission.    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1603,6 +1603,38 @@ operator|.
 name|set_fw_drv_ver
 operator|=
 name|ixgbe_set_fw_drv_ver_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|bypass_rw
+operator|=
+name|ixgbe_bypass_rw_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|bypass_valid_rd
+operator|=
+name|ixgbe_bypass_valid_rd_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|bypass_set
+operator|=
+name|ixgbe_bypass_set_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|bypass_rd_eep
+operator|=
+name|ixgbe_bypass_rd_eep_generic
 expr_stmt|;
 name|mac
 operator|->
@@ -4213,35 +4245,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|hw
-operator|->
-name|mac
-operator|.
-name|ops
-operator|.
-name|set_rar
-argument_list|(
-name|hw
-argument_list|,
-name|hw
-operator|->
-name|mac
-operator|.
-name|num_rar_entries
-operator|-
-literal|1
-argument_list|,
-name|hw
-operator|->
-name|mac
-operator|.
-name|san_addr
-argument_list|,
-literal|0
-argument_list|,
-name|IXGBE_RAH_AV
-argument_list|)
-expr_stmt|;
 comment|/* Save the SAN MAC RAR index */
 name|hw
 operator|->
@@ -4256,6 +4259,53 @@ operator|.
 name|num_rar_entries
 operator|-
 literal|1
+expr_stmt|;
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|set_rar
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|san_mac_rar_index
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|san_addr
+argument_list|,
+literal|0
+argument_list|,
+name|IXGBE_RAH_AV
+argument_list|)
+expr_stmt|;
+comment|/* clear VMDq pool/queue selection for this RAR */
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|clear_vmdq
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|san_mac_rar_index
+argument_list|,
+name|IXGBE_CLEAR_VMDQ_ALL
+argument_list|)
 expr_stmt|;
 comment|/* Reserve the last RAR for the SAN MAC address */
 name|hw
@@ -4842,32 +4892,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|==
-name|ixgbe_mac_X550
-operator|)
-operator|||
-operator|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|==
-name|ixgbe_mac_X550EM_x
-operator|)
-condition|)
-name|fdirctrl
-operator||=
-name|IXGBE_FDIRCTRL_DROP_NO_MATCH
-expr_stmt|;
-if|if
-condition|(
 name|cloud_mode
 condition|)
 name|fdirctrl
@@ -4965,6 +4989,16 @@ operator|.
 name|type
 operator|==
 name|ixgbe_mac_X550EM_x
+operator|)
+operator|||
+operator|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|ixgbe_mac_X550EM_a
 operator|)
 condition|)
 name|fdirctrl
@@ -5970,11 +6004,12 @@ block|{
 case|case
 literal|0x0000
 case|:
-comment|/* mask VLAN ID, fall through to mask VLAN priority */
+comment|/* mask VLAN ID */
 name|fdirm
 operator||=
 name|IXGBE_FDIRM_VLANID
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|0x0FFF
 case|:
@@ -5987,11 +6022,12 @@ break|break;
 case|case
 literal|0xE000
 case|:
-comment|/* mask VLAN ID only, fall through */
+comment|/* mask VLAN ID only */
 name|fdirm
 operator||=
 name|IXGBE_FDIRM_VLANID
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|0xEFFF
 case|:
@@ -6021,11 +6057,12 @@ block|{
 case|case
 literal|0x0000
 case|:
-comment|/* Mask Flex Bytes, fall through */
+comment|/* Mask Flex Bytes */
 name|fdirm
 operator||=
 name|IXGBE_FDIRM_FLEX
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|0xFFFF
 case|:
@@ -6184,7 +6221,7 @@ argument_list|,
 name|fdirip6m
 argument_list|)
 expr_stmt|;
-comment|/* Set all bits in FDIRTCPM, FDIRUDPM, FDIRSIP4M and 		 * FDIRDIP4M in cloud mode to allow L3/L3 packets to 		 * tunnel. 		 */
+comment|/* Set all bits in FDIRTCPM, FDIRUDPM, FDIRSCTPM, 		 * FDIRSIP4M and FDIRDIP4M in cloud mode to allow 		 * L3/L3 packets to tunnel. 		 */
 name|IXGBE_WRITE_REG
 argument_list|(
 name|hw
@@ -6221,6 +6258,37 @@ argument_list|,
 literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+condition|)
+block|{
+case|case
+name|ixgbe_mac_X550
+case|:
+case|case
+name|ixgbe_mac_X550EM_x
+case|:
+case|case
+name|ixgbe_mac_X550EM_a
+case|:
+name|IXGBE_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_FDIRSCTPM
+argument_list|,
+literal|0xFFFFFFFF
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 block|}
 comment|/* Now mask VM pool and destination IPv6 - bits 5 and 2 */
 name|IXGBE_WRITE_REG
@@ -6282,6 +6350,9 @@ name|ixgbe_mac_X550
 case|:
 case|case
 name|ixgbe_mac_X550EM_x
+case|:
+case|case
+name|ixgbe_mac_X550EM_a
 case|:
 name|IXGBE_WRITE_REG
 argument_list|(
@@ -7108,6 +7179,7 @@ return|return
 name|IXGBE_ERR_CONFIG
 return|;
 block|}
+comment|/* fall through */
 case|case
 name|IXGBE_ATR_FLOW_TYPE_TCPV4
 case|:
@@ -7526,7 +7598,7 @@ comment|/**  *  ixgbe_get_supported_physical_layer_82599 - Returns physical laye
 end_comment
 
 begin_function
-name|u32
+name|u64
 name|ixgbe_get_supported_physical_layer_82599
 parameter_list|(
 name|struct
@@ -7535,7 +7607,7 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-name|u32
+name|u64
 name|physical_layer
 init|=
 name|IXGBE_PHYSICAL_LAYER_UNKNOWN

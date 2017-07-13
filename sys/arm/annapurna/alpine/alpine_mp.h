@@ -6,29 +6,31 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IMX6_MP_H
+name|_ANNAPURNA_ALPINE_MP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|IMX6_MP_H
+name|_ANNAPURNA_ALPINE_MP_H_
 end_define
 
 begin_function_decl
 name|void
-name|imx6_mp_start_ap
+name|alpine_mp_start_ap
 parameter_list|(
 name|platform_t
+name|plat
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|imx6_mp_setmaxid
+name|alpine_mp_setmaxid
 parameter_list|(
 name|platform_t
+name|plat
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -39,7 +41,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IMX6_MP_H */
+comment|/* _ANNAPURNA_ALPINE_MP_H_ */
 end_comment
 
 end_unit

@@ -336,7 +336,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MULTIDELAY
+name|PLATFORM
 end_ifdef
 
 begin_typedef

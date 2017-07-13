@@ -18,6 +18,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RTWN_USB_TXBUFSZ
+value|(16 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RTWN_IFACE_INDEX
 value|0
 end_define

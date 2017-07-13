@@ -869,119 +869,130 @@ begin_define
 define|#
 directive|define
 name|PR_ALLOW_SET_HOSTNAME
-value|0x0001
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_SYSVIPC
-value|0x0002
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_RAW_SOCKETS
-value|0x0004
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_CHFLAGS
-value|0x0008
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_MOUNT
-value|0x0010
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_QUOTAS
-value|0x0020
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_SOCKET_AF
-value|0x0040
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_MOUNT_DEVFS
-value|0x0080
+value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_MOUNT_NULLFS
-value|0x0100
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_MOUNT_ZFS
-value|0x0200
+value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_MOUNT_PROCFS
-value|0x0400
+value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_MOUNT_TMPFS
-value|0x0800
+value|0x00000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_MOUNT_FDESCFS
-value|0x1000
+value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_MOUNT_LINPROCFS
-value|0x2000
+value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_MOUNT_LINSYSFS
-value|0x4000
+value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|PR_ALLOW_RESERVED_PORTS
-value|0x8000
+value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
+name|PR_ALLOW_KMEM_ACCESS
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* reserved, not used yet */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PR_ALLOW_ALL
-value|0xffff
+value|0x0001ffff
 end_define
 
 begin_comment

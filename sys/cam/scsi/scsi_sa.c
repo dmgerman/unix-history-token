@@ -215,7 +215,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<opt_sa.h>
+file|"opt_sa.h"
 end_include
 
 begin_ifndef

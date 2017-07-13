@@ -224,22 +224,6 @@ directive|include
 file|<dev/rtwn/usb/rtwn_usb_rx.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/rtwn/rtl8192c/r92c_reg.h>
-end_include
-
-begin_comment
-comment|/* for CAM_ALGO_NONE */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<dev/rtwn/rtl8192c/r92c_rx_desc.h>
-end_include
-
 begin_function
 specifier|static
 name|struct
@@ -253,7 +237,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|r92c_rx_stat
+name|rtwn_rx_stat_common
 modifier|*
 name|stat
 parameter_list|,
@@ -374,9 +358,9 @@ argument_list|(
 name|rxdw0
 operator|&
 operator|(
-name|R92C_RXDW0_CRCERR
+name|RTWN_RXDW0_CRCERR
 operator||
-name|R92C_RXDW0_ICVERR
+name|RTWN_RXDW0_ICVERR
 operator|)
 argument_list|)
 condition|)
@@ -394,7 +378,7 @@ name|__func__
 argument_list|,
 name|rxdw0
 operator|&
-name|R92C_RXDW0_CRCERR
+name|RTWN_RXDW0_CRCERR
 condition|?
 literal|"CRC"
 else|:
@@ -411,7 +395,7 @@ name|MS
 argument_list|(
 name|rxdw0
 argument_list|,
-name|R92C_RXDW0_PKTLEN
+name|RTWN_RXDW0_PKTLEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -592,7 +576,7 @@ name|sc
 argument_list|)
 decl_stmt|;
 name|struct
-name|r92c_rx_stat
+name|rtwn_rx_stat_common
 modifier|*
 name|stat
 decl_stmt|;
@@ -632,7 +616,7 @@ name|stat
 operator|=
 operator|(
 expr|struct
-name|r92c_rx_stat
+name|rtwn_rx_stat_common
 operator|*
 operator|)
 name|buf
@@ -652,7 +636,7 @@ name|MS
 argument_list|(
 name|rxdw0
 argument_list|,
-name|R92C_RXDW0_PKTLEN
+name|RTWN_RXDW0_PKTLEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -671,7 +655,7 @@ name|MS
 argument_list|(
 name|rxdw0
 argument_list|,
-name|R92C_RXDW0_INFOSZ
+name|RTWN_RXDW0_INFOSZ
 argument_list|)
 operator|*
 literal|8
@@ -864,7 +848,7 @@ operator|<
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|r92c_rx_stat
+name|rtwn_rx_stat_common
 argument_list|)
 argument_list|)
 condition|)
@@ -1052,7 +1036,7 @@ name|m
 parameter_list|)
 block|{
 name|struct
-name|r92c_rx_stat
+name|rtwn_rx_stat_common
 name|stat
 decl_stmt|;
 comment|/* Imitate PCIe layout. */
@@ -1064,8 +1048,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|r92c_rx_stat
+name|stat
 argument_list|)
 argument_list|,
 operator|(
@@ -1081,8 +1064,7 @@ name|m
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|r92c_rx_stat
+name|stat
 argument_list|)
 argument_list|)
 expr_stmt|;

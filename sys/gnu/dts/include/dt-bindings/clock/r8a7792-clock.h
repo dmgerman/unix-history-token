@@ -61,13 +61,6 @@ name|R8A7792_CLK_QSPI
 value|5
 end_define
 
-begin_define
-define|#
-directive|define
-name|R8A7792_CLK_Z
-value|6
-end_define
-
 begin_comment
 comment|/* MSTP0 */
 end_comment
@@ -205,6 +198,13 @@ define|#
 directive|define
 name|R8A7792_CLK_IRQC
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8A7792_CLK_INTC_SYS
+value|8
 end_define
 
 begin_comment

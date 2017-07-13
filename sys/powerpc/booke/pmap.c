@@ -17312,7 +17312,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write given entry to TLB1 hardware.  * Use 32 bit pa, clear 4 high-order bits of RPN (mas7).  */
+comment|/*  * Write given entry to TLB1 hardware.  */
 end_comment
 
 begin_function

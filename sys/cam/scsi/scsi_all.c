@@ -44,7 +44,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<opt_scsi.h>
+file|"opt_scsi.h"
 end_include
 
 begin_include

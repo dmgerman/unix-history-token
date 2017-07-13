@@ -472,6 +472,10 @@ name|struct
 name|ata_params
 name|ident_data
 decl_stmt|;
+name|struct
+name|mmc_params
+name|mmc_ident_data
+decl_stmt|;
 name|u_int8_t
 name|inq_flags
 decl_stmt|;

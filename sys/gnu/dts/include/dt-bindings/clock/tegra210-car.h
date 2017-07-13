@@ -149,7 +149,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TEGRA210_CLK_ISP
+name|TEGRA210_CLK_ISPA
 value|23
 end_define
 
@@ -760,9 +760,12 @@ begin_comment
 comment|/* 135 */
 end_comment
 
-begin_comment
-comment|/* 136 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_CEC
+value|136
+end_define
 
 begin_comment
 comment|/* 137 */
@@ -849,9 +852,12 @@ begin_comment
 comment|/* 151 */
 end_comment
 
-begin_comment
-comment|/* 152 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_DP2
+value|152
+end_define
 
 begin_comment
 comment|/* 153 */
@@ -1036,7 +1042,7 @@ value|187
 end_define
 
 begin_comment
-comment|/* 188 */
+comment|/* 188 ((bit affects pll_a_out_adsp and pll_a_out0_out_adsp)*/
 end_comment
 
 begin_define
@@ -1097,9 +1103,12 @@ name|TEGRA210_CLK_APE
 value|198
 end_define
 
-begin_comment
-comment|/* 199 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_ADSP
+value|199
+end_define
 
 begin_comment
 comment|/* 200 */
@@ -1197,9 +1206,12 @@ begin_comment
 comment|/* 217 */
 end_comment
 
-begin_comment
-comment|/* 218 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_ADSP_NEON
+value|218
+end_define
 
 begin_define
 define|#
@@ -1208,13 +1220,19 @@ name|TEGRA210_CLK_NVENC
 value|219
 end_define
 
-begin_comment
-comment|/* 220 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_IQC2
+value|220
+end_define
 
-begin_comment
-comment|/* 221 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_IQC1
+value|221
+end_define
 
 begin_define
 define|#
@@ -1901,17 +1919,26 @@ begin_comment
 comment|/* 321 */
 end_comment
 
-begin_comment
-comment|/* 322 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_ISP
+value|322
+end_define
 
-begin_comment
-comment|/* 323 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_PLL_A_OUT_ADSP
+value|323
+end_define
 
-begin_comment
-comment|/* 324 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_PLL_A_OUT0_OUT_ADSP
+value|324
+end_define
 
 begin_comment
 comment|/* 325 */
@@ -2128,8 +2155,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|TEGRA210_CLK_ACLK
+value|370
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_DMIC1_SYNC_CLK
+value|388
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_DMIC1_SYNC_CLK_MUX
+value|389
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_DMIC2_SYNC_CLK
+value|390
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_DMIC2_SYNC_CLK_MUX
+value|391
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_DMIC3_SYNC_CLK
+value|392
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_DMIC3_SYNC_CLK_MUX
+value|393
+end_define
+
+begin_define
+define|#
+directive|define
 name|TEGRA210_CLK_CLK_MAX
-value|366
+value|394
 end_define
 
 begin_endif

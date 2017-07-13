@@ -535,8 +535,6 @@ name|td
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|td
 operator|=
@@ -560,11 +558,6 @@ expr_stmt|;
 comment|/* 	 * If a forced unmount is progressing, we need to drop it. The flags are 	 * protected by the hashmtx. 	 */
 name|fmp
 operator|=
-operator|(
-expr|struct
-name|fdescmount
-operator|*
-operator|)
 name|mp
 operator|->
 name|mnt_data
@@ -801,11 +794,6 @@ expr_stmt|;
 comment|/* 	 * If a forced unmount is progressing, we need to drop it. The flags are 	 * protected by the hashmtx. 	 */
 name|fmp
 operator|=
-operator|(
-expr|struct
-name|fdescmount
-operator|*
-operator|)
 name|mp
 operator|->
 name|mnt_data

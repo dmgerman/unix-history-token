@@ -206,6 +206,14 @@ name|JEMALLOC_HAVE_PTHREAD_ATFORK
 end_define
 
 begin_comment
+comment|/* Defined if pthread_setname_np(3) is available. */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_HAVE_PTHREAD_SETNAME_NP */
+end_comment
+
+begin_comment
 comment|/*  * Defined if clock_gettime(CLOCK_MONOTONIC_COARSE, ...) is available.  */
 end_comment
 

@@ -821,6 +821,10 @@ begin_function_decl
 name|int
 name|nfsrv_nfsuserdport
 parameter_list|(
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
 name|u_short
 parameter_list|,
 name|NFSPROC_T

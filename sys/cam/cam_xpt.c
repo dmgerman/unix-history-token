@@ -1875,19 +1875,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|const
-name|char
-modifier|*
-name|xpt_action_name
-parameter_list|(
-name|uint32_t
-name|action
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|__inline
 name|int
 name|device_is_queued
@@ -9066,6 +9053,34 @@ name|ata_params
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|device
+operator|->
+name|mmc_ident_data
+argument_list|,
+operator|&
+name|cdm
+operator|->
+name|matches
+index|[
+name|j
+index|]
+operator|.
+name|result
+operator|.
+name|device_result
+operator|.
+name|mmc_ident_data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mmc_params
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Let the user know whether this device is unconfigured */
 if|if
 condition|(
@@ -12671,6 +12686,10 @@ literal|0
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
+name|XPT_MMC_IO
+case|:
+comment|/* XXX just like nmve_io? */
+case|case
 name|XPT_RESET_DEV
 case|:
 case|case
@@ -13141,7 +13160,7 @@ argument_list|,
 name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
-literal|"sim->sim_action: func=%#x\n"
+literal|"Calling sim->sim_action(): func=%#x\n"
 operator|,
 name|start_ccb
 operator|->
@@ -13172,7 +13191,7 @@ argument_list|,
 name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
-literal|"sim->sim_action: status=%#x\n"
+literal|"sim->sim_action returned: status=%#x\n"
 operator|,
 name|start_ccb
 operator|->
@@ -26404,9 +26423,9 @@ literal|"XPT_NVME_IO"
 block|}
 block|,
 block|{
-name|XPT_MMCSD_IO
+name|XPT_MMC_IO
 block|,
-literal|"XPT_MMCSD_IO"
+literal|"XPT_MMC_IO"
 block|}
 block|,
 block|{
@@ -26491,7 +26510,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 specifier|const
 name|char
 modifier|*

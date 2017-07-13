@@ -390,6 +390,9 @@ name|mask
 operator|=
 literal|0xffffffff
 expr_stmt|;
+name|rmb
+argument_list|()
+expr_stmt|;
 name|val
 operator|=
 name|ATH_READ_REG
@@ -438,6 +441,9 @@ operator|)
 argument_list|,
 name|val
 argument_list|)
+expr_stmt|;
+name|wmb
+argument_list|()
 expr_stmt|;
 name|dprintf
 argument_list|(
@@ -553,6 +559,9 @@ name|reg
 argument_list|,
 name|bytes
 argument_list|)
+expr_stmt|;
+name|rmb
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -689,7 +698,7 @@ literal|0
 operator|)
 condition|)
 return|return;
-comment|/* 	 * WAR for BAR issue on AR7240 - We are unable to access the PCI 	 * device space if we set the BAR with proper base address. 	 * 	 * However, we _do_ want to allow programming in the probe value 	 * (0xffffffff) so the PCI code can find out how big the memory 	 * map is for this device.  Without it, it'll think the memory 	 * map is 32 bits wide, the PCI code will then end up thinking 	 * the register window is '0' and fail to allocate resources. 	 */
+comment|/* 	 * WAR for BAR issue on AR7240 - We are unable to access the PCI 	 * device space if we set the BAR with proper base address. 	 * 	 * However, we _do_ want to allow programming in the probe value 	 * (0xffffffff) so the PCI code can find out how big the memory 	 * map is for this device.  Without it, it'll think the memory 	 * map is 32 bits wide, the PCI code will then end up thinking 	 * the register window is '0' and fail to allocate resources. 	 * 	 * Note: Test on AR7241/AR7242/AR9344! Those use a WAR value of 	 * 0x1000ffff. 	 */
 if|if
 condition|(
 name|reg
@@ -1150,6 +1159,7 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|/* Write temporary BAR0 to map the NIC into a fixed location */
+comment|/* XXX AR7240: 0xffff; 7241/7242/9344: 0x1000ffff */
 name|ar724x_pci_write_config
 argument_list|(
 name|dev
@@ -1253,7 +1263,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"    0x%08x=0x%04x\n"
+literal|"    0x%08x=0x%08x\n"
 argument_list|,
 name|reg
 argument_list|,

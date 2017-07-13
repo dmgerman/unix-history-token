@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2017, Intel Corporation   All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions are met:     1. Redistributions of source code must retain the above copyright notice,       this list of conditions and the following disclaimer.     2. Redistributions in binary form must reproduce the above copyright       notice, this list of conditions and the following disclaimer in the       documentation and/or other materials provided with the distribution.     3. Neither the name of the Intel Corporation nor the names of its       contributors may be used to endorse or promote products derived from       this software without specific prior written permission.    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -335,6 +335,12 @@ comment|/* API version 2.0, solaris Phase1 VF driver */
 name|ixgbe_mbox_api_11
 block|,
 comment|/* API version 1.1, linux/freebsd VF driver */
+name|ixgbe_mbox_api_12
+block|,
+comment|/* API version 1.2, linux/freebsd VF driver */
+name|ixgbe_mbox_api_13
+block|,
+comment|/* API version 1.3, linux/freebsd VF driver */
 comment|/* This value should always be last */
 name|ixgbe_mbox_api_unknown
 block|,
@@ -442,6 +448,60 @@ end_define
 begin_comment
 comment|/* get queue configuration */
 end_comment
+
+begin_comment
+comment|/* mailbox API, version 1.2 VF requests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_GET_RETA
+value|0x0a
+end_define
+
+begin_comment
+comment|/* VF request for RETA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_GET_RSS_KEY
+value|0x0b
+end_define
+
+begin_comment
+comment|/* get RSS key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_VF_UPDATE_XCAST_MODE
+value|0x0c
+end_define
+
+begin_comment
+comment|/* mode choices for IXGBE_VF_UPDATE_XCAST_MODE */
+end_comment
+
+begin_enum
+enum|enum
+name|ixgbevf_xcast_modes
+block|{
+name|IXGBEVF_XCAST_MODE_NONE
+init|=
+literal|0
+block|,
+name|IXGBEVF_XCAST_MODE_MULTI
+block|,
+name|IXGBEVF_XCAST_MODE_ALLMULTI
+block|,
+name|IXGBEVF_XCAST_MODE_PROMISC
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/* GET_QUEUES return data indices within the mailbox */
@@ -652,117 +712,6 @@ end_define
 begin_comment
 comment|/* microseconds between retries */
 end_comment
-
-begin_function_decl
-name|s32
-name|ixgbe_read_mbx
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-parameter_list|,
-name|u32
-modifier|*
-parameter_list|,
-name|u16
-parameter_list|,
-name|u16
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|ixgbe_write_mbx
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-parameter_list|,
-name|u32
-modifier|*
-parameter_list|,
-name|u16
-parameter_list|,
-name|u16
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|ixgbe_read_posted_mbx
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-parameter_list|,
-name|u32
-modifier|*
-parameter_list|,
-name|u16
-parameter_list|,
-name|u16
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|ixgbe_write_posted_mbx
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-parameter_list|,
-name|u32
-modifier|*
-parameter_list|,
-name|u16
-parameter_list|,
-name|u16
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|ixgbe_check_for_msg
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-parameter_list|,
-name|u16
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|ixgbe_check_for_ack
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-parameter_list|,
-name|u16
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|ixgbe_check_for_rst
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-parameter_list|,
-name|u16
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

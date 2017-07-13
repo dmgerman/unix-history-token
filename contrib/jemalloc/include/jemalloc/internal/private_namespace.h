@@ -499,6 +499,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|arena_prefork7
+value|JEMALLOC_N(arena_prefork7)
+end_define
+
+begin_define
+define|#
+directive|define
 name|arena_prof_promote
 value|JEMALLOC_N(arena_prof_promote)
 end_define

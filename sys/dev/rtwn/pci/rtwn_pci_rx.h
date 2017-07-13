@@ -41,7 +41,7 @@ name|rtwn_pci_softc
 modifier|*
 parameter_list|,
 name|struct
-name|r92ce_rx_stat
+name|rtwn_rx_stat_pci
 modifier|*
 parameter_list|,
 name|bus_addr_t

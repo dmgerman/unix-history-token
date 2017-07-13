@@ -18,6 +18,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CLK_PLL_PERIPH0
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLK_CPUX
 value|14
 end_define
@@ -347,7 +354,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLK_BUS_SCR
+name|CLK_BUS_SCR0
 value|66
 end_define
 
@@ -671,6 +678,17 @@ define|#
 directive|define
 name|CLK_GPU
 value|114
+end_define
+
+begin_comment
+comment|/* New clocks imported in H5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLK_BUS_SCR1
+value|115
 end_define
 
 begin_endif

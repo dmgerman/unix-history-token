@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mmccam.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bcm2835_dma.h"
 end_include
 
@@ -1106,6 +1112,19 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MMCCAM
+name|sdhci_cam_start_slot
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_slot
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sdhci_start_slot
 argument_list|(
 operator|&
@@ -1114,6 +1133,8 @@ operator|->
 name|sc_slot
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0

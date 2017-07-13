@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/platformvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/annapurna/alpine/alpine_mp.h>
 end_include
 
 begin_define
@@ -425,9 +437,10 @@ end_function
 
 begin_function
 name|void
-name|platform_mp_setmaxid
+name|alpine_mp_setmaxid
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|mp_ncpus
@@ -680,9 +693,10 @@ end_function
 
 begin_function
 name|void
-name|platform_mp_start_ap
+name|alpine_mp_start_ap
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|uint32_t
