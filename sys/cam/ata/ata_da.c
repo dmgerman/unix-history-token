@@ -1987,6 +1987,26 @@ name|ADA_Q_NCQ_TRIM_BROKEN
 block|}
 block|,
 block|{
+comment|/* 		 * Samsung 845 SSDs 		 * 4k optimised, NCQ TRIM Broken (normal TRIM is fine) 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"Samsung SSD 845*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+operator||
+name|ADA_Q_NCQ_TRIM_BROKEN
+block|}
+block|,
+block|{
 comment|/* 		 * Samsung 850 SSDs 		 * 4k optimised, NCQ TRIM broken (normal TRIM fine) 		 */
 block|{
 name|T_DIRECT
