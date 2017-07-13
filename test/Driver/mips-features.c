@@ -288,6 +288,54 @@ comment|//
 end_comment
 
 begin_comment
+comment|// -mmt
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mno-mt -mmt 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MMT %s
+end_comment
+
+begin_comment
+comment|// CHECK-MMT: "-target-feature" "+mt"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mno-mt
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mmt -mno-mt 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOMMT %s
+end_comment
+
+begin_comment
+comment|// CHECK-NOMMT: "-target-feature" "-mt"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// -modd-spreg
 end_comment
 
@@ -993,6 +1041,46 @@ end_comment
 
 begin_comment
 comment|// CHECK-IMG-SINGLEFLOAT-FPXX: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|// -mlong-call
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -c %s -mlong-calls 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=LONG-CALLS-ON %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -c %s -mno-long-calls 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=LONG-CALLS-OFF %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-img-linux-gnu -### -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=LONG-CALLS-DEF %s
+end_comment
+
+begin_comment
+comment|// LONG-CALLS-ON: "-target-feature" "+long-calls"
+end_comment
+
+begin_comment
+comment|// LONG-CALLS-OFF: "-target-feature" "-long-calls"
+end_comment
+
+begin_comment
+comment|// LONG-CALLS-DEF-NOT: "long-calls"
 end_comment
 
 end_unit

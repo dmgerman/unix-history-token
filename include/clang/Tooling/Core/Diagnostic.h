@@ -194,11 +194,11 @@ name|Diagnostic
 argument_list|(
 argument|llvm::StringRef DiagnosticName
 argument_list|,
-argument|DiagnosticMessage&Message
+argument|const DiagnosticMessage&Message
 argument_list|,
-argument|llvm::StringMap<Replacements>&Fix
+argument|const llvm::StringMap<Replacements>&Fix
 argument_list|,
-argument|SmallVector<DiagnosticMessage
+argument|const SmallVector<DiagnosticMessage
 argument_list|,
 literal|1
 argument|>&Notes

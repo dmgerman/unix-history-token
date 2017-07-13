@@ -12,15 +12,7 @@ comment|// RUN: %clang_cc1 -O2 -fexperimental-new-pass-manager -fprofile-sample-
 end_comment
 
 begin_comment
-comment|// FIXME: Run the following command once LTOPreLinkDefaultPipeline is
-end_comment
-
-begin_comment
-comment|//        customized.
-end_comment
-
-begin_comment
-comment|// %clang_cc1 -O2 -fexperimental-new-pass-manager -fprofile-sample-use=%S/Inputs/pgo-sample-thinlto-summary.prof %s -emit-llvm -flto=thin -o - 2>&1 | FileCheck %s -check-prefix=THINLTO
+comment|// RUN: %clang_cc1 -O2 -fexperimental-new-pass-manager -fprofile-sample-use=%S/Inputs/pgo-sample-thinlto-summary.prof %s -emit-llvm -flto=thin -o - 2>&1 | FileCheck %s -check-prefix=THINLTO
 end_comment
 
 begin_comment

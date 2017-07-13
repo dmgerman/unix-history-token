@@ -4088,6 +4088,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|clang_EnumDecl_isScoped
+argument_list|(
+name|Cursor
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" (scoped)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|clang_Cursor_isVariadic
 argument_list|(
 name|Cursor

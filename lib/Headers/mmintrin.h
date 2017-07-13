@@ -5548,7 +5548,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the the<c> VXORPS / XORPS</c> instruction.
+comment|/// This intrinsic corresponds to the<c> VXORPS / XORPS</c> instruction.
 end_comment
 
 begin_comment

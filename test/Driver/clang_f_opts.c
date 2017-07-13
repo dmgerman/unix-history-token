@@ -1324,6 +1324,14 @@ comment|// RUN: -fno-devirtualize-speculatively                                 
 end_comment
 
 begin_comment
+comment|// RUN: -fslp-vectorize-aggressive                                            \
+end_comment
+
+begin_comment
+comment|// RUN: -fno-slp-vectorize-aggressive                                         \
+end_comment
+
+begin_comment
 comment|// RUN: %s 2>&1 | FileCheck --check-prefix=CHECK-WARNING %s
 end_comment
 
@@ -1585,6 +1593,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-WARNING-DAG: optimization flag '-fno-devirtualize-speculatively' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: the flag '-fslp-vectorize-aggressive' has been deprecated and will be ignored
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: the flag '-fno-slp-vectorize-aggressive' has been deprecated and will be ignored
 end_comment
 
 begin_comment

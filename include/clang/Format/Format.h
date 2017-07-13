@@ -1428,6 +1428,10 @@ name|LK_Proto
 block|,
 comment|/// Should be used for TableGen code.
 name|LK_TableGen
+block|,
+comment|/// Should be used for Protocol Buffer messages in text format
+comment|/// (https://developers.google.com/protocol-buffers/).
+name|LK_TextProto
 block|}
 enum|;
 name|bool
@@ -2726,6 +2730,14 @@ name|LK_Proto
 case|:
 return|return
 literal|"Proto"
+return|;
+case|case
+name|FormatStyle
+operator|::
+name|LK_TextProto
+case|:
+return|return
+literal|"TextProto"
 return|;
 default|default:
 return|return

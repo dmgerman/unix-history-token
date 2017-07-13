@@ -239,6 +239,21 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WARN_PARTIAL
+end_ifdef
+
+begin_comment
+comment|// expected-note@+2 2 {{marked partial here}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|enum
 name|__attribute__
@@ -297,6 +312,29 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WARN_PARTIAL
+end_ifdef
+
+begin_comment
+comment|// FIXME: This note should point to the declaration with the availability
+end_comment
+
+begin_comment
+comment|// attribute.
+end_comment
+
+begin_comment
+comment|// expected-note@+2 {{marked partial here}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|void
@@ -310,11 +348,17 @@ name|void
 name|with_redeclaration
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|WARN_PARTIAL
+comment|// expected-warning@+4 {{'PartiallyAvailable' is only available on macOS 10.8 or newer}} expected-note@+4 {{__builtin_available}}
+comment|// expected-warning@+4 {{'PartialEnum' is only available on macOS 10.8 or newer}} expected-note@+4 {{__builtin_available}}
+comment|// expected-warning@+3 {{'kPartialEnumConstant' is only available on macOS 10.8 or newer}} expected-note@+3 {{__builtin_available}}
+endif|#
+directive|endif
 name|PartiallyAvailable
 argument_list|()
 expr_stmt|;
-comment|// Don't warn.
-comment|// enums should never warn.
 name|enum
 name|PartialEnum
 name|p
@@ -749,9 +793,9 @@ begin_enum
 enum|enum
 name|AllDeprecated
 block|{
+comment|// expected-note + {{'AllDeprecated' has been explicitly marked deprecated here}}
 name|AllDeprecatedCase
 block|,
-comment|// expected-note + {{'AllDeprecatedCase' has been explicitly marked deprecated here}}
 name|AllDeprecatedUnavailable
 name|__attribute__
 argument_list|(
@@ -786,10 +830,9 @@ begin_enum
 enum|enum
 name|AllUnavailable
 block|{
+comment|// expected-note + {{'AllUnavailable' has been explicitly marked unavailable here}}
 name|AllUnavailableCase
-block|,
-comment|// expected-note + {{'AllUnavailableCase' has been explicitly marked unavailable here}}
-block|}
+block|, }
 name|__attribute__
 argument_list|(
 operator|(

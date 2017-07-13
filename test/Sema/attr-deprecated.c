@@ -652,7 +652,7 @@ operator|)
 argument_list|)
 name|Test20
 block|{
-comment|// expected-note {{'Test20' has been explicitly marked deprecated here}}
+comment|// expected-note 2 {{'Test20' has been explicitly marked deprecated here}}
 name|test20_a
 name|__attribute__
 argument_list|(
@@ -663,7 +663,6 @@ argument_list|)
 decl_stmt|,
 comment|// expected-note {{'test20_a' has been explicitly marked deprecated here}}
 name|test20_b
-comment|// expected-note {{'test20_b' has been explicitly marked deprecated here}}
 block|}
 end_decl_stmt
 

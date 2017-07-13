@@ -3934,6 +3934,13 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ActOnStartOfTranslationUnit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ActOnEndOfTranslationUnit
 parameter_list|()
 function_decl|;
@@ -5710,6 +5717,17 @@ end_decl_stmt
 begin_function_decl
 name|bool
 name|hasVisibleMergedDefinition
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|Def
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|hasMergedDefinitionInCurrentModule
 parameter_list|(
 name|NamedDecl
 modifier|*
@@ -15780,6 +15798,9 @@ parameter_list|,
 name|ObjCInterfaceDecl
 modifier|*
 name|IDecl
+parameter_list|,
+name|SourceLocation
+name|AtEnd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15795,6 +15816,9 @@ parameter_list|,
 name|Decl
 modifier|*
 name|D
+parameter_list|,
+name|SourceLocation
+name|AtEnd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -18673,9 +18697,15 @@ parameter_list|(
 name|AvailabilityResult
 name|AR
 parameter_list|,
+specifier|const
 name|NamedDecl
 modifier|*
-name|D
+name|ReferringDecl
+parameter_list|,
+specifier|const
+name|NamedDecl
+modifier|*
+name|OffendingDecl
 parameter_list|,
 name|StringRef
 name|Message
@@ -18771,6 +18801,11 @@ name|nullptr
 parameter_list|,
 name|bool
 name|ObjCPropertyAccess
+init|=
+name|false
+parameter_list|,
+name|bool
+name|AvoidPartialAvailabilityChecks
 init|=
 name|false
 parameter_list|)
@@ -19050,6 +19085,13 @@ parameter_list|(
 name|DeclRefExpr
 modifier|*
 name|E
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|Base
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -50690,7 +50732,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief The diagnostic we should emit for \c D, or \c AR_Available.
+comment|/// The diagnostic we should emit for \c D, and the declaration that
+end_comment
+
+begin_comment
+comment|/// originated it, or \c AR_Available.
 end_comment
 
 begin_comment
@@ -50698,19 +50744,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param D The declaration to check. Note that this may be altered to point
-end_comment
-
-begin_comment
-comment|/// to another declaration that \c D gets it's availability from. i.e., we
-end_comment
-
-begin_comment
-comment|/// walk the list of typedefs to find an availability attribute.
-end_comment
-
-begin_comment
-comment|///
+comment|/// \param D The declaration to check.
 end_comment
 
 begin_comment
@@ -50721,13 +50755,22 @@ begin_comment
 comment|/// the availability attribute that is selected.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
 name|AvailabilityResult
-name|ShouldDiagnoseAvailabilityOfDecl
-argument_list|(
+operator|,
+specifier|const
 name|NamedDecl
 operator|*
-operator|&
+operator|>
+name|ShouldDiagnoseAvailabilityOfDecl
+argument_list|(
+specifier|const
+name|NamedDecl
+operator|*
 name|D
 argument_list|,
 name|std
@@ -50736,8 +50779,8 @@ name|string
 operator|*
 name|Message
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 specifier|const

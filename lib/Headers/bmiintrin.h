@@ -1286,7 +1286,7 @@ comment|///    An unsigned 64-bit integer used to create the mask.
 end_comment
 
 begin_comment
-comment|/// \returns A unsigned 64-bit integer containing the newly created mask.
+comment|/// \returns An unsigned 64-bit integer containing the newly created mask.
 end_comment
 
 begin_function

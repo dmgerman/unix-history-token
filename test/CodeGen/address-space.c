@@ -147,11 +147,15 @@ comment|// CHECK-LABEL: define void @test3()
 end_comment
 
 begin_comment
-comment|// GIZ: load i32 addrspace(2)*, i32 addrspace(2)** @B
+comment|// X86: load i32 addrspace(2)*, i32 addrspace(2)** @B
 end_comment
 
 begin_comment
-comment|// PIZ: load i32 addrspace(2)*, i32 addrspace(2)* addrspace(4)* @B
+comment|// AMDGIZ: load i32 addrspace(2)*, i32 addrspace(2)** addrspacecast (i32 addrspace(2)* addrspace(1)* @B to i32 addrspace(2)**)
+end_comment
+
+begin_comment
+comment|// PIZ: load i32 addrspace(2)*, i32 addrspace(2)* addrspace(4)* addrspacecast (i32 addrspace(2)* addrspace(1)* @B to i32 addrspace(2)* addrspace(4)*)
 end_comment
 
 begin_comment
@@ -159,11 +163,15 @@ comment|// CHECK: load i32, i32 addrspace(2)*
 end_comment
 
 begin_comment
-comment|// GIZ: load i32 addrspace(2)*, i32 addrspace(2)** @A
+comment|// X86: load i32 addrspace(2)*, i32 addrspace(2)** @A
 end_comment
 
 begin_comment
-comment|// PIZ: load i32 addrspace(2)*, i32 addrspace(2)* addrspace(4)* @A
+comment|// AMDGIZ: load i32 addrspace(2)*, i32 addrspace(2)** addrspacecast (i32 addrspace(2)* addrspace(1)* @A to i32 addrspace(2)**)
+end_comment
+
+begin_comment
+comment|// PIZ: load i32 addrspace(2)*, i32 addrspace(2)* addrspace(4)* addrspacecast (i32 addrspace(2)* addrspace(1)* @A to i32 addrspace(2)* addrspace(4)*)
 end_comment
 
 begin_comment

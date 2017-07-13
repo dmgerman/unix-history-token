@@ -151,5 +151,21 @@ begin_comment
 comment|// MRELOCMODELALL: dynamic-no-pic pic ropi ropi-rwpi rwpi static
 end_comment
 
+begin_comment
+comment|// RUN: %clang --autocomplete=-mrelocation-mode | FileCheck %s -check-prefix=MRELOCMODEL_CLANG
+end_comment
+
+begin_comment
+comment|// MRELOCMODEL_CLANG-NOT: -mrelocation-model
+end_comment
+
+begin_comment
+comment|// RUN: %clang --autocomplete=#-mrelocation-mode | FileCheck %s -check-prefix=MRELOCMODEL_CC1
+end_comment
+
+begin_comment
+comment|// MRELOCMODEL_CC1: -mrelocation-model
+end_comment
+
 end_unit
 

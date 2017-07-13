@@ -8716,11 +8716,7 @@ comment|// ARMV6-CLOUDABI:#define __arm__ 1
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-netbsd-eabi< /dev/null | FileCheck -match-full-lines -check-prefix ARM-NETBSD %s
-end_comment
-
-begin_comment
-comment|//
+comment|// RUN: %clang -E -dM -ffreestanding -target arm-netbsd-eabi %s -o - | FileCheck -match-full-lines -check-prefix ARM-NETBSD %s
 end_comment
 
 begin_comment
@@ -8740,7 +8736,7 @@ comment|// ARM-NETBSD:#define __ARMEL__ 1
 end_comment
 
 begin_comment
-comment|// ARM-NETBSD:#define __ARM_ARCH_4T__ 1
+comment|// ARM-NETBSD:#define __ARM_ARCH_5TE__ 1
 end_comment
 
 begin_comment
@@ -9308,6 +9304,10 @@ comment|// ARM-NETBSD:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// ARM-NETBSD:#define __SOFTFP__ 1
+end_comment
+
+begin_comment
 comment|// ARM-NETBSD:#define __UINT16_C_SUFFIX__
 end_comment
 
@@ -9477,6 +9477,22 @@ end_comment
 
 begin_comment
 comment|// ARM-NETBSD:#define __arm__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -E -dM -ffreestanding -target arm-netbsd-eabihf %s -o - | FileCheck -match-full-lines -check-prefix ARMHF-NETBSD %s
+end_comment
+
+begin_comment
+comment|// ARMHF-NETBSD:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMHF-NETBSD-NOT:#define __SOFTFP__ 1
+end_comment
+
+begin_comment
+comment|// ARMHF-NETBSD:#define __UINT16_C_SUFFIX__
 end_comment
 
 begin_comment

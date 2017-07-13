@@ -285,7 +285,6 @@ name|a
 init|=
 literal|1
 block|,
-comment|// expected-note {{'a' has been explicitly marked deprecated here}}
 name|b
 name|__attribute__
 argument_list|(
@@ -312,16 +311,19 @@ argument_list|)
 enum|;
 end_enum
 
+begin_comment
+comment|// expected-note {{'foo' has been explicitly marked deprecated here}}
+end_comment
+
 begin_enum
 enum|enum
 name|fee
 block|{
-comment|// expected-note {{'fee' has been explicitly marked unavailable here}}
+comment|// expected-note 2 {{'fee' has been explicitly marked unavailable here}}
 name|r
 init|=
 literal|1
 block|,
-comment|// expected-note {{'r' has been explicitly marked unavailable here}}
 name|s
 init|=
 literal|2

@@ -1305,7 +1305,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Run checkers on begining of function.
+comment|/// \brief Run checkers on beginning of function.
 end_comment
 
 begin_function_decl

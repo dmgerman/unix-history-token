@@ -6890,6 +6890,23 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+specifier|const
+name|TargetCodeGenInfo
+operator|&
+name|getTargetHooks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CGM
+operator|.
+name|getTargetCodeGenInfo
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
@@ -8509,31 +8526,6 @@ argument|uint64_t VTableByteOffset
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/// CanDevirtualizeMemberFunctionCalls - Checks whether virtual calls on given
-end_comment
-
-begin_comment
-comment|/// expr can be devirtualized.
-end_comment
-
-begin_function_decl
-name|bool
-name|CanDevirtualizeMemberFunctionCall
-parameter_list|(
-specifier|const
-name|Expr
-modifier|*
-name|Base
-parameter_list|,
-specifier|const
-name|CXXMethodDecl
-modifier|*
-name|MD
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/// EnterDtorCleanups - Enter the cleanups necessary to complete the
@@ -21168,23 +21160,6 @@ name|Arg
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_expr_stmt
-specifier|const
-name|TargetCodeGenInfo
-operator|&
-name|getTargetHooks
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CGM
-operator|.
-name|getTargetCodeGenInfo
-argument_list|()
-return|;
-block|}
-end_expr_stmt
 
 begin_function_decl
 name|void

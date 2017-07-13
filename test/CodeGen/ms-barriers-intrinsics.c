@@ -60,7 +60,7 @@ comment|// CHECK-LABEL: define void @test_ReadWriteBarrier
 end_comment
 
 begin_comment
-comment|// CHECK:   fence singlethread seq_cst
+comment|// CHECK:   fence syncscope("singlethread") seq_cst
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ comment|// CHECK-LABEL: define void @test_ReadBarrier
 end_comment
 
 begin_comment
-comment|// CHECK:   fence singlethread seq_cst
+comment|// CHECK:   fence syncscope("singlethread") seq_cst
 end_comment
 
 begin_comment
@@ -114,7 +114,7 @@ comment|// CHECK-LABEL: define void @test_WriteBarrier
 end_comment
 
 begin_comment
-comment|// CHECK:   fence singlethread seq_cst
+comment|// CHECK:   fence syncscope("singlethread") seq_cst
 end_comment
 
 begin_comment

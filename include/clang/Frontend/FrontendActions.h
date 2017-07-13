@@ -378,6 +378,13 @@ name|GenerateModuleAction
 block|{
 name|private
 operator|:
+name|bool
+name|BeginSourceFileAction
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|)
+name|override
+block|;
 name|std
 operator|::
 name|unique_ptr

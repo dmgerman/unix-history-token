@@ -4818,6 +4818,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief After parser warm-up, initialize the conditional stack from
+end_comment
+
+begin_comment
+comment|/// the preamble.
+end_comment
+
+begin_function_decl
+name|void
+name|replayPreambleConditionalStack
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Inform the preprocessor callbacks that processing is complete.
 end_comment
 
@@ -8141,26 +8156,6 @@ end_comment
 begin_expr_stmt
 name|bool
 name|isInPrimaryFile
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Return true if we're in the main file (specifically, if we are 0
-end_comment
-
-begin_comment
-comment|/// (zero) levels deep \#include. This is used by the lexer to determine if
-end_comment
-
-begin_comment
-comment|/// it needs to generate errors about unterminated \#if directives.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|isInMainFile
 argument_list|()
 specifier|const
 expr_stmt|;

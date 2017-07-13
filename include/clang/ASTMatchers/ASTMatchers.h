@@ -8610,6 +8610,14 @@ comment|///   match 3.14
 comment|/// integerLiteral(equals(42))
 comment|///   matches 42
 comment|///
+comment|/// Note that you cannot directly match a negative numeric literal because the
+comment|/// minus sign is not part of the literal: It is a unary operator whose operand
+comment|/// is the positive numeric literal. Instead, you must use a unaryOperator()
+comment|/// matcher to match the minus sign:
+comment|///
+comment|/// unaryOperator(hasOperatorName("-"),
+comment|///               hasUnaryOperand(integerLiteral(equals(13))))
+comment|///
 comment|/// Usable as: Matcher<CharacterLiteral>, Matcher<CXXBoolLiteralExpr>,
 comment|///            Matcher<FloatingLiteral>, Matcher<IntegerLiteral>
 name|template

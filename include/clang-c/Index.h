@@ -5065,6 +5065,15 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Determine if an enum declaration refers to a scoped enum.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_EnumDecl_isScoped
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Determine if a C++ member function or member function template is  * declared 'const'.  */
 name|CINDEX_LINKAGE
 name|unsigned

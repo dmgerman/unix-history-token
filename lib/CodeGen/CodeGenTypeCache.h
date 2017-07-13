@@ -128,9 +128,6 @@ name|llvm
 operator|::
 name|Type
 operator|*
-name|HalfTy
-operator|,
-operator|*
 name|FloatTy
 operator|,
 operator|*

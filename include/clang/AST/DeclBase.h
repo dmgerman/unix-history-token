@@ -2510,7 +2510,7 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|hasOwningModule
+name|isHidden
 argument_list|()
 condition|)
 name|setModuleOwnershipKind

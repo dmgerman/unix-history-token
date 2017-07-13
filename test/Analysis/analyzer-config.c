@@ -52,6 +52,14 @@ comment|// CHECK-NEXT: cfg-conditional-static-initializers = true
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: cfg-implicit-dtors = true
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: cfg-lifetime = false
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: cfg-temporary-dtors = false
 end_comment
 
@@ -112,7 +120,7 @@ comment|// CHECK-NEXT: [stats]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: num-entries = 15
+comment|// CHECK-NEXT: num-entries = 17
 end_comment
 
 end_unit

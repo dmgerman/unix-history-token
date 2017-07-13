@@ -56,7 +56,7 @@ comment|// CHECK-NOT: crtbegin.o
 end_comment
 
 begin_comment
-comment|// CHECK: "-L[[SYSROOT]]/lib"
+comment|// CHECK: "-L[[SYSROOT]]{{/|\\\\}}lib"
 end_comment
 
 begin_comment

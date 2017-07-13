@@ -737,7 +737,7 @@ name|APSIntType
 argument_list|(
 name|Ctx
 operator|.
-name|getTypeSize
+name|getIntWidth
 argument_list|(
 name|T
 argument_list|)

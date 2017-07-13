@@ -8,7 +8,11 @@ comment|// RUN: mkdir "%t"
 end_comment
 
 begin_comment
-comment|// RUN: not env TMPDIR="%t" TEMP="%t" TMP="%t" RC_DEBUG_OPTIONS=1 %clang -fsyntax-only "%s" 2>&1 | FileCheck "%s"
+comment|// RUN: cp "%s" "%t/crash report spaces.c"
+end_comment
+
+begin_comment
+comment|// RUN: not env TMPDIR="%t" TEMP="%t" TMP="%t" RC_DEBUG_OPTIONS=1 %clang -fsyntax-only "%t/crash report spaces.c" 2>&1 | FileCheck "%s"
 end_comment
 
 begin_comment

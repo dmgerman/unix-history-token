@@ -1419,6 +1419,11 @@ operator|::
 name|ArgStringList
 operator|&
 name|CC1Args
+argument_list|,
+name|Action
+operator|::
+name|OffloadKind
+name|DeviceOffloadKind
 argument_list|)
 decl|const
 decl_stmt|;

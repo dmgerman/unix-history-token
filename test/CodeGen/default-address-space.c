@@ -8,11 +8,11 @@ comment|// RUN: %clang_cc1 -triple amdgcn---amdgiz -emit-llvm< %s | FileCheck -c
 end_comment
 
 begin_comment
-comment|// PIZ-DAG: @foo = common addrspace(4) global i32 0
+comment|// PIZ-DAG: @foo = common addrspace(1) global i32 0
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @foo = common global i32 0
+comment|// CHECK-DAG: @foo = common addrspace(1) global i32 0
 end_comment
 
 begin_decl_stmt
@@ -22,11 +22,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// PIZ-DAG: @ban = common addrspace(4) global [10 x i32] zeroinitializer
+comment|// PIZ-DAG: @ban = common addrspace(1) global [10 x i32] zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @ban = common global [10 x i32] zeroinitializer
+comment|// CHECK-DAG: @ban = common addrspace(1) global [10 x i32] zeroinitializer
 end_comment
 
 begin_decl_stmt
@@ -39,19 +39,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// PIZ-DAG: @A = common addrspace(4) global i32 addrspace(4)* null
+comment|// PIZ-DAG: @A = common addrspace(1) global i32 addrspace(4)* null
 end_comment
 
 begin_comment
-comment|// PIZ-DAG: @B = common addrspace(4) global i32 addrspace(4)* null
+comment|// PIZ-DAG: @B = common addrspace(1) global i32 addrspace(4)* null
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @A = common global i32* null
+comment|// CHECK-DAG: @A = common addrspace(1) global i32* null
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: @B = common global i32* null
+comment|// CHECK-DAG: @B = common addrspace(1) global i32* null
 end_comment
 
 begin_decl_stmt
@@ -73,11 +73,11 @@ comment|// COM-LABEL: define i32 @test1()
 end_comment
 
 begin_comment
-comment|// PIZ: load i32, i32 addrspace(4)* @foo
+comment|// PIZ: load i32, i32 addrspace(4)* addrspacecast{{[^@]+}} @foo
 end_comment
 
 begin_comment
-comment|// CHECK: load i32, i32* @foo
+comment|// CHECK: load i32, i32* addrspacecast{{[^@]+}} @foo
 end_comment
 
 begin_function
@@ -137,7 +137,7 @@ comment|// COM-LABEL: define void @test3()
 end_comment
 
 begin_comment
-comment|// PIZ: load i32 addrspace(4)*, i32 addrspace(4)* addrspace(4)* @B
+comment|// PIZ: load i32 addrspace(4)*, i32 addrspace(4)* addrspace(4)* addrspacecast{{[^@]+}} @B
 end_comment
 
 begin_comment
@@ -145,7 +145,7 @@ comment|// PIZ: load i32, i32 addrspace(4)*
 end_comment
 
 begin_comment
-comment|// PIZ: load i32 addrspace(4)*, i32 addrspace(4)* addrspace(4)* @A
+comment|// PIZ: load i32 addrspace(4)*, i32 addrspace(4)* addrspace(4)* addrspacecast{{[^@]+}} @A
 end_comment
 
 begin_comment
@@ -153,7 +153,7 @@ comment|// PIZ: store i32 {{.*}}, i32 addrspace(4)*
 end_comment
 
 begin_comment
-comment|// CHECK: load i32*, i32** @B
+comment|// CHECK: load i32*, i32** addrspacecast{{.*}} @B
 end_comment
 
 begin_comment
@@ -161,7 +161,7 @@ comment|// CHECK: load i32, i32*
 end_comment
 
 begin_comment
-comment|// CHECK: load i32*, i32** @A
+comment|// CHECK: load i32*, i32** addrspacecast{{.*}} @A
 end_comment
 
 begin_comment
@@ -215,7 +215,7 @@ comment|// CHECK-LABEL: define void @test4(i32* %a)
 end_comment
 
 begin_comment
-comment|// CHECK: %[[alloca:.*]] = alloca i32*, align 4, addrspace(5)
+comment|// CHECK: %[[alloca:.*]] = alloca i32*, align 8, addrspace(5)
 end_comment
 
 begin_comment

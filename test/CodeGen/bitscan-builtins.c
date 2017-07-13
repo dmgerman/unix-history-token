@@ -3,6 +3,14 @@ begin_comment
 comment|// RUN: %clang_cc1 -ffreestanding -triple x86_64-unknown-unknown -emit-llvm -o - %s | FileCheck %s
 end_comment
 
+begin_comment
+comment|// PR33722
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -ffreestanding -triple x86_64-unknown-unknown -D_MSC_VER -emit-llvm -o - %s | FileCheck %s
+end_comment
+
 begin_include
 include|#
 directive|include

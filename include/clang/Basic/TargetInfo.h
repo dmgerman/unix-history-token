@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallSet.h"
 end_include
 
@@ -3013,6 +3019,27 @@ block|{
 return|return
 operator|*
 name|AddrSpaceMap
+return|;
+block|}
+comment|/// \brief Return an AST address space which can be used opportunistically
+comment|/// for constant global memory. It must be possible to convert pointers into
+comment|/// this address space to LangAS::Default. If no such address space exists,
+comment|/// this may return None, and such optimizations will be disabled.
+name|virtual
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|getConstantAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LangAS
+operator|::
+name|Default
 return|;
 block|}
 comment|/// \brief Retrieve the name of the platform as it is used in the

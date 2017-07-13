@@ -2994,7 +2994,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Return the address space of the underlying global variable for D, as
+comment|/// Return the AST address space of the underlying global variable for D, as
 end_comment
 
 begin_comment
@@ -3006,7 +3006,23 @@ comment|/// space of D's type, but in CUDA, address spaces are associated with
 end_comment
 
 begin_comment
-comment|/// declarations, not types.
+comment|/// declarations, not types. If D is nullptr, return the default address
+end_comment
+
+begin_comment
+comment|/// space for global variable.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// For languages without explicit address spaces, if D has default address
+end_comment
+
+begin_comment
+comment|/// space, target-specific global or constant address space may be returned.
 end_comment
 
 begin_function_decl
@@ -3017,9 +3033,6 @@ specifier|const
 name|VarDecl
 modifier|*
 name|D
-parameter_list|,
-name|unsigned
-name|AddrSpace
 parameter_list|)
 function_decl|;
 end_function_decl
