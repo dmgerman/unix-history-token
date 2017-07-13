@@ -1929,6 +1929,24 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
+comment|/* 		 * Samsung 750 SSDs 		 * 4k optimised, NCQ TRIM seems to work 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"Samsung SSD 750*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
 comment|/* 		 * Samsung 830 Series SSDs 		 * 4k optimised, NCQ TRIM Broken (normal TRIM is fine) 		 */
 block|{
 name|T_DIRECT
