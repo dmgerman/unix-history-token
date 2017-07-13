@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"lldb/Utility/Status.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Utility/StringExtractor.h"
 end_include
 
@@ -288,6 +294,8 @@ block|,
 name|eServerPacketType_qFileLoadAddress
 block|,
 name|eServerPacketType_QEnvironment
+block|,
+name|eServerPacketType_QEnableErrorStrings
 block|,
 name|eServerPacketType_QLaunchArch
 block|,
@@ -560,6 +568,15 @@ name|GetError
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|lldb_private
+operator|::
+name|Status
+name|GetStatus
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|size_t

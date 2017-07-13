@@ -136,6 +136,9 @@ name|class
 name|InfoStreamBuilder
 decl_stmt|;
 name|class
+name|PublicsStreamBuilder
+decl_stmt|;
+name|class
 name|TpiStreamBuilder
 decl_stmt|;
 name|class
@@ -151,6 +154,10 @@ modifier|&
 name|Allocator
 parameter_list|)
 function_decl|;
+operator|~
+name|PDBFileBuilder
+argument_list|()
+expr_stmt|;
 name|PDBFileBuilder
 argument_list|(
 specifier|const
@@ -209,6 +216,11 @@ function_decl|;
 name|PDBStringTableBuilder
 modifier|&
 name|getStringTableBuilder
+parameter_list|()
+function_decl|;
+name|PublicsStreamBuilder
+modifier|&
+name|getPublicsBuilder
 parameter_list|()
 function_decl|;
 name|Error
@@ -278,6 +290,14 @@ operator|<
 name|DbiStreamBuilder
 operator|>
 name|Dbi
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PublicsStreamBuilder
+operator|>
+name|Publics
 expr_stmt|;
 name|std
 operator|::

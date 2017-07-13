@@ -399,6 +399,9 @@ parameter_list|,
 name|int
 modifier|&
 name|length
+parameter_list|,
+name|uint32_t
+name|buffer_remaining_bytes
 parameter_list|)
 function_decl|;
 name|bool

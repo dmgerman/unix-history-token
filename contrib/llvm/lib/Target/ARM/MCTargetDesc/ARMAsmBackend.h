@@ -211,13 +211,11 @@ argument|const MCValue&Target
 argument_list|,
 argument|uint64_t Value
 argument_list|,
-argument|bool IsPCRel
+argument|bool IsResolved
 argument_list|,
 argument|MCContext&Ctx
 argument_list|,
 argument|bool IsLittleEndian
-argument_list|,
-argument|bool IsResolved
 argument_list|)
 specifier|const
 block|;
@@ -234,7 +232,7 @@ argument|MutableArrayRef<char> Data
 argument_list|,
 argument|uint64_t Value
 argument_list|,
-argument|bool IsPCRel
+argument|bool IsResolved
 argument_list|)
 specifier|const
 name|override

@@ -163,10 +163,6 @@ name|StatClockAcquireEmpty
 block|,
 name|StatClockAcquireFastRelease
 block|,
-name|StatClockAcquireLarge
-block|,
-name|StatClockAcquireRepeat
-block|,
 name|StatClockAcquireFull
 block|,
 name|StatClockAcquiredSomething
@@ -176,9 +172,7 @@ name|StatClockRelease
 block|,
 name|StatClockReleaseResize
 block|,
-name|StatClockReleaseFast1
-block|,
-name|StatClockReleaseFast2
+name|StatClockReleaseFast
 block|,
 name|StatClockReleaseSlow
 block|,

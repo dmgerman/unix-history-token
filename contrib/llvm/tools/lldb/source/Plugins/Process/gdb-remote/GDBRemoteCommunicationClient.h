@@ -894,6 +894,10 @@ name|bool
 name|GetQXferAuxvReadSupported
 argument_list|()
 block|;
+name|void
+name|EnableErrorStringInPacket
+argument_list|()
+block|;
 name|bool
 name|GetQXferLibrariesReadSupported
 argument_list|()
@@ -1523,6 +1527,9 @@ name|m_supports_jGetSharedCacheInfo
 block|;
 name|LazyBool
 name|m_supports_QPassSignals
+block|;
+name|LazyBool
+name|m_supports_error_string_reply
 block|;
 name|bool
 name|m_supports_qProcessInfoPID

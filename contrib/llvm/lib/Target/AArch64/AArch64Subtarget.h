@@ -864,6 +864,26 @@ return|return
 name|HasFuseLiterals
 return|;
 block|}
+comment|/// \brief Return true if the CPU supports any kind of instruction fusion.
+name|bool
+name|hasFusion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasArithmeticBccFusion
+argument_list|()
+operator|||
+name|hasArithmeticCbzFusion
+argument_list|()
+operator|||
+name|hasFuseAES
+argument_list|()
+operator|||
+name|hasFuseLiterals
+argument_list|()
+return|;
+block|}
 name|bool
 name|useRSqrt
 argument_list|()

@@ -218,6 +218,10 @@ comment|/// VEXTS, ByteWidth - takes an input in VSFRC and produces an output in
 comment|/// VSFRC that is sign-extended from ByteWidth to a 64-byte integer.
 name|VEXTS
 block|,
+comment|/// SExtVElems, takes an input vector of a smaller type and sign
+comment|/// extends to an output vector of a larger type.
+name|SExtVElems
+block|,
 comment|/// Reciprocal estimate instructions (unary FP ops).
 name|FRE
 block|,
@@ -4263,6 +4267,35 @@ name|State
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|bool
+name|isIntS16Immediate
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|int16_t
+modifier|&
+name|Imm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|isIntS16Immediate
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+name|int16_t
+modifier|&
+name|Imm
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|}

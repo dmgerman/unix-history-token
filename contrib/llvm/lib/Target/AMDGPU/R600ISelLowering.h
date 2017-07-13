@@ -189,6 +189,8 @@ argument_list|(
 argument|unsigned AS
 argument_list|,
 argument|EVT MemVT
+argument_list|,
+argument|const SelectionDAG&DAG
 argument_list|)
 specifier|const
 name|override

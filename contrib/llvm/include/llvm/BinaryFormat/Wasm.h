@@ -278,7 +278,7 @@ struct|struct
 name|WasmDataSegment
 block|{
 name|uint32_t
-name|Index
+name|MemoryIndex
 decl_stmt|;
 name|WasmInitExpr
 name|Offset
@@ -317,7 +317,7 @@ name|uint32_t
 name|Type
 decl_stmt|;
 comment|// The type of the relocation.
-name|int32_t
+name|uint32_t
 name|Index
 decl_stmt|;
 comment|// Index into function to global index space.

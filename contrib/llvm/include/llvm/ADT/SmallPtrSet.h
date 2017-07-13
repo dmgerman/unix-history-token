@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Config/abi-breaking.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -79,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/PointerLikeTypeTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ReverseIteration.h"
 end_include
 
 begin_include
@@ -133,63 +133,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-if|#
-directive|if
-name|LLVM_ENABLE_ABI_BREAKING_CHECKS
-name|template
-operator|<
-name|class
-name|T
-operator|=
-name|void
-operator|>
-expr|struct
-name|ReverseIterate
-block|{
-specifier|static
-name|bool
-name|value
-block|; }
-expr_stmt|;
-if|#
-directive|if
-name|LLVM_ENABLE_REVERSE_ITERATION
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|bool
-name|ReverseIterate
-operator|<
-name|T
-operator|>
-operator|::
-name|value
-operator|=
-name|true
-expr_stmt|;
-else|#
-directive|else
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|bool
-name|ReverseIterate
-operator|<
-name|T
-operator|>
-operator|::
-name|value
-operator|=
-name|false
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 comment|/// SmallPtrSetImplBase - This is the common code shared among all the
 comment|/// SmallPtrSet<>'s, which is almost everything.  SmallPtrSet has two modes, one
 comment|/// for small and one for large sets.

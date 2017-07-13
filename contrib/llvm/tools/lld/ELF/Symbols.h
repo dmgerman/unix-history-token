@@ -287,6 +287,10 @@ operator|&&
 operator|!
 name|isShared
 argument_list|()
+operator|&&
+operator|!
+name|isLazy
+argument_list|()
 return|;
 block|}
 name|bool
@@ -942,6 +946,8 @@ condition|(
 name|isGnuIFunc
 argument_list|()
 condition|)
+name|this
+operator|->
 name|Type
 operator|=
 name|llvm

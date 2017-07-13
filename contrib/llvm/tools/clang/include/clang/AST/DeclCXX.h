@@ -6337,6 +6337,74 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// If it's possible to devirtualize a call to this method, return the called
+end_comment
+
+begin_comment
+comment|/// function. Otherwise, return null.
+end_comment
+
+begin_comment
+comment|/// \param Base The object on which this virtual function is called.
+end_comment
+
+begin_comment
+comment|/// \param IsAppleKext True if we are compiling for Apple kext.
+end_comment
+
+begin_function_decl
+name|CXXMethodDecl
+modifier|*
+name|getDevirtualizedMethod
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|Base
+parameter_list|,
+name|bool
+name|IsAppleKext
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|getDevirtualizedMethod
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|Base
+argument_list|,
+name|bool
+name|IsAppleKext
+argument_list|)
+decl|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|CXXMethodDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getDevirtualizedMethod
+argument_list|(
+name|Base
+argument_list|,
+name|IsAppleKext
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether this is a usual deallocation function
 end_comment
 

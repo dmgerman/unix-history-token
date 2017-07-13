@@ -171,6 +171,16 @@ argument_list|()
 block|;
 name|virtual
 name|void
+name|emitDirectiveSetMt
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetNoMt
+argument_list|()
+block|;
+name|virtual
+name|void
 name|emitDirectiveSetAt
 argument_list|()
 block|;
@@ -445,6 +455,11 @@ argument_list|()
 block|;
 name|virtual
 name|void
+name|emitDirectiveModuleMT
+argument_list|()
+block|;
+name|virtual
+name|void
 name|emitDirectiveSetFp
 argument_list|(
 argument|MipsABIFlagsSection::FpABIKind Value
@@ -570,6 +585,26 @@ argument_list|,
 argument|unsigned Reg1
 argument_list|,
 argument|int16_t Imm
+argument_list|,
+argument|SMLoc IDLoc
+argument_list|,
+argument|const MCSubtargetInfo *STI
+argument_list|)
+block|;
+name|void
+name|emitRRIII
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Reg0
+argument_list|,
+argument|unsigned Reg1
+argument_list|,
+argument|int16_t Imm0
+argument_list|,
+argument|int16_t Imm1
+argument_list|,
+argument|int16_t Imm2
 argument_list|,
 argument|SMLoc IDLoc
 argument_list|,
@@ -921,6 +956,16 @@ argument_list|()
 name|override
 block|;
 name|void
+name|emitDirectiveSetMt
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoMt
+argument_list|()
+name|override
+block|;
+name|void
 name|emitDirectiveSetAt
 argument_list|()
 name|override
@@ -1195,6 +1240,11 @@ name|override
 block|;
 name|void
 name|emitDirectiveModuleHardFloat
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveModuleMT
 argument_list|()
 name|override
 block|;

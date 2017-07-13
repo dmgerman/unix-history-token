@@ -202,11 +202,23 @@ name|virtual
 name|void
 name|emitIndirectFunctionType
 argument_list|(
-argument|StringRef name
+name|MCSymbol
+operator|*
+name|Symbol
 argument_list|,
-argument|SmallVectorImpl<MVT>&Params
+name|SmallVectorImpl
+operator|<
+name|MVT
+operator|>
+operator|&
+name|Params
 argument_list|,
-argument|SmallVectorImpl<MVT>&Results
+name|SmallVectorImpl
+operator|<
+name|MVT
+operator|>
+operator|&
+name|Results
 argument_list|)
 operator|=
 literal|0
@@ -315,7 +327,7 @@ block|;
 name|void
 name|emitIndirectFunctionType
 argument_list|(
-argument|StringRef name
+argument|MCSymbol *Symbol
 argument_list|,
 argument|SmallVectorImpl<MVT>&Params
 argument_list|,
@@ -403,7 +415,7 @@ block|;
 name|void
 name|emitIndirectFunctionType
 argument_list|(
-argument|StringRef name
+argument|MCSymbol *Symbol
 argument_list|,
 argument|SmallVectorImpl<MVT>&Params
 argument_list|,
@@ -491,7 +503,7 @@ block|;
 name|void
 name|emitIndirectFunctionType
 argument_list|(
-argument|StringRef name
+argument|MCSymbol *Symbol
 argument_list|,
 argument|SmallVectorImpl<MVT>&Params
 argument_list|,

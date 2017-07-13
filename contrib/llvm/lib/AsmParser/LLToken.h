@@ -224,7 +224,7 @@ name|kw_acq_rel
 block|,
 name|kw_seq_cst
 block|,
-name|kw_singlethread
+name|kw_syncscope
 block|,
 name|kw_nnan
 block|,

@@ -5470,16 +5470,18 @@ name|getRanges
 argument_list|()
 return|;
 block|}
-comment|/// Return the synchronization scope for this memory operation.
-name|SynchronizationScope
-name|getSynchScope
+comment|/// Returns the synchronization scope ID for this memory operation.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
 argument_list|()
 specifier|const
 block|{
 return|return
 name|MMO
 operator|->
-name|getSynchScope
+name|getSyncScopeID
 argument_list|()
 return|;
 block|}
@@ -6607,7 +6609,7 @@ block|{
 return|return
 name|Value
 operator|->
-name|isNullValue
+name|isZero
 argument_list|()
 return|;
 block|}
@@ -6619,7 +6621,7 @@ block|{
 return|return
 name|Value
 operator|->
-name|isAllOnesValue
+name|isMinusOne
 argument_list|()
 return|;
 block|}

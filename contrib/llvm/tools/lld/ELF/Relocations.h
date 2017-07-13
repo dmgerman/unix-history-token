@@ -497,7 +497,7 @@ argument_list|,
 argument|uint64_t Off
 argument_list|)
 block|;
-comment|// Track Symbols that already have a Thunk
+comment|// Record all the available Thunks for a Symbol
 name|llvm
 operator|::
 name|DenseMap
@@ -505,9 +505,13 @@ operator|<
 name|SymbolBody
 operator|*
 block|,
+name|std
+operator|::
+name|vector
+operator|<
 name|Thunk
 operator|*
-operator|>
+operator|>>
 name|ThunkedSymbols
 block|;
 comment|// Find a Thunk from the Thunks symbol definition, we can use this to find
@@ -524,7 +528,10 @@ operator|*
 operator|>
 name|Thunks
 block|;
-comment|// Track InputSections that have a ThunkSection placed in front
+comment|// Track InputSections that have an inline ThunkSection placed in front
+comment|// an inline ThunkSection may have control fall through to the section below
+comment|// so we need to make sure that there is only one of them.
+comment|// The Mips LA25 Thunk is an example of an inline ThunkSection.
 name|llvm
 operator|::
 name|DenseMap

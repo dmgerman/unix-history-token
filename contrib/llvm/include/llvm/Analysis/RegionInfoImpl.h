@@ -177,14 +177,17 @@ directive|include
 file|<vector>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
+begin_define
 define|#
 directive|define
 name|DEBUG_TYPE
 value|"region"
+end_define
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
 comment|//===----------------------------------------------------------------------===//
 comment|/// RegionBase Implementation
 name|template
@@ -5257,16 +5260,16 @@ argument_list|)
 block|; }
 end_expr_stmt
 
+begin_comment
+unit|}
+comment|// end namespace llvm
+end_comment
+
 begin_undef
 undef|#
 directive|undef
 name|DEBUG_TYPE
 end_undef
-
-begin_comment
-unit|}
-comment|// end namespace llvm
-end_comment
 
 begin_endif
 endif|#

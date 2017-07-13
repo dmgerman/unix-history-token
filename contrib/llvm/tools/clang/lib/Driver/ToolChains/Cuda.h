@@ -566,6 +566,8 @@ argument_list|(
 argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
 argument|llvm::opt::ArgStringList&CC1Args
+argument_list|,
+argument|Action::OffloadKind DeviceOffloadKind
 argument_list|)
 specifier|const
 name|override

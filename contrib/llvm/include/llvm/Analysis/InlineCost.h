@@ -475,7 +475,7 @@ name|unsigned
 name|SizeOptLevel
 parameter_list|)
 function_decl|;
-comment|/// Return the cost associated with a callsite, including paramater passing
+comment|/// Return the cost associated with a callsite, including parameter passing
 comment|/// and the call/return instruction.
 name|int
 name|getCallsiteCost

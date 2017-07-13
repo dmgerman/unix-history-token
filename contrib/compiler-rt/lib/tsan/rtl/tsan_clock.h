@@ -281,6 +281,10 @@ decl_stmt|;
 name|u32
 name|size_
 decl_stmt|;
+name|void
+name|ResetImpl
+parameter_list|()
+function_decl|;
 name|ClockElem
 modifier|&
 name|elem
@@ -341,6 +345,10 @@ block|}
 name|void
 name|set
 parameter_list|(
+name|ClockCache
+modifier|*
+name|c
+parameter_list|,
 name|unsigned
 name|tid
 parameter_list|,
@@ -450,6 +458,14 @@ name|dst
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|ResetCached
+parameter_list|(
+name|ClockCache
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
 name|void
 name|DebugReset
 parameter_list|()

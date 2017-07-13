@@ -980,15 +980,42 @@ return|;
 block|}
 name|public
 label|:
+comment|/// @brief Functor for creating memory managers.
+name|using
+name|MemoryManagerGetter
+init|=
+name|std
+operator|::
+name|function
+operator|<
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|MemoryManager
+operator|>
+operator|(
+operator|)
+operator|>
+decl_stmt|;
 comment|/// @brief Construct an ObjectLinkingLayer with the given NotifyLoaded,
 comment|///        and NotifyFinalized functors.
 name|RTDyldObjectLinkingLayer
 argument_list|(
+argument|MemoryManagerGetter GetMemMgr
+argument_list|,
 argument|NotifyLoadedFtor NotifyLoaded = NotifyLoadedFtor()
 argument_list|,
 argument|NotifyFinalizedFtor NotifyFinalized = NotifyFinalizedFtor()
 argument_list|)
 block|:
+name|GetMemMgr
+argument_list|(
+name|GetMemMgr
+argument_list|)
+operator|,
 name|NotifyLoaded
 argument_list|(
 name|std
@@ -1001,7 +1028,17 @@ argument_list|)
 operator|,
 name|NotifyFinalized
 argument_list|(
-argument|std::move(NotifyFinalized)
+name|std
+operator|::
+name|move
+argument_list|(
+name|NotifyFinalized
+argument_list|)
+argument_list|)
+operator|,
+name|ProcessAllSections
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// @brief Set the 'ProcessAllSections' flag.
@@ -1027,22 +1064,15 @@ comment|///        for the purposes of symbol lookup and memory management.
 comment|///
 comment|/// @return A handle that can be used to refer to the loaded objects (for
 comment|///         symbol searching, finalization, freeing memory, etc.).
-name|template
+name|Expected
 operator|<
-name|typename
-name|MemoryManagerPtrT
-operator|,
-name|typename
-name|SymbolResolverPtrT
-operator|>
 name|ObjHandleT
+operator|>
 name|addObject
 argument_list|(
 argument|ObjectPtr Obj
 argument_list|,
-argument|MemoryManagerPtrT MemMgr
-argument_list|,
-argument|SymbolResolverPtrT Resolver
+argument|std::shared_ptr<JITSymbolResolver> Resolver
 argument_list|)
 block|{
 name|auto
@@ -1148,12 +1178,8 @@ argument_list|(
 name|Obj
 argument_list|)
 argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|MemMgr
-argument_list|)
+name|GetMemMgr
+argument_list|()
 argument_list|,
 name|std
 operator|::
@@ -1222,7 +1248,7 @@ comment|/// re-emit the missing symbols, and any use of these symbols (directly 
 comment|/// indirectly) will result in undefined behavior. If dependence tracking is
 comment|/// required to detect or resolve such issues it should be added at a higher
 comment|/// layer.
-name|void
+name|Error
 name|removeObject
 parameter_list|(
 name|ObjHandleT
@@ -1237,6 +1263,12 @@ argument_list|(
 name|H
 argument_list|)
 expr_stmt|;
+return|return
+name|Error
+operator|::
+name|success
+argument_list|()
+return|;
 block|}
 comment|/// @brief Search for the given named symbol.
 comment|/// @param Name The name of the symbol to search for.
@@ -1363,7 +1395,7 @@ block|}
 comment|/// @brief Immediately emit and finalize the object set represented by the
 comment|///        given handle.
 comment|/// @param H Handle for object set to emit/finalize.
-name|void
+name|Error
 name|emitAndFinalize
 parameter_list|(
 name|ObjHandleT
@@ -1378,11 +1410,20 @@ operator|->
 name|finalize
 argument_list|()
 expr_stmt|;
+return|return
+name|Error
+operator|::
+name|success
+argument_list|()
+return|;
 block|}
 name|private
 label|:
 name|LinkedObjectListT
 name|LinkedObjList
+decl_stmt|;
+name|MemoryManagerGetter
+name|GetMemMgr
 decl_stmt|;
 name|NotifyLoadedFtor
 name|NotifyLoaded

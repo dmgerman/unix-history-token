@@ -1890,6 +1890,13 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
+name|initializeRAFastPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
 name|initializeRAGreedyPass
 parameter_list|(
 name|PassRegistry
@@ -1989,6 +1996,13 @@ parameter_list|)
 function_decl|;
 name|void
 name|initializeRewriteSymbolsLegacyPassPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
+name|initializeSafepointIRVerifierPass
 parameter_list|(
 name|PassRegistry
 modifier|&

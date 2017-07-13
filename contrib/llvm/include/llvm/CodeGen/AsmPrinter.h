@@ -1724,8 +1724,8 @@ decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Internal Implementation Details
 comment|//===------------------------------------------------------------------===//
-comment|/// This emits visibility information about symbol, if this is suported by the
-comment|/// target.
+comment|/// This emits visibility information about symbol, if this is supported by
+comment|/// the target.
 name|void
 name|EmitVisibility
 argument_list|(

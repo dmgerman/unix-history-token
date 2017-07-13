@@ -358,6 +358,25 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|MachineBasicBlock
+operator|*
+name|getBranchDestBlock
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isBranchOffsetInRange
+argument_list|(
+argument|unsigned BranchOpc
+argument_list|,
+argument|int64_t BrOffset
+argument_list|)
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 specifier|const

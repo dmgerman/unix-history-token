@@ -617,6 +617,21 @@ argument|uint64_t P
 argument_list|)
 specifier|const
 block|;
+name|void
+name|applyRelARM64
+argument_list|(
+argument|uint8_t *Off
+argument_list|,
+argument|uint16_t Type
+argument_list|,
+argument|OutputSection *OS
+argument_list|,
+argument|uint64_t S
+argument_list|,
+argument|uint64_t P
+argument_list|)
+specifier|const
+block|;
 comment|// Called if the garbage collector decides to not include this chunk
 comment|// in a final output. It's supposed to print out a log message to stdout.
 name|void
@@ -1042,6 +1057,42 @@ block|,
 comment|// ldr.w pc, [ip]
 block|}
 block|;
+specifier|static
+specifier|const
+name|uint8_t
+name|ImportThunkARM64
+index|[]
+operator|=
+block|{
+literal|0x10
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x90
+block|,
+comment|// adrp x16, #0
+literal|0x10
+block|,
+literal|0x02
+block|,
+literal|0x40
+block|,
+literal|0xf9
+block|,
+comment|// ldr  x16, [x16]
+literal|0x00
+block|,
+literal|0x02
+block|,
+literal|0x1f
+block|,
+literal|0xd6
+block|,
+comment|// br   x16
+block|}
+block|;
 comment|// Windows-specific.
 comment|// A chunk for DLL import jump table entry. In a final output, it's
 comment|// contents will be a JMP instruction to some __imp_ symbol.
@@ -1186,6 +1237,55 @@ argument|std::vector<Baserel> *Res
 argument_list|)
 name|override
 block|;
+name|void
+name|writeTo
+argument_list|(
+argument|uint8_t *Buf
+argument_list|)
+specifier|const
+name|override
+block|;
+name|private
+operator|:
+name|Defined
+operator|*
+name|ImpSymbol
+block|; }
+block|;
+name|class
+name|ImportThunkChunkARM64
+operator|:
+name|public
+name|Chunk
+block|{
+name|public
+operator|:
+name|explicit
+name|ImportThunkChunkARM64
+argument_list|(
+name|Defined
+operator|*
+name|S
+argument_list|)
+operator|:
+name|ImpSymbol
+argument_list|(
+argument|S
+argument_list|)
+block|{}
+name|size_t
+name|getSize
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+sizeof|sizeof
+argument_list|(
+name|ImportThunkARM64
+argument_list|)
+return|;
+block|}
 name|void
 name|writeTo
 argument_list|(

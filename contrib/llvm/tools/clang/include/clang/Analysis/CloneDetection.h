@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclTemplate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/StmtVisitor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
@@ -112,10 +124,388 @@ decl_stmt|;
 name|class
 name|CompoundStmt
 decl_stmt|;
-comment|/// Identifies a list of statements.
+name|namespace
+name|clone_detection
+block|{
+comment|/// Returns a string that represents all macro expansions that expanded into the
+comment|/// given SourceLocation.
 comment|///
+comment|/// If 'getMacroStack(A) == getMacroStack(B)' is true, then the SourceLocations
+comment|/// A and B are expanded from the same macros in the same order.
+name|std
+operator|::
+name|string
+name|getMacroStack
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|ASTContext&Context
+argument_list|)
+expr_stmt|;
+comment|/// Collects the data of a single Stmt.
+comment|///
+comment|/// This class defines what a code clone is: If it collects for two statements
+comment|/// the same data, then those two statements are considered to be clones of each
+comment|/// other.
+comment|///
+comment|/// All collected data is forwarded to the given data consumer of the type T.
+comment|/// The data consumer class needs to provide a member method with the signature:
+comment|///   update(StringRef Str)
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|StmtDataCollector
+operator|:
+name|public
+name|ConstStmtVisitor
+operator|<
+name|StmtDataCollector
+operator|<
+name|T
+operator|>>
+block|{
+name|ASTContext
+operator|&
+name|Context
+block|;
+comment|/// The data sink to which all data is forwarded.
+name|T
+operator|&
+name|DataConsumer
+block|;
+name|public
+operator|:
+comment|/// Collects data of the given Stmt.
+comment|/// \param S The given statement.
+comment|/// \param Context The ASTContext of S.
+comment|/// \param DataConsumer The data sink to which all data is forwarded.
+name|StmtDataCollector
+argument_list|(
+specifier|const
+name|Stmt
+operator|*
+name|S
+argument_list|,
+name|ASTContext
+operator|&
+name|Context
+argument_list|,
+name|T
+operator|&
+name|DataConsumer
+argument_list|)
+operator|:
+name|Context
+argument_list|(
+name|Context
+argument_list|)
+block|,
+name|DataConsumer
+argument_list|(
+argument|DataConsumer
+argument_list|)
+block|{
+name|this
+operator|->
+name|Visit
+argument_list|(
+name|S
+argument_list|)
+block|;   }
+typedef|typedef
+name|unsigned
+name|DataPiece
+typedef|;
+comment|// Below are utility methods for appending different data to the vector.
+name|void
+name|addData
+argument_list|(
+argument|DataPiece Integer
+argument_list|)
+block|{
+name|DataConsumer
+operator|.
+name|update
+argument_list|(
+name|StringRef
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|char
+operator|*
+operator|>
+operator|(
+operator|&
+name|Integer
+operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Integer
+argument_list|)
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|addData
+argument_list|(
+argument|llvm::StringRef Str
+argument_list|)
+block|{
+name|DataConsumer
+operator|.
+name|update
+argument_list|(
+name|Str
+argument_list|)
+block|; }
+name|void
+name|addData
+argument_list|(
+argument|const QualType&QT
+argument_list|)
+block|{
+name|addData
+argument_list|(
+name|QT
+operator|.
+name|getAsString
+argument_list|()
+argument_list|)
+block|; }
+comment|// The functions below collect the class specific data of each Stmt subclass.
+comment|// Utility macro for defining a visit method for a given class. This method
+comment|// calls back to the ConstStmtVisitor to visit all parent classes.
+define|#
+directive|define
+name|DEF_ADD_DATA
+parameter_list|(
+name|CLASS
+parameter_list|,
+name|CODE
+parameter_list|)
+define|\
+value|void Visit##CLASS(const CLASS *S) {                                          \     CODE;                                                                      \     ConstStmtVisitor<StmtDataCollector>::Visit##CLASS(S);                      \   }
+name|DEF_ADD_DATA
+argument_list|(
+argument|Stmt
+argument_list|,
+argument|{     addData(S->getStmtClass());
+comment|// This ensures that macro generated code isn't identical to macro-generated
+comment|// code.
+argument|addData(getMacroStack(S->getLocStart(), Context));     addData(getMacroStack(S->getLocEnd(), Context));   }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|Expr
+argument_list|,
+argument|{ addData(S->getType()); }
+argument_list|)
+comment|//--- Builtin functionality ----------------------------------------------//
+name|DEF_ADD_DATA
+argument_list|(
+argument|ArrayTypeTraitExpr
+argument_list|,
+argument|{ addData(S->getTrait()); }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|ExpressionTraitExpr
+argument_list|,
+argument|{ addData(S->getTrait()); }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|PredefinedExpr
+argument_list|,
+argument|{ addData(S->getIdentType()); }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|TypeTraitExpr
+argument_list|,
+argument|{     addData(S->getTrait());     for (unsigned i =
+literal|0
+argument|; i< S->getNumArgs(); ++i)       addData(S->getArg(i)->getType());   }
+argument_list|)
+comment|//--- Calls --------------------------------------------------------------//
+name|DEF_ADD_DATA
+argument_list|(
+argument|CallExpr
+argument_list|,
+argument|{
+comment|// Function pointers don't have a callee and we just skip hashing it.
+argument|if (const FunctionDecl *D = S->getDirectCallee()) {
+comment|// If the function is a template specialization, we also need to handle
+comment|// the template arguments as they are not included in the qualified name.
+argument|if (auto Args = D->getTemplateSpecializationArgs()) {         std::string ArgString;
+comment|// Print all template arguments into ArgString
+argument|llvm::raw_string_ostream OS(ArgString);         for (unsigned i =
+literal|0
+argument|; i< Args->size(); ++i) {           Args->get(i).print(Context.getLangOpts(), OS);
+comment|// Add a padding character so that 'foo<X, XX>()' != 'foo<XX, X>()'.
+argument|OS<<
+literal|'\n'
+argument|;         }         OS.flush();          addData(ArgString);       }       addData(D->getQualifiedNameAsString());     }   }
+argument_list|)
+comment|//--- Exceptions ---------------------------------------------------------//
+name|DEF_ADD_DATA
+argument_list|(
+argument|CXXCatchStmt
+argument_list|,
+argument|{ addData(S->getCaughtType()); }
+argument_list|)
+comment|//--- C++ OOP Stmts ------------------------------------------------------//
+name|DEF_ADD_DATA
+argument_list|(
+argument|CXXDeleteExpr
+argument_list|,
+argument|{     addData(S->isArrayFormAsWritten());     addData(S->isGlobalDelete());   }
+argument_list|)
+comment|//--- Casts --------------------------------------------------------------//
+name|DEF_ADD_DATA
+argument_list|(
+argument|ObjCBridgedCastExpr
+argument_list|,
+argument|{ addData(S->getBridgeKind()); }
+argument_list|)
+comment|//--- Miscellaneous Exprs ------------------------------------------------//
+name|DEF_ADD_DATA
+argument_list|(
+argument|BinaryOperator
+argument_list|,
+argument|{ addData(S->getOpcode()); }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|UnaryOperator
+argument_list|,
+argument|{ addData(S->getOpcode()); }
+argument_list|)
+comment|//--- Control flow -------------------------------------------------------//
+name|DEF_ADD_DATA
+argument_list|(
+argument|GotoStmt
+argument_list|,
+argument|{ addData(S->getLabel()->getName()); }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|IndirectGotoStmt
+argument_list|,
+argument|{     if (S->getConstantTarget())       addData(S->getConstantTarget()->getName());   }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|LabelStmt
+argument_list|,
+argument|{ addData(S->getDecl()->getName()); }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|MSDependentExistsStmt
+argument_list|,
+argument|{ addData(S->isIfExists()); }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|AddrLabelExpr
+argument_list|,
+argument|{ addData(S->getLabel()->getName()); }
+argument_list|)
+comment|//--- Objective-C --------------------------------------------------------//
+name|DEF_ADD_DATA
+argument_list|(
+argument|ObjCIndirectCopyRestoreExpr
+argument_list|,
+argument|{ addData(S->shouldCopy()); }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|ObjCPropertyRefExpr
+argument_list|,
+argument|{     addData(S->isSuperReceiver());     addData(S->isImplicitProperty());   }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|ObjCAtCatchStmt
+argument_list|,
+argument|{ addData(S->hasEllipsis()); }
+argument_list|)
+comment|//--- Miscellaneous Stmts ------------------------------------------------//
+name|DEF_ADD_DATA
+argument_list|(
+argument|CXXFoldExpr
+argument_list|,
+argument|{     addData(S->isRightFold());     addData(S->getOperator());   }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|GenericSelectionExpr
+argument_list|,
+argument|{     for (unsigned i =
+literal|0
+argument|; i< S->getNumAssocs(); ++i) {       addData(S->getAssocType(i));     }   }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|LambdaExpr
+argument_list|,
+argument|{     for (const LambdaCapture&C : S->captures()) {       addData(C.isPackExpansion());       addData(C.getCaptureKind());       if (C.capturesVariable())         addData(C.getCapturedVar()->getType());     }     addData(S->isGenericLambda());     addData(S->isMutable());   }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|DeclStmt
+argument_list|,
+argument|{     auto numDecls = std::distance(S->decl_begin(), S->decl_end());     addData(static_cast<DataPiece>(numDecls));     for (const Decl *D : S->decls()) {       if (const VarDecl *VD = dyn_cast<VarDecl>(D)) {         addData(VD->getType());       }     }   }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|AsmStmt
+argument_list|,
+argument|{     addData(S->isSimple());     addData(S->isVolatile());     addData(S->generateAsmString(Context));     for (unsigned i =
+literal|0
+argument|; i< S->getNumInputs(); ++i) {       addData(S->getInputConstraint(i));     }     for (unsigned i =
+literal|0
+argument|; i< S->getNumOutputs(); ++i) {       addData(S->getOutputConstraint(i));     }     for (unsigned i =
+literal|0
+argument|; i< S->getNumClobbers(); ++i) {       addData(S->getClobber(i));     }   }
+argument_list|)
+name|DEF_ADD_DATA
+argument_list|(
+argument|AttributedStmt
+argument_list|,
+argument|{     for (const Attr *A : S->getAttrs()) {       addData(std::string(A->getSpelling()));     }   }
+argument_list|)
+block|}
+empty_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace clone_detection
+end_comment
+
+begin_comment
+comment|/// Identifies a list of statements.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// Can either identify a single arbitrary Stmt object, a continuous sequence of
+end_comment
+
+begin_comment
 comment|/// child statements inside a CompoundStmt or no statements at all.
+end_comment
+
+begin_decl_stmt
 name|class
 name|StmtSequence
 block|{
@@ -290,7 +680,13 @@ return|return
 literal|1
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Returns true if and only if this StmtSequence contains no statements.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|empty
 argument_list|()
@@ -303,14 +699,26 @@ operator|==
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Returns the related ASTContext for the stored Stmts.
+end_comment
+
+begin_expr_stmt
 name|ASTContext
 operator|&
 name|getASTContext
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Returns the declaration that contains the stored Stmts.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|Decl
 operator|*
@@ -327,7 +735,13 @@ return|return
 name|D
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Returns true if this objects holds a list of statements.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|holdsSequence
 argument_list|()
@@ -339,29 +753,65 @@ operator|!=
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Returns the start sourcelocation of the first statement in this sequence.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This method should only be called on a non-empty StmtSequence object.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getStartLoc
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Returns the end sourcelocation of the last statement in this sequence.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This method should only be called on a non-empty StmtSequence object.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getEndLoc
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Returns the source range of the whole sequence - from the beginning
+end_comment
+
+begin_comment
 comment|/// of the first statement to the end of the last statement.
+end_comment
+
+begin_expr_stmt
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|==
@@ -403,6 +853,9 @@ name|EndIndex
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|!=
@@ -444,11 +897,29 @@ name|EndIndex
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Returns true if and only if this sequence covers a source range that
+end_comment
+
+begin_comment
 comment|/// contains the source range of the given sequence \p Other.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This method should only be called on a non-empty StmtSequence object
+end_comment
+
+begin_comment
 comment|/// and passed a non-empty StmtSequence object.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|contains
 argument_list|(
@@ -459,14 +930,10 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// Searches for similar subtrees in the AST.
 end_comment
 

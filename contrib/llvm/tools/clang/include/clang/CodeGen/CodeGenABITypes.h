@@ -127,6 +127,12 @@ decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
+name|class
+name|FunctionType
+decl_stmt|;
+name|class
+name|Type
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -277,6 +283,34 @@ name|RequiredArgs
 name|args
 argument_list|)
 decl_stmt|;
+comment|// Returns null if the function type is incomplete and can't be lowered.
+name|llvm
+operator|::
+name|FunctionType
+operator|*
+name|convertFreeFunctionType
+argument_list|(
+name|CodeGenModule
+operator|&
+name|CGM
+argument_list|,
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|Type
+operator|*
+name|convertTypeForMemory
+argument_list|(
+argument|CodeGenModule&CGM
+argument_list|,
+argument|QualType T
+argument_list|)
+expr_stmt|;
 block|}
 comment|// end namespace CodeGen
 block|}

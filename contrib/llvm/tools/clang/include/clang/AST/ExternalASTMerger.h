@@ -166,18 +166,6 @@ argument_list|,
 argument|SmallVectorImpl<Decl *>&Result
 argument_list|)
 name|override
-block|;
-name|using
-name|ExternalASTSource
-operator|::
-name|CompleteType
-block|;
-name|void
-name|CompleteType
-argument_list|(
-argument|TagDecl *Tag
-argument_list|)
-name|override
 block|; }
 decl_stmt|;
 block|}

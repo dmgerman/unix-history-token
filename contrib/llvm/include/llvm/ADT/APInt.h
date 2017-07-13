@@ -1114,17 +1114,46 @@ name|isOneValue
 argument_list|()
 specifier|const
 block|{
-return|return
-name|getActiveBits
+if|if
+condition|(
+name|isSingleWord
 argument_list|()
+condition|)
+return|return
+name|U
+operator|.
+name|VAL
 operator|==
 literal|1
 return|;
+return|return
+name|countLeadingZerosSlowCase
+argument_list|()
+operator|==
+name|BitWidth
+operator|-
+literal|1
+return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine if this is the largest unsigned value.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This checks to see if the value of this APInt is the maximum unsigned
+end_comment
+
+begin_comment
 comment|/// value for the APInt's bit width.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMaxValue
 argument_list|()
@@ -1135,10 +1164,25 @@ name|isAllOnesValue
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine if this is the largest signed value.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This checks to see if the value of this APInt is the maximum signed
+end_comment
+
+begin_comment
 comment|/// value for the APInt's bit width.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMaxSignedValue
 argument_list|()
@@ -1171,6 +1215,9 @@ operator|-
 literal|1
 operator|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|!
 name|isNegative
@@ -1183,10 +1230,10 @@ name|BitWidth
 operator|-
 literal|1
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Determine if this is the smallest unsigned value.
 end_comment
 
@@ -1202,10 +1249,13 @@ begin_comment
 comment|/// value for the APInt's bit width.
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_macro
+unit|bool
 name|isMinValue
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return

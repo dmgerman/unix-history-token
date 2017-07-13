@@ -449,6 +449,8 @@ operator|>
 name|findByPrefix
 argument_list|(
 argument|StringRef Cur
+argument_list|,
+argument|unsigned short DisableFlags
 argument_list|)
 specifier|const
 expr_stmt|;

@@ -92,6 +92,60 @@ block|{
 name|namespace
 name|pdb
 block|{
+name|std
+operator|::
+name|string
+name|truncateStringBack
+argument_list|(
+argument|StringRef S
+argument_list|,
+argument|uint32_t MaxLen
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|truncateStringMiddle
+argument_list|(
+argument|StringRef S
+argument_list|,
+argument|uint32_t MaxLen
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|truncateStringFront
+argument_list|(
+argument|StringRef S
+argument_list|,
+argument|uint32_t MaxLen
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|truncateQuotedNameFront
+argument_list|(
+argument|StringRef Label
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|uint32_t MaxLen
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|truncateQuotedNameBack
+argument_list|(
+argument|StringRef Label
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|uint32_t MaxLen
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|PUSH_MASKED_FLAG
@@ -139,7 +193,6 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|static
 name|std
 operator|::
 name|string

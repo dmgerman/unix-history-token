@@ -85,9 +85,11 @@ range|:
 name|int
 block|{
 comment|// RPC Errors
-name|RemoteAllocatorDoesNotExist
+name|JITSymbolNotFound
 operator|=
 literal|1
+block|,
+name|RemoteAllocatorDoesNotExist
 block|,
 name|RemoteAllocatorIdAlreadyInUse
 block|,
@@ -118,6 +120,59 @@ argument_list|(
 argument|OrcErrorCode ErrCode
 argument_list|)
 expr_stmt|;
+name|class
+name|JITSymbolNotFound
+range|:
+name|public
+name|ErrorInfo
+operator|<
+name|JITSymbolNotFound
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+name|char
+name|ID
+block|;
+name|JITSymbolNotFound
+argument_list|(
+argument|std::string SymbolName
+argument_list|)
+block|;
+name|std
+operator|::
+name|error_code
+name|convertToErrorCode
+argument_list|()
+specifier|const
+name|override
+block|;
+name|void
+name|log
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getSymbolName
+argument_list|()
+specifier|const
+block|;
+name|private
+operator|:
+name|std
+operator|::
+name|string
+name|SymbolName
+block|; }
+decl_stmt|;
 block|}
 comment|// End namespace orc.
 block|}

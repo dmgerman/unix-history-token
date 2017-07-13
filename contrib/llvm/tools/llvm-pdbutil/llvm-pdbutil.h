@@ -379,6 +379,15 @@ extern|extern llvm::cl::list<ModuleSubsection> DumpModuleSubsections;
 extern|extern llvm::cl::opt<bool> DumpModuleSyms;
 block|}
 comment|// namespace pdb2yaml
+name|namespace
+name|diff
+block|{
+extern|extern llvm::cl::opt<bool> PrintValueColumns;
+extern|extern llvm::cl::opt<bool> PrintResultColumn;
+extern|extern llvm::cl::opt<std::string> LeftRoot;
+extern|extern llvm::cl::opt<std::string> RightRoot;
+block|}
+comment|// namespace diff
 block|}
 end_decl_stmt
 

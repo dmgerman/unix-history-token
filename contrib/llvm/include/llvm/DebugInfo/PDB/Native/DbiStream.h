@@ -332,6 +332,16 @@ name|Visitor
 argument_list|)
 decl|const
 decl_stmt|;
+name|Expected
+operator|<
+name|StringRef
+operator|>
+name|getECName
+argument_list|(
+argument|uint32_t NI
+argument_list|)
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|Error

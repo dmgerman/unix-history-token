@@ -7298,5 +7298,9 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// LLVM_ANALYSIS_BLOCKFREQUENCYINFOIMPL_H
+end_comment
+
 end_unit
 

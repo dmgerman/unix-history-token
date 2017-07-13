@@ -287,10 +287,6 @@ parameter_list|,
 name|MCValue
 name|Target
 parameter_list|,
-name|bool
-modifier|&
-name|IsPCRel
-parameter_list|,
 name|uint64_t
 modifier|&
 name|FixedValue

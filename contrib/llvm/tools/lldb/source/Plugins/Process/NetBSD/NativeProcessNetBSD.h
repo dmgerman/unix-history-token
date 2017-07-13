@@ -101,46 +101,53 @@ range|:
 name|public
 name|NativeProcessProtocol
 block|{
-name|friend
-name|Status
+name|public
+operator|:
+name|class
+name|Factory
+operator|:
+name|public
 name|NativeProcessProtocol
 operator|::
+name|Factory
+block|{
+name|public
+operator|:
+name|llvm
+operator|::
+name|Expected
+operator|<
+name|NativeProcessProtocolSP
+operator|>
 name|Launch
 argument_list|(
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+argument|ProcessLaunchInfo&launch_info
 argument_list|,
-name|NativeDelegate
-operator|&
-name|native_delegate
+argument|NativeDelegate&native_delegate
 argument_list|,
-name|MainLoop
-operator|&
-name|mainloop
-argument_list|,
-name|NativeProcessProtocolSP
-operator|&
-name|process_sp
+argument|MainLoop&mainloop
 argument_list|)
+specifier|const
+name|override
 block|;
-name|friend
-name|Status
-name|NativeProcessProtocol
+name|llvm
 operator|::
+name|Expected
+operator|<
+name|NativeProcessProtocolSP
+operator|>
 name|Attach
 argument_list|(
 argument|lldb::pid_t pid
 argument_list|,
-argument|NativeProcessProtocol::NativeDelegate&native_delegate
+argument|NativeDelegate&native_delegate
 argument_list|,
 argument|MainLoop&mainloop
-argument_list|,
-argument|NativeProcessProtocolSP&process_sp
 argument_list|)
+specifier|const
+name|override
+block|;   }
 block|;
-name|public
-operator|:
 comment|// ---------------------------------------------------------------------
 comment|// NativeProcessProtocol Interface
 comment|// ---------------------------------------------------------------------
@@ -352,6 +359,8 @@ name|m_arch
 block|;
 name|LazyBool
 name|m_supports_mem_region
+operator|=
+name|eLazyBoolCalculate
 block|;
 name|std
 operator|::
@@ -371,7 +380,17 @@ comment|// ---------------------------------------------------------------------
 comment|// Private Instance Methods
 comment|// ---------------------------------------------------------------------
 name|NativeProcessNetBSD
-argument_list|()
+argument_list|(
+argument|::pid_t pid
+argument_list|,
+argument|int terminal_fd
+argument_list|,
+argument|NativeDelegate&delegate
+argument_list|,
+argument|const ArchSpec&arch
+argument_list|,
+argument|MainLoop&mainloop
+argument_list|)
 block|;
 name|bool
 name|HasThreadNoLock
@@ -383,28 +402,6 @@ name|NativeThreadNetBSDSP
 name|AddThread
 argument_list|(
 argument|lldb::tid_t thread_id
-argument_list|)
-block|;
-name|Status
-name|LaunchInferior
-argument_list|(
-name|MainLoop
-operator|&
-name|mainloop
-argument_list|,
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
-argument_list|)
-block|;
-name|void
-name|AttachToInferior
-argument_list|(
-argument|MainLoop&mainloop
-argument_list|,
-argument|lldb::pid_t pid
-argument_list|,
-argument|Status&error
 argument_list|)
 block|;
 name|void
@@ -467,14 +464,9 @@ name|void
 name|SigchldHandler
 argument_list|()
 block|;
-operator|::
-name|pid_t
+name|Status
 name|Attach
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|,
-argument|Status&error
-argument_list|)
+argument_list|()
 block|;
 name|Status
 name|ReinitializeThreads

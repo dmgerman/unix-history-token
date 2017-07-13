@@ -2029,6 +2029,68 @@ name|ExpectedType
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \returns The type to use in a loop expansion of a memcpy call.
+name|Type
+modifier|*
+name|getMemcpyLoopLoweringType
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|Value
+operator|*
+name|Length
+argument_list|,
+name|unsigned
+name|SrcAlign
+argument_list|,
+name|unsigned
+name|DestAlign
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \param[out] OpsOut The operand types to copy RemainingBytes of memory.
+comment|/// \param RemainingBytes The number of bytes to copy.
+comment|///
+comment|/// Calculates the operand types to use when copying \p RemainingBytes of
+comment|/// memory, where source and destination alignments are \p SrcAlign and
+comment|/// \p DestAlign respectively.
+name|void
+name|getMemcpyLoopResidualLoweringType
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|Type
+operator|*
+operator|>
+operator|&
+name|OpsOut
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|unsigned
+name|RemainingBytes
+argument_list|,
+name|unsigned
+name|SrcAlign
+argument_list|,
+name|unsigned
+name|DestAlign
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns True if we want to test the new memcpy lowering functionality in
+comment|/// Transform/Utils.
+comment|/// Temporary. Will be removed once we move to the new functionality and
+comment|/// remove the old.
+name|bool
+name|useWideIRMemcpyLoopLowering
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \returns True if the two functions have compatible attributes for inlining
 comment|/// purposes.
 name|bool
@@ -3263,6 +3325,41 @@ name|Type
 operator|*
 name|ExpectedType
 argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|Type
+operator|*
+name|getMemcpyLoopLoweringType
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|Value *Length
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|unsigned DestAlign
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|getMemcpyLoopResidualLoweringType
+argument_list|(
+argument|SmallVectorImpl<Type *>&OpsOut
+argument_list|,
+argument|LLVMContext&Context
+argument_list|,
+argument|unsigned RemainingBytes
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|unsigned DestAlign
+argument_list|)
+specifier|const
 operator|=
 literal|0
 block|;
@@ -5043,6 +5140,67 @@ name|ExpectedType
 argument_list|)
 return|;
 block|}
+name|Type
+operator|*
+name|getMemcpyLoopLoweringType
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|Value *Length
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|unsigned DestAlign
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getMemcpyLoopLoweringType
+argument_list|(
+name|Context
+argument_list|,
+name|Length
+argument_list|,
+name|SrcAlign
+argument_list|,
+name|DestAlign
+argument_list|)
+return|;
+block|}
+name|void
+name|getMemcpyLoopResidualLoweringType
+argument_list|(
+argument|SmallVectorImpl<Type *>&OpsOut
+argument_list|,
+argument|LLVMContext&Context
+argument_list|,
+argument|unsigned RemainingBytes
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|unsigned DestAlign
+argument_list|)
+specifier|const
+name|override
+block|{
+name|Impl
+operator|.
+name|getMemcpyLoopResidualLoweringType
+argument_list|(
+name|OpsOut
+argument_list|,
+name|Context
+argument_list|,
+name|RemainingBytes
+argument_list|,
+name|SrcAlign
+argument_list|,
+name|DestAlign
+argument_list|)
+block|;   }
 name|bool
 name|areInlineCompatible
 argument_list|(

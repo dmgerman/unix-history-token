@@ -46,7 +46,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/TypeIndex.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/IPDBRawSymbol.h"
 end_include
 
 begin_include
@@ -59,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/PDB/Native/DbiModuleDescriptor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/Native/NativeBuiltinSymbol.h"
 end_include
 
 begin_include
@@ -148,6 +172,12 @@ operator|>
 name|createCompilandSymbol
 argument_list|(
 argument|DbiModuleDescriptor MI
+argument_list|)
+block|;
+name|SymIndexId
+name|findSymbolByTypeIndex
+argument_list|(
+argument|codeview::TypeIndex TI
 argument_list|)
 block|;
 name|uint64_t
@@ -396,6 +426,16 @@ operator|<
 name|NativeRawSymbol
 operator|>>
 name|SymbolCache
+block|;
+name|DenseMap
+operator|<
+name|codeview
+operator|::
+name|TypeIndex
+block|,
+name|SymIndexId
+operator|>
+name|TypeIndexToSymbolId
 block|; }
 decl_stmt|;
 block|}

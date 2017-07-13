@@ -186,11 +186,15 @@ name|MangledSymbol
 parameter_list|)
 function_decl|;
 comment|/**  * Create a lazy compile callback.  */
-name|LLVMOrcTargetAddress
+name|LLVMOrcErrorCode
 name|LLVMOrcCreateLazyCompileCallback
 parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
+parameter_list|,
+name|LLVMOrcTargetAddress
+modifier|*
+name|RetAddr
 parameter_list|,
 name|LLVMOrcLazyCompileCallbackFn
 name|Callback
@@ -233,11 +237,15 @@ name|NewAddr
 parameter_list|)
 function_decl|;
 comment|/**  * Add module to be eagerly compiled.  */
-name|LLVMOrcModuleHandle
+name|LLVMOrcErrorCode
 name|LLVMOrcAddEagerlyCompiledIR
 parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
+parameter_list|,
+name|LLVMOrcModuleHandle
+modifier|*
+name|RetHandle
 parameter_list|,
 name|LLVMSharedModuleRef
 name|Mod
@@ -251,11 +259,15 @@ name|SymbolResolverCtx
 parameter_list|)
 function_decl|;
 comment|/**  * Add module to be lazily compiled one function at a time.  */
-name|LLVMOrcModuleHandle
+name|LLVMOrcErrorCode
 name|LLVMOrcAddLazilyCompiledIR
 parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
+parameter_list|,
+name|LLVMOrcModuleHandle
+modifier|*
+name|RetHandle
 parameter_list|,
 name|LLVMSharedModuleRef
 name|Mod
@@ -269,11 +281,15 @@ name|SymbolResolverCtx
 parameter_list|)
 function_decl|;
 comment|/**  * Add an object file.  */
-name|LLVMOrcModuleHandle
+name|LLVMOrcErrorCode
 name|LLVMOrcAddObjectFile
 parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
+parameter_list|,
+name|LLVMOrcModuleHandle
+modifier|*
+name|RetHandle
 parameter_list|,
 name|LLVMSharedObjectBufferRef
 name|Obj
@@ -287,7 +303,7 @@ name|SymbolResolverCtx
 parameter_list|)
 function_decl|;
 comment|/**  * Remove a module set from the JIT.  *  * This works for all modules that can be added via OrcAdd*, including object  * files.  */
-name|void
+name|LLVMOrcErrorCode
 name|LLVMOrcRemoveModule
 parameter_list|(
 name|LLVMOrcJITStackRef
@@ -298,11 +314,15 @@ name|H
 parameter_list|)
 function_decl|;
 comment|/**  * Get symbol address from JIT instance.  */
-name|LLVMOrcTargetAddress
+name|LLVMOrcErrorCode
 name|LLVMOrcGetSymbolAddress
 parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
+parameter_list|,
+name|LLVMOrcTargetAddress
+modifier|*
+name|RetAddr
 parameter_list|,
 specifier|const
 name|char
@@ -311,7 +331,7 @@ name|SymbolName
 parameter_list|)
 function_decl|;
 comment|/**  * Dispose of an ORC JIT stack.  */
-name|void
+name|LLVMOrcErrorCode
 name|LLVMOrcDisposeInstance
 parameter_list|(
 name|LLVMOrcJITStackRef

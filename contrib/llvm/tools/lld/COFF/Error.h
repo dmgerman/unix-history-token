@@ -67,7 +67,6 @@ name|uint64_t
 name|ErrorCount
 decl_stmt|;
 extern|extern llvm::raw_ostream *ErrorOS;
-extern|extern llvm::StringRef Argv0;
 name|void
 name|log
 parameter_list|(

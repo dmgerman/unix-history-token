@@ -383,6 +383,16 @@ name|llvm
 operator|::
 name|StringRef
 operator|>
+name|Argv
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|>
 name|AuxiliaryList
 expr_stmt|;
 name|std

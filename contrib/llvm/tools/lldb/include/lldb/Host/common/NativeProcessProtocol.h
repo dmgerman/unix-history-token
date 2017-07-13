@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MemoryBuffer.h"
 end_include
 
@@ -769,10 +775,18 @@ argument_list|)
 operator|=
 literal|0
 block|;
+name|class
+name|Factory
+block|{
+name|public
+operator|:
+name|virtual
+operator|~
+name|Factory
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
-comment|/// Launch a process for debugging. This method will create an concrete
-comment|/// instance of NativeProcessProtocol, based on the host platform.
-comment|/// (e.g. NativeProcessLinux on linux, etc.)
+comment|/// Launch a process for debugging.
 comment|///
 comment|/// @param[in] launch_info
 comment|///     Information required to launch the process.
@@ -787,41 +801,31 @@ comment|///     The mainloop instance with which the process can register
 comment|///     callbacks. Must outlive the NativeProcessProtocol
 comment|///     instance.
 comment|///
-comment|/// @param[out] process_sp
-comment|///     On successful return from the method, this parameter
-comment|///     contains the shared pointer to the
-comment|///     NativeProcessProtocol that can be used to manipulate
-comment|///     the native process.
-comment|///
 comment|/// @return
-comment|///     An error object indicating if the operation succeeded,
-comment|///     and if not, what error occurred.
+comment|///     A NativeProcessProtocol shared pointer if the operation succeeded or
+comment|///     an error object if it failed.
 comment|//------------------------------------------------------------------
-specifier|static
-name|Status
+name|virtual
+name|llvm
+operator|::
+name|Expected
+operator|<
+name|NativeProcessProtocolSP
+operator|>
 name|Launch
 argument_list|(
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+argument|ProcessLaunchInfo&launch_info
 argument_list|,
-name|NativeDelegate
-operator|&
-name|native_delegate
+argument|NativeDelegate&native_delegate
 argument_list|,
-name|MainLoop
-operator|&
-name|mainloop
-argument_list|,
-name|NativeProcessProtocolSP
-operator|&
-name|process_sp
+argument|MainLoop&mainloop
 argument_list|)
+specifier|const
+operator|=
+literal|0
 block|;
 comment|//------------------------------------------------------------------
-comment|/// Attach to an existing process. This method will create an concrete
-comment|/// instance of NativeProcessProtocol, based on the host platform.
-comment|/// (e.g. NativeProcessLinux on linux, etc.)
+comment|/// Attach to an existing process.
 comment|///
 comment|/// @param[in] pid
 comment|///     pid of the process locatable
@@ -836,18 +840,17 @@ comment|///     The mainloop instance with which the process can register
 comment|///     callbacks. Must outlive the NativeProcessProtocol
 comment|///     instance.
 comment|///
-comment|/// @param[out] process_sp
-comment|///     On successful return from the method, this parameter
-comment|///     contains the shared pointer to the
-comment|///     NativeProcessProtocol that can be used to manipulate
-comment|///     the native process.
-comment|///
 comment|/// @return
-comment|///     An error object indicating if the operation succeeded,
-comment|///     and if not, what error occurred.
+comment|///     A NativeProcessProtocol shared pointer if the operation succeeded or
+comment|///     an error object if it failed.
 comment|//------------------------------------------------------------------
-specifier|static
-name|Status
+name|virtual
+name|llvm
+operator|::
+name|Expected
+operator|<
+name|NativeProcessProtocolSP
+operator|>
 name|Attach
 argument_list|(
 argument|lldb::pid_t pid
@@ -855,9 +858,11 @@ argument_list|,
 argument|NativeDelegate&native_delegate
 argument_list|,
 argument|MainLoop&mainloop
-argument_list|,
-argument|NativeProcessProtocolSP&process_sp
 argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;   }
 block|;
 comment|//------------------------------------------------------------------
 comment|/// StartTracing API for starting a tracing instance with the
@@ -1049,6 +1054,8 @@ name|lldb
 operator|::
 name|tid_t
 name|m_current_thread_id
+operator|=
+name|LLDB_INVALID_THREAD_ID
 block|;
 name|mutable
 name|std
@@ -1060,6 +1067,10 @@ name|lldb
 operator|::
 name|StateType
 name|m_state
+operator|=
+name|lldb
+operator|::
+name|eStateInvalid
 block|;
 name|mutable
 name|std
@@ -1103,6 +1114,8 @@ name|m_terminal_fd
 block|;
 name|uint32_t
 name|m_stop_id
+operator|=
+literal|0
 block|;
 comment|// Set of signal numbers that LLDB directly injects back to inferior
 comment|// without stopping it.
@@ -1122,6 +1135,10 @@ comment|// and then this function should be called.
 name|NativeProcessProtocol
 argument_list|(
 argument|lldb::pid_t pid
+argument_list|,
+argument|int terminal_fd
+argument_list|,
+argument|NativeDelegate&delegate
 argument_list|)
 block|;
 comment|// -----------------------------------------------------------

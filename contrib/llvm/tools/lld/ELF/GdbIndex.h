@@ -122,6 +122,10 @@ comment|// for filling gdb index section areas.
 struct|struct
 name|GdbIndexChunk
 block|{
+name|InputSection
+modifier|*
+name|DebugInfoSec
+decl_stmt|;
 name|std
 operator|::
 name|vector

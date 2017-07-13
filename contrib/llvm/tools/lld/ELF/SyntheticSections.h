@@ -2359,7 +2359,16 @@ block|;
 name|public
 operator|:
 name|GdbIndexSection
-argument_list|()
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|GdbIndexChunk
+operator|>
+operator|&&
+name|Chunks
+argument_list|)
 block|;
 name|void
 name|finalizeContents
@@ -2421,14 +2430,6 @@ name|Chunks
 block|;
 name|private
 operator|:
-name|GdbIndexChunk
-name|readDwarf
-argument_list|(
-name|InputSection
-operator|*
-name|Sec
-argument_list|)
-block|;
 name|void
 name|buildIndex
 argument_list|()
@@ -2465,6 +2466,19 @@ name|false
 block|; }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|GdbIndexSection
+operator|*
+name|createGdbIndex
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// --eh-frame-hdr option tells linker to construct a header for all the

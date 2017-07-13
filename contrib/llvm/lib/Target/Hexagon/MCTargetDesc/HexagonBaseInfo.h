@@ -502,8 +502,11 @@ comment|// Hexagon specific MO operand flag mask.
 enum|enum
 name|HexagonMOTargetFlagVal
 block|{
-comment|//===------------------------------------------------------------------===//
-comment|// Hexagon Specific MachineOperand flags.
+comment|// Hexagon-specific MachineOperand target flags.
+comment|//
+comment|// When chaning these, make sure to update
+comment|// getSerializableDirectMachineOperandTargetFlags and
+comment|// getSerializableBitmaskMachineOperandTargetFlags if needed.
 name|MO_NO_FLAG
 block|,
 comment|/// MO_PCREL - On a symbol operand, indicates a PC-relative relocation
@@ -542,11 +545,16 @@ comment|// local Executable method
 name|MO_TPREL
 block|,
 comment|// HMOTF_ConstExtended
-comment|// Addendum to abovem, indicates a const extended op
+comment|// Addendum to above, indicates a const extended op
 comment|// Can be used as a mask.
 name|HMOTF_ConstExtended
 init|=
 literal|0x80
+block|,
+comment|// Union of all bitmasks (currently only HMOTF_ConstExtended).
+name|MO_Bitmasks
+init|=
+name|HMOTF_ConstExtended
 block|}
 enum|;
 comment|// Hexagon Sub-instruction classes.

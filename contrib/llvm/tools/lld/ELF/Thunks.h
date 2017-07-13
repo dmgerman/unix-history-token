@@ -137,6 +137,21 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|// To reuse a Thunk the caller as identified by the RelocType must be
+comment|// compatible with it.
+name|virtual
+name|bool
+name|isCompatibleWith
+argument_list|(
+name|uint32_t
+name|RelocType
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|// The alignment requirement for this Thunk, defaults to the size of the
 comment|// typical code section alignment.
 specifier|const

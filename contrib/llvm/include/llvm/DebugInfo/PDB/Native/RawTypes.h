@@ -653,6 +653,54 @@ comment|/// char ModuleName[];
 comment|/// char ObjFileName[];
 block|}
 struct|;
+comment|// This is PSGSIHDR struct defined in
+comment|// https://github.com/Microsoft/microsoft-pdb/blob/master/PDB/dbi/gsi.h
+struct|struct
+name|PublicsStreamHeader
+block|{
+name|support
+operator|::
+name|ulittle32_t
+name|SymHash
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|AddrMap
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|NumThunks
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|SizeOfThunk
+expr_stmt|;
+name|support
+operator|::
+name|ulittle16_t
+name|ISectThunkTable
+expr_stmt|;
+name|char
+name|Padding
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|OffThunkTable
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|NumSections
+expr_stmt|;
+block|}
+struct|;
 comment|/// Defines a 128-bit unique identifier.  This maps to a GUID on Windows, but
 comment|/// is abstracted here for the purposes of non-Windows platforms that don't have
 comment|/// the GUID structure defined.

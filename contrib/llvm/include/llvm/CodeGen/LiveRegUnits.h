@@ -404,6 +404,8 @@ name|true
 return|;
 block|}
 comment|/// Updates liveness when stepping backwards over the instruction \p MI.
+comment|/// This removes all register units defined or clobbered in \p MI and then
+comment|/// adds the units used (as in use operands) in \p MI.
 name|void
 name|stepBackward
 parameter_list|(
@@ -413,11 +415,11 @@ modifier|&
 name|MI
 parameter_list|)
 function_decl|;
-comment|/// Mark all register units live during instruction \p MI.
-comment|/// This can be used to accumulate live/unoccupied registers over a range of
-comment|/// instructions.
+comment|/// Adds all register units used, defined or clobbered in \p MI.
+comment|/// This is useful when walking over a range of instruction to find registers
+comment|/// unused over the whole range.
 name|void
-name|accumulateBackward
+name|accumulate
 parameter_list|(
 specifier|const
 name|MachineInstr

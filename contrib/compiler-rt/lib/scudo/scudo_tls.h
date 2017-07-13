@@ -115,7 +115,7 @@ block|{
 name|AllocatorCache
 name|Cache
 block|;
-name|Xorshift128Plus
+name|ScudoPrng
 name|Prng
 block|;
 name|uptr

@@ -1207,8 +1207,8 @@ specifier|const
 name|override
 block|;
 comment|/// Return true when there is potentially a faster code sequence
-comment|/// for an instruction chain ending in<Root>. All potential patterns are
-comment|/// listed in the<Patterns> array.
+comment|/// for an instruction chain ending in ``Root``. All potential patterns are
+comment|/// listed in the ``Patterns`` array.
 name|bool
 name|getMachineCombinerPatterns
 argument_list|(
@@ -1309,6 +1309,25 @@ name|char
 operator|*
 operator|>>
 name|getSerializableBitmaskMachineOperandTargetFlags
+argument_list|()
+specifier|const
+name|override
+block|;
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MachineMemOperand
+operator|::
+name|Flags
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableMachineMemOperandTargetFlags
 argument_list|()
 specifier|const
 name|override

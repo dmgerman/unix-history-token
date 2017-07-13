@@ -304,14 +304,12 @@ name|LI
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// Helper function that replaces \p MI with a libcall.
+comment|/// Helper function that creates the given libcall.
 name|LegalizerHelper
 operator|::
 name|LegalizeResult
-name|replaceWithLibcall
+name|createLibcall
 argument_list|(
-argument|MachineInstr&MI
-argument_list|,
 argument|MachineIRBuilder&MIRBuilder
 argument_list|,
 argument|RTLIB::Libcall Libcall

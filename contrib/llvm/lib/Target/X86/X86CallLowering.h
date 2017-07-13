@@ -149,7 +149,7 @@ argument_list|)
 operator|>
 name|SplitArgTy
 expr_stmt|;
-name|void
+name|bool
 name|splitToValueTypes
 argument_list|(
 argument|const ArgInfo&OrigArgInfo

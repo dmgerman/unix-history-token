@@ -135,6 +135,17 @@ decl_stmt|;
 specifier|static
 specifier|const
 specifier|auto
+name|ARM64
+init|=
+name|llvm
+operator|::
+name|COFF
+operator|::
+name|IMAGE_FILE_MACHINE_ARM64
+decl_stmt|;
+specifier|static
+specifier|const
+specifier|auto
 name|ARMNT
 init|=
 name|llvm
@@ -321,6 +332,10 @@ return|return
 name|Machine
 operator|==
 name|AMD64
+operator|||
+name|Machine
+operator|==
+name|ARM64
 return|;
 block|}
 name|llvm
@@ -420,6 +435,16 @@ operator|<
 literal|128
 operator|>
 name|PDBPath
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|>
+name|Argv
 expr_stmt|;
 comment|// Symbols in this set are considered as live by the garbage collector.
 name|std

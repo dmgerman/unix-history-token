@@ -235,6 +235,33 @@ name|isValid
 argument_list|()
 return|;
 block|}
+enum|enum
+name|SearchOrdering
+block|{
+comment|/// SO_Linker - Search as a call to dlsym(dlopen(NULL)) would when
+comment|/// DynamicLibrary::getPermanentLibrary(NULL) has been called or
+comment|/// search the list of explcitly loaded symbols if not.
+name|SO_Linker
+block|,
+comment|/// SO_LoadedFirst - Search all loaded libraries, then as SO_Linker would.
+name|SO_LoadedFirst
+block|,
+comment|/// SO_LoadedLast - Search as SO_Linker would, then loaded libraries.
+comment|/// Only useful to search if libraries with RTLD_LOCAL have been added.
+name|SO_LoadedLast
+block|,
+comment|/// SO_LoadOrder - Or this in to search libraries in the ordered loaded.
+comment|/// The default bahaviour is to search loaded libraries in reverse.
+name|SO_LoadOrder
+init|=
+literal|4
+block|}
+enum|;
+specifier|static
+name|SearchOrdering
+name|SearchOrder
+decl_stmt|;
+comment|// = SO_Linker
 comment|/// This function will search through all previously loaded dynamic
 comment|/// libraries for the symbol \p symbolName. If it is found, the address of
 comment|/// that symbol is returned. If not, null is returned. Note that this will

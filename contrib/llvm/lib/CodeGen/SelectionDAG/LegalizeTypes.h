@@ -2543,58 +2543,6 @@ name|SDValue
 name|Result
 parameter_list|)
 function_decl|;
-comment|// Call ReplaceValueWith(SDValue(N, ResNo), Res) if necessary.
-name|void
-name|ReplaceSoftenFloatResult
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|,
-name|unsigned
-name|ResNo
-parameter_list|,
-name|SDValue
-modifier|&
-name|NewRes
-parameter_list|)
-block|{
-comment|// When the result type can be kept in HW registers, the converted
-comment|// NewRes node could have the same type. We can save the effort in
-comment|// cloning every user of N in SoftenFloatOperand or other legalization functions,
-comment|// by calling ReplaceValueWith here to update all users.
-if|if
-condition|(
-name|NewRes
-operator|.
-name|getNode
-argument_list|()
-operator|!=
-name|N
-operator|&&
-name|isLegalInHWReg
-argument_list|(
-name|N
-operator|->
-name|getValueType
-argument_list|(
-name|ResNo
-argument_list|)
-argument_list|)
-condition|)
-name|ReplaceValueWith
-argument_list|(
-name|SDValue
-argument_list|(
-name|N
-argument_list|,
-name|ResNo
-argument_list|)
-argument_list|,
-name|NewRes
-argument_list|)
-expr_stmt|;
-block|}
 comment|// Convert Float Results to Integer for Non-HW-supported Operations.
 name|bool
 name|SoftenFloatResult
@@ -2966,8 +2914,9 @@ name|N
 parameter_list|)
 function_decl|;
 comment|// Return true if we can skip softening the given operand or SDNode because
-comment|// it was soften before by SoftenFloatResult and references to the operand
-comment|// were replaced by ReplaceValueWith.
+comment|// either it was soften before by SoftenFloatResult and references to the
+comment|// operand were replaced by ReplaceValueWith or it's value type is legal in HW
+comment|// registers and the operand can be left unchanged.
 name|bool
 name|CanSkipSoftenFloatOperand
 parameter_list|(
@@ -3000,7 +2949,39 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|SoftenFloatOp_COPY_TO_REG
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|SoftenFloatOp_BR_CC
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|SoftenFloatOp_FABS
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|SoftenFloatOp_FCOPYSIGN
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|SoftenFloatOp_FNEG
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3025,6 +3006,14 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|SoftenFloatOp_FP_TO_XINT
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|SoftenFloatOp_SELECT
 parameter_list|(
 name|SDNode
 modifier|*

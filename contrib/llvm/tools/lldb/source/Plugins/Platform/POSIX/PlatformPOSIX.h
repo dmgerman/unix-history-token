@@ -652,36 +652,21 @@ operator|::
 name|Status
 name|EvaluateLibdlExpression
 argument_list|(
-name|lldb_private
-operator|::
-name|Process
-operator|*
-name|process
+argument|lldb_private::Process *process
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|expr_cstr
+argument|const char *expr_cstr
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|expr_prefix
+argument|llvm::StringRef expr_prefix
 argument_list|,
-name|lldb
-operator|::
-name|ValueObjectSP
-operator|&
-name|result_valobj_sp
+argument|lldb::ValueObjectSP&result_valobj_sp
 argument_list|)
 block|;
 name|virtual
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetLibdlFunctionDeclarations
 argument_list|()
-specifier|const
 block|;
 name|private
 operator|:

@@ -168,7 +168,7 @@ name|ExternalLookupFtorT
 operator|>
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|LambdaResolver
 operator|<

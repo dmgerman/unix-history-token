@@ -251,18 +251,6 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
-enum|enum
-name|SynchronizationScope
-block|{
-name|SingleThread
-init|=
-literal|0
-block|,
-name|CrossThread
-init|=
-literal|1
-block|}
-enum|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                AllocaInst Class
 comment|//===----------------------------------------------------------------------===//
@@ -812,7 +800,7 @@ argument|unsigned Align
 argument_list|,
 argument|AtomicOrdering Order
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -831,7 +819,7 @@ argument|Align
 argument_list|,
 argument|Order
 argument_list|,
-argument|SynchScope
+argument|SSID
 argument_list|,
 argument|InsertBefore
 argument_list|)
@@ -850,7 +838,7 @@ argument|unsigned Align
 argument_list|,
 argument|AtomicOrdering Order
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -867,7 +855,7 @@ argument|unsigned Align
 argument_list|,
 argument|AtomicOrdering Order
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -1023,7 +1011,7 @@ argument_list|(
 argument|unsigned Align
 argument_list|)
 block|;
-comment|/// Returns the ordering effect of this fence.
+comment|/// Returns the ordering constraint of this load instruction.
 name|AtomicOrdering
 name|getOrdering
 argument_list|()
@@ -1043,8 +1031,8 @@ literal|7
 argument_list|)
 return|;
 block|}
-comment|/// Set the ordering constraint on this load. May not be Release or
-comment|/// AcquireRelease.
+comment|/// Sets the ordering constraint of this load instruction.  May not be Release
+comment|/// or AcquireRelease.
 name|void
 name|setOrdering
 argument_list|(
@@ -1075,61 +1063,39 @@ literal|7
 operator|)
 argument_list|)
 block|;   }
-name|SynchronizationScope
-name|getSynchScope
+comment|/// Returns the synchronization scope ID of this load instruction.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SynchronizationScope
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|>>
-literal|6
-operator|)
-operator|&
-literal|1
-argument_list|)
+name|SSID
 return|;
 block|}
-comment|/// Specify whether this load is ordered with respect to all
-comment|/// concurrently executing threads, or only with respect to signal handlers
-comment|/// executing in the same thread.
+comment|/// Sets the synchronization scope ID of this load instruction.
 name|void
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-argument|SynchronizationScope xthread
+argument|SyncScope::ID SSID
 argument_list|)
 block|{
-name|setInstructionSubclassData
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-operator|)
-operator||
-operator|(
-name|xthread
-operator|<<
-literal|6
-operator|)
-argument_list|)
+name|this
+operator|->
+name|SSID
+operator|=
+name|SSID
 block|;   }
+comment|/// Sets the ordering constraint and the synchronization scope ID of this load
+comment|/// instruction.
 name|void
 name|setAtomic
 argument_list|(
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|)
 block|{
 name|setOrdering
@@ -1137,9 +1103,9 @@ argument_list|(
 name|Ordering
 argument_list|)
 block|;
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-name|SynchScope
+name|SSID
 argument_list|)
 block|;   }
 name|bool
@@ -1311,7 +1277,14 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-expr|}
+comment|/// The synchronization scope ID of this load instruction.  Not quite enough
+comment|/// room in SubClassData for everything, so synchronization scope ID gets its
+comment|/// own field.
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+block|; }
 block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                StoreInst Class
@@ -1432,7 +1405,7 @@ argument|unsigned Align
 argument_list|,
 argument|AtomicOrdering Order
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -1449,7 +1422,7 @@ argument|unsigned Align
 argument_list|,
 argument|AtomicOrdering Order
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -1551,7 +1524,7 @@ argument_list|(
 argument|unsigned Align
 argument_list|)
 block|;
-comment|/// Returns the ordering effect of this store.
+comment|/// Returns the ordering constraint of this store instruction.
 name|AtomicOrdering
 name|getOrdering
 argument_list|()
@@ -1571,8 +1544,8 @@ literal|7
 argument_list|)
 return|;
 block|}
-comment|/// Set the ordering constraint on this store.  May not be Acquire or
-comment|/// AcquireRelease.
+comment|/// Sets the ordering constraint of this store instruction.  May not be
+comment|/// Acquire or AcquireRelease.
 name|void
 name|setOrdering
 argument_list|(
@@ -1603,61 +1576,39 @@ literal|7
 operator|)
 argument_list|)
 block|;   }
-name|SynchronizationScope
-name|getSynchScope
+comment|/// Returns the synchronization scope ID of this store instruction.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SynchronizationScope
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|>>
-literal|6
-operator|)
-operator|&
-literal|1
-argument_list|)
+name|SSID
 return|;
 block|}
-comment|/// Specify whether this store instruction is ordered with respect to all
-comment|/// concurrently executing threads, or only with respect to signal handlers
-comment|/// executing in the same thread.
+comment|/// Sets the synchronization scope ID of this store instruction.
 name|void
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-argument|SynchronizationScope xthread
+argument|SyncScope::ID SSID
 argument_list|)
 block|{
-name|setInstructionSubclassData
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-operator|)
-operator||
-operator|(
-name|xthread
-operator|<<
-literal|6
-operator|)
-argument_list|)
+name|this
+operator|->
+name|SSID
+operator|=
+name|SSID
 block|;   }
+comment|/// Sets the ordering constraint and the synchronization scope ID of this
+comment|/// store instruction.
 name|void
 name|setAtomic
 argument_list|(
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|)
 block|{
 name|setOrdering
@@ -1665,9 +1616,9 @@ argument_list|(
 name|Ordering
 argument_list|)
 block|;
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-name|SynchScope
+name|SSID
 argument_list|)
 block|;   }
 name|bool
@@ -1865,7 +1816,14 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-expr|}
+comment|/// The synchronization scope ID of this store instruction.  Not quite enough
+comment|/// room in SubClassData for everything, so synchronization scope ID gets its
+comment|/// own field.
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+block|; }
 block|;
 name|template
 operator|<
@@ -1906,7 +1864,7 @@ name|Init
 argument_list|(
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|)
 block|;
 name|protected
@@ -1932,7 +1890,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -1943,7 +1901,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -1969,7 +1927,7 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// Returns the ordering effect of this fence.
+comment|/// Returns the ordering constraint of this fence instruction.
 name|AtomicOrdering
 name|getOrdering
 argument_list|()
@@ -1985,8 +1943,8 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// Set the ordering constraint on this fence.  May only be Acquire, Release,
-comment|/// AcquireRelease, or SequentiallyConsistent.
+comment|/// Sets the ordering constraint of this fence instruction.  May only be
+comment|/// Acquire, Release, AcquireRelease, or SequentiallyConsistent.
 name|void
 name|setOrdering
 argument_list|(
@@ -2012,42 +1970,30 @@ literal|1
 operator|)
 argument_list|)
 block|;   }
-name|SynchronizationScope
-name|getSynchScope
+comment|/// Returns the synchronization scope ID of this fence instruction.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SynchronizationScope
-argument_list|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-literal|1
-argument_list|)
+name|SSID
 return|;
 block|}
-comment|/// Specify whether this fence orders other operations with respect to all
-comment|/// concurrently executing threads, or only with respect to signal handlers
-comment|/// executing in the same thread.
+comment|/// Sets the synchronization scope ID of this fence instruction.
 name|void
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-argument|SynchronizationScope xthread
+argument|SyncScope::ID SSID
 argument_list|)
 block|{
-name|setInstructionSubclassData
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-operator|~
-literal|1
-operator|)
-operator||
-name|xthread
-argument_list|)
+name|this
+operator|->
+name|SSID
+operator|=
+name|SSID
 block|;   }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -2113,7 +2059,14 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-expr|}
+comment|/// The synchronization scope ID of this fence instruction.  Not quite enough
+comment|/// room in SubClassData for everything, so synchronization scope ID gets its
+comment|/// own field.
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+block|; }
 block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                AtomicCmpXchgInst Class
@@ -2141,7 +2094,7 @@ argument|AtomicOrdering SuccessOrdering
 argument_list|,
 argument|AtomicOrdering FailureOrdering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|)
 block|;
 name|protected
@@ -2171,7 +2124,7 @@ argument|AtomicOrdering SuccessOrdering
 argument_list|,
 argument|AtomicOrdering FailureOrdering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -2188,7 +2141,7 @@ argument|AtomicOrdering SuccessOrdering
 argument_list|,
 argument|AtomicOrdering FailureOrdering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -2295,7 +2248,27 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
-comment|/// Set the ordering constraint on this cmpxchg.
+comment|/// Returns the success ordering constraint of this cmpxchg instruction.
+name|AtomicOrdering
+name|getSuccessOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtomicOrdering
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|>>
+literal|2
+operator|)
+operator|&
+literal|7
+argument_list|)
+return|;
+block|}
+comment|/// Sets the success ordering constraint of this cmpxchg instruction.
 name|void
 name|setSuccessOrdering
 argument_list|(
@@ -2333,6 +2306,27 @@ literal|2
 operator|)
 argument_list|)
 block|;   }
+comment|/// Returns the failure ordering constraint of this cmpxchg instruction.
+name|AtomicOrdering
+name|getFailureOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtomicOrdering
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|>>
+literal|5
+operator|)
+operator|&
+literal|7
+argument_list|)
+return|;
+block|}
+comment|/// Sets the failure ordering constraint of this cmpxchg instruction.
 name|void
 name|setFailureOrdering
 argument_list|(
@@ -2370,93 +2364,31 @@ literal|5
 operator|)
 argument_list|)
 block|;   }
-comment|/// Specify whether this cmpxchg is atomic and orders other operations with
-comment|/// respect to all concurrently executing threads, or only with respect to
-comment|/// signal handlers executing in the same thread.
+comment|/// Returns the synchronization scope ID of this cmpxchg instruction.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SSID
+return|;
+block|}
+comment|/// Sets the synchronization scope ID of this cmpxchg instruction.
 name|void
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|)
 block|{
-name|setInstructionSubclassData
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-operator|~
-literal|2
-operator|)
-operator||
-operator|(
-name|SynchScope
-operator|<<
-literal|1
-operator|)
-argument_list|)
+name|this
+operator|->
+name|SSID
+operator|=
+name|SSID
 block|;   }
-comment|/// Returns the ordering constraint on this cmpxchg.
-name|AtomicOrdering
-name|getSuccessOrdering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AtomicOrdering
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|>>
-literal|2
-operator|)
-operator|&
-literal|7
-argument_list|)
-return|;
-block|}
-comment|/// Returns the ordering constraint on this cmpxchg.
-name|AtomicOrdering
-name|getFailureOrdering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AtomicOrdering
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|>>
-literal|5
-operator|)
-operator|&
-literal|7
-argument_list|)
-return|;
-block|}
-comment|/// Returns whether this cmpxchg is atomic between threads or only within a
-comment|/// single thread.
-name|SynchronizationScope
-name|getSynchScope
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SynchronizationScope
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-literal|2
-operator|)
-operator|>>
-literal|1
-argument_list|)
-return|;
-block|}
 name|Value
 operator|*
 name|getPointerOperand
@@ -2692,7 +2624,14 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-expr|}
+comment|/// The synchronization scope ID of this cmpxchg instruction.  Not quite
+comment|/// enough room in SubClassData for everything, so synchronization scope ID
+comment|/// gets its own field.
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+block|; }
 block|;
 name|template
 operator|<
@@ -2807,7 +2746,7 @@ argument|Value *Val
 argument_list|,
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -2822,7 +2761,7 @@ argument|Value *Val
 argument_list|,
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -2938,7 +2877,27 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
-comment|/// Set the ordering constraint on this RMW.
+comment|/// Returns the ordering constraint of this rmw instruction.
+name|AtomicOrdering
+name|getOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtomicOrdering
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|>>
+literal|2
+operator|)
+operator|&
+literal|7
+argument_list|)
+return|;
+block|}
+comment|/// Sets the ordering constraint of this rmw instruction.
 name|void
 name|setOrdering
 argument_list|(
@@ -2980,73 +2939,31 @@ literal|2
 operator|)
 argument_list|)
 block|;   }
-comment|/// Specify whether this RMW orders other operations with respect to all
-comment|/// concurrently executing threads, or only with respect to signal handlers
-comment|/// executing in the same thread.
+comment|/// Returns the synchronization scope ID of this rmw instruction.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SSID
+return|;
+block|}
+comment|/// Sets the synchronization scope ID of this rmw instruction.
 name|void
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|)
 block|{
-name|setInstructionSubclassData
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-operator|~
-literal|2
-operator|)
-operator||
-operator|(
-name|SynchScope
-operator|<<
-literal|1
-operator|)
-argument_list|)
+name|this
+operator|->
+name|SSID
+operator|=
+name|SSID
 block|;   }
-comment|/// Returns the ordering constraint on this RMW.
-name|AtomicOrdering
-name|getOrdering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AtomicOrdering
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|>>
-literal|2
-operator|)
-operator|&
-literal|7
-argument_list|)
-return|;
-block|}
-comment|/// Returns whether this RMW is atomic between threads or only within a
-comment|/// single thread.
-name|SynchronizationScope
-name|getSynchScope
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SynchronizationScope
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-literal|2
-operator|)
-operator|>>
-literal|1
-argument_list|)
-return|;
-block|}
 name|Value
 operator|*
 name|getPointerOperand
@@ -3185,7 +3102,7 @@ argument|Value *Val
 argument_list|,
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|)
 block|;
 comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
@@ -3203,7 +3120,14 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-block|}
+comment|/// The synchronization scope ID of this rmw instruction.  Not quite enough
+comment|/// room in SubClassData for everything, so synchronization scope ID gets its
+comment|/// own field.
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+block|; }
 block|;
 name|template
 operator|<
@@ -3549,17 +3473,32 @@ comment|/// Create an "inbounds" getelementptr. See the documentation for the
 comment|/// "inbounds" flag in LangRef.html for details.
 specifier|static
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|CreateInBounds
 argument_list|(
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|,
-argument|const Twine&NameStr =
+specifier|const
+name|Twine
+operator|&
+name|NameStr
+operator|=
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore = nullptr
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+name|nullptr
 argument_list|)
 block|{
 return|return
@@ -3579,25 +3518,42 @@ return|;
 block|}
 specifier|static
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|CreateInBounds
 argument_list|(
-argument|Type *PointeeType
+name|Type
+operator|*
+name|PointeeType
 argument_list|,
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|,
-argument|const Twine&NameStr =
+specifier|const
+name|Twine
+operator|&
+name|NameStr
+operator|=
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore = nullptr
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+name|nullptr
 argument_list|)
 block|{
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|GEP
-operator|=
+init|=
 name|Create
 argument_list|(
 name|PointeeType
@@ -3610,30 +3566,42 @@ name|NameStr
 argument_list|,
 name|InsertBefore
 argument_list|)
-block|;
+decl_stmt|;
 name|GEP
 operator|->
 name|setIsInBounds
 argument_list|(
 name|true
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|GEP
 return|;
 block|}
 specifier|static
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|CreateInBounds
 argument_list|(
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|,
-argument|const Twine&NameStr
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|BasicBlock *InsertAtEnd
+name|BasicBlock
+operator|*
+name|InsertAtEnd
 argument_list|)
 block|{
 return|return
@@ -3653,24 +3621,38 @@ return|;
 block|}
 specifier|static
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|CreateInBounds
 argument_list|(
-argument|Type *PointeeType
+name|Type
+operator|*
+name|PointeeType
 argument_list|,
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|,
-argument|const Twine&NameStr
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|BasicBlock *InsertAtEnd
+name|BasicBlock
+operator|*
+name|InsertAtEnd
 argument_list|)
 block|{
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|GEP
-operator|=
+init|=
 name|Create
 argument_list|(
 name|PointeeType
@@ -3683,14 +3665,14 @@ name|NameStr
 argument_list|,
 name|InsertAtEnd
 argument_list|)
-block|;
+decl_stmt|;
 name|GEP
 operator|->
 name|setIsInBounds
 argument_list|(
 name|true
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|GEP
 return|;
@@ -3700,7 +3682,7 @@ name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
 argument_list|)
-block|;
+expr_stmt|;
 name|Type
 operator|*
 name|getSourceElementType
@@ -3713,24 +3695,30 @@ return|;
 block|}
 name|void
 name|setSourceElementType
-argument_list|(
-argument|Type *Ty
-argument_list|)
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|)
 block|{
 name|SourceElementType
 operator|=
 name|Ty
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setResultElementType
-argument_list|(
-argument|Type *Ty
-argument_list|)
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|)
 block|{
 name|ResultElementType
 operator|=
 name|Ty
-block|; }
+expr_stmt|;
+block|}
 name|Type
 operator|*
 name|getResultElementType
@@ -3782,7 +3770,7 @@ comment|/// pointer type.
 comment|///
 specifier|static
 name|Type
-operator|*
+modifier|*
 name|getIndexedType
 argument_list|(
 name|Type
@@ -3796,10 +3784,10 @@ operator|*
 operator|>
 name|IdxList
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|Type
-operator|*
+modifier|*
 name|getIndexedType
 argument_list|(
 name|Type
@@ -3813,10 +3801,10 @@ operator|*
 operator|>
 name|IdxList
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|Type
-operator|*
+modifier|*
 name|getIndexedType
 argument_list|(
 name|Type
@@ -3829,11 +3817,11 @@ name|uint64_t
 operator|>
 name|IdxList
 argument_list|)
-block|;
+decl_stmt|;
 specifier|inline
 name|op_iterator
 name|idx_begin
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|op_begin
@@ -3858,7 +3846,7 @@ block|}
 specifier|inline
 name|op_iterator
 name|idx_end
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|op_end
@@ -3916,9 +3904,9 @@ argument_list|)
 return|;
 block|}
 name|Value
-operator|*
+modifier|*
 name|getPointerOperand
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|getOperand
@@ -3944,7 +3932,7 @@ block|}
 specifier|static
 name|unsigned
 name|getPointerOperandIndex
-argument_list|()
+parameter_list|()
 block|{
 return|return
 literal|0U
@@ -3985,12 +3973,19 @@ comment|/// Returns the pointer type returned by the GEP
 comment|/// instruction, which may be a vector of pointers.
 specifier|static
 name|Type
-operator|*
+modifier|*
 name|getGEPReturnType
 argument_list|(
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|)
 block|{
 return|return
@@ -4021,20 +4016,29 @@ return|;
 block|}
 specifier|static
 name|Type
-operator|*
+modifier|*
 name|getGEPReturnType
 argument_list|(
-argument|Type *ElTy
+name|Type
+operator|*
+name|ElTy
 argument_list|,
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|)
 block|{
 name|Type
-operator|*
+modifier|*
 name|PtrTy
-operator|=
+init|=
 name|PointerType
 operator|::
 name|get
@@ -4057,7 +4061,7 @@ operator|->
 name|getPointerAddressSpace
 argument_list|()
 argument_list|)
-block|;
+decl_stmt|;
 comment|// Vector GEP
 if|if
 condition|(
@@ -4170,7 +4174,7 @@ name|bool
 name|hasAllZeroIndices
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Return true if all of the indices of this GEP are
 comment|/// constant integers.  If so, the result pointer and the first operand have
 comment|/// a constant offset between them.
@@ -4178,21 +4182,24 @@ name|bool
 name|hasAllConstantIndices
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Set or clear the inbounds flag on this GEP instruction.
 comment|/// See LangRef.html for the meaning of inbounds on a getelementptr.
 name|void
 name|setIsInBounds
-argument_list|(
-argument|bool b = true
-argument_list|)
-block|;
+parameter_list|(
+name|bool
+name|b
+init|=
+name|true
+parameter_list|)
+function_decl|;
 comment|/// Determine whether the GEP has the inbounds flag.
 name|bool
 name|isInBounds
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Accumulate the constant address offset of this GEP if possible.
 comment|///
 comment|/// This routine accepts an APInt into which it will accumulate the constant
@@ -4204,19 +4211,27 @@ comment|/// the base GEP pointer.
 name|bool
 name|accumulateConstantOffset
 argument_list|(
-argument|const DataLayout&DL
-argument_list|,
-argument|APInt&Offset
-argument_list|)
 specifier|const
-block|;
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+name|APInt
+operator|&
+name|Offset
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -4234,9 +4249,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 return|return
 name|isa
@@ -4259,8 +4277,14 @@ operator|)
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -4274,11 +4298,14 @@ name|public
 name|VariadicOperandTraits
 operator|<
 name|GetElementPtrInst
-block|,
+operator|,
 literal|1
 operator|>
 block|{ }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|GetElementPtrInst
 operator|::
 name|GetElementPtrInst
@@ -4325,12 +4352,12 @@ name|Values
 argument_list|,
 name|InsertBefore
 argument_list|)
-block|,
+operator|,
 name|SourceElementType
 argument_list|(
 name|PointeeType
 argument_list|)
-block|,
+operator|,
 name|ResultElementType
 argument_list|(
 argument|getIndexedType(PointeeType, IdxList)
@@ -4411,12 +4438,12 @@ name|Values
 argument_list|,
 name|InsertAtEnd
 argument_list|)
-block|,
+operator|,
 name|SourceElementType
 argument_list|(
 name|PointeeType
 argument_list|)
-block|,
+operator|,
 name|ResultElementType
 argument_list|(
 argument|getIndexedType(PointeeType, IdxList)
@@ -4476,19 +4503,8 @@ argument_list|()
 block|{
 name|assert
 argument_list|(
-name|getPredicate
+name|isIntPredicate
 argument_list|()
-operator|>=
-name|CmpInst
-operator|::
-name|FIRST_ICMP_PREDICATE
-operator|&&
-name|getPredicate
-argument_list|()
-operator|<=
-name|CmpInst
-operator|::
-name|LAST_ICMP_PREDICATE
 operator|&&
 literal|"Invalid ICmp predicate value"
 argument_list|)
@@ -4718,11 +4734,26 @@ name|getSignedPredicate
 argument_list|(
 argument|Predicate pred
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// For example, EQ->EQ, SLE->ULE, UGT->UGT, etc.
+end_comment
+
+begin_comment
 comment|/// @returns the predicate that would be the result if the operand were
+end_comment
+
+begin_comment
 comment|/// regarded as unsigned.
+end_comment
+
+begin_comment
 comment|/// Return the unsigned version of the predicate
+end_comment
+
+begin_expr_stmt
 name|Predicate
 name|getUnsignedPredicate
 argument_list|()
@@ -4736,23 +4767,43 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// This is a static version that you can use without an instruction.
+end_comment
+
+begin_comment
 comment|/// Return the unsigned version of the predicate.
+end_comment
+
+begin_function_decl
 specifier|static
 name|Predicate
 name|getUnsignedPredicate
-argument_list|(
-argument|Predicate pred
-argument_list|)
-block|;
+parameter_list|(
+name|Predicate
+name|pred
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Return true if this predicate is either EQ or NE.  This also
+end_comment
+
+begin_comment
 comment|/// tests for commutativity.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|isEquality
-argument_list|(
-argument|Predicate P
-argument_list|)
+parameter_list|(
+name|Predicate
+name|P
+parameter_list|)
 block|{
 return|return
 name|P
@@ -4764,8 +4815,17 @@ operator|==
 name|ICMP_NE
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Return true if this predicate is either EQ or NE.  This also
+end_comment
+
+begin_comment
 comment|/// tests for commutativity.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isEquality
 argument_list|()
@@ -4779,8 +4839,17 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @returns true if the predicate of this ICmpInst is commutative
+end_comment
+
+begin_comment
 comment|/// Determine if this relation is commutative.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isCommutative
 argument_list|()
@@ -4791,8 +4860,17 @@ name|isEquality
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Return true if the predicate is relational (not EQ or NE).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isRelational
 argument_list|()
@@ -4804,14 +4882,24 @@ name|isEquality
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Return true if the predicate is relational (not EQ or NE).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|isRelational
-argument_list|(
-argument|Predicate P
-argument_list|)
+parameter_list|(
+name|Predicate
+name|P
+parameter_list|)
 block|{
 return|return
 operator|!
@@ -4821,21 +4909,39 @@ name|P
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Exchange the two operands to this instruction in such a way that it does
+end_comment
+
+begin_comment
 comment|/// not modify the semantics of the instruction. The predicate value may be
+end_comment
+
+begin_comment
 comment|/// changed to retain the same result if the predicate is order dependent
+end_comment
+
+begin_comment
 comment|/// (e.g. ult).
+end_comment
+
+begin_comment
 comment|/// Swap operands and adjust predicate.
+end_comment
+
+begin_function
 name|void
 name|swapOperands
-argument_list|()
+parameter_list|()
 block|{
 name|setPredicate
 argument_list|(
 name|getSwappedPredicate
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
 name|Op
 operator|<
 literal|0
@@ -4852,14 +4958,24 @@ operator|>
 operator|(
 operator|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
 block|{
 return|return
 name|I
@@ -4872,12 +4988,18 @@ operator|::
 name|ICmp
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 return|return
 name|isa
@@ -4900,18 +5022,41 @@ operator|)
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                               FCmpInst Class
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// This instruction compares its operands according to the predicate given
+end_comment
+
+begin_comment
 comment|/// to the constructor. It only operates on floating point values or packed
+end_comment
+
+begin_comment
 comment|/// vectors of floating point values. The operands must be identical types.
+end_comment
+
+begin_comment
 comment|/// Represents a floating point comparison operator.
+end_comment
+
+begin_decl_stmt
 name|class
 name|FCmpInst
-operator|:
+range|:
 name|public
 name|CmpInst
 block|{
@@ -4921,12 +5066,8 @@ argument_list|()
 block|{
 name|assert
 argument_list|(
-name|getPredicate
+name|isFPPredicate
 argument_list|()
-operator|<=
-name|FCmpInst
-operator|::
-name|LAST_FCMP_PREDICATE
 operator|&&
 literal|"Invalid FCmp predicate value"
 argument_list|)
@@ -7769,6 +7910,9 @@ condition|)
 return|return
 name|false
 return|;
+end_decl_stmt
+
+begin_if
 if|if
 condition|(
 specifier|const
@@ -7794,17 +7938,32 @@ argument_list|,
 name|Kind
 argument_list|)
 return|;
+end_if
+
+begin_return
 return|return
 name|false
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
+end_comment
+
+begin_comment
 comment|// method so that subclasses cannot accidentally use it.
-name|void
+end_comment
+
+begin_macro
+unit|void
 name|setInstructionSubclassData
 argument_list|(
 argument|unsigned short D
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|Instruction
 operator|::
@@ -7812,9 +7971,12 @@ name|setInstructionSubclassData
 argument_list|(
 name|D
 argument_list|)
-block|;   }
-expr|}
-block|;
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -7828,11 +7990,14 @@ name|public
 name|VariadicOperandTraits
 operator|<
 name|CallInst
-block|,
+operator|,
 literal|1
 operator|>
 block|{ }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|CallInst
 operator|::
 name|CallInst
@@ -8206,21 +8371,35 @@ return|return
 name|Sel
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|SelectInst
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|Value *C
-argument_list|,
-argument|Value *S1
-argument_list|,
-argument|Value *S2
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
-argument_list|)
+parameter_list|(
+name|Value
+modifier|*
+name|C
+parameter_list|,
+name|Value
+modifier|*
+name|S1
+parameter_list|,
+name|Value
+modifier|*
+name|S2
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|NameStr
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|InsertAtEnd
+parameter_list|)
 block|{
 return|return
 name|new
@@ -8241,6 +8420,9 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -8257,6 +8439,9 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -8273,6 +8458,9 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -8289,10 +8477,13 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|Value
-operator|*
+modifier|*
 name|getCondition
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Op
@@ -8303,10 +8494,13 @@ operator|(
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|Value
-operator|*
+modifier|*
 name|getTrueValue
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Op
@@ -8317,10 +8511,13 @@ operator|(
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|Value
-operator|*
+modifier|*
 name|getFalseValue
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Op
@@ -8331,11 +8528,16 @@ operator|(
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setCondition
-argument_list|(
-argument|Value *V
-argument_list|)
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 name|Op
 operator|<
@@ -8345,12 +8547,18 @@ operator|(
 operator|)
 operator|=
 name|V
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setTrueValue
-argument_list|(
-argument|Value *V
-argument_list|)
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 name|Op
 operator|<
@@ -8360,12 +8568,18 @@ operator|(
 operator|)
 operator|=
 name|V
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setFalseValue
-argument_list|(
-argument|Value *V
-argument_list|)
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 name|Op
 operator|<
@@ -8375,34 +8589,53 @@ operator|(
 operator|)
 operator|=
 name|V
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// Return a string if the specified operands are invalid
+end_comment
+
+begin_comment
 comment|/// for a select operation, otherwise return null.
+end_comment
+
+begin_function_decl
 specifier|static
 specifier|const
 name|char
-operator|*
+modifier|*
 name|areInvalidOperands
-argument_list|(
+parameter_list|(
 name|Value
-operator|*
+modifier|*
 name|Cond
-argument_list|,
+parameter_list|,
 name|Value
-operator|*
+modifier|*
 name|True
-argument_list|,
+parameter_list|,
 name|Value
-operator|*
+modifier|*
 name|False
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Transparently provide more efficient getOperand methods.
+end_comment
+
+begin_expr_stmt
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|OtherOps
 name|getOpcode
 argument_list|()
@@ -8421,13 +8654,22 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
 block|{
 return|return
 name|I
@@ -8440,12 +8682,18 @@ operator|::
 name|Select
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 return|return
 name|isa
@@ -8468,8 +8716,10 @@ operator|)
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -8483,26 +8733,50 @@ name|public
 name|FixedNumOperandTraits
 operator|<
 name|SelectInst
-block|,
+operator|,
 literal|3
 operator|>
 block|{ }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|SelectInst
 argument_list|,
 argument|Value
 argument_list|)
+end_macro
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                                VAArgInst Class
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// This class represents the va_arg llvm instruction, which returns
+end_comment
+
+begin_comment
 comment|/// an argument of the specified type given a va_list and increments that list
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|VAArgInst
-operator|:
+range|:
 name|public
 name|UnaryInstruction
 block|{

@@ -134,6 +134,8 @@ block|,
 name|FULL_LTO_GLOBALVAL_SUMMARY_BLOCK_ID
 block|,
 name|SYMTAB_BLOCK_ID
+block|,
+name|SYNC_SCOPE_NAMES_BLOCK_ID
 block|, }
 enum|;
 comment|/// Identification block contains a string that describes the producer details,
@@ -409,6 +411,14 @@ literal|1
 block|,
 comment|// TAG: [strchr x N]
 block|}
+enum|;
+enum|enum
+name|SyncScopeNameCode
+block|{
+name|SYNC_SCOPE_NAME
+init|=
+literal|1
+block|, }
 enum|;
 comment|// Value symbol table codes.
 enum|enum
@@ -1128,19 +1138,6 @@ block|,
 name|ORDERING_SEQCST
 init|=
 literal|6
-block|}
-enum|;
-comment|/// Encoded SynchronizationScope values.
-enum|enum
-name|AtomicSynchScopeCodes
-block|{
-name|SYNCHSCOPE_SINGLETHREAD
-init|=
-literal|0
-block|,
-name|SYNCHSCOPE_CROSSTHREAD
-init|=
-literal|1
 block|}
 enum|;
 comment|/// Markers and flags for call instruction.
