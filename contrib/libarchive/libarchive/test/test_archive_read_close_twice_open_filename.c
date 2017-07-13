@@ -26,6 +26,13 @@ end_macro
 
 begin_block
 block|{
+specifier|const
+name|char
+modifier|*
+name|filename
+init|=
+literal|"empty.file"
+decl_stmt|;
 name|struct
 name|archive
 modifier|*
@@ -34,6 +41,15 @@ init|=
 name|archive_read_new
 argument_list|()
 decl_stmt|;
+name|assertMakeFile
+argument_list|(
+name|filename
+argument_list|,
+literal|0644
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
@@ -52,7 +68,7 @@ name|archive_read_open_filename
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|filename
 argument_list|,
 literal|0
 argument_list|)

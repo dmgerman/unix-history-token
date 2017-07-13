@@ -695,7 +695,7 @@ comment|/*  * Textual name/version of the library, useful for version displays. 
 define|#
 directive|define
 name|ARCHIVE_VERSION_ONLY_STRING
-value|"3.3.1"
+value|"3.3.2"
 define|#
 directive|define
 name|ARCHIVE_VERSION_STRING
