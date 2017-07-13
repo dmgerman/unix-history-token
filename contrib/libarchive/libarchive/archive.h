@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|3003001
+value|3003002
 end_define
 
 begin_include
