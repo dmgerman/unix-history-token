@@ -114,7 +114,7 @@ file|"vga.h"
 end_include
 
 begin_comment
-comment|/*  * bhyve Framebuffer device emulation.  * BAR0 points to the current mode information.  * BAR1 is the 32-bit framebuffer address.  *  *  -s<b>,fbuf,wait,tcp=<ip>:port,w=width,h=height  */
+comment|/*  * bhyve Framebuffer device emulation.  * BAR0 points to the current mode information.  * BAR1 is the 32-bit framebuffer address.  *  *  -s<b>,fbuf,wait,vga=on|io|off,rfb=<ip>:port,w=width,h=height  */
 end_comment
 
 begin_decl_stmt
