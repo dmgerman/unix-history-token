@@ -718,6 +718,67 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Decompose the machine operand's target flags into two values - the direct
+comment|/// target flag value and any of bit flags that are applied.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|decomposeMachineOperandsTargetFlags
+argument_list|(
+argument|unsigned TF
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Return an array that contains the direct target flag values and their
+comment|/// names.
+comment|///
+comment|/// MIR Serialization is able to serialize only the target flags that are
+comment|/// defined by this method.
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableDirectMachineOperandTargetFlags
+argument_list|()
+specifier|const
+name|override
+block|;
+comment|/// Return an array that contains the bitmask target flag values and their
+comment|/// names.
+comment|///
+comment|/// MIR Serialization is able to serialize only the target flags that are
+comment|/// defined by this method.
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableBitmaskMachineOperandTargetFlags
+argument_list|()
+specifier|const
+name|override
+block|;
 name|bool
 name|isTailCall
 argument_list|(

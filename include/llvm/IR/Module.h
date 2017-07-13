@@ -758,17 +758,18 @@ comment|/// A unique RNG per pass ensures a reproducible random stream even
 comment|/// when other randomness consuming passes are added or removed. In
 comment|/// addition, the random stream will be reproducible across LLVM
 comment|/// versions when the pass does not change.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RandomNumberGenerator
-modifier|*
+operator|>
 name|createRNG
 argument_list|(
-specifier|const
-name|Pass
-operator|*
-name|P
+argument|const Pass* P
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 comment|/// @}
 comment|/// @name Module Level Mutators
 comment|/// @{

@@ -7795,6 +7795,42 @@ name|Tag
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// A set of interned synchronization scopes.  The StringMap maps
+comment|/// synchronization scope names to their respective synchronization scope IDs.
+name|StringMap
+operator|<
+name|SyncScope
+operator|::
+name|ID
+operator|>
+name|SSC
+expr_stmt|;
+comment|/// getOrInsertSyncScopeID - Maps synchronization scope name to
+comment|/// synchronization scope ID.  Every synchronization scope registered with
+comment|/// LLVMContext has unique ID except pre-defined ones.
+name|SyncScope
+operator|::
+name|ID
+name|getOrInsertSyncScopeID
+argument_list|(
+argument|StringRef SSN
+argument_list|)
+expr_stmt|;
+comment|/// getSyncScopeNames - Populates client supplied SmallVector with
+comment|/// synchronization scope names registered with LLVMContext.  Synchronization
+comment|/// scope names are ordered by increasing synchronization scope IDs.
+name|void
+name|getSyncScopeNames
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|StringRef
+operator|>
+operator|&
+name|SSNs
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Maintain the GC name for each function.
 comment|///
 comment|/// This saves allocating an additional word in Function for programs which

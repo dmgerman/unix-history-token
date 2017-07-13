@@ -1748,7 +1748,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/// \brief Resolve relocations to external symbols.
-name|void
+name|Error
 name|resolveExternalSymbols
 parameter_list|()
 function_decl|;

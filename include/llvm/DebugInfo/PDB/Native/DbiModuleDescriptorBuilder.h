@@ -180,6 +180,13 @@ operator|=
 name|delete
 decl_stmt|;
 name|void
+name|setPdbFilePathNI
+parameter_list|(
+name|uint32_t
+name|NI
+parameter_list|)
+function_decl|;
+name|void
 name|setObjFileName
 parameter_list|(
 name|StringRef
@@ -276,6 +283,19 @@ name|calculateSerializedLength
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Return the offset within the module symbol stream of the next symbol
+comment|/// record passed to addSymbol. Add four to account for the signature.
+name|uint32_t
+name|getNextSymbolOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SymbolByteSize
+operator|+
+literal|4
+return|;
+block|}
 name|void
 name|finalize
 parameter_list|()
@@ -324,6 +344,11 @@ name|MSF
 expr_stmt|;
 name|uint32_t
 name|SymbolByteSize
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|PdbFilePathNI
 init|=
 literal|0
 decl_stmt|;

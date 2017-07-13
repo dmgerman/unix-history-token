@@ -2294,27 +2294,6 @@ argument_list|,
 argument|Data
 argument_list|)
 block|{}
-comment|/// Allocate space for exactly zero operands.
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|public
 operator|:
 name|ConstantDataArray
@@ -2575,27 +2554,6 @@ argument_list|,
 argument|Data
 argument_list|)
 block|{}
-comment|// allocate space for exactly zero operands.
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|public
 operator|:
 name|ConstantDataVector

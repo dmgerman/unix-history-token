@@ -74,7 +74,7 @@ name|NativeCompilandSymbol
 argument_list|(
 argument|NativeSession&Session
 argument_list|,
-argument|uint32_t SymbolId
+argument|SymIndexId SymbolId
 argument_list|,
 argument|DbiModuleDescriptor MI
 argument_list|)

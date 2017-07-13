@@ -237,11 +237,34 @@ name|createDataLayout
 argument_list|()
 argument_list|)
 operator|,
+name|ObjectLayer
+argument_list|(
+index|[]
+operator|(
+operator|)
+block|{
+return|return
+name|std
+operator|::
+name|make_shared
+operator|<
+name|SectionMemoryManager
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+block|)
+decl_stmt|,
 name|CompileLayer
 argument_list|(
-argument|ObjectLayer
+name|ObjectLayer
 argument_list|,
-argument|SimpleCompiler(*TM)
+name|SimpleCompiler
+argument_list|(
+operator|*
+name|TM
+argument_list|)
 argument_list|)
 block|{
 name|llvm
@@ -254,11 +277,12 @@ name|LoadLibraryPermanently
 argument_list|(
 name|nullptr
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 name|TargetMachine
-operator|&
+modifier|&
 name|getTargetMachine
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|*
@@ -364,9 +388,20 @@ return|;
 block|}
 block|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Add the set to the JIT with the resolver we created above and a newly
+end_comment
+
+begin_comment
 comment|// created SectionMemoryManager.
+end_comment
+
+begin_return
 return|return
+name|cantFail
+argument_list|(
 name|CompileLayer
 operator|.
 name|addModule
@@ -378,13 +413,6 @@ argument_list|(
 name|M
 argument_list|)
 argument_list|,
-name|make_unique
-operator|<
-name|SectionMemoryManager
-operator|>
-operator|(
-operator|)
-argument_list|,
 name|std
 operator|::
 name|move
@@ -392,20 +420,19 @@ argument_list|(
 name|Resolver
 argument_list|)
 argument_list|)
+argument_list|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
-begin_decl_stmt
-name|JITSymbol
+begin_macro
+unit|}    JITSymbol
 name|findSymbol
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-name|Name
+argument|const std::string Name
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|std
 operator|::
@@ -443,7 +470,7 @@ name|true
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_block
 
 begin_function
 name|void
@@ -453,11 +480,14 @@ name|ModuleHandle
 name|H
 parameter_list|)
 block|{
+name|cantFail
+argument_list|(
 name|CompileLayer
 operator|.
 name|removeModule
 argument_list|(
 name|H
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

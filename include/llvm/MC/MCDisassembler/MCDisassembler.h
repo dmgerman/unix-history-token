@@ -166,6 +166,7 @@ comment|///                   the number of bytes consumed while attempting to d
 comment|///                   an invalid instruction.
 comment|/// \param Address  - The address, in the memory space of region, of the first
 comment|///                   byte of the instruction.
+comment|/// \param Bytes    - A reference to the actual bytes of the instruction.
 comment|/// \param VStream  - The stream to print warnings and diagnostic messages on.
 comment|/// \param CStream  - The stream to print comments and annotations on.
 comment|/// \return         - MCDisassembler::Success if the instruction is valid,

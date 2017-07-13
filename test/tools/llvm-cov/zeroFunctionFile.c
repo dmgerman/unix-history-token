@@ -53,7 +53,7 @@ comment|// REPORT-NO: 0%
 end_comment
 
 begin_comment
-comment|// RUN: llvm-cov show %S/Inputs/zeroFunctionFile.covmapping -format html -instr-profile %t.profdata -o %t.dir
+comment|// RUN: llvm-cov show -j 1 %S/Inputs/zeroFunctionFile.covmapping -format html -instr-profile %t.profdata -o %t.dir
 end_comment
 
 begin_comment

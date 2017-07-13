@@ -166,9 +166,6 @@ name|class
 name|ExtractElementInst
 decl_stmt|;
 name|class
-name|ExtractValueInst
-decl_stmt|;
-name|class
 name|FCmpInst
 decl_stmt|;
 name|class
@@ -209,9 +206,6 @@ name|InvokeInst
 decl_stmt|;
 name|class
 name|InsertElementInst
-decl_stmt|;
-name|class
-name|InsertValueInst
 decl_stmt|;
 name|class
 name|Instruction
@@ -3436,7 +3430,7 @@ name|void
 name|visitExtractValue
 parameter_list|(
 specifier|const
-name|ExtractValueInst
+name|User
 modifier|&
 name|I
 parameter_list|)
@@ -3445,7 +3439,7 @@ name|void
 name|visitInsertValue
 parameter_list|(
 specifier|const
-name|InsertValueInst
+name|User
 modifier|&
 name|I
 parameter_list|)

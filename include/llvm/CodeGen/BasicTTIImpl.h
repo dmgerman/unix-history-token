@@ -2128,10 +2128,7 @@ name|IsFloat
 init|=
 name|Ty
 operator|->
-name|getScalarType
-argument_list|()
-operator|->
-name|isFloatingPointTy
+name|isFPOrFPVectorTy
 argument_list|()
 decl_stmt|;
 comment|// Assume that floating point arithmetic operations cost twice as much as

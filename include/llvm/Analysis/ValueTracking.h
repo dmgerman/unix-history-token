@@ -1811,7 +1811,7 @@ argument|const Value *RHS
 argument_list|,
 argument|const DataLayout&DL
 argument_list|,
-argument|bool InvertAPred = false
+argument|bool LHSIsFalse = false
 argument_list|,
 argument|unsigned Depth =
 literal|0

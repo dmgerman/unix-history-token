@@ -287,6 +287,8 @@ name|QuotedIRValue
 block|,
 comment|// `<constant value>`
 name|SubRegisterIndex
+block|,
+name|StringConstant
 block|}
 enum|;
 name|private
@@ -486,6 +488,10 @@ operator|||
 name|Kind
 operator|==
 name|kw_invariant
+operator|||
+name|Kind
+operator|==
+name|StringConstant
 return|;
 block|}
 name|bool

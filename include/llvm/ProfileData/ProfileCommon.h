@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ProfileData/InstrProf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Error.h"
 end_include
 
@@ -121,9 +127,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-struct_decl|struct
-name|InstrProfRecord
-struct_decl|;
 name|namespace
 name|sampleprof
 block|{

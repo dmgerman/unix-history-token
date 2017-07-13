@@ -102,18 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/BinaryFormat/Dwarf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/DIBuilder.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Dominators.h"
 end_include
 
@@ -868,7 +856,7 @@ operator|>
 name|BuilderTy
 expr_stmt|;
 name|BuilderTy
-modifier|*
+modifier|&
 name|Builder
 decl_stmt|;
 name|private
@@ -924,7 +912,7 @@ name|InstCombiner
 argument_list|(
 argument|InstCombineWorklist&Worklist
 argument_list|,
-argument|BuilderTy *Builder
+argument|BuilderTy&Builder
 argument_list|,
 argument|bool MinimizeSize
 argument_list|,
@@ -3129,11 +3117,6 @@ name|Value
 modifier|*
 name|tryFactorization
 argument_list|(
-name|InstCombiner
-operator|::
-name|BuilderTy
-operator|*
-argument_list|,
 name|BinaryOperator
 operator|&
 argument_list|,
@@ -3338,15 +3321,6 @@ function_decl|;
 name|Value
 modifier|*
 name|SimplifyVectorOp
-parameter_list|(
-name|BinaryOperator
-modifier|&
-name|Inst
-parameter_list|)
-function_decl|;
-name|Value
-modifier|*
-name|SimplifyBSwap
 parameter_list|(
 name|BinaryOperator
 modifier|&

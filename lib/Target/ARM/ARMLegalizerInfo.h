@@ -62,7 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IndexedMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/GlobalISel/LegalizerInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/RuntimeLibcalls.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_decl_stmt
@@ -100,6 +118,74 @@ argument|MachineIRBuilder&MIRBuilder
 argument_list|)
 specifier|const
 name|override
+block|;
+name|private
+operator|:
+name|void
+name|setFCmpLibcallsGNU
+argument_list|()
+block|;
+name|void
+name|setFCmpLibcallsAEABI
+argument_list|()
+block|;    struct
+name|FCmpLibcallInfo
+block|{
+comment|// Which libcall this is.
+name|RTLIB
+operator|::
+name|Libcall
+name|LibcallID
+block|;
+comment|// The predicate to be used when comparing the value returned by the
+comment|// function with a relevant constant (currently hard-coded to zero). This is
+comment|// necessary because often the libcall will return e.g. a value greater than
+comment|// 0 to represent 'true' and anything negative to represent 'false', or
+comment|// maybe 0 to represent 'true' and non-zero for 'false'. If no comparison is
+comment|// needed, this should be CmpInst::BAD_ICMP_PREDICATE.
+name|CmpInst
+operator|::
+name|Predicate
+name|Predicate
+block|;   }
+block|;
+name|using
+name|FCmpLibcallsList
+operator|=
+name|SmallVector
+operator|<
+name|FCmpLibcallInfo
+block|,
+literal|2
+operator|>
+block|;
+comment|// Map from each FCmp predicate to the corresponding libcall infos. A FCmp
+comment|// instruction may be lowered to one or two libcalls, which is why we need a
+comment|// list. If two libcalls are needed, their results will be OR'ed.
+name|using
+name|FCmpLibcallsMapTy
+operator|=
+name|IndexedMap
+operator|<
+name|FCmpLibcallsList
+operator|>
+block|;
+name|FCmpLibcallsMapTy
+name|FCmp32Libcalls
+block|;
+name|FCmpLibcallsMapTy
+name|FCmp64Libcalls
+block|;
+comment|// Get the libcall(s) corresponding to \p Predicate for operands of \p Size
+comment|// bits.
+name|FCmpLibcallsList
+name|getFCmpLibcalls
+argument_list|(
+argument|CmpInst::Predicate
+argument_list|,
+argument|unsigned Size
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

@@ -1332,6 +1332,25 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|// Return true if it is profitable to combine a BUILD_VECTOR to a TRUNCATE
+comment|// for given operand and result types.
+comment|// Example of such a combine:
+comment|// v4i32 build_vector((extract_elt V, 0),
+comment|//                    (extract_elt V, 2),
+comment|//                    (extract_elt V, 4),
+comment|//                    (extract_elt V, 6))
+comment|//  -->
+comment|// v4i32 truncate (bitcast V to v4i64)
+name|bool
+name|isDesirableToCombineBuildVectorToTruncate
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// Return true if the target has native support for
 comment|/// the specified value type and it is 'desirable' to use the type for the
 comment|/// given node type. e.g. On x86 i16 is legal, but undesirable since i16

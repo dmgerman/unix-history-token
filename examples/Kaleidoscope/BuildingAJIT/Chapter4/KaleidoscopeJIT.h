@@ -478,6 +478,25 @@ name|createDataLayout
 argument_list|()
 argument_list|)
 operator|,
+name|ObjectLayer
+argument_list|(
+index|[]
+operator|(
+operator|)
+block|{
+return|return
+name|std
+operator|::
+name|make_shared
+operator|<
+name|SectionMemoryManager
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+block|)
+decl_stmt|,
 name|CompileLayer
 argument_list|(
 name|ObjectLayer
@@ -488,7 +507,7 @@ operator|*
 name|TM
 argument_list|)
 argument_list|)
-operator|,
+decl_stmt|,
 name|OptimizeLayer
 argument_list|(
 name|CompileLayer
@@ -689,9 +708,12 @@ name|nullptr
 argument_list|)
 return|;
 block|}
-block|)
-decl_stmt|;
 end_decl_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|// Add the set to the JIT with the resolver we created above and a newly
@@ -703,6 +725,8 @@ end_comment
 
 begin_return
 return|return
+name|cantFail
+argument_list|(
 name|OptimizeLayer
 operator|.
 name|addModule
@@ -714,18 +738,12 @@ argument_list|(
 name|M
 argument_list|)
 argument_list|,
-name|make_unique
-operator|<
-name|SectionMemoryManager
-operator|>
-operator|(
-operator|)
-argument_list|,
 name|std
 operator|::
 name|move
 argument_list|(
 name|Resolver
+argument_list|)
 argument_list|)
 argument_list|)
 return|;
@@ -880,10 +898,13 @@ block|;
 name|JITTargetAddress
 name|SymAddr
 operator|=
+name|cantFail
+argument_list|(
 name|Sym
 operator|.
 name|getAddress
 argument_list|()
+argument_list|)
 block|;
 if|if
 condition|(
@@ -981,11 +1002,14 @@ name|ModuleHandle
 name|H
 parameter_list|)
 block|{
+name|cantFail
+argument_list|(
 name|OptimizeLayer
 operator|.
 name|removeModule
 argument_list|(
 name|H
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

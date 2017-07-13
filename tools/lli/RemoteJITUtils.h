@@ -450,7 +450,7 @@ block|;   }
 name|void
 name|setResolver
 argument_list|(
-argument|std::unique_ptr<JITSymbolResolver> Resolver
+argument|std::shared_ptr<JITSymbolResolver> Resolver
 argument_list|)
 block|{
 name|this
@@ -690,7 +690,7 @@ name|MemMgr
 block|;
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|JITSymbolResolver
 operator|>

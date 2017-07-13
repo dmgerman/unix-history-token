@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<bitset>
 end_include
 
@@ -97,10 +103,19 @@ directive|include
 file|<initializer_list>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|LLT
+decl_stmt|;
 name|class
 name|MachineInstr
 decl_stmt|;
@@ -210,6 +225,147 @@ argument_list|)
 expr_stmt|;
 block|}
 expr|}
+block|;  enum
+block|{
+comment|/// Record the specified instruction
+comment|/// - NewInsnID - Instruction ID to define
+comment|/// - InsnID - Instruction ID
+comment|/// - OpIdx - Operand index
+name|GIM_RecordInsn
+block|,
+comment|/// Check the feature bits
+comment|/// - Expected features
+name|GIM_CheckFeatures
+block|,
+comment|/// Check the opcode on the specified instruction
+comment|/// - InsnID - Instruction ID
+comment|/// - Expected opcode
+name|GIM_CheckOpcode
+block|,
+comment|/// Check the instruction has the right number of operands
+comment|/// - InsnID - Instruction ID
+comment|/// - Expected number of operands
+name|GIM_CheckNumOperands
+block|,
+comment|/// Check the type for the specified operand
+comment|/// - InsnID - Instruction ID
+comment|/// - OpIdx - Operand index
+comment|/// - Expected type
+name|GIM_CheckType
+block|,
+comment|/// Check the register bank for the specified operand
+comment|/// - InsnID - Instruction ID
+comment|/// - OpIdx - Operand index
+comment|/// - Expected register bank (specified as a register class)
+name|GIM_CheckRegBankForClass
+block|,
+comment|/// Check the operand matches a complex predicate
+comment|/// - InsnID - Instruction ID
+comment|/// - OpIdx - Operand index
+comment|/// - RendererID - The renderer to hold the result
+comment|/// - Complex predicate ID
+name|GIM_CheckComplexPattern
+block|,
+comment|/// Check the operand is a specific integer
+comment|/// - InsnID - Instruction ID
+comment|/// - OpIdx - Operand index
+comment|/// - Expected integer
+name|GIM_CheckConstantInt
+block|,
+comment|/// Check the operand is a specific literal integer (i.e. MO.isImm() or MO.isCImm() is true).
+comment|/// - InsnID - Instruction ID
+comment|/// - OpIdx - Operand index
+comment|/// - Expected integer
+name|GIM_CheckLiteralInt
+block|,
+comment|/// Check the operand is a specific intrinsic ID
+comment|/// - InsnID - Instruction ID
+comment|/// - OpIdx - Operand index
+comment|/// - Expected Intrinsic ID
+name|GIM_CheckIntrinsicID
+block|,
+comment|/// Check the specified operand is an MBB
+comment|/// - InsnID - Instruction ID
+comment|/// - OpIdx - Operand index
+name|GIM_CheckIsMBB
+block|,
+comment|/// Check if the specified operand is safe to fold into the current
+comment|/// instruction.
+comment|/// - InsnID - Instruction ID
+name|GIM_CheckIsSafeToFold
+block|,
+comment|//=== Renderers ===
+comment|/// Mutate an instruction
+comment|/// - NewInsnID - Instruction ID to define
+comment|/// - OldInsnID - Instruction ID to mutate
+comment|/// - NewOpcode - The new opcode to use
+name|GIR_MutateOpcode
+block|,
+comment|/// Build a new instruction
+comment|/// - InsnID - Instruction ID to define
+comment|/// - Opcode - The new opcode to use
+name|GIR_BuildMI
+block|,
+comment|/// Copy an operand to the specified instruction
+comment|/// - NewInsnID - Instruction ID to modify
+comment|/// - OldInsnID - Instruction ID to copy from
+comment|/// - OpIdx - The operand to copy
+name|GIR_Copy
+block|,
+comment|/// Copy an operand to the specified instruction
+comment|/// - NewInsnID - Instruction ID to modify
+comment|/// - OldInsnID - Instruction ID to copy from
+comment|/// - OpIdx - The operand to copy
+comment|/// - SubRegIdx - The subregister to copy
+name|GIR_CopySubReg
+block|,
+comment|/// Add an implicit register def to the specified instruction
+comment|/// - InsnID - Instruction ID to modify
+comment|/// - RegNum - The register to add
+name|GIR_AddImplicitDef
+block|,
+comment|/// Add an implicit register use to the specified instruction
+comment|/// - InsnID - Instruction ID to modify
+comment|/// - RegNum - The register to add
+name|GIR_AddImplicitUse
+block|,
+comment|/// Add an register to the specified instruction
+comment|/// - InsnID - Instruction ID to modify
+comment|/// - RegNum - The register to add
+name|GIR_AddRegister
+block|,
+comment|/// Add an immediate to the specified instruction
+comment|/// - InsnID - Instruction ID to modify
+comment|/// - Imm - The immediate to add
+name|GIR_AddImm
+block|,
+comment|/// Render complex operands to the specified instruction
+comment|/// - InsnID - Instruction ID to modify
+comment|/// - RendererID - The renderer to call
+name|GIR_ComplexRenderer
+block|,
+comment|/// Constrain an instruction operand to a register class.
+comment|/// - InsnID - Instruction ID to modify
+comment|/// - OpIdx - Operand index
+comment|/// - RCEnum - Register class enumeration value
+name|GIR_ConstrainOperandRC
+block|,
+comment|/// Constrain an instructions operands according to the instruction
+comment|/// description.
+comment|/// - InsnID - Instruction ID to modify
+name|GIR_ConstrainSelectedInstOperands
+block|,
+comment|/// Merge all memory operands into instruction.
+comment|/// - InsnID - Instruction ID to modify
+name|GIR_MergeMemOperands
+block|,
+comment|/// Erase from parent.
+comment|/// - InsnID - Instruction ID to erase
+name|GIR_EraseFromParent
+block|,
+comment|/// A successful emission
+name|GIR_Done
+block|, }
 block|;
 comment|/// Provides the logic to select generic machine instructions.
 name|class
@@ -261,8 +417,123 @@ operator|&
 argument_list|)
 operator|>
 block|;
+name|using
+name|RecordedMIVector
+operator|=
+name|SmallVector
+operator|<
+name|MachineInstr
+operator|*
+block|,
+literal|4
+operator|>
+block|;
+name|using
+name|NewMIVector
+operator|=
+name|SmallVector
+operator|<
+name|MachineInstrBuilder
+block|,
+literal|4
+operator|>
+block|;    struct
+name|MatcherState
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|ComplexRendererFn
+operator|>
+name|Renderers
+block|;
+name|RecordedMIVector
+name|MIs
+block|;
+name|MatcherState
+argument_list|(
+argument|unsigned MaxRenderers
+argument_list|)
+block|;   }
+block|;
+name|public
+operator|:
+name|template
+operator|<
+name|class
+name|PredicateBitset
+block|,
+name|class
+name|ComplexMatcherMemFn
+operator|>
+expr|struct
+name|MatcherInfoTy
+block|{
+specifier|const
+name|LLT
+operator|*
+name|TypeObjects
+block|;
+specifier|const
+name|PredicateBitset
+operator|*
+name|FeatureBitsets
+block|;
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|ComplexMatcherMemFn
+operator|>
+name|ComplexPredicates
+block|;   }
+block|;
+name|protected
+operator|:
 name|InstructionSelector
 argument_list|()
+block|;
+comment|/// Execute a given matcher table and return true if the match was successful
+comment|/// and false otherwise.
+name|template
+operator|<
+name|class
+name|TgtInstructionSelector
+block|,
+name|class
+name|PredicateBitset
+block|,
+name|class
+name|ComplexMatcherMemFn
+operator|>
+name|bool
+name|executeMatchTable
+argument_list|(
+argument|TgtInstructionSelector&ISel
+argument_list|,
+argument|NewMIVector&OutMIs
+argument_list|,
+argument|MatcherState&State
+argument_list|,
+argument|const MatcherInfoTy<PredicateBitset
+argument_list|,
+argument|ComplexMatcherMemFn>&MatcherInfo
+argument_list|,
+argument|const int64_t *MatchTable
+argument_list|,
+argument|const TargetInstrInfo&TII
+argument_list|,
+argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|const TargetRegisterInfo&TRI
+argument_list|,
+argument|const RegisterBankInfo&RBI
+argument_list|,
+argument|const PredicateBitset&AvailableFeatures
+argument_list|)
+specifier|const
 block|;
 comment|/// Constrain a register operand of an instruction \p I to a specified
 comment|/// register class. This could involve inserting COPYs before (for uses) or

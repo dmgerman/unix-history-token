@@ -80,6 +80,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/Orc/OrcError.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
 end_include
 
@@ -319,7 +331,7 @@ argument_list|)
 block|{}
 comment|/// @brief Run the recorded constructors/destructors through the given JIT
 comment|///        layer.
-name|bool
+name|Error
 name|runViaLayer
 argument_list|(
 argument|JITLayerT&JITLayer
@@ -334,11 +346,6 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|()
-block|;
-name|bool
-name|Error
-operator|=
-name|false
 block|;
 for|for
 control|(
@@ -366,6 +373,17 @@ name|false
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|auto
+name|AddrOrErr
+init|=
+name|CtorDtorSym
+operator|.
+name|getAddress
+argument_list|()
+condition|)
+block|{
 name|CtorDtorTy
 name|CtorDtor
 init|=
@@ -379,10 +397,8 @@ operator|<
 name|uintptr_t
 operator|>
 operator|(
-name|CtorDtorSym
-operator|.
-name|getAddress
-argument_list|()
+operator|*
+name|AddrOrErr
 operator|)
 operator|)
 decl_stmt|;
@@ -391,17 +407,48 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
-name|Error
-operator|=
-name|true
-expr_stmt|;
 return|return
-operator|!
+name|AddrOrErr
+operator|.
+name|takeError
+argument_list|()
+return|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|auto
+name|Err
+init|=
+name|CtorDtorSym
+operator|.
+name|takeError
+argument_list|()
+condition|)
+return|return
+name|Err
+return|;
+else|else
+return|return
+name|make_error
+operator|<
+name|JITSymbolNotFound
+operator|>
+operator|(
+name|CtorDtorName
+operator|)
+return|;
+block|}
+return|return
 name|Error
+operator|::
+name|success
+argument_list|()
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|std
 operator|::
 name|vector
@@ -411,15 +458,14 @@ operator|::
 name|string
 operator|>
 name|CtorDtorNames
-expr_stmt|;
+block|;
 name|typename
 name|JITLayerT
 operator|::
 name|ModuleHandleT
 name|H
+block|; }
 expr_stmt|;
-block|}
-empty_stmt|;
 comment|/// @brief Support class for static dtor execution. For hosted (in-process) JITs
 comment|///        only!
 comment|///
@@ -646,14 +692,11 @@ name|DSOHandle
 parameter_list|)
 function_decl|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace orc
 end_comment
 

@@ -893,6 +893,16 @@ modifier|&
 name|I
 parameter_list|)
 function_decl|;
+name|private
+label|:
+name|bool
+name|CheckedZextOrTrunc
+parameter_list|(
+name|APInt
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 typedef|typedef

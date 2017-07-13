@@ -693,6 +693,26 @@ name|MEMCPY_ELEMENT_UNORDERED_ATOMIC_8
 block|,
 name|MEMCPY_ELEMENT_UNORDERED_ATOMIC_16
 block|,
+name|MEMMOVE_ELEMENT_UNORDERED_ATOMIC_1
+block|,
+name|MEMMOVE_ELEMENT_UNORDERED_ATOMIC_2
+block|,
+name|MEMMOVE_ELEMENT_UNORDERED_ATOMIC_4
+block|,
+name|MEMMOVE_ELEMENT_UNORDERED_ATOMIC_8
+block|,
+name|MEMMOVE_ELEMENT_UNORDERED_ATOMIC_16
+block|,
+name|MEMSET_ELEMENT_UNORDERED_ATOMIC_1
+block|,
+name|MEMSET_ELEMENT_UNORDERED_ATOMIC_2
+block|,
+name|MEMSET_ELEMENT_UNORDERED_ATOMIC_4
+block|,
+name|MEMSET_ELEMENT_UNORDERED_ATOMIC_8
+block|,
+name|MEMSET_ELEMENT_UNORDERED_ATOMIC_16
+block|,
 comment|// EXCEPTION HANDLING
 name|UNWIND_RESUME
 block|,
@@ -1027,6 +1047,26 @@ comment|/// MEMCPY_ELEMENT_UNORDERED_ATOMIC_* value for the given element size o
 comment|/// UNKNOW_LIBCALL if there is none.
 name|Libcall
 name|getMEMCPY_ELEMENT_UNORDERED_ATOMIC
+parameter_list|(
+name|uint64_t
+name|ElementSize
+parameter_list|)
+function_decl|;
+comment|/// getMEMMOVE_ELEMENT_UNORDERED_ATOMIC - Return
+comment|/// MEMMOVE_ELEMENT_UNORDERED_ATOMIC_* value for the given element size or
+comment|/// UNKNOW_LIBCALL if there is none.
+name|Libcall
+name|getMEMMOVE_ELEMENT_UNORDERED_ATOMIC
+parameter_list|(
+name|uint64_t
+name|ElementSize
+parameter_list|)
+function_decl|;
+comment|/// getMEMSET_ELEMENT_UNORDERED_ATOMIC - Return
+comment|/// MEMSET_ELEMENT_UNORDERED_ATOMIC_* value for the given element size or
+comment|/// UNKNOW_LIBCALL if there is none.
+name|Libcall
+name|getMEMSET_ELEMENT_UNORDERED_ATOMIC
 parameter_list|(
 name|uint64_t
 name|ElementSize

@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Constants.h"
 end_include
 
@@ -197,6 +203,107 @@ name|bool
 name|IsExtend
 parameter_list|)
 function_decl|;
+name|MachineInstrBuilder
+name|buildBinaryOp
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|unsigned
+name|Res
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|unsigned
+name|Op1
+parameter_list|)
+function_decl|;
+name|unsigned
+name|getDestFromArg
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+return|return
+name|Reg
+return|;
+block|}
+name|unsigned
+name|getDestFromArg
+parameter_list|(
+name|LLT
+name|Ty
+parameter_list|)
+block|{
+return|return
+name|getMF
+argument_list|()
+operator|.
+name|getRegInfo
+argument_list|()
+operator|.
+name|createGenericVirtualRegister
+argument_list|(
+name|Ty
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getDestFromArg
+parameter_list|(
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|)
+block|{
+return|return
+name|getMF
+argument_list|()
+operator|.
+name|getRegInfo
+argument_list|()
+operator|.
+name|createVirtualRegister
+argument_list|(
+name|RC
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getRegFromArg
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+return|return
+name|Reg
+return|;
+block|}
+name|unsigned
+name|getRegFromArg
+parameter_list|(
+specifier|const
+name|MachineInstrBuilder
+modifier|&
+name|MIB
+parameter_list|)
+block|{
+return|return
+name|MIB
+operator|->
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+return|;
+block|}
 name|public
 label|:
 comment|/// Getter for the function we currently build.
@@ -358,6 +465,81 @@ name|unsigned
 name|Opcode
 parameter_list|)
 function_decl|;
+comment|/// DAG like Generic method for building arbitrary instructions as above.
+comment|/// \Opc opcode for the instruction.
+comment|/// \Ty Either LLT/TargetRegisterClass/unsigned types for Dst
+comment|/// \Args Variadic list of uses of types(unsigned/MachineInstrBuilder)
+comment|/// Uses of type MachineInstrBuilder will perform
+comment|/// getOperand(0).getReg() to convert to register.
+name|template
+operator|<
+name|typename
+name|DstTy
+operator|,
+name|typename
+operator|...
+name|UseArgsTy
+operator|>
+name|MachineInstrBuilder
+name|buildInstr
+argument_list|(
+argument|unsigned Opc
+argument_list|,
+argument|DstTy&&Ty
+argument_list|,
+argument|UseArgsTy&&... Args
+argument_list|)
+block|{
+name|auto
+name|MIB
+operator|=
+name|buildInstr
+argument_list|(
+name|Opc
+argument_list|)
+operator|.
+name|addDef
+argument_list|(
+name|getDestFromArg
+argument_list|(
+name|Ty
+argument_list|)
+argument_list|)
+block|;
+name|unsigned
+name|It
+index|[]
+operator|=
+block|{
+operator|(
+name|getRegFromArg
+argument_list|(
+name|Args
+argument_list|)
+operator|)
+operator|...
+block|}
+block|;
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|i
+range|:
+name|It
+control|)
+name|MIB
+operator|.
+name|addUse
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+return|return
+name|MIB
+return|;
+block|}
 comment|/// Build but don't insert<empty> = \p Opcode<empty>.
 comment|///
 comment|/// \pre setMF, setBasicBlock or setMI  must have been called.
@@ -528,6 +710,46 @@ name|unsigned
 name|Op1
 parameter_list|)
 function_decl|;
+name|template
+operator|<
+name|typename
+name|DstTy
+operator|,
+name|typename
+operator|...
+name|UseArgsTy
+operator|>
+name|MachineInstrBuilder
+name|buildAdd
+argument_list|(
+argument|DstTy&&Ty
+argument_list|,
+argument|UseArgsTy&&... UseArgs
+argument_list|)
+block|{
+name|unsigned
+name|Res
+operator|=
+name|getDestFromArg
+argument_list|(
+name|Ty
+argument_list|)
+block|;
+return|return
+name|buildAdd
+argument_list|(
+name|Res
+argument_list|,
+operator|(
+name|getRegFromArg
+argument_list|(
+name|UseArgs
+argument_list|)
+operator|)
+operator|...
+argument_list|)
+return|;
+block|}
 comment|/// Build and insert \p Res<def> = G_SUB \p Op0, \p Op1
 comment|///
 comment|/// G_SUB sets \p Res to the sum of integer parameters \p Op0 and \p Op1,
@@ -700,6 +922,29 @@ comment|///
 comment|/// \return a MachineInstrBuilder for the newly created instruction.
 name|MachineInstrBuilder
 name|buildAnd
+parameter_list|(
+name|unsigned
+name|Res
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|unsigned
+name|Op1
+parameter_list|)
+function_decl|;
+comment|/// Build and insert \p Res<def> = G_OR \p Op0, \p Op1
+comment|///
+comment|/// G_OR sets \p Res to the bitwise or of integer parameters \p Op0 and \p
+comment|/// Op1.
+comment|///
+comment|/// \pre setBasicBlock or setMI must have been called.
+comment|/// \pre \p Res, \p Op0 and \p Op1 must be generic virtual registers
+comment|///      with the same (scalar or vector) type).
+comment|///
+comment|/// \return a MachineInstrBuilder for the newly created instruction.
+name|MachineInstrBuilder
+name|buildOr
 parameter_list|(
 name|unsigned
 name|Res
@@ -918,6 +1163,31 @@ name|int64_t
 name|Val
 parameter_list|)
 function_decl|;
+name|template
+operator|<
+name|typename
+name|DstType
+operator|>
+name|MachineInstrBuilder
+name|buildConstant
+argument_list|(
+argument|DstType&&Res
+argument_list|,
+argument|int64_t Val
+argument_list|)
+block|{
+return|return
+name|buildConstant
+argument_list|(
+name|getDestFromArg
+argument_list|(
+name|Res
+argument_list|)
+argument_list|,
+name|Val
+argument_list|)
+return|;
+block|}
 comment|/// Build and insert \p Res = G_FCONSTANT \p Val
 comment|///
 comment|/// G_FCONSTANT is a floating-point constant with the specified size and
@@ -1322,11 +1592,14 @@ name|Idx
 parameter_list|)
 function_decl|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End namespace llvm.
 end_comment
 

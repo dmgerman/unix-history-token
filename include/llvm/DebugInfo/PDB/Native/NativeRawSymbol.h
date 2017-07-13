@@ -71,6 +71,10 @@ block|{
 name|class
 name|NativeSession
 decl_stmt|;
+typedef|typedef
+name|uint32_t
+name|SymIndexId
+typedef|;
 name|class
 name|NativeRawSymbol
 range|:
@@ -83,7 +87,7 @@ name|NativeRawSymbol
 argument_list|(
 argument|NativeSession&PDBSession
 argument_list|,
-argument|uint32_t SymbolId
+argument|SymIndexId SymbolId
 argument_list|)
 block|;
 name|virtual
@@ -1191,7 +1195,7 @@ name|NativeSession
 operator|&
 name|Session
 block|;
-name|uint32_t
+name|SymIndexId
 name|SymbolId
 block|; }
 decl_stmt|;

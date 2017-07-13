@@ -2380,19 +2380,39 @@ comment|/// This may form a larger cycle and thus collapse SCCs into TargetN's S
 end_comment
 
 begin_comment
-comment|/// If that happens, the deleted SCC pointers are returned. These SCCs are
+comment|/// If that happens, the optional callback \p MergedCB will be invoked (if
 end_comment
 
 begin_comment
-comment|/// not in a valid state any longer but the pointers will remain valid
+comment|/// provided) on the SCCs being merged away prior to actually performing
 end_comment
 
 begin_comment
-comment|/// until destruction of the parent graph instance for the purpose of
+comment|/// the merge. Note that this will never include the target SCC as that
 end_comment
 
 begin_comment
-comment|/// clearing cached information.
+comment|/// will be the SCC functions are merged into to resolve the cycle. Once
+end_comment
+
+begin_comment
+comment|/// this function returns, these merged SCCs are not in a valid state but
+end_comment
+
+begin_comment
+comment|/// the pointers will remain valid until destruction of the parent graph
+end_comment
+
+begin_comment
+comment|/// instance for the purpose of clearing cached information. This function
+end_comment
+
+begin_comment
+comment|/// also returns 'true' if a cycle was formed and some SCCs merged away as
+end_comment
+
+begin_comment
+comment|/// a convenience.
 end_comment
 
 begin_comment
@@ -2415,14 +2435,8 @@ begin_comment
 comment|/// which took place on that SCC.
 end_comment
 
-begin_expr_stmt
-name|SmallVector
-operator|<
-name|SCC
-operator|*
-operator|,
-literal|1
-operator|>
+begin_decl_stmt
+name|bool
 name|switchInternalEdgeToCall
 argument_list|(
 name|Node
@@ -2432,9 +2446,25 @@ argument_list|,
 name|Node
 operator|&
 name|TargetN
+argument_list|,
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|ArrayRef
+operator|<
+name|SCC
+operator|*
+operator|>
+name|MergedSCCs
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+operator|>
+name|MergeCB
+operator|=
+block|{}
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Make an existing internal call edge between separate SCCs into a ref

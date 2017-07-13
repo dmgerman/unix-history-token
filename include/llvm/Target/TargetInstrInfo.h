@@ -3472,6 +3472,34 @@ return|return
 name|None
 return|;
 block|}
+comment|/// Return an array that contains the MMO target flag values and their
+comment|/// names.
+comment|///
+comment|/// MIR Serialization is able to serialize only the MMO target flags that are
+comment|/// defined by this method.
+name|virtual
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MachineMemOperand
+operator|::
+name|Flags
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableMachineMemOperandTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|None
+return|;
+block|}
 comment|/// Determines whether \p Inst is a tail call instruction. Override this
 comment|/// method on targets that do not properly set MCID::Return and MCID::Call on
 comment|/// tail call instructions."

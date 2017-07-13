@@ -718,6 +718,26 @@ name|isIntegerTy
 argument_list|()
 return|;
 block|}
+comment|/// Return true if this is an integer type or a vector of integer types of
+comment|/// the given width.
+name|bool
+name|isIntOrIntVectorTy
+argument_list|(
+name|unsigned
+name|BitWidth
+argument_list|)
+decl|const
+block|{
+return|return
+name|getScalarType
+argument_list|()
+operator|->
+name|isIntegerTy
+argument_list|(
+name|BitWidth
+argument_list|)
+return|;
+block|}
 comment|/// True if this is an instance of FunctionType.
 name|bool
 name|isFunctionTy

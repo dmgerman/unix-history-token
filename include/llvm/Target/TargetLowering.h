@@ -1421,10 +1421,15 @@ name|bool
 name|canMergeStoresTo
 argument_list|(
 name|unsigned
-name|AddressSpace
+name|AS
 argument_list|,
 name|EVT
 name|MemVT
+argument_list|,
+specifier|const
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 block|{
@@ -9006,6 +9011,24 @@ return|return
 name|true
 return|;
 block|}
+comment|// Return true if it is profitable to combine a BUILD_VECTOR to a TRUNCATE.
+comment|// Example of such a combine:
+comment|// v4i32 build_vector((extract_elt V, 0),
+comment|//                    (extract_elt V, 2),
+comment|//                    (extract_elt V, 4),
+comment|//                    (extract_elt V, 6))
+comment|//  -->
+comment|// v4i32 truncate (bitcast V to v4i64)
+name|virtual
+name|bool
+name|isDesirableToCombineBuildVectorToTruncate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Return true if the target has native support for the specified value type
 comment|/// and it is 'desirable' to use the type for the given node type. e.g. On x86
 comment|/// i16 is legal, but undesirable since i16 instruction encodings are longer
@@ -9228,6 +9251,12 @@ comment|// IsTailCall should be modified by implementations of
 comment|// TargetLowering::LowerCall that perform tail call conversions.
 name|bool
 name|IsTailCall
+operator|=
+name|false
+block|;
+comment|// Is Call lowering done post SelectionDAG type legalization.
+name|bool
+name|IsPostTypeLegalization
 operator|=
 name|false
 block|;
@@ -9779,6 +9808,22 @@ operator|*
 name|this
 return|;
 block|}
+name|CallLoweringInfo
+operator|&
+name|setIsPostTypeLegalization
+argument_list|(
+argument|bool Value=true
+argument_list|)
+block|{
+name|IsPostTypeLegalization
+operator|=
+name|Value
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 name|ArgListTy
 operator|&
 name|getArgs
@@ -10076,6 +10121,25 @@ specifier|const
 block|{
 return|return
 name|Chain
+return|;
+block|}
+comment|/// This callback is used to inspect load/store instructions and add
+comment|/// target-specific MachineMemOperand flags to them.  The default
+comment|/// implementation does nothing.
+name|virtual
+name|MachineMemOperand
+operator|::
+name|Flags
+name|getMMOFlags
+argument_list|(
+argument|const Instruction&I
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MachineMemOperand
+operator|::
+name|MONone
 return|;
 block|}
 comment|/// This callback is invoked by the type legalizer to legalize nodes with an

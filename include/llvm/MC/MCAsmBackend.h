@@ -268,7 +268,7 @@ name|uint64_t
 name|Value
 argument_list|,
 name|bool
-name|IsPCRel
+name|IsResolved
 argument_list|)
 decl|const
 init|=

@@ -104,9 +104,6 @@ decl_stmt|;
 name|class
 name|PublicsStream
 block|{
-struct_decl|struct
-name|HeaderInfo
-struct_decl|;
 name|public
 label|:
 name|PublicsStream
@@ -301,7 +298,7 @@ operator|>
 name|SectionOffsets
 expr_stmt|;
 specifier|const
-name|HeaderInfo
+name|PublicsStreamHeader
 modifier|*
 name|Header
 decl_stmt|;

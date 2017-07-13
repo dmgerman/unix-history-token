@@ -2394,10 +2394,14 @@ name|Ranges
 operator|=
 name|nullptr
 argument_list|,
-name|SynchronizationScope
-name|SynchScope
+name|SyncScope
+operator|::
+name|ID
+name|SSID
 operator|=
-name|CrossThread
+name|SyncScope
+operator|::
+name|System
 argument_list|,
 name|AtomicOrdering
 name|Ordering

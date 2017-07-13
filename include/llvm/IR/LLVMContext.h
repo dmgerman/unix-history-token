@@ -151,6 +151,32 @@ name|Output
 decl_stmt|;
 block|}
 comment|// end namespace yaml
+name|namespace
+name|SyncScope
+block|{
+typedef|typedef
+name|uint8_t
+name|ID
+typedef|;
+comment|/// Known synchronization scope IDs, which always have the same value.  All
+comment|/// synchronization scope IDs that LLVM has special knowledge of are listed
+comment|/// here.  Additionally, this scheme allows LLVM to efficiently check for
+comment|/// specific synchronization scope ID without comparing strings.
+enum|enum
+block|{
+comment|/// Synchronized with respect to signal handlers executing in the same thread.
+name|SingleThread
+init|=
+literal|0
+block|,
+comment|/// Synchronized with respect to all concurrently executing threads.
+name|System
+init|=
+literal|1
+block|}
+enum|;
+block|}
+comment|// end namespace SyncScope
 comment|/// This is an important class for using LLVM in a threaded context.  It
 comment|/// (opaquely) owns and manages the core "global" data of LLVM's core
 comment|/// infrastructure, including the type and constant uniquing tables.
@@ -384,6 +410,32 @@ name|getOperandBundleTagID
 argument_list|(
 name|StringRef
 name|Tag
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getOrInsertSyncScopeID - Maps synchronization scope name to
+comment|/// synchronization scope ID.  Every synchronization scope registered with
+comment|/// LLVMContext has unique ID except pre-defined ones.
+name|SyncScope
+operator|::
+name|ID
+name|getOrInsertSyncScopeID
+argument_list|(
+argument|StringRef SSN
+argument_list|)
+expr_stmt|;
+comment|/// getSyncScopeNames - Populates client supplied SmallVector with
+comment|/// synchronization scope names registered with LLVMContext.  Synchronization
+comment|/// scope names are ordered by increasing synchronization scope IDs.
+name|void
+name|getSyncScopeNames
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|StringRef
+operator|>
+operator|&
+name|SSNs
 argument_list|)
 decl|const
 decl_stmt|;

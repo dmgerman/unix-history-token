@@ -227,11 +227,34 @@ name|createDataLayout
 argument_list|()
 argument_list|)
 operator|,
+name|ObjectLayer
+argument_list|(
+index|[]
+operator|(
+operator|)
+block|{
+return|return
+name|std
+operator|::
+name|make_shared
+operator|<
+name|SectionMemoryManager
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+block|)
+decl_stmt|,
 name|CompileLayer
 argument_list|(
-argument|ObjectLayer
+name|ObjectLayer
 argument_list|,
-argument|SimpleCompiler(*TM)
+name|SimpleCompiler
+argument_list|(
+operator|*
+name|TM
+argument_list|)
 argument_list|)
 block|{
 name|llvm
@@ -244,11 +267,12 @@ name|LoadLibraryPermanently
 argument_list|(
 name|nullptr
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 name|TargetMachine
-operator|&
+modifier|&
 name|getTargetMachine
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|*
@@ -327,6 +351,8 @@ decl_stmt|;
 name|auto
 name|H
 init|=
+name|cantFail
+argument_list|(
 name|CompileLayer
 operator|.
 name|addModule
@@ -338,18 +364,12 @@ argument_list|(
 name|M
 argument_list|)
 argument_list|,
-name|make_unique
-operator|<
-name|SectionMemoryManager
-operator|>
-operator|(
-operator|)
-argument_list|,
 name|std
 operator|::
 name|move
 argument_list|(
 name|Resolver
+argument_list|)
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -364,6 +384,9 @@ return|return
 name|H
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|removeModule
 parameter_list|(
@@ -383,14 +406,20 @@ name|H
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|cantFail
+argument_list|(
 name|CompileLayer
 operator|.
 name|removeModule
 argument_list|(
 name|H
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_decl_stmt
 name|JITSymbol
 name|findSymbol
 argument_list|(
@@ -411,8 +440,14 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -448,6 +483,9 @@ return|return
 name|MangledName
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|JITSymbol
 name|findMangledSymbol
 argument_list|(
@@ -551,7 +589,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|LLVM_ON_WIN32
-comment|// For Windows retry without "_" at begining, as RTDyldMemoryManager uses
+comment|// For Windows retry without "_" at beginning, as RTDyldMemoryManager uses
 comment|// GetProcAddress and standard libraries like msvcrt.dll use names
 comment|// with and without "_" (for example "_itoa" but "sin").
 if|if
@@ -603,6 +641,9 @@ return|return
 name|nullptr
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
@@ -611,16 +652,28 @@ name|TargetMachine
 operator|>
 name|TM
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|DataLayout
 name|DL
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|ObjLayerT
 name|ObjectLayer
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|CompileLayerT
 name|CompileLayer
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -629,15 +682,10 @@ name|ModuleHandleT
 operator|>
 name|ModuleHandles
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace orc
 end_comment
 

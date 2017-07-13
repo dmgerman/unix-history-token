@@ -244,11 +244,6 @@ operator|>
 name|IDs
 expr_stmt|;
 name|uint32_t
-name|ByteSize
-init|=
-literal|0
-decl_stmt|;
-name|uint32_t
 name|NameCount
 init|=
 literal|0

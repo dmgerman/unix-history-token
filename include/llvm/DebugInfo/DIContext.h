@@ -775,9 +775,11 @@ operator|&
 name|Sec
 argument_list|)
 decl|const
-init|=
+block|{
+return|return
 literal|0
-decl_stmt|;
+return|;
+block|}
 comment|/// If conveniently available, return the content of the given Section.
 comment|///
 comment|/// When the section is available in the local address space, in relocated (loaded)
@@ -809,9 +811,10 @@ return|return
 name|false
 return|;
 block|}
+comment|// FIXME: This is untested and unused anywhere in the LLVM project, it's
+comment|// used/needed by Julia (an external project). It should have some coverage
+comment|// (at least tests, but ideally example functionality).
 comment|/// Obtain a copy of this LoadedObjectInfo.
-comment|///
-comment|/// The caller is responsible for deallocation once the copy is no longer required.
 name|virtual
 name|std
 operator|::
@@ -827,7 +830,94 @@ literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
+name|template
+operator|<
+name|typename
+name|Derived
+operator|,
+name|typename
+name|Base
+operator|=
+name|LoadedObjectInfo
+operator|>
+expr|struct
+name|LoadedObjectInfoHelper
+operator|:
+name|Base
+block|{
+name|protected
+operator|:
+name|LoadedObjectInfoHelper
+argument_list|(
+specifier|const
+name|LoadedObjectInfoHelper
+operator|&
+argument_list|)
+operator|=
+expr|default
+block|;
+name|LoadedObjectInfoHelper
+argument_list|()
+operator|=
+expr|default
+block|;
+name|public
+operator|:
+name|template
+operator|<
+name|typename
+operator|...
+name|Ts
+operator|>
+name|LoadedObjectInfoHelper
+argument_list|(
+name|Ts
+operator|&&
+operator|...
+name|Args
+argument_list|)
+operator|:
+name|Base
+argument_list|(
+argument|std::forward<Ts>(Args)...
+argument_list|)
+block|{}
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|LoadedObjectInfo
+operator|>
+name|clone
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|llvm
+operator|::
+name|make_unique
+operator|<
+name|Derived
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Derived
+operator|&
+operator|>
+operator|(
+operator|*
+name|this
+operator|)
+operator|)
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

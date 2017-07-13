@@ -140,6 +140,11 @@ name|Shrink
 init|=
 name|false
 decl_stmt|;
+name|bool
+name|ReduceInputs
+init|=
+name|false
+decl_stmt|;
 name|int
 name|ReloadIntervalSec
 init|=

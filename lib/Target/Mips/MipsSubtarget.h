@@ -335,6 +335,10 @@ comment|// related instructions.
 name|bool
 name|DisableMadd4
 block|;
+comment|// HasMT -- support MT ASE.
+name|bool
+name|HasMT
+block|;
 name|InstrItineraryData
 name|InstrItins
 block|;
@@ -1001,6 +1005,15 @@ specifier|const
 block|{
 return|return
 name|HasEVA
+return|;
+block|}
+name|bool
+name|hasMT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMT
 return|;
 block|}
 name|bool

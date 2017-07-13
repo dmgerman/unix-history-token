@@ -779,8 +779,6 @@ argument|const MCFixup&Fixup
 argument_list|,
 argument|MCValue Target
 argument_list|,
-argument|bool&IsPCRel
-argument_list|,
 argument|uint64_t&FixedValue
 argument_list|)
 name|override

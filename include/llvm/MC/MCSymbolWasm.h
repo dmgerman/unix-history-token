@@ -102,6 +102,16 @@ literal|4
 operator|>
 name|Params
 block|;
+name|bool
+name|ParamsSet
+operator|=
+name|false
+block|;
+name|bool
+name|ReturnsSet
+operator|=
+name|false
+block|;
 comment|/// An expression describing how to calculate the size of a symbol. If a
 comment|/// symbol has no size this field will be NULL.
 specifier|const
@@ -233,6 +243,11 @@ name|getReturns
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|ReturnsSet
+argument_list|)
+block|;
 return|return
 name|Returns
 return|;
@@ -243,6 +258,10 @@ argument_list|(
 argument|SmallVectorImpl<wasm::ValType>&&Rets
 argument_list|)
 block|{
+name|ReturnsSet
+operator|=
+name|true
+block|;
 name|Returns
 operator|=
 name|std
@@ -266,6 +285,11 @@ name|getParams
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|ParamsSet
+argument_list|)
+block|;
 return|return
 name|Params
 return|;
@@ -276,6 +300,10 @@ argument_list|(
 argument|SmallVectorImpl<wasm::ValType>&&Pars
 argument_list|)
 block|{
+name|ParamsSet
+operator|=
+name|true
+block|;
 name|Params
 operator|=
 name|std

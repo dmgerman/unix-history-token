@@ -2159,8 +2159,42 @@ name|PassPA
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Update the call graph based on this function pass. This may also
-comment|// update the current SCC to point to a smaller, more refined SCC.
+comment|// If the call graph hasn't been preserved, update it based on this
+comment|// function pass. This may also update the current SCC to point to
+comment|// a smaller, more refined SCC.
+name|auto
+name|PAC
+init|=
+name|PA
+operator|.
+name|getChecker
+operator|<
+name|LazyCallGraphAnalysis
+operator|>
+operator|(
+operator|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|PAC
+operator|.
+name|preserved
+argument_list|()
+operator|&&
+operator|!
+name|PAC
+operator|.
+name|preservedSet
+operator|<
+name|AllAnalysesOn
+operator|<
+name|Module
+operator|>>
+operator|(
+operator|)
+condition|)
+block|{
 name|CurrentC
 operator|=
 operator|&
@@ -2196,6 +2230,7 @@ operator|&&
 literal|"Current SCC not updated to the SCC containing the current node!"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_for
 

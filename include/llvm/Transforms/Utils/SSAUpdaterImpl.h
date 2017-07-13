@@ -99,14 +99,17 @@ directive|include
 file|"llvm/Support/Debug.h"
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
+begin_define
 define|#
 directive|define
 name|DEBUG_TYPE
 value|"ssaupdater"
+end_define
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
 name|class
 name|CastInst
 decl_stmt|;
@@ -2173,6 +2176,11 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+unit|}
+comment|// end llvm namespace
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -2183,15 +2191,14 @@ begin_comment
 comment|// "ssaupdater"
 end_comment
 
-begin_comment
-unit|}
-comment|// End llvm namespace
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_UTILS_SSAUPDATERIMPL_H
+end_comment
 
 end_unit
 

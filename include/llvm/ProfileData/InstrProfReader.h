@@ -191,7 +191,7 @@ name|std
 operator|::
 name|input_iterator_tag
 decl_stmt|,
-name|InstrProfRecord
+name|NamedInstrProfRecord
 decl|>
 block|{
 name|InstrProfReader
@@ -200,7 +200,7 @@ name|Reader
 init|=
 name|nullptr
 decl_stmt|;
-name|InstrProfRecord
+name|value_type
 name|Record
 decl_stmt|;
 name|void
@@ -280,7 +280,7 @@ operator|.
 name|Reader
 return|;
 block|}
-name|InstrProfRecord
+name|value_type
 modifier|&
 name|operator
 modifier|*
@@ -290,7 +290,7 @@ return|return
 name|Record
 return|;
 block|}
-name|InstrProfRecord
+name|value_type
 operator|*
 name|operator
 operator|->
@@ -314,7 +314,7 @@ comment|/// Base class and interface for reading profiling data of any known ins
 end_comment
 
 begin_comment
-comment|/// format. Provides an iterator over InstrProfRecords.
+comment|/// format. Provides an iterator over NamedInstrProfRecords.
 end_comment
 
 begin_decl_stmt
@@ -355,7 +355,7 @@ name|virtual
 name|Error
 name|readNextRecord
 parameter_list|(
-name|InstrProfRecord
+name|NamedInstrProfRecord
 modifier|&
 name|Record
 parameter_list|)
@@ -748,7 +748,7 @@ comment|/// Read a single record.
 name|Error
 name|readNextRecord
 argument_list|(
-argument|InstrProfRecord&Record
+argument|NamedInstrProfRecord&Record
 argument_list|)
 name|override
 block|;
@@ -928,7 +928,7 @@ block|;
 name|Error
 name|readNextRecord
 argument_list|(
-argument|InstrProfRecord&Record
+argument|NamedInstrProfRecord&Record
 argument_list|)
 name|override
 block|;
@@ -1096,7 +1096,7 @@ block|}
 name|Error
 name|readName
 argument_list|(
-name|InstrProfRecord
+name|NamedInstrProfRecord
 operator|&
 name|Record
 argument_list|)
@@ -1104,7 +1104,7 @@ block|;
 name|Error
 name|readFuncHash
 argument_list|(
-name|InstrProfRecord
+name|NamedInstrProfRecord
 operator|&
 name|Record
 argument_list|)
@@ -1256,7 +1256,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|InstrProfRecord
+name|NamedInstrProfRecord
 operator|>
 name|DataBuffer
 block|;
@@ -1304,7 +1304,7 @@ name|data_type
 operator|=
 name|ArrayRef
 operator|<
-name|InstrProfRecord
+name|NamedInstrProfRecord
 operator|>
 block|;
 name|using
@@ -1503,7 +1503,7 @@ name|getRecords
 argument_list|(
 name|ArrayRef
 operator|<
-name|InstrProfRecord
+name|NamedInstrProfRecord
 operator|>
 operator|&
 name|Data
@@ -1518,7 +1518,7 @@ name|getRecords
 argument_list|(
 argument|StringRef FuncName
 argument_list|,
-argument|ArrayRef<InstrProfRecord>&Data
+argument|ArrayRef<NamedInstrProfRecord>&Data
 argument_list|)
 operator|=
 literal|0
@@ -1637,7 +1637,7 @@ block|;
 name|Error
 name|getRecords
 argument_list|(
-argument|ArrayRef<InstrProfRecord>&Data
+argument|ArrayRef<NamedInstrProfRecord>&Data
 argument_list|)
 name|override
 block|;
@@ -1646,7 +1646,7 @@ name|getRecords
 argument_list|(
 argument|StringRef FuncName
 argument_list|,
-argument|ArrayRef<InstrProfRecord>&Data
+argument|ArrayRef<NamedInstrProfRecord>&Data
 argument_list|)
 name|override
 block|;
@@ -1875,12 +1875,11 @@ comment|/// Read a single record.
 name|Error
 name|readNextRecord
 argument_list|(
-argument|InstrProfRecord&Record
+argument|NamedInstrProfRecord&Record
 argument_list|)
 name|override
 block|;
-comment|/// Return the pointer to InstrProfRecord associated with FuncName
-comment|/// and FuncHash
+comment|/// Return the NamedInstrProfRecord associated with FuncName and FuncHash
 name|Expected
 operator|<
 name|InstrProfRecord

@@ -332,7 +332,10 @@ struct|struct
 name|DataSegment
 block|{
 name|uint32_t
-name|Index
+name|MemoryIndex
+decl_stmt|;
+name|uint32_t
+name|SectionOffset
 decl_stmt|;
 name|wasm
 operator|::

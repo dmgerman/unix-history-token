@@ -135,22 +135,15 @@ comment|/// @brief Apply the transform functor to the module, then add the modul
 comment|///        the layer below, along with the memory manager and symbol resolver.
 comment|///
 comment|/// @return A handle for the added modules.
-name|template
+name|Expected
 operator|<
-name|typename
-name|MemoryManagerPtrT
-block|,
-name|typename
-name|SymbolResolverPtrT
-operator|>
 name|ModuleHandleT
+operator|>
 name|addModule
 argument_list|(
 argument|std::shared_ptr<Module> M
 argument_list|,
-argument|MemoryManagerPtrT MemMgr
-argument_list|,
-argument|SymbolResolverPtrT Resolver
+argument|std::shared_ptr<JITSymbolResolver> Resolver
 argument_list|)
 block|{
 return|return
@@ -172,32 +165,27 @@ name|std
 operator|::
 name|move
 argument_list|(
-name|MemMgr
-argument_list|)
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
 name|Resolver
 argument_list|)
 argument_list|)
 return|;
 block|}
 comment|/// @brief Remove the module associated with the handle H.
-name|void
+name|Error
 name|removeModule
 argument_list|(
 argument|ModuleHandleT H
 argument_list|)
 block|{
+return|return
 name|BaseLayer
 operator|.
 name|removeModule
 argument_list|(
 name|H
 argument_list|)
-block|; }
+return|;
+block|}
 comment|/// @brief Search for the given named symbol.
 comment|/// @param Name The name of the symbol to search for.
 comment|/// @param ExportedSymbolsOnly If true, search only for exported symbols.
@@ -255,19 +243,21 @@ block|}
 comment|/// @brief Immediately emit and finalize the module represented by the given
 comment|///        handle.
 comment|/// @param H Handle for module to emit/finalize.
-name|void
+name|Error
 name|emitAndFinalize
 argument_list|(
 argument|ModuleHandleT H
 argument_list|)
 block|{
+return|return
 name|BaseLayer
 operator|.
 name|emitAndFinalize
 argument_list|(
 name|H
 argument_list|)
-block|;   }
+return|;
+block|}
 comment|/// @brief Access the transform functor directly.
 name|TransformFtor
 operator|&

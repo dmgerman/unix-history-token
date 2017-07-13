@@ -219,7 +219,7 @@ name|SIMachineFunctionInfo
 operator|&
 name|MFI
 block|;
-comment|// Occupancy target at the begining of function scheduling cycle.
+comment|// Occupancy target at the beginning of function scheduling cycle.
 name|unsigned
 name|StartingOccupancy
 block|;

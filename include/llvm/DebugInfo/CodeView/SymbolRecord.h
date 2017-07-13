@@ -2993,6 +2993,31 @@ block|;
 name|StringRef
 name|Version
 block|;
+name|void
+name|setLanguage
+argument_list|(
+argument|SourceLanguage Lang
+argument_list|)
+block|{
+name|Flags
+operator|=
+name|CompileSym3Flags
+argument_list|(
+operator|(
+name|uint32_t
+argument_list|(
+name|Flags
+argument_list|)
+operator|&
+literal|0xFFFFFF00
+operator|)
+operator||
+name|uint32_t
+argument_list|(
+name|Lang
+argument_list|)
+argument_list|)
+block|;   }
 name|uint8_t
 name|getLanguage
 argument_list|()

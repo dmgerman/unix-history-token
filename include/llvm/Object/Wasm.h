@@ -256,6 +256,10 @@ operator|<<
 literal|", Flags="
 operator|<<
 name|Flags
+operator|<<
+literal|" ElemIndex="
+operator|<<
+name|ElementIndex
 expr_stmt|;
 block|}
 if|#
@@ -286,11 +290,9 @@ endif|#
 directive|endif
 block|}
 empty_stmt|;
-name|class
+struct|struct
 name|WasmSection
 block|{
-name|public
-label|:
 name|WasmSection
 argument_list|()
 operator|=
@@ -331,7 +333,20 @@ name|Relocations
 expr_stmt|;
 comment|// Relocations for this section
 block|}
-empty_stmt|;
+struct|;
+struct|struct
+name|WasmSegment
+block|{
+name|uint32_t
+name|SectionOffset
+decl_stmt|;
+name|wasm
+operator|::
+name|WasmDataSegment
+name|Data
+expr_stmt|;
+block|}
+struct|;
 name|class
 name|WasmObjectFile
 range|:
@@ -580,9 +595,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|wasm
-operator|::
-name|WasmDataSegment
+name|WasmSegment
 operator|>
 operator|&
 name|dataSegments
@@ -1306,9 +1319,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|wasm
-operator|::
-name|WasmDataSegment
+name|WasmSegment
 operator|>
 name|DataSegments
 block|;

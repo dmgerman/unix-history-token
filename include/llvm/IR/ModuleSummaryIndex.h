@@ -229,6 +229,10 @@ block|,
 name|Hot
 operator|=
 literal|3
+block|,
+name|Critical
+operator|=
+literal|4
 block|}
 decl_stmt|;
 name|HotnessType
@@ -1901,9 +1905,7 @@ comment|/// a particular module, and provide efficient access to their summary.
 name|using
 name|GVSummaryMapTy
 operator|=
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|GlobalValue
 operator|::

@@ -168,18 +168,13 @@ block|,
 comment|// Count number of bits set in operand 0 per byte.
 name|POPCNT
 block|,
-comment|// Wrappers around the ISD opcodes of the same name.  The output and
-comment|// first input operands are GR128s.  The trailing numbers are the
-comment|// widths of the second operand in bits.
-name|UMUL_LOHI64
+comment|// Wrappers around the ISD opcodes of the same name.  The output is GR128.
+comment|// Input operands may be GR64 or GR32, depending on the instruction.
+name|UMUL_LOHI
 block|,
-name|SDIVREM32
+name|SDIVREM
 block|,
-name|SDIVREM64
-block|,
-name|UDIVREM32
-block|,
-name|UDIVREM64
+name|UDIVREM
 block|,
 comment|// Use a series of MVCs to copy bytes from one memory location to another.
 comment|// The operands are:
@@ -1935,9 +1930,6 @@ name|MBB
 argument_list|,
 name|bool
 name|ClearEven
-argument_list|,
-name|unsigned
-name|SubReg
 argument_list|)
 decl|const
 decl_stmt|;

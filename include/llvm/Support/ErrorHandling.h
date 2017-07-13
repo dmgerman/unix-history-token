@@ -245,6 +245,66 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+comment|/// Installs a new bad alloc error handler that should be used whenever a
+comment|/// bad alloc error, e.g. failing malloc/calloc, is encountered by LLVM.
+comment|///
+comment|/// The user can install a bad alloc handler, in order to define the behavior
+comment|/// in case of failing allocations, e.g. throwing an exception. Note that this
+comment|/// handler must not trigger any additional allocations itself.
+comment|///
+comment|/// If no error handler is installed the default is to print the error message
+comment|/// to stderr, and call exit(1).  If an error handler is installed then it is
+comment|/// the handler's responsibility to log the message, it will no longer be
+comment|/// printed to stderr.  If the error handler returns, then exit(1) will be
+comment|/// called.
+comment|///
+comment|///
+comment|/// \param user_data - An argument which will be passed to the installed error
+comment|/// handler.
+name|void
+name|install_bad_alloc_error_handler
+parameter_list|(
+name|fatal_error_handler_t
+name|handler
+parameter_list|,
+name|void
+modifier|*
+name|user_data
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Restores default bad alloc error handling behavior.
+name|void
+name|remove_bad_alloc_error_handler
+parameter_list|()
+function_decl|;
+comment|/// Reports a bad alloc error, calling any user defined bad alloc
+comment|/// error handler. In contrast to the generic 'report_fatal_error'
+comment|/// functions, this function is expected to return, e.g. the user
+comment|/// defined error handler throws an exception.
+comment|///
+comment|/// Note: When throwing an exception in the bad alloc handler, make sure that
+comment|/// the following unwind succeeds, e.g. do not trigger additional allocations
+comment|/// in the unwind chain.
+comment|///
+comment|/// If no error handler is installed (default), then a bad_alloc exception
+comment|/// is thrown if LLVM is compiled with exception support, otherwise an assertion
+comment|/// is called.
+name|void
+name|report_bad_alloc_error
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Reason
+parameter_list|,
+name|bool
+name|GenCrashDiag
+init|=
+name|true
+parameter_list|)
+function_decl|;
 comment|/// This function calls abort(), and prints the optional message to stderr.
 comment|/// Use the llvm_unreachable macro (that adds location info), instead of
 comment|/// calling this function directly.

@@ -3057,6 +3057,26 @@ operator|&
 name|NameOffset
 return|;
 block|}
+comment|// Even though the PE/COFF spec doesn't mention this, the high bit of a name
+comment|// offset is set.
+name|void
+name|setNameOffset
+parameter_list|(
+name|uint32_t
+name|Offset
+parameter_list|)
+block|{
+name|NameOffset
+operator|=
+name|Offset
+operator||
+operator|(
+literal|1
+operator|<<
+literal|31
+operator|)
+expr_stmt|;
+block|}
 block|}
 name|Identifier
 union|;

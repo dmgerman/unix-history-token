@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -137,22 +143,17 @@ comment|/// @return A handle for the added objects.
 name|template
 operator|<
 name|typename
-name|ObjPtrT
-block|,
-name|typename
-name|MemoryManagerPtrT
-block|,
-name|typename
-name|SymbolResolverPtrT
+name|ObjectPtr
 operator|>
+name|Expected
+operator|<
 name|ObjHandleT
+operator|>
 name|addObject
 argument_list|(
-argument|ObjPtrT Obj
+argument|ObjectPtr Obj
 argument_list|,
-argument|MemoryManagerPtrT MemMgr
-argument_list|,
-argument|SymbolResolverPtrT Resolver
+argument|std::shared_ptr<JITSymbolResolver> Resolver
 argument_list|)
 block|{
 return|return
@@ -174,32 +175,27 @@ name|std
 operator|::
 name|move
 argument_list|(
-name|MemMgr
-argument_list|)
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
 name|Resolver
 argument_list|)
 argument_list|)
 return|;
 block|}
 comment|/// @brief Remove the object set associated with the handle H.
-name|void
+name|Error
 name|removeObject
 argument_list|(
 argument|ObjHandleT H
 argument_list|)
 block|{
+return|return
 name|BaseLayer
 operator|.
 name|removeObject
 argument_list|(
 name|H
 argument_list|)
-block|; }
+return|;
+block|}
 comment|/// @brief Search for the given named symbol.
 comment|/// @param Name The name of the symbol to search for.
 comment|/// @param ExportedSymbolsOnly If true, search only for exported symbols.
@@ -257,19 +253,21 @@ block|}
 comment|/// @brief Immediately emit and finalize the object set represented by the
 comment|///        given handle.
 comment|/// @param H Handle for object set to emit/finalize.
-name|void
+name|Error
 name|emitAndFinalize
 argument_list|(
 argument|ObjHandleT H
 argument_list|)
 block|{
+return|return
 name|BaseLayer
 operator|.
 name|emitAndFinalize
 argument_list|(
 name|H
 argument_list|)
-block|; }
+return|;
+block|}
 comment|/// @brief Map section addresses for the objects associated with the handle H.
 name|void
 name|mapSectionAddress
