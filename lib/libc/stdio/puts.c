@@ -193,7 +193,7 @@ name|uio_iovcnt
 operator|=
 literal|2
 expr_stmt|;
-name|FLOCKFILE
+name|FLOCKFILE_CANCELSAFE
 argument_list|(
 name|stdout
 argument_list|)
@@ -220,10 +220,8 @@ name|EOF
 else|:
 literal|'\n'
 expr_stmt|;
-name|FUNLOCKFILE
-argument_list|(
-name|stdout
-argument_list|)
+name|FUNLOCKFILE_CANCELSAFE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
