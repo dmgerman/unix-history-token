@@ -172,8 +172,14 @@ operator|::
 name|IndexT
 name|IndexT
 expr_stmt|;
+name|explicit
 name|DenseSlabAlloc
-argument_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
 block|{
 comment|// Check that kL1Size and kL2Size are sane.
 name|CHECK_EQ
@@ -253,6 +259,10 @@ expr_stmt|;
 name|fillpos_
 operator|=
 literal|0
+expr_stmt|;
+name|name_
+operator|=
+name|name
 expr_stmt|;
 block|}
 operator|~
@@ -547,6 +557,14 @@ name|fillpos_
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|name_
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|Refill
@@ -579,13 +597,34 @@ condition|)
 block|{
 name|Printf
 argument_list|(
-literal|"ThreadSanitizer: DenseSlabAllocator overflow. Dying.\n"
+literal|"ThreadSanitizer: %s overflow (%zu*%zu). Dying.\n"
+argument_list|,
+name|name_
+argument_list|,
+name|kL1Size
+argument_list|,
+name|kL2Size
 argument_list|)
 expr_stmt|;
 name|Die
 argument_list|()
 expr_stmt|;
 block|}
+name|VPrintf
+argument_list|(
+literal|2
+argument_list|,
+literal|"ThreadSanitizer: growing %s: %zu out of %zu*%zu\n"
+argument_list|,
+name|name_
+argument_list|,
+name|fillpos_
+argument_list|,
+name|kL1Size
+argument_list|,
+name|kL2Size
+argument_list|)
+expr_stmt|;
 name|T
 modifier|*
 name|batch
@@ -603,7 +642,7 @@ argument_list|(
 name|T
 argument_list|)
 argument_list|,
-literal|"DenseSlabAllocator"
+name|name_
 argument_list|)
 decl_stmt|;
 comment|// Reserve 0 as invalid index.

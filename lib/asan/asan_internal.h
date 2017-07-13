@@ -222,6 +222,10 @@ name|ReplaceSystemMalloc
 argument_list|()
 block|;
 comment|// asan_linux.cc / asan_mac.cc / asan_win.cc
+name|uptr
+name|FindDynamicShadowStart
+argument_list|()
+block|;
 name|void
 operator|*
 name|AsanDoesNotSupportStaticLinkage

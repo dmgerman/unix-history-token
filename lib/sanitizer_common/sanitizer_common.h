@@ -564,6 +564,10 @@ name|alignment
 parameter_list|,
 name|uptr
 name|left_padding
+parameter_list|,
+name|uptr
+modifier|*
+name|largest_gap_found
 parameter_list|)
 function_decl|;
 comment|// Used to check if we can map shadow memory to a fixed location.

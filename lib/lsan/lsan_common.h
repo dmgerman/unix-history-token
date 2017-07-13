@@ -558,8 +558,8 @@ parameter_list|,
 name|uptr
 name|region_end
 parameter_list|,
-name|uptr
-name|prot
+name|bool
+name|is_readable
 parameter_list|)
 function_decl|;
 comment|// Run stoptheworld while holding any platform-specific locks.
