@@ -113,7 +113,7 @@ name|count
 operator|)
 argument_list|)
 expr_stmt|;
-name|atomic_add_acq_int
+name|atomic_add_int
 argument_list|(
 name|count
 argument_list|,
@@ -138,7 +138,9 @@ block|{
 name|u_int
 name|old
 decl_stmt|;
-comment|/* XXX: Should this have a rel membar? */
+name|atomic_thread_fence_rel
+argument_list|()
+expr_stmt|;
 name|old
 operator|=
 name|atomic_fetchadd_int
@@ -162,10 +164,23 @@ name|count
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|old
+operator|>
+literal|1
+condition|)
 return|return
 operator|(
-name|old
-operator|==
+literal|0
+operator|)
+return|;
+comment|/* 	 * Last reference.  Signal the user to call the destructor. 	 * 	 * Ensure that the destructor sees all updates.  The fence_rel 	 * at the start of the function synchronized with this fence. 	 */
+name|atomic_thread_fence_acq
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
 literal|1
 operator|)
 return|;
