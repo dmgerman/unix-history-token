@@ -729,7 +729,9 @@ name|struct
 name|sigevent
 modifier|*
 name|setup_thread
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|struct
