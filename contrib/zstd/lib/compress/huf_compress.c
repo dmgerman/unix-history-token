@@ -1483,6 +1483,7 @@ break|break;
 block|}
 block|}
 comment|/* only triggered when no more rank 1 symbol left => find closest one (note : there is necessarily at least one !) */
+comment|/* HUF_MAX_TABLELOG test just to please gcc 5+; but it should not be necessary */
 while|while
 condition|(
 operator|(
@@ -1500,7 +1501,6 @@ operator|==
 name|noSymbol
 operator|)
 condition|)
-comment|/* HUF_MAX_TABLELOG test just to please gcc 5+; but it should not be necessary */
 name|nBitsToDecrease
 operator|++
 expr_stmt|;
@@ -3037,6 +3037,7 @@ operator|&
 name|bitC
 argument_list|)
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|2
 case|:
@@ -3061,6 +3062,7 @@ operator|&
 name|bitC
 argument_list|)
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|1
 case|:
@@ -3085,11 +3087,13 @@ operator|&
 name|bitC
 argument_list|)
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|0
 case|:
+comment|/* fall-through */
 default|default:
-empty_stmt|;
+break|break;
 block|}
 for|for
 control|(

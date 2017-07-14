@@ -484,7 +484,7 @@ argument_list|(
 name|dictBuffer
 argument_list|)
 operator|!=
-name|ZSTD_DICT_MAGIC
+name|ZSTD_MAGIC_DICTIONARY
 condition|)
 return|return
 literal|0
@@ -3425,7 +3425,7 @@ end_function
 begin_function
 specifier|static
 name|size_t
-name|ZDICT_trainBuffer
+name|ZDICT_trainBuffer_legacy
 parameter_list|(
 name|dictItem
 modifier|*
@@ -4083,7 +4083,7 @@ name|void
 modifier|*
 name|workPlace
 decl_stmt|;
-comment|/* must be ZSTD_BLOCKSIZE_ABSOLUTEMAX allocated */
+comment|/* must be ZSTD_BLOCKSIZE_MAX allocated */
 block|}
 name|EStats_ress_t
 typedef|;
@@ -4145,7 +4145,7 @@ name|blockSizeMax
 init|=
 name|MIN
 argument_list|(
-name|ZSTD_BLOCKSIZE_ABSOLUTEMAX
+name|ZSTD_BLOCKSIZE_MAX
 argument_list|,
 literal|1
 operator|<<
@@ -4218,7 +4218,7 @@ name|esr
 operator|.
 name|workPlace
 argument_list|,
-name|ZSTD_BLOCKSIZE_ABSOLUTEMAX
+name|ZSTD_BLOCKSIZE_MAX
 argument_list|,
 name|src
 argument_list|,
@@ -4510,10 +4510,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* static size_t ZDICT_maxSampleSize(const size_t* fileSizes, unsigned nbFiles) {     unsigned u;     size_t max=0;     for (u=0; u<nbFiles; u++)         if (max< fileSizes[u]) max = fileSizes[u];     return max; } */
-end_comment
 
 begin_function
 specifier|static
@@ -4923,7 +4919,7 @@ name|workPlace
 operator|=
 name|malloc
 argument_list|(
-name|ZSTD_BLOCKSIZE_ABSOLUTEMAX
+name|ZSTD_BLOCKSIZE_MAX
 argument_list|)
 expr_stmt|;
 if|if
@@ -5977,7 +5973,7 @@ name|MEM_writeLE32
 argument_list|(
 name|header
 argument_list|,
-name|ZSTD_DICT_MAGIC
+name|ZSTD_MAGIC_DICTIONARY
 argument_list|)
 expr_stmt|;
 block|{
@@ -6310,7 +6306,7 @@ name|MEM_writeLE32
 argument_list|(
 name|dictBuffer
 argument_list|,
-name|ZSTD_DICT_MAGIC
+name|ZSTD_MAGIC_DICTIONARY
 argument_list|)
 expr_stmt|;
 block|{
@@ -6428,12 +6424,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*! ZDICT_trainFromBuffer_unsafe() : *   Warning : `samplesBuffer` must be followed by noisy guard band. *   @return : size of dictionary, or an error code which can be tested with ZDICT_isError() */
+comment|/*! ZDICT_trainFromBuffer_unsafe_legacy() : *   Warning : `samplesBuffer` must be followed by noisy guard band. *   @return : size of dictionary, or an error code which can be tested with ZDICT_isError() */
 end_comment
 
 begin_function
 name|size_t
-name|ZDICT_trainFromBuffer_unsafe
+name|ZDICT_trainFromBuffer_unsafe_legacy
 parameter_list|(
 name|void
 modifier|*
@@ -6455,7 +6451,7 @@ parameter_list|,
 name|unsigned
 name|nbSamples
 parameter_list|,
-name|ZDICT_params_t
+name|ZDICT_legacy_params_t
 name|params
 parameter_list|)
 block|{
@@ -6562,6 +6558,8 @@ name|notificationLevel
 init|=
 name|params
 operator|.
+name|zParams
+operator|.
 name|notificationLevel
 decl_stmt|;
 comment|/* checks */
@@ -6623,7 +6621,7 @@ name|dictList
 argument_list|)
 expr_stmt|;
 comment|/* build dictionary */
-name|ZDICT_trainBuffer
+name|ZDICT_trainBuffer_legacy
 argument_list|(
 name|dictList
 argument_list|,
@@ -6646,6 +6644,8 @@ comment|/* display best matches */
 if|if
 condition|(
 name|params
+operator|.
+name|zParams
 operator|.
 name|notificationLevel
 operator|>=
@@ -7189,6 +7189,8 @@ argument_list|,
 name|nbSamples
 argument_list|,
 name|params
+operator|.
+name|zParams
 argument_list|)
 expr_stmt|;
 block|}
@@ -7210,7 +7212,7 @@ end_comment
 
 begin_function
 name|size_t
-name|ZDICT_trainFromBuffer_advanced
+name|ZDICT_trainFromBuffer_legacy
 parameter_list|(
 name|void
 modifier|*
@@ -7232,7 +7234,7 @@ parameter_list|,
 name|unsigned
 name|nbSamples
 parameter_list|,
-name|ZDICT_params_t
+name|ZDICT_legacy_params_t
 name|params
 parameter_list|)
 block|{
@@ -7309,7 +7311,7 @@ expr_stmt|;
 comment|/* guard band, for end of buffer condition */
 name|result
 operator|=
-name|ZDICT_trainFromBuffer_unsafe
+name|ZDICT_trainFromBuffer_unsafe_legacy
 argument_list|(
 name|dictBuffer
 argument_list|,
@@ -7360,7 +7362,7 @@ name|unsigned
 name|nbSamples
 parameter_list|)
 block|{
-name|ZDICT_params_t
+name|ZDICT_cover_params_t
 name|params
 decl_stmt|;
 name|memset
@@ -7376,8 +7378,20 @@ name|params
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|params
+operator|.
+name|d
+operator|=
+literal|8
+expr_stmt|;
+name|params
+operator|.
+name|steps
+operator|=
+literal|4
+expr_stmt|;
 return|return
-name|ZDICT_trainFromBuffer_advanced
+name|ZDICT_optimizeTrainFromBuffer_cover
 argument_list|(
 name|dictBuffer
 argument_list|,
@@ -7389,6 +7403,7 @@ name|samplesSizes
 argument_list|,
 name|nbSamples
 argument_list|,
+operator|&
 name|params
 argument_list|)
 return|;

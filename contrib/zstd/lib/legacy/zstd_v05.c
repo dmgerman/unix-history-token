@@ -1355,82 +1355,6 @@ modifier|*
 name|dctx
 parameter_list|)
 function_decl|;
-name|size_t
-name|ZSTDv05_decompressBegin_usingDict
-parameter_list|(
-name|ZSTDv05_DCtx
-modifier|*
-name|dctx
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|dict
-parameter_list|,
-name|size_t
-name|dictSize
-parameter_list|)
-function_decl|;
-name|void
-name|ZSTDv05_copyDCtx
-parameter_list|(
-name|ZSTDv05_DCtx
-modifier|*
-name|dctx
-parameter_list|,
-specifier|const
-name|ZSTDv05_DCtx
-modifier|*
-name|preparedDCtx
-parameter_list|)
-function_decl|;
-name|size_t
-name|ZSTDv05_getFrameParams
-parameter_list|(
-name|ZSTDv05_parameters
-modifier|*
-name|params
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|src
-parameter_list|,
-name|size_t
-name|srcSize
-parameter_list|)
-function_decl|;
-name|size_t
-name|ZSTDv05_nextSrcSizeToDecompress
-parameter_list|(
-name|ZSTDv05_DCtx
-modifier|*
-name|dctx
-parameter_list|)
-function_decl|;
-name|size_t
-name|ZSTDv05_decompressContinue
-parameter_list|(
-name|ZSTDv05_DCtx
-modifier|*
-name|dctx
-parameter_list|,
-name|void
-modifier|*
-name|dst
-parameter_list|,
-name|size_t
-name|dstCapacity
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|src
-parameter_list|,
-name|size_t
-name|srcSize
-parameter_list|)
-function_decl|;
 comment|/*   Streaming decompression, direct mode (bufferless)    A ZSTDv05_DCtx object is required to track streaming operations.   Use ZSTDv05_createDCtx() / ZSTDv05_freeDCtx() to manage it.   A ZSTDv05_DCtx object can be re-used multiple times.    First typical operation is to retrieve frame parameters, using ZSTDv05_getFrameParams().   This operation is independent, and just needs enough input data to properly decode the frame header.   Objective is to retrieve *params.windowlog, to know minimum amount of memory required during decoding.   Result : 0 when successful, it means the ZSTDv05_parameters structure has been filled.>0 : means there is not enough data into src. Provides the expected size to successfully decode header.            errorCode, which can be tested using ZSTDv05_isError()    Start decompression, with ZSTDv05_decompressBegin() or ZSTDv05_decompressBegin_usingDict()   Alternatively, you can copy a prepared context, using ZSTDv05_copyDCtx()    Then use ZSTDv05_nextSrcSizeToDecompress() and ZSTDv05_decompressContinue() alternatively.   ZSTDv05_nextSrcSizeToDecompress() tells how much bytes to provide as 'srcSize' to ZSTDv05_decompressContinue().   ZSTDv05_decompressContinue() requires this exact amount of bytes, or it will fail.   ZSTDv05_decompressContinue() needs previous data blocks during decompression, up to (1<< windowlog).   They should preferably be located contiguously, prior to current block. Alternatively, a round buffer is also possible.    @result of ZSTDv05_decompressContinue() is the number of bytes regenerated within 'dst'.   It can be zero, which is not an error; it just means ZSTDv05_decompressContinue() has decoded some header.    A frame is fully decoded when ZSTDv05_nextSrcSizeToDecompress() returns zero.   Context can then be reset to start a new decompression. */
 comment|/* ************************************** *  Block functions ****************************************/
 comment|/*! Block functions produce and decode raw zstd blocks, without frame metadata.     User will have to take in charge required information to regenerate data, such as block sizes.      A few rules to respect :     - Uncompressed block size must be<= 128 KB     - Compressing or decompressing requires a context structure       + Use ZSTDv05_createCCtx() and ZSTDv05_createDCtx()     - It is necessary to init context before starting       + compression : ZSTDv05_compressBegin()       + decompression : ZSTDv05_decompressBegin()       + variants _usingDict() are also allowed       + copyCCtx() and copyDCtx() work too     - When a block is considered not compressible enough, ZSTDv05_compressBlock() result will be zero.       In which case, nothing is produced into `dst`.       + User must test for such outcome and deal directly with uncompressed data       + ZSTDv05_decompressBlock() doesn't accept uncompressed data as input !! */
@@ -2772,6 +2696,7 @@ operator|-
 literal|16
 operator|)
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|6
 case|:
@@ -2811,6 +2736,7 @@ operator|-
 literal|24
 operator|)
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|5
 case|:
@@ -2850,6 +2776,7 @@ operator|-
 literal|32
 operator|)
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|4
 case|:
@@ -2880,6 +2807,7 @@ argument_list|)
 operator|<<
 literal|24
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|3
 case|:
@@ -2910,6 +2838,7 @@ argument_list|)
 operator|<<
 literal|16
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|2
 case|:
@@ -2940,8 +2869,9 @@ argument_list|)
 operator|<<
 literal|8
 expr_stmt|;
+comment|/* fall-through */
 default|default:
-empty_stmt|;
+break|break;
 block|}
 name|contain32
 operator|=
@@ -18756,6 +18686,7 @@ name|ZBUFFv05ds_decodeHeader
 expr_stmt|;
 break|break;
 block|}
+comment|/* fall-through */
 case|case
 name|ZBUFFv05ds_loadHeader
 case|:
@@ -18847,6 +18778,7 @@ return|;
 block|}
 comment|// zbc->stage = ZBUFFv05ds_decodeHeader; break;   /* useless : stage follows */
 block|}
+comment|/* fall-through */
 case|case
 name|ZBUFFv05ds_decodeHeader
 case|:
@@ -19024,6 +18956,7 @@ name|stage
 operator|=
 name|ZBUFFv05ds_read
 expr_stmt|;
+comment|/* fall-through */
 case|case
 name|ZBUFFv05ds_read
 case|:
@@ -19163,6 +19096,7 @@ operator|=
 name|ZBUFFv05ds_load
 expr_stmt|;
 block|}
+comment|/* fall-through */
 case|case
 name|ZBUFFv05ds_load
 case|:
@@ -19338,6 +19272,7 @@ expr_stmt|;
 comment|// break; /* ZBUFFv05ds_flush follows */
 block|}
 block|}
+comment|/* fall-through */
 case|case
 name|ZBUFFv05ds_flush
 case|:

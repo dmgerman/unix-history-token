@@ -36,6 +36,9 @@ directive|include
 file|<stddef.h>
 comment|/* size_t */
 comment|/* =====   ZDICTLIB_API : control library symbols visibility   ===== */
+ifndef|#
+directive|ifndef
+name|ZDICTLIB_VISIBILITY
 if|#
 directive|if
 name|defined
@@ -57,6 +60,8 @@ directive|else
 define|#
 directive|define
 name|ZDICTLIB_VISIBILITY
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|#
@@ -100,7 +105,7 @@ name|ZDICTLIB_API
 value|ZDICTLIB_VISIBILITY
 endif|#
 directive|endif
-comment|/*! ZDICT_trainFromBuffer() :     Train a dictionary from an array of samples.     Samples must be stored concatenated in a single flat buffer `samplesBuffer`,     supplied with an array of sizes `samplesSizes`, providing the size of each sample, in order.     The resulting dictionary will be saved into `dictBuffer`.     @return : size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`)               or an error code, which can be tested with ZDICT_isError().     Tips : In general, a reasonable dictionary has a size of ~ 100 KB.            It's obviously possible to target smaller or larger ones, just by specifying different `dictBufferCapacity`.            In general, it's recommended to provide a few thousands samples, but this can vary a lot.            It's recommended that total size of all samples be about ~x100 times the target size of dictionary. */
+comment|/*! ZDICT_trainFromBuffer():  * Train a dictionary from an array of samples.  * Uses ZDICT_optimizeTrainFromBuffer_cover() single-threaded, with d=8 and steps=4.  * Samples must be stored concatenated in a single flat buffer `samplesBuffer`,  * supplied with an array of sizes `samplesSizes`, providing the size of each sample, in order.  * The resulting dictionary will be saved into `dictBuffer`.  * @return: size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`)  *           or an error code, which can be tested with ZDICT_isError().  * Note: ZDICT_trainFromBuffer() requires about 9 bytes of memory for each input byte.  * Tips: In general, a reasonable dictionary has a size of ~ 100 KB.  *        It's obviously possible to target smaller or larger ones, just by specifying different `dictBufferCapacity`.  *        In general, it's recommended to provide a few thousands samples, but this can vary a lot.  *        It's recommended that total size of all samples be about ~x100 times the target size of dictionary.  */
 name|ZDICTLIB_API
 name|size_t
 name|ZDICT_trainFromBuffer
@@ -166,10 +171,6 @@ comment|/* =====================================================================
 typedef|typedef
 struct|struct
 block|{
-name|unsigned
-name|selectivityLevel
-decl_stmt|;
-comment|/* 0 means default; larger => select more => larger dictionary */
 name|int
 name|compressionLevel
 decl_stmt|;
@@ -182,46 +183,10 @@ name|unsigned
 name|dictID
 decl_stmt|;
 comment|/* 0 means auto mode (32-bits random value); other : force dictID value */
-name|unsigned
-name|reserved
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* reserved space for future parameters */
 block|}
 name|ZDICT_params_t
 typedef|;
-comment|/*! ZDICT_trainFromBuffer_advanced() :     Same as ZDICT_trainFromBuffer() with control over more parameters.     `parameters` is optional and can be provided with values set to 0 to mean "default".     @return : size of dictionary stored into `dictBuffer` (<= `dictBufferSize`),               or an error code, which can be tested by ZDICT_isError().     note : ZDICT_trainFromBuffer_advanced() will send notifications into stderr if instructed to, using notificationLevel>0. */
-name|ZDICTLIB_API
-name|size_t
-name|ZDICT_trainFromBuffer_advanced
-parameter_list|(
-name|void
-modifier|*
-name|dictBuffer
-parameter_list|,
-name|size_t
-name|dictBufferCapacity
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|samplesBuffer
-parameter_list|,
-specifier|const
-name|size_t
-modifier|*
-name|samplesSizes
-parameter_list|,
-name|unsigned
-name|nbSamples
-parameter_list|,
-name|ZDICT_params_t
-name|parameters
-parameter_list|)
-function_decl|;
-comment|/*! COVER_params_t :     For all values 0 means default.     k and d are the only required parameters. */
+comment|/*! ZDICT_cover_params_t:  *  For all values 0 means default.  *  k and d are the only required parameters.  */
 typedef|typedef
 struct|struct
 block|{
@@ -241,25 +206,16 @@ name|unsigned
 name|nbThreads
 decl_stmt|;
 comment|/* Number of threads : constraint: 0< nbThreads : 1 means single-threaded : Only used for optimization : Ignored if ZSTD_MULTITHREAD is not defined */
-name|unsigned
-name|notificationLevel
+name|ZDICT_params_t
+name|zParams
 decl_stmt|;
-comment|/* Write to stderr; 0 = none (default); 1 = errors; 2 = progression; 3 = details; 4 = debug; */
-name|unsigned
-name|dictID
-decl_stmt|;
-comment|/* 0 means auto mode (32-bits random value); other : force dictID value */
-name|int
-name|compressionLevel
-decl_stmt|;
-comment|/* 0 means default; target a specific zstd compression level */
 block|}
-name|COVER_params_t
+name|ZDICT_cover_params_t
 typedef|;
-comment|/*! COVER_trainFromBuffer() :     Train a dictionary from an array of samples using the COVER algorithm.     Samples must be stored concatenated in a single flat buffer `samplesBuffer`,     supplied with an array of sizes `samplesSizes`, providing the size of each sample, in order.     The resulting dictionary will be saved into `dictBuffer`.     @return : size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`)               or an error code, which can be tested with ZDICT_isError().     Note : COVER_trainFromBuffer() requires about 9 bytes of memory for each input byte.     Tips : In general, a reasonable dictionary has a size of ~ 100 KB.            It's obviously possible to target smaller or larger ones, just by specifying different `dictBufferCapacity`.            In general, it's recommended to provide a few thousands samples, but this can vary a lot.            It's recommended that total size of all samples be about ~x100 times the target size of dictionary. */
+comment|/*! ZDICT_trainFromBuffer_cover():  * Train a dictionary from an array of samples using the COVER algorithm.  * Samples must be stored concatenated in a single flat buffer `samplesBuffer`,  * supplied with an array of sizes `samplesSizes`, providing the size of each sample, in order.  * The resulting dictionary will be saved into `dictBuffer`.  * @return: size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`)  *           or an error code, which can be tested with ZDICT_isError().  * Note: ZDICT_trainFromBuffer_cover() requires about 9 bytes of memory for each input byte.  * Tips: In general, a reasonable dictionary has a size of ~ 100 KB.  *        It's obviously possible to target smaller or larger ones, just by specifying different `dictBufferCapacity`.  *        In general, it's recommended to provide a few thousands samples, but this can vary a lot.  *        It's recommended that total size of all samples be about ~x100 times the target size of dictionary.  */
 name|ZDICTLIB_API
 name|size_t
-name|COVER_trainFromBuffer
+name|ZDICT_trainFromBuffer_cover
 parameter_list|(
 name|void
 modifier|*
@@ -281,14 +237,14 @@ parameter_list|,
 name|unsigned
 name|nbSamples
 parameter_list|,
-name|COVER_params_t
+name|ZDICT_cover_params_t
 name|parameters
 parameter_list|)
 function_decl|;
-comment|/*! COVER_optimizeTrainFromBuffer() :     The same requirements as above hold for all the parameters except `parameters`.     This function tries many parameter combinations and picks the best parameters.     `*parameters` is filled with the best parameters found, and the dictionary     constructed with those parameters is stored in `dictBuffer`.      All of the parameters d, k, steps are optional.     If d is non-zero then we don't check multiple values of d, otherwise we check d = {6, 8, 10, 12, 14, 16}.     if steps is zero it defaults to its default value.     If k is non-zero then we don't check multiple values of k, otherwise we check steps values in [16, 2048].      @return : size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`)               or an error code, which can be tested with ZDICT_isError().               On success `*parameters` contains the parameters selected.     Note : COVER_optimizeTrainFromBuffer() requires about 8 bytes of memory for each input byte and additionally another 5 bytes of memory for each byte of memory for each thread. */
+comment|/*! ZDICT_optimizeTrainFromBuffer_cover():  * The same requirements as above hold for all the parameters except `parameters`.  * This function tries many parameter combinations and picks the best parameters.  * `*parameters` is filled with the best parameters found, and the dictionary  * constructed with those parameters is stored in `dictBuffer`.  *  * All of the parameters d, k, steps are optional.  * If d is non-zero then we don't check multiple values of d, otherwise we check d = {6, 8, 10, 12, 14, 16}.  * if steps is zero it defaults to its default value.  * If k is non-zero then we don't check multiple values of k, otherwise we check steps values in [16, 2048].  *  * @return: size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`)  *           or an error code, which can be tested with ZDICT_isError().  *           On success `*parameters` contains the parameters selected.  * Note: ZDICT_optimizeTrainFromBuffer_cover() requires about 8 bytes of memory for each input byte and additionally another 5 bytes of memory for each byte of memory for each thread.  */
 name|ZDICTLIB_API
 name|size_t
-name|COVER_optimizeTrainFromBuffer
+name|ZDICT_optimizeTrainFromBuffer_cover
 parameter_list|(
 name|void
 modifier|*
@@ -310,12 +266,12 @@ parameter_list|,
 name|unsigned
 name|nbSamples
 parameter_list|,
-name|COVER_params_t
+name|ZDICT_cover_params_t
 modifier|*
 name|parameters
 parameter_list|)
 function_decl|;
-comment|/*! ZDICT_finalizeDictionary() :      Given a custom content as a basis for dictionary, and a set of samples,     finalize dictionary by adding headers and statistics.      Samples must be stored concatenated in a flat buffer `samplesBuffer`,     supplied with an array of sizes `samplesSizes`, providing the size of each sample in order.      dictContentSize must be>= ZDICT_CONTENTSIZE_MIN bytes.     maxDictSize must be>= dictContentSize, and must be>= ZDICT_DICTSIZE_MIN bytes.      @return : size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`),               or an error code, which can be tested by ZDICT_isError().     note : ZDICT_finalizeDictionary() will push notifications into stderr if instructed to, using notificationLevel>0.     note 2 : dictBuffer and dictContent can overlap */
+comment|/*! ZDICT_finalizeDictionary():  * Given a custom content as a basis for dictionary, and a set of samples,  * finalize dictionary by adding headers and statistics.  *  * Samples must be stored concatenated in a flat buffer `samplesBuffer`,  * supplied with an array of sizes `samplesSizes`, providing the size of each sample in order.  *  * dictContentSize must be>= ZDICT_CONTENTSIZE_MIN bytes.  * maxDictSize must be>= dictContentSize, and must be>= ZDICT_DICTSIZE_MIN bytes.  *  * @return: size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`),  *           or an error code, which can be tested by ZDICT_isError().  * Note: ZDICT_finalizeDictionary() will push notifications into stderr if instructed to, using notificationLevel>0.  * Note 2: dictBuffer and dictContent can overlap  */
 define|#
 directive|define
 name|ZDICT_CONTENTSIZE_MIN
@@ -357,6 +313,48 @@ name|unsigned
 name|nbSamples
 parameter_list|,
 name|ZDICT_params_t
+name|parameters
+parameter_list|)
+function_decl|;
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|selectivityLevel
+decl_stmt|;
+comment|/* 0 means default; larger => select more => larger dictionary */
+name|ZDICT_params_t
+name|zParams
+decl_stmt|;
+block|}
+name|ZDICT_legacy_params_t
+typedef|;
+comment|/*! ZDICT_trainFromBuffer_legacy():  * Train a dictionary from an array of samples.  * Samples must be stored concatenated in a single flat buffer `samplesBuffer`,  * supplied with an array of sizes `samplesSizes`, providing the size of each sample, in order.  * The resulting dictionary will be saved into `dictBuffer`.  * `parameters` is optional and can be provided with values set to 0 to mean "default".  * @return: size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`)  *           or an error code, which can be tested with ZDICT_isError().  * Tips: In general, a reasonable dictionary has a size of ~ 100 KB.  *        It's obviously possible to target smaller or larger ones, just by specifying different `dictBufferCapacity`.  *        In general, it's recommended to provide a few thousands samples, but this can vary a lot.  *        It's recommended that total size of all samples be about ~x100 times the target size of dictionary.  * Note: ZDICT_trainFromBuffer_legacy() will send notifications into stderr if instructed to, using notificationLevel>0.  */
+name|ZDICTLIB_API
+name|size_t
+name|ZDICT_trainFromBuffer_legacy
+parameter_list|(
+name|void
+modifier|*
+name|dictBuffer
+parameter_list|,
+name|size_t
+name|dictBufferCapacity
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|samplesBuffer
+parameter_list|,
+specifier|const
+name|size_t
+modifier|*
+name|samplesSizes
+parameter_list|,
+name|unsigned
+name|nbSamples
+parameter_list|,
+name|ZDICT_legacy_params_t
 name|parameters
 parameter_list|)
 function_decl|;
