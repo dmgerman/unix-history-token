@@ -307,6 +307,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Optimization: using a precomputed count of days between POSIX_BASE_YEAR and a  * recent year avoids lots of needless loop iterations in conversion.  * recent_base_days is the number of days through the end of recent_base_year.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|recent_base_year
+init|=
+literal|2016
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|recent_base_days
+init|=
+literal|17167
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * This inline avoids some unnecessary modulo operations  * as compared with the usual macro:  *   ( ((year % 4) == 0&&  *      (year % 100) != 0) ||  *     ((year % 400) == 0) )  * It is otherwise equivalent.  */
 end_comment
 
@@ -553,15 +577,35 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Compute days since start of time 	 * First from years, then from months. 	 */
+if|if
+condition|(
+name|year
+operator|>
+name|recent_base_year
+condition|)
+block|{
+name|i
+operator|=
+name|recent_base_year
+expr_stmt|;
+name|days
+operator|=
+name|recent_base_days
+expr_stmt|;
+block|}
+else|else
+block|{
+name|i
+operator|=
+name|POSIX_BASE_YEAR
+expr_stmt|;
 name|days
 operator|=
 literal|0
 expr_stmt|;
+block|}
 for|for
 control|(
-name|i
-operator|=
-name|POSIX_BASE_YEAR
 init|;
 name|i
 operator|<
@@ -735,12 +779,34 @@ argument_list|(
 name|days
 argument_list|)
 expr_stmt|;
-comment|/* Subtract out whole years, counting them in i. */
-for|for
-control|(
+comment|/* Subtract out whole years. */
+if|if
+condition|(
+name|days
+operator|>=
+name|recent_base_days
+condition|)
+block|{
+name|year
+operator|=
+name|recent_base_year
+operator|+
+literal|1
+expr_stmt|;
+name|days
+operator|-=
+name|recent_base_days
+expr_stmt|;
+block|}
+else|else
+block|{
 name|year
 operator|=
 name|POSIX_BASE_YEAR
+expr_stmt|;
+block|}
+for|for
+control|(
 init|;
 name|days
 operator|>=
