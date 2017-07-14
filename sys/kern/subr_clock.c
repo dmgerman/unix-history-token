@@ -181,7 +181,7 @@ name|OID_AUTO
 argument_list|,
 name|clocktime
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ct_debug
@@ -657,18 +657,15 @@ name|ct_debug
 condition|)
 name|printf
 argument_list|(
-literal|" = %ld.%09ld\n"
+literal|" = %jd.%09ld\n"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ts
 operator|->
 name|tv_sec
 argument_list|,
-operator|(
-name|long
-operator|)
 name|ts
 operator|->
 name|tv_nsec
@@ -861,18 +858,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ts_to_ct(%ld.%09ld) = "
+literal|"ts_to_ct(%jd.%09ld) = "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ts
 operator|->
 name|tv_sec
 argument_list|,
-operator|(
-name|long
-operator|)
 name|ts
 operator|->
 name|tv_nsec
