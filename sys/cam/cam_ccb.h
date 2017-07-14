@@ -636,7 +636,7 @@ literal|0x1c
 operator||
 name|XPT_FC_DEV_QUEUED
 block|,
-comment|/* Execiute the requestred NVMe I/O operation */
+comment|/* Execute the requested NVMe I/O operation */
 name|XPT_MMC_IO
 init|=
 literal|0x1d
@@ -655,6 +655,13 @@ operator||
 name|XPT_FC_XPT_ONLY
 block|,
 comment|/* Scan Target */
+name|XPT_NVME_ADMIN
+init|=
+literal|0x1f
+operator||
+name|XPT_FC_DEV_QUEUED
+block|,
+comment|/* Execute the requested NVMe Admin operation */
 comment|/* HBA engine commands 0x20->0x2F */
 name|XPT_ENG_INQ
 init|=
@@ -2776,7 +2783,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * NVMe I/O Request CCB used for the XPT_NVME_IO function code.  */
+comment|/*  * NVMe I/O Request CCB used for the XPT_NVME_IO and XPT_NVME_ADMIN function codes.  */
 end_comment
 
 begin_struct
@@ -5724,6 +5731,104 @@ operator|.
 name|func_code
 operator|=
 name|XPT_NVME_IO
+expr_stmt|;
+name|nvmeio
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|=
+name|flags
+expr_stmt|;
+name|nvmeio
+operator|->
+name|ccb_h
+operator|.
+name|retry_count
+operator|=
+name|retries
+expr_stmt|;
+name|nvmeio
+operator|->
+name|ccb_h
+operator|.
+name|cbfcnp
+operator|=
+name|cbfcnp
+expr_stmt|;
+name|nvmeio
+operator|->
+name|ccb_h
+operator|.
+name|timeout
+operator|=
+name|timeout
+expr_stmt|;
+name|nvmeio
+operator|->
+name|data_ptr
+operator|=
+name|data_ptr
+expr_stmt|;
+name|nvmeio
+operator|->
+name|dxfer_len
+operator|=
+name|dxfer_len
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|cam_fill_nvmeadmin
+parameter_list|(
+name|struct
+name|ccb_nvmeio
+modifier|*
+name|nvmeio
+parameter_list|,
+name|u_int32_t
+name|retries
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|cbfcnp
+function_decl|)
+parameter_list|(
+name|struct
+name|cam_periph
+modifier|*
+parameter_list|,
+name|union
+name|ccb
+modifier|*
+parameter_list|)
+parameter_list|,
+name|u_int32_t
+name|flags
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|data_ptr
+parameter_list|,
+name|u_int32_t
+name|dxfer_len
+parameter_list|,
+name|u_int32_t
+name|timeout
+parameter_list|)
+block|{
+name|nvmeio
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|=
+name|XPT_NVME_ADMIN
 expr_stmt|;
 name|nvmeio
 operator|->

@@ -12666,24 +12666,10 @@ comment|/* FALLTHROUGH */
 case|case
 name|XPT_NVME_IO
 case|:
-if|if
-condition|(
-name|start_ccb
-operator|->
-name|ccb_h
-operator|.
-name|func_code
-operator|==
-name|XPT_NVME_IO
-condition|)
-name|start_ccb
-operator|->
-name|nvmeio
-operator|.
-name|resid
-operator|=
-literal|0
-expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|XPT_NVME_ADMIN
+case|:
 comment|/* FALLTHROUGH */
 case|case
 name|XPT_MMC_IO
@@ -26438,6 +26424,12 @@ block|{
 name|XPT_SCAN_TGT
 block|,
 literal|"XPT_SCAN_TGT"
+block|}
+block|,
+block|{
+name|XPT_NVME_ADMIN
+block|,
+literal|"XPT_NVME_ADMIN"
 block|}
 block|,
 block|{
