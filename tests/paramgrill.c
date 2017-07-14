@@ -233,15 +233,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|U32
+name|double
 name|g_grillDuration_s
 init|=
-literal|60000
+literal|90000
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* about 16 hours */
+comment|/* about 24 hours */
 end_comment
 
 begin_decl_stmt
@@ -444,6 +444,10 @@ begin_comment
 comment|/*-******************************************************* *  Private functions *********************************************************/
 end_comment
 
+begin_comment
+comment|/* works even if overflow ; max span ~ 30 mn */
+end_comment
+
 begin_function
 specifier|static
 name|clock_t
@@ -463,12 +467,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* works even if overflow ; max span ~ 30 mn */
+comment|/* accuracy in seconds only, span can be multiple years */
 end_comment
 
 begin_function
 specifier|static
-name|U32
+name|double
 name|BMK_timeSpan
 parameter_list|(
 name|time_t
@@ -476,9 +480,6 @@ name|tStart
 parameter_list|)
 block|{
 return|return
-operator|(
-name|U32
-operator|)
 name|difftime
 argument_list|(
 name|time
@@ -491,10 +492,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* accuracy in seconds only, span can be multiple years */
-end_comment
 
 begin_function
 specifier|static
@@ -1852,21 +1849,21 @@ name|g_stratName
 index|[]
 init|=
 block|{
-literal|"ZSTD_fast   "
+literal|"ZSTD_fast    "
 block|,
-literal|"ZSTD_dfast  "
+literal|"ZSTD_dfast   "
 block|,
-literal|"ZSTD_greedy "
+literal|"ZSTD_greedy  "
 block|,
-literal|"ZSTD_lazy   "
+literal|"ZSTD_lazy    "
 block|,
-literal|"ZSTD_lazy2  "
+literal|"ZSTD_lazy2   "
 block|,
-literal|"ZSTD_btlazy2"
+literal|"ZSTD_btlazy2 "
 block|,
-literal|"ZSTD_btopt  "
+literal|"ZSTD_btopt   "
 block|,
-literal|"ZSTD_btopt2 "
+literal|"ZSTD_btultra "
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2438,7 +2435,7 @@ operator|.
 name|windowLog
 operator|)
 operator|+
-name|ZSTD_estimateCCtxSize
+name|ZSTD_estimateCCtxSize_advanced
 argument_list|(
 name|params
 argument_list|)
@@ -2459,7 +2456,7 @@ operator|.
 name|windowLog
 operator|)
 operator|+
-name|ZSTD_estimateCCtxSize
+name|ZSTD_estimateCCtxSize_advanced
 argument_list|(
 name|winners
 index|[
@@ -2911,7 +2908,7 @@ name|params
 operator|.
 name|strategy
 operator|!=
-name|ZSTD_btopt2
+name|ZSTD_btultra
 condition|)
 name|g_params
 operator|.
@@ -3564,7 +3561,7 @@ name|g_rand
 argument_list|)
 operator|%
 operator|(
-name|ZSTD_btopt2
+name|ZSTD_btultra
 operator|+
 literal|1
 operator|)

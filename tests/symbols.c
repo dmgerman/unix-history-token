@@ -299,7 +299,7 @@ operator|&
 name|ZSTD_compressEnd
 block|,
 operator|&
-name|ZSTD_getFrameParams
+name|ZSTD_getFrameHeader
 block|,
 operator|&
 name|ZSTD_decompressBegin
@@ -320,7 +320,7 @@ operator|&
 name|ZSTD_nextInputType
 block|,
 operator|&
-name|ZSTD_getBlockSizeMax
+name|ZSTD_getBlockSize
 block|,
 operator|&
 name|ZSTD_compressBlock
@@ -418,7 +418,16 @@ name|ZDICT_getErrorName
 block|,
 comment|/* zdict.h: advanced functions */
 operator|&
-name|ZDICT_trainFromBuffer_advanced
+name|ZDICT_trainFromBuffer_cover
+block|,
+operator|&
+name|ZDICT_optimizeTrainFromBuffer_cover
+block|,
+operator|&
+name|ZDICT_finalizeDictionary
+block|,
+operator|&
+name|ZDICT_trainFromBuffer_legacy
 block|,
 operator|&
 name|ZDICT_addEntropyTablesFromBuffer

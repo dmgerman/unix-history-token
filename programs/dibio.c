@@ -1184,12 +1184,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*! ZDICT_trainFromBuffer_unsafe() :     Strictly Internal use only !!     Same as ZDICT_trainFromBuffer_advanced(), but does not control `samplesBuffer`.     `samplesBuffer` must be followed by noisy guard band to avoid out-of-buffer reads.     @return : size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`)               or an error code. */
+comment|/*! ZDICT_trainFromBuffer_unsafe_legacy() :     Strictly Internal use only !!     Same as ZDICT_trainFromBuffer_legacy(), but does not control `samplesBuffer`.     `samplesBuffer` must be followed by noisy guard band to avoid out-of-buffer reads.     @return : size of dictionary stored into `dictBuffer` (<= `dictBufferCapacity`)               or an error code. */
 end_comment
 
 begin_function_decl
 name|size_t
-name|ZDICT_trainFromBuffer_unsafe
+name|ZDICT_trainFromBuffer_unsafe_legacy
 parameter_list|(
 name|void
 modifier|*
@@ -1211,7 +1211,7 @@ parameter_list|,
 name|unsigned
 name|nbSamples
 parameter_list|,
-name|ZDICT_params_t
+name|ZDICT_legacy_params_t
 name|parameters
 parameter_list|)
 function_decl|;
@@ -1238,11 +1238,11 @@ parameter_list|,
 name|unsigned
 name|nbFiles
 parameter_list|,
-name|ZDICT_params_t
+name|ZDICT_legacy_params_t
 modifier|*
 name|params
 parameter_list|,
-name|COVER_params_t
+name|ZDICT_cover_params_t
 modifier|*
 name|coverParams
 parameter_list|,
@@ -1359,6 +1359,8 @@ name|g_displayLevel
 operator|=
 name|params
 operator|->
+name|zParams
+operator|.
 name|notificationLevel
 expr_stmt|;
 elseif|else
@@ -1370,6 +1372,8 @@ name|g_displayLevel
 operator|=
 name|coverParams
 operator|->
+name|zParams
+operator|.
 name|notificationLevel
 expr_stmt|;
 else|else
@@ -1572,7 +1576,7 @@ expr_stmt|;
 comment|/* guard band, for end of buffer condition */
 name|dictSize
 operator|=
-name|ZDICT_trainFromBuffer_unsafe
+name|ZDICT_trainFromBuffer_unsafe_legacy
 argument_list|(
 name|dictBuffer
 argument_list|,
@@ -1597,7 +1601,7 @@ condition|)
 block|{
 name|dictSize
 operator|=
-name|COVER_optimizeTrainFromBuffer
+name|ZDICT_optimizeTrainFromBuffer_cover
 argument_list|(
 name|dictBuffer
 argument_list|,
@@ -1646,7 +1650,7 @@ else|else
 block|{
 name|dictSize
 operator|=
-name|COVER_trainFromBuffer
+name|ZDICT_trainFromBuffer_cover
 argument_list|(
 name|dictBuffer
 argument_list|,

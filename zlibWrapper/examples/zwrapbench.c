@@ -431,7 +431,7 @@ name|DEBUGOUTPUT
 parameter_list|(
 modifier|...
 parameter_list|)
-value|if (DEBUG) DISPLAY(__VA_ARGS__);
+value|{ if (DEBUG) DISPLAY(__VA_ARGS__); }
 end_define
 
 begin_define
@@ -1370,6 +1370,9 @@ argument_list|,
 name|dictBufferSize
 argument_list|,
 literal|1
+comment|/*byRef*/
+argument_list|,
+name|ZSTD_dm_auto
 argument_list|,
 name|zparams
 operator|.
