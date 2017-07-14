@@ -383,7 +383,7 @@ operator|==
 name|NULL
 operator|||
 name|count
-operator|<=
+operator|==
 literal|0
 condition|)
 return|return

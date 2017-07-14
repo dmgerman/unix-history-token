@@ -151,11 +151,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYSCALL32_INIT_HELPER_F
+parameter_list|(
+name|syscallname
+parameter_list|,
+name|flags
+parameter_list|)
+value|{		\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& syscallname,			\ 	.sy_flags = (flags)					\     },								\     .syscall_no = FREEBSD32_SYS_##syscallname			\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCALL32_INIT_HELPER_COMPAT_F
+parameter_list|(
+name|syscallname
+parameter_list|,
+name|flags
+parameter_list|)
+value|{	\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& sys_ ## syscallname,		\ 	.sy_flags = (flags)					\     },								\     .syscall_no = FREEBSD32_SYS_##syscallname			\ }
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYSCALL32_INIT_HELPER
 parameter_list|(
 name|syscallname
 parameter_list|)
-value|{			\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& syscallname,			\     },								\     .syscall_no = FREEBSD32_SYS_##syscallname			\ }
+define|\
+value|SYSCALL32_INIT_HELPER_F(syscallname, 0)
 end_define
 
 begin_define
@@ -165,7 +190,8 @@ name|SYSCALL32_INIT_HELPER_COMPAT
 parameter_list|(
 name|syscallname
 parameter_list|)
-value|{		\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& sys_ ## syscallname,		\     },								\     .syscall_no = FREEBSD32_SYS_##syscallname			\ }
+define|\
+value|SYSCALL32_INIT_HELPER_COMPAT_F(syscallname, 0)
 end_define
 
 begin_function_decl

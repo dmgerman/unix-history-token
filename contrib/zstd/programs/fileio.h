@@ -236,6 +236,22 @@ modifier|*
 name|dictFileName
 parameter_list|)
 function_decl|;
+name|int
+name|FIO_listMultipleFiles
+parameter_list|(
+name|unsigned
+name|numFiles
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|filenameTable
+parameter_list|,
+name|int
+name|displayLevel
+parameter_list|)
+function_decl|;
 comment|/*-************************************* *  Multiple File functions ***************************************/
 comment|/** FIO_compressMultipleFilenames() :     @return : nb of missing files */
 name|int

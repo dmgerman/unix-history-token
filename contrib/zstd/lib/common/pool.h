@@ -60,6 +60,15 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
+comment|/*! POOL_sizeof() :     return memory usage of pool returned by POOL_create(). */
+name|size_t
+name|POOL_sizeof
+parameter_list|(
+name|POOL_ctx
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
 comment|/*! POOL_function :     The function type that can be added to a thread pool. */
 typedef|typedef
 name|void

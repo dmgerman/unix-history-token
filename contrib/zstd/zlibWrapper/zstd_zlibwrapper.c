@@ -3,6 +3,38 @@ begin_comment
 comment|/**  * Copyright (c) 2016-present, Przemyslaw Skibinski, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
 end_comment
 
+begin_comment
+comment|/* ===   Tuning parameters   === */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ZWRAP_USE_ZSTD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ZWRAP_USE_ZSTD
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ===   Dependencies   === */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -58,7 +90,7 @@ name|ZSTD_STATIC_LINKING_ONLY
 end_define
 
 begin_comment
-comment|/* ZSTD_MAGICNUMBER */
+comment|/* ZSTD_isFrame, ZSTD_MAGICNUMBER */
 end_comment
 
 begin_include
@@ -74,7 +106,11 @@ file|"zstd_internal.h"
 end_include
 
 begin_comment
-comment|/* defaultCustomMem */
+comment|/* ZSTD_malloc, ZSTD_free */
+end_comment
+
+begin_comment
+comment|/* ===   Constants   === */
 end_comment
 
 begin_define
@@ -109,6 +145,10 @@ begin_comment
 comment|/* Z_DEFAULT_COMPRESSION is translated to ZWRAP_DEFAULT_CLEVEL for zstd */
 end_comment
 
+begin_comment
+comment|/* ===   Debug   === */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -119,7 +159,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/* printf(__VA_ARGS__) */
+comment|/* fprintf(stderr, __VA_ARGS__) */
 end_comment
 
 begin_define
@@ -132,7 +172,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/* printf(__VA_ARGS__) */
+comment|/* fprintf(stderr, __VA_ARGS__) */
 end_comment
 
 begin_define
@@ -155,23 +195,9 @@ parameter_list|)
 value|{ (void)msg; return NULL; }
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ZWRAP_USE_ZSTD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ZWRAP_USE_ZSTD
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* ===   Wrapper   === */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -333,7 +359,7 @@ operator|)
 name|size
 argument_list|)
 decl_stmt|;
-comment|/*  printf("ZWRAP alloc %p, %d \n", address, (int)size); */
+comment|/* LOG_WRAPPERC("ZWRAP alloc %p, %d \n", address, (int)size); */
 return|return
 name|address
 return|;
@@ -373,12 +399,12 @@ argument_list|,
 name|address
 argument_list|)
 expr_stmt|;
-comment|/* if (address) printf("ZWRAP free %p \n", address); */
+comment|/* if (address) LOG_WRAPPERC("ZWRAP free %p \n", address); */
 block|}
 end_function
 
 begin_comment
-comment|/* *** Compression *** */
+comment|/* ===   Compression   === */
 end_comment
 
 begin_typedef
@@ -450,6 +476,7 @@ typedef|;
 end_typedef
 
 begin_function
+specifier|static
 name|size_t
 name|ZWRAP_freeCCtx
 parameter_list|(
@@ -468,12 +495,6 @@ return|return
 literal|0
 return|;
 comment|/* support free on NULL */
-if|if
-condition|(
-name|zwc
-operator|->
-name|zbc
-condition|)
 name|ZSTD_freeCStream
 argument_list|(
 name|zwc
@@ -481,19 +502,13 @@ operator|->
 name|zbc
 argument_list|)
 expr_stmt|;
-name|zwc
-operator|->
-name|customMem
-operator|.
-name|customFree
+name|ZSTD_free
 argument_list|(
 name|zwc
-operator|->
-name|customMem
-operator|.
-name|opaque
 argument_list|,
 name|zwc
+operator|->
+name|customMem
 argument_list|)
 expr_stmt|;
 return|return
@@ -503,6 +518,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|ZWRAP_CCtx
 modifier|*
 name|ZWRAP_createCCtx
@@ -586,6 +602,7 @@ argument_list|)
 expr_stmt|;
 block|{
 name|ZSTD_customMem
+specifier|const
 name|ZWRAP_customMem
 init|=
 block|{
@@ -599,21 +616,11 @@ operator|->
 name|allocFunc
 block|}
 decl_stmt|;
-name|memcpy
-argument_list|(
-operator|&
 name|zwc
 operator|->
 name|customMem
-argument_list|,
-operator|&
+operator|=
 name|ZWRAP_customMem
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ZSTD_customMem
-argument_list|)
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -625,17 +632,14 @@ operator|(
 name|ZWRAP_CCtx
 operator|*
 operator|)
-name|defaultCustomMem
-operator|.
-name|customAlloc
+name|calloc
 argument_list|(
-name|defaultCustomMem
-operator|.
-name|opaque
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ZWRAP_CCtx
+operator|*
+name|zwc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -648,34 +652,6 @@ condition|)
 return|return
 name|NULL
 return|;
-name|memset
-argument_list|(
-name|zwc
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ZWRAP_CCtx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
-name|zwc
-operator|->
-name|customMem
-argument_list|,
-operator|&
-name|defaultCustomMem
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ZSTD_customMem
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 name|zwc
@@ -684,6 +660,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ZWRAP_initializeCStream
 parameter_list|(
@@ -755,7 +732,7 @@ name|dictSize
 argument_list|)
 decl_stmt|;
 name|size_t
-name|errorCode
+name|initErr
 decl_stmt|;
 name|LOG_WRAPPERC
 argument_list|(
@@ -803,7 +780,7 @@ operator|.
 name|strategy
 argument_list|)
 expr_stmt|;
-name|errorCode
+name|initErr
 operator|=
 name|ZSTD_initCStream_advanced
 argument_list|(
@@ -824,7 +801,7 @@ if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|initErr
 argument_list|)
 condition|)
 return|return
@@ -838,6 +815,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ZWRAPC_finishWithError
 parameter_list|(
@@ -891,6 +869,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ZWRAPC_finishWithErrorMsg
 parameter_list|(
@@ -1538,9 +1517,6 @@ operator|!
 name|g_ZWRAP_useZSTDcompression
 condition|)
 block|{
-name|int
-name|res
-decl_stmt|;
 name|LOG_WRAPPERC
 argument_list|(
 literal|"- deflate1 flush=%d avail_in=%d avail_out=%d total_in=%d total_out=%d\n"
@@ -1579,17 +1555,13 @@ operator|->
 name|total_out
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
+return|return
 name|deflate
 argument_list|(
 name|strm
 argument_list|,
 name|flush
 argument_list|)
-expr_stmt|;
-return|return
-name|res
 return|;
 block|}
 name|zwc
@@ -1627,9 +1599,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|int
-name|res
-decl_stmt|;
 name|zwc
 operator|->
 name|zbc
@@ -1659,8 +1628,11 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-name|res
-operator|=
+block|{
+name|int
+specifier|const
+name|initErr
+init|=
 name|ZWRAP_initializeCStream
 argument_list|(
 name|zwc
@@ -1681,10 +1653,10 @@ name|avail_in
 else|:
 literal|0
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
-name|res
+name|initErr
 operator|!=
 name|Z_OK
 condition|)
@@ -1695,9 +1667,10 @@ name|zwc
 argument_list|,
 name|strm
 argument_list|,
-name|res
+name|initErr
 argument_list|)
 return|;
+block|}
 if|if
 condition|(
 name|flush
@@ -1733,7 +1706,7 @@ condition|)
 block|{
 name|size_t
 specifier|const
-name|errorCode
+name|resetErr
 init|=
 name|ZSTD_resetCStream
 argument_list|(
@@ -1760,7 +1733,7 @@ if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|resetErr
 argument_list|)
 condition|)
 block|{
@@ -1770,7 +1743,7 @@ literal|"ERROR: ZSTD_resetCStream errorCode=%s\n"
 argument_list|,
 name|ZSTD_getErrorName
 argument_list|(
-name|errorCode
+name|resetErr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1789,6 +1762,7 @@ block|}
 else|else
 block|{
 name|int
+specifier|const
 name|res
 init|=
 name|ZWRAP_initializeCStream
@@ -1842,7 +1816,9 @@ name|ZWRAP_useReset
 expr_stmt|;
 block|}
 block|}
+comment|/* (zwc->totalInBytes == 0) */
 block|}
+comment|/* ! (zwc->zbc == NULL) */
 name|LOG_WRAPPERC
 argument_list|(
 literal|"- deflate2 flush=%d avail_in=%d avail_out=%d total_in=%d total_out=%d\n"
@@ -1949,7 +1925,7 @@ expr_stmt|;
 block|{
 name|size_t
 specifier|const
-name|errorCode
+name|cErr
 init|=
 name|ZSTD_compressStream
 argument_list|(
@@ -1995,7 +1971,7 @@ if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|cErr
 argument_list|)
 condition|)
 return|return
@@ -2644,7 +2620,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* *** Decompression *** */
+comment|/* ===   Decompression   === */
 end_comment
 
 begin_typedef
@@ -2675,7 +2651,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* should be equal or bigger than ZSTD_frameHeaderSize_min */
+comment|/* must be>= ZSTD_frameHeaderSize_min */
 name|int
 name|errorCount
 decl_stmt|;
@@ -2711,42 +2687,14 @@ decl_stmt|;
 name|z_stream
 name|allocFunc
 decl_stmt|;
-comment|/* copy of zalloc, zfree, opaque */
+comment|/* just to copy zalloc, zfree, opaque */
 block|}
 name|ZWRAP_DCtx
 typedef|;
 end_typedef
 
 begin_function
-name|int
-name|ZWRAP_isUsingZSTDdecompression
-parameter_list|(
-name|z_streamp
-name|strm
-parameter_list|)
-block|{
-if|if
-condition|(
-name|strm
-operator|==
-name|NULL
-condition|)
-return|return
-literal|0
-return|;
-return|return
-operator|(
-name|strm
-operator|->
-name|reserved
-operator|==
-name|ZWRAP_ZSTD_STREAM
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
+specifier|static
 name|void
 name|ZWRAP_initDCtx
 parameter_list|(
@@ -2781,6 +2729,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|ZWRAP_DCtx
 modifier|*
 name|ZWRAP_createDCtx
@@ -2793,6 +2742,19 @@ name|ZWRAP_DCtx
 modifier|*
 name|zwd
 decl_stmt|;
+name|MEM_STATIC_ASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|zwd
+operator|->
+name|headerBuf
+argument_list|)
+operator|>=
+name|ZSTD_FRAMEHEADERSIZE_MIN
+argument_list|)
+expr_stmt|;
+comment|/* check static buffer size condition */
 if|if
 condition|(
 name|strm
@@ -2847,23 +2809,17 @@ name|ZWRAP_DCtx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
 name|zwd
 operator|->
 name|allocFunc
-argument_list|,
+operator|=
+operator|*
 name|strm
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|z_stream
-argument_list|)
-argument_list|)
 expr_stmt|;
+comment|/* just to copy zalloc, zfree& opaque */
 block|{
 name|ZSTD_customMem
+specifier|const
 name|ZWRAP_customMem
 init|=
 block|{
@@ -2877,21 +2833,11 @@ operator|->
 name|allocFunc
 block|}
 decl_stmt|;
-name|memcpy
-argument_list|(
-operator|&
 name|zwd
 operator|->
 name|customMem
-argument_list|,
-operator|&
+operator|=
 name|ZWRAP_customMem
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ZSTD_customMem
-argument_list|)
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2903,17 +2849,14 @@ operator|(
 name|ZWRAP_DCtx
 operator|*
 operator|)
-name|defaultCustomMem
-operator|.
-name|customAlloc
+name|calloc
 argument_list|(
-name|defaultCustomMem
-operator|.
-name|opaque
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ZWRAP_DCtx
+operator|*
+name|zwd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2926,48 +2869,7 @@ condition|)
 return|return
 name|NULL
 return|;
-name|memset
-argument_list|(
-name|zwd
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ZWRAP_DCtx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
-name|zwd
-operator|->
-name|customMem
-argument_list|,
-operator|&
-name|defaultCustomMem
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ZSTD_customMem
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
-name|MEM_STATIC_ASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|zwd
-operator|->
-name|headerBuf
-argument_list|)
-operator|>=
-name|ZSTD_FRAMEHEADERSIZE_MIN
-argument_list|)
-expr_stmt|;
-comment|/* if compilation fails here, assertion is false */
 name|ZWRAP_initDCtx
 argument_list|(
 name|zwd
@@ -2980,6 +2882,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|ZWRAP_freeDCtx
 parameter_list|(
@@ -2998,12 +2901,6 @@ return|return
 literal|0
 return|;
 comment|/* support free on null */
-if|if
-condition|(
-name|zwd
-operator|->
-name|zbd
-condition|)
 name|ZSTD_freeDStream
 argument_list|(
 name|zwd
@@ -3011,42 +2908,24 @@ operator|->
 name|zbd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|zwd
-operator|->
-name|version
-condition|)
-name|zwd
-operator|->
-name|customMem
-operator|.
-name|customFree
+name|ZSTD_free
 argument_list|(
 name|zwd
 operator|->
-name|customMem
-operator|.
-name|opaque
+name|version
 argument_list|,
 name|zwd
 operator|->
-name|version
+name|customMem
 argument_list|)
 expr_stmt|;
-name|zwd
-operator|->
-name|customMem
-operator|.
-name|customFree
+name|ZSTD_free
 argument_list|(
 name|zwd
-operator|->
-name|customMem
-operator|.
-name|opaque
 argument_list|,
 name|zwd
+operator|->
+name|customMem
 argument_list|)
 expr_stmt|;
 return|return
@@ -3056,6 +2935,36 @@ block|}
 end_function
 
 begin_function
+name|int
+name|ZWRAP_isUsingZSTDdecompression
+parameter_list|(
+name|z_streamp
+name|strm
+parameter_list|)
+block|{
+if|if
+condition|(
+name|strm
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+return|return
+operator|(
+name|strm
+operator|->
+name|reserved
+operator|==
+name|ZWRAP_ZSTD_STREAM
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|ZWRAPD_finishWithError
 parameter_list|(
@@ -3077,19 +2986,11 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|zwd
-condition|)
 name|ZWRAP_freeDCtx
 argument_list|(
 name|zwd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strm
-condition|)
 name|strm
 operator|->
 name|state
@@ -3109,6 +3010,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ZWRAPD_finishWithErrorMsg
 parameter_list|(
@@ -3122,6 +3024,7 @@ parameter_list|)
 block|{
 name|ZWRAP_DCtx
 modifier|*
+specifier|const
 name|zwd
 init|=
 operator|(
@@ -3194,7 +3097,6 @@ name|reserved
 operator|=
 name|ZWRAP_ZLIB_STREAM
 expr_stmt|;
-comment|/* mark as zlib stream */
 return|return
 name|inflateInit
 argument_list|(
@@ -3205,6 +3107,7 @@ block|}
 block|{
 name|ZWRAP_DCtx
 modifier|*
+specifier|const
 name|zwd
 init|=
 name|ZWRAP_createDCtx
@@ -3237,24 +3140,18 @@ name|zwd
 operator|->
 name|version
 operator|=
-name|zwd
-operator|->
-name|customMem
-operator|.
-name|customAlloc
+name|ZSTD_malloc
 argument_list|(
-name|zwd
-operator|->
-name|customMem
-operator|.
-name|opaque
-argument_list|,
 name|strlen
 argument_list|(
 name|version
 argument_list|)
 operator|+
 literal|1
+argument_list|,
+name|zwd
+operator|->
+name|customMem
 argument_list|)
 expr_stmt|;
 if|if
@@ -3307,7 +3204,6 @@ operator|*
 operator|)
 name|zwd
 expr_stmt|;
-comment|/* use state which in not used by user */
 name|strm
 operator|->
 name|total_in
@@ -3326,7 +3222,6 @@ name|reserved
 operator|=
 name|ZWRAP_UNKNOWN_STREAM
 expr_stmt|;
-comment|/* mark as unknown steam */
 name|strm
 operator|->
 name|adler
@@ -3386,6 +3281,7 @@ return|;
 block|}
 block|{
 name|int
+specifier|const
 name|ret
 init|=
 name|z_inflateInit_
@@ -3413,6 +3309,7 @@ condition|)
 block|{
 name|ZWRAP_DCtx
 modifier|*
+specifier|const
 name|zwd
 init|=
 operator|(
@@ -3479,6 +3376,7 @@ return|;
 block|{
 name|ZWRAP_DCtx
 modifier|*
+specifier|const
 name|zwd
 init|=
 operator|(
@@ -3571,6 +3469,7 @@ argument_list|)
 return|;
 block|{
 name|int
+specifier|const
 name|ret
 init|=
 name|ZWRAP_inflateReset_keepDict
@@ -3591,6 +3490,7 @@ block|}
 block|{
 name|ZWRAP_DCtx
 modifier|*
+specifier|const
 name|zwd
 init|=
 operator|(
@@ -3668,6 +3568,7 @@ argument_list|)
 return|;
 block|{
 name|int
+specifier|const
 name|ret
 init|=
 name|z_inflateReset
@@ -3684,6 +3585,7 @@ condition|)
 block|{
 name|ZWRAP_DCtx
 modifier|*
+specifier|const
 name|zwd
 init|=
 operator|(
@@ -3770,11 +3672,9 @@ name|dictLength
 argument_list|)
 return|;
 block|{
-name|size_t
-name|errorCode
-decl_stmt|;
 name|ZWRAP_DCtx
 modifier|*
+specifier|const
 name|zwd
 init|=
 operator|(
@@ -3800,8 +3700,11 @@ condition|)
 return|return
 name|Z_STREAM_ERROR
 return|;
-name|errorCode
-operator|=
+block|{
+name|size_t
+specifier|const
+name|initErr
+init|=
 name|ZSTD_initDStream_usingDict
 argument_list|(
 name|zwd
@@ -3812,12 +3715,12 @@ name|dictionary
 argument_list|,
 name|dictLength
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|initErr
 argument_list|)
 condition|)
 return|return
@@ -3830,6 +3733,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
+block|}
 name|zwd
 operator|->
 name|decompState
@@ -3899,8 +3803,11 @@ name|pos
 operator|=
 literal|0
 expr_stmt|;
+block|{
+name|size_t
+specifier|const
 name|errorCode
-operator|=
+init|=
 name|ZSTD_decompressStream
 argument_list|(
 name|zwd
@@ -3917,7 +3824,7 @@ name|zwd
 operator|->
 name|inBuffer
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|LOG_WRAPPERD
 argument_list|(
 literal|"inflateSetDictionary ZSTD_decompressStream errorCode=%d srcSize=%d dstCapacity=%d\n"
@@ -3989,6 +3896,7 @@ return|;
 block|}
 block|}
 block|}
+block|}
 return|return
 name|Z_OK
 return|;
@@ -4015,9 +3923,6 @@ name|ZWRAP_DCtx
 modifier|*
 name|zwd
 decl_stmt|;
-name|int
-name|res
-decl_stmt|;
 if|if
 condition|(
 name|g_ZWRAPdecompressionType
@@ -4030,53 +3935,17 @@ operator|->
 name|reserved
 condition|)
 block|{
-name|LOG_WRAPPERD
-argument_list|(
-literal|"- inflate1 flush=%d avail_in=%d avail_out=%d total_in=%d total_out=%d\n"
-argument_list|,
-operator|(
 name|int
-operator|)
-name|flush
-argument_list|,
-operator|(
-name|int
-operator|)
-name|strm
-operator|->
-name|avail_in
-argument_list|,
-operator|(
-name|int
-operator|)
-name|strm
-operator|->
-name|avail_out
-argument_list|,
-operator|(
-name|int
-operator|)
-name|strm
-operator|->
-name|total_in
-argument_list|,
-operator|(
-name|int
-operator|)
-name|strm
-operator|->
-name|total_out
-argument_list|)
-expr_stmt|;
-name|res
-operator|=
+specifier|const
+name|result
+init|=
 name|inflate
 argument_list|(
 name|strm
 argument_list|,
 name|flush
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|LOG_WRAPPERD
 argument_list|(
 literal|"- inflate2 flush=%d avail_in=%d avail_out=%d total_in=%d total_out=%d res=%d\n"
@@ -4114,11 +3983,11 @@ name|strm
 operator|->
 name|total_out
 argument_list|,
-name|res
+name|result
 argument_list|)
 expr_stmt|;
 return|return
-name|res
+name|result
 return|;
 block|}
 if|if
@@ -4132,12 +4001,6 @@ condition|)
 return|return
 name|Z_OK
 return|;
-block|{
-name|size_t
-name|errorCode
-decl_stmt|,
-name|srcSize
-decl_stmt|;
 name|zwd
 operator|=
 operator|(
@@ -4242,14 +4105,17 @@ operator|!=
 name|ZSTD_MAGICNUMBER
 condition|)
 block|{
-if|if
-condition|(
+block|{
+name|int
+specifier|const
+name|initErr
+init|=
+operator|(
 name|zwd
 operator|->
 name|windowBits
-condition|)
-name|errorCode
-operator|=
+operator|)
+condition|?
 name|inflateInit2_
 argument_list|(
 name|strm
@@ -4266,10 +4132,7 @@ name|zwd
 operator|->
 name|stream_size
 argument_list|)
-expr_stmt|;
-else|else
-name|errorCode
-operator|=
+else|:
 name|inflateInit_
 argument_list|(
 name|strm
@@ -4282,54 +4145,81 @@ name|zwd
 operator|->
 name|stream_size
 argument_list|)
+decl_stmt|;
+name|LOG_WRAPPERD
+argument_list|(
+literal|"ZLIB inflateInit errorCode=%d\n"
+argument_list|,
+name|initErr
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|initErr
+operator|!=
+name|Z_OK
+condition|)
+return|return
+name|ZWRAPD_finishWithError
+argument_list|(
+name|zwd
+argument_list|,
+name|strm
+argument_list|,
+name|initErr
+argument_list|)
+return|;
+block|}
 name|strm
 operator|->
 name|reserved
 operator|=
 name|ZWRAP_ZLIB_STREAM
 expr_stmt|;
-comment|/* mark as zlib stream */
-name|errorCode
-operator|=
+block|{
+name|size_t
+specifier|const
+name|freeErr
+init|=
 name|ZWRAP_freeDCtx
 argument_list|(
 name|zwd
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|freeErr
 argument_list|)
 condition|)
 goto|goto
 name|error
 goto|;
-if|if
-condition|(
+block|}
+block|{
+name|int
+specifier|const
+name|result
+init|=
+operator|(
 name|flush
 operator|==
 name|Z_INFLATE_SYNC
-condition|)
-name|res
-operator|=
+operator|)
+condition|?
 name|inflateSync
 argument_list|(
 name|strm
 argument_list|)
-expr_stmt|;
-else|else
-name|res
-operator|=
+else|:
 name|inflate
 argument_list|(
 name|strm
 argument_list|,
 name|flush
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|LOG_WRAPPERD
 argument_list|(
 literal|"- inflate3 flush=%d avail_in=%d avail_out=%d total_in=%d total_out=%d res=%d\n"
@@ -4371,14 +4261,18 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
-name|res
+name|result
 return|;
+block|}
 block|}
 block|}
 else|else
 block|{
+comment|/* ! (zwd->totalInBytes == 0&& strm->avail_in>= ZLIB_HEADERSIZE) */
+name|size_t
+specifier|const
 name|srcSize
-operator|=
+init|=
 name|MIN
 argument_list|(
 name|strm
@@ -4391,7 +4285,7 @@ name|zwd
 operator|->
 name|totalInBytes
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|memcpy
 argument_list|(
 name|zwd
@@ -4491,14 +4385,17 @@ name|strm
 operator|->
 name|avail_out
 expr_stmt|;
-if|if
-condition|(
+block|{
+name|int
+specifier|const
+name|initErr
+init|=
+operator|(
 name|zwd
 operator|->
 name|windowBits
-condition|)
-name|errorCode
-operator|=
+operator|)
+condition|?
 name|inflateInit2_
 argument_list|(
 name|strm
@@ -4515,10 +4412,7 @@ name|zwd
 operator|->
 name|stream_size
 argument_list|)
-expr_stmt|;
-else|else
-name|errorCode
-operator|=
+else|:
 name|inflateInit_
 argument_list|(
 name|strm
@@ -4531,20 +4425,17 @@ name|zwd
 operator|->
 name|stream_size
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|LOG_WRAPPERD
 argument_list|(
 literal|"ZLIB inflateInit errorCode=%d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
-name|errorCode
+name|initErr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|errorCode
+name|initErr
 operator|!=
 name|Z_OK
 condition|)
@@ -4555,12 +4446,10 @@ name|zwd
 argument_list|,
 name|strm
 argument_list|,
-operator|(
-name|int
-operator|)
-name|errorCode
+name|initErr
 argument_list|)
 return|;
+block|}
 comment|/* inflate header */
 name|strm
 operator|->
@@ -4587,23 +4476,23 @@ name|avail_out
 operator|=
 literal|0
 expr_stmt|;
-name|errorCode
-operator|=
+block|{
+name|int
+specifier|const
+name|dErr
+init|=
 name|inflate
 argument_list|(
 name|strm
 argument_list|,
 name|Z_NO_FLUSH
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|LOG_WRAPPERD
 argument_list|(
 literal|"ZLIB inflate errorCode=%d strm->avail_in=%d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
-name|errorCode
+name|dErr
 argument_list|,
 operator|(
 name|int
@@ -4615,7 +4504,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|errorCode
+name|dErr
 operator|!=
 name|Z_OK
 condition|)
@@ -4626,12 +4515,10 @@ name|zwd
 argument_list|,
 name|strm
 argument_list|,
-operator|(
-name|int
-operator|)
-name|errorCode
+name|dErr
 argument_list|)
 return|;
+block|}
 if|if
 condition|(
 name|strm
@@ -4682,46 +4569,50 @@ operator|=
 name|ZWRAP_ZLIB_STREAM
 expr_stmt|;
 comment|/* mark as zlib stream */
-name|errorCode
-operator|=
+block|{
+name|size_t
+specifier|const
+name|freeErr
+init|=
 name|ZWRAP_freeDCtx
 argument_list|(
 name|zwd
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|freeErr
 argument_list|)
 condition|)
 goto|goto
 name|error
 goto|;
-if|if
-condition|(
+block|}
+block|{
+name|int
+specifier|const
+name|result
+init|=
+operator|(
 name|flush
 operator|==
 name|Z_INFLATE_SYNC
-condition|)
-name|res
-operator|=
+operator|)
+condition|?
 name|inflateSync
 argument_list|(
 name|strm
 argument_list|)
-expr_stmt|;
-else|else
-name|res
-operator|=
+else|:
 name|inflate
 argument_list|(
 name|strm
 argument_list|,
 name|flush
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|LOG_WRAPPERD
 argument_list|(
 literal|"- inflate2 flush=%d avail_in=%d avail_out=%d total_in=%d total_out=%d res=%d\n"
@@ -4763,11 +4654,14 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
-name|res
+name|result
 return|;
 block|}
 block|}
 block|}
+comment|/* if ! (zwd->totalInBytes == 0&& strm->avail_in>= ZLIB_HEADERSIZE) */
+block|}
+comment|/* (zwd->totalInBytes< ZLIB_HEADERSIZE) */
 name|strm
 operator|->
 name|reserved
@@ -4869,20 +4763,22 @@ operator|==
 name|ZWRAP_useInit
 condition|)
 block|{
-name|errorCode
-operator|=
+name|size_t
+specifier|const
+name|initErr
+init|=
 name|ZSTD_initDStream
 argument_list|(
 name|zwd
 operator|->
 name|zbd
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|initErr
 argument_list|)
 condition|)
 block|{
@@ -4892,7 +4788,7 @@ literal|"ERROR: ZSTD_initDStream errorCode=%s\n"
 argument_list|,
 name|ZSTD_getErrorName
 argument_list|(
-name|errorCode
+name|initErr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4903,20 +4799,22 @@ block|}
 block|}
 else|else
 block|{
-name|errorCode
-operator|=
+name|size_t
+specifier|const
+name|resetErr
+init|=
 name|ZSTD_resetDStream
 argument_list|(
 name|zwd
 operator|->
 name|zbd
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|resetErr
 argument_list|)
 condition|)
 goto|goto
@@ -4926,8 +4824,10 @@ block|}
 block|}
 else|else
 block|{
+name|size_t
+specifier|const
 name|srcSize
-operator|=
+init|=
 name|MIN
 argument_list|(
 name|strm
@@ -4940,7 +4840,7 @@ name|zwd
 operator|->
 name|totalInBytes
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|memcpy
 argument_list|(
 name|zwd
@@ -5002,20 +4902,22 @@ operator|==
 name|ZWRAP_useInit
 condition|)
 block|{
-name|errorCode
-operator|=
+name|size_t
+specifier|const
+name|initErr
+init|=
 name|ZSTD_initDStream
 argument_list|(
 name|zwd
 operator|->
 name|zbd
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|initErr
 argument_list|)
 condition|)
 block|{
@@ -5025,7 +4927,7 @@ literal|"ERROR: ZSTD_initDStream errorCode=%s\n"
 argument_list|,
 name|ZSTD_getErrorName
 argument_list|(
-name|errorCode
+name|initErr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5036,20 +4938,22 @@ block|}
 block|}
 else|else
 block|{
-name|errorCode
-operator|=
+name|size_t
+specifier|const
+name|resetErr
+init|=
 name|ZSTD_resetDStream
 argument_list|(
 name|zwd
 operator|->
 name|zbd
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|resetErr
 argument_list|)
 condition|)
 goto|goto
@@ -5108,8 +5012,11 @@ name|pos
 operator|=
 literal|0
 expr_stmt|;
-name|errorCode
-operator|=
+block|{
+name|size_t
+specifier|const
+name|dErr
+init|=
 name|ZSTD_decompressStream
 argument_list|(
 name|zwd
@@ -5126,7 +5033,7 @@ name|zwd
 operator|->
 name|inBuffer
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|LOG_WRAPPERD
 argument_list|(
 literal|"inflate ZSTD_decompressStream1 errorCode=%d srcSize=%d dstCapacity=%d\n"
@@ -5134,7 +5041,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|errorCode
+name|dErr
 argument_list|,
 operator|(
 name|int
@@ -5159,7 +5066,7 @@ if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|dErr
 argument_list|)
 condition|)
 block|{
@@ -5169,13 +5076,14 @@ literal|"ERROR: ZSTD_decompressStream1 %s\n"
 argument_list|,
 name|ZSTD_getErrorName
 argument_list|(
-name|errorCode
+name|dErr
 argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -5197,6 +5105,7 @@ goto|;
 comment|/* not consumed */
 block|}
 block|}
+comment|/* (zwd->totalInBytes< ZSTD_HEADERSIZE) */
 name|zwd
 operator|->
 name|inBuffer
@@ -5253,8 +5162,11 @@ name|pos
 operator|=
 literal|0
 expr_stmt|;
-name|errorCode
-operator|=
+block|{
+name|size_t
+specifier|const
+name|dErr
+init|=
 name|ZSTD_decompressStream
 argument_list|(
 name|zwd
@@ -5271,7 +5183,7 @@ name|zwd
 operator|->
 name|inBuffer
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|LOG_WRAPPERD
 argument_list|(
 literal|"inflate ZSTD_decompressStream2 errorCode=%d srcSize=%d dstCapacity=%d\n"
@@ -5279,7 +5191,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|errorCode
+name|dErr
 argument_list|,
 operator|(
 name|int
@@ -5300,7 +5212,7 @@ if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|dErr
 argument_list|)
 condition|)
 block|{
@@ -5315,7 +5227,7 @@ literal|"ERROR: ZSTD_decompressStream2 %s zwd->errorCount=%d\n"
 argument_list|,
 name|ZSTD_getErrorName
 argument_list|(
-name|errorCode
+name|dErr
 argument_list|)
 argument_list|,
 name|zwd
@@ -5452,7 +5364,7 @@ name|pos
 expr_stmt|;
 if|if
 condition|(
-name|errorCode
+name|dErr
 operator|==
 literal|0
 condition|)
@@ -5501,6 +5413,7 @@ name|Z_STREAM_END
 return|;
 block|}
 block|}
+comment|/* dErr lifetime */
 name|LOG_WRAPPERD
 argument_list|(
 literal|"- inflate2 flush=%d avail_in=%d avail_out=%d total_in=%d total_out=%d res=%d\n"
@@ -5613,11 +5526,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|{
-name|size_t
-name|errorCode
-decl_stmt|;
 name|ZWRAP_DCtx
 modifier|*
+specifier|const
 name|zwd
 init|=
 operator|(
@@ -5638,29 +5549,33 @@ return|return
 name|Z_OK
 return|;
 comment|/* structures are already freed */
+block|{
+name|size_t
+specifier|const
+name|freeErr
+init|=
+name|ZWRAP_freeDCtx
+argument_list|(
+name|zwd
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|ZSTD_isError
+argument_list|(
+name|freeErr
+argument_list|)
+condition|)
+return|return
+name|Z_STREAM_ERROR
+return|;
+block|}
 name|strm
 operator|->
 name|state
 operator|=
 name|NULL
 expr_stmt|;
-name|errorCode
-operator|=
-name|ZWRAP_freeDCtx
-argument_list|(
-name|zwd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ZSTD_isError
-argument_list|(
-name|errorCode
-argument_list|)
-condition|)
-return|return
-name|Z_STREAM_ERROR
-return|;
 block|}
 return|return
 name|Z_OK
@@ -6418,7 +6333,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* utility functions */
+comment|/* ===   utility functions  === */
 end_comment
 
 begin_ifndef
@@ -6479,7 +6394,7 @@ name|destLen
 decl_stmt|;
 name|size_t
 specifier|const
-name|errorCode
+name|cSize
 init|=
 name|ZSTD_compress
 argument_list|(
@@ -6513,7 +6428,7 @@ if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|cSize
 argument_list|)
 condition|)
 return|return
@@ -6522,7 +6437,7 @@ return|;
 operator|*
 name|destLen
 operator|=
-name|errorCode
+name|cSize
 expr_stmt|;
 block|}
 return|return
@@ -6588,7 +6503,7 @@ name|destLen
 decl_stmt|;
 name|size_t
 specifier|const
-name|errorCode
+name|cSize
 init|=
 name|ZSTD_compress
 argument_list|(
@@ -6607,7 +6522,7 @@ if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|cSize
 argument_list|)
 condition|)
 return|return
@@ -6616,7 +6531,7 @@ return|;
 operator|*
 name|destLen
 operator|=
-name|errorCode
+name|cSize
 expr_stmt|;
 block|}
 return|return
@@ -6686,16 +6601,13 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|sourceLen
-operator|<
-literal|4
-operator|||
-name|MEM_readLE32
+operator|!
+name|ZSTD_isFrame
 argument_list|(
 name|source
+argument_list|,
+name|sourceLen
 argument_list|)
-operator|!=
-name|ZSTD_MAGICNUMBER
 condition|)
 return|return
 name|uncompress
@@ -6718,7 +6630,7 @@ name|destLen
 decl_stmt|;
 name|size_t
 specifier|const
-name|errorCode
+name|dSize
 init|=
 name|ZSTD_decompress
 argument_list|(
@@ -6735,7 +6647,7 @@ if|if
 condition|(
 name|ZSTD_isError
 argument_list|(
-name|errorCode
+name|dSize
 argument_list|)
 condition|)
 return|return
@@ -6744,7 +6656,7 @@ return|;
 operator|*
 name|destLen
 operator|=
-name|errorCode
+name|dSize
 expr_stmt|;
 block|}
 return|return

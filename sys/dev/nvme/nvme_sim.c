@@ -468,7 +468,25 @@ name|cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|==
+name|XPT_NVME_IO
+condition|)
 name|nvme_ctrlr_submit_io_request
+argument_list|(
+name|ctrlr
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+else|else
+name|nvme_ctrlr_submit_admin_request
 argument_list|(
 name|ctrlr
 argument_list|,
@@ -932,6 +950,10 @@ case|case
 name|XPT_NVME_IO
 case|:
 comment|/* Execute the requested I/O operation */
+case|case
+name|XPT_NVME_ADMIN
+case|:
+comment|/* or Admin operation */
 name|nvme_sim_nvmeio
 argument_list|(
 name|sim

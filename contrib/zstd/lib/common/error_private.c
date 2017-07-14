@@ -116,6 +116,15 @@ name|compressionParameter_unsupported
 argument_list|)
 case|:
 return|return
+literal|"Compression parameter is not supported"
+return|;
+case|case
+name|PREFIX
+argument_list|(
+name|compressionParameter_outOfBound
+argument_list|)
+case|:
+return|return
 literal|"Compression parameter is out of bound"
 return|;
 case|case
@@ -234,6 +243,24 @@ argument_list|)
 case|:
 return|return
 literal|"Cannot create Dictionary from provided samples"
+return|;
+case|case
+name|PREFIX
+argument_list|(
+name|frameIndex_tooLarge
+argument_list|)
+case|:
+return|return
+literal|"Frame index is too large"
+return|;
+case|case
+name|PREFIX
+argument_list|(
+name|seekableIO
+argument_list|)
+case|:
+return|return
+literal|"An I/O error occurred when reading/seeking"
 return|;
 case|case
 name|PREFIX

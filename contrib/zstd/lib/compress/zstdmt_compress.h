@@ -30,7 +30,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* Note : All prototypes defined in this file shall be considered experimental.  *        There is no guarantee of API continuity (yet) on any of these prototypes */
+comment|/* Note : All prototypes defined in this file are labelled experimental.  *        No guarantee of API continuity is provided on any of them.  *        In fact, the expectation is that these prototypes will be replaced  *        by ZSTD_compress_generic() API in the near future */
 comment|/* ===   Dependencies   === */
 include|#
 directive|include
@@ -44,7 +44,7 @@ include|#
 directive|include
 file|"zstd.h"
 comment|/* ZSTD_inBuffer, ZSTD_outBuffer, ZSTDLIB_API */
-comment|/* ===   Simple one-pass functions   === */
+comment|/* ===   Memory management   === */
 typedef|typedef
 name|struct
 name|ZSTDMT_CCtx_s
@@ -60,21 +60,43 @@ name|nbThreads
 parameter_list|)
 function_decl|;
 name|ZSTDLIB_API
+name|ZSTDMT_CCtx
+modifier|*
+name|ZSTDMT_createCCtx_advanced
+parameter_list|(
+name|unsigned
+name|nbThreads
+parameter_list|,
+name|ZSTD_customMem
+name|cMem
+parameter_list|)
+function_decl|;
+name|ZSTDLIB_API
 name|size_t
 name|ZSTDMT_freeCCtx
 parameter_list|(
 name|ZSTDMT_CCtx
 modifier|*
-name|cctx
+name|mtctx
 parameter_list|)
 function_decl|;
+name|ZSTDLIB_API
+name|size_t
+name|ZSTDMT_sizeof_CCtx
+parameter_list|(
+name|ZSTDMT_CCtx
+modifier|*
+name|mtctx
+parameter_list|)
+function_decl|;
+comment|/* ===   Simple buffer-to-butter one-pass function   === */
 name|ZSTDLIB_API
 name|size_t
 name|ZSTDMT_compressCCtx
 parameter_list|(
 name|ZSTDMT_CCtx
 modifier|*
-name|cctx
+name|mtctx
 parameter_list|,
 name|void
 modifier|*
@@ -181,6 +203,42 @@ endif|#
 directive|endif
 name|ZSTDLIB_API
 name|size_t
+name|ZSTDMT_compress_advanced
+parameter_list|(
+name|ZSTDMT_CCtx
+modifier|*
+name|mtctx
+parameter_list|,
+name|void
+modifier|*
+name|dst
+parameter_list|,
+name|size_t
+name|dstCapacity
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|srcSize
+parameter_list|,
+specifier|const
+name|ZSTD_CDict
+modifier|*
+name|cdict
+parameter_list|,
+name|ZSTD_parameters
+specifier|const
+name|params
+parameter_list|,
+name|unsigned
+name|overlapRLog
+parameter_list|)
+function_decl|;
+name|ZSTDLIB_API
+name|size_t
 name|ZSTDMT_initCStream_advanced
 parameter_list|(
 name|ZSTDMT_CCtx
@@ -195,7 +253,7 @@ parameter_list|,
 name|size_t
 name|dictSize
 parameter_list|,
-comment|/**< dict can be released after init, a local copy is preserved within zcs */
+comment|/* dict can be released after init, a local copy is preserved within zcs */
 name|ZSTD_parameters
 name|params
 parameter_list|,
@@ -205,7 +263,30 @@ name|long
 name|pledgedSrcSize
 parameter_list|)
 function_decl|;
-comment|/**< pledgedSrcSize is optional and can be zero == unknown */
+comment|/* pledgedSrcSize is optional and can be zero == unknown */
+name|ZSTDLIB_API
+name|size_t
+name|ZSTDMT_initCStream_usingCDict
+parameter_list|(
+name|ZSTDMT_CCtx
+modifier|*
+name|mtctx
+parameter_list|,
+specifier|const
+name|ZSTD_CDict
+modifier|*
+name|cdict
+parameter_list|,
+name|ZSTD_frameParameters
+name|fparams
+parameter_list|,
+name|unsigned
+name|long
+name|long
+name|pledgedSrcSize
+parameter_list|)
+function_decl|;
+comment|/* note : zero means empty */
 comment|/* ZSDTMT_parameter :  * List of parameters that can be set using ZSTDMT_setMTCtxParameter() */
 typedef|typedef
 enum|enum
@@ -232,6 +313,27 @@ name|parameter
 parameter_list|,
 name|unsigned
 name|value
+parameter_list|)
+function_decl|;
+comment|/*! ZSTDMT_compressStream_generic() :  *  Combines ZSTDMT_compressStream() with ZSTDMT_flushStream() or ZSTDMT_endStream()  *  depending on flush directive.  * @return : minimum amount of data still to be flushed  *           0 if fully flushed  *           or an error code */
+name|ZSTDLIB_API
+name|size_t
+name|ZSTDMT_compressStream_generic
+parameter_list|(
+name|ZSTDMT_CCtx
+modifier|*
+name|mtctx
+parameter_list|,
+name|ZSTD_outBuffer
+modifier|*
+name|output
+parameter_list|,
+name|ZSTD_inBuffer
+modifier|*
+name|input
+parameter_list|,
+name|ZSTD_EndDirective
+name|endOp
 parameter_list|)
 function_decl|;
 if|#

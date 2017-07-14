@@ -68,11 +68,11 @@ parameter_list|,
 name|unsigned
 name|nbFiles
 parameter_list|,
-name|ZDICT_params_t
+name|ZDICT_legacy_params_t
 modifier|*
 name|params
 parameter_list|,
-name|COVER_params_t
+name|ZDICT_cover_params_t
 modifier|*
 name|coverParams
 parameter_list|,
