@@ -3329,6 +3329,16 @@ literal|"3592A5 (unencrypted)"
 block|}
 block|,
 block|{
+literal|0x56
+block|,
+literal|20670
+block|,
+literal|525018
+block|,
+literal|"3592B5 (unencrypted)"
+block|}
+block|,
+block|{
 literal|0x58
 block|,
 literal|15142
@@ -3416,6 +3426,16 @@ block|,
 literal|525018
 block|,
 literal|"3592A5 (encrypted)"
+block|}
+block|,
+block|{
+literal|0x76
+block|,
+literal|20670
+block|,
+literal|525018
+block|,
+literal|"3592B5 (encrypted)"
 block|}
 block|,
 block|{
