@@ -1496,6 +1496,10 @@ block|,
 literal|1
 block|,
 literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

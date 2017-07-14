@@ -1522,6 +1522,20 @@ name|NFSPROC_COMMITDS
 value|53
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSPROC_OPENLAYGET
+value|54
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSPROC_CREATELAYGET
+value|55
+end_define
+
 begin_comment
 comment|/*  * Must be defined as one higher than the last NFSv4.1 Proc# above.  */
 end_comment
@@ -1530,7 +1544,7 @@ begin_define
 define|#
 directive|define
 name|NFSV41_NPROCS
-value|54
+value|56
 end_define
 
 begin_endif
@@ -1620,7 +1634,7 @@ name|rpccnt
 index|[
 name|NFSV41_NPROCS
 operator|+
-literal|15
+literal|13
 index|]
 decl_stmt|;
 name|uint64_t
