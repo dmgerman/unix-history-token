@@ -168,6 +168,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<compat/linux/linux_misc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/linux/linux_util.h>
 end_include
 
@@ -1484,15 +1490,11 @@ if|if
 condition|(
 name|len
 operator|>
-name|MAXPATHLEN
-operator|*
-literal|4
+name|LINUX_PATH_MAX
 condition|)
 name|len
 operator|=
-name|MAXPATHLEN
-operator|*
-literal|4
+name|LINUX_PATH_MAX
 expr_stmt|;
 elseif|else
 if|if
@@ -1526,6 +1528,8 @@ argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
 name|len
+argument_list|,
+name|LINUX_PATH_MAX
 argument_list|)
 expr_stmt|;
 if|if

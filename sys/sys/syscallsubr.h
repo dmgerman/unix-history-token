@@ -202,6 +202,9 @@ name|bufseg
 parameter_list|,
 name|u_int
 name|buflen
+parameter_list|,
+name|u_int
+name|path_max
 parameter_list|)
 function_decl|;
 end_function_decl

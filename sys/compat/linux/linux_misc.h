@@ -152,6 +152,13 @@ name|LINUX_MREMAP_FIXED
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_PATH_MAX
+value|4096
+end_define
+
 begin_decl_stmt
 specifier|extern
 specifier|const
