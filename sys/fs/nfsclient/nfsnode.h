@@ -568,6 +568,17 @@ begin_comment
 comment|/* Has been file locked. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NDSCOMMIT
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Commit is done via the DS. */
+end_comment
+
 begin_comment
 comment|/*  * Convert between nfsnode pointers and vnode pointers  */
 end_comment

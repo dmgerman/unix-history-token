@@ -1114,12 +1114,16 @@ operator|->
 name|a_td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NMODIFIED means that there might be dirty/stale buffers 	 * associated with the NFS vnode.  None of the other flags are 	 * meaningful after the vnode is unused. 	 */
+comment|/* 	 * NMODIFIED means that there might be dirty/stale buffers 	 * associated with the NFS vnode. 	 * NDSCOMMIT means that the file is on a pNFS server and commits 	 * should be done to the DS. 	 * None of the other flags are meaningful after the vnode is unused. 	 */
 name|np
 operator|->
 name|n_flag
 operator|&=
+operator|(
 name|NMODIFIED
+operator||
+name|NDSCOMMIT
+operator|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
