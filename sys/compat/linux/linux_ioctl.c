@@ -15572,7 +15572,7 @@ if|if
 condition|(
 name|plvc
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
