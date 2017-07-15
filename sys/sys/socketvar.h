@@ -922,9 +922,9 @@ name|int
 name|getsock_cap
 parameter_list|(
 name|struct
-name|filedesc
+name|thread
 modifier|*
-name|fdp
+name|td
 parameter_list|,
 name|int
 name|fd

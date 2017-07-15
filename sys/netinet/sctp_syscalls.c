@@ -1025,10 +1025,6 @@ operator|=
 name|getsock_cap
 argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 argument_list|,
 name|uap
 operator|->
@@ -1668,10 +1664,6 @@ operator|=
 name|getsock_cap
 argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 argument_list|,
 name|uap
 operator|->
@@ -2309,10 +2301,6 @@ operator|=
 name|getsock_cap
 argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 argument_list|,
 name|uap
 operator|->
