@@ -5111,5 +5111,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|linux64
+argument_list|,
+literal|"Linux 64bit support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

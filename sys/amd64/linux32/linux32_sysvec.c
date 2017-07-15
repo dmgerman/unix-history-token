@@ -6310,5 +6310,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|linux
+argument_list|,
+literal|"Linux 32bit support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
