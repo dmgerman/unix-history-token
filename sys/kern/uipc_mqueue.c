@@ -9747,13 +9747,11 @@ argument_list|)
 expr_stmt|;
 name|fdclose
 argument_list|(
-name|fdp
+name|td
 argument_list|,
 name|fp
 argument_list|,
 name|fd
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|fdrop

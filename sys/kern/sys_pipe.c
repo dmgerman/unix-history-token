@@ -1758,11 +1758,6 @@ name|flags
 parameter_list|)
 block|{
 name|struct
-name|filedesc
-modifier|*
-name|fdp
-decl_stmt|;
-name|struct
 name|file
 modifier|*
 name|rf
@@ -1790,14 +1785,6 @@ name|fflags
 decl_stmt|,
 name|error
 decl_stmt|;
-name|fdp
-operator|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
-expr_stmt|;
 name|pipe_paircreate
 argument_list|(
 name|td
@@ -1921,7 +1908,7 @@ condition|)
 block|{
 name|fdclose
 argument_list|(
-name|fdp
+name|td
 argument_list|,
 name|rf
 argument_list|,
@@ -1929,8 +1916,6 @@ name|fildes
 index|[
 literal|0
 index|]
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|fdrop

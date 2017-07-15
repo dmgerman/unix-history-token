@@ -737,9 +737,9 @@ name|void
 name|fdclose
 parameter_list|(
 name|struct
-name|filedesc
+name|thread
 modifier|*
-name|fdp
+name|td
 parameter_list|,
 name|struct
 name|file
@@ -748,11 +748,6 @@ name|fp
 parameter_list|,
 name|int
 name|idx
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl

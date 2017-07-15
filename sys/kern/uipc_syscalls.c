@@ -1042,16 +1042,10 @@ block|{
 name|fdclose
 argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 argument_list|,
 name|fp
 argument_list|,
 name|fd
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1902,10 +1896,6 @@ condition|)
 name|fdclose
 argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 argument_list|,
 name|fp
 argument_list|,
@@ -1915,8 +1905,6 @@ name|td_retval
 index|[
 literal|0
 index|]
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|fdrop
@@ -2744,13 +2732,11 @@ literal|0
 condition|)
 name|fdclose
 argument_list|(
-name|fdp
+name|td
 argument_list|,
 name|nfp
 argument_list|,
 name|fd
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Release explicitly held references before returning.  We return 	 * a reference on nfp to the caller on success if they request it. 	 */
@@ -3579,17 +3565,6 @@ name|rsv
 parameter_list|)
 block|{
 name|struct
-name|filedesc
-modifier|*
-name|fdp
-init|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
-decl_stmt|;
-name|struct
 name|file
 modifier|*
 name|fp1
@@ -4000,7 +3975,7 @@ name|free4
 label|:
 name|fdclose
 argument_list|(
-name|fdp
+name|td
 argument_list|,
 name|fp2
 argument_list|,
@@ -4008,8 +3983,6 @@ name|rsv
 index|[
 literal|1
 index|]
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|fdrop
@@ -4023,7 +3996,7 @@ name|free3
 label|:
 name|fdclose
 argument_list|(
-name|fdp
+name|td
 argument_list|,
 name|fp1
 argument_list|,
@@ -4031,8 +4004,6 @@ name|rsv
 index|[
 literal|0
 index|]
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|fdrop

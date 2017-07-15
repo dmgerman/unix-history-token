@@ -3568,16 +3568,10 @@ block|{
 name|fdclose
 argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 argument_list|,
 name|fp
 argument_list|,
 name|fd
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|fdrop

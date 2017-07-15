@@ -4120,17 +4120,11 @@ block|{
 name|fdclose
 argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 argument_list|,
 name|fp_procdesc
 argument_list|,
 operator|*
 name|procdescp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|fdrop

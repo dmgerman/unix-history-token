@@ -239,16 +239,10 @@ comment|/* 	 * NOTE: We should only get here when the "fd" has not been 	 * inst
 name|fdclose
 argument_list|(
 name|curthread
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 argument_list|,
 name|file
 argument_list|,
 name|fd
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* drop extra reference */
