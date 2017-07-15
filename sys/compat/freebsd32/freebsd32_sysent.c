@@ -12022,7 +12022,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sys_sctp_peeloff
+name|lkmressys
 block|,
 name|AUE_NULL
 block|,
@@ -12034,7 +12034,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 471 = sctp_peeloff */
@@ -12048,7 +12048,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sys_sctp_generic_sendmsg
+name|lkmressys
 block|,
 name|AUE_NULL
 block|,
@@ -12060,7 +12060,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 472 = sctp_generic_sendmsg */
@@ -12074,7 +12074,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sys_sctp_generic_sendmsg_iov
+name|lkmressys
 block|,
 name|AUE_NULL
 block|,
@@ -12086,7 +12086,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 473 = sctp_generic_sendmsg_iov */
@@ -12100,7 +12100,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sys_sctp_generic_recvmsg
+name|lkmressys
 block|,
 name|AUE_NULL
 block|,
@@ -12112,7 +12112,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_STATIC
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 474 = sctp_generic_recvmsg */
