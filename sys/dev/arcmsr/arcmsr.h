@@ -146,6 +146,13 @@ begin_comment
 comment|/* in sec */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ARCMSR_NUM_MSIX_VECTORS
+value|4
+end_define
+
 begin_comment
 comment|/* ********************************************************************* */
 end_comment
@@ -666,6 +673,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ARECA_1884
+value|0x1884
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ARECA_SUB_DEV_ID_1880
 value|0x1880
 end_define
@@ -690,6 +708,17 @@ define|#
 directive|define
 name|ARECA_SUB_DEV_ID_1883
 value|0x1883
+end_define
+
+begin_comment
+comment|/* Subsystem Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARECA_SUB_DEV_ID_1884
+value|0x1884
 end_define
 
 begin_comment
@@ -1031,6 +1060,17 @@ define|#
 directive|define
 name|PCIDevVenIDARC1882
 value|0x188217D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1884
+value|0x188417D3
 end_define
 
 begin_comment
@@ -2697,6 +2737,121 @@ value|0x80000000
 end_define
 
 begin_comment
+comment|/*  ******************************************************************************* **                SPEC. for Areca HBE adapter ******************************************************************************* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_SIGNATURE_1884
+value|0x188417D3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_OUTBOUND_DOORBELL_ISR
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_OUTBOUND_POSTQUEUE_ISR
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_ALL_INTMASKENABLE
+value|0x00000009
+end_define
+
+begin_comment
+comment|/* disable all ISR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_DRV2IOP_DATA_WRITE_OK
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_DRV2IOP_DATA_READ_OK
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_DRV2IOP_MESSAGE_CMD_DONE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* inbound message 0 ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_IOP2DRV_DATA_WRITE_OK
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_IOP2DRV_DATA_READ_OK
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_IOP2DRV_MESSAGE_CMD_DONE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* outbound message 0 ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_MESSAGE_FIRMWARE_OK
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* ARCMSR_HBCMU_MESSAGE_FIRMWARE_OK */
+end_comment
+
+begin_comment
+comment|/* ARC-1884 doorbell sync */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_HBEMU_DOORBELL_SYNC
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCMSR_ARC188X_RESET_ADAPTER
+value|0x00000004
+end_define
+
+begin_comment
 comment|/* ********************************************************************* ** Message Unit structure ********************************************************************* */
 end_comment
 
@@ -3615,6 +3770,361 @@ end_comment
 
 begin_struct
 struct|struct
+name|HBE_MessageUnit
+block|{
+name|u_int32_t
+name|iobound_doorbell
+decl_stmt|;
+comment|/*0000 0003*/
+name|u_int32_t
+name|write_sequence_3xxx
+decl_stmt|;
+comment|/*0004 0007*/
+name|u_int32_t
+name|host_diagnostic_3xxx
+decl_stmt|;
+comment|/*0008 000B*/
+name|u_int32_t
+name|posted_outbound_doorbell
+decl_stmt|;
+comment|/*000C 000F*/
+name|u_int32_t
+name|master_error_attribute
+decl_stmt|;
+comment|/*0010 0013*/
+name|u_int32_t
+name|master_error_address_low
+decl_stmt|;
+comment|/*0014 0017*/
+name|u_int32_t
+name|master_error_address_high
+decl_stmt|;
+comment|/*0018 001B*/
+name|u_int32_t
+name|hcb_size
+decl_stmt|;
+comment|/*001C 001F*/
+name|u_int32_t
+name|inbound_doorbell
+decl_stmt|;
+comment|/*0020 0023*/
+name|u_int32_t
+name|diagnostic_rw_data
+decl_stmt|;
+comment|/*0024 0027*/
+name|u_int32_t
+name|diagnostic_rw_address_low
+decl_stmt|;
+comment|/*0028 002B*/
+name|u_int32_t
+name|diagnostic_rw_address_high
+decl_stmt|;
+comment|/*002C 002F*/
+name|u_int32_t
+name|host_int_status
+decl_stmt|;
+comment|/*0030 0033 host interrupt status*/
+name|u_int32_t
+name|host_int_mask
+decl_stmt|;
+comment|/*0034 0037 host interrupt mask*/
+name|u_int32_t
+name|dcr_data
+decl_stmt|;
+comment|/*0038 003B*/
+name|u_int32_t
+name|dcr_address
+decl_stmt|;
+comment|/*003C 003F*/
+name|u_int32_t
+name|inbound_queueport
+decl_stmt|;
+comment|/*0040 0043 port32 host inbound queue port*/
+name|u_int32_t
+name|outbound_queueport
+decl_stmt|;
+comment|/*0044 0047 port32 host outbound queue port*/
+name|u_int32_t
+name|hcb_pci_address_low
+decl_stmt|;
+comment|/*0048 004B*/
+name|u_int32_t
+name|hcb_pci_address_high
+decl_stmt|;
+comment|/*004C 004F*/
+name|u_int32_t
+name|iop_int_status
+decl_stmt|;
+comment|/*0050 0053*/
+name|u_int32_t
+name|iop_int_mask
+decl_stmt|;
+comment|/*0054 0057*/
+name|u_int32_t
+name|iop_inbound_queue_port
+decl_stmt|;
+comment|/*0058 005B*/
+name|u_int32_t
+name|iop_outbound_queue_port
+decl_stmt|;
+comment|/*005C 005F*/
+name|u_int32_t
+name|inbound_free_list_index
+decl_stmt|;
+comment|/*0060 0063*/
+name|u_int32_t
+name|inbound_post_list_index
+decl_stmt|;
+comment|/*0064 0067*/
+name|u_int32_t
+name|outbound_free_list_index
+decl_stmt|;
+comment|/*0068 006B*/
+name|u_int32_t
+name|outbound_post_list_index
+decl_stmt|;
+comment|/*006C 006F*/
+name|u_int32_t
+name|inbound_doorbell_clear
+decl_stmt|;
+comment|/*0070 0073*/
+name|u_int32_t
+name|i2o_message_unit_control
+decl_stmt|;
+comment|/*0074 0077*/
+name|u_int32_t
+name|last_used_message_source_address_low
+decl_stmt|;
+comment|/*0078 007B*/
+name|u_int32_t
+name|last_used_message_source_address_high
+decl_stmt|;
+comment|/*007C 007F*/
+name|u_int32_t
+name|pull_mode_data_byte_count
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/*0080 008F*/
+name|u_int32_t
+name|message_dest_address_index
+decl_stmt|;
+comment|/*0090 0093*/
+name|u_int32_t
+name|done_queue_not_empty_int_counter_timer
+decl_stmt|;
+comment|/*0094 0097*/
+name|u_int32_t
+name|utility_A_int_counter_timer
+decl_stmt|;
+comment|/*0098 009B*/
+name|u_int32_t
+name|outbound_doorbell
+decl_stmt|;
+comment|/*009C 009F*/
+name|u_int32_t
+name|outbound_doorbell_clear
+decl_stmt|;
+comment|/*00A0 00A3*/
+name|u_int32_t
+name|message_source_address_index
+decl_stmt|;
+comment|/*00A4 00A7*/
+name|u_int32_t
+name|message_done_queue_index
+decl_stmt|;
+comment|/*00A8 00AB*/
+name|u_int32_t
+name|reserved0
+decl_stmt|;
+comment|/*00AC 00AF*/
+name|u_int32_t
+name|inbound_msgaddr0
+decl_stmt|;
+comment|/*00B0 00B3 scratchpad0*/
+name|u_int32_t
+name|inbound_msgaddr1
+decl_stmt|;
+comment|/*00B4 00B7 scratchpad1*/
+name|u_int32_t
+name|outbound_msgaddr0
+decl_stmt|;
+comment|/*00B8 00BB scratchpad2*/
+name|u_int32_t
+name|outbound_msgaddr1
+decl_stmt|;
+comment|/*00BC 00BF scratchpad3*/
+name|u_int32_t
+name|inbound_queueport_low
+decl_stmt|;
+comment|/*00C0 00C3 port64 host inbound queue port low*/
+name|u_int32_t
+name|inbound_queueport_high
+decl_stmt|;
+comment|/*00C4 00C7 port64 host inbound queue port high*/
+name|u_int32_t
+name|outbound_queueport_low
+decl_stmt|;
+comment|/*00C8 00CB port64 host outbound queue port low*/
+name|u_int32_t
+name|outbound_queueport_high
+decl_stmt|;
+comment|/*00CC 00CF port64 host outbound queue port high*/
+name|u_int32_t
+name|iop_inbound_queue_port_low
+decl_stmt|;
+comment|/*00D0 00D3*/
+name|u_int32_t
+name|iop_inbound_queue_port_high
+decl_stmt|;
+comment|/*00D4 00D7*/
+name|u_int32_t
+name|iop_outbound_queue_port_low
+decl_stmt|;
+comment|/*00D8 00DB*/
+name|u_int32_t
+name|iop_outbound_queue_port_high
+decl_stmt|;
+comment|/*00DC 00DF*/
+name|u_int32_t
+name|message_dest_queue_port_low
+decl_stmt|;
+comment|/*00E0 00E3*/
+name|u_int32_t
+name|message_dest_queue_port_high
+decl_stmt|;
+comment|/*00E4 00E7*/
+name|u_int32_t
+name|last_used_message_dest_address_low
+decl_stmt|;
+comment|/*00E8 00EB*/
+name|u_int32_t
+name|last_used_message_dest_address_high
+decl_stmt|;
+comment|/*00EC 00EF*/
+name|u_int32_t
+name|message_done_queue_base_address_low
+decl_stmt|;
+comment|/*00F0 00F3*/
+name|u_int32_t
+name|message_done_queue_base_address_high
+decl_stmt|;
+comment|/*00F4 00F7*/
+name|u_int32_t
+name|host_diagnostic
+decl_stmt|;
+comment|/*00F8 00FB*/
+name|u_int32_t
+name|write_sequence
+decl_stmt|;
+comment|/*00FC 00FF*/
+name|u_int32_t
+name|reserved1
+index|[
+literal|46
+index|]
+decl_stmt|;
+comment|/*0100 01B7*/
+name|u_int32_t
+name|reply_post_producer_index
+decl_stmt|;
+comment|/*01B8 01BB*/
+name|u_int32_t
+name|reply_post_consumer_index
+decl_stmt|;
+comment|/*01BC 01BF*/
+name|u_int32_t
+name|reserved2
+index|[
+literal|1936
+index|]
+decl_stmt|;
+comment|/*01C0 1FFF*/
+name|u_int32_t
+name|message_wbuffer
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*2000 207F*/
+name|u_int32_t
+name|reserved3
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*2080 20FF*/
+name|u_int32_t
+name|message_rbuffer
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*2100 217F*/
+name|u_int32_t
+name|reserved4
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/*2180 21FF*/
+name|u_int32_t
+name|msgcode_rwbuffer
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/*2200 23FF*/
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|deliver_completeQ
+block|{
+name|u_int16_t
+name|cmdFlag
+decl_stmt|;
+name|u_int16_t
+name|cmdSMID
+decl_stmt|;
+name|u_int16_t
+name|cmdLMID
+decl_stmt|;
+comment|// reserved (0)
+name|u_int16_t
+name|cmdFlag2
+decl_stmt|;
+comment|// reserved (0)
+block|}
+name|DeliverQ
+operator|,
+name|CompletionQ
+operator|,
+typedef|*
+name|pDeliver_Q
+operator|,
+typedef|*
+name|pCompletion_Q
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|COMPLETION_Q_POOL_SIZE
+value|(sizeof(struct deliver_completeQ) * 512 + 128)
+end_define
+
+begin_comment
+comment|/* ********************************************************************* **  ********************************************************************* */
+end_comment
+
+begin_struct
+struct|struct
 name|MessageUnit_UNION
 block|{
 union|union
@@ -3634,6 +4144,10 @@ decl_stmt|;
 name|struct
 name|HBD_MessageUnit0
 name|hbdmu
+decl_stmt|;
+name|struct
+name|HBE_MessageUnit
+name|hbemu
 decl_stmt|;
 block|}
 name|muu
@@ -4187,6 +4701,9 @@ name|struct
 name|callout
 name|ccb_callout
 decl_stmt|;
+name|u_int32_t
+name|smid
+decl_stmt|;
 comment|/*  ==========================================================  */
 block|}
 struct|;
@@ -4355,7 +4872,7 @@ begin_define
 define|#
 directive|define
 name|ACB_ADAPTER_TYPE_A
-value|0x00000001
+value|0x00000000
 end_define
 
 begin_comment
@@ -4366,7 +4883,7 @@ begin_define
 define|#
 directive|define
 name|ACB_ADAPTER_TYPE_B
-value|0x00000002
+value|0x00000001
 end_define
 
 begin_comment
@@ -4377,7 +4894,7 @@ begin_define
 define|#
 directive|define
 name|ACB_ADAPTER_TYPE_C
-value|0x00000004
+value|0x00000002
 end_define
 
 begin_comment
@@ -4388,11 +4905,22 @@ begin_define
 define|#
 directive|define
 name|ACB_ADAPTER_TYPE_D
-value|0x00000008
+value|0x00000003
 end_define
 
 begin_comment
 comment|/* hbd M IOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACB_ADAPTER_TYPE_E
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* hbd L IOP */
 end_comment
 
 begin_struct
@@ -4464,12 +4992,24 @@ name|struct
 name|resource
 modifier|*
 name|irqres
+index|[
+name|ARCMSR_NUM_MSIX_VECTORS
+index|]
 decl_stmt|;
 name|void
 modifier|*
 name|ih
+index|[
+name|ARCMSR_NUM_MSIX_VECTORS
+index|]
 decl_stmt|;
 comment|/* interrupt handle */
+name|int
+name|irq_id
+index|[
+name|ARCMSR_NUM_MSIX_VECTORS
+index|]
+decl_stmt|;
 comment|/* Hooks into the CAM XPT */
 name|struct
 name|cam_sim
@@ -4678,6 +5218,27 @@ decl_stmt|;
 name|u_int16_t
 name|sub_device_id
 decl_stmt|;
+name|u_int32_t
+name|doneq_index
+decl_stmt|;
+name|u_int32_t
+name|in_doorbell
+decl_stmt|;
+name|u_int32_t
+name|out_doorbell
+decl_stmt|;
+name|u_int32_t
+name|completionQ_entry
+decl_stmt|;
+name|pCompletion_Q
+name|pCompletionQ
+decl_stmt|;
+name|int
+name|msix_vectors
+decl_stmt|;
+name|int
+name|rid
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -4811,6 +5372,13 @@ define|#
 directive|define
 name|ACB_F_SRB_FUNCTION_POWER
 value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACB_F_MSIX_ENABLED
+value|0x2000
 end_define
 
 begin_comment
