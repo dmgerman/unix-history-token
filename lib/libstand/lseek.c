@@ -121,9 +121,6 @@ operator|+=
 name|offset
 expr_stmt|;
 break|break;
-case|case
-name|SEEK_END
-case|:
 default|default:
 name|errno
 operator|=
