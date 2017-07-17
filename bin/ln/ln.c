@@ -1083,9 +1083,13 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * If the target is a directory (and not a symlink if hflag), 	 * append the source's name. 	 */
+comment|/* 	 * If the target is a directory (and not a symlink if hflag), 	 * append the source's name, unless Fflag is set. 	 */
 if|if
 condition|(
+operator|!
+name|Fflag
+operator|&&
+operator|(
 name|isdir
 operator|||
 operator|(
@@ -1127,6 +1131,7 @@ name|sb
 operator|.
 name|st_mode
 argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
