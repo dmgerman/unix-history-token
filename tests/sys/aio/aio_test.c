@@ -3094,6 +3094,9 @@ argument_list|(
 literal|"aio"
 argument_list|)
 expr_stmt|;
+name|ATF_REQUIRE_UNSAFE_AIO
+argument_list|()
+expr_stmt|;
 name|mdctl_fd
 operator|=
 name|open
