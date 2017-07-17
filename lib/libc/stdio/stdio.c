@@ -724,5 +724,32 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|__stdio_cancel_cleanup
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+if|if
+condition|(
+name|arg
+operator|!=
+name|NULL
+condition|)
+name|_funlockfile
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 
