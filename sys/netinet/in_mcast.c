@@ -4753,6 +4753,7 @@ operator|>
 literal|0
 operator|)
 condition|)
+block|{
 name|CTR1
 argument_list|(
 name|KTR_IGMPV3
@@ -4772,6 +4773,7 @@ index|]
 operator|.
 name|iss_asm
 expr_stmt|;
+block|}
 block|}
 comment|/* Increment ASM listener count on transition to ASM mode. */
 if|if
