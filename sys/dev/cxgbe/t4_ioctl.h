@@ -93,6 +93,12 @@ comment|/* program a tracer */
 name|T4_LOAD_CFG
 block|,
 comment|/* copy a config file to card's flash */
+name|T4_LOAD_BOOT
+block|,
+comment|/* flash boot rom */
+name|T4_LOAD_BOOTCFG
+block|,
+comment|/* flash bootcfg */
 block|}
 enum|;
 end_enum
@@ -151,6 +157,27 @@ begin_struct
 struct|struct
 name|t4_data
 block|{
+name|uint32_t
+name|len
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|t4_bootrom
+block|{
+name|uint32_t
+name|pf_offset
+decl_stmt|;
+name|uint32_t
+name|pfidx_addr
+decl_stmt|;
 name|uint32_t
 name|len
 decl_stmt|;
@@ -1181,6 +1208,20 @@ define|#
 directive|define
 name|CHELSIO_T4_LOAD_CFG
 value|_IOW('f', T4_LOAD_CFG, struct t4_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_LOAD_BOOT
+value|_IOW('f', T4_LOAD_BOOT, struct t4_bootrom)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_LOAD_BOOTCFG
+value|_IOW('f', T4_LOAD_BOOTCFG, struct t4_data)
 end_define
 
 begin_endif
