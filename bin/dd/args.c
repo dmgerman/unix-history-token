@@ -895,47 +895,6 @@ name|cfunc
 operator|=
 name|def
 expr_stmt|;
-comment|/* 	 * Bail out if the calculation of a file offset would overflow. 	 */
-if|if
-condition|(
-name|in
-operator|.
-name|offset
-operator|>
-name|OFF_MAX
-operator|/
-operator|(
-name|ssize_t
-operator|)
-name|in
-operator|.
-name|dbsz
-operator|||
-name|out
-operator|.
-name|offset
-operator|>
-name|OFF_MAX
-operator|/
-operator|(
-name|ssize_t
-operator|)
-name|out
-operator|.
-name|dbsz
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"seek offsets cannot be larger than %jd"
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|OFF_MAX
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
