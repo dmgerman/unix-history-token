@@ -4214,6 +4214,8 @@ init|=
 literal|"data"
 decl_stmt|;
 name|ssize_t
+name|datalen
+decl_stmt|,
 name|ssize
 decl_stmt|;
 name|int
@@ -4389,6 +4391,16 @@ name|SHUT_RDWR
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|datalen
+operator|=
+name|strlen
+argument_list|(
+name|data
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+comment|/* +1 for the null */
 comment|/* USE MSG_NOSIGNAL so we don't get SIGPIPE */
 name|ssize
 operator|=
@@ -4398,10 +4410,7 @@ name|s2
 argument_list|,
 name|data
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|data
-argument_list|)
+name|datalen
 argument_list|,
 name|MSG_EOR
 operator||
@@ -4477,6 +4486,9 @@ modifier|*
 name|data
 init|=
 literal|"data"
+decl_stmt|;
+name|ssize_t
+name|datalen
 decl_stmt|;
 name|int
 name|s
@@ -4663,6 +4675,16 @@ name|shutdown_send_sigpipe_handler
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|datalen
+operator|=
+name|strlen
+argument_list|(
+name|data
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+comment|/* +1 for the null */
 operator|(
 name|void
 operator|)
@@ -4674,6 +4696,7 @@ name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|data
 argument_list|)
 argument_list|,
