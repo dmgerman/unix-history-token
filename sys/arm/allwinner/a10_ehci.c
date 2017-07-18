@@ -1008,8 +1008,8 @@ name|error
 goto|;
 block|}
 comment|/* Enable USB PHY */
-name|err
-operator|=
+if|if
+condition|(
 name|phy_get_by_ofw_name
 argument_list|(
 name|self
@@ -1023,25 +1023,10 @@ name|aw_sc
 operator|->
 name|phy
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
-name|device_printf
-argument_list|(
-name|self
-argument_list|,
-literal|"Could not get phy\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|error
-goto|;
-block|}
 name|err
 operator|=
 name|phy_enable
@@ -1070,6 +1055,7 @@ expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 block|}
 comment|/* Enable passby */
 name|reg_value
@@ -1191,30 +1177,6 @@ operator|)
 return|;
 name|error
 label|:
-if|if
-condition|(
-name|aw_sc
-operator|->
-name|clk
-operator|!=
-name|NULL
-condition|)
-block|{
-name|clk_disable
-argument_list|(
-name|aw_sc
-operator|->
-name|clk
-argument_list|)
-expr_stmt|;
-name|clk_release
-argument_list|(
-name|aw_sc
-operator|->
-name|clk
-argument_list|)
-expr_stmt|;
-block|}
 name|a10_ehci_detach
 argument_list|(
 name|self
