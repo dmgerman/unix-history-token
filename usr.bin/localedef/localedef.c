@@ -412,6 +412,8 @@ condition|)
 block|{
 name|errf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|strerror
 argument_list|(
 name|errno
@@ -475,6 +477,8 @@ argument_list|)
 expr_stmt|;
 name|errf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|strerror
 argument_list|(
 name|errno
@@ -503,6 +507,8 @@ argument_list|)
 expr_stmt|;
 name|errf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|strerror
 argument_list|(
 name|errno
@@ -799,6 +805,8 @@ argument_list|)
 expr_stmt|;
 name|errf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|strerror
 argument_list|(
 name|errno
@@ -842,6 +850,8 @@ argument_list|)
 expr_stmt|;
 name|errf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|strerror
 argument_list|(
 name|errno
@@ -925,6 +935,8 @@ argument_list|)
 expr_stmt|;
 name|errf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|strerror
 argument_list|(
 name|errno
@@ -1421,6 +1433,8 @@ condition|)
 block|{
 name|errf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|strerror
 argument_list|(
 name|errno
