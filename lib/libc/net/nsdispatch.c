@@ -2475,6 +2475,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|exiting
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -2529,6 +2538,9 @@ operator|->
 name|handle
 operator|!=
 name|nss_builtin_handle
+operator|&&
+operator|!
+name|exiting
 condition|)
 operator|(
 name|void
@@ -2558,6 +2570,10 @@ block|{
 name|int
 name|isthreaded
 decl_stmt|;
+name|exiting
+operator|=
+literal|1
+expr_stmt|;
 name|isthreaded
 operator|=
 name|__isthreaded
