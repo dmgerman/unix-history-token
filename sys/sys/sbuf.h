@@ -93,6 +93,11 @@ value|0x00000001
 comment|/* automatically extend buffer */
 define|#
 directive|define
+name|SBUF_INCLUDENUL
+value|0x00000002
+comment|/* nulterm byte is counted in len */
+define|#
+directive|define
 name|SBUF_USRFLAGMSK
 value|0x0000ffff
 comment|/* mask of flags the user may specify */
@@ -208,6 +213,43 @@ parameter_list|()
 define|\
 value|sbuf_new(NULL, NULL, 0, SBUF_AUTOEXTEND)
 end_define
+
+begin_function_decl
+name|int
+name|sbuf_get_flags
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbuf_clear_flags
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbuf_set_flags
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
