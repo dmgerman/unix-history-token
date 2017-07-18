@@ -2021,6 +2021,7 @@ name|char
 modifier|*
 name|hostlist_file
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|snapshot_file
@@ -2035,9 +2036,40 @@ name|td
 decl_stmt|,
 name|td_snap
 decl_stmt|;
+name|char
+modifier|*
+name|snapshot_file_copy
+decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
+if|if
+condition|(
+name|snapshot_file
+operator|==
+name|NULL
+condition|)
+name|snapshot_file_copy
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+block|{
+name|snapshot_file_copy
+operator|=
+name|strdup
+argument_list|(
+name|snapshot_file
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE
+argument_list|(
+name|snapshot_file_copy
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 name|memset
 argument_list|(
 operator|&
@@ -2321,12 +2353,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|hostlist_file
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|snapshot_file
+name|snapshot_file_copy
 argument_list|)
 expr_stmt|;
 block|}
@@ -2350,7 +2377,7 @@ name|snapshot_file
 parameter_list|,
 name|ai_family
 parameter_list|)
-value|do {			\ 	char *_hostlist_file;						\ 	char *_snapshot_file;						\ 	ATF_REQUIRE(0< asprintf(&_hostlist_file, "%s/%s",		\ 	    atf_tc_get_config_var(tc, "srcdir"), HOSTLIST_FILE));	\ 	if (snapshot_file == NULL)					\ 		_snapshot_file = NULL;					\ 	else {							\ 		_snapshot_file = strdup(snapshot_file); 		\ 		ATF_REQUIRE(_snapshot_file != NULL);			\ 	}								\ 	run_tests(_hostlist_file, _snapshot_file, ai_family);		\ } while(0)
+value|do {			\ 	char *_hostlist_file;						\ 	ATF_REQUIRE(0< asprintf(&_hostlist_file, "%s/%s",		\ 	    atf_tc_get_config_var(tc, "srcdir"), HOSTLIST_FILE));	\ 	run_tests(_hostlist_file, snapshot_file, ai_family);		\ 	free(_hostlist_file);						\ } while (0)
 end_define
 
 begin_expr_stmt
