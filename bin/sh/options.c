@@ -803,19 +803,6 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NOHACK
-comment|/* removing this code allows sh -ce 'foo' for compat */
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\0'
-condition|)
-endif|#
-directive|endif
 name|q
 operator|=
 operator|*
@@ -841,12 +828,6 @@ name|minusc
 operator|=
 name|q
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NOHACK
-break|break;
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if
