@@ -7100,6 +7100,17 @@ argument_list|,
 name|ki_udata
 argument_list|)
 expr_stmt|;
+name|PTRTRIM_CP
+argument_list|(
+operator|*
+name|ki
+argument_list|,
+operator|*
+name|ki32
+argument_list|,
+name|ki_tdaddr
+argument_list|)
+expr_stmt|;
 name|CP
 argument_list|(
 operator|*

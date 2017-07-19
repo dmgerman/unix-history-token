@@ -223,7 +223,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: cron [-j jitter] [-J rootjitter] "
-literal|"[-m mailto] [-n ] [-s] [-o] [-x debugflag[,...]]\n"
+literal|"[-m mailto] [-n] [-s] [-o] [-x debugflag[,...]]\n"
 argument_list|)
 expr_stmt|;
 if|#

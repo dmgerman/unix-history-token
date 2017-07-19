@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.67 2016/08/17 15:52:42 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.68 2017/07/09 04:54:00 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -3078,7 +3078,7 @@ name|pbm
 operator|->
 name|mfp
 argument_list|,
-literal|"*** Error code %d%s\n"
+literal|"\n*** Error code %d%s\n"
 argument_list|,
 name|status
 argument_list|,
@@ -3362,9 +3362,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_FILEMON
 name|BuildMon
 modifier|*
 name|pbm
@@ -3384,6 +3381,9 @@ operator|=
 operator|&
 name|Mybm
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_FILEMON
 if|if
 condition|(
 name|pbm
@@ -3447,8 +3447,19 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+else|else
 endif|#
 directive|endif
+name|fprintf
+argument_list|(
+name|pbm
+operator|->
+name|mfp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* ensure end with newline */
 return|return
 name|error
 return|;
@@ -3745,6 +3756,16 @@ argument_list|,
 name|BUFSIZ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|newsz
+operator|<=
+name|bufsz
+condition|)
+return|return
+name|x
+return|;
+comment|/* truncated */
 if|if
 condition|(
 name|DEBUG
@@ -4119,20 +4140,15 @@ name|char
 modifier|*
 name|pm
 decl_stmt|;
-name|snprintf
+name|Var_Set
 argument_list|(
-name|fname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fname
-argument_list|)
-argument_list|,
-literal|"${%s:@m@${%s:L:M$m}@}"
-argument_list|,
-name|MAKE_META_IGNORE_PATTERNS
+literal|".p."
 argument_list|,
 name|p
+argument_list|,
+name|gn
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pm
@@ -4141,7 +4157,9 @@ name|Var_Subst
 argument_list|(
 name|NULL
 argument_list|,
-name|fname
+literal|"${"
+name|MAKE_META_IGNORE_PATTERNS
+literal|":@m@${.p.:M$m}@}"
 argument_list|,
 name|gn
 argument_list|,

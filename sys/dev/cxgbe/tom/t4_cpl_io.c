@@ -2280,11 +2280,11 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
-name|CTR4
+name|CTR6
 argument_list|(
 name|KTR_CXGBE
 argument_list|,
-literal|"%s: tid %d, toep %p, inp %p"
+literal|"%s: tid %d, so %p, inp %p, tp %p, toep %p"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2292,9 +2292,13 @@ name|toep
 operator|->
 name|tid
 argument_list|,
-name|toep
+name|so
 argument_list|,
 name|inp
+argument_list|,
+name|tp
+argument_list|,
+name|toep
 argument_list|)
 expr_stmt|;
 name|tp

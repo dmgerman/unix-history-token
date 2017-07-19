@@ -97,6 +97,10 @@ define|#
 directive|define
 name|PCB_FP_KERN
 value|0x02
+define|#
+directive|define
+name|PCB_FP_NOSAVE
+value|0x04
 comment|/* The bits passed to userspace in get_fpcontext */
 define|#
 directive|define

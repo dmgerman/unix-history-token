@@ -7054,6 +7054,10 @@ operator|*
 name|pflags
 operator|&
 name|D_HEADER
+operator|&&
+name|diff_format
+operator|!=
+name|D_BRIEF
 condition|)
 block|{
 name|diff_output
