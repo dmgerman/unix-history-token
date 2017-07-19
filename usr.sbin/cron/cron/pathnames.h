@@ -168,6 +168,20 @@ name|SYSCRONTAB
 value|"/etc/crontab"
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCRONTABS
+value|"/etc/cron.d"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCALSYSCRONTABS
+value|"/usr/local/etc/cron.d"
+end_define
+
 begin_comment
 comment|/* what editor to use if no EDITOR or VISUAL 			 * environment variable specified. 			 */
 end_comment
