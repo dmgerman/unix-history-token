@@ -7551,7 +7551,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief This represents '#pragma omp taskgroup' directive.
+comment|/// This represents '#pragma omp taskgroup' directive.
 comment|///
 comment|/// \code
 comment|/// #pragma omp taskgroup
@@ -7567,16 +7567,19 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
-comment|/// \brief Build directive with the given start and end location.
+comment|/// Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 name|OMPTaskgroupDirective
 argument_list|(
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
 argument_list|)
 operator|:
 name|OMPExecutableDirective
@@ -7591,16 +7594,19 @@ argument|StartLoc
 argument_list|,
 argument|EndLoc
 argument_list|,
-literal|0
+argument|NumClauses
 argument_list|,
 literal|1
 argument_list|)
 block|{}
-comment|/// \brief Build an empty directive.
+comment|/// Build an empty directive.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 name|explicit
 name|OMPTaskgroupDirective
-argument_list|()
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
@@ -7614,18 +7620,19 @@ argument|SourceLocation()
 argument_list|,
 argument|SourceLocation()
 argument_list|,
-literal|0
+argument|NumClauses
 argument_list|,
 literal|1
 argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// \brief Creates directive.
+comment|/// Creates directive.
 comment|///
 comment|/// \param C AST context.
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
 comment|/// \param AssociatedStmt Statement, associated with the directive.
 comment|///
 specifier|static
@@ -7639,24 +7646,26 @@ argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
 argument|Stmt *AssociatedStmt
 argument_list|)
 block|;
-comment|/// \brief Creates an empty directive.
+comment|/// Creates an empty directive.
 comment|///
 comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 specifier|static
 name|OMPTaskgroupDirective
 operator|*
 name|CreateEmpty
 argument_list|(
-specifier|const
-name|ASTContext
-operator|&
-name|C
+argument|const ASTContext&C
 argument_list|,
-name|EmptyShell
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
 argument_list|)
 block|;
 specifier|static

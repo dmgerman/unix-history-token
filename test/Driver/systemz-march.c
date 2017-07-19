@@ -40,6 +40,14 @@ comment|// RUN: %clang -target s390x -### -S -emit-llvm -march=arch11 %s 2>&1 | 
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target s390x -### -S -emit-llvm -march=z14 %s 2>&1 | FileCheck --check-prefix=CHECK-Z14 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target s390x -### -S -emit-llvm -march=arch12 %s 2>&1 | FileCheck --check-prefix=CHECK-ARCH12 %s
+end_comment
+
+begin_comment
 comment|// CHECK-Z9: error: unknown target CPU 'z9'
 end_comment
 
@@ -73,6 +81,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-ARCH11: "-target-cpu" "arch11"
+end_comment
+
+begin_comment
+comment|// CHECK-Z14: "-target-cpu" "z14"
+end_comment
+
+begin_comment
+comment|// CHECK-ARCH12: "-target-cpu" "arch12"
 end_comment
 
 begin_decl_stmt

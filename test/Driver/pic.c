@@ -992,6 +992,18 @@ comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NOPIE-LD
 end_comment
 
 begin_comment
+comment|// Try with the alias
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -target i386-pc-openbsd -no-pie -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NOPIE-LD
+end_comment
+
+begin_comment
 comment|//
 end_comment
 

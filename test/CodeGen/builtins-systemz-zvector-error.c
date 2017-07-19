@@ -2257,7 +2257,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 12 {{candidate function not viable}}
 comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
 name|vsc
 operator|=
@@ -2272,7 +2272,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 12 {{candidate function not viable}}
 comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
 name|vsc
 operator|=
@@ -2286,7 +2286,7 @@ literal|16
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 12 {{candidate function not viable}}
 comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
 name|vuc
 operator|=
@@ -2300,8 +2300,8 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
+comment|// expected-note@vecintrin.h:* 11 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 2 {{must be a constant integer from 0 to 15}}
 name|vuc
 operator|=
 name|vec_sld
@@ -2315,8 +2315,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
+comment|// expected-note@vecintrin.h:* 11 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 2 {{must be a constant integer from 0 to 15}}
 name|vuc
 operator|=
 name|vec_sld
@@ -2329,8 +2329,8 @@ literal|16
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
+comment|// expected-note@vecintrin.h:* 11 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 2 {{must be a constant integer from 0 to 15}}
 name|vss
 operator|=
 name|vec_sld
@@ -2343,7 +2343,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 12 {{candidate function not viable}}
 comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
 name|vus
 operator|=
@@ -2357,8 +2357,8 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
+comment|// expected-note@vecintrin.h:* 11 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 2 {{must be a constant integer from 0 to 15}}
 name|vsi
 operator|=
 name|vec_sld
@@ -2371,7 +2371,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 12 {{candidate function not viable}}
 comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
 name|vui
 operator|=
@@ -2385,8 +2385,8 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
+comment|// expected-note@vecintrin.h:* 11 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 2 {{must be a constant integer from 0 to 15}}
 name|vsl
 operator|=
 name|vec_sld
@@ -2399,7 +2399,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 12 {{candidate function not viable}}
 comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
 name|vul
 operator|=
@@ -2413,8 +2413,8 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
+comment|// expected-note@vecintrin.h:* 11 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 2 {{must be a constant integer from 0 to 15}}
 name|vd
 operator|=
 name|vec_sld
@@ -2427,7 +2427,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
+comment|// expected-note@vecintrin.h:* 12 {{candidate function not viable}}
 comment|// expected-note@vecintrin.h:* 1 {{must be a constant integer from 0 to 15}}
 name|vsc
 operator|=

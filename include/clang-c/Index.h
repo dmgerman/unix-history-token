@@ -3663,7 +3663,7 @@ name|CXCallingConv_IntelOclBicc
 init|=
 literal|9
 block|,
-name|CXCallingConv_X86_64Win64
+name|CXCallingConv_Win64
 init|=
 literal|10
 block|,

@@ -6717,6 +6717,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Return the unique signed counterpart of
+end_comment
+
+begin_comment
+comment|/// the integer type corresponding to size_t.
+end_comment
+
+begin_expr_stmt
+name|CanQualType
+name|getSignedSizeType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Return the unique type for "intmax_t" (C99 7.18.1.5), defined in
 end_comment
 

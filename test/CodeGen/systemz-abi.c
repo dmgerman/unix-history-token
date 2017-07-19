@@ -32,6 +32,22 @@ comment|// RUN:   -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple s390x-linux-gnu -target-cpu z14 \
+end_comment
+
+begin_comment
+comment|// RUN:   -emit-llvm -o - %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple s390x-linux-gnu -target-cpu arch12 \
+end_comment
+
+begin_comment
+comment|// RUN:   -emit-llvm -o - %s | FileCheck %s
+end_comment
+
+begin_comment
 comment|// Scalar types
 end_comment
 

@@ -28,6 +28,10 @@ comment|// CHECK: {{.*}}lld{{.*}}" "-flavor" "gnu"
 end_comment
 
 begin_comment
+comment|// CHECK: "-z" "rodynamic"
+end_comment
+
+begin_comment
 comment|// CHECK: "--sysroot=[[SYSROOT]]"
 end_comment
 

@@ -12685,6 +12685,46 @@ name|v16
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.hexagon.V6.vzh
+name|__builtin_HEXAGON_Y2_dccleana
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.hexagon.Y2.dccleana
+name|__builtin_HEXAGON_Y2_dccleaninva
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.hexagon.Y2.dccleaninva
+name|__builtin_HEXAGON_Y2_dcinva
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.hexagon.Y2.dcinva
+name|__builtin_HEXAGON_Y2_dczeroa
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.hexagon.Y2.dczeroa
+name|__builtin_HEXAGON_Y4_l2fetch
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.hexagon.Y4.l2fetch
+name|__builtin_HEXAGON_Y5_l2fetch
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.hexagon.Y5.l2fetch
 block|}
 end_function
 

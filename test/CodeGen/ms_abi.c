@@ -74,7 +74,7 @@ comment|// WIN64-LABEL: define void @f3()
 name|f1
 argument_list|()
 expr_stmt|;
-comment|// FREEBSD: call x86_64_win64cc void @f1()
+comment|// FREEBSD: call win64cc void @f1()
 comment|// WIN64: call void @f1()
 name|f2
 argument_list|()
@@ -85,7 +85,7 @@ block|}
 end_function
 
 begin_comment
-comment|// FREEBSD: declare x86_64_win64cc void @f1()
+comment|// FREEBSD: declare win64cc void @f1()
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ argument_list|,
 operator|...
 argument_list|)
 block|{
-comment|// FREEBSD-LABEL: define x86_64_win64cc void @f4
+comment|// FREEBSD-LABEL: define win64cc void @f4
 comment|// WIN64-LABEL: define void @f4
 name|__builtin_ms_va_list
 name|ap

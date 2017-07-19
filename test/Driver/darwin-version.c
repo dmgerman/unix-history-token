@@ -439,5 +439,41 @@ begin_comment
 comment|// CHECK-VERSION-WATCHOSSIM: "i386-apple-watchos2.0.0"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-ios11.0.0 -c %s -### 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-VERSION-IOS-TARGET %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-IOS-TARGET: "x86_64-apple-ios11.0.0"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-tvos11.0 -c %s -### 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-VERSION-TVOS-TARGET %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-TVOS-TARGET: "x86_64-apple-tvos11.0.0"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-watchos4.0 -c %s -### 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-VERSION-WATCHOS-TARGET %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-WATCHOS-TARGET: "x86_64-apple-watchos4.0.0"
+end_comment
+
 end_unit
 

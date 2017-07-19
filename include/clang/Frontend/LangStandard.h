@@ -127,7 +127,7 @@ operator|<<
 literal|6
 operator|)
 block|,
-name|Digraphs
+name|CPlusPlus2a
 init|=
 operator|(
 literal|1
@@ -135,7 +135,7 @@ operator|<<
 literal|7
 operator|)
 block|,
-name|GNUMode
+name|Digraphs
 init|=
 operator|(
 literal|1
@@ -143,7 +143,7 @@ operator|<<
 literal|8
 operator|)
 block|,
-name|HexFloat
+name|GNUMode
 init|=
 operator|(
 literal|1
@@ -151,7 +151,7 @@ operator|<<
 literal|9
 operator|)
 block|,
-name|ImplicitInt
+name|HexFloat
 init|=
 operator|(
 literal|1
@@ -159,12 +159,20 @@ operator|<<
 literal|10
 operator|)
 block|,
-name|OpenCL
+name|ImplicitInt
 init|=
 operator|(
 literal|1
 operator|<<
 literal|11
+operator|)
+block|,
+name|OpenCL
+init|=
+operator|(
+literal|1
+operator|<<
+literal|12
 operator|)
 block|}
 enum|;
@@ -351,6 +359,20 @@ operator|&
 name|frontend
 operator|::
 name|CPlusPlus1z
+return|;
+block|}
+comment|/// isCPlusPlus2a - Language is a post-C++17 variant (or later).
+name|bool
+name|isCPlusPlus2a
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|frontend
+operator|::
+name|CPlusPlus2a
 return|;
 block|}
 comment|/// hasDigraphs - Language supports digraphs.

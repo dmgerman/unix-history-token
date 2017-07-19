@@ -517,7 +517,7 @@ comment|// __attribute__((vectorcall))
 name|CC_X86Pascal
 block|,
 comment|// __attribute__((pascal))
-name|CC_X86_64Win64
+name|CC_Win64
 block|,
 comment|// __attribute__((ms_abi))
 name|CC_X86_64SysV

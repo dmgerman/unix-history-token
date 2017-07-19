@@ -299,5 +299,37 @@ begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -fsyntax-only 2>&1        \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparc-sun-solaris2.11 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -fsyntax-only 2>&1        \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-pc-solaris2.11 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
+end_comment
+
 end_unit
 

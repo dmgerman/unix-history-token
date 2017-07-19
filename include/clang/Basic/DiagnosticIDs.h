@@ -81,6 +81,12 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -852,6 +858,23 @@ name|getDiagnosticSFINAEResponse
 argument_list|(
 argument|unsigned DiagID
 argument_list|)
+block|;
+comment|/// \brief Get the string of all diagnostic flags.
+comment|///
+comment|/// \returns A list of all diagnostics flags as they would be written in a
+comment|/// command line invocation including their `no-` variants. For example:
+comment|/// `{"-Wempty-body", "-Wno-empty-body", ...}`
+specifier|static
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|getDiagnosticFlags
+argument_list|()
 block|;
 comment|/// \brief Get the set of all diagnostic IDs in the group with the given name.
 comment|///

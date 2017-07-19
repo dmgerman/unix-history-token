@@ -152,6 +152,10 @@ comment|// CHECK-NOT: __ARM_SIZEOF_WCHAR_T 2
 end_comment
 
 begin_comment
+comment|// CHECK-NOT: __ARM_FEATURE_SVE
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target aarch64_be-eabi -x c -E -dM %s -o - | FileCheck %s -check-prefix CHECK-BIGENDIAN
 end_comment
 
@@ -293,6 +297,14 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target aarch64 -mtune=cyclone -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MTUNE-CYCLONE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-linux-gnu -march=armv8-a+sve -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-SVE %s
+end_comment
+
+begin_comment
+comment|// CHECK-SVE: __ARM_FEATURE_SVE 1
 end_comment
 
 begin_comment

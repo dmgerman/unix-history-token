@@ -167,5 +167,21 @@ begin_comment
 comment|// MRELOCMODEL_CC1: -mrelocation-model
 end_comment
 
+begin_comment
+comment|// RUN: %clang --autocomplete=-Wma | FileCheck %s -check-prefix=WARNING
+end_comment
+
+begin_comment
+comment|// WARNING: -Wmacro-redefined -Wmain -Wmain-return-type -Wmalformed-warning-check -Wmany-braces-around-scalar-init -Wmax-unsigned-zero
+end_comment
+
+begin_comment
+comment|// RUN: %clang --autocomplete=-Wnoinvalid-pp- | FileCheck %s -check-prefix=NOWARNING
+end_comment
+
+begin_comment
+comment|// NOWARNING: -Wnoinvalid-pp-token
+end_comment
+
 end_unit
 

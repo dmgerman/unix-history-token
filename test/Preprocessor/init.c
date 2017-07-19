@@ -44,6 +44,42 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -x c++ -std=c++2a -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix CXX2A %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CXX2A:#define __GNUG__ {{.*}}
+end_comment
+
+begin_comment
+comment|// CXX2A:#define __GXX_EXPERIMENTAL_CXX0X__ 1
+end_comment
+
+begin_comment
+comment|// CXX2A:#define __GXX_RTTI 1
+end_comment
+
+begin_comment
+comment|// CXX2A:#define __GXX_WEAK__ 1
+end_comment
+
+begin_comment
+comment|// CXX2A:#define __cplusplus 201707L
+end_comment
+
+begin_comment
+comment|// CXX2A:#define __private_extern__ extern
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -x c++ -std=c++1z -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix CXX1Z %s
 end_comment
 
@@ -441,6 +477,34 @@ end_comment
 
 begin_comment
 comment|// FREESTANDING:#define __STDC_HOSTED__ 0
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -std=gnu++2a -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix GXX2A %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// GXX2A:#define __GNUG__ {{.*}}
+end_comment
+
+begin_comment
+comment|// GXX2A:#define __GXX_WEAK__ 1
+end_comment
+
+begin_comment
+comment|// GXX2A:#define __cplusplus 201707L
+end_comment
+
+begin_comment
+comment|// GXX2A:#define __private_extern__ extern
 end_comment
 
 begin_comment

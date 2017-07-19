@@ -524,6 +524,22 @@ comment|// RUN: FileCheck %s -check-prefix=SYSTEMZ-VECTOR
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple s390x-unknown -target-cpu z14 -o - -emit-llvm %s | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s -check-prefix=SYSTEMZ-VECTOR
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple s390x-unknown -target-cpu arch12 -o - -emit-llvm %s | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s -check-prefix=SYSTEMZ-VECTOR
+end_comment
+
+begin_comment
 comment|// SYSTEMZ-VECTOR: target datalayout = "E-m:e-i1:8:16-i8:8:16-i64:64-f128:64-v128:64-a:8:16-n32:64"
 end_comment
 

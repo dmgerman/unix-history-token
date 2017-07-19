@@ -40,15 +40,15 @@ comment|// RUN: %clang_cc1 -triple i386-pc-win32 -fsyntax-only %s
 end_comment
 
 begin_comment
-comment|// OpenBSD does not suppport TLS.
+comment|// OpenBSD suppports TLS.
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -triple x86_64-pc-openbsd -fsyntax-only %s
+comment|// RUN: %clang_cc1 -triple x86_64-pc-openbsd -fsyntax-only %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -triple i386-pc-openbsd -fsyntax-only %s
+comment|// RUN: %clang_cc1 -triple i386-pc-openbsd -fsyntax-only %s
 end_comment
 
 begin_comment

@@ -19911,6 +19911,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// An enumeration which makes it easier to specify whether or not an
+end_comment
+
+begin_comment
+comment|/// operation is a subtraction.
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NotSubtraction
+init|=
+name|false
+block|,
+name|IsSubtraction
+init|=
+name|true
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/// Same as IRBuilder::CreateInBoundsGEP, but additionally emits a check to
 end_comment
 
@@ -19920,6 +19942,14 @@ end_comment
 
 begin_comment
 comment|/// \p SignedIndices indicates whether any of the GEP indices are signed.
+end_comment
+
+begin_comment
+comment|/// \p IsSubtraction indicates whether the expression used to form the GEP
+end_comment
+
+begin_comment
+comment|/// is a subtraction.
 end_comment
 
 begin_expr_stmt
@@ -19934,6 +19964,8 @@ argument_list|,
 argument|ArrayRef<llvm::Value *> IdxList
 argument_list|,
 argument|bool SignedIndices
+argument_list|,
+argument|bool IsSubtraction
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,

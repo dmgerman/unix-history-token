@@ -24,7 +24,7 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{this builtin is only available on x86-64 targets}}
+comment|// expected-error {{this builtin is only available on x86-64 and aarch64 targets}}
 block|}
 end_function
 
