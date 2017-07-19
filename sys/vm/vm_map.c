@@ -15283,6 +15283,7 @@ name|p
 operator|->
 name|p_vmspace
 expr_stmt|;
+comment|/* 	 * Disallow stack growth when the access is performed by a 	 * debugger or AIO daemon.  The reason is that the wrong 	 * resource limits are applied. 	 */
 if|if
 condition|(
 name|map
@@ -15293,6 +15294,12 @@ operator|->
 name|p_vmspace
 operator|->
 name|vm_map
+operator|||
+name|p
+operator|->
+name|p_textvp
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
