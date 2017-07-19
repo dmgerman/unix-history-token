@@ -1442,10 +1442,12 @@ block|{
 return|return;
 block|}
 comment|/* Copy out the port numbers and the verification tag. */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sh
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

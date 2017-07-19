@@ -13242,8 +13242,10 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+name|ptr
+argument_list|,
 name|mtod
 argument_list|(
 name|m
@@ -13252,8 +13254,6 @@ name|caddr_t
 argument_list|)
 operator|+
 name|off
-argument_list|,
-name|ptr
 argument_list|,
 name|count
 argument_list|)
@@ -32109,9 +32109,11 @@ comment|/* Now incr the count and int wi structure */
 name|SCTP_INCR_LADDR_COUNT
 argument_list|()
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|wi
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

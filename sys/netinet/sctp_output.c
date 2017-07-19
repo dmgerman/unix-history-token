@@ -21949,10 +21949,12 @@ operator|->
 name|sin6_addr
 expr_stmt|;
 comment|/* 			 * Add SRC address selection here: we can only reuse 			 * to a limited degree the kame src-addr-sel, since 			 * we can try their selection but it may not be 			 * bound. 			 */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|lsa6_tmp
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -22459,10 +22461,12 @@ operator|)
 return|;
 block|}
 comment|/* 			 * XXX: sa6 may not have a valid sin6_scope_id in 			 * the non-SCOPEDROUTING case. 			 */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|lsa6_storage
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -70200,9 +70204,11 @@ name|sctp_auth_chunk
 operator|*
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|auth
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

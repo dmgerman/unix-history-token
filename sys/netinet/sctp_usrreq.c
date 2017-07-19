@@ -273,13 +273,15 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|SCTP_BASE_VAR
 argument_list|(
 name|packet_log_buffer
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 name|SCTP_PACKET_LOG_SIZE
 argument_list|)
