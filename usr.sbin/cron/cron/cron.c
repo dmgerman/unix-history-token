@@ -186,6 +186,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|dont_daemonize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|pidfh
 modifier|*
@@ -214,7 +223,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: cron [-j jitter] [-J rootjitter] "
-literal|"[-m mailto] [-s] [-o] [-x debugflag[,...]]\n"
+literal|"[-m mailto] [-n] [-s] [-o] [-x debugflag[,...]]\n"
 argument_list|)
 expr_stmt|;
 if|#
@@ -556,7 +565,13 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|dont_daemonize
+operator|==
+literal|0
+condition|)
 block|{
 if|if
 condition|(
@@ -2304,7 +2319,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"j:J:m:osx:"
+literal|"j:J:m:nosx:"
 argument_list|)
 operator|)
 operator|!=
@@ -2405,6 +2420,14 @@ case|:
 name|defmailto
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|dont_daemonize
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
