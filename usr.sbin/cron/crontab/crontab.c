@@ -267,6 +267,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|passwd
 modifier|*
@@ -353,7 +360,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: crontab [-u user] file"
 argument_list|,
-literal|"       crontab [-u user] { -e | -l | -r }"
+literal|"       crontab [-u user] { -l | -r [-f] | -e }"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -647,7 +654,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"u:lerx:"
+literal|"u:lerx:f"
 argument_list|)
 operator|)
 operator|!=
@@ -816,6 +823,14 @@ expr_stmt|;
 name|Option
 operator|=
 name|opt_edit
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|fflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -1279,6 +1294,9 @@ name|first
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|fflag
+operator|&&
 name|isatty
 argument_list|(
 name|STDIN_FILENO
