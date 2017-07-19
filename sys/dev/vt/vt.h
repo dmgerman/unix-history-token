@@ -1827,14 +1827,14 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VT_FB_DEFAULT_WIDTH
+name|VT_FB_MAX_WIDTH
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|VT_FB_DEFAULT_WIDTH
-value|2048
+name|VT_FB_MAX_WIDTH
+value|4096
 end_define
 
 begin_endif
@@ -1845,14 +1845,14 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VT_FB_DEFAULT_HEIGHT
+name|VT_FB_MAX_HEIGHT
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|VT_FB_DEFAULT_HEIGHT
-value|1200
+name|VT_FB_MAX_HEIGHT
+value|2400
 end_define
 
 begin_endif

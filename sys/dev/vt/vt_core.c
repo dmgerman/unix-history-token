@@ -841,14 +841,14 @@ begin_define
 define|#
 directive|define
 name|_VTDEFH
-value|MAX(100, PIXEL_HEIGHT(VT_FB_DEFAULT_HEIGHT))
+value|MAX(100, PIXEL_HEIGHT(VT_FB_MAX_HEIGHT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|_VTDEFW
-value|MAX(200, PIXEL_WIDTH(VT_FB_DEFAULT_WIDTH))
+value|MAX(200, PIXEL_WIDTH(VT_FB_MAX_WIDTH))
 end_define
 
 begin_decl_stmt
