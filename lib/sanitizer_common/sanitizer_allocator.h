@@ -209,19 +209,6 @@ modifier|*
 name|arg
 parameter_list|)
 function_decl|;
-comment|// Returns true if calloc(size, n) call overflows on size*n calculation.
-comment|// The caller should "return POLICY::OnBadRequest();" where POLICY is the
-comment|// current allocator failure handling policy.
-name|bool
-name|CheckForCallocOverflow
-parameter_list|(
-name|uptr
-name|size
-parameter_list|,
-name|uptr
-name|n
-parameter_list|)
-function_decl|;
 include|#
 directive|include
 file|"sanitizer_allocator_size_class_map.h"

@@ -119,6 +119,19 @@ name|__errno_location
 value|__errno
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|SANITIZER_WINDOWS
+end_elif
+
+begin_define
+define|#
+directive|define
+name|__errno_location
+value|_errno
+end_define
+
 begin_endif
 endif|#
 directive|endif
