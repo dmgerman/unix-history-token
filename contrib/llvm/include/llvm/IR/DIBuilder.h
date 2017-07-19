@@ -2186,8 +2186,9 @@ parameter_list|)
 function_decl|;
 comment|/// Create a descriptor for an imported module.
 comment|/// \param Context The scope this module is imported into
-comment|/// \param NS The namespace being imported here
-comment|/// \param Line Line number
+comment|/// \param NS      The namespace being imported here.
+comment|/// \param File    File where the declaration is located.
+comment|/// \param Line    Line number of the declaration.
 name|DIImportedEntity
 modifier|*
 name|createImportedModule
@@ -2200,14 +2201,19 @@ name|DINamespace
 modifier|*
 name|NS
 parameter_list|,
+name|DIFile
+modifier|*
+name|File
+parameter_list|,
 name|unsigned
 name|Line
 parameter_list|)
 function_decl|;
 comment|/// Create a descriptor for an imported module.
-comment|/// \param Context The scope this module is imported into
-comment|/// \param NS An aliased namespace
-comment|/// \param Line Line number
+comment|/// \param Context The scope this module is imported into.
+comment|/// \param NS      An aliased namespace.
+comment|/// \param File    File where the declaration is located.
+comment|/// \param Line    Line number of the declaration.
 name|DIImportedEntity
 modifier|*
 name|createImportedModule
@@ -2220,14 +2226,19 @@ name|DIImportedEntity
 modifier|*
 name|NS
 parameter_list|,
+name|DIFile
+modifier|*
+name|File
+parameter_list|,
 name|unsigned
 name|Line
 parameter_list|)
 function_decl|;
 comment|/// Create a descriptor for an imported module.
-comment|/// \param Context The scope this module is imported into
-comment|/// \param M The module being imported here
-comment|/// \param Line Line number
+comment|/// \param Context The scope this module is imported into.
+comment|/// \param M       The module being imported here
+comment|/// \param File    File where the declaration is located.
+comment|/// \param Line    Line number of the declaration.
 name|DIImportedEntity
 modifier|*
 name|createImportedModule
@@ -2240,15 +2251,20 @@ name|DIModule
 modifier|*
 name|M
 parameter_list|,
+name|DIFile
+modifier|*
+name|File
+parameter_list|,
 name|unsigned
 name|Line
 parameter_list|)
 function_decl|;
 comment|/// Create a descriptor for an imported function.
-comment|/// \param Context The scope this module is imported into
-comment|/// \param Decl The declaration (or definition) of a function, type, or
-comment|///             variable
-comment|/// \param Line Line number
+comment|/// \param Context The scope this module is imported into.
+comment|/// \param Decl    The declaration (or definition) of a function, type, or
+comment|///                variable.
+comment|/// \param File    File where the declaration is located.
+comment|/// \param Line    Line number of the declaration.
 name|DIImportedEntity
 modifier|*
 name|createImportedDeclaration
@@ -2260,6 +2276,10 @@ parameter_list|,
 name|DINode
 modifier|*
 name|Decl
+parameter_list|,
+name|DIFile
+modifier|*
+name|File
 parameter_list|,
 name|unsigned
 name|Line

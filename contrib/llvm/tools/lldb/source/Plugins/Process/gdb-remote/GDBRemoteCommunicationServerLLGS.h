@@ -312,9 +312,14 @@ operator|::
 name|recursive_mutex
 name|m_debugged_process_mutex
 expr_stmt|;
-name|NativeProcessProtocolSP
-name|m_debugged_process_sp
-decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|NativeProcessProtocol
+operator|>
+name|m_debugged_process_up
+expr_stmt|;
 name|Communication
 name|m_stdio_communication
 decl_stmt|;

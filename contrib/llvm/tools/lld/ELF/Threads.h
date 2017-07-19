@@ -381,8 +381,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|// namespace elf
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lld
+end_comment
 
 begin_endif
 endif|#

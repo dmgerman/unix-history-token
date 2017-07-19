@@ -15570,6 +15570,8 @@ name|attr_uptr
 block|,
 name|attr_nonnull
 block|,
+name|attr_ns_returns_retained
+block|,
 name|attr_nullable
 block|,
 name|attr_null_unspecified

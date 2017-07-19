@@ -78,9 +78,6 @@ name|class
 name|TypeIndex
 decl_stmt|;
 name|class
-name|TypeServerHandler
-decl_stmt|;
-name|class
 name|TypeTableBuilder
 decl_stmt|;
 comment|/// \brief Merge one set of type records into another.  This method assumes
@@ -91,9 +88,6 @@ comment|///
 comment|/// \param SourceToDest A vector, indexed by the TypeIndex in the source
 comment|/// type stream, that contains the index of the corresponding type record
 comment|/// in the destination stream.
-comment|///
-comment|/// \param Handler (optional) If non-null, an interface that gets invoked
-comment|/// to handle type server records.
 comment|///
 comment|/// \param Types The collection of types to merge in.
 comment|///
@@ -112,10 +106,6 @@ name|TypeIndex
 operator|>
 operator|&
 name|SourceToDest
-argument_list|,
-name|TypeServerHandler
-operator|*
-name|Handler
 argument_list|,
 specifier|const
 name|CVTypeArray
@@ -181,9 +171,6 @@ comment|/// \param SourceToDest A vector, indexed by the TypeIndex in the source
 comment|/// id stream, that contains the index of the corresponding id record
 comment|/// in the destination stream.
 comment|///
-comment|/// \param Handler (optional) If non-null, an interface that gets invoked
-comment|/// to handle type server records.
-comment|///
 comment|/// \param IdsAndTypes The collection of id records to merge in.
 comment|///
 comment|/// \returns Error::success() if the operation succeeded, otherwise an
@@ -205,10 +192,6 @@ name|TypeIndex
 operator|>
 operator|&
 name|SourceToDest
-argument_list|,
-name|TypeServerHandler
-operator|*
-name|Handler
 argument_list|,
 specifier|const
 name|CVTypeArray

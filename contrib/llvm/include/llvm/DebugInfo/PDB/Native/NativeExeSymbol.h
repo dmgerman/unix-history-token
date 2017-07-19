@@ -115,7 +115,9 @@ argument_list|()
 specifier|const
 name|override
 block|;
-name|PDB_UniqueId
+name|codeview
+operator|::
+name|GUID
 name|getGuid
 argument_list|()
 specifier|const

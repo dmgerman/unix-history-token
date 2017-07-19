@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<csignal>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -85,7 +91,7 @@ name|public
 operator|:
 name|NativeThreadNetBSD
 argument_list|(
-argument|NativeProcessNetBSD *process
+argument|NativeProcessNetBSD&process
 argument_list|,
 argument|lldb::tid_t tid
 argument_list|)

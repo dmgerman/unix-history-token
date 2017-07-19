@@ -236,6 +236,15 @@ comment|// end namespace llvm
 end_comment
 
 begin_macro
+name|LLVM_YAML_DECLARE_SCALAR_TRAITS
+argument_list|(
+argument|codeview::GUID
+argument_list|,
+argument|true
+argument_list|)
+end_macro
+
+begin_macro
 name|LLVM_YAML_DECLARE_MAPPING_TRAITS
 argument_list|(
 argument|CodeViewYAML::LeafRecord

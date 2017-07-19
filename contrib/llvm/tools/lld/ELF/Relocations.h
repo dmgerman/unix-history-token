@@ -407,9 +407,9 @@ name|ThunkSection
 operator|*
 name|getOSThunkSec
 argument_list|(
-name|OutputSection
+name|OutputSectionCommand
 operator|*
-name|OS
+name|Cmd
 argument_list|,
 name|std
 operator|::
@@ -451,7 +451,7 @@ name|function
 operator|<
 name|void
 argument_list|(
-name|OutputSection
+name|OutputSectionCommand
 operator|*
 argument_list|,
 name|std
@@ -614,8 +614,14 @@ operator|.
 name|r_addend
 return|;
 block|}
-expr|} }
+expr|}
+comment|// namespace elf
+expr|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lld
+end_comment
 
 begin_endif
 endif|#

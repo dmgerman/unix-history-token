@@ -6023,6 +6023,17 @@ argument_list|,
 argument|void *DiagHandlerCtxt = nullptr
 argument_list|)
 block|;
+name|Input
+argument_list|(
+argument|MemoryBufferRef Input
+argument_list|,
+argument|void *Ctxt = nullptr
+argument_list|,
+argument|SourceMgr::DiagHandlerTy DiagHandler = nullptr
+argument_list|,
+argument|void *DiagHandlerCtxt = nullptr
+argument_list|)
+block|;
 operator|~
 name|Input
 argument_list|()

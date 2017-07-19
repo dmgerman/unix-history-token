@@ -598,17 +598,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__x86_64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_M_X64
-argument_list|)
-if|#
-directive|if
-name|defined
-argument_list|(
 name|__GNUC__
 argument_list|)
 operator|||
@@ -616,12 +605,35 @@ name|defined
 argument_list|(
 name|__clang__
 argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
 comment|// gcc doesn't know cpuid would clobber ebx/rbx. Preserve it manually.
 comment|// FIXME: should we save this for Clang?
 asm|__asm__("movq\t%%rbx, %%rsi\n\t"           "cpuid\n\t"           "xchgq\t%%rbx, %%rsi\n\t"           : "=a"(*rEAX), "=S"(*rEBX), "=c"(*rECX), "=d"(*rEDX)           : "a"(value), "c"(subleaf));
 return|return
 name|false
 return|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+asm|__asm__("movl\t%%ebx, %%esi\n\t"           "cpuid\n\t"           "xchgl\t%%ebx, %%esi\n\t"           : "=a"(*rEAX), "=S"(*rEBX), "=c"(*rECX), "=d"(*rEDX)           : "a"(value), "c"(subleaf));
+return|return
+name|false
+return|;
+else|#
+directive|else
+return|return
+name|true
+return|;
+endif|#
+directive|endif
 elif|#
 directive|elif
 name|defined
@@ -678,68 +690,6 @@ expr_stmt|;
 return|return
 name|false
 return|;
-else|#
-directive|else
-return|return
-name|true
-return|;
-endif|#
-directive|endif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_M_IX86
-argument_list|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__clang__
-argument_list|)
-asm|__asm__("movl\t%%ebx, %%esi\n\t"           "cpuid\n\t"           "xchgl\t%%ebx, %%esi\n\t"           : "=a"(*rEAX), "=S"(*rEBX), "=c"(*rECX), "=d"(*rEDX)           : "a"(value), "c"(subleaf));
-return|return
-name|false
-return|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-asm|__asm {
-asm|mov   eax,value
-asm|mov   ecx,subleaf
-asm|cpuid
-asm|mov   esi,rEAX
-asm|mov   dword ptr [esi],eax
-asm|mov   esi,rEBX
-asm|mov   dword ptr [esi],ebx
-asm|mov   esi,rECX
-asm|mov   dword ptr [esi],ecx
-asm|mov   esi,rEDX
-asm|mov   dword ptr [esi],edx
-asm|}
-return|return
-name|false
-return|;
-else|#
-directive|else
-return|return
-name|true
-return|;
-endif|#
-directive|endif
 else|#
 directive|else
 return|return

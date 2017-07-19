@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/GUID.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/TypeIndex.h"
 end_include
 
@@ -254,6 +260,34 @@ literal|")"
 expr_stmt|;
 block|}
 block|}
+block|}
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|format_provider
+operator|<
+name|codeview
+operator|::
+name|GUID
+operator|>
+block|{
+specifier|static
+name|void
+name|format
+argument_list|(
+argument|const codeview::GUID&V
+argument_list|,
+argument|llvm::raw_ostream&Stream
+argument_list|,
+argument|StringRef Style
+argument_list|)
+block|{
+name|Stream
+operator|<<
+name|V
+block|;   }
 block|}
 expr_stmt|;
 block|}

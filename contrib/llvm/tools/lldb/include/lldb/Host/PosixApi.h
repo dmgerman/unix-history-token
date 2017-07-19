@@ -70,6 +70,17 @@ directive|include
 file|"lldb/Host/windows/PosixApi.h"
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif

@@ -111,6 +111,9 @@ name|template
 operator|<
 name|class
 name|BlockT
+operator|,
+name|bool
+name|IsPostDom
 operator|>
 name|class
 name|DominanceFrontierBase
@@ -163,21 +166,17 @@ operator|*
 operator|>
 name|Roots
 expr_stmt|;
-specifier|const
+specifier|static
+name|constexpr
 name|bool
 name|IsPostDominators
+init|=
+name|IsPostDom
 decl_stmt|;
 name|public
 label|:
 name|DominanceFrontierBase
-argument_list|(
-argument|bool isPostDom
-argument_list|)
-block|:
-name|IsPostDominators
-argument_list|(
-argument|isPostDom
-argument_list|)
+argument_list|()
 block|{}
 comment|/// getRoots - Return the root blocks of the current CFG.  This may include
 comment|/// multiple blocks if we are computing post dominators.  For forward
@@ -440,9 +439,6 @@ name|bool
 name|compare
 argument_list|(
 name|DominanceFrontierBase
-operator|<
-name|BlockT
-operator|>
 operator|&
 name|Other
 argument_list|)
@@ -515,6 +511,8 @@ name|public
 name|DominanceFrontierBase
 operator|<
 name|BlockT
+operator|,
+name|false
 operator|>
 block|{
 name|private
@@ -533,7 +531,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|DominatorTreeBase
+name|DomTreeBase
 operator|<
 name|BlockT
 operator|>
@@ -557,6 +555,8 @@ name|typename
 name|DominanceFrontierBase
 operator|<
 name|BlockT
+operator|,
+name|false
 operator|>
 operator|::
 name|DomSetType
@@ -564,23 +564,14 @@ name|DomSetType
 expr_stmt|;
 end_typedef
 
-begin_expr_stmt
-name|ForwardDominanceFrontierBase
-argument_list|()
-operator|:
-name|DominanceFrontierBase
-operator|<
-name|BlockT
-operator|>
-operator|(
-name|false
-operator|)
-block|{}
+begin_function
 name|void
 name|analyze
-argument_list|(
-argument|DomTreeT&DT
-argument_list|)
+parameter_list|(
+name|DomTreeT
+modifier|&
+name|DT
+parameter_list|)
 block|{
 name|this
 operator|->
@@ -590,7 +581,7 @@ name|DT
 operator|.
 name|getRoots
 argument_list|()
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 name|this
@@ -604,7 +595,7 @@ literal|1
 operator|&&
 literal|"Only one entry block for forward domfronts!"
 argument_list|)
-block|;
+expr_stmt|;
 name|calculate
 argument_list|(
 name|DT
@@ -619,24 +610,28 @@ literal|0
 index|]
 index|]
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
 specifier|const
 name|DomSetType
-operator|&
+modifier|&
 name|calculate
-argument_list|(
+parameter_list|(
 specifier|const
 name|DomTreeT
-operator|&
+modifier|&
 name|DT
-argument_list|,
+parameter_list|,
 specifier|const
 name|DomTreeNodeT
-operator|*
+modifier|*
 name|Node
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 unit|};
@@ -652,7 +647,7 @@ block|{
 name|public
 operator|:
 typedef|typedef
-name|DominatorTreeBase
+name|DomTreeBase
 operator|<
 name|BasicBlock
 operator|>
@@ -675,6 +670,8 @@ typedef|typedef
 name|DominanceFrontierBase
 operator|<
 name|BasicBlock
+operator|,
+name|false
 operator|>
 operator|::
 name|DomSetType
@@ -687,6 +684,8 @@ typedef|typedef
 name|DominanceFrontierBase
 operator|<
 name|BasicBlock
+operator|,
+name|false
 operator|>
 operator|::
 name|iterator
@@ -699,6 +698,8 @@ typedef|typedef
 name|DominanceFrontierBase
 operator|<
 name|BasicBlock
+operator|,
+name|false
 operator|>
 operator|::
 name|const_iterator
@@ -811,7 +812,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_extern
-extern|extern template class DominanceFrontierBase<BasicBlock>;
+extern|extern template class DominanceFrontierBase<BasicBlock
+operator|,
+extern|false>;
+end_extern
+
+begin_extern
+extern|extern template class DominanceFrontierBase<BasicBlock
+operator|,
+extern|true>;
 end_extern
 
 begin_extern

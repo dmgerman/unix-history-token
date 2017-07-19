@@ -264,6 +264,22 @@ name|S
 argument_list|)
 decl|const
 decl_stmt|;
+comment|// Return true if we can reach Dst from Src with Relocation RelocType
+name|virtual
+name|bool
+name|inBranchRange
+argument_list|(
+name|uint32_t
+name|RelocType
+argument_list|,
+name|uint64_t
+name|Src
+argument_list|,
+name|uint64_t
+name|Dst
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 name|RelExpr
 name|getRelExpr
@@ -805,6 +821,10 @@ block|}
 comment|// namespace elf
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lld
+end_comment
 
 begin_endif
 endif|#

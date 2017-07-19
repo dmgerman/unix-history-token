@@ -98,7 +98,7 @@ block|{
 name|public
 operator|:
 name|void
-name|Init
+name|init
 argument_list|(
 argument|s32 ReleaseToOSIntervalMs
 argument_list|)
@@ -120,23 +120,17 @@ operator|.
 name|Init
 argument_list|()
 block|;   }
+comment|// Primary allocations are always MinAlignment aligned, and as such do not
+comment|// require an Alignment parameter.
 name|void
 operator|*
-name|Allocate
+name|allocatePrimary
 argument_list|(
 argument|AllocatorCache *Cache
 argument_list|,
 argument|uptr Size
-argument_list|,
-argument|uptr Alignment
-argument_list|,
-argument|bool FromPrimary
 argument_list|)
 block|{
-if|if
-condition|(
-name|FromPrimary
-condition|)
 return|return
 name|Cache
 operator|->
@@ -153,6 +147,18 @@ name|Size
 argument_list|)
 argument_list|)
 return|;
+block|}
+comment|// Secondary allocations do not require a Cache, but do require an Alignment
+comment|// parameter.
+name|void
+operator|*
+name|allocateSecondary
+argument_list|(
+argument|uptr Size
+argument_list|,
+argument|uptr Alignment
+argument_list|)
+block|{
 return|return
 name|Secondary
 operator|.
@@ -171,7 +177,7 @@ end_expr_stmt
 
 begin_function
 name|void
-name|Deallocate
+name|deallocatePrimary
 parameter_list|(
 name|AllocatorCache
 modifier|*
@@ -180,15 +186,8 @@ parameter_list|,
 name|void
 modifier|*
 name|Ptr
-parameter_list|,
-name|bool
-name|FromPrimary
 parameter_list|)
 block|{
-if|if
-condition|(
-name|FromPrimary
-condition|)
 name|Cache
 operator|->
 name|Deallocate
@@ -206,7 +205,18 @@ argument_list|,
 name|Ptr
 argument_list|)
 expr_stmt|;
-else|else
+block|}
+end_function
+
+begin_function
+name|void
+name|deallocateSecondary
+parameter_list|(
+name|void
+modifier|*
+name|Ptr
+parameter_list|)
+block|{
 name|Secondary
 operator|.
 name|Deallocate
@@ -222,7 +232,7 @@ end_function
 
 begin_function
 name|uptr
-name|GetActuallyAllocatedSize
+name|getActuallyAllocatedSize
 parameter_list|(
 name|void
 modifier|*
@@ -262,7 +272,7 @@ end_function
 
 begin_function
 name|void
-name|InitCache
+name|initCache
 parameter_list|(
 name|AllocatorCache
 modifier|*
@@ -282,7 +292,7 @@ end_function
 
 begin_function
 name|void
-name|DestroyCache
+name|destroyCache
 parameter_list|(
 name|AllocatorCache
 modifier|*
@@ -305,7 +315,7 @@ end_function
 
 begin_decl_stmt
 name|void
-name|GetStats
+name|getStats
 argument_list|(
 name|AllocatorStatCounters
 name|StatType

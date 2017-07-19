@@ -385,8 +385,13 @@ decl_stmt|;
 block|}
 struct|;
 block|}
+comment|// namespace elf
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lld
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -463,6 +468,10 @@ block|; }
 expr_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_decl_stmt
 name|namespace

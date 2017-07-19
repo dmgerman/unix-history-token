@@ -1149,6 +1149,14 @@ argument_list|,
 argument|SDValue V
 argument_list|)
 specifier|const
+block|;
+name|void
+name|finalizeLowering
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

@@ -61,6 +61,12 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<csignal>
+end_include
+
 begin_if
 if|#
 directive|if

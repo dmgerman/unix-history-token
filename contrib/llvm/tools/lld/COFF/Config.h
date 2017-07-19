@@ -377,6 +377,11 @@ operator|::
 name|string
 name|OutputFile
 expr_stmt|;
+name|std
+operator|::
+name|string
+name|ImportName
+expr_stmt|;
 name|bool
 name|ColorDiagnostics
 decl_stmt|;

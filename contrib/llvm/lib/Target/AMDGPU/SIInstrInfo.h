@@ -81,6 +81,12 @@ directive|include
 file|"SIRegisterInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -139,257 +145,360 @@ operator|=
 literal|3
 block|}
 block|;
+typedef|typedef
+name|SmallSetVector
+operator|<
+name|MachineInstr
+operator|*
+operator|,
+literal|32
+operator|>
+name|SetVectorType
+expr_stmt|;
 specifier|static
 name|unsigned
 name|getBranchOpcode
 argument_list|(
 argument|BranchPredicate Cond
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|BranchPredicate
 name|getBranchPredicate
-argument_list|(
-argument|unsigned Opcode
-argument_list|)
-block|;
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|)
+function_decl|;
 name|unsigned
 name|buildExtractSubReg
 argument_list|(
-argument|MachineBasicBlock::iterator MI
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
 argument_list|,
-argument|MachineRegisterInfo&MRI
+name|MachineRegisterInfo
+operator|&
+name|MRI
 argument_list|,
-argument|MachineOperand&SuperReg
-argument_list|,
-argument|const TargetRegisterClass *SuperRC
-argument_list|,
-argument|unsigned SubIdx
-argument_list|,
-argument|const TargetRegisterClass *SubRC
-argument_list|)
-specifier|const
-block|;
 name|MachineOperand
-name|buildExtractSubRegOrImm
-argument_list|(
-argument|MachineBasicBlock::iterator MI
+operator|&
+name|SuperReg
 argument_list|,
-argument|MachineRegisterInfo&MRI
-argument_list|,
-argument|MachineOperand&SuperReg
-argument_list|,
-argument|const TargetRegisterClass *SuperRC
-argument_list|,
-argument|unsigned SubIdx
-argument_list|,
-argument|const TargetRegisterClass *SubRC
-argument_list|)
-specifier|const
-block|;
-name|void
-name|swapOperands
-argument_list|(
-argument|MachineInstr&Inst
-argument_list|)
-specifier|const
-block|;
-name|void
-name|lowerScalarAbs
-argument_list|(
-argument|SmallVectorImpl<MachineInstr *>&Worklist
-argument_list|,
-argument|MachineInstr&Inst
-argument_list|)
-specifier|const
-block|;
-name|void
-name|splitScalar64BitUnaryOp
-argument_list|(
-argument|SmallVectorImpl<MachineInstr *>&Worklist
-argument_list|,
-argument|MachineInstr&Inst
-argument_list|,
-argument|unsigned Opcode
-argument_list|)
-specifier|const
-block|;
-name|void
-name|splitScalar64BitBinaryOp
-argument_list|(
-argument|SmallVectorImpl<MachineInstr *>&Worklist
-argument_list|,
-argument|MachineInstr&Inst
-argument_list|,
-argument|unsigned Opcode
-argument_list|)
-specifier|const
-block|;
-name|void
-name|splitScalar64BitBCNT
-argument_list|(
-argument|SmallVectorImpl<MachineInstr *>&Worklist
-argument_list|,
-argument|MachineInstr&Inst
-argument_list|)
-specifier|const
-block|;
-name|void
-name|splitScalar64BitBFE
-argument_list|(
-argument|SmallVectorImpl<MachineInstr *>&Worklist
-argument_list|,
-argument|MachineInstr&Inst
-argument_list|)
-specifier|const
-block|;
-name|void
-name|movePackToVALU
-argument_list|(
-argument|SmallVectorImpl<MachineInstr *>&Worklist
-argument_list|,
-argument|MachineRegisterInfo&MRI
-argument_list|,
-argument|MachineInstr&Inst
-argument_list|)
-specifier|const
-block|;
-name|void
-name|addUsersToMoveToVALUWorklist
-argument_list|(
-argument|unsigned Reg
-argument_list|,
-argument|MachineRegisterInfo&MRI
-argument_list|,
-argument|SmallVectorImpl<MachineInstr *>&Worklist
-argument_list|)
-specifier|const
-block|;
-name|void
-name|addSCCDefUsersToVALUWorklist
-argument_list|(
-argument|MachineInstr&SCCDefInst
-argument_list|,
-argument|SmallVectorImpl<MachineInstr *>&Worklist
-argument_list|)
-specifier|const
-block|;
 specifier|const
 name|TargetRegisterClass
 operator|*
+name|SuperRC
+argument_list|,
+name|unsigned
+name|SubIdx
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|SubRC
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineOperand
+name|buildExtractSubRegOrImm
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
+argument_list|,
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+name|MachineOperand
+operator|&
+name|SuperReg
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|SuperRC
+argument_list|,
+name|unsigned
+name|SubIdx
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|SubRC
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|swapOperands
+argument_list|(
+name|MachineInstr
+operator|&
+name|Inst
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|lowerScalarAbs
+argument_list|(
+name|SetVectorType
+operator|&
+name|Worklist
+argument_list|,
+name|MachineInstr
+operator|&
+name|Inst
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|splitScalar64BitUnaryOp
+argument_list|(
+name|SetVectorType
+operator|&
+name|Worklist
+argument_list|,
+name|MachineInstr
+operator|&
+name|Inst
+argument_list|,
+name|unsigned
+name|Opcode
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|splitScalar64BitBinaryOp
+argument_list|(
+name|SetVectorType
+operator|&
+name|Worklist
+argument_list|,
+name|MachineInstr
+operator|&
+name|Inst
+argument_list|,
+name|unsigned
+name|Opcode
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|splitScalar64BitBCNT
+argument_list|(
+name|SetVectorType
+operator|&
+name|Worklist
+argument_list|,
+name|MachineInstr
+operator|&
+name|Inst
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|splitScalar64BitBFE
+argument_list|(
+name|SetVectorType
+operator|&
+name|Worklist
+argument_list|,
+name|MachineInstr
+operator|&
+name|Inst
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|movePackToVALU
+argument_list|(
+name|SetVectorType
+operator|&
+name|Worklist
+argument_list|,
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+name|MachineInstr
+operator|&
+name|Inst
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|addUsersToMoveToVALUWorklist
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|,
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+name|SetVectorType
+operator|&
+name|Worklist
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|addSCCDefUsersToVALUWorklist
+argument_list|(
+name|MachineInstr
+operator|&
+name|SCCDefInst
+argument_list|,
+name|SetVectorType
+operator|&
+name|Worklist
+argument_list|)
+decl|const
+decl_stmt|;
+specifier|const
+name|TargetRegisterClass
+modifier|*
 name|getDestEquivalentVGPRClass
 argument_list|(
-argument|const MachineInstr&Inst
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|Inst
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|checkInstOffsetsDoNotOverlap
 argument_list|(
-argument|MachineInstr&MIa
+name|MachineInstr
+operator|&
+name|MIa
 argument_list|,
-argument|MachineInstr&MIb
+name|MachineInstr
+operator|&
+name|MIb
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|unsigned
 name|findUsedSGPR
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|int OpIndices[
-literal|3
-argument|]
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|int
+name|OpIndices
+index|[
+literal|3
+index|]
+argument_list|)
+decl|const
+decl_stmt|;
 name|protected
-operator|:
+label|:
 name|bool
 name|swapSourceModifiers
 argument_list|(
-argument|MachineInstr&MI
-argument_list|,
-argument|MachineOperand&Src0
-argument_list|,
-argument|unsigned Src0OpName
-argument_list|,
-argument|MachineOperand&Src1
-argument_list|,
-argument|unsigned Src1OpName
-argument_list|)
-specifier|const
-block|;
 name|MachineInstr
-operator|*
+operator|&
+name|MI
+argument_list|,
+name|MachineOperand
+operator|&
+name|Src0
+argument_list|,
+name|unsigned
+name|Src0OpName
+argument_list|,
+name|MachineOperand
+operator|&
+name|Src1
+argument_list|,
+name|unsigned
+name|Src1OpName
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineInstr
+modifier|*
 name|commuteInstructionImpl
 argument_list|(
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|bool NewMI
+name|bool
+name|NewMI
 argument_list|,
-argument|unsigned OpIdx0
+name|unsigned
+name|OpIdx0
 argument_list|,
-argument|unsigned OpIdx1
+name|unsigned
+name|OpIdx1
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|public
-operator|:
-expr|enum
+label|:
+enum|enum
 name|TargetOperandFlags
 block|{
 name|MO_MASK
-operator|=
+init|=
 literal|0x7
 block|,
 name|MO_NONE
-operator|=
+init|=
 literal|0
 block|,
 comment|// MO_GOTPCREL -> symbol@GOTPCREL -> R_AMDGPU_GOTPCREL.
 name|MO_GOTPCREL
-operator|=
+init|=
 literal|1
 block|,
 comment|// MO_GOTPCREL32_LO -> symbol@gotpcrel32@lo -> R_AMDGPU_GOTPCREL32_LO.
 name|MO_GOTPCREL32
-operator|=
+init|=
 literal|2
 block|,
 name|MO_GOTPCREL32_LO
-operator|=
+init|=
 literal|2
 block|,
 comment|// MO_GOTPCREL32_HI -> symbol@gotpcrel32@hi -> R_AMDGPU_GOTPCREL32_HI.
 name|MO_GOTPCREL32_HI
-operator|=
+init|=
 literal|3
 block|,
 comment|// MO_REL32_LO -> symbol@rel32@lo -> R_AMDGPU_REL32_LO.
 name|MO_REL32
-operator|=
+init|=
 literal|4
 block|,
 name|MO_REL32_LO
-operator|=
+init|=
 literal|4
 block|,
 comment|// MO_REL32_HI -> symbol@rel32@hi -> R_AMDGPU_REL32_HI.
 name|MO_REL32_HI
-operator|=
+init|=
 literal|5
 block|}
-block|;
+enum|;
 name|explicit
 name|SIInstrInfo
-argument_list|(
+parameter_list|(
 specifier|const
 name|SISubtarget
-operator|&
-argument_list|)
-block|;
+modifier|&
+parameter_list|)
+function_decl|;
 specifier|const
 name|SIRegisterInfo
 operator|&
@@ -404,214 +513,328 @@ block|}
 name|bool
 name|isReallyTriviallyReMaterializable
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|AliasAnalysis *AA
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|areLoadsFromSameBasePtr
 argument_list|(
-argument|SDNode *Load1
+name|SDNode
+operator|*
+name|Load1
 argument_list|,
-argument|SDNode *Load2
+name|SDNode
+operator|*
+name|Load2
 argument_list|,
-argument|int64_t&Offset1
+name|int64_t
+operator|&
+name|Offset1
 argument_list|,
-argument|int64_t&Offset2
+name|int64_t
+operator|&
+name|Offset2
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|getMemOpBaseRegImmOfs
 argument_list|(
-argument|MachineInstr&LdSt
+name|MachineInstr
+operator|&
+name|LdSt
 argument_list|,
-argument|unsigned&BaseReg
+name|unsigned
+operator|&
+name|BaseReg
 argument_list|,
-argument|int64_t&Offset
+name|int64_t
+operator|&
+name|Offset
 argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
 specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
 name|final
-block|;
+decl_stmt|;
 name|bool
 name|shouldClusterMemOps
 argument_list|(
-argument|MachineInstr&FirstLdSt
+name|MachineInstr
+operator|&
+name|FirstLdSt
 argument_list|,
-argument|MachineInstr&SecondLdSt
+name|MachineInstr
+operator|&
+name|SecondLdSt
 argument_list|,
-argument|unsigned NumLoads
+name|unsigned
+name|NumLoads
 argument_list|)
-specifier|const
+decl|const
 name|final
-block|;
+decl_stmt|;
 name|void
 name|copyPhysReg
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MI
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
 argument_list|,
-argument|const DebugLoc&DL
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool KillSrc
-argument_list|)
 specifier|const
+name|DebugLoc
+operator|&
+name|DL
+argument_list|,
+name|unsigned
+name|DestReg
+argument_list|,
+name|unsigned
+name|SrcReg
+argument_list|,
+name|bool
+name|KillSrc
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|unsigned
 name|calculateLDSSpillAddress
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|RegScavenger *RS
+name|RegScavenger
+operator|*
+name|RS
 argument_list|,
-argument|unsigned TmpReg
+name|unsigned
+name|TmpReg
 argument_list|,
-argument|unsigned Offset
+name|unsigned
+name|Offset
 argument_list|,
-argument|unsigned Size
+name|unsigned
+name|Size
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|void
 name|materializeImmediate
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MI
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
 argument_list|,
-argument|const DebugLoc&DL
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|int64_t Value
-argument_list|)
 specifier|const
-block|;
+name|DebugLoc
+operator|&
+name|DL
+argument_list|,
+name|unsigned
+name|DestReg
+argument_list|,
+name|int64_t
+name|Value
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|const
 name|TargetRegisterClass
-operator|*
+modifier|*
 name|getPreferredSelectRegClass
 argument_list|(
-argument|unsigned Size
+name|unsigned
+name|Size
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|unsigned
 name|insertNE
 argument_list|(
-argument|MachineBasicBlock *MBB
+name|MachineBasicBlock
+operator|*
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator I
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
 argument_list|,
-argument|const DebugLoc&DL
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|int Value
-argument_list|)
 specifier|const
-block|;
+name|DebugLoc
+operator|&
+name|DL
+argument_list|,
+name|unsigned
+name|SrcReg
+argument_list|,
+name|int
+name|Value
+argument_list|)
+decl|const
+decl_stmt|;
 name|unsigned
 name|insertEQ
 argument_list|(
-argument|MachineBasicBlock *MBB
+name|MachineBasicBlock
+operator|*
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator I
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
 argument_list|,
-argument|const DebugLoc&DL
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|int Value
-argument_list|)
 specifier|const
-block|;
+name|DebugLoc
+operator|&
+name|DL
+argument_list|,
+name|unsigned
+name|SrcReg
+argument_list|,
+name|int
+name|Value
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|storeRegToStackSlot
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MI
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
 argument_list|,
-argument|unsigned SrcReg
+name|unsigned
+name|SrcReg
 argument_list|,
-argument|bool isKill
+name|bool
+name|isKill
 argument_list|,
-argument|int FrameIndex
+name|int
+name|FrameIndex
 argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
 specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|void
 name|loadRegFromStackSlot
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MI
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
 argument_list|,
-argument|unsigned DestReg
+name|unsigned
+name|DestReg
 argument_list|,
-argument|int FrameIndex
+name|int
+name|FrameIndex
 argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
 specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|expandPostRAPseudo
 argument_list|(
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|// \brief Returns an opcode that can be used to move a value to a \p DstRC
 comment|// register.  If there is no hardware instruction that can store to \p
 comment|// DstRC, then AMDGPU::COPY is returned.
 name|unsigned
 name|getMovOpcode
 argument_list|(
-argument|const TargetRegisterClass *DstRC
-argument_list|)
 specifier|const
-block|;
+name|TargetRegisterClass
+operator|*
+name|DstRC
+argument_list|)
+decl|const
+decl_stmt|;
 name|LLVM_READONLY
 name|int
 name|commuteOpcode
 argument_list|(
-argument|unsigned Opc
+name|unsigned
+name|Opc
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|LLVM_READONLY
 specifier|inline
 name|int
 name|commuteOpcode
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
 block|{
 return|return
 name|commuteOpcode
@@ -626,211 +849,358 @@ block|}
 name|bool
 name|findCommutedOpIndices
 argument_list|(
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|unsigned&SrcOpIdx1
+name|unsigned
+operator|&
+name|SrcOpIdx1
 argument_list|,
-argument|unsigned&SrcOpIdx2
+name|unsigned
+operator|&
+name|SrcOpIdx2
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|isBranchOffsetInRange
 argument_list|(
-argument|unsigned BranchOpc
+name|unsigned
+name|BranchOpc
 argument_list|,
-argument|int64_t BrOffset
+name|int64_t
+name|BrOffset
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|getBranchDestBlock
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|unsigned
 name|insertIndirectBranch
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock&NewDestBB
+name|MachineBasicBlock
+operator|&
+name|NewDestBB
 argument_list|,
-argument|const DebugLoc&DL
-argument_list|,
-argument|int64_t BrOffset
-argument_list|,
-argument|RegScavenger *RS = nullptr
-argument_list|)
 specifier|const
+name|DebugLoc
+operator|&
+name|DL
+argument_list|,
+name|int64_t
+name|BrOffset
+argument_list|,
+name|RegScavenger
+operator|*
+name|RS
+operator|=
+name|nullptr
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|analyzeBranchImpl
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator I
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
 argument_list|,
-argument|MachineBasicBlock *&TBB
+name|MachineBasicBlock
+operator|*
+operator|&
+name|TBB
 argument_list|,
-argument|MachineBasicBlock *&FBB
+name|MachineBasicBlock
+operator|*
+operator|&
+name|FBB
 argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Cond
+name|SmallVectorImpl
+operator|<
+name|MachineOperand
+operator|>
+operator|&
+name|Cond
 argument_list|,
-argument|bool AllowModify
+name|bool
+name|AllowModify
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|bool
 name|analyzeBranch
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock *&TBB
+name|MachineBasicBlock
+operator|*
+operator|&
+name|TBB
 argument_list|,
-argument|MachineBasicBlock *&FBB
+name|MachineBasicBlock
+operator|*
+operator|&
+name|FBB
 argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Cond
+name|SmallVectorImpl
+operator|<
+name|MachineOperand
+operator|>
+operator|&
+name|Cond
 argument_list|,
-argument|bool AllowModify = false
+name|bool
+name|AllowModify
+operator|=
+name|false
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|unsigned
 name|removeBranch
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|int *BytesRemoved = nullptr
+name|int
+operator|*
+name|BytesRemoved
+operator|=
+name|nullptr
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|unsigned
 name|insertBranch
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock *TBB
+name|MachineBasicBlock
+operator|*
+name|TBB
 argument_list|,
-argument|MachineBasicBlock *FBB
+name|MachineBasicBlock
+operator|*
+name|FBB
 argument_list|,
-argument|ArrayRef<MachineOperand> Cond
+name|ArrayRef
+operator|<
+name|MachineOperand
+operator|>
+name|Cond
 argument_list|,
-argument|const DebugLoc&DL
-argument_list|,
-argument|int *BytesAdded = nullptr
-argument_list|)
 specifier|const
+name|DebugLoc
+operator|&
+name|DL
+argument_list|,
+name|int
+operator|*
+name|BytesAdded
+operator|=
+name|nullptr
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|reverseBranchCondition
 argument_list|(
-argument|SmallVectorImpl<MachineOperand>&Cond
+name|SmallVectorImpl
+operator|<
+name|MachineOperand
+operator|>
+operator|&
+name|Cond
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|canInsertSelect
 argument_list|(
-argument|const MachineBasicBlock&MBB
-argument_list|,
-argument|ArrayRef<MachineOperand> Cond
-argument_list|,
-argument|unsigned TrueReg
-argument_list|,
-argument|unsigned FalseReg
-argument_list|,
-argument|int&CondCycles
-argument_list|,
-argument|int&TrueCycles
-argument_list|,
-argument|int&FalseCycles
-argument_list|)
 specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|ArrayRef
+operator|<
+name|MachineOperand
+operator|>
+name|Cond
+argument_list|,
+name|unsigned
+name|TrueReg
+argument_list|,
+name|unsigned
+name|FalseReg
+argument_list|,
+name|int
+operator|&
+name|CondCycles
+argument_list|,
+name|int
+operator|&
+name|TrueCycles
+argument_list|,
+name|int
+operator|&
+name|FalseCycles
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|void
 name|insertSelect
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator I
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
 argument_list|,
-argument|const DebugLoc&DL
-argument_list|,
-argument|unsigned DstReg
-argument_list|,
-argument|ArrayRef<MachineOperand> Cond
-argument_list|,
-argument|unsigned TrueReg
-argument_list|,
-argument|unsigned FalseReg
-argument_list|)
 specifier|const
+name|DebugLoc
+operator|&
+name|DL
+argument_list|,
+name|unsigned
+name|DstReg
+argument_list|,
+name|ArrayRef
+operator|<
+name|MachineOperand
+operator|>
+name|Cond
+argument_list|,
+name|unsigned
+name|TrueReg
+argument_list|,
+name|unsigned
+name|FalseReg
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|void
 name|insertVectorSelect
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator I
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
 argument_list|,
-argument|const DebugLoc&DL
-argument_list|,
-argument|unsigned DstReg
-argument_list|,
-argument|ArrayRef<MachineOperand> Cond
-argument_list|,
-argument|unsigned TrueReg
-argument_list|,
-argument|unsigned FalseReg
-argument_list|)
 specifier|const
-block|;
+name|DebugLoc
+operator|&
+name|DL
+argument_list|,
+name|unsigned
+name|DstReg
+argument_list|,
+name|ArrayRef
+operator|<
+name|MachineOperand
+operator|>
+name|Cond
+argument_list|,
+name|unsigned
+name|TrueReg
+argument_list|,
+name|unsigned
+name|FalseReg
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|areMemAccessesTriviallyDisjoint
 argument_list|(
-argument|MachineInstr&MIa
+name|MachineInstr
+operator|&
+name|MIa
 argument_list|,
-argument|MachineInstr&MIb
+name|MachineInstr
+operator|&
+name|MIb
 argument_list|,
-argument|AliasAnalysis *AA = nullptr
+name|AliasAnalysis
+operator|*
+name|AA
+operator|=
+name|nullptr
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|isFoldableCopy
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|FoldImmediate
 argument_list|(
-argument|MachineInstr&UseMI
+name|MachineInstr
+operator|&
+name|UseMI
 argument_list|,
-argument|MachineInstr&DefMI
+name|MachineInstr
+operator|&
+name|DefMI
 argument_list|,
-argument|unsigned Reg
+name|unsigned
+name|Reg
 argument_list|,
-argument|MachineRegisterInfo *MRI
+name|MachineRegisterInfo
+operator|*
+name|MRI
 argument_list|)
-specifier|const
+decl|const
 name|final
-block|;
+decl_stmt|;
 name|unsigned
 name|getMachineCSELookAheadLimit
 argument_list|()
@@ -842,36 +1212,56 @@ literal|500
 return|;
 block|}
 name|MachineInstr
-operator|*
+modifier|*
 name|convertToThreeAddress
 argument_list|(
-argument|MachineFunction::iterator&MBB
+name|MachineFunction
+operator|::
+name|iterator
+operator|&
+name|MBB
 argument_list|,
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|LiveVariables *LV
+name|LiveVariables
+operator|*
+name|LV
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|isSchedulingBoundary
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|const MachineBasicBlock *MBB
-argument_list|,
-argument|const MachineFunction&MF
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|,
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 specifier|static
 name|bool
 name|isSALU
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -889,9 +1279,10 @@ block|}
 name|bool
 name|isSALU
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -909,9 +1300,12 @@ block|}
 specifier|static
 name|bool
 name|isVALU
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -929,9 +1323,10 @@ block|}
 name|bool
 name|isVALU
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -949,9 +1344,12 @@ block|}
 specifier|static
 name|bool
 name|isVMEM
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|isMUBUF
@@ -973,9 +1371,10 @@ block|}
 name|bool
 name|isVMEM
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|isMUBUF
@@ -997,9 +1396,12 @@ block|}
 specifier|static
 name|bool
 name|isSOP1
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1017,9 +1419,10 @@ block|}
 name|bool
 name|isSOP1
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1037,9 +1440,12 @@ block|}
 specifier|static
 name|bool
 name|isSOP2
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1057,9 +1463,10 @@ block|}
 name|bool
 name|isSOP2
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1077,9 +1484,12 @@ block|}
 specifier|static
 name|bool
 name|isSOPC
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1097,9 +1507,10 @@ block|}
 name|bool
 name|isSOPC
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1117,9 +1528,12 @@ block|}
 specifier|static
 name|bool
 name|isSOPK
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1137,9 +1551,10 @@ block|}
 name|bool
 name|isSOPK
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1157,9 +1572,12 @@ block|}
 specifier|static
 name|bool
 name|isSOPP
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1177,9 +1595,10 @@ block|}
 name|bool
 name|isSOPP
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1197,9 +1616,12 @@ block|}
 specifier|static
 name|bool
 name|isVOP1
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1217,9 +1639,10 @@ block|}
 name|bool
 name|isVOP1
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1237,9 +1660,12 @@ block|}
 specifier|static
 name|bool
 name|isVOP2
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1257,9 +1683,10 @@ block|}
 name|bool
 name|isVOP2
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1277,9 +1704,12 @@ block|}
 specifier|static
 name|bool
 name|isVOP3
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1297,9 +1727,10 @@ block|}
 name|bool
 name|isVOP3
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1317,9 +1748,12 @@ block|}
 specifier|static
 name|bool
 name|isSDWA
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1337,9 +1771,10 @@ block|}
 name|bool
 name|isSDWA
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1357,9 +1792,12 @@ block|}
 specifier|static
 name|bool
 name|isVOPC
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1377,9 +1815,10 @@ block|}
 name|bool
 name|isVOPC
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1397,9 +1836,12 @@ block|}
 specifier|static
 name|bool
 name|isMUBUF
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1417,9 +1859,10 @@ block|}
 name|bool
 name|isMUBUF
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1437,9 +1880,12 @@ block|}
 specifier|static
 name|bool
 name|isMTBUF
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1457,9 +1903,10 @@ block|}
 name|bool
 name|isMTBUF
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1477,9 +1924,12 @@ block|}
 specifier|static
 name|bool
 name|isSMRD
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1497,9 +1947,10 @@ block|}
 name|bool
 name|isSMRD
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1517,9 +1968,12 @@ block|}
 specifier|static
 name|bool
 name|isDS
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1537,9 +1991,10 @@ block|}
 name|bool
 name|isDS
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1557,9 +2012,12 @@ block|}
 specifier|static
 name|bool
 name|isMIMG
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1577,9 +2035,10 @@ block|}
 name|bool
 name|isMIMG
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1597,9 +2056,12 @@ block|}
 specifier|static
 name|bool
 name|isGather4
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1617,9 +2079,10 @@ block|}
 name|bool
 name|isGather4
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1637,9 +2100,12 @@ block|}
 specifier|static
 name|bool
 name|isFLAT
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1657,9 +2123,10 @@ block|}
 name|bool
 name|isFLAT
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1677,9 +2144,12 @@ block|}
 specifier|static
 name|bool
 name|isEXP
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1697,9 +2167,10 @@ block|}
 name|bool
 name|isEXP
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1717,9 +2188,12 @@ block|}
 specifier|static
 name|bool
 name|isWQM
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1737,9 +2211,10 @@ block|}
 name|bool
 name|isWQM
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1757,9 +2232,12 @@ block|}
 specifier|static
 name|bool
 name|isDisableWQM
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1777,9 +2255,10 @@ block|}
 name|bool
 name|isDisableWQM
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1797,9 +2276,12 @@ block|}
 specifier|static
 name|bool
 name|isVGPRSpill
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1817,9 +2299,10 @@ block|}
 name|bool
 name|isVGPRSpill
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1837,9 +2320,12 @@ block|}
 specifier|static
 name|bool
 name|isSGPRSpill
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1857,9 +2343,10 @@ block|}
 name|bool
 name|isSGPRSpill
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1877,9 +2364,12 @@ block|}
 specifier|static
 name|bool
 name|isDPP
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1897,9 +2387,10 @@ block|}
 name|bool
 name|isDPP
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1917,9 +2408,12 @@ block|}
 specifier|static
 name|bool
 name|isVOP3P
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1937,9 +2431,10 @@ block|}
 name|bool
 name|isVOP3P
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1957,9 +2452,12 @@ block|}
 specifier|static
 name|bool
 name|isVINTRP
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -1977,9 +2475,10 @@ block|}
 name|bool
 name|isVINTRP
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -1997,9 +2496,12 @@ block|}
 specifier|static
 name|bool
 name|isScalarUnit
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -2023,9 +2525,12 @@ block|}
 specifier|static
 name|bool
 name|usesVM_CNT
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -2043,9 +2548,12 @@ block|}
 specifier|static
 name|bool
 name|sopkIsZext
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -2063,9 +2571,10 @@ block|}
 name|bool
 name|sopkIsZext
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -2085,9 +2594,12 @@ comment|/// specific than than isSMEM&& mayStore.
 specifier|static
 name|bool
 name|isScalarStore
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -2105,9 +2617,10 @@ block|}
 name|bool
 name|isScalarStore
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -2125,9 +2638,12 @@ block|}
 specifier|static
 name|bool
 name|isFixedSize
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -2145,9 +2661,10 @@ block|}
 name|bool
 name|isFixedSize
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -2165,9 +2682,12 @@ block|}
 specifier|static
 name|bool
 name|hasFPClamp
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|MI
@@ -2185,9 +2705,10 @@ block|}
 name|bool
 name|hasFPClamp
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -2205,9 +2726,12 @@ block|}
 name|bool
 name|isVGPRCopy
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -2216,10 +2740,10 @@ operator|.
 name|isCopy
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
 name|unsigned
 name|Dest
-operator|=
+init|=
 name|MI
 operator|.
 name|getOperand
@@ -2229,12 +2753,12 @@ argument_list|)
 operator|.
 name|getReg
 argument_list|()
-block|;
+decl_stmt|;
 specifier|const
 name|MachineFunction
-operator|&
+modifier|&
 name|MF
-operator|=
+init|=
 operator|*
 name|MI
 operator|.
@@ -2243,17 +2767,17 @@ argument_list|()
 operator|->
 name|getParent
 argument_list|()
-block|;
+decl_stmt|;
 specifier|const
 name|MachineRegisterInfo
-operator|&
+modifier|&
 name|MRI
-operator|=
+init|=
 name|MF
 operator|.
 name|getRegInfo
 argument_list|()
-block|;
+decl_stmt|;
 return|return
 operator|!
 name|RI
@@ -2269,27 +2793,40 @@ block|}
 name|bool
 name|isInlineConstant
 argument_list|(
-argument|const APInt&Imm
-argument_list|)
 specifier|const
-block|;
+name|APInt
+operator|&
+name|Imm
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|isInlineConstant
 argument_list|(
-argument|const MachineOperand&MO
-argument_list|,
-argument|uint8_t OperandType
-argument_list|)
 specifier|const
-block|;
+name|MachineOperand
+operator|&
+name|MO
+argument_list|,
+name|uint8_t
+name|OperandType
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|isInlineConstant
 argument_list|(
-argument|const MachineOperand&MO
-argument_list|,
-argument|const MCOperandInfo&OpInfo
-argument_list|)
 specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|,
+specifier|const
+name|MCOperandInfo
+operator|&
+name|OpInfo
+argument_list|)
+decl|const
 block|{
 return|return
 name|isInlineConstant
@@ -2307,13 +2844,22 @@ comment|/// be an inline immediate.
 name|bool
 name|isInlineConstant
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|const MachineOperand&UseMO
-argument_list|,
-argument|const MachineOperand&DefMO
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|&
+name|UseMO
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|&
+name|DefMO
+argument_list|)
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -2325,10 +2871,10 @@ operator|==
 operator|&
 name|MI
 argument_list|)
-block|;
+expr_stmt|;
 name|int
 name|OpIdx
-operator|=
+init|=
 name|MI
 operator|.
 name|getOperandNo
@@ -2336,7 +2882,7 @@ argument_list|(
 operator|&
 name|UseMO
 argument_list|)
-block|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2383,24 +2929,28 @@ comment|/// immediate.
 name|bool
 name|isInlineConstant
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned OpIdx
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|OpIdx
+argument_list|)
+decl|const
 block|{
 specifier|const
 name|MachineOperand
-operator|&
+modifier|&
 name|MO
-operator|=
+init|=
 name|MI
 operator|.
 name|getOperand
 argument_list|(
 name|OpIdx
 argument_list|)
-block|;
+decl_stmt|;
 return|return
 name|isInlineConstant
 argument_list|(
@@ -2423,13 +2973,20 @@ block|}
 name|bool
 name|isInlineConstant
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned OpIdx
-argument_list|,
-argument|const MachineOperand&MO
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|OpIdx
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|)
+decl|const
 block|{
 if|if
 condition|(

@@ -403,6 +403,16 @@ name|llvm
 operator|::
 name|StringRef
 operator|>
+name|FilterList
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|>
 name|SearchPaths
 expr_stmt|;
 name|std

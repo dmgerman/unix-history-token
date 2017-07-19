@@ -140,20 +140,43 @@ name|class
 name|raw_ostream
 decl_stmt|;
 extern|extern template class DomTreeNodeBase<BasicBlock>;
-extern|extern template class DominatorTreeBase<BasicBlock>;
+extern|extern template class DominatorTreeBase<BasicBlock
+operator|,
+extern|false>;
+comment|// DomTree
+extern|extern template class DominatorTreeBase<BasicBlock
+operator|,
+extern|true>;
+comment|// PostDomTree
 name|namespace
 name|DomTreeBuilder
 block|{
-extern|extern template void Calculate<Function
+name|using
+name|BBDomTree
+init|=
+name|DomTreeBase
+operator|<
+name|BasicBlock
+operator|>
+decl_stmt|;
+name|using
+name|BBPostDomTree
+init|=
+name|PostDomTreeBase
+operator|<
+name|BasicBlock
+operator|>
+decl_stmt|;
+extern|extern template void Calculate<BBDomTree
 operator|,
-extern|BasicBlock *>(     DominatorTreeBaseByGraphTraits<GraphTraits<BasicBlock *>>&DT
+extern|Function>(BBDomTree&DT
 operator|,
 extern|Function&F
 block|)
 decl_stmt|;
-extern|extern template void Calculate<Function
+extern|extern template void Calculate<BBPostDomTree
 operator|,
-extern|Inverse<BasicBlock *>>(     DominatorTreeBaseByGraphTraits<GraphTraits<Inverse<BasicBlock *>>>&DT
+extern|Function>(BBPostDomTree&DT
 operator|,
 extern|Function&F
 block|)
@@ -161,7 +184,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_extern
-extern|extern template bool Verify<BasicBlock *>(     const DominatorTreeBaseByGraphTraits<GraphTraits<BasicBlock *>>&DT
+extern|extern template void InsertEdge<BBDomTree>(BBDomTree&DT
+operator|,
+extern|BasicBlock *From
+operator|,
+extern|BasicBlock *To
 end_extern
 
 begin_empty_stmt
@@ -170,7 +197,55 @@ empty_stmt|;
 end_empty_stmt
 
 begin_extern
-extern|extern template bool Verify<Inverse<BasicBlock *>>(     const DominatorTreeBaseByGraphTraits<GraphTraits<Inverse<BasicBlock *>>>&DT
+extern|extern template void InsertEdge<BBPostDomTree>(BBPostDomTree&DT
+operator|,
+extern|BasicBlock *From
+operator|,
+extern|BasicBlock *To
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern template void DeleteEdge<BBDomTree>(BBDomTree&DT
+operator|,
+extern|BasicBlock *From
+operator|,
+extern|BasicBlock *To
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern template void DeleteEdge<BBPostDomTree>(BBPostDomTree&DT
+operator|,
+extern|BasicBlock *From
+operator|,
+extern|BasicBlock *To
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern template bool Verify<BBDomTree>(const BBDomTree&DT
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern template bool Verify<BBPostDomTree>(const BBPostDomTree&DT
 end_extern
 
 begin_empty_stmt
@@ -571,50 +646,41 @@ name|public
 name|DominatorTreeBase
 operator|<
 name|BasicBlock
-operator|>
+decl_stmt|,
+name|false
+decl|>
 block|{
 name|public
-operator|:
+label|:
 name|using
 name|Base
-operator|=
+init|=
 name|DominatorTreeBase
 operator|<
 name|BasicBlock
-operator|>
-block|;
+decl_stmt|,
+name|false
+decl|>
+decl_stmt|;
 name|DominatorTree
 argument_list|()
-operator|:
-name|DominatorTreeBase
-operator|<
-name|BasicBlock
-operator|>
-operator|(
-name|false
-operator|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|DominatorTree
-argument_list|(
+parameter_list|(
 name|Function
-operator|&
+modifier|&
 name|F
-argument_list|)
-operator|:
-name|DominatorTreeBase
-operator|<
-name|BasicBlock
-operator|>
-operator|(
-name|false
-operator|)
+parameter_list|)
 block|{
 name|recalculate
 argument_list|(
 name|F
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// Handle invalidation explicitly.
 name|bool
 name|invalidate
@@ -633,35 +699,38 @@ operator|::
 name|Invalidator
 operator|&
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Returns *false* if the other dominator tree matches this dominator
 comment|/// tree.
 specifier|inline
 name|bool
 name|compare
 argument_list|(
-argument|const DominatorTree&Other
-argument_list|)
 specifier|const
+name|DominatorTree
+operator|&
+name|Other
+argument_list|)
+decl|const
 block|{
 specifier|const
 name|DomTreeNode
-operator|*
+modifier|*
 name|R
-operator|=
+init|=
 name|getRootNode
 argument_list|()
-block|;
+decl_stmt|;
 specifier|const
 name|DomTreeNode
-operator|*
+modifier|*
 name|OtherR
-operator|=
+init|=
 name|Other
 operator|.
 name|getRootNode
 argument_list|()
-block|;
+decl_stmt|;
 return|return
 operator|!
 name|R
@@ -692,7 +761,7 @@ name|using
 name|Base
 operator|::
 name|dominates
-block|;
+expr_stmt|;
 comment|/// \brief Return true if Def dominates a use in User.
 comment|///
 comment|/// This performs the special checks necessary if Def and User are in the same
@@ -700,30 +769,48 @@ comment|/// basic block. Note that Def doesn't dominate a use in Def itself!
 name|bool
 name|dominates
 argument_list|(
-argument|const Instruction *Def
-argument_list|,
-argument|const Use&U
-argument_list|)
 specifier|const
-block|;
+name|Instruction
+operator|*
+name|Def
+argument_list|,
+specifier|const
+name|Use
+operator|&
+name|U
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|dominates
 argument_list|(
-argument|const Instruction *Def
-argument_list|,
-argument|const Instruction *User
-argument_list|)
 specifier|const
-block|;
+name|Instruction
+operator|*
+name|Def
+argument_list|,
+specifier|const
+name|Instruction
+operator|*
+name|User
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|dominates
 argument_list|(
-argument|const Instruction *Def
-argument_list|,
-argument|const BasicBlock *BB
-argument_list|)
 specifier|const
-block|;
+name|Instruction
+operator|*
+name|Def
+argument_list|,
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Return true if an edge dominates a use.
 comment|///
 comment|/// If BBE is not a unique edge between start and end of the edge, it can
@@ -731,35 +818,50 @@ comment|/// never dominate the use.
 name|bool
 name|dominates
 argument_list|(
-argument|const BasicBlockEdge&BBE
-argument_list|,
-argument|const Use&U
-argument_list|)
 specifier|const
-block|;
+name|BasicBlockEdge
+operator|&
+name|BBE
+argument_list|,
+specifier|const
+name|Use
+operator|&
+name|U
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|dominates
 argument_list|(
-argument|const BasicBlockEdge&BBE
-argument_list|,
-argument|const BasicBlock *BB
-argument_list|)
 specifier|const
-block|;
+name|BasicBlockEdge
+operator|&
+name|BBE
+argument_list|,
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Ensure base class overloads are visible.
 name|using
 name|Base
 operator|::
 name|isReachableFromEntry
-block|;
+expr_stmt|;
 comment|/// \brief Provide an overload for a Use.
 name|bool
 name|isReachableFromEntry
 argument_list|(
-argument|const Use&U
-argument_list|)
 specifier|const
-block|;
+name|Use
+operator|&
+name|U
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Verify the correctness of the domtree by re-computing it.
 comment|///
 comment|/// This should only be used for debugging as it aborts the program if the
@@ -768,28 +870,32 @@ name|void
 name|verifyDomTree
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|// Pop up a GraphViz/gv window with the Dominator Tree rendered using `dot`.
 name|void
 name|viewGraph
-argument_list|(
+parameter_list|(
 specifier|const
 name|Twine
-operator|&
+modifier|&
 name|Name
-argument_list|,
+parameter_list|,
 specifier|const
 name|Twine
-operator|&
+modifier|&
 name|Title
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|viewGraph
-argument_list|()
-block|; }
-decl_stmt|;
+parameter_list|()
+function_decl|;
+block|}
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|//===-------------------------------------

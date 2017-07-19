@@ -145,7 +145,7 @@ name|public
 operator|:
 name|llvm
 operator|::
-name|DominatorTreeBase
+name|DomTreeBase
 operator|<
 name|CFGBlock
 operator|>
@@ -160,12 +160,11 @@ operator|=
 name|new
 name|llvm
 operator|::
-name|DominatorTreeBase
+name|DomTreeBase
 operator|<
 name|CFGBlock
 operator|>
 operator|(
-name|false
 operator|)
 block|;   }
 operator|~
@@ -178,7 +177,7 @@ name|DT
 block|; }
 name|llvm
 operator|::
-name|DominatorTreeBase
+name|DomTreeBase
 operator|<
 name|CFGBlock
 operator|>

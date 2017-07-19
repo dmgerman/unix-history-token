@@ -1883,7 +1883,7 @@ name|m_script_interpreter_sp
 expr_stmt|;
 name|std
 operator|::
-name|mutex
+name|recursive_mutex
 name|m_script_interpreter_mutex
 expr_stmt|;
 name|lldb

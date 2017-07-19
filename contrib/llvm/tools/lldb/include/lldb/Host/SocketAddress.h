@@ -514,6 +514,14 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|// Returns true if the socket is INADDR_LOOPBACK
+comment|//------------------------------------------------------------------
+name|bool
+name|IsLocalhost
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
 comment|// Direct access to all of the sockaddr structures
 comment|//------------------------------------------------------------------
 name|struct

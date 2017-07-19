@@ -100,7 +100,7 @@ operator|:
 name|using
 name|DomTreeT
 operator|=
-name|DominatorTreeBase
+name|DomTreeBase
 operator|<
 name|MachineBasicBlock
 operator|>
@@ -119,6 +119,8 @@ operator|=
 name|DominanceFrontierBase
 operator|<
 name|MachineBasicBlock
+block|,
+name|false
 operator|>
 operator|::
 name|DomSetType
@@ -129,6 +131,8 @@ operator|=
 name|DominanceFrontierBase
 operator|<
 name|MachineBasicBlock
+block|,
+name|false
 operator|>
 operator|::
 name|iterator
@@ -139,6 +143,8 @@ operator|=
 name|DominanceFrontierBase
 operator|<
 name|MachineBasicBlock
+block|,
+name|false
 operator|>
 operator|::
 name|const_iterator
@@ -174,6 +180,8 @@ block|;
 name|DominanceFrontierBase
 operator|<
 name|MachineBasicBlock
+block|,
+name|false
 operator|>
 operator|&
 name|getBase
@@ -401,7 +409,9 @@ block|}
 name|bool
 name|compare
 argument_list|(
-argument|DominanceFrontierBase<MachineBasicBlock>&Other
+argument|DominanceFrontierBase<MachineBasicBlock
+argument_list|,
+argument|false>&Other
 argument_list|)
 specifier|const
 block|{

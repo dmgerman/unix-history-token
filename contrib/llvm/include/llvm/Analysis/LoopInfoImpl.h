@@ -2088,13 +2088,13 @@ name|discoverAndMapSubloop
 argument_list|(
 argument|LoopT *L
 argument_list|,
-argument|ArrayRef<BlockT*> Backedges
+argument|ArrayRef<BlockT *> Backedges
 argument_list|,
 argument|LoopInfoBase<BlockT
 argument_list|,
 argument|LoopT> *LI
 argument_list|,
-argument|const DominatorTreeBase<BlockT>&DomTree
+argument|const DomTreeBase<BlockT>&DomTree
 argument_list|)
 block|{
 typedef|typedef
@@ -2742,7 +2742,7 @@ operator|>
 operator|::
 name|analyze
 argument_list|(
-argument|const DominatorTreeBase<BlockT>&DomTree
+argument|const DomTreeBase<BlockT>&DomTree
 argument_list|)
 block|{
 comment|// Postorder traversal of the dominator tree.
@@ -3599,7 +3599,7 @@ operator|>
 operator|::
 name|verify
 argument_list|(
-argument|const DominatorTreeBase<BlockT>&DomTree
+argument|const DomTreeBase<BlockT>&DomTree
 argument_list|)
 specifier|const
 block|{

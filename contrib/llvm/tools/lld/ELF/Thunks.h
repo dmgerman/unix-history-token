@@ -167,7 +167,7 @@ name|uint64_t
 name|Offset
 decl_stmt|;
 name|uint32_t
-name|alignment
+name|Alignment
 init|=
 literal|4
 decl_stmt|;

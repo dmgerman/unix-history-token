@@ -258,8 +258,13 @@ name|F
 parameter_list|)
 function_decl|;
 block|}
+comment|// namespace elf
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lld
+end_comment
 
 begin_endif
 endif|#

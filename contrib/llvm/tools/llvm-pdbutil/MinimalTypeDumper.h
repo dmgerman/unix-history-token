@@ -94,6 +94,8 @@ argument|bool Hashes
 argument_list|,
 argument|codeview::LazyRandomTypeCollection&Types
 argument_list|,
+argument|uint32_t NumHashBuckets
+argument_list|,
 argument|FixedStreamArray<support::ulittle32_t> HashValues
 argument_list|)
 operator|:
@@ -120,6 +122,11 @@ block|,
 name|Types
 argument_list|(
 name|Types
+argument_list|)
+block|,
+name|NumHashBuckets
+argument_list|(
+name|NumHashBuckets
 argument_list|)
 block|,
 name|HashValues
@@ -239,6 +246,9 @@ operator|::
 name|LazyRandomTypeCollection
 operator|&
 name|Types
+block|;
+name|uint32_t
+name|NumHashBuckets
 block|;
 name|FixedStreamArray
 operator|<

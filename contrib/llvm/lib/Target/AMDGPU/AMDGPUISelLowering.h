@@ -376,6 +376,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|performAssertSZExtCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|splitBinaryBitConstantOpImpl
 argument_list|(
 argument|DAGCombinerInfo&DCI

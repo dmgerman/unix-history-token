@@ -107,12 +107,6 @@ begin_comment
 comment|// Opaque type returned by dlopen().
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|sigaltstack
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 name|namespace
 name|__sanitizer
@@ -143,13 +137,11 @@ name|uptr
 name|internal_sigaltstack
 parameter_list|(
 specifier|const
-name|struct
-name|sigaltstack
+name|void
 modifier|*
 name|ss
 parameter_list|,
-name|struct
-name|sigaltstack
+name|void
 modifier|*
 name|oss
 parameter_list|)

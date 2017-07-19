@@ -1193,6 +1193,23 @@ end_expr_stmt
 
 begin_expr_stmt
 name|bool
+name|supportsMinMaxDenormModes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getGeneration
+argument_list|()
+operator|>=
+name|AMDGPUSubtarget
+operator|::
+name|GFX9
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
 name|hasFPExceptions
 argument_list|()
 specifier|const

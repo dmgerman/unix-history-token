@@ -792,7 +792,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|PDB_UniqueId
+name|codeview
+operator|::
+name|GUID
 name|getGuid
 argument_list|()
 specifier|const

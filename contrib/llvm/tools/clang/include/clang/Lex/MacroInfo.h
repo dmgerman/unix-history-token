@@ -136,18 +136,18 @@ name|EndLocation
 decl_stmt|;
 comment|/// \brief The list of arguments for a function-like macro.
 comment|///
-comment|/// ArgumentList points to the first of NumArguments pointers.
+comment|/// ParameterList points to the first of NumParameters pointers.
 comment|///
 comment|/// This can be empty, for, e.g. "#define X()".  In a C99-style variadic
 comment|/// macro, this includes the \c __VA_ARGS__ identifier on the list.
 name|IdentifierInfo
 modifier|*
 modifier|*
-name|ArgumentList
+name|ParameterList
 decl_stmt|;
-comment|/// \see ArgumentList
+comment|/// \see ParameterList
 name|unsigned
-name|NumArguments
+name|NumParameters
 decl_stmt|;
 comment|/// \brief This is the list of tokens that the macro is defined to.
 name|SmallVector
@@ -398,10 +398,10 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-comment|/// \brief Set the specified list of identifiers as the argument list for
+comment|/// \brief Set the specified list of identifiers as the parameter list for
 comment|/// this macro.
 name|void
-name|setArgumentList
+name|setParameterList
 argument_list|(
 name|ArrayRef
 operator|<
@@ -419,15 +419,15 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-name|ArgumentList
+name|ParameterList
 operator|==
 name|nullptr
 operator|&&
-name|NumArguments
+name|NumParameters
 operator|==
 literal|0
 operator|&&
-literal|"Argument list already set!"
+literal|"Parameter list already set!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -438,14 +438,14 @@ name|empty
 argument_list|()
 condition|)
 return|return;
-name|NumArguments
+name|NumParameters
 operator|=
 name|List
 operator|.
 name|size
 argument_list|()
 expr_stmt|;
-name|ArgumentList
+name|ParameterList
 operator|=
 name|PPAllocator
 operator|.
@@ -475,57 +475,57 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|ArgumentList
+name|ParameterList
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Arguments - The list of arguments for a function-like macro.  This can be
-comment|/// empty, for, e.g. "#define X()".
+comment|/// Parameters - The list of parameters for a function-like macro.  This can
+comment|/// be empty, for, e.g. "#define X()".
 typedef|typedef
 name|IdentifierInfo
 modifier|*
 specifier|const
 modifier|*
-name|arg_iterator
+name|param_iterator
 typedef|;
 name|bool
-name|arg_empty
+name|param_empty
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumArguments
+name|NumParameters
 operator|==
 literal|0
 return|;
 block|}
-name|arg_iterator
-name|arg_begin
+name|param_iterator
+name|param_begin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ArgumentList
+name|ParameterList
 return|;
 block|}
-name|arg_iterator
-name|arg_end
+name|param_iterator
+name|param_end
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ArgumentList
+name|ParameterList
 operator|+
-name|NumArguments
+name|NumParameters
 return|;
 block|}
 name|unsigned
-name|getNumArgs
+name|getNumParams
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumArguments
+name|NumParameters
 return|;
 block|}
 name|ArrayRef
@@ -534,7 +534,7 @@ specifier|const
 name|IdentifierInfo
 operator|*
 operator|>
-name|args
+name|params
 argument_list|()
 specifier|const
 block|{
@@ -546,16 +546,16 @@ name|IdentifierInfo
 operator|*
 operator|>
 operator|(
-name|ArgumentList
+name|ParameterList
 operator|,
-name|NumArguments
+name|NumParameters
 operator|)
 return|;
 block|}
-comment|/// \brief Return the argument number of the specified identifier,
-comment|/// or -1 if the identifier is not a formal argument identifier.
+comment|/// \brief Return the parameter number of the specified identifier,
+comment|/// or -1 if the identifier is not a formal parameter identifier.
 name|int
-name|getArgumentNum
+name|getParameterNum
 argument_list|(
 specifier|const
 name|IdentifierInfo
@@ -566,15 +566,15 @@ decl|const
 block|{
 for|for
 control|(
-name|arg_iterator
+name|param_iterator
 name|I
 init|=
-name|arg_begin
+name|param_begin
 argument_list|()
 init|,
 name|E
 init|=
-name|arg_end
+name|param_end
 argument_list|()
 init|;
 name|I
@@ -594,7 +594,7 @@ condition|)
 return|return
 name|I
 operator|-
-name|arg_begin
+name|param_begin
 argument_list|()
 return|;
 return|return

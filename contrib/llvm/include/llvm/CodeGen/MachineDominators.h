@@ -135,11 +135,13 @@ name|void
 name|DominatorTreeBase
 operator|<
 name|MachineBasicBlock
+operator|,
+name|false
 operator|>
 operator|::
 name|addRoot
 argument_list|(
-argument|MachineBasicBlock* MBB
+argument|MachineBasicBlock *MBB
 argument_list|)
 block|{
 name|this
@@ -159,7 +161,14 @@ operator|<
 name|MachineBasicBlock
 operator|>
 expr_stmt|;
-extern|extern template class DominatorTreeBase<MachineBasicBlock>;
+extern|extern template class DominatorTreeBase<MachineBasicBlock
+operator|,
+extern|false>;
+comment|// DomTree
+extern|extern template class DominatorTreeBase<MachineBasicBlock
+operator|,
+extern|true>;
+comment|// PostDomTree
 name|using
 name|MachineDomTreeNode
 init|=
@@ -229,7 +238,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|DominatorTreeBase
+name|DomTreeBase
 operator|<
 name|MachineBasicBlock
 operator|>>
@@ -255,7 +264,7 @@ comment|// Pass ID, replacement for typeid
 name|MachineDominatorTree
 argument_list|()
 block|;
-name|DominatorTreeBase
+name|DomTreeBase
 operator|<
 name|MachineBasicBlock
 operator|>
@@ -272,7 +281,7 @@ name|DT
 operator|.
 name|reset
 argument_list|(
-argument|new DominatorTreeBase<MachineBasicBlock>(false)
+argument|new DomTreeBase<MachineBasicBlock>()
 argument_list|)
 expr_stmt|;
 name|applySplitCriticalEdges

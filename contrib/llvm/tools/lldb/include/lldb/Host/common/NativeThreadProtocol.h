@@ -89,7 +89,7 @@ name|public
 operator|:
 name|NativeThreadProtocol
 argument_list|(
-argument|NativeProcessProtocol *process
+argument|NativeProcessProtocol&process
 argument_list|,
 argument|lldb::tid_t tid
 argument_list|)
@@ -192,10 +192,15 @@ return|return
 name|m_tid
 return|;
 block|}
-name|NativeProcessProtocolSP
+name|NativeProcessProtocol
+operator|&
 name|GetProcess
 argument_list|()
-block|;
+block|{
+return|return
+name|m_process
+return|;
+block|}
 comment|// ---------------------------------------------------------------------
 comment|// Thread-specific watchpoints
 comment|// ---------------------------------------------------------------------
@@ -248,8 +253,9 @@ literal|0
 block|;
 name|protected
 operator|:
-name|NativeProcessProtocolWP
-name|m_process_wp
+name|NativeProcessProtocol
+operator|&
+name|m_process
 block|;
 name|lldb
 operator|::

@@ -405,7 +405,7 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
-name|private
+name|protected
 label|:
 struct|struct
 name|EHFrame
@@ -419,14 +419,18 @@ name|Size
 decl_stmt|;
 block|}
 struct|;
+typedef|typedef
 name|std
 operator|::
 name|vector
 operator|<
 name|EHFrame
 operator|>
-name|EHFrames
+name|EHFrameInfos
 expr_stmt|;
+name|EHFrameInfos
+name|EHFrames
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).

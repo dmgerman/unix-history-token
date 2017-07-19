@@ -534,6 +534,11 @@ name|bool
 name|ConsumeAnonymousNamespace
 parameter_list|()
 function_decl|;
+comment|// Consumes '{lambda ...}'
+name|bool
+name|ConsumeLambda
+parameter_list|()
+function_decl|;
 comment|// Consumes operator declaration like 'operator *' or 'operator delete []'
 name|bool
 name|ConsumeOperator

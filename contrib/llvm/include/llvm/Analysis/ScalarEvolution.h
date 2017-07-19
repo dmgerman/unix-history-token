@@ -815,8 +815,7 @@ block|}
 expr|}
 block|;
 comment|/// This class represents an assumption that two SCEV expressions are equal,
-comment|/// and this can be checked at run-time. We assume that the left hand side is
-comment|/// a SCEVUnknown and the right hand side a constant.
+comment|/// and this can be checked at run-time.
 name|class
 name|SCEVEqualPredicate
 name|final
@@ -824,15 +823,14 @@ operator|:
 name|public
 name|SCEVPredicate
 block|{
-comment|/// We assume that LHS == RHS, where LHS is a SCEVUnknown and RHS a
-comment|/// constant.
+comment|/// We assume that LHS == RHS.
 specifier|const
-name|SCEVUnknown
+name|SCEV
 operator|*
 name|LHS
 block|;
 specifier|const
-name|SCEVConstant
+name|SCEV
 operator|*
 name|RHS
 block|;
@@ -842,9 +840,9 @@ name|SCEVEqualPredicate
 argument_list|(
 argument|const FoldingSetNodeIDRef ID
 argument_list|,
-argument|const SCEVUnknown *LHS
+argument|const SCEV *LHS
 argument_list|,
-argument|const SCEVConstant *RHS
+argument|const SCEV *RHS
 argument_list|)
 block|;
 comment|/// Implementation of the SCEVPredicate interface
@@ -883,7 +881,7 @@ name|override
 block|;
 comment|/// Returns the left hand side of the equality.
 specifier|const
-name|SCEVUnknown
+name|SCEV
 operator|*
 name|getLHS
 argument_list|()
@@ -895,7 +893,7 @@ return|;
 block|}
 comment|/// Returns the right hand side of the equality.
 specifier|const
-name|SCEVConstant
+name|SCEV
 operator|*
 name|getRHS
 argument_list|()
@@ -4596,6 +4594,36 @@ name|Flags
 argument_list|)
 return|;
 block|}
+comment|/// Checks if \p SymbolicPHI can be rewritten as an AddRecExpr under some
+comment|/// Predicates. If successful return these<AddRecExpr, Predicates>;
+comment|/// The function is intended to be called from PSCEV (the caller will decide
+comment|/// whether to actually add the predicates and carry out the rewrites).
+name|Optional
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|,
+name|SmallVector
+operator|<
+specifier|const
+name|SCEVPredicate
+operator|*
+operator|,
+literal|3
+operator|>>>
+name|createAddRecFromPHIWithCasts
+argument_list|(
+specifier|const
+name|SCEVUnknown
+operator|*
+name|SymbolicPHI
+argument_list|)
+expr_stmt|;
 comment|/// Returns an expression for a GEP
 comment|///
 comment|/// \p GEP The GEP. The indices contained in the GEP itself are ignored,
@@ -6041,12 +6069,12 @@ modifier|*
 name|getEqualPredicate
 parameter_list|(
 specifier|const
-name|SCEVUnknown
+name|SCEV
 modifier|*
 name|LHS
 parameter_list|,
 specifier|const
-name|SCEVConstant
+name|SCEV
 modifier|*
 name|RHS
 parameter_list|)
@@ -6117,6 +6145,42 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
+comment|/// Similar to createAddRecFromPHI, but with the additional flexibility of
+comment|/// suggesting runtime overflow checks in case casts are encountered.
+comment|/// If successful, the analysis records that for this loop, \p SymbolicPHI,
+comment|/// which is the UnknownSCEV currently representing the PHI, can be rewritten
+comment|/// into an AddRec, assuming some predicates; The function then returns the
+comment|/// AddRec and the predicates as a pair, and caches this pair in
+comment|/// PredicatedSCEVRewrites.
+comment|/// If the analysis is not successful, a mapping from the \p SymbolicPHI to
+comment|/// itself (with no predicates) is recorded, and a nullptr with an empty
+comment|/// predicates vector is returned as a pair.
+name|Optional
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|,
+name|SmallVector
+operator|<
+specifier|const
+name|SCEVPredicate
+operator|*
+operator|,
+literal|3
+operator|>>>
+name|createAddRecFromPHIWithCastsImpl
+argument_list|(
+specifier|const
+name|SCEVUnknown
+operator|*
+name|SymbolicPHI
+argument_list|)
+expr_stmt|;
 comment|/// Compute the backedge taken count knowing the interval difference, the
 comment|/// stride and presence of the equality in the comparison.
 specifier|const
@@ -6243,6 +6307,41 @@ expr_stmt|;
 name|BumpPtrAllocator
 name|SCEVAllocator
 decl_stmt|;
+comment|/// Cache tentative mappings from UnknownSCEVs in a Loop, to a SCEV expression
+comment|/// they can be rewritten into under certain predicates.
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|SCEVUnknown
+operator|*
+operator|,
+specifier|const
+name|Loop
+operator|*
+operator|>
+operator|,
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|,
+name|SmallVector
+operator|<
+specifier|const
+name|SCEVPredicate
+operator|*
+operator|,
+literal|3
+operator|>>>
+name|PredicatedSCEVRewrites
+expr_stmt|;
 comment|/// The head of a linked list of all SCEVUnknown values that have been
 comment|/// allocated. This is used by releaseMemory to locate them all and call
 comment|/// their destructors.

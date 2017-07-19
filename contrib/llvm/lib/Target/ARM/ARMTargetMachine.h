@@ -195,6 +195,8 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|// The no argument getSubtargetImpl, while it exists on some targets, is
+comment|// deprecated and should not be used.
 specifier|const
 name|ARMSubtarget
 operator|*

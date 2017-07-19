@@ -117,8 +117,12 @@ name|llvm
 operator|::
 name|Expected
 operator|<
-name|NativeProcessProtocolSP
-operator|>
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|NativeProcessProtocol
+operator|>>
 name|Launch
 argument_list|(
 argument|ProcessLaunchInfo&launch_info
@@ -134,8 +138,12 @@ name|llvm
 operator|::
 name|Expected
 operator|<
-name|NativeProcessProtocolSP
-operator|>
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|NativeProcessProtocol
+operator|>>
 name|Attach
 argument_list|(
 argument|lldb::pid_t pid

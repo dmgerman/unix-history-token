@@ -70,6 +70,12 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
 expr|\
 operator|!
 name|defined
@@ -153,6 +159,39 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_FREEBSD
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_NETBSD
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_NETBSD
 value|0
 end_define
 
@@ -451,7 +490,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_POSIX
-value|(SANITIZER_FREEBSD || SANITIZER_LINUX || SANITIZER_MAC)
+define|\
+value|(SANITIZER_FREEBSD || SANITIZER_LINUX || SANITIZER_MAC || SANITIZER_NETBSD)
 end_define
 
 begin_if

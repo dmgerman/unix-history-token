@@ -204,7 +204,9 @@ name|EXTRACTURP
 block|,
 name|VCOMBINE
 block|,
-name|VPACK
+name|VPACKE
+block|,
+name|VPACKO
 block|,
 name|TC_RETURN
 block|,
@@ -676,15 +678,6 @@ specifier|const
 block|;
 name|SDValue
 name|LowerRETURNADDR
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerLOAD
 argument_list|(
 argument|SDValue Op
 argument_list|,

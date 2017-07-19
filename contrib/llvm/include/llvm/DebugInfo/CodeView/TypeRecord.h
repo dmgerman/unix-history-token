@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/GUID.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/TypeIndex.h"
 end_include
 
@@ -2644,7 +2650,7 @@ argument_list|)
 block|{}
 name|TypeServer2Record
 argument_list|(
-argument|StringRef Guid
+argument|StringRef GuidStr
 argument_list|,
 argument|uint32_t Age
 argument_list|,
@@ -2658,11 +2664,6 @@ operator|::
 name|TypeServer2
 argument_list|)
 block|,
-name|Guid
-argument_list|(
-name|Guid
-argument_list|)
-block|,
 name|Age
 argument_list|(
 name|Age
@@ -2672,8 +2673,37 @@ name|Name
 argument_list|(
 argument|Name
 argument_list|)
-block|{}
-name|StringRef
+block|{
+name|assert
+argument_list|(
+name|GuidStr
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|16
+operator|&&
+literal|"guid isn't 16 bytes"
+argument_list|)
+block|;
+operator|::
+name|memcpy
+argument_list|(
+name|Guid
+operator|.
+name|Guid
+argument_list|,
+name|GuidStr
+operator|.
+name|data
+argument_list|()
+argument_list|,
+literal|16
+argument_list|)
+block|;   }
+specifier|const
+name|GUID
+operator|&
 name|getGuid
 argument_list|()
 specifier|const
@@ -2700,7 +2730,7 @@ return|return
 name|Name
 return|;
 block|}
-name|StringRef
+name|GUID
 name|Guid
 block|;
 name|uint32_t

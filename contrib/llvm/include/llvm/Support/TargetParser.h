@@ -266,6 +266,10 @@ name|AEK_RAS
 init|=
 literal|0x1000
 block|,
+name|AEK_SVE
+init|=
+literal|0x2000
+block|,
 comment|// Unsupported extensions.
 name|AEK_OS
 init|=
@@ -651,6 +655,10 @@ block|,
 name|AEK_LSE
 init|=
 literal|0x100
+block|,
+name|AEK_SVE
+init|=
+literal|0x200
 block|}
 enum|;
 name|StringRef

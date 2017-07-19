@@ -2177,7 +2177,7 @@ comment|// This convention allows using the Win64 convention on other targets.
 case|case
 name|CallingConv
 operator|::
-name|X86_64_Win64
+name|Win64
 case|:
 return|return
 name|true

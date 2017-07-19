@@ -104,46 +104,6 @@ name|format_provider
 operator|<
 name|pdb
 operator|::
-name|PDB_UniqueId
-operator|>
-block|{
-specifier|static
-name|void
-name|format
-argument_list|(
-argument|const pdb::PDB_UniqueId&V
-argument_list|,
-argument|llvm::raw_ostream&Stream
-argument_list|,
-argument|StringRef Style
-argument_list|)
-block|{
-name|codeview
-operator|::
-name|fmt_guid
-argument_list|(
-name|V
-operator|.
-name|Guid
-argument_list|)
-operator|.
-name|format
-argument_list|(
-name|Stream
-argument_list|,
-name|Style
-argument_list|)
-block|;   }
-block|}
-expr_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|format_provider
-operator|<
-name|pdb
-operator|::
 name|PdbRaw_ImplVer
 operator|>
 block|{

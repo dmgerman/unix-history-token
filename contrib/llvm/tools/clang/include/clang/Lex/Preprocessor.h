@@ -8611,11 +8611,63 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// ReadOptionalMacroParameterListAndBody - This consumes all (i.e. the
+end_comment
+
+begin_comment
+comment|/// entire line) of the macro's tokens and adds them to MacroInfo, and while
+end_comment
+
+begin_comment
+comment|/// doing so performs certain validity checks including (but not limited to):
+end_comment
+
+begin_comment
+comment|///   - # (stringization) is followed by a macro parameter
+end_comment
+
+begin_comment
+comment|/// \param MacroNameTok - Token that represents the macro name
+end_comment
+
+begin_comment
+comment|/// \param ImmediatelyAfterHeaderGuard - Macro follows an #ifdef header guard
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///  Either returns a pointer to a MacroInfo object OR emits a diagnostic and
+end_comment
+
+begin_comment
+comment|///  returns a nullptr if an invalid sequence of tokens is encountered.
+end_comment
+
+begin_function_decl
+name|MacroInfo
+modifier|*
+name|ReadOptionalMacroParameterListAndBody
+parameter_list|(
+specifier|const
+name|Token
+modifier|&
+name|MacroNameTok
+parameter_list|,
+name|bool
+name|ImmediatelyAfterHeaderGuard
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// The ( starting an argument list of a macro definition has just been read.
 end_comment
 
 begin_comment
-comment|/// Lex the rest of the arguments and the closing ), updating \p MI with
+comment|/// Lex the rest of the parameters and the closing ), updating \p MI with
 end_comment
 
 begin_comment
@@ -8628,7 +8680,7 @@ end_comment
 
 begin_function_decl
 name|bool
-name|ReadMacroDefinitionArgList
+name|ReadMacroParameterList
 parameter_list|(
 name|MacroInfo
 modifier|*
@@ -8897,7 +8949,7 @@ end_comment
 begin_function_decl
 name|MacroArgs
 modifier|*
-name|ReadFunctionLikeMacroArgs
+name|ReadMacroCallArgumentList
 parameter_list|(
 name|Token
 modifier|&

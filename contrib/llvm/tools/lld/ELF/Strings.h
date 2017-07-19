@@ -92,20 +92,6 @@ block|{
 name|namespace
 name|elf
 block|{
-name|int
-name|getPriority
-parameter_list|(
-name|StringRef
-name|S
-parameter_list|)
-function_decl|;
-name|bool
-name|hasWildcard
-parameter_list|(
-name|StringRef
-name|S
-parameter_list|)
-function_decl|;
 name|std
 operator|::
 name|vector
@@ -119,13 +105,6 @@ argument_list|)
 expr_stmt|;
 name|bool
 name|isValidCIdentifier
-parameter_list|(
-name|StringRef
-name|S
-parameter_list|)
-function_decl|;
-name|StringRef
-name|unquote
 parameter_list|(
 name|StringRef
 name|S
@@ -349,8 +328,16 @@ block|}
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
+comment|// namespace elf
+end_comment
+
+begin_comment
 unit|}
+comment|// namespace lld
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

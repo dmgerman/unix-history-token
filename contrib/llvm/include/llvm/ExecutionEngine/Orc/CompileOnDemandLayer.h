@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/Orc/OrcError.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
@@ -1391,8 +1397,7 @@ comment|//
 comment|// FIXME: We should track and free associated resources (unused compile
 comment|//        callbacks, uncompiled IR, and no-longer-needed/reachable function
 comment|//        implementations).
-comment|// FIXME: Return Error once the JIT APIs are Errorized.
-name|bool
+name|Error
 name|updatePointer
 argument_list|(
 name|std
@@ -1475,7 +1480,7 @@ expr_stmt|;
 if|if
 condition|(
 name|auto
-name|EC
+name|Err
 init|=
 name|LMResources
 operator|->
@@ -1489,16 +1494,24 @@ name|FnBodyAddr
 argument_list|)
 condition|)
 return|return
-name|false
+name|Err
 return|;
-else|else
 return|return
-name|true
+name|Error
+operator|::
+name|success
+argument_list|()
 return|;
 block|}
 block|}
 return|return
-name|false
+name|make_error
+operator|<
+name|JITSymbolNotFound
+operator|>
+operator|(
+name|FuncName
+operator|)
 return|;
 block|}
 name|private
@@ -1732,8 +1745,10 @@ argument|;             }           }
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|auto
-name|EC
+name|Err
 init|=
 name|LD
 operator|.
@@ -1743,22 +1758,10 @@ name|createStubs
 argument_list|(
 name|StubInits
 argument_list|)
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|EC
-expr_stmt|;
-comment|// FIXME: This should be propagated back to the user. Stub creation may
-comment|//        fail for remote JITs.
-name|assert
-argument_list|(
-operator|!
-name|EC
-operator|&&
-literal|"Error generating stubs"
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|Err
+return|;
 block|}
 comment|// If this module doesn't contain any globals, aliases, or module flags then
 comment|// we can bail out early and avoid the overhead of creating and managing an

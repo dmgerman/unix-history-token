@@ -390,6 +390,7 @@ empty_stmt|;
 comment|// A chunk corresponding a section of an input file.
 name|class
 name|SectionChunk
+name|final
 range|:
 name|public
 name|Chunk
@@ -746,6 +747,21 @@ operator|.
 name|startswith
 argument_list|(
 literal|".debug$"
+argument_list|)
+return|;
+block|}
+comment|// True if this is a DWARF debug info chunk.
+name|bool
+name|isDWARF
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SectionName
+operator|.
+name|startswith
+argument_list|(
+literal|".debug_"
 argument_list|)
 return|;
 block|}

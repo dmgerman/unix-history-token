@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Object/ELF.h"
+file|"llvm/DebugInfo/DWARF/DWARFContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/DWARF/DWARFContext.h"
+file|"llvm/Object/ELF.h"
 end_include
 
 begin_decl_stmt

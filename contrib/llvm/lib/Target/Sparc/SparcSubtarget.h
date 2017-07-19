@@ -141,6 +141,9 @@ name|anchor
 argument_list|()
 block|;
 name|bool
+name|UseSoftMulDiv
+block|;
+name|bool
 name|IsV9
 block|;
 name|bool
@@ -294,6 +297,15 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|bool
+name|useSoftMulDiv
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSoftMulDiv
+return|;
+block|}
 name|bool
 name|isV9
 argument_list|()

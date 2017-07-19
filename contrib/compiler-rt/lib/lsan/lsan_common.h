@@ -959,6 +959,16 @@ modifier|*
 name|GetLinker
 parameter_list|()
 function_decl|;
+comment|// Return true if LSan has finished leak checking and reported leaks.
+name|bool
+name|HasReportedLeaks
+parameter_list|()
+function_decl|;
+comment|// Run platform-specific leak handlers.
+name|void
+name|HandleLeaks
+parameter_list|()
+function_decl|;
 comment|// Wrapper for chunk metadata operations.
 name|class
 name|LsanMetadata

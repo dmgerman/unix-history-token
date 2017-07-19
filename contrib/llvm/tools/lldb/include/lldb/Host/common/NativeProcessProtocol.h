@@ -142,21 +142,13 @@ comment|// NativeProcessProtocol
 comment|//------------------------------------------------------------------
 name|class
 name|NativeProcessProtocol
-range|:
-name|public
-name|std
-operator|::
-name|enable_shared_from_this
-operator|<
-name|NativeProcessProtocol
-operator|>
 block|{
 name|friend
 name|class
 name|SoftwareBreakpoint
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|virtual
 operator|~
 name|NativeProcessProtocol
@@ -173,21 +165,21 @@ name|resume_actions
 argument_list|)
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|virtual
 name|Status
 name|Halt
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-block|;
+function_decl|;
 name|virtual
 name|Status
 name|Detach
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-block|;
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Sends a process a UNIX signal \a signal.
 comment|///
@@ -197,12 +189,13 @@ comment|//------------------------------------------------------------------
 name|virtual
 name|Status
 name|Signal
-argument_list|(
-argument|int signo
-argument_list|)
-operator|=
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Tells a process to interrupt all operations as if by a Ctrl-C.
 comment|///
@@ -216,15 +209,15 @@ comment|//------------------------------------------------------------------
 name|virtual
 name|Status
 name|Interrupt
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|virtual
 name|Status
 name|Kill
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-block|;
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|// Tells a process not to stop the inferior on given signals
 comment|// and just reinject them back.
@@ -241,7 +234,7 @@ name|int
 operator|>
 name|signals
 argument_list|)
-block|;
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Memory and memory region functions
 comment|//----------------------------------------------------------------------
@@ -249,78 +242,117 @@ name|virtual
 name|Status
 name|GetMemoryRegionInfo
 argument_list|(
-argument|lldb::addr_t load_addr
+name|lldb
+operator|::
+name|addr_t
+name|load_addr
 argument_list|,
-argument|MemoryRegionInfo&range_info
+name|MemoryRegionInfo
+operator|&
+name|range_info
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|ReadMemory
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|,
-argument|void *buf
+name|void
+operator|*
+name|buf
 argument_list|,
-argument|size_t size
+name|size_t
+name|size
 argument_list|,
-argument|size_t&bytes_read
+name|size_t
+operator|&
+name|bytes_read
 argument_list|)
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|ReadMemoryWithoutTrap
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|,
-argument|void *buf
+name|void
+operator|*
+name|buf
 argument_list|,
-argument|size_t size
+name|size_t
+name|size
 argument_list|,
-argument|size_t&bytes_read
+name|size_t
+operator|&
+name|bytes_read
 argument_list|)
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|WriteMemory
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|,
-argument|const void *buf
+specifier|const
+name|void
+operator|*
+name|buf
 argument_list|,
-argument|size_t size
+name|size_t
+name|size
 argument_list|,
-argument|size_t&bytes_written
+name|size_t
+operator|&
+name|bytes_written
 argument_list|)
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|AllocateMemory
 argument_list|(
-argument|size_t size
+name|size_t
+name|size
 argument_list|,
-argument|uint32_t permissions
+name|uint32_t
+name|permissions
 argument_list|,
-argument|lldb::addr_t&addr
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|addr
 argument_list|)
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|DeallocateMemory
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|)
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|virtual
 name|lldb
 operator|::
@@ -329,30 +361,32 @@ name|GetSharedLibraryInfoAddress
 argument_list|()
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|virtual
 name|bool
 name|IsAlive
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|virtual
 name|size_t
 name|UpdateThreads
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-block|;
+function_decl|;
 name|virtual
 name|bool
 name|GetArchitecture
 argument_list|(
-argument|ArchSpec&arch
+name|ArchSpec
+operator|&
+name|arch
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-block|;
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Breakpoint functions
 comment|//----------------------------------------------------------------------
@@ -360,38 +394,55 @@ name|virtual
 name|Status
 name|SetBreakpoint
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|,
-argument|uint32_t size
+name|uint32_t
+name|size
 argument_list|,
-argument|bool hardware
+name|bool
+name|hardware
 argument_list|)
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|RemoveBreakpoint
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|,
-argument|bool hardware = false
+name|bool
+name|hardware
+operator|=
+name|false
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|EnableBreakpoint
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|DisableBreakpoint
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|)
-block|;
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Hardware Breakpoint functions
 comment|//----------------------------------------------------------------------
@@ -402,23 +453,30 @@ operator|&
 name|GetHardwareBreakpointMap
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|virtual
 name|Status
 name|SetHardwareBreakpoint
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|,
-argument|size_t size
+name|size_t
+name|size
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|RemoveHardwareBreakpoint
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|)
-block|;
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Watchpoint functions
 comment|//----------------------------------------------------------------------
@@ -431,7 +489,7 @@ operator|&
 name|GetWatchpointMap
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|virtual
 name|llvm
 operator|::
@@ -442,33 +500,42 @@ operator|::
 name|pair
 operator|<
 name|uint32_t
-block|,
+operator|,
 name|uint32_t
 operator|>>
 name|GetHardwareDebugSupportInfo
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|virtual
 name|Status
 name|SetWatchpoint
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|,
-argument|size_t size
+name|size_t
+name|size
 argument_list|,
-argument|uint32_t watch_flags
+name|uint32_t
+name|watch_flags
 argument_list|,
-argument|bool hardware
+name|bool
+name|hardware
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|RemoveWatchpoint
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|)
-block|;
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Accessors
 comment|//----------------------------------------------------------------------
@@ -489,7 +556,7 @@ name|StateType
 name|GetState
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|bool
 name|IsRunning
 argument_list|()
@@ -535,10 +602,14 @@ block|}
 name|bool
 name|GetByteOrder
 argument_list|(
-argument|lldb::ByteOrder&byte_order
+name|lldb
+operator|::
+name|ByteOrder
+operator|&
+name|byte_order
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|virtual
 name|llvm
 operator|::
@@ -557,7 +628,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-block|;
+expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Exit Status
 comment|//----------------------------------------------------------------------
@@ -570,41 +641,51 @@ name|WaitStatus
 operator|>
 name|GetExitStatus
 argument_list|()
-block|;
+expr_stmt|;
 name|virtual
 name|bool
 name|SetExitStatus
-argument_list|(
-argument|WaitStatus status
-argument_list|,
-argument|bool bNotifyStateChange
-argument_list|)
-block|;
+parameter_list|(
+name|WaitStatus
+name|status
+parameter_list|,
+name|bool
+name|bNotifyStateChange
+parameter_list|)
+function_decl|;
 comment|//----------------------------------------------------------------------
 comment|// Access to threads
 comment|//----------------------------------------------------------------------
 name|NativeThreadProtocolSP
 name|GetThreadAtIndex
-argument_list|(
-argument|uint32_t idx
-argument_list|)
-block|;
+parameter_list|(
+name|uint32_t
+name|idx
+parameter_list|)
+function_decl|;
 name|NativeThreadProtocolSP
 name|GetThreadByID
 argument_list|(
-argument|lldb::tid_t tid
+name|lldb
+operator|::
+name|tid_t
+name|tid
 argument_list|)
-block|;
+decl_stmt|;
 name|void
 name|SetCurrentThreadID
 argument_list|(
-argument|lldb::tid_t tid
+name|lldb
+operator|::
+name|tid_t
+name|tid
 argument_list|)
 block|{
 name|m_current_thread_id
 operator|=
 name|tid
-block|; }
+expr_stmt|;
+block|}
 name|lldb
 operator|::
 name|tid_t
@@ -617,7 +698,7 @@ return|;
 block|}
 name|NativeThreadProtocolSP
 name|GetCurrentThread
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|GetThreadByID
@@ -632,7 +713,7 @@ comment|//----------------------------------------------------------------------
 name|virtual
 name|int
 name|GetTerminalFileDescriptor
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|m_terminal_fd
@@ -643,9 +724,8 @@ comment|// Stop id interface
 comment|//----------------------------------------------------------------------
 name|uint32_t
 name|GetStopID
-argument_list|()
-specifier|const
-block|;
+parameter_list|()
+function|const;
 comment|// ---------------------------------------------------------------------
 comment|// Callbacks for low-level process state changes
 comment|// ---------------------------------------------------------------------
@@ -653,7 +733,7 @@ name|class
 name|NativeDelegate
 block|{
 name|public
-operator|:
+label|:
 name|virtual
 operator|~
 name|NativeDelegate
@@ -669,30 +749,36 @@ name|process
 argument_list|)
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|virtual
 name|void
 name|ProcessStateChanged
 argument_list|(
-argument|NativeProcessProtocol *process
-argument_list|,
-argument|lldb::StateType state
-argument_list|)
-operator|=
-literal|0
-block|;
-name|virtual
-name|void
-name|DidExec
-argument_list|(
 name|NativeProcessProtocol
 operator|*
 name|process
+argument_list|,
+name|lldb
+operator|::
+name|StateType
+name|state
 argument_list|)
-operator|=
+init|=
 literal|0
-block|;   }
-block|;
+decl_stmt|;
+name|virtual
+name|void
+name|DidExec
+parameter_list|(
+name|NativeProcessProtocol
+modifier|*
+name|process
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+block|}
+empty_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Register a native delegate.
 comment|///
@@ -714,12 +800,12 @@ comment|/// @see NativeProcessProtocol::NativeDelegate.
 comment|//------------------------------------------------------------------
 name|bool
 name|RegisterNativeDelegate
-argument_list|(
+parameter_list|(
 name|NativeDelegate
-operator|&
+modifier|&
 name|native_delegate
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Unregister a native delegate previously registered.
 comment|///
@@ -733,28 +819,28 @@ comment|/// @see NativeProcessProtocol::NativeDelegate
 comment|//------------------------------------------------------------------
 name|bool
 name|UnregisterNativeDelegate
-argument_list|(
+parameter_list|(
 name|NativeDelegate
-operator|&
+modifier|&
 name|native_delegate
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|virtual
 name|Status
 name|GetLoadedModuleFileSpec
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|module_path
-argument_list|,
+parameter_list|,
 name|FileSpec
-operator|&
+modifier|&
 name|file_spec
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 name|virtual
 name|Status
 name|GetFileLoadAddress
@@ -772,19 +858,19 @@ name|addr_t
 operator|&
 name|load_addr
 argument_list|)
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|class
 name|Factory
 block|{
 name|public
-operator|:
+label|:
 name|virtual
 operator|~
 name|Factory
 argument_list|()
-block|;
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Launch a process for debugging.
 comment|///
@@ -810,8 +896,12 @@ name|llvm
 operator|::
 name|Expected
 operator|<
-name|NativeProcessProtocolSP
-operator|>
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|NativeProcessProtocol
+operator|>>
 name|Launch
 argument_list|(
 argument|ProcessLaunchInfo&launch_info
@@ -823,7 +913,7 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-block|;
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Attach to an existing process.
 comment|///
@@ -849,8 +939,12 @@ name|llvm
 operator|::
 name|Expected
 operator|<
-name|NativeProcessProtocolSP
-operator|>
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|NativeProcessProtocol
+operator|>>
 name|Attach
 argument_list|(
 argument|lldb::pid_t pid
@@ -862,8 +956,9 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-block|;   }
-block|;
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// StartTracing API for starting a tracing instance with the
 comment|/// TraceOptions on a specific thread or process.
@@ -923,9 +1018,17 @@ name|virtual
 name|Status
 name|StopTrace
 argument_list|(
-argument|lldb::user_id_t traceid
+name|lldb
+operator|::
+name|user_id_t
+name|traceid
 argument_list|,
-argument|lldb::tid_t thread = LLDB_INVALID_THREAD_ID
+name|lldb
+operator|::
+name|tid_t
+name|thread
+operator|=
+name|LLDB_INVALID_THREAD_ID
 argument_list|)
 block|{
 return|return
@@ -960,13 +1063,28 @@ name|virtual
 name|Status
 name|GetData
 argument_list|(
-argument|lldb::user_id_t traceid
+name|lldb
+operator|::
+name|user_id_t
+name|traceid
 argument_list|,
-argument|lldb::tid_t thread
+name|lldb
+operator|::
+name|tid_t
+name|thread
 argument_list|,
-argument|llvm::MutableArrayRef<uint8_t>&buffer
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
+name|uint8_t
+operator|>
+operator|&
+name|buffer
 argument_list|,
-argument|size_t offset =
+name|size_t
+name|offset
+operator|=
 literal|0
 argument_list|)
 block|{
@@ -985,13 +1103,28 @@ name|virtual
 name|Status
 name|GetMetaData
 argument_list|(
-argument|lldb::user_id_t traceid
+name|lldb
+operator|::
+name|user_id_t
+name|traceid
 argument_list|,
-argument|lldb::tid_t thread
+name|lldb
+operator|::
+name|tid_t
+name|thread
 argument_list|,
-argument|llvm::MutableArrayRef<uint8_t>&buffer
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
+name|uint8_t
+operator|>
+operator|&
+name|buffer
 argument_list|,
-argument|size_t offset =
+name|size_t
+name|offset
+operator|=
 literal|0
 argument_list|)
 block|{
@@ -1023,9 +1156,14 @@ name|virtual
 name|Status
 name|GetTraceConfig
 argument_list|(
-argument|lldb::user_id_t traceid
+name|lldb
+operator|::
+name|user_id_t
+name|traceid
 argument_list|,
-argument|TraceOptions&config
+name|TraceOptions
+operator|&
+name|config
 argument_list|)
 block|{
 return|return
@@ -1036,12 +1174,12 @@ argument_list|)
 return|;
 block|}
 name|protected
-operator|:
+label|:
 name|lldb
 operator|::
 name|pid_t
 name|m_pid
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -1049,20 +1187,20 @@ operator|<
 name|NativeThreadProtocolSP
 operator|>
 name|m_threads
-block|;
+expr_stmt|;
 name|lldb
 operator|::
 name|tid_t
 name|m_current_thread_id
 operator|=
 name|LLDB_INVALID_THREAD_ID
-block|;
+expr_stmt|;
 name|mutable
 name|std
 operator|::
 name|recursive_mutex
 name|m_threads_mutex
-block|;
+expr_stmt|;
 name|lldb
 operator|::
 name|StateType
@@ -1071,13 +1209,13 @@ operator|=
 name|lldb
 operator|::
 name|eStateInvalid
-block|;
+expr_stmt|;
 name|mutable
 name|std
 operator|::
 name|recursive_mutex
 name|m_state_mutex
-block|;
+expr_stmt|;
 name|llvm
 operator|::
 name|Optional
@@ -1085,12 +1223,12 @@ operator|<
 name|WaitStatus
 operator|>
 name|m_exit_status
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|recursive_mutex
 name|m_delegates_mutex
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -1099,24 +1237,24 @@ name|NativeDelegate
 operator|*
 operator|>
 name|m_delegates
-block|;
+expr_stmt|;
 name|NativeBreakpointList
 name|m_breakpoint_list
-block|;
+decl_stmt|;
 name|NativeWatchpointList
 name|m_watchpoint_list
-block|;
+decl_stmt|;
 name|HardwareBreakpointMap
 name|m_hw_breakpoints_map
-block|;
+decl_stmt|;
 name|int
 name|m_terminal_fd
-block|;
+decl_stmt|;
 name|uint32_t
 name|m_stop_id
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 comment|// Set of signal numbers that LLDB directly injects back to inferior
 comment|// without stopping it.
 name|llvm
@@ -1126,7 +1264,7 @@ operator|<
 name|int
 operator|>
 name|m_signals_to_ignore
-block|;
+expr_stmt|;
 comment|// lldb_private::Host calls should be used to launch a process for debugging,
 comment|// and
 comment|// then the process should be attached to. When attaching to a process
@@ -1140,18 +1278,24 @@ argument|int terminal_fd
 argument_list|,
 argument|NativeDelegate&delegate
 argument_list|)
-block|;
+empty_stmt|;
 comment|// -----------------------------------------------------------
 comment|// Internal interface for state handling
 comment|// -----------------------------------------------------------
 name|void
 name|SetState
 argument_list|(
-argument|lldb::StateType state
+name|lldb
+operator|::
+name|StateType
+name|state
 argument_list|,
-argument|bool notify_delegates = true
+name|bool
+name|notify_delegates
+operator|=
+name|true
 argument_list|)
-block|;
+decl_stmt|;
 comment|// Derived classes need not implement this.  It can be used as a
 comment|// hook to clear internal caches that should be invalidated when
 comment|// stop ids change.
@@ -1161,34 +1305,46 @@ comment|// by the caller.
 name|virtual
 name|void
 name|DoStopIDBumped
-argument_list|(
-argument|uint32_t newBumpId
-argument_list|)
-block|;
+parameter_list|(
+name|uint32_t
+name|newBumpId
+parameter_list|)
+function_decl|;
 comment|// -----------------------------------------------------------
 comment|// Internal interface for software breakpoints
 comment|// -----------------------------------------------------------
 name|Status
 name|SetSoftwareBreakpoint
 argument_list|(
-argument|lldb::addr_t addr
+name|lldb
+operator|::
+name|addr_t
+name|addr
 argument_list|,
-argument|uint32_t size_hint
+name|uint32_t
+name|size_hint
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|Status
 name|GetSoftwareBreakpointTrapOpcode
-argument_list|(
-argument|size_t trap_opcode_size_hint
-argument_list|,
-argument|size_t&actual_opcode_size
-argument_list|,
-argument|const uint8_t *&trap_opcode_bytes
-argument_list|)
-operator|=
+parameter_list|(
+name|size_t
+name|trap_opcode_size_hint
+parameter_list|,
+name|size_t
+modifier|&
+name|actual_opcode_size
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+modifier|&
+name|trap_opcode_bytes
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 comment|// -----------------------------------------------------------
 comment|/// Notify the delegate that an exec occurred.
 comment|///
@@ -1197,14 +1353,17 @@ comment|/// sensitive data.
 comment|// -----------------------------------------------------------
 name|void
 name|NotifyDidExec
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|NativeThreadProtocolSP
 name|GetThreadByIDUnlocked
 argument_list|(
-argument|lldb::tid_t tid
+name|lldb
+operator|::
+name|tid_t
+name|tid
 argument_list|)
-block|;
+decl_stmt|;
 comment|// -----------------------------------------------------------
 comment|// Static helper methods for derived classes.
 comment|// -----------------------------------------------------------
@@ -1212,20 +1371,29 @@ specifier|static
 name|Status
 name|ResolveProcessArchitecture
 argument_list|(
-argument|lldb::pid_t pid
+name|lldb
+operator|::
+name|pid_t
+name|pid
 argument_list|,
-argument|ArchSpec&arch
+name|ArchSpec
+operator|&
+name|arch
 argument_list|)
-block|;
+decl_stmt|;
 name|private
-operator|:
+label|:
 name|void
 name|SynchronouslyNotifyProcessStateChanged
 argument_list|(
-argument|lldb::StateType state
+name|lldb
+operator|::
+name|StateType
+name|state
 argument_list|)
-block|; }
 decl_stmt|;
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

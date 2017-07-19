@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/GUID.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/MSF/MappedBlockStream.h"
 end_include
 
@@ -155,7 +161,9 @@ name|getAge
 argument_list|()
 specifier|const
 expr_stmt|;
-name|PDB_UniqueId
+name|codeview
+operator|::
+name|GUID
 name|getGuid
 argument_list|()
 specifier|const
@@ -241,9 +249,11 @@ decl_stmt|;
 comment|// Due to the aforementioned limitations with `Signature`, this is a new
 comment|// signature present on VC70 and higher PDBs which is guaranteed to be
 comment|// universally unique.
-name|PDB_UniqueId
+name|codeview
+operator|::
+name|GUID
 name|Guid
-decl_stmt|;
+expr_stmt|;
 name|BinarySubstreamRef
 name|SubNamedStreams
 decl_stmt|;

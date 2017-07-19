@@ -246,6 +246,36 @@ end_endif
 begin_if
 if|#
 directive|if
+name|SANITIZER_NETBSD
+end_if
+
+begin_define
+define|#
+directive|define
+name|SI_NETBSD
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SI_NETBSD
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|SANITIZER_LINUX
 end_if
 
@@ -598,7 +628,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_MEMMEM
 define|\
-value|SI_NOT_WINDOWS&& !SI_MAC_DEPLOYMENT_BELOW_10_7
+value|(SI_NOT_WINDOWS&& !SI_MAC_DEPLOYMENT_BELOW_10_7)
 end_define
 
 begin_define
@@ -612,7 +642,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_MEMRCHR
-value|SI_FREEBSD || SI_LINUX
+value|(SI_FREEBSD || SI_LINUX || SI_NETBSD)
 end_define
 
 begin_define
@@ -689,7 +719,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_PREADV
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+define|\
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -765,7 +796,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_PRINTF_L
-value|SI_FREEBSD
+value|(SI_FREEBSD || SI_NETBSD)
 end_define
 
 begin_define
@@ -806,7 +837,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETPWNAM_R_AND_FRIENDS
 define|\
-value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -814,7 +845,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETPWENT
 define|\
-value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -828,21 +859,22 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETPWENT_R
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+define|\
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_SETPWENT
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_CLOCK_GETTIME
-value|SI_FREEBSD || SI_LINUX
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX)
 end_define
 
 begin_define
@@ -919,28 +951,29 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETHOSTBYNAME_R
-value|SI_FREEBSD || SI_LINUX
+value|(SI_FREEBSD || SI_LINUX)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETHOSTBYNAME2_R
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+define|\
+value|(SI_FREEBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETHOSTBYADDR_R
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETHOSTENT_R
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1136,7 +1169,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_MBSNRTOWCS
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1151,7 +1184,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_WCSNRTOMBS
 define|\
-value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1159,7 +1192,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_WCRTOMB
 define|\
-value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1188,7 +1221,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_CONFSTR
 define|\
-value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1231,7 +1264,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_SCANDIR
 define|\
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1267,7 +1300,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_WORDEXP
 define|\
-value|SI_FREEBSD || (SI_MAC&& !SI_IOS) || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || (SI_MAC&& !SI_IOS) || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1296,7 +1329,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_SIGSETOPS
 define|\
-value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1317,7 +1350,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_BACKTRACE
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+define|\
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1338,7 +1372,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_STATFS
-value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+define|\
+value|(SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1346,14 +1381,15 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_STATFS64
 define|\
-value|(SI_MAC&& !SI_IOS) || SI_LINUX_NOT_ANDROID
+value|((SI_MAC&& !SI_IOS) || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_STATVFS
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+define|\
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1382,14 +1418,14 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_ETHER_HOST
 define|\
-value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_ETHER_R
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1397,8 +1433,12 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_SHMCTL
 define|\
-value|((SI_FREEBSD || SI_LINUX_NOT_ANDROID)&& SANITIZER_WORDSIZE == 64)
+value|(SI_NETBSD || ((SI_FREEBSD || SI_LINUX_NOT_ANDROID)&& \                  SANITIZER_WORDSIZE == 64))
 end_define
+
+begin_comment
+comment|// NOLINT
+end_comment
 
 begin_define
 define|#
@@ -1419,7 +1459,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_PTHREAD_ATTR_GETINHERITSCHED
 define|\
-value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1448,7 +1488,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_PTHREAD_MUTEXATTR_GETPROTOCOL
 define|\
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_MAC || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1456,7 +1496,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_PTHREAD_MUTEXATTR_GETPRIOCEILING
 define|\
-value|SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_MAC || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1561,7 +1601,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_LGAMMA_R
-value|SI_FREEBSD || SI_LINUX
+value|(SI_FREEBSD || SI_LINUX)
 end_define
 
 begin_define
@@ -1583,14 +1623,15 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_RAND_R
 define|\
-value|SI_FREEBSD || SI_MAC || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_MAC || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_ICONV
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+define|\
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1608,14 +1649,16 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETLINE
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+define|\
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT__EXIT
-value|SI_LINUX || SI_FREEBSD || SI_MAC
+define|\
+value|(SI_LINUX || SI_FREEBSD || SI_NETBSD || SI_MAC)
 end_define
 
 begin_define
@@ -1630,7 +1673,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_PTHREAD_SETNAME_NP
 define|\
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1638,7 +1681,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_TLS_GET_ADDR
 define|\
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID)
 end_define
 
 begin_define
@@ -1667,7 +1710,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETIFADDRS
 define|\
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID || SI_MAC
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID || SI_MAC)
 end_define
 
 begin_define
@@ -1675,7 +1718,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_IF_INDEXTONAME
 define|\
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID || SI_MAC
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID || SI_MAC)
 end_define
 
 begin_define
@@ -1731,7 +1774,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_FTIME
-value|!SI_FREEBSD&& SI_NOT_WINDOWS
+value|(!SI_FREEBSD&& !SI_NETBSD&& SI_NOT_WINDOWS)
 end_define
 
 begin_define
@@ -1745,7 +1788,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_TSEARCH
-value|SI_LINUX_NOT_ANDROID || SI_MAC
+define|\
+value|(SI_LINUX_NOT_ANDROID || SI_MAC || SI_NETBSD)
 end_define
 
 begin_define
@@ -1773,7 +1817,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_OPEN_MEMSTREAM
-value|SI_LINUX_NOT_ANDROID
+value|(SI_LINUX_NOT_ANDROID || SI_NETBSD)
 end_define
 
 begin_define
@@ -1808,7 +1852,7 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_DLOPEN_DLCLOSE
 define|\
-value|SI_FREEBSD || SI_LINUX_NOT_ANDROID || SI_MAC
+value|(SI_FREEBSD || SI_NETBSD || SI_LINUX_NOT_ANDROID || SI_MAC)
 end_define
 
 begin_endif
@@ -1820,7 +1864,8 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETPASS
-value|SI_LINUX_NOT_ANDROID || SI_MAC
+define|\
+value|(SI_LINUX_NOT_ANDROID || SI_MAC || SI_NETBSD)
 end_define
 
 begin_define
@@ -1848,7 +1893,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_SEM
-value|SI_LINUX || SI_FREEBSD
+value|(SI_LINUX || SI_FREEBSD || SI_NETBSD)
 end_define
 
 begin_define
@@ -1862,7 +1907,7 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_MINCORE
-value|SI_LINUX
+value|(SI_LINUX || SI_NETBSD)
 end_define
 
 begin_define
@@ -1876,21 +1921,22 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_CTERMID
-value|SI_LINUX || SI_MAC || SI_FREEBSD
+define|\
+value|(SI_LINUX || SI_MAC || SI_FREEBSD || SI_NETBSD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_CTERMID_R
-value|SI_MAC || SI_FREEBSD
+value|(SI_MAC || SI_FREEBSD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPTOR_HOOKS
-value|SI_LINUX || SI_MAC || SI_WINDOWS
+value|(SI_LINUX || SI_MAC || SI_WINDOWS)
 end_define
 
 begin_define
@@ -1918,14 +1964,16 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_STAT
-value|(SI_FREEBSD || SI_MAC || SI_ANDROID)
+define|\
+value|(SI_FREEBSD || SI_MAC || SI_ANDROID || SI_NETBSD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT___XSTAT
-value|!SANITIZER_INTERCEPT_STAT&& SI_NOT_WINDOWS
+define|\
+value|(!SANITIZER_INTERCEPT_STAT&& SI_NOT_WINDOWS)
 end_define
 
 begin_define
@@ -1953,14 +2001,14 @@ begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_UTMP
-value|SI_NOT_WINDOWS&& !SI_MAC&& !SI_FREEBSD
+value|(SI_NOT_WINDOWS&& !SI_MAC&& !SI_FREEBSD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_UTMPX
-value|SI_LINUX_NOT_ANDROID || SI_MAC || SI_FREEBSD
+value|(SI_LINUX_NOT_ANDROID || SI_MAC || SI_FREEBSD)
 end_define
 
 begin_define
@@ -1968,35 +2016,36 @@ define|#
 directive|define
 name|SANITIZER_INTERCEPT_GETLOADAVG
 define|\
-value|SI_LINUX_NOT_ANDROID || SI_MAC || SI_FREEBSD
+value|(SI_LINUX_NOT_ANDROID || SI_MAC || SI_FREEBSD || SI_NETBSD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_MALLOPT_AND_MALLINFO
-value|(!SI_FREEBSD&& !SI_MAC)
+define|\
+value|(!SI_FREEBSD&& !SI_MAC&& !SI_NETBSD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_MEMALIGN
-value|(!SI_FREEBSD&& !SI_MAC)
+value|(!SI_FREEBSD&& !SI_MAC&& !SI_NETBSD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_PVALLOC
-value|(!SI_FREEBSD&& !SI_MAC)
+value|(!SI_FREEBSD&& !SI_MAC&& !SI_NETBSD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERCEPT_CFREE
-value|(!SI_FREEBSD&& !SI_MAC)
+value|(!SI_FREEBSD&& !SI_MAC&& !SI_NETBSD)
 end_define
 
 begin_define

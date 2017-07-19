@@ -1241,8 +1241,8 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
-name|bool
-name|Aligned
+name|unsigned
+name|Alignment
 argument_list|)
 decl|const
 decl_stmt|;

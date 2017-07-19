@@ -285,6 +285,13 @@ argument_list|)
 specifier|const
 block|;
 name|MCOperand
+name|decodeOperand_VS_128
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
 name|decodeOperand_VSrc16
 argument_list|(
 argument|unsigned Val

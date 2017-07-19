@@ -147,6 +147,9 @@ name|template
 operator|<
 name|class
 name|NodeTy
+operator|,
+name|bool
+name|IsPostDom
 operator|>
 name|class
 name|IDFCalculator
@@ -158,6 +161,8 @@ argument_list|(
 name|DominatorTreeBase
 operator|<
 name|BasicBlock
+argument_list|,
+name|IsPostDom
 operator|>
 operator|&
 name|DT
@@ -246,6 +251,8 @@ operator|:
 name|DominatorTreeBase
 operator|<
 name|BasicBlock
+block|,
+name|IsPostDom
 operator|>
 operator|&
 name|DT
@@ -277,6 +284,8 @@ name|IDFCalculator
 operator|<
 name|BasicBlock
 operator|*
+operator|,
+name|false
 operator|>
 name|ForwardIDFCalculator
 expr_stmt|;
@@ -287,7 +296,10 @@ name|Inverse
 operator|<
 name|BasicBlock
 operator|*
-operator|>>
+operator|>
+operator|,
+name|true
+operator|>
 name|ReverseIDFCalculator
 expr_stmt|;
 block|}

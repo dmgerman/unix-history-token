@@ -207,7 +207,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|Solaris
 range|:
 name|public
-name|Generic_GCC
+name|Generic_ELF
 block|{
 name|public
 operator|:
