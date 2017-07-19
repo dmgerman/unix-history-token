@@ -709,13 +709,13 @@ name|ref_count
 operator|=
 literal|0
 expr_stmt|;
+name|vm_radix_init
+argument_list|(
+operator|&
 name|object
 operator|->
 name|rtree
-operator|.
-name|rt_root
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|object
 operator|->
@@ -1124,7 +1124,7 @@ argument_list|,
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
-name|vm_radix_init
+name|vm_radix_zinit
 argument_list|()
 expr_stmt|;
 block|}
