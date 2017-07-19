@@ -175,10 +175,6 @@ name|V
 parameter_list|)
 function_decl|;
 name|void
-name|InitializeTraceState
-parameter_list|()
-function_decl|;
-name|void
 name|RereadOutputCorpus
 parameter_list|(
 name|size_t
@@ -564,6 +560,11 @@ specifier|const
 name|Unit
 modifier|&
 name|U
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Text
 parameter_list|)
 function_decl|;
 name|void
@@ -576,19 +577,6 @@ parameter_list|)
 function_decl|;
 name|void
 name|CheckExitOnSrcPosOrItem
-parameter_list|()
-function_decl|;
-comment|// Trace-based fuzzing: we run a unit with some kind of tracing
-comment|// enabled and record potentially useful mutations. Then
-comment|// We apply these mutations one by one to the unit and run it again.
-comment|// Start tracing; forget all previously proposed mutations.
-name|void
-name|StartTraceRecording
-parameter_list|()
-function_decl|;
-comment|// Stop tracing.
-name|void
-name|StopTraceRecording
 parameter_list|()
 function_decl|;
 specifier|static
@@ -716,7 +704,7 @@ name|vector
 operator|<
 name|uint32_t
 operator|>
-name|FeatureSetTmp
+name|UniqFeatureSetTmp
 expr_stmt|;
 comment|// Need to know our own thread.
 specifier|static

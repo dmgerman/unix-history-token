@@ -422,6 +422,26 @@ name|Operands
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Estimate the cost of a EXT operation when lowered.
+comment|///
+comment|/// The contract for this function is the same as \c getOperationCost except
+comment|/// that it supports an interface that provides extra information specific to
+comment|/// the EXT operation.
+name|int
+name|getExtCost
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|,
+specifier|const
+name|Value
+operator|*
+name|Src
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Estimate the cost of a function call when lowered.
 comment|///
 comment|/// The contract for this is the same as \c getOperationCost except that it
@@ -2364,6 +2384,23 @@ literal|0
 block|;
 name|virtual
 name|int
+name|getExtCost
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|,
+specifier|const
+name|Value
+operator|*
+name|Src
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|int
 name|getCallCost
 argument_list|(
 argument|FunctionType *FTy
@@ -3586,6 +3623,26 @@ argument_list|,
 name|Ptr
 argument_list|,
 name|Operands
+argument_list|)
+return|;
+block|}
+name|int
+name|getExtCost
+argument_list|(
+argument|const Instruction *I
+argument_list|,
+argument|const Value *Src
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getExtCost
+argument_list|(
+name|I
+argument_list|,
+name|Src
 argument_list|)
 return|;
 block|}

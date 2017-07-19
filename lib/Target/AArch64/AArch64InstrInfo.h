@@ -105,6 +105,32 @@ decl_stmt|;
 name|class
 name|AArch64TargetMachine
 decl_stmt|;
+specifier|static
+specifier|const
+name|MachineMemOperand
+operator|::
+name|Flags
+name|MOSuppressPair
+operator|=
+name|MachineMemOperand
+operator|::
+name|MOTargetFlag1
+expr_stmt|;
+specifier|static
+specifier|const
+name|MachineMemOperand
+operator|::
+name|Flags
+name|MOStridedAccess
+operator|=
+name|MachineMemOperand
+operator|::
+name|MOTargetFlag2
+expr_stmt|;
+define|#
+directive|define
+name|FALKOR_STRIDED_ACCESS_MD
+value|"falkor.strided.access"
 name|class
 name|AArch64InstrInfo
 name|final
@@ -264,6 +290,14 @@ comment|/// Return true if pairing the given load or store is hinted to be
 comment|/// unprofitable.
 name|bool
 name|isLdStPairSuppressed
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+comment|/// Return true if the given load or store is a strided memory access.
+name|bool
+name|isStridedAccess
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|)
@@ -1552,7 +1586,7 @@ comment|/// It uses the values defined by AArch64FrameOffsetStatus for that.
 comment|/// If result == AArch64FrameOffsetCannotUpdate, @p MI cannot be updated to
 comment|/// use an offset.eq
 comment|/// If result& AArch64FrameOffsetIsLegal, @p Offset can completely be
-comment|/// rewriten in @p MI.
+comment|/// rewritten in @p MI.
 comment|/// If result& AArch64FrameOffsetCanUpdate, @p Offset contains the
 comment|/// amount that is off the limit of the legal offset.
 comment|/// If set, @p OutUseUnscaledOp will contain the whether @p MI should be

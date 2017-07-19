@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/GUID.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/TypeRecord.h"
 end_include
 
@@ -701,59 +707,6 @@ name|NumSections
 expr_stmt|;
 block|}
 struct|;
-comment|/// Defines a 128-bit unique identifier.  This maps to a GUID on Windows, but
-comment|/// is abstracted here for the purposes of non-Windows platforms that don't have
-comment|/// the GUID structure defined.
-struct|struct
-name|PDB_UniqueId
-block|{
-name|uint8_t
-name|Guid
-index|[
-literal|16
-index|]
-decl_stmt|;
-block|}
-struct|;
-specifier|inline
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|PDB_UniqueId
-operator|&
-name|LHS
-operator|,
-specifier|const
-name|PDB_UniqueId
-operator|&
-name|RHS
-operator|)
-block|{
-return|return
-literal|0
-operator|==
-operator|::
-name|memcmp
-argument_list|(
-name|LHS
-operator|.
-name|Guid
-argument_list|,
-name|RHS
-operator|.
-name|Guid
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|LHS
-operator|.
-name|Guid
-argument_list|)
-argument_list|)
-return|;
-block|}
 comment|// The header preceeding the global TPI stream.
 comment|// This corresponds to `HDR` in PDB/dbi/tpi.h.
 struct|struct
@@ -862,9 +815,11 @@ operator|::
 name|ulittle32_t
 name|Age
 expr_stmt|;
-name|PDB_UniqueId
+name|codeview
+operator|::
+name|GUID
 name|Guid
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 comment|/// The header preceeding the /names stream.

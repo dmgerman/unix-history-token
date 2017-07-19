@@ -2058,6 +2058,15 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|;
+comment|/// If this is a sequential container of integers (of any size), return the
+comment|/// specified element as an APInt.
+name|APInt
+name|getElementAsAPInt
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
 comment|/// If this is a sequential container of floating point type, return the
 comment|/// specified element as an APFloat.
 name|APFloat
@@ -2729,6 +2738,13 @@ argument|unsigned NumElts
 argument_list|,
 argument|Constant *Elt
 argument_list|)
+block|;
+comment|/// Returns true if this is a splat constant, meaning that all elements have
+comment|/// the same value.
+name|bool
+name|isSplat
+argument_list|()
+specifier|const
 block|;
 comment|/// If this is a splat constant, meaning that all of the elements have the
 comment|/// same value, return that value. Otherwise return NULL.

@@ -599,35 +599,34 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// This is a helper class used for left_justify() and right_justify().
+comment|/// This is a helper class for left_justify, right_justify, and center_justify.
 end_comment
 
 begin_decl_stmt
 name|class
 name|FormattedString
 block|{
-name|StringRef
-name|Str
-decl_stmt|;
-name|unsigned
-name|Width
-decl_stmt|;
-name|bool
-name|RightJustify
-decl_stmt|;
-name|friend
-name|class
-name|raw_ostream
-decl_stmt|;
 name|public
 label|:
+enum|enum
+name|Justification
+block|{
+name|JustifyNone
+block|,
+name|JustifyLeft
+block|,
+name|JustifyRight
+block|,
+name|JustifyCenter
+block|}
+enum|;
 name|FormattedString
 argument_list|(
 argument|StringRef S
 argument_list|,
 argument|unsigned W
 argument_list|,
-argument|bool R
+argument|Justification J
 argument_list|)
 block|:
 name|Str
@@ -640,11 +639,26 @@ argument_list|(
 name|W
 argument_list|)
 operator|,
-name|RightJustify
+name|Justify
 argument_list|(
-argument|R
+argument|J
 argument_list|)
-block|{ }
+block|{}
+name|private
+operator|:
+name|StringRef
+name|Str
+expr_stmt|;
+name|unsigned
+name|Width
+decl_stmt|;
+name|Justification
+name|Justify
+decl_stmt|;
+name|friend
+name|class
+name|raw_ostream
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -683,7 +697,9 @@ name|Str
 argument_list|,
 name|Width
 argument_list|,
-name|false
+name|FormattedString
+operator|::
+name|JustifyLeft
 argument_list|)
 return|;
 block|}
@@ -720,7 +736,48 @@ name|Str
 argument_list|,
 name|Width
 argument_list|,
-name|true
+name|FormattedString
+operator|::
+name|JustifyRight
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// center_justify - add spaces before and after string so total output is
+end_comment
+
+begin_comment
+comment|/// \p Width characters.  If \p Str is larger that \p Width, full string
+end_comment
+
+begin_comment
+comment|/// is written with no padding.
+end_comment
+
+begin_function
+specifier|inline
+name|FormattedString
+name|center_justify
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|,
+name|unsigned
+name|Width
+parameter_list|)
+block|{
+return|return
+name|FormattedString
+argument_list|(
+name|Str
+argument_list|,
+name|Width
+argument_list|,
+name|FormattedString
+operator|::
+name|JustifyCenter
 argument_list|)
 return|;
 block|}

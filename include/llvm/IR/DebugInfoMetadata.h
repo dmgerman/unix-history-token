@@ -1952,10 +1952,10 @@ specifier|const
 block|;
 comment|/// Return the raw underlying file.
 comment|///
-comment|/// A \a DIFile is a \a DIScope, but it doesn't point at a separate file
-comment|/// (it\em is the file).  If \c this is an \a DIFile, we need to return \c
-comment|/// this.  Otherwise, return the first operand, which is where all other
-comment|/// subclasses store their file pointer.
+comment|/// A \a DIFile is a \a DIScope, but it doesn't point at a separate file (it
+comment|/// \em is the file).  If \c this is an \a DIFile, we need to return \c this.
+comment|/// Otherwise, return the first operand, which is where all other subclasses
+comment|/// store their file pointer.
 name|Metadata
 operator|*
 name|getRawFile
@@ -11552,6 +11552,8 @@ argument|DIScope *Scope
 argument_list|,
 argument|DINodeRef Entity
 argument_list|,
+argument|DIFile *File
+argument_list|,
 argument|unsigned Line
 argument_list|,
 argument|StringRef Name
@@ -11571,6 +11573,8 @@ argument_list|,
 name|Scope
 argument_list|,
 name|Entity
+argument_list|,
+name|File
 argument_list|,
 name|Line
 argument_list|,
@@ -11599,6 +11603,8 @@ argument_list|,
 argument|Metadata *Scope
 argument_list|,
 argument|Metadata *Entity
+argument_list|,
+argument|Metadata *File
 argument_list|,
 argument|unsigned Line
 argument_list|,
@@ -11629,6 +11635,9 @@ argument_list|,
 name|getEntity
 argument_list|()
 argument_list|,
+name|getFile
+argument_list|()
+argument_list|,
 name|getLine
 argument_list|()
 argument_list|,
@@ -11643,19 +11652,19 @@ name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIImportedEntity
 argument_list|,
-argument|(unsigned Tag, DIScope *Scope, DINodeRef Entity,                      unsigned Line, StringRef Name =
+argument|(unsigned Tag, DIScope *Scope, DINodeRef Entity,                      DIFile *File, unsigned Line, StringRef Name =
 literal|""
 argument|)
 argument_list|,
-argument|(Tag, Scope, Entity, Line, Name)
+argument|(Tag, Scope, Entity, File, Line, Name)
 argument_list|)
 name|DEFINE_MDNODE_GET
 argument_list|(
 argument|DIImportedEntity
 argument_list|,
-argument|(unsigned Tag, Metadata *Scope, Metadata *Entity,                      unsigned Line, MDString *Name)
+argument|(unsigned Tag, Metadata *Scope, Metadata *Entity,                      Metadata *File, unsigned Line, MDString *Name)
 argument_list|,
-argument|(Tag, Scope, Entity, Line, Name)
+argument|(Tag, Scope, Entity, File, Line, Name)
 argument_list|)
 name|TempDIImportedEntity
 name|clone
@@ -11718,6 +11727,23 @@ literal|2
 argument_list|)
 return|;
 block|}
+name|DIFile
+operator|*
+name|getFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|DIFile
+operator|>
+operator|(
+name|getRawFile
+argument_list|()
+operator|)
+return|;
+block|}
 name|Metadata
 operator|*
 name|getRawScope
@@ -11758,6 +11784,19 @@ operator|>
 operator|(
 literal|2
 operator|)
+return|;
+block|}
+name|Metadata
+operator|*
+name|getRawFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|3
+argument_list|)
 return|;
 block|}
 specifier|static

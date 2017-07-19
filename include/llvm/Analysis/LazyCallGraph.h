@@ -194,6 +194,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/TargetLibraryInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/BasicBlock.h"
 end_include
 
@@ -3557,6 +3563,10 @@ argument_list|(
 name|Module
 operator|&
 name|M
+argument_list|,
+name|TargetLibraryInfo
+operator|&
+name|TLI
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3882,6 +3892,87 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Get the sequence of known and defined library functions.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// These functions, because they are known to LLVM, can have calls
+end_comment
+
+begin_comment
+comment|/// introduced out of thin air from arbitrary IR.
+end_comment
+
+begin_expr_stmt
+name|ArrayRef
+operator|<
+name|Function
+operator|*
+operator|>
+name|getLibFunctions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LibFunctions
+operator|.
+name|getArrayRef
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Test whether a function is a known and defined library function tracked by
+end_comment
+
+begin_comment
+comment|/// the call graph.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Because these functions are known to LLVM they are specially modeled in
+end_comment
+
+begin_comment
+comment|/// the call graph and even when all IR-level references have been removed
+end_comment
+
+begin_comment
+comment|/// remain active and reachable.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isLibFunction
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|)
+decl|const
+block|{
+return|return
+name|LibFunctions
+operator|.
+name|count
+argument_list|(
+operator|&
+name|F
+argument_list|)
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|///@{
@@ -4533,6 +4624,30 @@ operator|,
 literal|4
 operator|>
 name|LeafRefSCCs
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Defined functions that are also known library functions which the
+end_comment
+
+begin_comment
+comment|/// optimizer can reason about and therefore might introduce calls to out of
+end_comment
+
+begin_comment
+comment|/// thin air.
+end_comment
+
+begin_expr_stmt
+name|SmallSetVector
+operator|<
+name|Function
+operator|*
+operator|,
+literal|4
+operator|>
+name|LibFunctions
 expr_stmt|;
 end_expr_stmt
 
@@ -5270,13 +5385,23 @@ name|run
 argument_list|(
 argument|Module&M
 argument_list|,
-argument|ModuleAnalysisManager&
+argument|ModuleAnalysisManager&AM
 argument_list|)
 block|{
 return|return
 name|LazyCallGraph
 argument_list|(
 name|M
+argument_list|,
+name|AM
+operator|.
+name|getResult
+operator|<
+name|TargetLibraryAnalysis
+operator|>
+operator|(
+name|M
+operator|)
 argument_list|)
 return|;
 block|}

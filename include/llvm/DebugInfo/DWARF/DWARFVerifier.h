@@ -83,6 +83,9 @@ decl_stmt|;
 name|class
 name|DWARFAcceleratorTable
 decl_stmt|;
+name|class
+name|DWARFDataExtractor
+decl_stmt|;
 comment|/// A class that verifies DWARF debug information given a DWARF Context.
 name|class
 name|DWARFVerifier
@@ -113,11 +116,6 @@ operator|>>
 name|ReferenceToDIEOffsets
 expr_stmt|;
 name|uint32_t
-name|NumDebugInfoErrors
-init|=
-literal|0
-decl_stmt|;
-name|uint32_t
 name|NumDebugLineErrors
 init|=
 literal|0
@@ -127,6 +125,56 @@ name|NumAppleNamesErrors
 init|=
 literal|0
 decl_stmt|;
+comment|/// Verifies the header of a unit in the .debug_info section.
+comment|///
+comment|/// This function currently checks for:
+comment|/// - Unit is in 32-bit DWARF format. The function can be modified to
+comment|/// support 64-bit format.
+comment|/// - The DWARF version is valid
+comment|/// - The unit type is valid (if unit is in version>=5)
+comment|/// - The unit doesn't extend beyond .debug_info section
+comment|/// - The address size is valid
+comment|/// - The offset in the .debug_abbrev section is valid
+comment|///
+comment|/// \param DebugInfoData The .debug_info section data
+comment|/// \param Offset A reference to the offset start of the unit. The offset will
+comment|/// be updated to point to the next unit in .debug_info
+comment|/// \param UnitIndex The index of the unit to be verified
+comment|/// \param UnitType A reference to the type of the unit
+comment|/// \param isUnitDWARF64 A reference to a flag that shows whether the unit is
+comment|/// in 64-bit format.
+comment|///
+comment|/// \returns true if the header is verified successfully, false otherwise.
+name|bool
+name|verifyUnitHeader
+parameter_list|(
+specifier|const
+name|DWARFDataExtractor
+name|DebugInfoData
+parameter_list|,
+name|uint32_t
+modifier|*
+name|Offset
+parameter_list|,
+name|unsigned
+name|UnitIndex
+parameter_list|,
+name|uint8_t
+modifier|&
+name|UnitType
+parameter_list|,
+name|bool
+modifier|&
+name|isUnitDWARF64
+parameter_list|)
+function_decl|;
+name|bool
+name|verifyUnitContents
+parameter_list|(
+name|DWARFUnit
+name|Unit
+parameter_list|)
+function_decl|;
 comment|/// Verifies the attribute's DWARF attribute and its value.
 comment|///
 comment|/// This function currently checks for:
@@ -135,7 +183,10 @@ comment|/// - DW_AT_stmt_list is a valid .debug_line offset
 comment|///
 comment|/// \param Die          The DWARF DIE that owns the attribute value
 comment|/// \param AttrValue    The DWARF attribute value to check
-name|void
+comment|///
+comment|/// \returns NumErrors The number of errors occured during verification of
+comment|/// attributes' values in a .debug_info section unit
+name|unsigned
 name|verifyDebugInfoAttribute
 parameter_list|(
 specifier|const
@@ -157,7 +208,10 @@ comment|/// - All DW_FORM_strp values have valid .debug_str offsets
 comment|///
 comment|/// \param Die          The DWARF DIE that owns the attribute value
 comment|/// \param AttrValue    The DWARF attribute value to check
-name|void
+comment|///
+comment|/// \returns NumErrors The number of errors occured during verification of
+comment|/// attributes' forms in a .debug_info section unit
+name|unsigned
 name|verifyDebugInfoForm
 parameter_list|(
 specifier|const
@@ -177,7 +231,10 @@ comment|/// This function will verify that all references point to DIEs whose DI
 comment|/// offset matches. This helps to ensure if a DWARF link phase moved things
 comment|/// around, that it doesn't create invalid references by failing to relocate
 comment|/// CU relative and absolute references.
-name|void
+comment|///
+comment|/// \returns NumErrors The number of errors occured during verification of
+comment|/// references for the .debug_info section
+name|unsigned
 name|verifyDebugInfoReferences
 parameter_list|()
 function_decl|;

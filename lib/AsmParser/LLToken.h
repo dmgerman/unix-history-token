@@ -318,7 +318,7 @@ name|kw_spir_func
 block|,
 name|kw_x86_64_sysvcc
 block|,
-name|kw_x86_64_win64cc
+name|kw_win64cc
 block|,
 name|kw_webkit_jscc
 block|,

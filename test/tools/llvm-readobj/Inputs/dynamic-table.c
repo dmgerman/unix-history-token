@@ -4,7 +4,7 @@ comment|// clang -target x86_64-linux-gnu -shared -fPIC -lc dynamic-table.c \
 end_comment
 
 begin_comment
-comment|//       -o dynamic-table-so.x86 -Wl,-f,aux_val
+comment|//       -o dynamic-table-so.x86 -Wl,-f,aux.so -Wl,-F,filter.so
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|//       -o dynamic-table-exe.mips
 end_comment
 
 begin_comment
-comment|// clang -target aarch64-linux-gnu -fPIC -shared dynamic-table.c \
+comment|// clang -target aarch64-linux-gnu -fPIC -shared dynamic-table.c\
 end_comment
 
 begin_comment

@@ -214,6 +214,27 @@ block|;
 name|bool
 name|HasDFPPackedConversion
 block|;
+name|bool
+name|HasMiscellaneousExtensions2
+block|;
+name|bool
+name|HasGuardedStorage
+block|;
+name|bool
+name|HasMessageSecurityAssist7
+block|;
+name|bool
+name|HasMessageSecurityAssist8
+block|;
+name|bool
+name|HasVectorEnhancements1
+block|;
+name|bool
+name|HasVectorPackedDecimal
+block|;
+name|bool
+name|HasInsertReferenceBitsMultiple
+block|;
 name|private
 operator|:
 name|Triple
@@ -589,6 +610,78 @@ specifier|const
 block|{
 return|return
 name|HasVector
+return|;
+block|}
+comment|// Return true if the target has the miscellaneous-extensions facility 2.
+name|bool
+name|hasMiscellaneousExtensions2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMiscellaneousExtensions2
+return|;
+block|}
+comment|// Return true if the target has the guarded-storage facility.
+name|bool
+name|hasGuardedStorage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasGuardedStorage
+return|;
+block|}
+comment|// Return true if the target has the message-security-assist
+comment|// extension facility 7.
+name|bool
+name|hasMessageSecurityAssist7
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMessageSecurityAssist7
+return|;
+block|}
+comment|// Return true if the target has the message-security-assist
+comment|// extension facility 8.
+name|bool
+name|hasMessageSecurityAssist8
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMessageSecurityAssist8
+return|;
+block|}
+comment|// Return true if the target has the vector-enhancements facility 1.
+name|bool
+name|hasVectorEnhancements1
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVectorEnhancements1
+return|;
+block|}
+comment|// Return true if the target has the vector-packed-decimal facility.
+name|bool
+name|hasVectorPackedDecimal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVectorPackedDecimal
+return|;
+block|}
+comment|// Return true if the target has the insert-reference-bits-multiple facility.
+name|bool
+name|hasInsertReferenceBitsMultiple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasInsertReferenceBitsMultiple
 return|;
 block|}
 comment|// Return true if GV can be accessed using LARL for reloc model RM

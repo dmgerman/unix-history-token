@@ -114,6 +114,11 @@ operator|::
 name|string
 name|OutputFile
 expr_stmt|;
+name|std
+operator|::
+name|string
+name|ImportName
+expr_stmt|;
 name|uint64_t
 name|ImageBase
 init|=
@@ -161,6 +166,9 @@ literal|0
 decl_stmt|;
 block|}
 struct|;
+comment|// mingw and wine def files do not mangle _ for x86 which
+comment|// is a consequence of legacy binutils' dlltool functionality.
+comment|// This MingwDef flag should be removed once mingw stops this pratice.
 name|Expected
 operator|<
 name|COFFModuleDefinition
@@ -170,6 +178,8 @@ argument_list|(
 argument|MemoryBufferRef MB
 argument_list|,
 argument|COFF::MachineTypes Machine
+argument_list|,
+argument|bool MingwDef = false
 argument_list|)
 expr_stmt|;
 block|}

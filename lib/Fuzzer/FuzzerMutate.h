@@ -265,21 +265,6 @@ name|size_t
 name|MaxSize
 parameter_list|)
 function_decl|;
-comment|/// Mutates data by adding a word from the temporary automatic dictionary.
-name|size_t
-name|Mutate_AddWordFromTemporaryAutoDictionary
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Data
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|size_t
-name|MaxSize
-parameter_list|)
-function_decl|;
 comment|/// Mutates data by adding a word from the TORC.
 name|size_t
 name|Mutate_AddWordFromTORC
@@ -423,17 +408,6 @@ name|Word
 modifier|&
 name|W
 parameter_list|)
-function_decl|;
-name|void
-name|AddWordToAutoDictionary
-parameter_list|(
-name|DictionaryEntry
-name|DE
-parameter_list|)
-function_decl|;
-name|void
-name|ClearAutoDictionary
-parameter_list|()
 function_decl|;
 name|void
 name|PrintRecommendedDictionary

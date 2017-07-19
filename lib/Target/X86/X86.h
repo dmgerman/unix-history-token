@@ -197,6 +197,12 @@ modifier|*
 name|createX86ExpandPseudoPass
 parameter_list|()
 function_decl|;
+comment|/// This pass converts X86 cmov instructions into branch when profitable.
+name|FunctionPass
+modifier|*
+name|createX86CmovConverterPass
+parameter_list|()
+function_decl|;
 comment|/// Return a Machine IR pass that selectively replaces
 comment|/// certain byte and word instructions by equivalent 32 bit instructions,
 comment|/// in order to eliminate partial register usage, false dependences on

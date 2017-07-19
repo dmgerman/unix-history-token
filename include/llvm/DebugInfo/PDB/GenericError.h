@@ -72,6 +72,8 @@ literal|1
 operator|,
 name|dia_sdk_not_present
 operator|,
+name|type_server_not_found
+operator|,
 name|unspecified
 operator|,
 block|}

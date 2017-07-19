@@ -592,26 +592,6 @@ argument|const MCSubtargetInfo *STI
 argument_list|)
 block|;
 name|void
-name|emitRRIII
-argument_list|(
-argument|unsigned Opcode
-argument_list|,
-argument|unsigned Reg0
-argument_list|,
-argument|unsigned Reg1
-argument_list|,
-argument|int16_t Imm0
-argument_list|,
-argument|int16_t Imm1
-argument_list|,
-argument|int16_t Imm2
-argument_list|,
-argument|SMLoc IDLoc
-argument_list|,
-argument|const MCSubtargetInfo *STI
-argument_list|)
-block|;
-name|void
 name|emitAddu
 argument_list|(
 argument|unsigned DstReg

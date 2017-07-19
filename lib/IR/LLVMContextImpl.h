@@ -6195,6 +6195,10 @@ name|Metadata
 operator|*
 name|Entity
 block|;
+name|Metadata
+operator|*
+name|File
+block|;
 name|unsigned
 name|Line
 block|;
@@ -6209,6 +6213,8 @@ argument_list|,
 argument|Metadata *Scope
 argument_list|,
 argument|Metadata *Entity
+argument_list|,
+argument|Metadata *File
 argument_list|,
 argument|unsigned Line
 argument_list|,
@@ -6228,6 +6234,11 @@ block|,
 name|Entity
 argument_list|(
 name|Entity
+argument_list|)
+block|,
+name|File
+argument_list|(
+name|File
 argument_list|)
 block|,
 name|Line
@@ -6269,6 +6280,14 @@ argument_list|(
 name|N
 operator|->
 name|getRawEntity
+argument_list|()
+argument_list|)
+block|,
+name|File
+argument_list|(
+name|N
+operator|->
+name|getRawFile
 argument_list|()
 argument_list|)
 block|,
@@ -6314,6 +6333,13 @@ operator|->
 name|getRawEntity
 argument_list|()
 operator|&&
+name|File
+operator|==
+name|RHS
+operator|->
+name|getFile
+argument_list|()
+operator|&&
 name|Line
 operator|==
 name|RHS
@@ -6342,6 +6368,8 @@ argument_list|,
 name|Scope
 argument_list|,
 name|Entity
+argument_list|,
+name|File
 argument_list|,
 name|Line
 argument_list|,

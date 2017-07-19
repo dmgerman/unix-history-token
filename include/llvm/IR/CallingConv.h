@@ -244,11 +244,15 @@ name|X86_64_SysV
 init|=
 literal|78
 block|,
-comment|/// \brief The C convention as implemented on Windows/x86-64. This
-comment|/// convention differs from the more common \c X86_64_SysV convention
-comment|/// in a number of ways, most notably in that XMM registers used to pass
-comment|/// arguments are shadowed by GPRs, and vice versa.
-name|X86_64_Win64
+comment|/// \brief The C convention as implemented on Windows/x86-64 and
+comment|/// AArch64. This convention differs from the more common
+comment|/// \c X86_64_SysV convention in a number of ways, most notably in
+comment|/// that XMM registers used to pass arguments are shadowed by GPRs,
+comment|/// and vice versa.
+comment|/// On AArch64, this is identical to the normal C (AAPCS) calling
+comment|/// convention for normal functions, but floats are passed in integer
+comment|/// registers to variadic functions.
+name|Win64
 init|=
 literal|79
 block|,

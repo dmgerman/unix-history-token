@@ -339,6 +339,12 @@ comment|// HasMT -- support MT ASE.
 name|bool
 name|HasMT
 block|;
+comment|// Disable use of the `jal` instruction.
+name|bool
+name|UseLongCalls
+operator|=
+name|false
+block|;
 name|InstrItineraryData
 name|InstrItins
 block|;
@@ -1043,6 +1049,15 @@ specifier|const
 block|{
 return|return
 name|IsSoftFloat
+return|;
+block|}
+name|bool
+name|useLongCalls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseLongCalls
 return|;
 block|}
 name|bool

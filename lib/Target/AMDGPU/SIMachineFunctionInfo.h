@@ -332,6 +332,16 @@ block|;
 name|unsigned
 name|PrivateSegmentWaveByteOffsetSystemSGPR
 block|;
+comment|// VGPR inputs. These are always v0, v1 and v2 for entry functions.
+name|unsigned
+name|WorkItemIDXVGPR
+block|;
+name|unsigned
+name|WorkItemIDYVGPR
+block|;
+name|unsigned
+name|WorkItemIDZVGPR
+block|;
 comment|// Graphics info.
 name|unsigned
 name|PSInputAddr
@@ -1175,21 +1185,14 @@ argument_list|(
 argument|unsigned Reg
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|Reg
-operator|!=
-name|AMDGPU
-operator|::
-name|NoRegister
-operator|&&
-literal|"Should never be unset"
-argument_list|)
-block|;
 name|StackPtrOffsetReg
 operator|=
 name|Reg
 block|;   }
+comment|// Note the unset value for this is AMDGPU::SP_REG rather than
+comment|// NoRegister. This is mostly a workaround for MIR tests where state that
+comment|// can't be directly computed from the function is not preserved in serialized
+comment|// MIR.
 name|unsigned
 name|getStackPtrOffsetReg
 argument_list|()

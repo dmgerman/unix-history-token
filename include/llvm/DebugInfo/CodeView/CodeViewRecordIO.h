@@ -467,7 +467,7 @@ begin_function_decl
 name|Error
 name|mapGuid
 parameter_list|(
-name|StringRef
+name|GUID
 modifier|&
 name|Guid
 parameter_list|)

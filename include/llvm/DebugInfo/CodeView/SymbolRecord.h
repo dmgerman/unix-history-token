@@ -3433,7 +3433,7 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|uint32_t
+name|TypeIndex
 name|BuildId
 block|;
 name|uint32_t

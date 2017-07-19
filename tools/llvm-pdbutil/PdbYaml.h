@@ -222,9 +222,11 @@ name|Age
 init|=
 literal|1
 decl_stmt|;
-name|PDB_UniqueId
+name|codeview
+operator|::
+name|GUID
 name|Guid
-decl_stmt|;
+expr_stmt|;
 name|std
 operator|::
 name|vector

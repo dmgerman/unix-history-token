@@ -216,7 +216,7 @@ name|PassRegistry
 modifier|&
 parameter_list|)
 function_decl|;
-name|ModulePass
+name|Pass
 modifier|*
 name|createAMDGPUAnnotateKernelFeaturesPass
 parameter_list|()

@@ -239,6 +239,9 @@ name|template
 operator|<
 name|class
 name|N
+operator|,
+name|bool
+name|IsPostDom
 operator|>
 name|class
 name|DominatorTreeBase
@@ -3221,6 +3224,8 @@ specifier|const
 name|DominatorTreeBase
 operator|<
 name|BlockT
+argument_list|,
+name|false
 operator|>
 operator|&
 name|DomTree
@@ -3252,6 +3257,8 @@ specifier|const
 name|DominatorTreeBase
 operator|<
 name|BlockT
+argument_list|,
+name|false
 operator|>
 operator|&
 name|DomTree
@@ -3333,6 +3340,8 @@ specifier|const
 name|DominatorTreeBase
 operator|<
 name|BasicBlock
+argument_list|,
+name|false
 operator|>
 operator|&
 name|DomTree

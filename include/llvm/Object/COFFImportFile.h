@@ -469,7 +469,7 @@ operator|::
 name|error_code
 name|writeImportLibrary
 argument_list|(
-argument|StringRef DLLName
+argument|StringRef ImportName
 argument_list|,
 argument|StringRef Path
 argument_list|,
