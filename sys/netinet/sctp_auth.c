@@ -8197,18 +8197,18 @@ return|return;
 block|}
 name|control
 operator|->
-name|spec_flags
-operator|=
-name|M_NOTIFICATION
-expr_stmt|;
-name|control
-operator|->
 name|length
 operator|=
 name|SCTP_BUF_LEN
 argument_list|(
 name|m_notify
 argument_list|)
+expr_stmt|;
+name|control
+operator|->
+name|spec_flags
+operator|=
+name|M_NOTIFICATION
 expr_stmt|;
 comment|/* not that we need this */
 name|control
