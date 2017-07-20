@@ -809,6 +809,8 @@ name|OBJT_PHYS
 argument_list|,
 name|NULL
 argument_list|,
+name|ptoa
+argument_list|(
 literal|1
 operator|+
 name|NPML4EPG
@@ -822,6 +824,7 @@ operator|*
 name|NPDPEPG
 operator|*
 name|NPDEPG
+argument_list|)
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
