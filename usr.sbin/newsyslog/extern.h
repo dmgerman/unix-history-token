@@ -185,6 +185,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|ptimeget_ctime_rfc5424
+parameter_list|(
+specifier|const
+name|struct
+name|ptime_data
+modifier|*
+name|_ptime
+parameter_list|,
+name|char
+modifier|*
+name|timebuf
+parameter_list|,
+name|size_t
+name|bufsize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|double
 name|ptimeget_diff
 parameter_list|(
