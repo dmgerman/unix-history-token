@@ -1742,36 +1742,100 @@ name|apic_types
 index|[]
 init|=
 block|{
+index|[
+name|ACPI_MADT_TYPE_LOCAL_APIC
+index|]
+operator|=
 literal|"Local APIC"
 block|,
+index|[
+name|ACPI_MADT_TYPE_IO_APIC
+index|]
+operator|=
 literal|"IO APIC"
 block|,
+index|[
+name|ACPI_MADT_TYPE_INTERRUPT_OVERRIDE
+index|]
+operator|=
 literal|"INT Override"
 block|,
+index|[
+name|ACPI_MADT_TYPE_NMI_SOURCE
+index|]
+operator|=
 literal|"NMI"
 block|,
+index|[
+name|ACPI_MADT_TYPE_LOCAL_APIC_NMI
+index|]
+operator|=
 literal|"Local APIC NMI"
 block|,
+index|[
+name|ACPI_MADT_TYPE_LOCAL_APIC_OVERRIDE
+index|]
+operator|=
 literal|"Local APIC Override"
 block|,
+index|[
+name|ACPI_MADT_TYPE_IO_SAPIC
+index|]
+operator|=
 literal|"IO SAPIC"
 block|,
+index|[
+name|ACPI_MADT_TYPE_LOCAL_SAPIC
+index|]
+operator|=
 literal|"Local SAPIC"
 block|,
+index|[
+name|ACPI_MADT_TYPE_INTERRUPT_SOURCE
+index|]
+operator|=
 literal|"Platform Interrupt"
 block|,
+index|[
+name|ACPI_MADT_TYPE_LOCAL_X2APIC
+index|]
+operator|=
 literal|"Local X2APIC"
 block|,
+index|[
+name|ACPI_MADT_TYPE_LOCAL_X2APIC_NMI
+index|]
+operator|=
 literal|"Local X2APIC NMI"
 block|,
+index|[
+name|ACPI_MADT_TYPE_GENERIC_INTERRUPT
+index|]
+operator|=
 literal|"GIC CPU Interface Structure"
 block|,
+index|[
+name|ACPI_MADT_TYPE_GENERIC_DISTRIBUTOR
+index|]
+operator|=
 literal|"GIC Distributor Structure"
 block|,
+index|[
+name|ACPI_MADT_TYPE_GENERIC_MSI_FRAME
+index|]
+operator|=
 literal|"GICv2m MSI Frame"
 block|,
+index|[
+name|ACPI_MADT_TYPE_GENERIC_REDISTRIBUTOR
+index|]
+operator|=
 literal|"GIC Redistributor Structure"
 block|,
+index|[
+name|ACPI_MADT_TYPE_GENERIC_TRANSLATOR
+index|]
+operator|=
 literal|"GIC ITS Structure"
 block|}
 decl_stmt|;
@@ -5162,12 +5226,28 @@ name|srat_types
 index|[]
 init|=
 block|{
+index|[
+name|ACPI_SRAT_TYPE_CPU_AFFINITY
+index|]
+operator|=
 literal|"CPU"
 block|,
+index|[
+name|ACPI_SRAT_TYPE_MEMORY_AFFINITY
+index|]
+operator|=
 literal|"Memory"
 block|,
+index|[
+name|ACPI_SRAT_TYPE_X2APIC_CPU_AFFINITY
+index|]
+operator|=
 literal|"X2APIC"
 block|,
+index|[
+name|ACPI_SRAT_TYPE_GICC_AFFINITY
+index|]
+operator|=
 literal|"GICC"
 block|}
 decl_stmt|;
