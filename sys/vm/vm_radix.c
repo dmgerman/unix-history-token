@@ -1037,7 +1037,7 @@ end_comment
 
 begin_function
 name|void
-name|vm_radix_init
+name|vm_radix_zinit
 parameter_list|(
 name|void
 parameter_list|)

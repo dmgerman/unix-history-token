@@ -607,6 +607,124 @@ value|0x0004;
 end_define
 
 begin_comment
+comment|/* Support AutoMediaDetect for Marvell M88 PHY in i354 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_MEDIA_RESET
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Define the starting Interrupt rate per Queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_INTS_PER_SEC
+value|8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_DEFAULT_ITR
+value|((1000000/IGB_INTS_PER_SEC)<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_LINK_ITR
+value|2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I210_LINK_DELAY
+value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_MAX_SCATTER
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_VFTA_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_BR_SIZE
+value|4096
+end_define
+
+begin_comment
+comment|/* ring buf size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_TSO_SIZE
+value|(65535 + sizeof(struct ether_vlan_header))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TSO_SEG_SIZE
+value|4096
+end_define
+
+begin_comment
+comment|/* Max dma segment size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_TXPBSIZE
+value|20408
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_HDR_BUF
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_PKTTYPE_MASK
+value|0x0000FFF0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_DMCTLX_DCFLUSH_DIS
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Disable DMA Coalesce Flush */
+end_comment
+
+begin_comment
 comment|/*  * Driver state logic for the detection of a hung state  * in hardware.  Set TX_HUNG whenever a TX packet is used  * (data is sent) and clear it when txeof() is invoked if  * any descriptors from the ring are cleaned/reclaimed.  * Increment internal counter if no descriptors are cleaned  * and compare to TX_MAXTRIES.  When counter> TX_MAXTRIES,  * reset adapter.  */
 end_comment
 
@@ -1484,9 +1602,6 @@ name|int
 name|if_flags
 decl_stmt|;
 name|int
-name|min_frame_size
-decl_stmt|;
-name|int
 name|em_insert_vlan_header
 decl_stmt|;
 name|u32
@@ -1494,6 +1609,9 @@ name|ims
 decl_stmt|;
 name|bool
 name|in_detach
+decl_stmt|;
+name|u32
+name|flags
 decl_stmt|;
 comment|/* Task for FAST handling */
 name|struct
@@ -1614,6 +1732,9 @@ decl_stmt|;
 name|struct
 name|e1000_hw_stats
 name|stats
+decl_stmt|;
+name|u16
+name|vf_ifp
 decl_stmt|;
 block|}
 struct|;
