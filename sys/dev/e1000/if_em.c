@@ -9240,7 +9240,7 @@ name|mac
 operator|.
 name|get_link_status
 expr_stmt|;
-comment|/* Fall thru */
+comment|/* FALLTHROUGH */
 default|default:
 break|break;
 block|}
@@ -13514,7 +13514,7 @@ literal|8
 expr_stmt|;
 break|break;
 block|}
-comment|/* else fall thru */
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(
@@ -17895,7 +17895,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Bit of a misnomer, what this really means is  * to enable OS management of the system... aka  * to disable special hardware management features   */
+comment|/*  * Bit of a misnomer, what this really means is  * to enable OS management of the system... aka  * to disable special hardware management features  */
 end_comment
 
 begin_function
