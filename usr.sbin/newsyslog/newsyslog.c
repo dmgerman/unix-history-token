@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -389,6 +395,17 @@ end_define
 
 begin_comment
 comment|/* Replace PID file with a shell command.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CE_RFC5424
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Use RFC5424 format rotation message */
 end_comment
 
 begin_define
@@ -1075,6 +1092,27 @@ end_decl_stmt
 begin_comment
 comment|/* The current time in human readable form, 				  * used for rotation-tracking messages. */
 end_comment
+
+begin_comment
+comment|/* Another buffer to hold the current time in RFC5424 format. Fractional  * seconds are allowed by the RFC, but are not included in the  * rotation-tracking messages written by newsyslog and so are not accounted for  * in the length below.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DAYTIME_RFC5424_LEN
+value|sizeof("YYYY-MM-DDTHH:MM:SS+00:00")
+end_define
+
+begin_decl_stmt
+specifier|static
+name|char
+name|daytime_rfc5424
+index|[
+name|DAYTIME_RFC5424_LEN
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -3270,6 +3308,15 @@ operator|+
 literal|4
 argument_list|,
 name|DAYTIME_LEN
+argument_list|)
+expr_stmt|;
+name|ptimeget_ctime_rfc5424
+argument_list|(
+name|timenow
+argument_list|,
+name|daytime_rfc5424
+argument_list|,
+name|DAYTIME_RFC5424_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Let's get our hostname */
@@ -6213,6 +6260,16 @@ name|CE_PID2CMD
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|working
+operator|->
+name|flags
+operator||=
+name|CE_RFC5424
+expr_stmt|;
+break|break;
+case|case
 literal|'u'
 case|:
 name|working
@@ -6225,7 +6282,7 @@ break|break;
 case|case
 literal|'w'
 case|:
-comment|/* Depreciated flag - keep for compatibility purposes */
+comment|/* Deprecated flag - keep for compatibility purposes */
 break|break;
 case|case
 literal|'x'
@@ -10518,6 +10575,119 @@ if|if
 condition|(
 name|log_ent
 operator|->
+name|flags
+operator|&
+name|CE_RFC5424
+condition|)
+block|{
+if|if
+condition|(
+name|log_ent
+operator|->
+name|firstcreate
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"<%d>1 %s %s newsyslog %d - - %s%s\n"
+argument_list|,
+name|LOG_MAKEPRI
+argument_list|(
+name|LOG_USER
+argument_list|,
+name|LOG_INFO
+argument_list|)
+argument_list|,
+name|daytime_rfc5424
+argument_list|,
+name|hostname
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+literal|"logfile first created"
+argument_list|,
+name|xtra
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|log_ent
+operator|->
+name|r_reason
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"<%d>1 %s %s newsyslog %d - - %s%s%s\n"
+argument_list|,
+name|LOG_MAKEPRI
+argument_list|(
+name|LOG_USER
+argument_list|,
+name|LOG_INFO
+argument_list|)
+argument_list|,
+name|daytime_rfc5424
+argument_list|,
+name|hostname
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+literal|"logfile turned over"
+argument_list|,
+name|log_ent
+operator|->
+name|r_reason
+argument_list|,
+name|xtra
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"<%d>1 %s %s newsyslog %d - - %s%s\n"
+argument_list|,
+name|LOG_MAKEPRI
+argument_list|(
+name|LOG_USER
+argument_list|,
+name|LOG_INFO
+argument_list|)
+argument_list|,
+name|daytime_rfc5424
+argument_list|,
+name|hostname
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+literal|"logfile turned over"
+argument_list|,
+name|xtra
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|log_ent
+operator|->
 name|firstcreate
 condition|)
 name|fprintf
@@ -10530,9 +10700,6 @@ name|daytime
 argument_list|,
 name|hostname
 argument_list|,
-operator|(
-name|int
-operator|)
 name|getpid
 argument_list|()
 argument_list|,
@@ -10558,9 +10725,6 @@ name|daytime
 argument_list|,
 name|hostname
 argument_list|,
-operator|(
-name|int
-operator|)
 name|getpid
 argument_list|()
 argument_list|,
@@ -10582,15 +10746,13 @@ name|daytime
 argument_list|,
 name|hostname
 argument_list|,
-operator|(
-name|int
-operator|)
 name|getpid
 argument_list|()
 argument_list|,
 name|xtra
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|fclose
