@@ -3905,11 +3905,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|DEBUG
 argument_list|(
 literal|"Bootcamp detected"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
