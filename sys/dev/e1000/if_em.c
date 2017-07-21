@@ -8929,14 +8929,9 @@ operator|!=
 literal|0
 condition|)
 return|return;
-name|em_if_update_admin_status
+name|iflib_admin_intr_deferred
 argument_list|(
 name|ctx
-argument_list|)
-expr_stmt|;
-name|em_update_stats_counters
-argument_list|(
-name|adapter
 argument_list|)
 expr_stmt|;
 comment|/* Reset LAA into RAR[0] on 82571 */
@@ -9617,6 +9612,11 @@ literal|"link state changed to down\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|em_update_stats_counters
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
