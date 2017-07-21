@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_var.h>
 end_include
 
@@ -4473,6 +4479,31 @@ name|num_tx_desc
 decl_stmt|,
 name|num_rx_desc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_type
+operator|==
+name|IFT_LOOP
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"if_loop is not supported by %s"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+endif|#
+directive|endif
 name|num_tx_desc
 operator|=
 name|num_rx_desc

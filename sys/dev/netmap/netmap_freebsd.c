@@ -2783,7 +2783,7 @@ expr_stmt|;
 operator|*
 name|nm_addr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 name|ENOMEM

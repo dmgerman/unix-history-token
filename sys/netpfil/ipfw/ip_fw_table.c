@@ -7009,7 +7009,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lookup an arbtrary key @paddr of legth @plen in table @tbl.  * Stores found value in @val.  *  * Returns 1 if key was found.  */
+comment|/*  * Lookup an arbitrary key @paddr of length @plen in table @tbl.  * Stores found value in @val.  *  * Returns 1 if key was found.  */
 end_comment
 
 begin_function
