@@ -4554,11 +4554,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|struct
-name|syscall_args
-modifier|*
-name|sa
 parameter_list|)
 block|{
 name|struct
@@ -4571,6 +4566,11 @@ name|trapframe
 modifier|*
 name|frame
 decl_stmt|;
+name|struct
+name|syscall_args
+modifier|*
+name|sa
+decl_stmt|;
 name|p
 operator|=
 name|td
@@ -4582,6 +4582,13 @@ operator|=
 name|td
 operator|->
 name|td_frame
+expr_stmt|;
+name|sa
+operator|=
+operator|&
+name|td
+operator|->
+name|td_sa
 expr_stmt|;
 name|sa
 operator|->

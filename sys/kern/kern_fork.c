@@ -2070,6 +2070,14 @@ name|td_endcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|td2
+operator|->
+name|td_sa
+operator|=
+name|td
+operator|->
+name|td_sa
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
@@ -4719,7 +4727,9 @@ name|S_SCX
 argument_list|,
 name|td
 operator|->
-name|td_dbg_sc_code
+name|td_sa
+operator|.
+name|code
 argument_list|)
 expr_stmt|;
 if|if

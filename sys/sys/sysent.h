@@ -491,10 +491,6 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-parameter_list|,
-name|struct
-name|syscall_args
-modifier|*
 parameter_list|)
 function_decl|;
 specifier|const

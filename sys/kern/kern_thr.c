@@ -1059,6 +1059,14 @@ argument_list|)
 expr_stmt|;
 name|newtd
 operator|->
+name|td_sa
+operator|=
+name|td
+operator|->
+name|td_sa
+expr_stmt|;
+name|newtd
+operator|->
 name|td_proc
 operator|=
 name|td

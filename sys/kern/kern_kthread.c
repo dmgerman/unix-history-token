@@ -1085,6 +1085,14 @@ name|td_endcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|newtd
+operator|->
+name|td_sa
+operator|=
+name|oldtd
+operator|->
+name|td_sa
+expr_stmt|;
 comment|/* set up arg0 for 'ps', et al */
 name|va_start
 argument_list|(

@@ -5803,7 +5803,9 @@ name|pl_syscall_code
 operator|=
 name|td2
 operator|->
-name|td_dbg_sc_code
+name|td_sa
+operator|.
+name|code
 expr_stmt|;
 name|pl
 operator|->
@@ -5811,7 +5813,9 @@ name|pl_syscall_narg
 operator|=
 name|td2
 operator|->
-name|td_dbg_sc_narg
+name|td_sa
+operator|.
+name|narg
 expr_stmt|;
 block|}
 else|else
