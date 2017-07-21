@@ -49,12 +49,6 @@ name|KINFO_PROC_SIZE
 value|1088
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -86,11 +80,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
