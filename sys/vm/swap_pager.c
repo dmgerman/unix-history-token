@@ -271,7 +271,7 @@ begin_define
 define|#
 directive|define
 name|MAX_PAGEOUT_CLUSTER
-value|16
+value|32
 end_define
 
 begin_endif
@@ -309,7 +309,7 @@ begin_define
 define|#
 directive|define
 name|SWAP_META_PAGES
-value|(SWB_NPAGES * 2)
+value|32
 end_define
 
 begin_define
