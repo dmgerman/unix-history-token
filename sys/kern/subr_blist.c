@@ -136,6 +136,16 @@ end_include
 begin_define
 define|#
 directive|define
+name|bitcount64
+parameter_list|(
+name|x
+parameter_list|)
+value|__bitcount64((uint64_t)(x))
+end_define
+
+begin_define
+define|#
+directive|define
 name|malloc
 parameter_list|(
 name|a
@@ -495,8 +505,6 @@ argument_list|,
 name|M_SWAP
 argument_list|,
 name|flags
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -698,7 +706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * blist_alloc() - reserve space in the block bitmap.  Return the base  *		     of a contiguous region or SWAPBLK_NONE if space could  *		     not be allocated.  */
+comment|/*  * blist_alloc() -   reserve space in the block bitmap.  Return the base  *		     of a contiguous region or SWAPBLK_NONE if space could  *		     not be allocated.  */
 end_comment
 
 begin_function
@@ -714,12 +722,20 @@ parameter_list|)
 block|{
 name|daddr_t
 name|blk
-init|=
-name|SWAPBLK_NONE
 decl_stmt|;
 if|if
 condition|(
 name|bl
+operator|!=
+name|NULL
+operator|&&
+name|count
+operator|<=
+name|bl
+operator|->
+name|bl_root
+operator|->
+name|bm_bighint
 condition|)
 block|{
 if|if
@@ -765,22 +781,64 @@ operator|->
 name|bl_skip
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|blk
-operator|!=
-name|SWAPBLK_NONE
-condition|)
-name|bl
-operator|->
-name|bl_free
-operator|-=
-name|count
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|blk
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|SWAPBLK_NONE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * blist_avail() -	return the number of free blocks.  */
+end_comment
+
+begin_function
+name|daddr_t
+name|blist_avail
+parameter_list|(
+name|blist_t
+name|bl
+parameter_list|)
+block|{
+if|if
+condition|(
+name|bl
+operator|->
+name|bl_radix
+operator|==
+name|BLIST_BMAP_RADIX
+condition|)
+return|return
+operator|(
+name|bitcount64
+argument_list|(
+name|bl
+operator|->
+name|bl_root
+operator|->
+name|u
+operator|.
+name|bmu_bitmap
+argument_list|)
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|bl
+operator|->
+name|bl_root
+operator|->
+name|u
+operator|.
+name|bmu_avail
 operator|)
 return|;
 block|}
@@ -849,12 +907,6 @@ name|bl_skip
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|bl
-operator|->
-name|bl_free
-operator|+=
-name|count
 expr_stmt|;
 block|}
 block|}
@@ -931,19 +983,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|bl
-operator|->
-name|bl_free
-operator|-=
-name|filled
-expr_stmt|;
 return|return
+operator|(
 name|filled
+operator|)
 return|;
 block|}
-else|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1389,6 +1438,9 @@ name|int
 name|skip
 parameter_list|)
 block|{
+name|daddr_t
+name|r
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1411,16 +1463,20 @@ operator|->
 name|u
 operator|.
 name|bmu_avail
-operator|==
-literal|0
+operator|<
+name|count
 condition|)
 block|{
-comment|/* 		 * ALL-ALLOCATED special case 		 */
+comment|/* 		 * The meta node's hint must be too large if the allocation 		 * exceeds the number of free blocks.  Reduce the hint, and 		 * return failure. 		 */
 name|scan
 operator|->
 name|bm_bighint
 operator|=
-literal|0
+name|scan
+operator|->
+name|u
+operator|.
+name|bmu_avail
 expr_stmt|;
 return|return
 operator|(
@@ -1428,6 +1484,7 @@ name|SWAPBLK_NONE
 operator|)
 return|;
 block|}
+comment|/* 	 * An ALL-FREE meta node requires special handling before allocating 	 * any of its blocks. 	 */
 if|if
 condition|(
 name|scan
@@ -1443,7 +1500,7 @@ name|radix
 operator|/=
 name|BLIST_META_RADIX
 expr_stmt|;
-comment|/* 		 * ALL-FREE special case, initialize uninitialize 		 * sublevel. 		 */
+comment|/* 		 * Reinitialize each of the meta node's children.  An ALL-FREE 		 * meta node cannot have a terminator in any subtree. 		 */
 for|for
 control|(
 name|i
@@ -1459,22 +1516,6 @@ operator|+=
 name|next_skip
 control|)
 block|{
-if|if
-condition|(
-name|scan
-index|[
-name|i
-index|]
-operator|.
-name|bm_bighint
-operator|==
-operator|(
-name|daddr_t
-operator|)
-operator|-
-literal|1
-condition|)
-break|break;
 if|if
 condition|(
 name|next_skip
@@ -1539,6 +1580,20 @@ operator|/=
 name|BLIST_META_RADIX
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|count
+operator|>
+name|radix
+condition|)
+block|{
+comment|/* 		 * The allocation exceeds the number of blocks that are 		 * managed by a subtree of this meta node. 		 */
+name|panic
+argument_list|(
+literal|"allocation too large"
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -1566,10 +1621,7 @@ operator|.
 name|bm_bighint
 condition|)
 block|{
-comment|/* 			 * count fits in object 			 */
-name|daddr_t
-name|r
-decl_stmt|;
+comment|/* 			 * The allocation might fit in the i'th subtree. 			 */
 if|if
 condition|(
 name|next_skip
@@ -1632,28 +1684,6 @@ name|bmu_avail
 operator|-=
 name|count
 expr_stmt|;
-if|if
-condition|(
-name|scan
-operator|->
-name|bm_bighint
-operator|>
-name|scan
-operator|->
-name|u
-operator|.
-name|bmu_avail
-condition|)
-name|scan
-operator|->
-name|bm_bighint
-operator|=
-name|scan
-operator|->
-name|u
-operator|.
-name|bmu_avail
-expr_stmt|;
 return|return
 operator|(
 name|r
@@ -1680,21 +1710,6 @@ condition|)
 block|{
 comment|/* 			 * Terminator 			 */
 break|break;
-block|}
-elseif|else
-if|if
-condition|(
-name|count
-operator|>
-name|radix
-condition|)
-block|{
-comment|/* 			 * count does not fit in object even if it were 			 * complete free. 			 */
-name|panic
-argument_list|(
-literal|"blist_meta_alloc: allocation too large"
-argument_list|)
-expr_stmt|;
 block|}
 name|blk
 operator|+=
@@ -2555,8 +2570,6 @@ name|nblks
 decl_stmt|;
 name|u_daddr_t
 name|mask
-decl_stmt|,
-name|bitmap
 decl_stmt|;
 name|mask
 operator|=
@@ -2586,9 +2599,11 @@ name|n
 operator|)
 operator|)
 expr_stmt|;
-comment|/* Count the number of blocks we're about to allocate */
-name|bitmap
+comment|/* Count the number of blocks that we are allocating. */
+name|nblks
 operator|=
+name|bitcount64
+argument_list|(
 name|scan
 operator|->
 name|u
@@ -2596,25 +2611,7 @@ operator|.
 name|bmu_bitmap
 operator|&
 name|mask
-expr_stmt|;
-for|for
-control|(
-name|nblks
-operator|=
-literal|0
-init|;
-name|bitmap
-operator|!=
-literal|0
-condition|;
-name|nblks
-operator|++
-control|)
-name|bitmap
-operator|&=
-name|bitmap
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 name|scan
 operator|->
@@ -2626,7 +2623,9 @@ operator|~
 name|mask
 expr_stmt|;
 return|return
+operator|(
 name|nblks
+operator|)
 return|;
 block|}
 end_function
@@ -2686,11 +2685,14 @@ name|count
 operator|>
 name|radix
 condition|)
+block|{
+comment|/* 		 * The allocation exceeds the number of blocks that are 		 * managed by this meta node. 		 */
 name|panic
 argument_list|(
-literal|"blist_meta_fill: allocation too large"
+literal|"allocation too large"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|count
@@ -2733,6 +2735,7 @@ return|return
 name|nblks
 return|;
 block|}
+comment|/* 	 * An ALL-FREE meta node requires special handling before allocating 	 * any of its blocks. 	 */
 if|if
 condition|(
 name|scan
@@ -2748,7 +2751,7 @@ name|radix
 operator|/=
 name|BLIST_META_RADIX
 expr_stmt|;
-comment|/* 		 * ALL-FREE special case, initialize sublevel 		 */
+comment|/* 		 * Reinitialize each of the meta node's children.  An ALL-FREE 		 * meta node cannot have a terminator in any subtree. 		 */
 for|for
 control|(
 name|i
@@ -2764,22 +2767,6 @@ operator|+=
 name|next_skip
 control|)
 block|{
-if|if
-condition|(
-name|scan
-index|[
-name|i
-index|]
-operator|.
-name|bm_bighint
-operator|==
-operator|(
-name|daddr_t
-operator|)
-operator|-
-literal|1
-condition|)
-break|break;
 if|if
 condition|(
 name|next_skip
@@ -3724,9 +3711,10 @@ operator|(
 name|long
 name|long
 operator|)
+name|blist_avail
+argument_list|(
 name|bl
-operator|->
-name|bl_free
+argument_list|)
 argument_list|,
 operator|(
 name|long
