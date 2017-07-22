@@ -4790,6 +4790,26 @@ name|map
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* An exec terminates mlockall(MCL_FUTURE). */
+name|vm_map_lock
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
+name|vm_map_modflags
+argument_list|(
+name|map
+argument_list|,
+literal|0
+argument_list|,
+name|MAP_WIREFUTURE
+argument_list|)
+expr_stmt|;
+name|vm_map_unlock
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
