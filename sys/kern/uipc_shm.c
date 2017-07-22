@@ -2137,6 +2137,17 @@ name|base
 decl_stmt|,
 name|rv
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|length
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"shm_dotruncate: length< 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|object
 operator|=
 name|shmfd
@@ -2454,7 +2465,7 @@ block|}
 block|}
 name|delta
 operator|=
-name|ptoa
+name|IDX_TO_OFF
 argument_list|(
 name|object
 operator|->
@@ -2522,10 +2533,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Attempt to reserve the swap */
+comment|/* Try to reserve additional swap space. */
 name|delta
 operator|=
-name|ptoa
+name|IDX_TO_OFF
 argument_list|(
 name|nobjsize
 operator|-
