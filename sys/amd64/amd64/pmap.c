@@ -7640,10 +7640,14 @@ block|{
 name|sva
 operator|&=
 operator|~
-operator|(
+call|(
 name|vm_offset_t
-operator|)
+call|)
+argument_list|(
 name|cpu_clflush_line_size
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 else|else
