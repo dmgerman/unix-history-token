@@ -129,6 +129,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getCallPreservedMask
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|CallingConv::ID
+argument_list|)
+specifier|const
+name|override
+block|;
 name|BitVector
 name|getReservedRegs
 argument_list|(
@@ -251,13 +263,6 @@ specifier|const
 block|;
 name|bool
 name|isEHReturnCalleeSaveReg
-argument_list|(
-argument|unsigned Reg
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isCalleeSaveReg
 argument_list|(
 argument|unsigned Reg
 argument_list|)

@@ -62,6 +62,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/Host/OptionParser.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/CommandObject.h"
 end_include
 
@@ -153,7 +159,7 @@ name|CommandOptions
 argument_list|()
 name|override
 block|{}
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
@@ -164,7 +170,7 @@ argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|{
-name|Error
+name|Status
 name|error
 block|;
 specifier|const

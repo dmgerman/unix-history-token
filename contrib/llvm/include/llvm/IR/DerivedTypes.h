@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/DerivedTypes.h - Classes for handling data types ---*- C++ -*-===//
+comment|//===- llvm/DerivedTypes.h - Classes for handling data types ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
@@ -276,7 +282,6 @@ specifier|const
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -423,12 +428,13 @@ literal|0
 index|]
 return|;
 block|}
-typedef|typedef
+name|using
+name|param_iterator
+operator|=
 name|Type
 operator|::
 name|subtype_iterator
-name|param_iterator
-expr_stmt|;
+block|;
 name|param_iterator
 name|param_begin
 argument_list|()
@@ -506,7 +512,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -664,7 +669,6 @@ specifier|const
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -731,14 +735,9 @@ argument_list|)
 operator|:
 name|CompositeType
 argument_list|(
-name|C
+argument|C
 argument_list|,
-name|StructTyID
-argument_list|)
-block|,
-name|SymbolTableEntry
-argument_list|(
-argument|nullptr
+argument|StructTyID
 argument_list|)
 block|{}
 expr|enum
@@ -768,6 +767,8 @@ comment|/// type that has an empty name.
 name|void
 operator|*
 name|SymbolTableEntry
+operator|=
+name|nullptr
 block|;
 name|public
 operator|:
@@ -869,19 +870,77 @@ operator|>
 name|Elements
 argument_list|)
 block|;
+name|template
+operator|<
+name|class
+operator|...
+name|Tys
+operator|>
 specifier|static
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|are_base_of
+operator|<
+name|Type
+block|,
+name|Tys
+operator|...
+operator|>
+operator|::
+name|value
+block|,
 name|StructType
 operator|*
+operator|>
+operator|::
+name|type
 name|create
 argument_list|(
 argument|StringRef Name
 argument_list|,
 argument|Type *elt1
 argument_list|,
-argument|...
+argument|Tys *... elts
 argument_list|)
-name|LLVM_END_WITH_NULL
+block|{
+name|assert
+argument_list|(
+name|elt1
+operator|&&
+literal|"Cannot create a struct type with no elements with this"
+argument_list|)
 block|;
+name|SmallVector
+operator|<
+name|llvm
+operator|::
+name|Type
+operator|*
+block|,
+literal|8
+operator|>
+name|StructFields
+argument_list|(
+block|{
+name|elt1
+block|,
+name|elts
+operator|...
+block|}
+argument_list|)
+block|;
+return|return
+name|create
+argument_list|(
+name|StructFields
+argument_list|,
+name|Name
+argument_list|)
+return|;
+block|}
 comment|/// This static method is the primary way to create a literal StructType.
 specifier|static
 name|StructType
@@ -909,17 +968,88 @@ block|;
 comment|/// This static method is a convenience method for creating structure types by
 comment|/// specifying the elements as arguments. Note that this method always returns
 comment|/// a non-packed struct, and requires at least one element type.
+name|template
+operator|<
+name|class
+operator|...
+name|Tys
+operator|>
 specifier|static
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|are_base_of
+operator|<
+name|Type
+block|,
+name|Tys
+operator|...
+operator|>
+operator|::
+name|value
+block|,
 name|StructType
 operator|*
+operator|>
+operator|::
+name|type
 name|get
 argument_list|(
 argument|Type *elt1
 argument_list|,
-argument|...
+argument|Tys *... elts
 argument_list|)
-name|LLVM_END_WITH_NULL
+block|{
+name|assert
+argument_list|(
+name|elt1
+operator|&&
+literal|"Cannot create a struct type with no elements with this"
+argument_list|)
 block|;
+name|LLVMContext
+operator|&
+name|Ctx
+operator|=
+name|elt1
+operator|->
+name|getContext
+argument_list|()
+block|;
+name|SmallVector
+operator|<
+name|llvm
+operator|::
+name|Type
+operator|*
+block|,
+literal|8
+operator|>
+name|StructFields
+argument_list|(
+block|{
+name|elt1
+block|,
+name|elts
+operator|...
+block|}
+argument_list|)
+block|;
+return|return
+name|llvm
+operator|::
+name|StructType
+operator|::
+name|get
+argument_list|(
+name|Ctx
+argument_list|,
+name|StructFields
+argument_list|)
+return|;
+block|}
 name|bool
 name|isPacked
 argument_list|()
@@ -1017,15 +1147,69 @@ argument_list|,
 argument|bool isPacked = false
 argument_list|)
 block|;
+name|template
+operator|<
+name|typename
+operator|...
+name|Tys
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|are_base_of
+operator|<
+name|Type
+block|,
+name|Tys
+operator|...
+operator|>
+operator|::
+name|value
+block|,
 name|void
+operator|>
+operator|::
+name|type
 name|setBody
 argument_list|(
 argument|Type *elt1
 argument_list|,
-argument|...
+argument|Tys *... elts
 argument_list|)
-name|LLVM_END_WITH_NULL
+block|{
+name|assert
+argument_list|(
+name|elt1
+operator|&&
+literal|"Cannot create a struct type with no elements with this"
+argument_list|)
 block|;
+name|SmallVector
+operator|<
+name|llvm
+operator|::
+name|Type
+operator|*
+block|,
+literal|8
+operator|>
+name|StructFields
+argument_list|(
+block|{
+name|elt1
+block|,
+name|elts
+operator|...
+block|}
+argument_list|)
+block|;
+name|setBody
+argument_list|(
+name|StructFields
+argument_list|)
+block|;   }
 comment|/// Return true if the specified type is valid as a element type.
 specifier|static
 name|bool
@@ -1037,12 +1221,13 @@ name|ElemTy
 argument_list|)
 block|;
 comment|// Iterator access to the elements.
-typedef|typedef
+name|using
+name|element_iterator
+operator|=
 name|Type
 operator|::
 name|subtype_iterator
-name|element_iterator
-expr_stmt|;
+block|;
 name|element_iterator
 name|element_begin
 argument_list|()
@@ -1130,7 +1315,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1317,7 +1501,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1402,7 +1585,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1777,7 +1959,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1934,7 +2115,6 @@ return|;
 block|}
 comment|/// Implement support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

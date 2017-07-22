@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- IPDBDataStream.h - base interface for child enumerator -*- C++ ---*-===//
+comment|//===- IPDBDataStream.h - base interface for child enumerator ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"PDBTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -59,6 +53,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -76,17 +82,13 @@ name|IPDBDataStream
 block|{
 name|public
 label|:
-typedef|typedef
-name|llvm
-operator|::
+name|using
+name|RecordType
+init|=
 name|SmallVector
 operator|<
 name|uint8_t
-operator|,
-literal|32
-operator|>
-name|RecordType
-expr_stmt|;
+decl_stmt|, 32>;
 name|virtual
 operator|~
 name|IPDBDataStream
@@ -111,8 +113,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|RecordType
@@ -155,13 +155,22 @@ expr_stmt|;
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace pdb
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_PDB_IPDBDATASTREAM_H
+end_comment
 
 end_unit
 

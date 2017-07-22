@@ -43,46 +43,6 @@ directive|define
 name|liblldb_OptionValueEnumeration_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Stream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StreamString.h"
-end_include
-
 begin_include
 include|#
 directive|include
@@ -93,6 +53,36 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/OptionValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Stream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StreamString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-types.h"
 end_include
 
 begin_decl_stmt
@@ -180,7 +170,7 @@ name|dump_mask
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 name|llvm
@@ -195,7 +185,7 @@ name|eVarSetOperationAssign
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|SetValueFromString
 parameter_list|(
 specifier|const

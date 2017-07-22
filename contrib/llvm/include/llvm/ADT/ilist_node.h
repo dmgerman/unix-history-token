@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- llvm/ADT/ilist_node.h - Intrusive Linked List Helper ------*- C++ -*-==//
+comment|//===- llvm/ADT/ilist_node.h - Intrusive Linked List Helper -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -89,14 +89,6 @@ block|}
 comment|// end namespace ilist_detail
 name|template
 operator|<
-name|typename
-name|NodeTy
-operator|>
-expr|struct
-name|ilist_traits
-expr_stmt|;
-name|template
-operator|<
 name|class
 name|OptionsT
 operator|,
@@ -137,147 +129,154 @@ name|OptionsT
 operator|::
 name|node_base_type
 block|{
-typedef|typedef
+name|using
+name|value_type
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|value_type
-name|value_type
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|node_base_type
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|node_base_type
-name|node_base_type
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|list_base_type
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|list_base_type
-name|list_base_type
-expr_stmt|;
+block|;
 name|friend
 name|typename
 name|OptionsT
 operator|::
 name|list_base_type
-expr_stmt|;
+block|;
 name|friend
-block|struct
+expr|struct
 name|ilist_detail
 operator|::
 name|NodeAccess
-expr_stmt|;
+block|;
 name|friend
 name|class
 name|ilist_sentinel
 operator|<
 name|OptionsT
 operator|>
-expr_stmt|;
+block|;
 name|friend
 name|class
 name|ilist_iterator
 operator|<
 name|OptionsT
-operator|,
+block|,
 name|false
-operator|,
+block|,
 name|false
 operator|>
-expr_stmt|;
+block|;
 name|friend
 name|class
 name|ilist_iterator
 operator|<
 name|OptionsT
-operator|,
+block|,
 name|false
-operator|,
+block|,
 name|true
 operator|>
-expr_stmt|;
+block|;
 name|friend
 name|class
 name|ilist_iterator
 operator|<
 name|OptionsT
-operator|,
+block|,
 name|true
-operator|,
+block|,
 name|false
 operator|>
-expr_stmt|;
+block|;
 name|friend
 name|class
 name|ilist_iterator
 operator|<
 name|OptionsT
-operator|,
+block|,
 name|true
-operator|,
+block|,
 name|true
 operator|>
-expr_stmt|;
+block|;
 name|protected
-label|:
+operator|:
+name|using
+name|self_iterator
+operator|=
+name|ilist_iterator
+operator|<
+name|OptionsT
+block|,
+name|false
+block|,
+name|false
+operator|>
+block|;
+name|using
+name|const_self_iterator
+operator|=
+name|ilist_iterator
+operator|<
+name|OptionsT
+block|,
+name|false
+block|,
+name|true
+operator|>
+block|;
+name|using
+name|reverse_self_iterator
+operator|=
+name|ilist_iterator
+operator|<
+name|OptionsT
+block|,
+name|true
+block|,
+name|false
+operator|>
+block|;
+name|using
+name|const_reverse_self_iterator
+operator|=
+name|ilist_iterator
+operator|<
+name|OptionsT
+block|,
+name|true
+block|,
+name|true
+operator|>
+block|;
 name|ilist_node_impl
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
-typedef|typedef
-name|ilist_iterator
-operator|<
-name|OptionsT
-operator|,
-name|false
-operator|,
-name|false
-operator|>
-name|self_iterator
-expr_stmt|;
-typedef|typedef
-name|ilist_iterator
-operator|<
-name|OptionsT
-operator|,
-name|false
-operator|,
-name|true
-operator|>
-name|const_self_iterator
-expr_stmt|;
-typedef|typedef
-name|ilist_iterator
-operator|<
-name|OptionsT
-operator|,
-name|true
-operator|,
-name|false
-operator|>
-name|reverse_self_iterator
-expr_stmt|;
-typedef|typedef
-name|ilist_iterator
-operator|<
-name|OptionsT
-operator|,
-name|true
-operator|,
-name|true
-operator|>
-name|const_reverse_self_iterator
-expr_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|ilist_node_impl
-modifier|*
+operator|*
 name|getPrev
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|static_cast
@@ -294,9 +293,9 @@ operator|)
 return|;
 block|}
 name|ilist_node_impl
-modifier|*
+operator|*
 name|getNext
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|static_cast
@@ -356,11 +355,9 @@ return|;
 block|}
 name|void
 name|setPrev
-parameter_list|(
-name|ilist_node_impl
-modifier|*
-name|N
-parameter_list|)
+argument_list|(
+argument|ilist_node_impl *N
+argument_list|)
 block|{
 name|node_base_type
 operator|::
@@ -368,15 +365,12 @@ name|setPrev
 argument_list|(
 name|N
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|setNext
-parameter_list|(
-name|ilist_node_impl
-modifier|*
-name|N
-parameter_list|)
+argument_list|(
+argument|ilist_node_impl *N
+argument_list|)
 block|{
 name|node_base_type
 operator|::
@@ -384,13 +378,12 @@ name|setNext
 argument_list|(
 name|N
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 name|public
-label|:
+operator|:
 name|self_iterator
 name|getIterator
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|self_iterator
@@ -415,7 +408,7 @@ return|;
 block|}
 name|reverse_self_iterator
 name|getReverseIterator
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|reverse_self_iterator
@@ -443,7 +436,7 @@ name|using
 name|node_base_type
 operator|::
 name|isKnownSentinel
-expr_stmt|;
+block|;
 comment|/// Check whether this is the sentinel node.
 comment|///
 comment|/// This requires sentinel tracking to be explicitly enabled.  Use the
@@ -469,183 +462,54 @@ name|isSentinel
 argument_list|()
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// An intrusive list node.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// A base class to enable membership in intrusive lists, including \a
-end_comment
-
-begin_comment
 comment|/// simple_ilist, \a iplist, and \a ilist.  The first template parameter is the
-end_comment
-
-begin_comment
 comment|/// \a value_type for the list.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// An ilist node can be configured with compile-time options to change
-end_comment
-
-begin_comment
 comment|/// behaviour and/or add API.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, an \a ilist_node knows whether it is the list sentinel (an
-end_comment
-
-begin_comment
 comment|/// instance of \a ilist_sentinel) if and only if
-end_comment
-
-begin_comment
 comment|/// LLVM_ENABLE_ABI_BREAKING_CHECKS.  The function \a isKnownSentinel() always
-end_comment
-
-begin_comment
 comment|/// returns \c false tracking is off.  Sentinel tracking steals a bit from the
-end_comment
-
-begin_comment
 comment|/// "prev" link, which adds a mask operation when decrementing an iterator, but
-end_comment
-
-begin_comment
 comment|/// enables bug-finding assertions in \a ilist_iterator.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// To turn sentinel tracking on all the time, pass in the
-end_comment
-
-begin_comment
 comment|/// ilist_sentinel_tracking<true> template parameter.  This also enables the \a
-end_comment
-
-begin_comment
 comment|/// isSentinel() function.  The same option must be passed to the intrusive
-end_comment
-
-begin_comment
 comment|/// list.  (ilist_sentinel_tracking<false> turns sentinel tracking off all the
-end_comment
-
-begin_comment
 comment|/// time.)
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// A type can inherit from ilist_node multiple times by passing in different
-end_comment
-
-begin_comment
 comment|/// \a ilist_tag options.  This allows a single instance to be inserted into
-end_comment
-
-begin_comment
 comment|/// multiple lists simultaneously, where each list is given the same tag.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \example
-end_comment
-
-begin_comment
 comment|/// struct A {};
-end_comment
-
-begin_comment
 comment|/// struct B {};
-end_comment
-
-begin_comment
 comment|/// struct N : ilist_node<N, ilist_tag<A>>, ilist_node<N, ilist_tag<B>> {};
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// void foo() {
-end_comment
-
-begin_comment
 comment|///   simple_ilist<N, ilist_tag<A>> ListA;
-end_comment
-
-begin_comment
 comment|///   simple_ilist<N, ilist_tag<B>> ListB;
-end_comment
-
-begin_comment
 comment|///   N N1;
-end_comment
-
-begin_comment
 comment|///   ListA.push_back(N1);
-end_comment
-
-begin_comment
 comment|///   ListB.push_back(N1);
-end_comment
-
-begin_comment
 comment|/// }
-end_comment
-
-begin_comment
 comment|/// \endexample
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// See \a is_valid_option for steps on adding a new option.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
 name|T
-operator|,
+block|,
 name|class
 operator|...
 name|Options
@@ -662,7 +526,7 @@ operator|::
 name|compute_node_options
 operator|<
 name|T
-operator|,
+block|,
 name|Options
 operator|...
 operator|>
@@ -685,10 +549,7 @@ argument_list|,
 literal|"Unrecognized node option!"
 argument_list|)
 block|; }
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 name|namespace
 name|ilist_detail
 block|{
@@ -698,11 +559,11 @@ comment|/// This gives access to the private parts of ilist nodes.  Nodes for an
 comment|/// should friend this class if they inherit privately from ilist_node.
 comment|///
 comment|/// Using this class outside of the ilist implementation is unsupported.
-struct|struct
+block|struct
 name|NodeAccess
 block|{
 name|protected
-label|:
+operator|:
 name|template
 operator|<
 name|class
@@ -894,8 +755,8 @@ name|getNext
 argument_list|()
 return|;
 block|}
-block|}
-struct|;
+expr|}
+block|;
 name|template
 operator|<
 name|class
@@ -908,35 +769,37 @@ name|NodeAccess
 block|{
 name|protected
 operator|:
-typedef|typedef
+name|using
+name|pointer
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|pointer
-name|pointer
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_pointer
+operator|=
 name|typename
 name|OptionsT
 operator|::
 name|const_pointer
-name|const_pointer
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|node_type
+operator|=
 name|ilist_node_impl
 operator|<
 name|OptionsT
 operator|>
-name|node_type
-expr_stmt|;
+block|;
 specifier|static
 name|node_type
-modifier|*
+operator|*
 name|getNodePtr
-parameter_list|(
-name|pointer
-name|N
-parameter_list|)
+argument_list|(
+argument|pointer N
+argument_list|)
 block|{
 return|return
 name|NodeAccess
@@ -953,12 +816,11 @@ block|}
 specifier|static
 specifier|const
 name|node_type
-modifier|*
+operator|*
 name|getNodePtr
-parameter_list|(
-name|const_pointer
-name|N
-parameter_list|)
+argument_list|(
+argument|const_pointer N
+argument_list|)
 block|{
 return|return
 name|NodeAccess
@@ -975,11 +837,9 @@ block|}
 specifier|static
 name|pointer
 name|getValuePtr
-parameter_list|(
-name|node_type
-modifier|*
-name|N
-parameter_list|)
+argument_list|(
+argument|node_type *N
+argument_list|)
 block|{
 return|return
 name|NodeAccess
@@ -996,12 +856,9 @@ block|}
 specifier|static
 name|const_pointer
 name|getValuePtr
-parameter_list|(
-specifier|const
-name|node_type
-modifier|*
-name|N
-parameter_list|)
+argument_list|(
+argument|const node_type *N
+argument_list|)
 block|{
 return|return
 name|NodeAccess
@@ -1015,20 +872,10 @@ name|N
 operator|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-unit|}
+expr|}
+block|;  }
 comment|// end namespace ilist_detail
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|class
 name|OptionsT
@@ -1087,34 +934,20 @@ name|getPrev
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|/// An ilist node that can access its parent list.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Requires \c NodeTy to have \a getParent() to find the parent node, and the
-end_comment
-
-begin_comment
 comment|/// \c ParentTy to have \a getSublistAccess() to get a reference to the list.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|NodeTy
-operator|,
+block|,
 name|typename
 name|ParentTy
-operator|,
+block|,
 name|class
 operator|...
 name|Options
@@ -1126,7 +959,7 @@ name|public
 name|ilist_node
 operator|<
 name|NodeTy
-operator|,
+block|,
 name|Options
 operator|...
 operator|>
@@ -1217,13 +1050,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Get the previous node, or \c nullptr for the list head.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|NodeTy
 operator|*
@@ -1245,25 +1072,19 @@ name|getPrevNode
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Get the next node, or \c nullptr for the list tail.
-end_comment
-
-begin_function
 name|NodeTy
-modifier|*
+operator|*
 name|getNextNode
-parameter_list|()
+argument_list|()
 block|{
 comment|// Should be separated to a reused function, but then we couldn't use auto
 comment|// (and would need the type of the list).
 specifier|const
-specifier|auto
-modifier|&
+name|auto
+operator|&
 name|List
-init|=
+operator|=
 name|getNodeParent
 argument_list|()
 operator|->*
@@ -1279,7 +1100,7 @@ operator|)
 name|nullptr
 argument_list|)
 operator|)
-decl_stmt|;
+block|;
 return|return
 name|List
 operator|.
@@ -1297,13 +1118,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Get the next node, or \c nullptr for the list tail.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|NodeTy
 operator|*
@@ -1325,21 +1140,23 @@ name|getNextNode
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// @}
-end_comment
+expr|}
+block|;  }
+end_decl_stmt
 
 begin_comment
-unit|};  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_ILIST_NODE_H
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugAranges.h -------------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugAranges.h --------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGARANGES_H
+name|LLVM_DEBUGINFO_DWARFDEBUGARANGES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGARANGES_H
+name|LLVM_DEBUGINFO_DWARFDEBUGARANGES_H
 end_define
 
 begin_include
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -102,7 +108,7 @@ name|DataExtractor
 name|DebugArangesData
 parameter_list|)
 function_decl|;
-comment|// Call appendRange multiple times and then call construct.
+comment|/// Call appendRange multiple times and then call construct.
 name|void
 name|appendRange
 parameter_list|(
@@ -242,15 +248,15 @@ block|}
 name|uint64_t
 name|LowPC
 struct|;
-comment|// Start of address range.
+comment|/// Start of address range.
 name|uint32_t
 name|Length
 decl_stmt|;
-comment|// End of address range (not including this address).
+comment|/// End of address range (not including this address).
 name|uint32_t
 name|CUOffset
 decl_stmt|;
-comment|// Offset of the compile unit or die.
+comment|/// Offset of the compile unit or die.
 block|}
 empty_stmt|;
 struct|struct
@@ -310,21 +316,23 @@ return|;
 block|}
 block|}
 struct|;
-typedef|typedef
+name|using
+name|RangeColl
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|Range
 operator|>
-name|RangeColl
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|RangeCollIterator
+init|=
 name|RangeColl
 operator|::
 name|const_iterator
-name|RangeCollIterator
-expr_stmt|;
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -349,11 +357,19 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARFDEBUGARANGES_H
+end_comment
 
 end_unit
 

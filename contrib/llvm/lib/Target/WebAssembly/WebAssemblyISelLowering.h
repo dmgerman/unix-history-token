@@ -250,7 +250,7 @@ name|isIntDivCheap
 argument_list|(
 argument|EVT VT
 argument_list|,
-argument|AttributeSet Attr
+argument|AttributeList Attr
 argument_list|)
 specifier|const
 name|override

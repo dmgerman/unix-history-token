@@ -79,131 +79,22 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// Handle pruning a directory provided a path and some options to control what
-comment|/// to prune.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
 name|class
-name|CachePruning
+name|Expected
+expr_stmt|;
+comment|/// Policy for the pruneCache() function. A default constructed
+comment|/// CachePruningPolicy provides a reasonable default policy.
+struct|struct
+name|CachePruningPolicy
 block|{
-name|public
-label|:
-comment|/// Prepare to prune \p Path.
-name|CachePruning
-argument_list|(
-argument|StringRef Path
-argument_list|)
-block|:
-name|Path
-argument_list|(
-argument|Path
-argument_list|)
-block|{}
-comment|/// Define the pruning interval. This is intended to be used to avoid scanning
-comment|/// the directory too often. It does not impact the decision of which file to
-comment|/// prune. A value of 0 forces the scan to occurs.
-name|CachePruning
-modifier|&
-name|setPruningInterval
-argument_list|(
-name|std
-operator|::
-name|chrono
-operator|::
-name|seconds
-name|PruningInterval
-argument_list|)
-block|{
-name|Interval
-operator|=
-name|PruningInterval
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-comment|/// Define the expiration for a file. When a file hasn't been accessed for
-comment|/// \p ExpireAfter seconds, it is removed from the cache. A value of 0 disable
-comment|/// the expiration-based pruning.
-name|CachePruning
-modifier|&
-name|setEntryExpiration
-argument_list|(
-name|std
-operator|::
-name|chrono
-operator|::
-name|seconds
-name|ExpireAfter
-argument_list|)
-block|{
-name|Expiration
-operator|=
-name|ExpireAfter
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-comment|/// Define the maximum size for the cache directory, in terms of percentage of
-comment|/// the available space on the the disk. Set to 100 to indicate no limit, 50
-comment|/// to indicate that the cache size will not be left over half the
-comment|/// available disk space. A value over 100 will be reduced to 100. A value of
-comment|/// 0 disable the size-based pruning.
-name|CachePruning
-modifier|&
-name|setMaxSize
-parameter_list|(
-name|unsigned
-name|Percentage
-parameter_list|)
-block|{
-name|PercentageOfAvailableSpace
-operator|=
-name|std
-operator|::
-name|min
-argument_list|(
-literal|100u
-argument_list|,
-name|Percentage
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-comment|/// Peform pruning using the supplied options, returns true if pruning
-comment|/// occured, i.e. if PruningInterval was expired.
-name|bool
-name|prune
-parameter_list|()
-function_decl|;
-name|private
-label|:
-comment|// Options that matches the setters above.
-name|std
-operator|::
-name|string
-name|Path
-expr_stmt|;
-name|std
-operator|::
-name|chrono
-operator|::
-name|seconds
-name|Expiration
-operator|=
-name|std
-operator|::
-name|chrono
-operator|::
-name|seconds
-operator|::
-name|zero
-argument_list|()
-expr_stmt|;
+comment|/// The pruning interval. This is intended to be used to avoid scanning the
+comment|/// directory too often. It does not impact the decision of which file to
+comment|/// prune. A value of 0 forces the scan to occur.
 name|std
 operator|::
 name|chrono
@@ -216,17 +107,82 @@ operator|::
 name|chrono
 operator|::
 name|seconds
-operator|::
-name|zero
-argument_list|()
+argument_list|(
+literal|1200
+argument_list|)
 expr_stmt|;
+comment|/// The expiration for a file. When a file hasn't been accessed for Expiration
+comment|/// seconds, it is removed from the cache. A value of 0 disables the
+comment|/// expiration-based pruning.
+name|std
+operator|::
+name|chrono
+operator|::
+name|seconds
+name|Expiration
+operator|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|hours
+argument_list|(
+literal|7
+operator|*
+literal|24
+argument_list|)
+expr_stmt|;
+comment|// 1w
+comment|/// The maximum size for the cache directory, in terms of percentage of the
+comment|/// available space on the the disk. Set to 100 to indicate no limit, 50 to
+comment|/// indicate that the cache size will not be left over half the available disk
+comment|/// space. A value over 100 will be reduced to 100. A value of 0 disables the
+comment|/// percentage size-based pruning.
 name|unsigned
-name|PercentageOfAvailableSpace
+name|MaxSizePercentageOfAvailableSpace
+init|=
+literal|75
+decl_stmt|;
+comment|/// The maximum size for the cache directory in bytes. A value over the amount
+comment|/// of available space on the disk will be reduced to the amount of available
+comment|/// space. A value of 0 disables the absolute size-based pruning.
+name|uint64_t
+name|MaxSizeBytes
 init|=
 literal|0
 decl_stmt|;
 block|}
-empty_stmt|;
+struct|;
+comment|/// Parse the given string as a cache pruning policy. Defaults are taken from a
+comment|/// default constructed CachePruningPolicy object.
+comment|/// For example: "prune_interval=30s:prune_after=24h:cache_size=50%"
+comment|/// which means a pruning interval of 30 seconds, expiration time of 24 hours
+comment|/// and maximum cache size of 50% of available disk space.
+name|Expected
+operator|<
+name|CachePruningPolicy
+operator|>
+name|parseCachePruningPolicy
+argument_list|(
+argument|StringRef PolicyStr
+argument_list|)
+expr_stmt|;
+comment|/// Peform pruning using the supplied policy, returns true if pruning
+comment|/// occured, i.e. if Policy.Interval was expired.
+comment|///
+comment|/// As a safeguard against data loss if the user specifies the wrong directory
+comment|/// as their cache directory, this function will ignore files not matching the
+comment|/// pattern "llvmcache-*".
+name|bool
+name|pruneCache
+parameter_list|(
+name|StringRef
+name|Path
+parameter_list|,
+name|CachePruningPolicy
+name|Policy
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

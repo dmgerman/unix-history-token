@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Target/TargetLowering.h - Target Lowering Info -----*- C++ -*-===//
+comment|//===- llvm/Target/TargetLowering.h - Target Lowering Info ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -98,6 +98,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/APInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -110,13 +116,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -147,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/RuntimeLibcalls.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
 begin_include
@@ -189,6 +201,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/DerivedTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
@@ -325,13 +343,25 @@ name|class
 name|CCValAssign
 decl_stmt|;
 name|class
+name|Constant
+decl_stmt|;
+name|class
 name|FastISel
 decl_stmt|;
 name|class
 name|FunctionLoweringInfo
 decl_stmt|;
 name|class
+name|GlobalValue
+decl_stmt|;
+name|class
 name|IntrinsicInst
+decl_stmt|;
+struct_decl|struct
+name|KnownBits
+struct_decl|;
+name|class
+name|LLVMContext
 decl_stmt|;
 name|class
 name|MachineBasicBlock
@@ -356,6 +386,9 @@ name|MCContext
 decl_stmt|;
 name|class
 name|MCExpr
+decl_stmt|;
+name|class
+name|Module
 decl_stmt|;
 name|class
 name|TargetRegisterClass
@@ -464,17 +497,18 @@ block|}
 enum|;
 comment|/// LegalizeKind holds the legalization kind that needs to happen to EVT
 comment|/// in order to type-legalize it.
-typedef|typedef
+name|using
+name|LegalizeKind
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|LegalizeTypeAction
-operator|,
+decl_stmt|,
 name|EVT
-operator|>
-name|LegalizeKind
-expr_stmt|;
+decl|>
+decl_stmt|;
 comment|/// Enum that describes how the target represents true/false values.
 enum|enum
 name|BooleanContent
@@ -543,6 +577,175 @@ comment|// Only expand when the resulting instructions are legal
 comment|// or custom.
 block|}
 empty_stmt|;
+name|class
+name|ArgListEntry
+block|{
+name|public
+label|:
+name|Value
+modifier|*
+name|Val
+init|=
+name|nullptr
+decl_stmt|;
+name|SDValue
+name|Node
+init|=
+name|SDValue
+argument_list|()
+decl_stmt|;
+name|Type
+modifier|*
+name|Ty
+init|=
+name|nullptr
+decl_stmt|;
+name|bool
+name|IsSExt
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsZExt
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsInReg
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsSRet
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsNest
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsByVal
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsInAlloca
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsReturned
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsSwiftSelf
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|IsSwiftError
+range|:
+literal|1
+decl_stmt|;
+name|uint16_t
+name|Alignment
+init|=
+literal|0
+decl_stmt|;
+name|ArgListEntry
+argument_list|()
+operator|:
+name|IsSExt
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsZExt
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsInReg
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSRet
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsNest
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsByVal
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsInAlloca
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsReturned
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSwiftSelf
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSwiftError
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|void
+name|setAttributes
+argument_list|(
+argument|ImmutableCallSite *CS
+argument_list|,
+argument|unsigned ArgIdx
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+name|using
+name|ArgListTy
+init|=
+name|std
+operator|::
+name|vector
+operator|<
+name|ArgListEntry
+operator|>
+decl_stmt|;
+name|virtual
+name|void
+name|markLibCallAttributes
+argument_list|(
+name|MachineFunction
+operator|*
+name|MF
+argument_list|,
+name|unsigned
+name|CC
+argument_list|,
+name|ArgListTy
+operator|&
+name|Args
+argument_list|)
+decl|const
+block|{}
+empty_stmt|;
 specifier|static
 name|ISD
 operator|::
@@ -610,7 +813,8 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|void
+name|TargetLoweringBase
+modifier|&
 name|operator
 init|=
 operator|(
@@ -687,6 +891,50 @@ name|getPointerSizeInBits
 argument_list|(
 name|AS
 argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// Return the type for frame index, which is determined by
+comment|/// the alloca address space specified through the data layout.
+name|MVT
+name|getFrameIndexTy
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+return|return
+name|getPointerTy
+argument_list|(
+name|DL
+argument_list|,
+name|DL
+operator|.
+name|getAllocaAddrSpace
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Return the type for operands of fence.
+comment|/// TODO: Let fence operands be of i32 type and remove this.
+name|virtual
+name|MVT
+name|getFenceOperandTy
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+return|return
+name|getPointerTy
+argument_list|(
+name|DL
 argument_list|)
 return|;
 block|}
@@ -838,7 +1086,7 @@ argument_list|(
 name|EVT
 name|VT
 argument_list|,
-name|AttributeSet
+name|AttributeList
 name|Attr
 argument_list|)
 decl|const
@@ -1155,6 +1403,40 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Should we merge stores after Legalization (generally
+comment|/// better quality) or before (simpler)
+name|virtual
+name|bool
+name|mergeStoresAfterLegalization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Returns if it's reasonable to merge stores to MemVT size.
+name|virtual
+name|bool
+name|canMergeStoresTo
+argument_list|(
+name|unsigned
+name|AS
+argument_list|,
+name|EVT
+name|MemVT
+argument_list|,
+specifier|const
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// \brief Return true if it is cheap to speculate a call to intrinsic cttz.
 name|virtual
 name|bool
@@ -1226,21 +1508,80 @@ block|}
 comment|/// \brief Return if the target supports combining a
 comment|/// chain like:
 comment|/// \code
-comment|///   %andResult = and %val1, #imm-with-one-bit-set;
+comment|///   %andResult = and %val1, #mask
 comment|///   %icmpResult = icmp %andResult, 0
-comment|///   br i1 %icmpResult, label %dest1, label %dest2
 comment|/// \endcode
 comment|/// into a single machine instruction of a form like:
 comment|/// \code
-comment|///   brOnBitSet %register, #bitNumber, dest
+comment|///   cc = test %register, #mask
 comment|/// \endcode
+name|virtual
 name|bool
-name|isMaskAndBranchFoldingLegal
-argument_list|()
+name|isMaskAndCmp0FoldingBeneficial
+argument_list|(
 specifier|const
+name|Instruction
+operator|&
+name|AndI
+argument_list|)
+decl|const
 block|{
 return|return
-name|MaskAndBranchFoldingIsLegal
+name|false
+return|;
+block|}
+comment|/// Use bitwise logic to make pairs of compares more efficient. For example:
+comment|/// and (seteq A, B), (seteq C, D) --> seteq (or (xor A, B), (xor C, D)), 0
+comment|/// This should be true when it takes more than one instruction to lower
+comment|/// setcc (cmp+set on x86 scalar), when bitwise ops are faster than logic on
+comment|/// condition bits (crand on PowerPC), and/or when reducing cmp+br is a win.
+name|virtual
+name|bool
+name|convertSetCCLogicToBitwiseLogic
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Return the preferred operand type if the target has a quick way to compare
+comment|/// integer values of the given size. Assume that any legal integer type can
+comment|/// be compared efficiently. Targets may override this to allow illegal wide
+comment|/// types to return a vector type if there is support to compare that type.
+name|virtual
+name|MVT
+name|hasFastEqualityCompare
+argument_list|(
+name|unsigned
+name|NumBits
+argument_list|)
+decl|const
+block|{
+name|MVT
+name|VT
+init|=
+name|MVT
+operator|::
+name|getIntegerVT
+argument_list|(
+name|NumBits
+argument_list|)
+decl_stmt|;
+return|return
+name|isTypeLegal
+argument_list|(
+name|VT
+argument_list|)
+condition|?
+name|VT
+else|:
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
 return|;
 block|}
 comment|/// Return true if the target should transform:
@@ -1882,6 +2223,49 @@ name|RegisterVT
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Certain targets such as MIPS require that some types such as vectors are
+comment|/// always broken down into scalars in some contexts. This occurs even if the
+comment|/// vector type is legal.
+name|virtual
+name|unsigned
+name|getVectorTypeBreakdownForCallingConv
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|EVT
+operator|&
+name|IntermediateVT
+argument_list|,
+name|unsigned
+operator|&
+name|NumIntermediates
+argument_list|,
+name|MVT
+operator|&
+name|RegisterVT
+argument_list|)
+decl|const
+block|{
+return|return
+name|getVectorTypeBreakdown
+argument_list|(
+name|Context
+argument_list|,
+name|VT
+argument_list|,
+name|IntermediateVT
+argument_list|,
+name|NumIntermediates
+argument_list|,
+name|RegisterVT
+argument_list|)
+return|;
+block|}
 struct|struct
 name|IntrinsicInfo
 block|{
@@ -2086,7 +2470,7 @@ comment|// to provide custom legalization for it.
 if|if
 condition|(
 name|Op
-operator|>
+operator|>=
 name|array_lengthof
 argument_list|(
 name|OpActions
@@ -2302,6 +2686,290 @@ name|VT
 argument_list|)
 operator|==
 name|Custom
+operator|)
+return|;
+block|}
+comment|/// Return true if lowering to a jump table is allowed.
+name|bool
+name|areJTsAllowed
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|Fn
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|Fn
+operator|->
+name|getFnAttribute
+argument_list|(
+literal|"no-jump-tables"
+argument_list|)
+operator|.
+name|getValueAsString
+argument_list|()
+operator|==
+literal|"true"
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|isOperationLegalOrCustom
+argument_list|(
+name|ISD
+operator|::
+name|BR_JT
+argument_list|,
+name|MVT
+operator|::
+name|Other
+argument_list|)
+operator|||
+name|isOperationLegalOrCustom
+argument_list|(
+name|ISD
+operator|::
+name|BRIND
+argument_list|,
+name|MVT
+operator|::
+name|Other
+argument_list|)
+return|;
+block|}
+comment|/// Check whether the range [Low,High] fits in a machine word.
+name|bool
+name|rangeFitsInWord
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|Low
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|High
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+comment|// FIXME: Using the pointer type doesn't seem ideal.
+name|uint64_t
+name|BW
+init|=
+name|DL
+operator|.
+name|getPointerSizeInBits
+argument_list|()
+decl_stmt|;
+name|uint64_t
+name|Range
+init|=
+operator|(
+name|High
+operator|-
+name|Low
+operator|)
+operator|.
+name|getLimitedValue
+argument_list|(
+name|UINT64_MAX
+operator|-
+literal|1
+argument_list|)
+operator|+
+literal|1
+decl_stmt|;
+return|return
+name|Range
+operator|<=
+name|BW
+return|;
+block|}
+comment|/// Return true if lowering to a jump table is suitable for a set of case
+comment|/// clusters which may contain \p NumCases cases, \p Range range of values.
+comment|/// FIXME: This function check the maximum table size and density, but the
+comment|/// minimum size is not checked. It would be nice if the the minimum size is
+comment|/// also combined within this function. Currently, the minimum size check is
+comment|/// performed in findJumpTable() in SelectionDAGBuiler and
+comment|/// getEstimatedNumberOfCaseClusters() in BasicTTIImpl.
+name|bool
+name|isSuitableForJumpTable
+argument_list|(
+specifier|const
+name|SwitchInst
+operator|*
+name|SI
+argument_list|,
+name|uint64_t
+name|NumCases
+argument_list|,
+name|uint64_t
+name|Range
+argument_list|)
+decl|const
+block|{
+specifier|const
+name|bool
+name|OptForSize
+init|=
+name|SI
+operator|->
+name|getParent
+argument_list|()
+operator|->
+name|getParent
+argument_list|()
+operator|->
+name|optForSize
+argument_list|()
+decl_stmt|;
+specifier|const
+name|unsigned
+name|MinDensity
+init|=
+name|getMinimumJumpTableDensity
+argument_list|(
+name|OptForSize
+argument_list|)
+decl_stmt|;
+specifier|const
+name|unsigned
+name|MaxJumpTableSize
+init|=
+name|OptForSize
+operator|||
+name|getMaximumJumpTableSize
+argument_list|()
+operator|==
+literal|0
+condition|?
+name|UINT_MAX
+else|:
+name|getMaximumJumpTableSize
+argument_list|()
+decl_stmt|;
+comment|// Check whether a range of clusters is dense enough for a jump table.
+if|if
+condition|(
+name|Range
+operator|<=
+name|MaxJumpTableSize
+operator|&&
+operator|(
+name|NumCases
+operator|*
+literal|100
+operator|>=
+name|Range
+operator|*
+name|MinDensity
+operator|)
+condition|)
+block|{
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+comment|/// Return true if lowering to a bit test is suitable for a set of case
+comment|/// clusters which contains \p NumDests unique destinations, \p Low and
+comment|/// \p High as its lowest and highest case values, and expects \p NumCmps
+comment|/// case value comparisons. Check if the number of destinations, comparison
+comment|/// metric, and range are all suitable.
+name|bool
+name|isSuitableForBitTests
+argument_list|(
+name|unsigned
+name|NumDests
+argument_list|,
+name|unsigned
+name|NumCmps
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|Low
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|High
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+comment|// FIXME: I don't think NumCmps is the correct metric: a single case and a
+comment|// range of cases both require only one branch to lower. Just looking at the
+comment|// number of clusters and destinations should be enough to decide whether to
+comment|// build bit tests.
+comment|// To lower a range with bit tests, the range must fit the bitwidth of a
+comment|// machine word.
+if|if
+condition|(
+operator|!
+name|rangeFitsInWord
+argument_list|(
+name|Low
+argument_list|,
+name|High
+argument_list|,
+name|DL
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+comment|// Decide whether it's profitable to lower this range with bit tests. Each
+comment|// destination requires a bit test and branch, and there is an overall range
+comment|// check branch. For a small number of clusters, separate comparisons might
+comment|// be cheaper, and for many destinations, splitting the range might be
+comment|// better.
+return|return
+operator|(
+name|NumDests
+operator|==
+literal|1
+operator|&&
+name|NumCmps
+operator|>=
+literal|3
+operator|)
+operator|||
+operator|(
+name|NumDests
+operator|==
+literal|2
+operator|&&
+name|NumCmps
+operator|>=
+literal|5
+operator|)
+operator|||
+operator|(
+name|NumDests
+operator|==
+literal|3
+operator|&&
+name|NumCmps
+operator|>=
+literal|6
 operator|)
 return|;
 block|}
@@ -3712,6 +4380,96 @@ literal|"Unsupported extended type!"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// Certain combinations of ABIs, Targets and features require that types
+comment|/// are legal for some operations and not for other operations.
+comment|/// For MIPS all vector types must be passed through the integer register set.
+name|virtual
+name|MVT
+name|getRegisterTypeForCallingConv
+argument_list|(
+name|MVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|getRegisterType
+argument_list|(
+name|VT
+argument_list|)
+return|;
+block|}
+name|virtual
+name|MVT
+name|getRegisterTypeForCallingConv
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|getRegisterType
+argument_list|(
+name|Context
+argument_list|,
+name|VT
+argument_list|)
+return|;
+block|}
+comment|/// Certain targets require unusual breakdowns of certain types. For MIPS,
+comment|/// this occurs when a vector type is used, as vector are passed through the
+comment|/// integer register set.
+name|virtual
+name|unsigned
+name|getNumRegistersForCallingConv
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|getNumRegisters
+argument_list|(
+name|Context
+argument_list|,
+name|VT
+argument_list|)
+return|;
+block|}
+comment|/// Certain targets have context senstive alignment requirements, where one
+comment|/// type has the alignment requirement of another type.
+name|virtual
+name|unsigned
+name|getABIAlignmentForCallingConv
+argument_list|(
+name|Type
+operator|*
+name|ArgTy
+argument_list|,
+name|DataLayout
+name|DL
+argument_list|)
+decl|const
+block|{
+return|return
+name|DL
+operator|.
+name|getABITypeAlignment
+argument_list|(
+name|ArgTy
+argument_list|)
+return|;
+block|}
 comment|/// If true, then instruction selection should seek to shrink the FP constant
 comment|/// of the specified type to a smaller type in order to save space and / or
 comment|/// reduce runtime.
@@ -3837,6 +4595,28 @@ return|return
 name|GatherAllAliasesMaxDepth
 return|;
 block|}
+comment|/// Returns the size of the platform's va_list object.
+name|virtual
+name|unsigned
+name|getVaListSizeInBits
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+return|return
+name|getPointerTy
+argument_list|(
+name|DL
+argument_list|)
+operator|.
+name|getSizeInBits
+argument_list|()
+return|;
+block|}
 comment|/// \brief Get maximum # of store operations permitted for llvm.memset
 comment|///
 comment|/// This function returns the maximum number of store operations permitted
@@ -3879,6 +4659,28 @@ condition|?
 name|MaxStoresPerMemcpyOptSize
 else|:
 name|MaxStoresPerMemcpy
+return|;
+block|}
+comment|/// Get maximum # of load operations permitted for memcmp
+comment|///
+comment|/// This function returns the maximum number of load operations permitted
+comment|/// to replace a call to memcmp. The value is set by the target at the
+comment|/// performance threshold for such a replacement. If OptSize is true,
+comment|/// return the limit for functions that have OptSize attribute.
+name|unsigned
+name|getMaxExpandSizeMemcmp
+argument_list|(
+name|bool
+name|OptSize
+argument_list|)
+decl|const
+block|{
+return|return
+name|OptSize
+condition|?
+name|MaxLoadsPerMemcmpOptSize
+else|:
+name|MaxLoadsPerMemcmp
 return|;
 block|}
 comment|/// \brief Get maximum # of store operations permitted for llvm.memmove
@@ -4068,6 +4870,15 @@ name|getMinimumJumpTableEntries
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Return lower limit of the density in a jump table.
+name|unsigned
+name|getMinimumJumpTableDensity
+argument_list|(
+name|bool
+name|OptForSize
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Return upper limit for number of entries in a jump table.
 comment|/// Zero if no limit.
 name|unsigned
@@ -4308,6 +5119,22 @@ name|IRB
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Returns the name of the symbol used to emit stack probes or the empty
+comment|/// string if not applicable.
+name|virtual
+name|StringRef
+name|getStackProbeSymbolName
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+literal|""
+return|;
+block|}
 comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
 name|virtual
 name|bool
@@ -4520,7 +5347,10 @@ comment|/// Inserts in the IR a target-specific intrinsic specifying a fence.
 comment|/// It is called by AtomicExpandPass before expanding an
 comment|///   AtomicRMW/AtomicCmpXchg/AtomicStore/AtomicLoad
 comment|///   if shouldInsertFencesForAtomic returns true.
-comment|/// RMW and CmpXchg set both IsStore and IsLoad to true.
+comment|///
+comment|/// Inst is the original atomic instruction, prior to other expansions that
+comment|/// may be performed.
+comment|///
 comment|/// This function should either return a nullptr, or a pointer to an IR-level
 comment|///   Instruction*. Even complex fence sequences can be represented by a
 comment|///   single Instruction* through an intrinsic to be lowered later.
@@ -4557,14 +5387,12 @@ operator|>
 operator|&
 name|Builder
 argument_list|,
+name|Instruction
+operator|*
+name|Inst
+argument_list|,
 name|AtomicOrdering
 name|Ord
-argument_list|,
-name|bool
-name|IsStore
-argument_list|,
-name|bool
-name|IsLoad
 argument_list|)
 decl|const
 block|{
@@ -4575,7 +5403,10 @@ argument_list|(
 name|Ord
 argument_list|)
 operator|&&
-name|IsStore
+name|Inst
+operator|->
+name|hasAtomicStore
+argument_list|()
 condition|)
 return|return
 name|Builder
@@ -4601,14 +5432,12 @@ operator|>
 operator|&
 name|Builder
 argument_list|,
+name|Instruction
+operator|*
+name|Inst
+argument_list|,
 name|AtomicOrdering
 name|Ord
-argument_list|,
-name|bool
-name|IsStore
-argument_list|,
-name|bool
-name|IsLoad
 argument_list|)
 decl|const
 block|{
@@ -4831,6 +5660,19 @@ operator|&&
 name|Action
 operator|!=
 name|TypeSplitVector
+return|;
+block|}
+comment|/// Return true if a select of constants (select Cond, C1, C2) should be
+comment|/// transformed into simple math ops with the condition value. For example:
+comment|/// select Cond, C1, C1-1 --> add (zext Cond), C1-1
+name|virtual
+name|bool
+name|convertSelectOfConstantsToMath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -5124,7 +5966,8 @@ name|TRI
 parameter_list|)
 function_decl|;
 comment|/// Indicate that the specified operation does not work with the specified
-comment|/// type and indicate what to do about it.
+comment|/// type and indicate what to do about it. Note that VT may refer to either
+comment|/// the type of a result or that of an operand of Op.
 name|void
 name|setOperationAction
 parameter_list|(
@@ -5822,7 +6665,7 @@ comment|/// targets also pass back when this should be done on intrinsics which
 comment|/// load/store.
 name|virtual
 name|bool
-name|GetAddrModeArguments
+name|getAddrModeArguments
 argument_list|(
 name|IntrinsicInst
 operator|*
@@ -5840,11 +6683,6 @@ name|Type
 operator|*
 operator|&
 comment|/*AccessTy*/
-argument_list|,
-name|unsigned
-name|AddrSpace
-operator|=
-literal|0
 argument_list|)
 decl|const
 block|{
@@ -6042,6 +6880,146 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Returns true if the opcode is a commutative binary operation.
+name|virtual
+name|bool
+name|isCommutativeBinOp
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|)
+decl|const
+block|{
+comment|// FIXME: This should get its info from the td file.
+switch|switch
+condition|(
+name|Opcode
+condition|)
+block|{
+case|case
+name|ISD
+operator|::
+name|ADD
+case|:
+case|case
+name|ISD
+operator|::
+name|SMIN
+case|:
+case|case
+name|ISD
+operator|::
+name|SMAX
+case|:
+case|case
+name|ISD
+operator|::
+name|UMIN
+case|:
+case|case
+name|ISD
+operator|::
+name|UMAX
+case|:
+case|case
+name|ISD
+operator|::
+name|MUL
+case|:
+case|case
+name|ISD
+operator|::
+name|MULHU
+case|:
+case|case
+name|ISD
+operator|::
+name|MULHS
+case|:
+case|case
+name|ISD
+operator|::
+name|SMUL_LOHI
+case|:
+case|case
+name|ISD
+operator|::
+name|UMUL_LOHI
+case|:
+case|case
+name|ISD
+operator|::
+name|FADD
+case|:
+case|case
+name|ISD
+operator|::
+name|FMUL
+case|:
+case|case
+name|ISD
+operator|::
+name|AND
+case|:
+case|case
+name|ISD
+operator|::
+name|OR
+case|:
+case|case
+name|ISD
+operator|::
+name|XOR
+case|:
+case|case
+name|ISD
+operator|::
+name|SADDO
+case|:
+case|case
+name|ISD
+operator|::
+name|UADDO
+case|:
+case|case
+name|ISD
+operator|::
+name|ADDC
+case|:
+case|case
+name|ISD
+operator|::
+name|ADDE
+case|:
+case|case
+name|ISD
+operator|::
+name|FMINNUM
+case|:
+case|case
+name|ISD
+operator|::
+name|FMAXNUM
+case|:
+case|case
+name|ISD
+operator|::
+name|FMINNAN
+case|:
+case|case
+name|ISD
+operator|::
+name|FMAXNAN
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
 comment|/// Return true if it's free to truncate a value of type FromTy to type
 comment|/// ToTy. e.g. On x86 it's free to truncate a i32 value in register EAX to i16
 comment|/// by referencing its sub-register AX.
@@ -6217,6 +7195,151 @@ name|I
 argument_list|)
 return|;
 block|}
+comment|/// Return true if \p Load and \p Ext can form an ExtLoad.
+comment|/// For example, in AArch64
+comment|///   %L = load i8, i8* %ptr
+comment|///   %E = zext i8 %L to i32
+comment|/// can be lowered into one load instruction
+comment|///   ldrb w0, [x0]
+name|bool
+name|isExtLoad
+argument_list|(
+specifier|const
+name|LoadInst
+operator|*
+name|Load
+argument_list|,
+specifier|const
+name|Instruction
+operator|*
+name|Ext
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+block|{
+name|EVT
+name|VT
+init|=
+name|getValueType
+argument_list|(
+name|DL
+argument_list|,
+name|Ext
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|EVT
+name|LoadVT
+init|=
+name|getValueType
+argument_list|(
+name|DL
+argument_list|,
+name|Load
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+decl_stmt|;
+comment|// If the load has other users and the truncate is not free, the ext
+comment|// probably isn't free.
+if|if
+condition|(
+operator|!
+name|Load
+operator|->
+name|hasOneUse
+argument_list|()
+operator|&&
+operator|(
+name|isTypeLegal
+argument_list|(
+name|LoadVT
+argument_list|)
+operator|||
+operator|!
+name|isTypeLegal
+argument_list|(
+name|VT
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|isTruncateFree
+argument_list|(
+name|Ext
+operator|->
+name|getType
+argument_list|()
+argument_list|,
+name|Load
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+comment|// Check whether the target supports casts folded into loads.
+name|unsigned
+name|LType
+decl_stmt|;
+if|if
+condition|(
+name|isa
+operator|<
+name|ZExtInst
+operator|>
+operator|(
+name|Ext
+operator|)
+condition|)
+name|LType
+operator|=
+name|ISD
+operator|::
+name|ZEXTLOAD
+expr_stmt|;
+else|else
+block|{
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|SExtInst
+operator|>
+operator|(
+name|Ext
+operator|)
+operator|&&
+literal|"Unexpected ext type!"
+argument_list|)
+expr_stmt|;
+name|LType
+operator|=
+name|ISD
+operator|::
+name|SEXTLOAD
+expr_stmt|;
+block|}
+return|return
+name|isLoadExtLegal
+argument_list|(
+name|LType
+argument_list|,
+name|VT
+argument_list|,
+name|LoadVT
+argument_list|)
+return|;
+block|}
 comment|/// Return true if any actual instruction that defines a value of type FromTy
 comment|/// implicitly zero-extends the value to ToTy in the result register.
 comment|///
@@ -6291,7 +7414,7 @@ comment|/*LoadedType*/
 argument_list|,
 name|unsigned
 operator|&
-comment|/*RequiredAligment*/
+comment|/*RequiredAlignment*/
 argument_list|)
 decl|const
 block|{
@@ -6713,6 +7836,20 @@ name|Call
 index|]
 return|;
 block|}
+comment|/// Execute target specific actions to finalize target lowering.
+comment|/// This is used to set extra flags in MachineFrameInformation and freezing
+comment|/// the set of reserved registers.
+comment|/// The default implementation just freezes the set of reserved registers.
+name|virtual
+name|void
+name|finalizeLowering
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 specifier|const
@@ -7162,6 +8299,12 @@ comment|/// memcpy, used for functions with OptSize attribute.
 name|unsigned
 name|MaxStoresPerMemcpyOptSize
 decl_stmt|;
+name|unsigned
+name|MaxLoadsPerMemcmp
+decl_stmt|;
+name|unsigned
+name|MaxLoadsPerMemcmpOptSize
+decl_stmt|;
 comment|/// \brief Specify maximum bytes of store instructions per memmove call.
 comment|///
 comment|/// When lowering \@llvm.memmove this field specifies the maximum number of
@@ -7185,11 +8328,6 @@ comment|/// the branch is usually predicted right.
 name|bool
 name|PredictableSelectIsExpensive
 decl_stmt|;
-comment|/// MaskAndBranchFoldingIsLegal - Indicates if the target supports folding
-comment|/// a mask of a single bit, a compare, and a branch into a single instruction.
-name|bool
-name|MaskAndBranchFoldingIsLegal
-decl_stmt|;
 comment|/// \see enableExtLdPromotion.
 name|bool
 name|EnableExtLdPromotion
@@ -7200,8 +8338,13 @@ name|bool
 name|isLegalRC
 argument_list|(
 specifier|const
+name|TargetRegisterInfo
+operator|&
+name|TRI
+argument_list|,
+specifier|const
 name|TargetRegisterClass
-operator|*
+operator|&
 name|RC
 argument_list|)
 decl|const
@@ -7270,7 +8413,8 @@ argument_list|)
 operator|=
 name|delete
 block|;
-name|void
+name|TargetLowering
+operator|&
 name|operator
 operator|=
 operator|(
@@ -7587,6 +8731,8 @@ return|return
 name|true
 return|;
 block|}
+expr|}
+block|;
 comment|/// Check to see if the specified operand of the specified instruction is a
 comment|/// constant integer.  If so, check to see if there are any bits set in the
 comment|/// constant that are not demanded.  If so, shrink the constant and return
@@ -7597,8 +8743,30 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|const APInt&Demanded
+argument_list|,
+argument|TargetLoweringOpt&TLO
 argument_list|)
+specifier|const
 block|;
+comment|// Target hook to do target-specific const optimization, which is called by
+comment|// ShrinkDemandedConstant. This function should return true if the target
+comment|// doesn't want ShrinkDemandedConstant to further optimize the constant.
+name|virtual
+name|bool
+name|targetShrinkDemandedConstant
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|const APInt&Demanded
+argument_list|,
+argument|TargetLoweringOpt&TLO
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Convert x+y to (VT)((SmallVT)x+(SmallVT)y) if the casts are free.  This
 comment|/// uses isZExtFree and ZERO_EXTEND for the widening cast, but it could be
 comment|/// generalized for targets with other types of implicit widening casts.
@@ -7611,16 +8779,17 @@ argument|unsigned BitWidth
 argument_list|,
 argument|const APInt&Demanded
 argument_list|,
-argument|const SDLoc&dl
+argument|TargetLoweringOpt&TLO
 argument_list|)
+specifier|const
 block|;
 comment|/// Helper for SimplifyDemandedBits that can simplify an operation with
-comment|/// multiple uses.  This function uses TLI.SimplifyDemandedBits to
-comment|/// simplify Operand \p OpIdx of \p User and then updated \p User with
-comment|/// the simplified version.  No other uses of \p OpIdx are updated.
-comment|/// If \p User is the only user of \p OpIdx, this function behaves exactly
-comment|/// like TLI.SimplifyDemandedBits except that it also updates the DAG by
-comment|/// calling DCI.CommitTargetLoweringOpt.
+comment|/// multiple uses.  This function simplifies operand \p OpIdx of \p User and
+comment|/// then updates \p User with the simplified version. No other uses of
+comment|/// \p OpIdx are updated. If \p User is the only user of \p OpIdx, this
+comment|/// function behaves exactly like function SimplifyDemandedBits declared
+comment|/// below except that it also updates the DAG by calling
+comment|/// DCI.CommitTargetLoweringOpt.
 name|bool
 name|SimplifyDemandedBits
 argument_list|(
@@ -7631,8 +8800,10 @@ argument_list|,
 argument|const APInt&Demanded
 argument_list|,
 argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|TargetLoweringOpt&TLO
 argument_list|)
-block|;   }
+specifier|const
 block|;
 comment|/// Look at Op.  At this point, we know that only the DemandedMask bits of the
 comment|/// result of Op are ever used downstream.  If we can use this information to
@@ -7641,11 +8812,11 @@ comment|/// the original and new nodes in Old and New.  Otherwise, analyze the
 comment|/// expression and return a mask of KnownOne and KnownZero bits for the
 comment|/// expression (used to simplify the caller).  The KnownZero/One bits may only
 comment|/// be accurate for those bits in the DemandedMask.
-comment|/// \p AssumeSingleUse When this paramater is true, this function will
+comment|/// \p AssumeSingleUse When this parameter is true, this function will
 comment|///    attempt to simplify \p Op even if there are multiple uses.
 comment|///    Callers are responsible for correctly updating the DAG based on the
 comment|///    results of this function, because simply replacing replacing TLO.Old
-comment|///    with TLO.New will be incorrect when this paramater is true and TLO.Old
+comment|///    with TLO.New will be incorrect when this parameter is true and TLO.Old
 comment|///    has multiple uses.
 name|bool
 name|SimplifyDemandedBits
@@ -7654,9 +8825,7 @@ argument|SDValue Op
 argument_list|,
 argument|const APInt&DemandedMask
 argument_list|,
-argument|APInt&KnownZero
-argument_list|,
-argument|APInt&KnownOne
+argument|KnownBits&Known
 argument_list|,
 argument|TargetLoweringOpt&TLO
 argument_list|,
@@ -7667,17 +8836,31 @@ argument|bool AssumeSingleUse = false
 argument_list|)
 specifier|const
 block|;
+comment|/// Helper wrapper around SimplifyDemandedBits
+name|bool
+name|SimplifyDemandedBits
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|APInt&DemandedMask
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
 comment|/// Determine which of the bits specified in Mask are known to be either zero
-comment|/// or one and return them in the KnownZero/KnownOne bitsets.
+comment|/// or one and return them in the KnownZero/KnownOne bitsets. The DemandedElts
+comment|/// argument allows us to only collect the known bits that are shared by the
+comment|/// requested vector elements.
 name|virtual
 name|void
 name|computeKnownBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
-argument|APInt&KnownZero
+argument|KnownBits&Known
 argument_list|,
-argument|APInt&KnownOne
+argument|const APInt&DemandedElts
 argument_list|,
 argument|const SelectionDAG&DAG
 argument_list|,
@@ -7687,12 +8870,16 @@ argument_list|)
 specifier|const
 block|;
 comment|/// This method can be implemented by targets that want to expose additional
-comment|/// information about sign bits to the DAG Combiner.
+comment|/// information about sign bits to the DAG Combiner. The DemandedElts
+comment|/// argument allows us to only collect the minimum sign bits that are shared
+comment|/// by the requested vector elements.
 name|virtual
 name|unsigned
 name|ComputeNumSignBitsForTargetNode
 argument_list|(
 argument|SDValue Op
+argument_list|,
+argument|const APInt&DemandedElts
 argument_list|,
 argument|const SelectionDAG&DAG
 argument_list|,
@@ -7962,12 +9149,29 @@ name|bool
 name|isDesirableToCommuteWithShift
 argument_list|(
 argument|const SDNode *N
-comment|/*Op*/
 argument_list|)
 specifier|const
 block|{
 return|return
 name|true
+return|;
+block|}
+comment|// Return true if it is profitable to combine a BUILD_VECTOR to a TRUNCATE.
+comment|// Example of such a combine:
+comment|// v4i32 build_vector((extract_elt V, 0),
+comment|//                    (extract_elt V, 2),
+comment|//                    (extract_elt V, 4),
+comment|//                    (extract_elt V, 6))
+comment|//  -->
+comment|// v4i32 truncate (bitcast V to v4i64)
+name|virtual
+name|bool
+name|isDesirableToCombineBuildVectorToTruncate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
 return|;
 block|}
 comment|/// Return true if the target has native support for the specified value type
@@ -8057,20 +9261,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// Return true if the MachineFunction contains a COPY which would imply
-comment|/// HasCopyImplyingStackAdjustment.
-name|virtual
-name|bool
-name|hasCopyImplyingStackAdjustment
-argument_list|(
-argument|MachineFunction *MF
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// Perform necessary initialization to handle a subset of CSRs explicitly
 comment|/// via copies. This function is called at the beginning of instruction
 comment|/// selection.
@@ -8114,7 +9304,6 @@ comment|/// This hook must be implemented to lower the incoming (formal) argumen
 comment|/// described by the Ins array, into the specified DAG. The implementation
 comment|/// should fill in the InVals array with legal-type argument values, and
 comment|/// return the resulting token chain value.
-comment|///
 name|virtual
 name|SDValue
 name|LowerFormalArguments
@@ -8147,150 +9336,11 @@ argument_list|(
 literal|"Not Implemented"
 argument_list|)
 block|;   }
-expr|struct
-name|ArgListEntry
-block|{
-name|SDValue
-name|Node
-block|;
-name|Type
-operator|*
-name|Ty
-block|;
-name|bool
-name|isSExt
-operator|:
-literal|1
-block|;
-name|bool
-name|isZExt
-operator|:
-literal|1
-block|;
-name|bool
-name|isInReg
-operator|:
-literal|1
-block|;
-name|bool
-name|isSRet
-operator|:
-literal|1
-block|;
-name|bool
-name|isNest
-operator|:
-literal|1
-block|;
-name|bool
-name|isByVal
-operator|:
-literal|1
-block|;
-name|bool
-name|isInAlloca
-operator|:
-literal|1
-block|;
-name|bool
-name|isReturned
-operator|:
-literal|1
-block|;
-name|bool
-name|isSwiftSelf
-operator|:
-literal|1
-block|;
-name|bool
-name|isSwiftError
-operator|:
-literal|1
-block|;
-name|uint16_t
-name|Alignment
-block|;
-name|ArgListEntry
-argument_list|()
-operator|:
-name|isSExt
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isZExt
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isInReg
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isSRet
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isNest
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isByVal
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isInAlloca
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isReturned
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isSwiftSelf
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|isSwiftError
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|Alignment
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|void
-name|setAttributes
-argument_list|(
-argument|ImmutableCallSite *CS
-argument_list|,
-argument|unsigned AttrIdx
-argument_list|)
-block|;   }
-block|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|ArgListEntry
-operator|>
-name|ArgListTy
-expr_stmt|;
 comment|/// This structure contains all information that is necessary for lowering
 comment|/// calls. It is passed to TLI::LowerCallTo when the SelectionDAG builder
 comment|/// needs to lower a call, and targets will see this struct in their LowerCall
 comment|/// implementation.
-block|struct
+expr|struct
 name|CallLoweringInfo
 block|{
 name|SDValue
@@ -8299,6 +9349,8 @@ block|;
 name|Type
 operator|*
 name|RetTy
+operator|=
+name|nullptr
 block|;
 name|bool
 name|RetSExt
@@ -8335,18 +9387,38 @@ name|IsConvergent
 operator|:
 literal|1
 block|;
+name|bool
+name|IsPatchPoint
+operator|:
+literal|1
+block|;
 comment|// IsTailCall should be modified by implementations of
 comment|// TargetLowering::LowerCall that perform tail call conversions.
 name|bool
 name|IsTailCall
+operator|=
+name|false
+block|;
+comment|// Is Call lowering done post SelectionDAG type legalization.
+name|bool
+name|IsPostTypeLegalization
+operator|=
+name|false
 block|;
 name|unsigned
 name|NumFixedArgs
+operator|=
+operator|-
+literal|1
 block|;
 name|CallingConv
 operator|::
 name|ID
 name|CallConv
+operator|=
+name|CallingConv
+operator|::
+name|C
 block|;
 name|SDValue
 name|Callee
@@ -8364,9 +9436,8 @@ block|;
 name|ImmutableCallSite
 operator|*
 name|CS
-block|;
-name|bool
-name|IsPatchPoint
+operator|=
+name|nullptr
 block|;
 name|SmallVector
 operator|<
@@ -8411,11 +9482,6 @@ operator|&
 name|DAG
 argument_list|)
 operator|:
-name|RetTy
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
 name|RetSExt
 argument_list|(
 name|false
@@ -8451,39 +9517,16 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|IsTailCall
+name|IsPatchPoint
 argument_list|(
 name|false
 argument_list|)
 block|,
-name|NumFixedArgs
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-block|,
-name|CallConv
-argument_list|(
-name|CallingConv
-operator|::
-name|C
-argument_list|)
-block|,
 name|DAG
 argument_list|(
-name|DAG
+argument|DAG
 argument_list|)
-block|,
-name|CS
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|IsPatchPoint
-argument_list|(
-argument|false
-argument_list|)
-block|{     }
+block|{}
 name|CallLoweringInfo
 operator|&
 name|setDebugLoc
@@ -8510,6 +9553,73 @@ block|{
 name|Chain
 operator|=
 name|InChain
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|// setCallee with target/module-specific attributes
+name|CallLoweringInfo
+operator|&
+name|setLibCallee
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|,
+argument|Type *ResultType
+argument_list|,
+argument|SDValue Target
+argument_list|,
+argument|ArgListTy&&ArgsList
+argument_list|)
+block|{
+name|RetTy
+operator|=
+name|ResultType
+block|;
+name|Callee
+operator|=
+name|Target
+block|;
+name|CallConv
+operator|=
+name|CC
+block|;
+name|NumFixedArgs
+operator|=
+name|Args
+operator|.
+name|size
+argument_list|()
+block|;
+name|Args
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|ArgsList
+argument_list|)
+block|;
+name|DAG
+operator|.
+name|getTargetLoweringInfo
+argument_list|()
+operator|.
+name|markLibCallAttributes
+argument_list|(
+operator|&
+operator|(
+name|DAG
+operator|.
+name|getMachineFunction
+argument_list|()
+operator|)
+argument_list|,
+name|CC
+argument_list|,
+name|Args
+argument_list|)
 block|;
 return|return
 operator|*
@@ -8585,10 +9695,8 @@ name|IsInReg
 operator|=
 name|Call
 operator|.
-name|paramHasAttr
+name|hasRetAttr
 argument_list|(
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|InReg
@@ -8645,10 +9753,8 @@ name|RetSExt
 operator|=
 name|Call
 operator|.
-name|paramHasAttr
+name|hasRetAttr
 argument_list|(
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|SExt
@@ -8658,10 +9764,8 @@ name|RetZExt
 operator|=
 name|Call
 operator|.
-name|paramHasAttr
+name|hasRetAttr
 argument_list|(
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|ZExt
@@ -8849,6 +9953,22 @@ operator|*
 name|this
 return|;
 block|}
+name|CallLoweringInfo
+operator|&
+name|setIsPostTypeLegalization
+argument_list|(
+argument|bool Value=true
+argument_list|)
+block|{
+name|IsPostTypeLegalization
+operator|=
+name|Value
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 name|ArgListTy
 operator|&
 name|getArgs
@@ -9004,7 +10124,7 @@ name|virtual
 name|bool
 name|mayBeEmittedAsTailCall
 argument_list|(
-argument|CallInst *
+argument|const CallInst *
 argument_list|)
 specifier|const
 block|{
@@ -9146,6 +10266,25 @@ specifier|const
 block|{
 return|return
 name|Chain
+return|;
+block|}
+comment|/// This callback is used to inspect load/store instructions and add
+comment|/// target-specific MachineMemOperand flags to them.  The default
+comment|/// implementation does nothing.
+name|virtual
+name|MachineMemOperand
+operator|::
+name|Flags
+name|getMMOFlags
+argument_list|(
+argument|const Instruction&I
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MachineMemOperand
+operator|::
+name|MONone
 return|;
 block|}
 comment|/// This callback is invoked by the type legalizer to legalize nodes with an
@@ -9371,6 +10510,10 @@ name|TargetLowering
 operator|::
 name|ConstraintType
 name|ConstraintType
+operator|=
+name|TargetLowering
+operator|::
+name|C_Unknown
 block|;
 comment|/// If this is the result output operand or a clobber, this is null,
 comment|/// otherwise it is the incoming operand to the CallInst.  This gets
@@ -9378,11 +10521,30 @@ comment|/// modified as the asm is processed.
 name|Value
 operator|*
 name|CallOperandVal
+operator|=
+name|nullptr
 block|;
 comment|/// The ValueType for the operand value.
 name|MVT
 name|ConstraintVT
+operator|=
+name|MVT
+operator|::
+name|Other
 block|;
+comment|/// Copy constructor for copying from a ConstraintInfo.
+name|AsmOperandInfo
+argument_list|(
+argument|InlineAsm::ConstraintInfo Info
+argument_list|)
+operator|:
+name|InlineAsm
+operator|::
+name|ConstraintInfo
+argument_list|(
+argument|std::move(Info)
+argument_list|)
+block|{}
 comment|/// Return true of this is an input operand that is a matching constraint
 comment|/// like "4".
 name|bool
@@ -9396,53 +10558,18 @@ name|unsigned
 name|getMatchedOperand
 argument_list|()
 specifier|const
+block|;   }
 block|;
-comment|/// Copy constructor for copying from a ConstraintInfo.
-name|AsmOperandInfo
-argument_list|(
-argument|InlineAsm::ConstraintInfo Info
-argument_list|)
-operator|:
-name|InlineAsm
-operator|::
-name|ConstraintInfo
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Info
-argument_list|)
-argument_list|)
-block|,
-name|ConstraintType
-argument_list|(
-name|TargetLowering
-operator|::
-name|C_Unknown
-argument_list|)
-block|,
-name|CallOperandVal
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|ConstraintVT
-argument_list|(
-argument|MVT::Other
-argument_list|)
-block|{}
-block|}
-block|;
-typedef|typedef
+name|using
+name|AsmOperandInfoVector
+operator|=
 name|std
 operator|::
 name|vector
 operator|<
 name|AsmOperandInfo
 operator|>
-name|AsmOperandInfoVector
-expr_stmt|;
+block|;
 comment|/// Split up the constraint string from the inline assembly value into the
 comment|/// specific constraints and their prefixes, and also tie in the associated
 comment|/// operand values.  If this returns an empty vector, and if the constraint
@@ -9458,157 +10585,72 @@ argument_list|,
 argument|ImmutableCallSite CS
 argument_list|)
 specifier|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Examine constraint type and operand type and determine a weight value.
-end_comment
-
-begin_comment
 comment|/// The operand object must already have been set up with the operand type.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|ConstraintWeight
 name|getMultipleConstraintMatchWeight
 argument_list|(
-name|AsmOperandInfo
-operator|&
-name|info
+argument|AsmOperandInfo&info
 argument_list|,
-name|int
-name|maIndex
+argument|int maIndex
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Examine constraint string and operand type and determine a weight value.
-end_comment
-
-begin_comment
 comment|/// The operand object must already have been set up with the operand type.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|ConstraintWeight
 name|getSingleConstraintMatchWeight
 argument_list|(
-name|AsmOperandInfo
-operator|&
-name|info
+argument|AsmOperandInfo&info
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|constraint
+argument|const char *constraint
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Determines the constraint code and constraint type to use for the specific
-end_comment
-
-begin_comment
 comment|/// AsmOperandInfo, setting OpInfo.ConstraintCode and OpInfo.ConstraintType.
-end_comment
-
-begin_comment
 comment|/// If the actual operand being passed in is available, it can be passed in as
-end_comment
-
-begin_comment
 comment|/// Op, otherwise an empty SDValue can be passed.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|ComputeConstraintToUse
 argument_list|(
-name|AsmOperandInfo
-operator|&
-name|OpInfo
+argument|AsmOperandInfo&OpInfo
 argument_list|,
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|*
-name|DAG
-operator|=
-name|nullptr
+argument|SelectionDAG *DAG = nullptr
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Given a constraint, return the type of constraint it is for this target.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-name|StringRef
-name|Constraint
+argument|StringRef Constraint
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Given a physical register constraint (e.g.  {edx}), return the register
-end_comment
-
-begin_comment
 comment|/// number and the register class for the register.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Given a register class constraint, like 'r', if this corresponds directly
-end_comment
-
-begin_comment
 comment|/// to an LLVM register class, return a register of 0 and the register class
-end_comment
-
-begin_comment
 comment|/// pointer.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This should only be used for C_Register constraints.  On error, this
-end_comment
-
-begin_comment
 comment|/// returns a register number of 0 and a null register class pointer.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|std
 operator|::
 name|pair
 operator|<
 name|unsigned
-operator|,
+block|,
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -9622,18 +10664,14 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 name|virtual
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-name|StringRef
-name|ConstraintCode
+argument|StringRef ConstraintCode
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -9664,218 +10702,90 @@ operator|::
 name|Constraint_Unknown
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Try to replace an X constraint, which matches anything, with another that
-end_comment
-
-begin_comment
 comment|/// has more specific requirements based on the type of the corresponding
-end_comment
-
-begin_comment
 comment|/// operand.  This returns null if there is no replacement to make.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|char
-modifier|*
+operator|*
 name|LowerXConstraint
 argument_list|(
-name|EVT
-name|ConstraintVT
+argument|EVT ConstraintVT
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Lower the specified operand into the Ops vector.  If it is invalid, don't
-end_comment
-
-begin_comment
 comment|/// add anything to Ops.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|LowerAsmOperandForConstraint
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|Constraint
+argument|std::string&Constraint
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Ops
+argument|std::vector<SDValue>&Ops
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Div utility functions
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|BuildSDIV
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Divisor
+argument|const APInt&Divisor
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|bool
-name|IsAfterLegalization
+argument|bool IsAfterLegalization
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SDNode
-operator|*
-operator|>
-operator|*
-name|Created
+argument|std::vector<SDNode *> *Created
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
+block|;
 name|SDValue
 name|BuildUDIV
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Divisor
+argument|const APInt&Divisor
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|bool
-name|IsAfterLegalization
+argument|bool IsAfterLegalization
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SDNode
-operator|*
-operator|>
-operator|*
-name|Created
+argument|std::vector<SDNode *> *Created
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Targets may override this function to provide custom SDIV lowering for
-end_comment
-
-begin_comment
 comment|/// power-of-2 denominators.  If the target returns an empty SDValue, LLVM
-end_comment
-
-begin_comment
 comment|/// assumes SDIV is expensive and replaces it with a series of other integer
-end_comment
-
-begin_comment
 comment|/// operations.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|SDValue
 name|BuildSDIVPow2
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Divisor
+argument|const APInt&Divisor
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SDNode
-operator|*
-operator|>
-operator|*
-name|Created
+argument|std::vector<SDNode *> *Created
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Indicate whether this target prefers to combine FDIVs with the same
-end_comment
-
-begin_comment
 comment|/// divisor. If the transform should never be done, return zero. If the
-end_comment
-
-begin_comment
 comment|/// transform should be done, return the minimum number of divisor uses
-end_comment
-
-begin_comment
 comment|/// that must exist.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|unsigned
 name|combineRepeatedFPDivisors
@@ -9886,492 +10796,200 @@ return|return
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Hooks for building estimates in place of slower divisions and square
-end_comment
-
-begin_comment
 comment|/// roots.
-end_comment
-
-begin_comment
 comment|/// Return either a square root or its reciprocal estimate value for the input
-end_comment
-
-begin_comment
 comment|/// operand.
-end_comment
-
-begin_comment
 comment|/// \p Enabled is a ReciprocalEstimate enum with value either 'Unspecified' or
-end_comment
-
-begin_comment
 comment|/// 'Enabled' as set by a potential default override attribute.
-end_comment
-
-begin_comment
 comment|/// If \p RefinementSteps is 'Unspecified', the number of Newton-Raphson
-end_comment
-
-begin_comment
 comment|/// refinement iterations required to generate a sufficient (though not
-end_comment
-
-begin_comment
 comment|/// necessarily IEEE-754 compliant) estimate is returned in that parameter.
-end_comment
-
-begin_comment
 comment|/// The boolean UseOneConstNR output is used to select a Newton-Raphson
-end_comment
-
-begin_comment
 comment|/// algorithm implementation that uses either one or two constants.
-end_comment
-
-begin_comment
 comment|/// The boolean Reciprocal is used to select whether the estimate is for the
-end_comment
-
-begin_comment
 comment|/// square root of the input operand or the reciprocal of its square root.
-end_comment
-
-begin_comment
 comment|/// A target may choose to implement its own refinement within this function.
-end_comment
-
-begin_comment
 comment|/// If that's true, then return '0' as the number of RefinementSteps to avoid
-end_comment
-
-begin_comment
 comment|/// any further refinement of the estimate.
-end_comment
-
-begin_comment
 comment|/// An empty SDValue return means no estimate sequence can be created.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|SDValue
 name|getSqrtEstimate
 argument_list|(
-name|SDValue
-name|Operand
+argument|SDValue Operand
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|int
-name|Enabled
+argument|int Enabled
 argument_list|,
-name|int
-operator|&
-name|RefinementSteps
+argument|int&RefinementSteps
 argument_list|,
-name|bool
-operator|&
-name|UseOneConstNR
+argument|bool&UseOneConstNR
 argument_list|,
-name|bool
-name|Reciprocal
+argument|bool Reciprocal
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|SDValue
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return a reciprocal estimate value for the input operand.
-end_comment
-
-begin_comment
 comment|/// \p Enabled is a ReciprocalEstimate enum with value either 'Unspecified' or
-end_comment
-
-begin_comment
 comment|/// 'Enabled' as set by a potential default override attribute.
-end_comment
-
-begin_comment
 comment|/// If \p RefinementSteps is 'Unspecified', the number of Newton-Raphson
-end_comment
-
-begin_comment
 comment|/// refinement iterations required to generate a sufficient (though not
-end_comment
-
-begin_comment
 comment|/// necessarily IEEE-754 compliant) estimate is returned in that parameter.
-end_comment
-
-begin_comment
 comment|/// A target may choose to implement its own refinement within this function.
-end_comment
-
-begin_comment
 comment|/// If that's true, then return '0' as the number of RefinementSteps to avoid
-end_comment
-
-begin_comment
 comment|/// any further refinement of the estimate.
-end_comment
-
-begin_comment
 comment|/// An empty SDValue return means no estimate sequence can be created.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|SDValue
 name|getRecipEstimate
 argument_list|(
-name|SDValue
-name|Operand
+argument|SDValue Operand
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|int
-name|Enabled
+argument|int Enabled
 argument_list|,
-name|int
-operator|&
-name|RefinementSteps
+argument|int&RefinementSteps
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|SDValue
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Legalization utility functions
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|/// Expand a MUL or [US]MUL_LOHI of n-bit values into two or four nodes,
-end_comment
-
-begin_comment
 comment|/// respectively, each computing an n/2-bit part of the result.
-end_comment
-
-begin_comment
 comment|/// \param Result A vector that will be filled with the parts of the result
-end_comment
-
-begin_comment
 comment|///        in little-endian order.
-end_comment
-
-begin_comment
 comment|/// \param LL Low bits of the LHS of the MUL.  You can use this parameter
-end_comment
-
-begin_comment
 comment|///        if you want to control how low bits are extracted from the LHS.
-end_comment
-
-begin_comment
 comment|/// \param LH High bits of the LHS of the MUL.  See LL for meaning.
-end_comment
-
-begin_comment
 comment|/// \param RL Low bits of the RHS of the MUL.  See LL for meaning
-end_comment
-
-begin_comment
 comment|/// \param RH High bits of the RHS of the MUL.  See LL for meaning.
-end_comment
-
-begin_comment
 comment|/// \returns true if the node has been expanded, false if it has not
-end_comment
-
-begin_decl_stmt
 name|bool
 name|expandMUL_LOHI
 argument_list|(
-name|unsigned
-name|Opcode
+argument|unsigned Opcode
 argument_list|,
-name|EVT
-name|VT
+argument|EVT VT
 argument_list|,
-name|SDLoc
-name|dl
+argument|SDLoc dl
 argument_list|,
-name|SDValue
-name|LHS
+argument|SDValue LHS
 argument_list|,
-name|SDValue
-name|RHS
+argument|SDValue RHS
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Result
+argument|SmallVectorImpl<SDValue>&Result
 argument_list|,
-name|EVT
-name|HiLoVT
+argument|EVT HiLoVT
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|MulExpansionKind
-name|Kind
+argument|MulExpansionKind Kind
 argument_list|,
-name|SDValue
-name|LL
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue LL = SDValue()
 argument_list|,
-name|SDValue
-name|LH
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue LH = SDValue()
 argument_list|,
-name|SDValue
-name|RL
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue RL = SDValue()
 argument_list|,
-name|SDValue
-name|RH
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue RH = SDValue()
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Expand a MUL into two nodes.  One that computes the high bits of
-end_comment
-
-begin_comment
 comment|/// the result and one that computes the low bits.
-end_comment
-
-begin_comment
 comment|/// \param HiLoVT The value type to use for the Lo and Hi nodes.
-end_comment
-
-begin_comment
 comment|/// \param LL Low bits of the LHS of the MUL.  You can use this parameter
-end_comment
-
-begin_comment
 comment|///        if you want to control how low bits are extracted from the LHS.
-end_comment
-
-begin_comment
 comment|/// \param LH High bits of the LHS of the MUL.  See LL for meaning.
-end_comment
-
-begin_comment
 comment|/// \param RL Low bits of the RHS of the MUL.  See LL for meaning
-end_comment
-
-begin_comment
 comment|/// \param RH High bits of the RHS of the MUL.  See LL for meaning.
-end_comment
-
-begin_comment
 comment|/// \returns true if the node has been expanded. false if it has not
-end_comment
-
-begin_decl_stmt
 name|bool
 name|expandMUL
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SDValue
-operator|&
-name|Lo
+argument|SDValue&Lo
 argument_list|,
-name|SDValue
-operator|&
-name|Hi
+argument|SDValue&Hi
 argument_list|,
-name|EVT
-name|HiLoVT
+argument|EVT HiLoVT
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|MulExpansionKind
-name|Kind
+argument|MulExpansionKind Kind
 argument_list|,
-name|SDValue
-name|LL
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue LL = SDValue()
 argument_list|,
-name|SDValue
-name|LH
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue LH = SDValue()
 argument_list|,
-name|SDValue
-name|RL
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue RL = SDValue()
 argument_list|,
-name|SDValue
-name|RH
-operator|=
-name|SDValue
-argument_list|()
+argument|SDValue RH = SDValue()
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Expand float(f32) to SINT(i64) conversion
-end_comment
-
-begin_comment
 comment|/// \param N Node to expand
-end_comment
-
-begin_comment
 comment|/// \param Result output after conversion
-end_comment
-
-begin_comment
 comment|/// \returns True, if the expansion was successful, false otherwise
-end_comment
-
-begin_decl_stmt
 name|bool
 name|expandFP_TO_SINT
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SDValue
-operator|&
-name|Result
+argument|SDValue&Result
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Turn load of vector type into a load of the individual elements.
-end_comment
-
-begin_comment
 comment|/// \param LD load to expand
-end_comment
-
-begin_comment
 comment|/// \returns MERGE_VALUEs of the scalar loads with their chains.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|scalarizeVectorLoad
 argument_list|(
-name|LoadSDNode
-operator|*
-name|LD
+argument|LoadSDNode *LD
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|// Turn a store of a vector type into stores of the individual elements.
-end_comment
-
-begin_comment
 comment|/// \param ST Store with a vector value type
-end_comment
-
-begin_comment
 comment|/// \returns MERGE_VALUs of the individual store chains.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|scalarizeVectorStore
 argument_list|(
-name|StoreSDNode
-operator|*
-name|ST
+argument|StoreSDNode *ST
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Expands an unaligned load to 2 half-size loads for an integer, and
-end_comment
-
-begin_comment
 comment|/// possibly more for vectors.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
 operator|<
 name|SDValue
-operator|,
+block|,
 name|SDValue
 operator|>
 name|expandUnalignedLoad
@@ -10381,231 +10999,97 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// Expands an unaligned store to 2 half-size stores for integer values, and
-end_comment
-
-begin_comment
 comment|/// possibly more for vectors.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|expandUnalignedStore
 argument_list|(
-name|StoreSDNode
-operator|*
-name|ST
+argument|StoreSDNode *ST
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Increments memory address \p Addr according to the type of the value
-end_comment
-
-begin_comment
 comment|/// \p DataVT that should be stored. If the data is stored in compressed
-end_comment
-
-begin_comment
 comment|/// form, the memory address should be incremented according to the number of
-end_comment
-
-begin_comment
 comment|/// the stored elements. This number is equal to the number of '1's bits
-end_comment
-
-begin_comment
 comment|/// in the \p Mask.
-end_comment
-
-begin_comment
 comment|/// \p DataVT is a vector type. \p Mask is a vector value.
-end_comment
-
-begin_comment
 comment|/// \p DataVT and \p Mask have the same number of vector elements.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|IncrementMemoryAddress
 argument_list|(
-name|SDValue
-name|Addr
+argument|SDValue Addr
 argument_list|,
-name|SDValue
-name|Mask
+argument|SDValue Mask
 argument_list|,
-specifier|const
-name|SDLoc
-operator|&
-name|DL
+argument|const SDLoc&DL
 argument_list|,
-name|EVT
-name|DataVT
+argument|EVT DataVT
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|bool
-name|IsCompressedMemory
+argument|bool IsCompressedMemory
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// Get a pointer to vector element \p Idx located in memory for a vector of
-end_comment
-
-begin_comment
 comment|/// type \p VecVT starting at a base address of \p VecPtr. If \p Idx is out of
-end_comment
-
-begin_comment
 comment|/// bounds the returned pointer is unspecified, but will be within the vector
-end_comment
-
-begin_comment
 comment|/// bounds.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|getVectorElementPointer
 argument_list|(
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|,
-name|SDValue
-name|VecPtr
+argument|SDValue VecPtr
 argument_list|,
-name|EVT
-name|VecVT
+argument|EVT VecVT
 argument_list|,
-name|SDValue
-name|Idx
+argument|SDValue Idx
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Instruction Emitting Hooks
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|/// This method should be implemented by targets that mark instructions with
-end_comment
-
-begin_comment
 comment|/// the 'usesCustomInserter' flag.  These instructions are special in various
-end_comment
-
-begin_comment
 comment|/// ways, which require special support to insert.  The specified MachineInstr
-end_comment
-
-begin_comment
 comment|/// is created but not inserted into any basic blocks, and this method is
-end_comment
-
-begin_comment
 comment|/// called to expand it into a sequence of instructions, potentially also
-end_comment
-
-begin_comment
 comment|/// creating new basic blocks and control flow.
-end_comment
-
-begin_comment
 comment|/// As long as the returned basic block is different (i.e., we created a new
-end_comment
-
-begin_comment
 comment|/// one), the custom inserter is free to modify the rest of \p MBB.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-name|MachineInstr
-operator|&
-name|MI
+argument|MachineInstr&MI
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|MBB
+argument|MachineBasicBlock *MBB
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// This method should be implemented by targets that mark instructions with
-end_comment
-
-begin_comment
 comment|/// the 'hasPostISelHook' flag. These instructions must be adjusted after
-end_comment
-
-begin_comment
 comment|/// instruction selection by target hooks.  e.g. To fill in optional defs for
-end_comment
-
-begin_comment
 comment|/// ARM 's' setting instructions.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|AdjustInstrPostInstrSelection
 argument_list|(
-name|MachineInstr
-operator|&
-name|MI
+argument|MachineInstr&MI
 argument_list|,
-name|SDNode
-operator|*
-name|Node
+argument|SDNode *Node
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// If this function returns true, SelectionDAGBuilder emits a
-end_comment
-
-begin_comment
 comment|/// LOAD_STACK_GUARD node when it is lowering Intrinsic::stackprotector.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|bool
 name|useLoadStackGuardNode
@@ -10616,145 +11100,70 @@ return|return
 name|false
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Lower TLS global address SDNode for target independent emulated TLS model.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|SDValue
 name|LowerToTLSEmulatedModel
 argument_list|(
-specifier|const
-name|GlobalAddressSDNode
-operator|*
-name|GA
+argument|const GlobalAddressSDNode *GA
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|// seteq(x, 0) -> truncate(srl(ctlz(zext(x)), log2(#bits)))
-end_comment
-
-begin_comment
 comment|// If we're comparing for equality to zero and isCtlzFast is true, expose the
-end_comment
-
-begin_comment
 comment|// fact that this can be implemented as a ctlz/srl pair, so that the dag
-end_comment
-
-begin_comment
 comment|// combiner can fold the new nodes.
-end_comment
-
-begin_decl_stmt
 name|SDValue
 name|lowerCmpEqZeroToCtlzSrl
 argument_list|(
-name|SDValue
-name|Op
+argument|SDValue Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+specifier|const
+block|;
 name|private
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 name|SDValue
 name|simplifySetCCWithAnd
 argument_list|(
-name|EVT
-name|VT
+argument|EVT VT
 argument_list|,
-name|SDValue
-name|N0
+argument|SDValue N0
 argument_list|,
-name|SDValue
-name|N1
+argument|SDValue N1
 argument_list|,
-name|ISD
-operator|::
-name|CondCode
-name|Cond
+argument|ISD::CondCode Cond
 argument_list|,
-name|DAGCombinerInfo
-operator|&
-name|DCI
+argument|DAGCombinerInfo&DCI
 argument_list|,
-specifier|const
-name|SDLoc
-operator|&
-name|DL
+argument|const SDLoc&DL
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+specifier|const
+block|; }
+block|;
 comment|/// Given an LLVM IR type and return type attributes, compute the return value
-end_comment
-
-begin_comment
 comment|/// EVTs and flags, and optionally also the offsets, if the return value is
-end_comment
-
-begin_comment
 comment|/// being lowered to memory.
-end_comment
-
-begin_decl_stmt
 name|void
 name|GetReturnInfo
 argument_list|(
-name|Type
-operator|*
-name|ReturnType
+argument|Type *ReturnType
 argument_list|,
-name|AttributeSet
-name|attr
+argument|AttributeList attr
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|OutputArg
-operator|>
-operator|&
-name|Outs
+argument|SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
-specifier|const
-name|TargetLowering
-operator|&
-name|TLI
+argument|const TargetLowering&TLI
 argument_list|,
-specifier|const
-name|DataLayout
-operator|&
-name|DL
+argument|const DataLayout&DL
 argument_list|)
-decl_stmt|;
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

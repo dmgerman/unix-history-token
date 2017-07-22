@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__TGMATH_H
+name|__CLANG_TGMATH_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__TGMATH_H
+name|__CLANG_TGMATH_H
 end_define
 
 begin_comment
@@ -24,6 +24,39 @@ include|#
 directive|include
 file|<math.h>
 end_include
+
+begin_comment
+comment|/*  * Allow additional definitions and implementation-defined values on Apple  * platforms. This is done after #include<math.h> to avoid depcycle conflicts  * between libcxx and darwin in C++ modules builds.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
+name|__STDC_HOSTED__
+operator|&&
+name|__has_include_next
+argument_list|(
+operator|<
+name|tgmath
+operator|.
+name|h
+operator|>
+argument_list|)
+end_if
+
+begin_empty
+empty|#  include_next<tgmath.h>
+end_empty
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/* C++ handles type genericity with overloading in math.h. */
@@ -6805,7 +6838,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __TGMATH_H */
+comment|/* __has_include_next */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __CLANG_TGMATH_H */
 end_comment
 
 end_unit

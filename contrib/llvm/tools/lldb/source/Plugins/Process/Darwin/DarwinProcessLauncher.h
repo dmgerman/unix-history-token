@@ -112,7 +112,7 @@ comment|///
 comment|/// @param[out] launch_flavor
 comment|///     Contains the launch flavor used when launching the process.
 comment|// =============================================================================
-name|Error
+name|Status
 name|LaunchInferior
 argument_list|(
 name|ProcessLaunchInfo

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/MachineInstr.h - MachineInstr class --------*- C++ -*-===//
+comment|//===- llvm/CodeGen/MachineInstr.h - MachineInstr class ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ilist.h"
 end_include
 
@@ -139,13 +133,34 @@ directive|include
 file|"llvm/Target/TargetOpcodes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|StringRef
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -154,6 +169,30 @@ operator|>
 name|class
 name|ArrayRef
 expr_stmt|;
+name|class
+name|DIExpression
+decl_stmt|;
+name|class
+name|DILocalVariable
+decl_stmt|;
+name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineMemOperand
+decl_stmt|;
+name|class
+name|MachineRegisterInfo
+decl_stmt|;
+name|class
+name|ModuleSlotTracker
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -163,10 +202,7 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 name|class
-name|DILocalVariable
-decl_stmt|;
-name|class
-name|DIExpression
+name|StringRef
 decl_stmt|;
 name|class
 name|TargetInstrInfo
@@ -176,12 +212,6 @@ name|TargetRegisterClass
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
-decl_stmt|;
-name|class
-name|MachineFunction
-decl_stmt|;
-name|class
-name|MachineMemOperand
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// Representation of each machine instruction.
@@ -207,12 +237,13 @@ decl|>>
 block|{
 name|public
 label|:
-typedef|typedef
-name|MachineMemOperand
-modifier|*
-modifier|*
+name|using
 name|mmo_iterator
-typedef|;
+init|=
+name|MachineMemOperand
+operator|*
+operator|*
+decl_stmt|;
 comment|/// Flags to specify different kinds of comments to output in
 comment|/// assembly code.  These flags carry semantic information not
 comment|/// otherwise easily derivable from the IR text.
@@ -275,39 +306,50 @@ comment|// Instruction descriptor.
 name|MachineBasicBlock
 modifier|*
 name|Parent
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Pointer to the owning basic block.
 comment|// Operands are allocated by an ArrayRecycler.
 name|MachineOperand
 modifier|*
 name|Operands
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Pointer to the first operand.
 name|unsigned
 name|NumOperands
+init|=
+literal|0
 decl_stmt|;
 comment|// Number of operands on instruction.
-typedef|typedef
+name|using
+name|OperandCapacity
+init|=
 name|ArrayRecycler
 operator|<
 name|MachineOperand
 operator|>
 operator|::
 name|Capacity
-name|OperandCapacity
-expr_stmt|;
+decl_stmt|;
 name|OperandCapacity
 name|CapOperands
 decl_stmt|;
 comment|// Capacity of the Operands array.
 name|uint8_t
 name|Flags
+init|=
+literal|0
 decl_stmt|;
 comment|// Various bits of additional
 comment|// information about machine
 comment|// instruction.
 name|uint8_t
 name|AsmPrinterFlags
+init|=
+literal|0
 decl_stmt|;
 comment|// Various bits of information used by
 comment|// the AsmPrinter to emit helpful
@@ -317,6 +359,8 @@ comment|// anything other than to convey comment
 comment|// information to AsmPrinter.
 name|uint8_t
 name|NumMemRefs
+init|=
+literal|0
 decl_stmt|;
 comment|// Information on memory references.
 comment|// Note that MemRefs == nullptr,  means 'don't know', not 'no memory access'.
@@ -327,38 +371,13 @@ comment|// that this is a non-owning reference to a shared copy on write buffer 
 comment|// by the MachineFunction and created via MF.allocateMemRefsArray.
 name|mmo_iterator
 name|MemRefs
+init|=
+name|nullptr
 decl_stmt|;
 name|DebugLoc
 name|debugLoc
 decl_stmt|;
 comment|// Source line information.
-name|MachineInstr
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MachineInstr
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-comment|// Use MachineFunction::DeleteMachineInstr() instead.
-operator|~
-name|MachineInstr
-argument_list|()
-operator|=
-name|delete
-expr_stmt|;
 comment|// Intrusive list support
 name|friend
 block|struct
@@ -420,6 +439,34 @@ name|MachineFunction
 decl_stmt|;
 name|public
 label|:
+name|MachineInstr
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MachineInstr
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MachineInstr
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+comment|// Use MachineFunction::DeleteMachineInstr() instead.
+operator|~
+name|MachineInstr
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
 specifier|const
 name|MachineBasicBlock
 operator|*
@@ -741,7 +788,6 @@ comment|/// impossible to compile. Other errors should have been handled much
 comment|/// earlier.
 comment|///
 comment|/// If this method returns, the caller should try to recover from the error.
-comment|///
 name|void
 name|emitError
 argument_list|(
@@ -776,7 +822,6 @@ name|Opcode
 return|;
 block|}
 comment|/// Access to explicit operands of the instruction.
-comment|///
 name|unsigned
 name|getNumOperands
 argument_list|()
@@ -845,17 +890,19 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// iterator/begin/end - Iterate over all operands of a machine instruction.
-typedef|typedef
-name|MachineOperand
-modifier|*
+name|using
 name|mop_iterator
-typedef|;
-typedef|typedef
+init|=
+name|MachineOperand
+operator|*
+decl_stmt|;
+name|using
+name|const_mop_iterator
+init|=
 specifier|const
 name|MachineOperand
-modifier|*
-name|const_mop_iterator
-typedef|;
+operator|*
+decl_stmt|;
 name|mop_iterator
 name|operands_begin
 parameter_list|()
@@ -2782,12 +2829,10 @@ name|getSubReg
 argument_list|()
 return|;
 block|}
-comment|/// Return true if this is a transient instruction that is
-comment|/// either very likely to be eliminated during register allocation (such as
-comment|/// copy-like instructions), or if this instruction doesn't have an
-comment|/// execution-time cost.
+comment|/// Return true if this instruction doesn't produce any output in the form of
+comment|/// executable instructions.
 name|bool
-name|isTransient
+name|isMetaInstruction
 argument_list|()
 specifier|const
 block|{
@@ -2801,33 +2846,6 @@ default|default:
 return|return
 name|false
 return|;
-comment|// Copy-like instructions are usually eliminated during register allocation.
-case|case
-name|TargetOpcode
-operator|::
-name|PHI
-case|:
-case|case
-name|TargetOpcode
-operator|::
-name|COPY
-case|:
-case|case
-name|TargetOpcode
-operator|::
-name|INSERT_SUBREG
-case|:
-case|case
-name|TargetOpcode
-operator|::
-name|SUBREG_TO_REG
-case|:
-case|case
-name|TargetOpcode
-operator|::
-name|REG_SEQUENCE
-case|:
-comment|// Pseudo-instructions that don't produce any real output.
 case|case
 name|TargetOpcode
 operator|::
@@ -2857,6 +2875,56 @@ case|case
 name|TargetOpcode
 operator|::
 name|DBG_VALUE
+case|:
+return|return
+name|true
+return|;
+block|}
+block|}
+comment|/// Return true if this is a transient instruction that is either very likely
+comment|/// to be eliminated during register allocation (such as copy-like
+comment|/// instructions), or if this instruction doesn't have an execution-time cost.
+name|bool
+name|isTransient
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getOpcode
+argument_list|()
+condition|)
+block|{
+default|default:
+return|return
+name|isMetaInstruction
+argument_list|()
+return|;
+comment|// Copy-like instructions are usually eliminated during register allocation.
+case|case
+name|TargetOpcode
+operator|::
+name|PHI
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|COPY
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|INSERT_SUBREG
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|SUBREG_TO_REG
+case|:
+case|case
+name|TargetOpcode
+operator|::
+name|REG_SEQUENCE
 case|:
 return|return
 name|true
@@ -3306,7 +3374,6 @@ comment|/// containing OpIdx.
 comment|///
 comment|/// The flag operand is an immediate that can be decoded with methods like
 comment|/// InlineAsm::hasRegClassConstraint().
-comment|///
 name|int
 name|findInlineAsmFlagIdx
 argument_list|(
@@ -3327,7 +3394,6 @@ comment|/// For inline assembly it is derived from the flag words.
 comment|///
 comment|/// Returns NULL if the static register class constraint cannot be
 comment|/// determined.
-comment|///
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -3740,6 +3806,31 @@ name|SawStore
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Returns true if this instruction's memory access aliases the memory
+comment|/// access of Other.
+comment|//
+comment|/// Assumes any physical registers used to compute addresses
+comment|/// have the same value for both instructions.  Returns false if neither
+comment|/// instruction writes to memory.
+comment|///
+comment|/// @param AA Optional alias analysis, used to compare memory operands.
+comment|/// @param Other MachineInstr to check aliasing against.
+comment|/// @param UseTBAA Whether to pass TBAA information to alias analysis.
+name|bool
+name|mayAlias
+parameter_list|(
+name|AliasAnalysis
+modifier|*
+name|AA
+parameter_list|,
+name|MachineInstr
+modifier|&
+name|Other
+parameter_list|,
+name|bool
+name|UseTBAA
+parameter_list|)
+function_decl|;
 comment|/// Return true if this instruction may have an ordered
 comment|/// or volatile memory reference, or if the information describing the memory
 comment|/// reference is not available. Return false if it is known to have no
@@ -3811,9 +3902,14 @@ modifier|&
 name|MI
 parameter_list|)
 function_decl|;
-comment|//
-comment|// Debugging support
-comment|//
+comment|/// Debugging support
+comment|/// @{
+comment|/// Print this MI to \p OS.
+comment|/// Only print the defs and the opcode if \p SkipOpers is true.
+comment|/// Otherwise, also print operands if \p SkipDebugLoc is true.
+comment|/// Otherwise, also print the debug loc, with a terminating newline.
+comment|/// \p TII is used to print the opcode name.  If it's not present, but the
+comment|/// MI is in a function, the opcode will be printed using the function's TII.
 name|void
 name|print
 argument_list|(
@@ -3823,6 +3919,11 @@ name|OS
 argument_list|,
 name|bool
 name|SkipOpers
+operator|=
+name|false
+argument_list|,
+name|bool
+name|SkipDebugLoc
 operator|=
 name|false
 argument_list|,
@@ -3851,6 +3952,11 @@ name|SkipOpers
 operator|=
 name|false
 argument_list|,
+name|bool
+name|SkipDebugLoc
+operator|=
+name|false
+argument_list|,
 specifier|const
 name|TargetInstrInfo
 operator|*
@@ -3862,16 +3968,10 @@ decl|const
 decl_stmt|;
 name|void
 name|dump
-argument_list|(
+argument_list|()
 specifier|const
-name|TargetInstrInfo
-operator|*
-name|TII
-operator|=
-name|nullptr
-argument_list|)
-decl|const
-decl_stmt|;
+expr_stmt|;
+comment|/// @}
 comment|//===--------------------------------------------------------------------===//
 comment|// Accessors used to build up machine instructions.
 comment|/// Add the specified operand to the instruction.  If it is an implicit
@@ -4376,13 +4476,17 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEINSTR_H
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- CodeGen/MachineConstantPool.h - Abstract Constant Pool --*- C++ -*-===//
+comment|//===- CodeGen/MachineConstantPool.h - Abstract Constant Pool ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<climits>
 end_include
 
@@ -105,22 +99,19 @@ name|class
 name|Constant
 decl_stmt|;
 name|class
-name|FoldingSetNodeID
-decl_stmt|;
-name|class
 name|DataLayout
 decl_stmt|;
 name|class
-name|TargetMachine
-decl_stmt|;
-name|class
-name|Type
+name|FoldingSetNodeID
 decl_stmt|;
 name|class
 name|MachineConstantPool
 decl_stmt|;
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|Type
 decl_stmt|;
 comment|/// Abstract base class for all machine specific constantpool value subclasses.
 comment|///
@@ -155,7 +146,9 @@ name|virtual
 operator|~
 name|MachineConstantPoolValue
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// getType - get type of this MachineConstantPoolValue.
 comment|///
 name|Type
@@ -529,7 +522,6 @@ return|;
 block|}
 comment|/// print - Used by the MachineFunction printer to print information about
 comment|/// constant pool objects.  Implemented in MachineFunction.cpp
-comment|///
 name|void
 name|print
 argument_list|(
@@ -551,13 +543,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINECONSTANTPOOL_H
+end_comment
 
 end_unit
 

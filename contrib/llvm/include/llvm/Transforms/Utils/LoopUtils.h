@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/Transforms/Utils/LoopUtils.h - Loop utilities -*- C++ -*-=========//
+comment|//===- llvm/Transforms/Utils/LoopUtils.h - Loop utilities -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,7 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -80,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/TargetTransformInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Dominators.h"
 end_include
 
@@ -87,6 +117,30 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InstrTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Operator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_decl_stmt
@@ -100,16 +154,10 @@ name|class
 name|AliasSetTracker
 decl_stmt|;
 name|class
-name|AssumptionCache
-decl_stmt|;
-name|class
 name|BasicBlock
 decl_stmt|;
 name|class
 name|DataLayout
-decl_stmt|;
-name|class
-name|DominatorTree
 decl_stmt|;
 name|class
 name|Loop
@@ -119,9 +167,6 @@ name|LoopInfo
 decl_stmt|;
 name|class
 name|OptimizationRemarkEmitter
-decl_stmt|;
-name|class
-name|Pass
 decl_stmt|;
 name|class
 name|PredicatedScalarEvolution
@@ -138,6 +183,9 @@ decl_stmt|;
 name|class
 name|TargetLibraryInfo
 decl_stmt|;
+name|class
+name|TargetTransformInfo
+decl_stmt|;
 comment|/// \brief Captures loop safety information.
 comment|/// It keep information for loop& its header may throw exception.
 struct|struct
@@ -145,11 +193,15 @@ name|LoopSafetyInfo
 block|{
 name|bool
 name|MayThrow
+init|=
+name|false
 decl_stmt|;
 comment|// The current loop contains an instruction which
 comment|// may throw.
 name|bool
 name|HeaderMayThrow
+init|=
+name|false
 decl_stmt|;
 comment|// Same as previous, but specific to loop header
 comment|// Used to update funclet bundle operands.
@@ -164,17 +216,9 @@ name|BlockColors
 expr_stmt|;
 name|LoopSafetyInfo
 argument_list|()
-operator|:
-name|MayThrow
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|HeaderMayThrow
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 block|}
 struct|;
 comment|/// The RecurrenceDescriptor is used to identify recurrences variables in a
@@ -249,42 +293,9 @@ block|}
 enum|;
 name|RecurrenceDescriptor
 argument_list|()
-operator|:
-name|StartValue
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|LoopExitInstr
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Kind
-argument_list|(
-name|RK_NoRecurrence
-argument_list|)
-operator|,
-name|MinMaxKind
-argument_list|(
-name|MRK_Invalid
-argument_list|)
-operator|,
-name|UnsafeAlgebraInst
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|RecurrenceType
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|IsSigned
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|RecurrenceDescriptor
 argument_list|(
 argument|Value *Start
@@ -303,7 +314,7 @@ argument|bool Signed
 argument_list|,
 argument|SmallPtrSetImpl<Instruction *>&CI
 argument_list|)
-operator|:
+block|:
 name|StartValue
 argument_list|(
 name|Start
@@ -655,24 +666,38 @@ function_decl|;
 comment|/// Returns true if Phi is a first-order recurrence. A first-order recurrence
 comment|/// is a non-reduction recurrence relation in which the value of the
 comment|/// recurrence in the current loop iteration equals a value defined in the
-comment|/// previous iteration.
+comment|/// previous iteration. \p SinkAfter includes pairs of instructions where the
+comment|/// first will be rescheduled to appear after the second if/when the loop is
+comment|/// vectorized. It may be augmented with additional pairs if needed in order
+comment|/// to handle Phi as a first-order recurrence.
 specifier|static
 name|bool
 name|isFirstOrderRecurrence
-parameter_list|(
+argument_list|(
 name|PHINode
-modifier|*
+operator|*
 name|Phi
-parameter_list|,
+argument_list|,
 name|Loop
-modifier|*
+operator|*
 name|TheLoop
-parameter_list|,
+argument_list|,
+name|DenseMap
+operator|<
+name|Instruction
+operator|*
+argument_list|,
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|SinkAfter
+argument_list|,
 name|DominatorTree
-modifier|*
+operator|*
 name|DT
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|RecurrenceKind
 name|getRecurrenceKind
 parameter_list|()
@@ -886,28 +911,40 @@ comment|// The instruction who's value is used outside the loop.
 name|Instruction
 modifier|*
 name|LoopExitInstr
+init|=
+name|nullptr
 decl_stmt|;
 comment|// The kind of the recurrence.
 name|RecurrenceKind
 name|Kind
+init|=
+name|RK_NoRecurrence
 decl_stmt|;
 comment|// If this a min/max recurrence the kind of recurrence.
 name|MinMaxRecurrenceKind
 name|MinMaxKind
+init|=
+name|MRK_Invalid
 decl_stmt|;
 comment|// First occurrence of unasfe algebra in the PHI's use-chain.
 name|Instruction
 modifier|*
 name|UnsafeAlgebraInst
+init|=
+name|nullptr
 decl_stmt|;
 comment|// The type of the recurrence.
 name|Type
 modifier|*
 name|RecurrenceType
+init|=
+name|nullptr
 decl_stmt|;
 comment|// True if all source operands of the recurrence are SExtInsts.
 name|bool
 name|IsSigned
+init|=
+name|false
 decl_stmt|;
 comment|// Instructions used for type-promoting the recurrence.
 name|SmallPtrSet
@@ -949,27 +986,9 @@ label|:
 comment|/// Default constructor - creates an invalid induction.
 name|InductionDescriptor
 argument_list|()
-operator|:
-name|StartValue
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|IK
-argument_list|(
-name|IK_NoInduction
-argument_list|)
-operator|,
-name|Step
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|InductionBinOp
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Get the consecutive direction. Returns:
 comment|///   0 - unknown or non-consecutive.
 comment|///   1 - consecutive and increasing.
@@ -1236,23 +1255,53 @@ expr_stmt|;
 comment|/// Induction kind.
 name|InductionKind
 name|IK
+init|=
+name|IK_NoInduction
 decl_stmt|;
 comment|/// Step value.
 specifier|const
 name|SCEV
 modifier|*
 name|Step
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Instruction that advances induction variable.
 name|BinaryOperator
 modifier|*
 name|InductionBinOp
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 empty_stmt|;
 name|BasicBlock
 modifier|*
 name|InsertPreheaderForLoop
+parameter_list|(
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+name|DominatorTree
+modifier|*
+name|DT
+parameter_list|,
+name|LoopInfo
+modifier|*
+name|LI
+parameter_list|,
+name|bool
+name|PreserveLCSSA
+parameter_list|)
+function_decl|;
+comment|/// Ensure that all exit blocks of the loop are dedicated exits.
+comment|///
+comment|/// For any loop exit block with non-loop predecessors, we split the loop
+comment|/// predecessors to use a dedicated loop exit block. We update the dominator
+comment|/// tree and loop info if provided, and will preserve LCSSA if requested.
+name|bool
+name|formDedicatedExitBlocks
 parameter_list|(
 name|Loop
 modifier|*
@@ -1655,13 +1704,167 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// Generates a vector reduction using shufflevectors to reduce the value.
+name|Value
+modifier|*
+name|getShuffleReduction
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|Value
+operator|*
+name|Src
+argument_list|,
+name|unsigned
+name|Op
+argument_list|,
+name|RecurrenceDescriptor
+operator|::
+name|MinMaxRecurrenceKind
+name|MinMaxKind
+operator|=
+name|RecurrenceDescriptor
+operator|::
+name|MRK_Invalid
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|RedOps
+operator|=
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/// Create a target reduction of the given vector. The reduction operation
+comment|/// is described by the \p Opcode parameter. min/max reductions require
+comment|/// additional information supplied in \p Flags.
+comment|/// The target is queried to determine if intrinsics or shuffle sequences are
+comment|/// required to implement the reduction.
+name|Value
+modifier|*
+name|createSimpleTargetReduction
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|,
+specifier|const
+name|TargetTransformInfo
+operator|*
+name|TTI
+argument_list|,
+name|unsigned
+name|Opcode
+argument_list|,
+name|Value
+operator|*
+name|Src
+argument_list|,
+name|TargetTransformInfo
+operator|::
+name|ReductionFlags
+name|Flags
+operator|=
+name|TargetTransformInfo
+operator|::
+name|ReductionFlags
+argument_list|()
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|RedOps
+operator|=
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/// Create a generic target reduction using a recurrence descriptor \p Desc
+comment|/// The target is queried to determine if intrinsics or shuffle sequences are
+comment|/// required to implement the reduction.
+name|Value
+modifier|*
+name|createTargetReduction
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|,
+specifier|const
+name|TargetTransformInfo
+operator|*
+name|TTI
+argument_list|,
+name|RecurrenceDescriptor
+operator|&
+name|Desc
+argument_list|,
+name|Value
+operator|*
+name|Src
+argument_list|,
+name|bool
+name|NoNaN
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+comment|/// Get the intersection (logical and) of all of the potential IR flags
+comment|/// of each scalar operation (VL) that will be converted into a vector (I).
+comment|/// Flag set: NSW, NUW, exact, and all of fast-math.
+name|void
+name|propagateIRFlags
+argument_list|(
+name|Value
+operator|*
+name|I
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|VL
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_UTILS_LOOPUTILS_H
+end_comment
 
 end_unit
 

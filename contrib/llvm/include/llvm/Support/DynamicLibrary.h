@@ -150,7 +150,7 @@ name|symbolName
 parameter_list|)
 function_decl|;
 comment|/// This function permanently loads the dynamic library at the given path.
-comment|/// The library will only be unloaded when the program terminates.
+comment|/// The library will only be unloaded when llvm_shutdown() is called.
 comment|/// This returns a valid DynamicLibrary instance on success and an invalid
 comment|/// instance on failure (see isValid()). \p *errMsg will only be modified
 comment|/// if the library fails to load.
@@ -165,6 +165,30 @@ specifier|const
 name|char
 operator|*
 name|filename
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|errMsg
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+comment|/// Registers an externally loaded library. The library will be unloaded
+comment|/// when the program terminates.
+comment|///
+comment|/// It is safe to call this function multiple times for the same library,
+comment|/// though ownership is only taken if there was no error.
+comment|///
+comment|/// \returns An empty \p DynamicLibrary if the library was already loaded.
+specifier|static
+name|DynamicLibrary
+name|addPermanentLibrary
+argument_list|(
+name|void
+operator|*
+name|handle
 argument_list|,
 name|std
 operator|::
@@ -211,6 +235,33 @@ name|isValid
 argument_list|()
 return|;
 block|}
+enum|enum
+name|SearchOrdering
+block|{
+comment|/// SO_Linker - Search as a call to dlsym(dlopen(NULL)) would when
+comment|/// DynamicLibrary::getPermanentLibrary(NULL) has been called or
+comment|/// search the list of explcitly loaded symbols if not.
+name|SO_Linker
+block|,
+comment|/// SO_LoadedFirst - Search all loaded libraries, then as SO_Linker would.
+name|SO_LoadedFirst
+block|,
+comment|/// SO_LoadedLast - Search as SO_Linker would, then loaded libraries.
+comment|/// Only useful to search if libraries with RTLD_LOCAL have been added.
+name|SO_LoadedLast
+block|,
+comment|/// SO_LoadOrder - Or this in to search libraries in the ordered loaded.
+comment|/// The default bahaviour is to search loaded libraries in reverse.
+name|SO_LoadOrder
+init|=
+literal|4
+block|}
+enum|;
+specifier|static
+name|SearchOrdering
+name|SearchOrder
+decl_stmt|;
+comment|// = SO_Linker
 comment|/// This function will search through all previously loaded dynamic
 comment|/// libraries for the symbol \p symbolName. If it is found, the address of
 comment|/// that symbol is returned. If not, null is returned. Note that this will
@@ -269,6 +320,9 @@ modifier|*
 name|symbolValue
 parameter_list|)
 function_decl|;
+name|class
+name|HandleSet
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

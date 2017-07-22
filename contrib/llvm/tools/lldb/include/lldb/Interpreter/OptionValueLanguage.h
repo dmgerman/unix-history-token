@@ -156,7 +156,7 @@ argument|uint32_t dump_mask
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 argument|llvm::StringRef value
@@ -165,7 +165,7 @@ argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 specifier|const

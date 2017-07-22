@@ -108,7 +108,7 @@ name|CommandOptions
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
@@ -185,7 +185,7 @@ name|c_str
 argument_list|()
 return|;
 block|}
-name|Error
+name|Status
 name|OptionParsingFinished
 argument_list|(
 argument|ExecutionContext *execution_context

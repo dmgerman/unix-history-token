@@ -121,6 +121,9 @@ name|class
 name|LoopInfo
 decl_stmt|;
 name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// \brief Analysis providing branch probability information.
@@ -148,6 +151,8 @@ argument_list|(
 argument|const Function&F
 argument_list|,
 argument|const LoopInfo&LI
+argument_list|,
+argument|const TargetLibraryInfo *TLI = nullptr
 argument_list|)
 block|{
 name|calculate
@@ -155,6 +160,8 @@ argument_list|(
 name|F
 argument_list|,
 name|LI
+argument_list|,
+name|TLI
 argument_list|)
 expr_stmt|;
 block|}
@@ -445,6 +452,13 @@ specifier|const
 name|LoopInfo
 modifier|&
 name|LI
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Forget analysis results for the given basic block.
@@ -638,6 +652,24 @@ literal|16
 operator|>
 name|PostDominatedByColdCall
 expr_stmt|;
+name|void
+name|updatePostDominatedByUnreachable
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
+name|void
+name|updatePostDominatedByColdCall
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
 name|bool
 name|calcUnreachableHeuristics
 parameter_list|(
@@ -695,6 +727,11 @@ specifier|const
 name|BasicBlock
 modifier|*
 name|BB
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 parameter_list|)
 function_decl|;
 name|bool

@@ -1188,26 +1188,6 @@ parameter_list|)
 value|a ## b ## c
 end_define
 
-begin_define
-define|#
-directive|define
-name|__intn_t
-parameter_list|(
-name|n
-parameter_list|)
-value|__stdint_join3( int, n, _t)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__uintn_t
-parameter_list|(
-name|n
-parameter_list|)
-value|__stdint_join3(uint, n, _t)
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1222,12 +1202,9 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|__intn_t
-argument_list|(
-argument|__INTPTR_WIDTH__
-argument_list|)
+name|__INTPTR_TYPE__
 name|intptr_t
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_define
@@ -1260,12 +1237,9 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|__uintn_t
-argument_list|(
-argument|__INTPTR_WIDTH__
-argument_list|)
+name|__UINTPTR_TYPE__
 name|uintptr_t
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_define
@@ -3549,42 +3523,42 @@ begin_define
 define|#
 directive|define
 name|INTPTR_MIN
-value|__INTN_MIN(__INTPTR_WIDTH__)
+value|(-__INTPTR_MAX__-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTPTR_MAX
-value|__INTN_MAX(__INTPTR_WIDTH__)
+value|__INTPTR_MAX__
 end_define
 
 begin_define
 define|#
 directive|define
 name|UINTPTR_MAX
-value|__UINTN_MAX(__INTPTR_WIDTH__)
+value|__UINTPTR_MAX__
 end_define
 
 begin_define
 define|#
 directive|define
 name|PTRDIFF_MIN
-value|__INTN_MIN(__PTRDIFF_WIDTH__)
+value|(-__PTRDIFF_MAX__-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PTRDIFF_MAX
-value|__INTN_MAX(__PTRDIFF_WIDTH__)
+value|__PTRDIFF_MAX__
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZE_MAX
-value|__UINTN_MAX(__SIZE_WIDTH__)
+value|__SIZE_MAX__
 end_define
 
 begin_comment
@@ -3624,21 +3598,21 @@ begin_define
 define|#
 directive|define
 name|INTMAX_MIN
-value|__INTN_MIN(__INTMAX_WIDTH__)
+value|(-__INTMAX_MAX__-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTMAX_MAX
-value|__INTN_MAX(__INTMAX_WIDTH__)
+value|__INTMAX_MAX__
 end_define
 
 begin_define
 define|#
 directive|define
 name|UINTMAX_MAX
-value|__UINTN_MAX(__INTMAX_WIDTH__)
+value|__UINTMAX_MAX__
 end_define
 
 begin_comment
@@ -3778,7 +3752,7 @@ name|INTMAX_C
 parameter_list|(
 name|v
 parameter_list|)
-value|__INTN_C(__INTMAX_WIDTH__, v)
+value|__int_c(v,  __INTMAX_C_SUFFIX__)
 end_define
 
 begin_define
@@ -3788,7 +3762,7 @@ name|UINTMAX_C
 parameter_list|(
 name|v
 parameter_list|)
-value|__UINTN_C(__INTMAX_WIDTH__, v)
+value|__int_c(v, __UINTMAX_C_SUFFIX__)
 end_define
 
 begin_endif

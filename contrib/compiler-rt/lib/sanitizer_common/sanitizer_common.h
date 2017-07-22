@@ -314,7 +314,7 @@ name|GetMaxVirtualAddress
 parameter_list|()
 function_decl|;
 comment|// Threads
-name|uptr
+name|tid_t
 name|GetTid
 parameter_list|()
 function_decl|;
@@ -416,6 +416,21 @@ name|uptr
 name|size
 parameter_list|)
 function_decl|;
+comment|// Behaves just like MmapOrDie, but tolerates out of memory condition, in that
+comment|// case returns nullptr.
+name|void
+modifier|*
+name|MmapOrDieOnFatalError
+parameter_list|(
+name|uptr
+name|size
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|mem_type
+parameter_list|)
+function_decl|;
 name|void
 modifier|*
 name|MmapFixedNoReserve
@@ -458,6 +473,19 @@ name|uptr
 name|size
 parameter_list|)
 function_decl|;
+comment|// Behaves just like MmapFixedOrDie, but tolerates out of memory condition, in
+comment|// that case returns nullptr.
+name|void
+modifier|*
+name|MmapFixedOrDieOnFatalError
+parameter_list|(
+name|uptr
+name|fixed_addr
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
+function_decl|;
 name|void
 modifier|*
 name|MmapFixedNoAccess
@@ -485,9 +513,10 @@ name|size
 parameter_list|)
 function_decl|;
 comment|// Map aligned chunk of address space; size and alignment are powers of two.
+comment|// Dies on all but out of memory errors, in the latter case returns nullptr.
 name|void
 modifier|*
-name|MmapAlignedOrDie
+name|MmapAlignedOrDieOnFatalError
 parameter_list|(
 name|uptr
 name|size
@@ -535,6 +564,10 @@ name|alignment
 parameter_list|,
 name|uptr
 name|left_padding
+parameter_list|,
+name|uptr
+modifier|*
+name|largest_gap_found
 parameter_list|)
 function_decl|;
 comment|// Used to check if we can map shadow memory to a fixed location.
@@ -1570,14 +1603,6 @@ name|args
 parameter_list|)
 function_decl|;
 name|void
-name|CovPrepareForSandboxing
-parameter_list|(
-name|__sanitizer_sandbox_arguments
-modifier|*
-name|args
-parameter_list|)
-function_decl|;
-name|void
 name|SetSandboxingCallback
 parameter_list|(
 name|void
@@ -1589,34 +1614,7 @@ parameter_list|()
 parameter_list|)
 function_decl|;
 name|void
-name|CoverageUpdateMapping
-parameter_list|()
-function_decl|;
-name|void
-name|CovBeforeFork
-parameter_list|()
-function_decl|;
-name|void
-name|CovAfterFork
-parameter_list|(
-name|int
-name|child_pid
-parameter_list|)
-function_decl|;
-name|void
 name|InitializeCoverage
-parameter_list|(
-name|bool
-name|enabled
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|coverage_dir
-parameter_list|)
-function_decl|;
-name|void
-name|ReInitializeCoverage
 parameter_list|(
 name|bool
 name|enabled
@@ -1889,8 +1887,8 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-name|bool
-name|IsHandledDeadlySignal
+name|HandleSignalMode
+name|GetHandleSignalMode
 parameter_list|(
 name|int
 name|signum
@@ -1901,6 +1899,15 @@ name|InstallDeadlySignalHandlers
 parameter_list|(
 name|SignalHandlerType
 name|handler
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|DescribeSignalOrException
+parameter_list|(
+name|int
+name|signo
 parameter_list|)
 function_decl|;
 comment|// Alternative signal stack (POSIX-only).
@@ -1922,6 +1929,7 @@ decl_stmt|;
 comment|// Construct a one-line string:
 comment|//   SUMMARY: SanitizerToolName: error_message
 comment|// and pass it to __sanitizer_report_error_summary.
+comment|// If alt_tool_name is provided, it's used in place of SanitizerToolName.
 name|void
 name|ReportErrorSummary
 parameter_list|(
@@ -1929,6 +1937,13 @@ specifier|const
 name|char
 modifier|*
 name|error_message
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alt_tool_name
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|// Same as above, but construct error_message as:
@@ -1945,6 +1960,13 @@ specifier|const
 name|AddressInfo
 modifier|&
 name|info
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alt_tool_name
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|// Same as above, but obtains AddressInfo by symbolizing top stack trace frame.
@@ -1960,6 +1982,13 @@ specifier|const
 name|StackTrace
 modifier|*
 name|trace
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|alt_tool_name
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|// Math
@@ -3718,6 +3747,9 @@ name|end
 parameter_list|,
 name|bool
 name|executable
+parameter_list|,
+name|bool
+name|writable
 parameter_list|)
 function_decl|;
 name|bool
@@ -3802,6 +3834,9 @@ decl_stmt|;
 name|bool
 name|executable
 decl_stmt|;
+name|bool
+name|writable
+decl_stmt|;
 name|AddressRange
 argument_list|(
 argument|uptr beg
@@ -3809,6 +3844,8 @@ argument_list|,
 argument|uptr end
 argument_list|,
 argument|bool executable
+argument_list|,
+argument|bool writable
 argument_list|)
 block|:
 name|next
@@ -3828,7 +3865,12 @@ argument_list|)
 operator|,
 name|executable
 argument_list|(
-argument|executable
+name|executable
+argument_list|)
+operator|,
+name|writable
+argument_list|(
+argument|writable
 argument_list|)
 block|{}
 block|}
@@ -4244,6 +4286,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|SetAbortMessage
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -4254,6 +4307,22 @@ name|INLINE
 name|void
 name|AndroidLogInit
 parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// FIXME: MacOS implementation could use CRSetCrashLogMessage.
+end_comment
+
+begin_function
+name|INLINE
+name|void
+name|SetAbortMessage
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
 block|{}
 end_function
 
@@ -4760,6 +4829,43 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|CheckNoDeepBind
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// Returns the requested amount of random data (up to 256 bytes) that can then
+end_comment
+
+begin_comment
+comment|// be used to seed a PRNG.
+end_comment
+
+begin_function_decl
+name|bool
+name|GetRandom
+parameter_list|(
+name|void
+modifier|*
+name|buffer
+parameter_list|,
+name|uptr
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/MachineBasicBlock.h ------------------------*- C++ -*-===//
+comment|//===- llvm/CodeGen/MachineBasicBlock.h -------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,13 +68,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ilist.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ilist_node.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineInstrBundleIterator.h"
+file|"llvm/ADT/simple_ilist.h"
 end_include
 
 begin_include
@@ -86,7 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/BranchProbability.h"
+file|"llvm/CodeGen/MachineInstrBundleIterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DebugLoc.h"
 end_include
 
 begin_include
@@ -104,7 +122,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/BranchProbability.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -113,13 +143,28 @@ directive|include
 file|<functional>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Pass
-decl_stmt|;
 name|class
 name|BasicBlock
 decl_stmt|;
@@ -130,7 +175,10 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
-name|MIPrinter
+name|ModuleSlotTracker
+decl_stmt|;
+name|class
+name|Pass
 decl_stmt|;
 name|class
 name|SlotIndexes
@@ -142,7 +190,10 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
-name|MachineBranchProbabilityInfo
+name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
 decl_stmt|;
 name|template
 operator|<
@@ -164,19 +215,20 @@ name|MachineBasicBlock
 operator|*
 name|Parent
 block|;
-typedef|typedef
+name|using
+name|instr_iterator
+operator|=
 name|simple_ilist
 operator|<
 name|MachineInstr
-operator|,
+block|,
 name|ilist_sentinel_tracking
 operator|<
 name|true
 operator|>>
 operator|::
 name|iterator
-name|instr_iterator
-expr_stmt|;
+block|;
 name|public
 operator|:
 name|void
@@ -186,45 +238,34 @@ name|MachineInstr
 operator|*
 name|N
 argument_list|)
-expr_stmt|;
+block|;
 name|void
 name|removeNodeFromList
-parameter_list|(
+argument_list|(
 name|MachineInstr
-modifier|*
+operator|*
 name|N
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|transferNodesFromList
-parameter_list|(
-name|ilist_traits
-modifier|&
-name|OldList
-parameter_list|,
-name|instr_iterator
-name|First
-parameter_list|,
-name|instr_iterator
-name|Last
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|ilist_traits&OldList
+argument_list|,
+argument|instr_iterator First
+argument_list|,
+argument|instr_iterator Last
+argument_list|)
+block|;
 name|void
 name|deleteNode
-parameter_list|(
+argument_list|(
 name|MachineInstr
-modifier|*
+operator|*
 name|MI
-parameter_list|)
-function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
+argument_list|)
+block|; }
+expr_stmt|;
 name|class
 name|MachineBasicBlock
 range|:
@@ -273,17 +314,18 @@ block|}
 struct|;
 name|private
 label|:
-typedef|typedef
+name|using
+name|Instructions
+init|=
 name|ilist
 operator|<
 name|MachineInstr
-operator|,
+decl_stmt|,
 name|ilist_sentinel_tracking
-operator|<
+decl|<
 name|true
-operator|>>
-name|Instructions
-expr_stmt|;
+decl|>>
+decl_stmt|;
 name|Instructions
 name|Insts
 decl_stmt|;
@@ -329,7 +371,9 @@ name|BranchProbability
 operator|>
 name|Probs
 expr_stmt|;
-typedef|typedef
+name|using
+name|probability_iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -338,9 +382,10 @@ name|BranchProbability
 operator|>
 operator|::
 name|iterator
-name|probability_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_probability_iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -349,18 +394,18 @@ name|BranchProbability
 operator|>
 operator|::
 name|const_iterator
-name|const_probability_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// Keep track of the physical registers that are livein of the basicblock.
-typedef|typedef
+name|using
+name|LiveInVector
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|RegisterMaskPair
 operator|>
-name|LiveInVector
-expr_stmt|;
+decl_stmt|;
 name|LiveInVector
 name|LiveIns
 decl_stmt|;
@@ -408,7 +453,9 @@ decl_stmt|;
 comment|// Intrusive list support
 name|MachineBasicBlock
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|MachineBasicBlock
 parameter_list|(
@@ -447,7 +494,7 @@ return|return
 name|BB
 return|;
 block|}
-comment|/// Return the name of the corresponding LLVM basic block, or "(null)".
+comment|/// Return the name of the corresponding LLVM basic block, or an empty string.
 name|StringRef
 name|getName
 argument_list|()
@@ -503,64 +550,72 @@ return|return
 name|xParent
 return|;
 block|}
-typedef|typedef
-name|Instructions
-operator|::
-name|iterator
+name|using
 name|instr_iterator
-expr_stmt|;
-typedef|typedef
+init|=
 name|Instructions
 operator|::
-name|const_iterator
-name|const_instr_iterator
-expr_stmt|;
-typedef|typedef
-name|Instructions
-operator|::
-name|reverse_iterator
-name|reverse_instr_iterator
-expr_stmt|;
-typedef|typedef
-name|Instructions
-operator|::
-name|const_reverse_iterator
-name|const_reverse_instr_iterator
-expr_stmt|;
-typedef|typedef
-name|MachineInstrBundleIterator
-operator|<
-name|MachineInstr
-operator|>
 name|iterator
-expr_stmt|;
-typedef|typedef
-name|MachineInstrBundleIterator
-operator|<
-specifier|const
-name|MachineInstr
-operator|>
+decl_stmt|;
+name|using
+name|const_instr_iterator
+init|=
+name|Instructions
+operator|::
 name|const_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|reverse_instr_iterator
+init|=
+name|Instructions
+operator|::
+name|reverse_iterator
+decl_stmt|;
+name|using
+name|const_reverse_instr_iterator
+init|=
+name|Instructions
+operator|::
+name|const_reverse_iterator
+decl_stmt|;
+name|using
+name|iterator
+init|=
 name|MachineInstrBundleIterator
 operator|<
 name|MachineInstr
-operator|,
-name|true
 operator|>
-name|reverse_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
 name|MachineInstrBundleIterator
 operator|<
 specifier|const
 name|MachineInstr
-operator|,
-name|true
 operator|>
+decl_stmt|;
+name|using
+name|reverse_iterator
+init|=
+name|MachineInstrBundleIterator
+operator|<
+name|MachineInstr
+decl_stmt|,
+name|true
+decl|>
+decl_stmt|;
+name|using
 name|const_reverse_iterator
-expr_stmt|;
+init|=
+name|MachineInstrBundleIterator
+operator|<
+specifier|const
+name|MachineInstr
+decl_stmt|,
+name|true
+decl|>
+decl_stmt|;
 name|unsigned
 name|size
 argument_list|()
@@ -784,20 +839,22 @@ name|rend
 argument_list|()
 return|;
 block|}
-typedef|typedef
+name|using
+name|instr_range
+init|=
 name|iterator_range
 operator|<
 name|instr_iterator
 operator|>
-name|instr_range
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_instr_range
+init|=
 name|iterator_range
 operator|<
 name|const_instr_iterator
 operator|>
-name|const_instr_range
-expr_stmt|;
+decl_stmt|;
 name|instr_range
 name|instrs
 parameter_list|()
@@ -979,31 +1036,9 @@ argument_list|)
 return|;
 block|}
 comment|// Machine-CFG iterators
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|::
-name|iterator
+name|using
 name|pred_iterator
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|::
-name|const_iterator
-name|const_pred_iterator
-expr_stmt|;
-typedef|typedef
+init|=
 name|std
 operator|::
 name|vector
@@ -1013,9 +1048,10 @@ operator|*
 operator|>
 operator|::
 name|iterator
-name|succ_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_pred_iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -1025,9 +1061,23 @@ operator|*
 operator|>
 operator|::
 name|const_iterator
+decl_stmt|;
+name|using
+name|succ_iterator
+init|=
+name|std
+operator|::
+name|vector
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|::
+name|iterator
+decl_stmt|;
+name|using
 name|const_succ_iterator
-expr_stmt|;
-typedef|typedef
+init|=
 name|std
 operator|::
 name|vector
@@ -1036,22 +1086,11 @@ name|MachineBasicBlock
 operator|*
 operator|>
 operator|::
-name|reverse_iterator
+name|const_iterator
+decl_stmt|;
+name|using
 name|pred_reverse_iterator
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|::
-name|const_reverse_iterator
-name|const_pred_reverse_iterator
-expr_stmt|;
-typedef|typedef
+init|=
 name|std
 operator|::
 name|vector
@@ -1061,9 +1100,10 @@ operator|*
 operator|>
 operator|::
 name|reverse_iterator
-name|succ_reverse_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_pred_reverse_iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -1073,8 +1113,33 @@ operator|*
 operator|>
 operator|::
 name|const_reverse_iterator
+decl_stmt|;
+name|using
+name|succ_reverse_iterator
+init|=
+name|std
+operator|::
+name|vector
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|::
+name|reverse_iterator
+decl_stmt|;
+name|using
 name|const_succ_reverse_iterator
-expr_stmt|;
+init|=
+name|std
+operator|::
+name|vector
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|::
+name|const_reverse_iterator
+decl_stmt|;
 name|pred_iterator
 name|pred_begin
 parameter_list|()
@@ -1502,12 +1567,13 @@ decl|const
 decl_stmt|;
 comment|// Iteration support for live in sets.  These sets are kept in sorted
 comment|// order by their register number.
-typedef|typedef
+name|using
+name|livein_iterator
+init|=
 name|LiveInVector
 operator|::
 name|const_iterator
-name|livein_iterator
-expr_stmt|;
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -1596,6 +1662,14 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Remove entry from the livein set and return iterator to the next.
+name|livein_iterator
+name|removeLiveIn
+parameter_list|(
+name|livein_iterator
+name|I
+parameter_list|)
+function_decl|;
 comment|/// Get the clobber mask for the start of this basic block. Funclets use this
 comment|/// to prevent register allocation across funclet transitions.
 specifier|const
@@ -1731,6 +1805,12 @@ operator|=
 name|V
 expr_stmt|;
 block|}
+comment|/// Returns true if it is legal to hoist instructions into this block.
+name|bool
+name|isLegalToHoistInto
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Code Layout methods.
 comment|/// Move 'this' block before or after the specified block.  This only moves
 comment|/// the block, it does not modify the CFG or adjust potential fall-throughs at
@@ -1958,10 +2038,21 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Return true if the block can implicitly transfer control to the block
-comment|/// after it by falling off the end of it.  This should return false if it can
-comment|/// reach the block after it, but it uses an explicit branch to do so (e.g., a
-comment|/// table jump).  True is a conservative answer.
+comment|/// Return the fallthrough block if the block can implicitly
+comment|/// transfer control to the block after it by falling off the end of
+comment|/// it.  This should return null if it can reach the block after
+comment|/// it, but it uses an explicit branch to do so (e.g., a table
+comment|/// jump).  Non-null return  is a conservative answer.
+name|MachineBasicBlock
+modifier|*
+name|getFallThrough
+parameter_list|()
+function_decl|;
+comment|/// Return true if the block can implicitly transfer control to the
+comment|/// block after it by falling off the end of it.  This should return
+comment|/// false if it can reach the block after it, but it uses an
+comment|/// explicit branch to do so (e.g., a table jump).  True is a
+comment|/// conservative answer.
 name|bool
 name|canFallThrough
 parameter_list|()
@@ -2680,6 +2771,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Find and return the merged DebugLoc of the branch instructions of the
+comment|/// block. Return UnknownLoc if there is none.
+name|DebugLoc
+name|findBranchDebugLoc
+parameter_list|()
+function_decl|;
 comment|/// Possible outcome of a register liveness query to computeRegisterLiveness()
 enum|enum
 name|LivenessQueryResult
@@ -2877,13 +2974,7 @@ name|Pred
 parameter_list|)
 function_decl|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 name|raw_ostream
 operator|&
 name|operator
@@ -2899,13 +2990,7 @@ operator|&
 name|MBB
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// This is useful when building IndexedMaps keyed on basic block pointers.
-end_comment
-
-begin_decl_stmt
 name|struct
 name|MBB2NumberFunctor
 range|:
@@ -2940,37 +3025,13 @@ argument_list|()
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// GraphTraits specializations for machine basic block graphs (machine-CFGs)
-end_comment
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Provide specializations of GraphTraits to be able to treat a
-end_comment
-
-begin_comment
 comment|// MachineFunction as a graph of MachineBasicBlocks.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2981,46 +3042,36 @@ name|MachineBasicBlock
 operator|*
 operator|>
 block|{
-typedef|typedef
-name|MachineBasicBlock
-modifier|*
+name|using
 name|NodeRef
-typedef|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+operator|=
+name|MachineBasicBlock
+operator|*
+block|;
+name|using
+name|ChildIteratorType
+operator|=
 name|MachineBasicBlock
 operator|::
 name|succ_iterator
-name|ChildIteratorType
-expr_stmt|;
-end_typedef
-
-begin_function
+block|;
 specifier|static
 name|NodeRef
 name|getEntryNode
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|BB
-parameter_list|)
+argument_list|(
+argument|MachineBasicBlock *BB
+argument_list|)
 block|{
 return|return
 name|BB
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_begin
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -3029,16 +3080,12 @@ name|succ_begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_end
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -3047,10 +3094,8 @@ name|succ_end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -3062,48 +3107,37 @@ name|MachineBasicBlock
 operator|*
 operator|>
 block|{
-typedef|typedef
+name|using
+name|NodeRef
+operator|=
 specifier|const
 name|MachineBasicBlock
-modifier|*
-name|NodeRef
-typedef|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+operator|*
+block|;
+name|using
+name|ChildIteratorType
+operator|=
 name|MachineBasicBlock
 operator|::
 name|const_succ_iterator
-name|ChildIteratorType
-expr_stmt|;
-end_typedef
-
-begin_function
+block|;
 specifier|static
 name|NodeRef
 name|getEntryNode
-parameter_list|(
-specifier|const
-name|MachineBasicBlock
-modifier|*
-name|BB
-parameter_list|)
+argument_list|(
+argument|const MachineBasicBlock *BB
+argument_list|)
 block|{
 return|return
 name|BB
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_begin
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -3112,16 +3146,12 @@ name|succ_begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_end
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -3130,34 +3160,14 @@ name|succ_end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|// Provide specializations of GraphTraits to be able to treat a
-end_comment
-
-begin_comment
 comment|// MachineFunction as a graph of MachineBasicBlocks and to walk it
-end_comment
-
-begin_comment
 comment|// in inverse order.  Inverse order for a function is considered
-end_comment
-
-begin_comment
 comment|// to be when traversing the predecessor edges of a MBB
-end_comment
-
-begin_comment
 comment|// instead of the successor edges.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -3168,36 +3178,26 @@ name|Inverse
 operator|<
 name|MachineBasicBlock
 operator|*
-operator|>
-expr|>
+operator|>>
 block|{
-typedef|typedef
-name|MachineBasicBlock
-modifier|*
+name|using
 name|NodeRef
-typedef|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+operator|=
+name|MachineBasicBlock
+operator|*
+block|;
+name|using
+name|ChildIteratorType
+operator|=
 name|MachineBasicBlock
 operator|::
 name|pred_iterator
-name|ChildIteratorType
-expr_stmt|;
-end_typedef
-
-begin_decl_stmt
+block|;
 specifier|static
 name|NodeRef
 name|getEntryNode
 argument_list|(
-name|Inverse
-operator|<
-name|MachineBasicBlock
-operator|*
-operator|>
-name|G
+argument|Inverse<MachineBasicBlock *> G
 argument_list|)
 block|{
 return|return
@@ -3206,16 +3206,12 @@ operator|.
 name|Graph
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_begin
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -3224,16 +3220,12 @@ name|pred_begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_end
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -3242,10 +3234,8 @@ name|pred_end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -3257,38 +3247,27 @@ operator|<
 specifier|const
 name|MachineBasicBlock
 operator|*
-operator|>
-expr|>
+operator|>>
 block|{
-typedef|typedef
+name|using
+name|NodeRef
+operator|=
 specifier|const
 name|MachineBasicBlock
-modifier|*
-name|NodeRef
-typedef|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+operator|*
+block|;
+name|using
+name|ChildIteratorType
+operator|=
 name|MachineBasicBlock
 operator|::
 name|const_pred_iterator
-name|ChildIteratorType
-expr_stmt|;
-end_typedef
-
-begin_decl_stmt
+block|;
 specifier|static
 name|NodeRef
 name|getEntryNode
 argument_list|(
-name|Inverse
-operator|<
-specifier|const
-name|MachineBasicBlock
-operator|*
-operator|>
-name|G
+argument|Inverse<const MachineBasicBlock *> G
 argument_list|)
 block|{
 return|return
@@ -3297,16 +3276,12 @@ operator|.
 name|Graph
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_begin
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -3315,16 +3290,12 @@ name|pred_begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ChildIteratorType
 name|child_end
-parameter_list|(
-name|NodeRef
-name|N
-parameter_list|)
+argument_list|(
+argument|NodeRef N
+argument_list|)
 block|{
 return|return
 name|N
@@ -3333,49 +3304,35 @@ name|pred_end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|/// MachineInstrSpan provides an interface to get an iteration range
-end_comment
-
-begin_comment
 comment|/// containing the instruction it was initialized with, along with all
-end_comment
-
-begin_comment
 comment|/// those instructions inserted prior to or following that instruction
-end_comment
-
-begin_comment
 comment|/// at some point after the MachineInstrSpan is constructed.
-end_comment
-
-begin_decl_stmt
 name|class
 name|MachineInstrSpan
 block|{
 name|MachineBasicBlock
-modifier|&
+operator|&
 name|MBB
-decl_stmt|;
+block|;
 name|MachineBasicBlock
 operator|::
 name|iterator
 name|I
-operator|,
+block|,
 name|B
-operator|,
+block|,
 name|E
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|MachineInstrSpan
 argument_list|(
 argument|MachineBasicBlock::iterator I
 argument_list|)
-block|:
+operator|:
 name|MBB
 argument_list|(
 operator|*
@@ -3384,12 +3341,12 @@ operator|->
 name|getParent
 argument_list|()
 argument_list|)
-operator|,
+block|,
 name|I
 argument_list|(
 name|I
 argument_list|)
-operator|,
+block|,
 name|B
 argument_list|(
 name|I
@@ -3411,7 +3368,7 @@ argument_list|(
 name|I
 argument_list|)
 argument_list|)
-operator|,
+block|,
 name|E
 argument_list|(
 argument|std::next(I)
@@ -3456,7 +3413,7 @@ return|;
 block|}
 name|bool
 name|empty
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|begin
@@ -3476,30 +3433,12 @@ return|return
 name|I
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// Increment \p It until it points to a non-debug instruction or to \p End
-end_comment
-
-begin_comment
 comment|/// and return the resulting iterator. This function should only be used
-end_comment
-
-begin_comment
 comment|/// MachineBasicBlock::{iterator, const_iterator, instr_iterator,
-end_comment
-
-begin_comment
 comment|/// const_instr_iterator} and the respective reverse iterators.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3528,33 +3467,15 @@ condition|)
 name|It
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|It
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// Decrement \p It until it points to a non-debug instruction or to \p Begin
-end_comment
-
-begin_comment
 comment|/// and return the resulting iterator. This function should only be used
-end_comment
-
-begin_comment
 comment|/// MachineBasicBlock::{iterator, const_iterator, instr_iterator,
-end_comment
-
-begin_comment
 comment|/// const_instr_iterator} and the respective reverse iterators.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|class
 name|IterT
@@ -3582,23 +3503,25 @@ condition|)
 name|It
 operator|--
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|It
 return|;
-end_return
+block|}
+expr|}
+end_decl_stmt
 
 begin_comment
-unit|}  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEBASICBLOCK_H
+end_comment
 
 end_unit
 

@@ -64,25 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataExtractor.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Flags.h"
+file|"lldb/Utility/Flags.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Core/RangeMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/VMRange.h"
 end_include
 
 begin_include
@@ -106,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Utility/VMRange.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private.h"
 end_include
 
@@ -124,20 +118,28 @@ name|DWARFCallFrameInfo
 block|{
 name|public
 label|:
+enum|enum
+name|Type
+block|{
+name|EH
+block|,
+name|DWARF
+block|}
+enum|;
 name|DWARFCallFrameInfo
 argument_list|(
 argument|ObjectFile&objfile
 argument_list|,
 argument|lldb::SectionSP&section
 argument_list|,
-argument|lldb::RegisterKind reg_kind
-argument_list|,
-argument|bool is_eh_frame
+argument|Type type
 argument_list|)
 empty_stmt|;
 operator|~
 name|DWARFCallFrameInfo
 argument_list|()
+operator|=
+expr|default
 expr_stmt|;
 comment|// Locate an AddressRange that includes the provided Address in this
 comment|// object's eh_frame/debug_info
@@ -236,6 +238,25 @@ init|=
 literal|8
 block|}
 enum|;
+enum|enum
+name|CFIVersion
+block|{
+name|CFI_VERSION1
+init|=
+literal|1
+block|,
+comment|// DWARF v.2
+name|CFI_VERSION3
+init|=
+literal|3
+block|,
+comment|// DWARF v.3
+name|CFI_VERSION4
+init|=
+literal|4
+comment|// DWARF v.4, v.5
+block|}
+enum|;
 struct|struct
 name|CIE
 block|{
@@ -253,6 +274,21 @@ index|]
 decl_stmt|;
 comment|// This is typically empty or very
 comment|// short.
+name|uint8_t
+name|address_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+decl_stmt|;
+comment|// The size of a target address.
+name|uint8_t
+name|segment_size
+init|=
+literal|0
+decl_stmt|;
+comment|// The size of a segment selector.
 name|uint32_t
 name|code_align
 decl_stmt|;
@@ -480,13 +516,10 @@ operator|::
 name|SectionSP
 name|m_section_sp
 expr_stmt|;
-name|lldb
-operator|::
-name|RegisterKind
-name|m_reg_kind
-expr_stmt|;
 name|Flags
 name|m_flags
+init|=
+literal|0
 decl_stmt|;
 name|cie_map_t
 name|m_cie_map
@@ -496,6 +529,8 @@ name|m_cfi_data
 decl_stmt|;
 name|bool
 name|m_cfi_data_initialized
+init|=
+name|false
 decl_stmt|;
 comment|// only copy the section into the DE once
 name|FDEEntryMap
@@ -503,6 +538,8 @@ name|m_fde_index
 decl_stmt|;
 name|bool
 name|m_fde_index_initialized
+init|=
+name|false
 decl_stmt|;
 comment|// only scan the section for FDEs once
 name|std
@@ -511,8 +548,8 @@ name|mutex
 name|m_fde_index_mutex
 expr_stmt|;
 comment|// and isolate the thread that does it
-name|bool
-name|m_is_eh_frame
+name|Type
+name|m_type
 decl_stmt|;
 name|CIESP
 name|ParseCIE
@@ -522,6 +559,27 @@ name|uint32_t
 name|cie_offset
 parameter_list|)
 function_decl|;
+name|lldb
+operator|::
+name|RegisterKind
+name|GetRegisterKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_type
+operator|==
+name|EH
+operator|?
+name|lldb
+operator|::
+name|eRegisterKindEHFrame
+operator|:
+name|lldb
+operator|::
+name|eRegisterKindDWARF
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/CallGraphSCCPass.h"
+file|"llvm/Analysis/AssumptionCache.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/AssumptionCache.h"
+file|"llvm/Analysis/CallGraphSCCPass.h"
 end_include
 
 begin_include
@@ -89,6 +89,9 @@ name|llvm
 block|{
 name|class
 name|AssumptionCacheTracker
+decl_stmt|;
+name|class
+name|BlockFrequencyInfo
 decl_stmt|;
 name|class
 name|CallSite
@@ -431,6 +434,13 @@ name|int
 operator|>
 name|HotCallSiteThreshold
 expr_stmt|;
+comment|/// Threshold to use when the callsite is considered cold.
+name|Optional
+operator|<
+name|int
+operator|>
+name|ColdCallSiteThreshold
+expr_stmt|;
 block|}
 struct|;
 comment|/// Generate the parameters to tune the inline cost analysis based only on the
@@ -463,6 +473,20 @@ name|OptLevel
 parameter_list|,
 name|unsigned
 name|SizeOptLevel
+parameter_list|)
+function_decl|;
+comment|/// Return the cost associated with a callsite, including parameter passing
+comment|/// and the call/return instruction.
+name|int
+name|getCallsiteCost
+parameter_list|(
+name|CallSite
+name|CS
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
 parameter_list|)
 function_decl|;
 comment|/// \brief Get an InlineCost object representing the cost of inlining this
@@ -504,6 +528,19 @@ operator|)
 operator|>
 operator|&
 name|GetAssumptionCache
+argument_list|,
+name|Optional
+operator|<
+name|function_ref
+operator|<
+name|BlockFrequencyInfo
+operator|&
+operator|(
+name|Function
+operator|&
+operator|)
+operator|>>
+name|GetBFI
 argument_list|,
 name|ProfileSummaryInfo
 operator|*
@@ -547,6 +584,19 @@ operator|)
 operator|>
 operator|&
 name|GetAssumptionCache
+argument_list|,
+name|Optional
+operator|<
+name|function_ref
+operator|<
+name|BlockFrequencyInfo
+operator|&
+operator|(
+name|Function
+operator|&
+operator|)
+operator|>>
+name|GetBFI
 argument_list|,
 name|ProfileSummaryInfo
 operator|*

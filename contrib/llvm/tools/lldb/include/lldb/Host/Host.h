@@ -34,47 +34,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|liblldb_Host_h_
+name|LLDB_HOST_HOST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|liblldb_Host_h_
+name|LLDB_HOST_HOST_H
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StringList.h"
-end_include
 
 begin_include
 include|#
@@ -85,13 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Host/HostThread.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/HostThread.h"
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StringList.h"
 end_include
 
 begin_include
@@ -106,6 +79,36 @@ directive|include
 file|"lldb/lldb-private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cerrno>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -116,6 +119,63 @@ decl_stmt|;
 name|class
 name|ProcessLaunchInfo
 decl_stmt|;
+comment|//----------------------------------------------------------------------
+comment|// Exit Type for inferior processes
+comment|//----------------------------------------------------------------------
+struct|struct
+name|WaitStatus
+block|{
+enum|enum
+name|Type
+enum|:
+name|uint8_t
+block|{
+name|Exit
+block|,
+comment|// The status represents the return code from normal
+comment|// program exit (i.e. WIFEXITED() was true)
+name|Signal
+block|,
+comment|// The status represents the signal number that caused
+comment|// the program to exit (i.e. WIFSIGNALED() was true)
+name|Stop
+block|,
+comment|// The status represents the signal number that caused the
+comment|// program to stop (i.e. WIFSTOPPED() was true)
+block|}
+enum|;
+name|Type
+name|type
+decl_stmt|;
+name|uint8_t
+name|status
+decl_stmt|;
+name|WaitStatus
+argument_list|(
+argument|Type type
+argument_list|,
+argument|uint8_t status
+argument_list|)
+block|:
+name|type
+argument_list|(
+name|type
+argument_list|)
+operator|,
+name|status
+argument_list|(
+argument|status
+argument_list|)
+block|{}
+specifier|static
+name|WaitStatus
+name|Decode
+argument_list|(
+argument|int wstatus
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
 comment|//----------------------------------------------------------------------
 comment|/// @class Host Host.h "lldb/Host/Host.h"
 comment|/// @brief A class that provides host computer information.
@@ -312,40 +372,6 @@ comment|//------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// Get the thread ID for the calling thread in the current process.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @return
-end_comment
-
-begin_comment
-comment|///     The thread ID for the calling thread in the current process.
-end_comment
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|tid_t
-name|GetCurrentThreadID
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
 comment|/// Get the thread token (the one returned by ThreadCreate when the thread was
 end_comment
 
@@ -395,64 +421,6 @@ name|signo
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|ThreadLocalStorageCleanupCallback
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|thread_key_t
-name|ThreadLocalStorageCreate
-argument_list|(
-argument|ThreadLocalStorageCleanupCallback callback
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|ThreadLocalStorageGet
-argument_list|(
-name|lldb
-operator|::
-name|thread_key_t
-name|key
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ThreadLocalStorageSet
-argument_list|(
-name|lldb
-operator|::
-name|thread_key_t
-name|key
-argument_list|,
-name|void
-operator|*
-name|value
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -772,112 +740,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__GLIBC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|)
-operator|&&
-expr|\
-operator|!
-name|defined
-argument_list|(
-name|__ANDROID__
-argument_list|)
-end_if
-
-begin_function_decl
-specifier|static
-name|short
-name|GetPosixspawnFlags
-parameter_list|(
-specifier|const
-name|ProcessLaunchInfo
-modifier|&
-name|launch_info
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|Error
-name|LaunchProcessPosixSpawn
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|exe_path
-argument_list|,
-specifier|const
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
-argument_list|,
-name|lldb
-operator|::
-name|pid_t
-operator|&
-name|pid
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|bool
-name|AddPosixSpawnFileAction
-parameter_list|(
-name|void
-modifier|*
-name|file_actions
-parameter_list|,
-specifier|const
-name|FileAction
-modifier|*
-name|info
-parameter_list|,
-name|Log
-modifier|*
-name|log
-parameter_list|,
-name|Error
-modifier|&
-name|error
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 specifier|static
 specifier|const
@@ -892,7 +754,7 @@ end_expr_stmt
 
 begin_function_decl
 specifier|static
-name|Error
+name|Status
 name|LaunchProcess
 parameter_list|(
 name|ProcessLaunchInfo
@@ -932,7 +794,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|Error
+name|Status
 name|ShellExpandArguments
 parameter_list|(
 name|ProcessLaunchInfo
@@ -948,7 +810,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|Error
+name|Status
 name|RunShellCommand
 argument_list|(
 specifier|const
@@ -995,7 +857,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|Error
+name|Status
 name|RunShellCommand
 argument_list|(
 specifier|const
@@ -1039,34 +901,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|DataBufferSP
-name|GetAuxvData
-argument_list|(
-name|lldb_private
-operator|::
-name|Process
-operator|*
-name|process
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|DataBufferSP
-name|GetAuxvData
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|bool
@@ -1095,18 +929,63 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Connection
+operator|>
+name|CreateDefaultConnection
+argument_list|(
+argument|llvm::StringRef url
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 unit|};  }
 comment|// namespace lldb_private
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+unit|namespace
+name|llvm
+end_macro
+
+begin_block
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|format_provider
+operator|<
+name|lldb_private
+operator|::
+name|WaitStatus
+operator|>
+block|{
+comment|/// Options = "" gives a human readable description of the status
+comment|/// Options = "g" gives a gdb-remote protocol status (e.g., X09)
+specifier|static
+name|void
+name|format
+argument_list|(
+argument|const lldb_private::WaitStatus&WS
+argument_list|,
+argument|raw_ostream&OS
+argument_list|,
+argument|llvm::StringRef Options
+argument_list|)
+block|; }
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
-comment|// #if defined(__cplusplus)
+comment|// namespace llvm
 end_comment
 
 begin_endif
@@ -1115,7 +994,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_Host_h_
+comment|// LLDB_HOST_HOST_H
 end_comment
 
 end_unit

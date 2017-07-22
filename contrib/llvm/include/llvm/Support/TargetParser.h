@@ -74,6 +74,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -224,7 +230,7 @@ name|AEK_FP
 init|=
 literal|0x8
 block|,
-name|AEK_HWDIV
+name|AEK_HWDIVTHUMB
 init|=
 literal|0x10
 block|,
@@ -259,6 +265,10 @@ block|,
 name|AEK_RAS
 init|=
 literal|0x1000
+block|,
+name|AEK_SVE
+init|=
+literal|0x2000
 block|,
 comment|// Unsupported extensions.
 name|AEK_OS
@@ -552,6 +562,18 @@ name|StringRef
 name|Arch
 parameter_list|)
 function_decl|;
+name|StringRef
+name|computeDefaultTargetABI
+parameter_list|(
+specifier|const
+name|Triple
+modifier|&
+name|TT
+parameter_list|,
+name|StringRef
+name|CPU
+parameter_list|)
+function_decl|;
 block|}
 comment|// namespace ARM
 comment|// FIXME:This should be made into class design,to avoid dupplication.
@@ -633,6 +655,10 @@ block|,
 name|AEK_LSE
 init|=
 literal|0x100
+block|,
+name|AEK_SVE
+init|=
+literal|0x200
 block|}
 enum|;
 name|StringRef

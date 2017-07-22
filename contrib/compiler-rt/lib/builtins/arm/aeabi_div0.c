@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * RTABI 4.3.2 - Division by zero  *  * The *div0 functions:  * - Return the value passed to them as a parameter  * - Or, return a fixed value defined by the execution environment (such as 0)  * - Or, raise a signal (often SIGFPE) or throw an exception, and do not return  *  * An application may provide its own implementations of the *div0 functions to  * for a particular behaviour from the *div and *divmod functions called out of  * line.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"../int_lib.h"
+end_include
+
 begin_comment
 comment|/* provide an unused declaration to pacify pendantic compilation */
 end_comment
@@ -29,6 +35,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
+name|AEABI_RTABI
 name|int
 name|__attribute__
 argument_list|(
@@ -58,6 +65,7 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
+name|AEABI_RTABI
 name|long
 name|long
 name|__attribute__

@@ -85,7 +85,11 @@ block|{
 comment|/// This type defines the callback to add a pre-existing native object file
 comment|/// (e.g. in a cache).
 comment|///
-comment|/// File callbacks must be thread safe.
+comment|/// MB->getBufferIdentifier() is a valid path for the file at the time that it
+comment|/// was opened, but clients should prefer to access MB directly in order to
+comment|/// avoid a potential race condition.
+comment|///
+comment|/// Buffer callbacks must be thread safe.
 typedef|typedef
 name|std
 operator|::
@@ -95,25 +99,25 @@ name|void
 argument_list|(
 argument|unsigned Task
 argument_list|,
-argument|StringRef Path
+argument|std::unique_ptr<MemoryBuffer> MB
 argument_list|)
 operator|>
-name|AddFileFn
+name|AddBufferFn
 expr_stmt|;
 comment|/// Create a local file system cache which uses the given cache directory and
-comment|/// file callback.
+comment|/// file callback. This function also creates the cache directory if it does not
+comment|/// already exist.
+name|Expected
+operator|<
 name|NativeObjectCache
+operator|>
 name|localCache
 argument_list|(
-name|std
-operator|::
-name|string
-name|CacheDirectoryPath
+argument|StringRef CacheDirectoryPath
 argument_list|,
-name|AddFileFn
-name|AddFile
+argument|AddBufferFn AddBuffer
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 comment|// namespace lto
 block|}

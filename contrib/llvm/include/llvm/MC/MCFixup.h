@@ -186,7 +186,7 @@ name|MCExpr
 modifier|*
 name|Value
 decl_stmt|;
-comment|/// The byte index of start of the relocation inside the encoded instruction.
+comment|/// The byte index of start of the relocation inside the MCFragment.
 name|uint32_t
 name|Offset
 decl_stmt|;

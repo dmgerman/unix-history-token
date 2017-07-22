@@ -351,6 +351,15 @@ comment|/// True if the intrinsic is marked as convergent.
 name|bool
 name|isConvergent
 decl_stmt|;
+comment|/// True if the intrinsic has side effects that aren't captured by any
+comment|/// of the other flags.
+name|bool
+name|hasSideEffects
+decl_stmt|;
+comment|// True if the intrinsic is marked as speculatable.
+name|bool
+name|isSpeculatable
+decl_stmt|;
 enum|enum
 name|ArgAttribute
 block|{

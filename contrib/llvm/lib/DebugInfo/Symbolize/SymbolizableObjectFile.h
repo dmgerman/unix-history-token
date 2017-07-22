@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SymbolizableObjectFile.h -------------------------------- C++ -----===//
+comment|//===- SymbolizableObjectFile.h ---------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,13 +62,55 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DIContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/Symbolize/SymbolizableModule.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -78,13 +120,6 @@ block|{
 name|class
 name|DataExtractor
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
 name|namespace
 name|symbolize
 block|{
@@ -315,12 +350,12 @@ name|DICtx
 argument_list|)
 block|; }
 block|;  }
-comment|// namespace symbolize
+comment|// end namespace symbolize
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

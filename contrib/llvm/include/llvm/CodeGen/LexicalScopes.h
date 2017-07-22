@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- LexicalScopes.cpp - Collecting lexical scope info -*- C++ -*--------===//
+comment|//===- LexicalScopes.cpp - Collecting lexical scope info --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -104,19 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DebugLoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DebugInfoMetadata.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ValueHandle.h"
+file|<cassert>
 end_include
 
 begin_include
@@ -136,19 +124,24 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MachineInstr
-decl_stmt|;
-name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|MachineFunction
 decl_stmt|;
+name|class
+name|MachineInstr
+decl_stmt|;
+name|class
+name|MDNode
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// InsnRange - This is used to track range of instructions with identical
 comment|/// lexical scope.
 comment|///
-typedef|typedef
+name|using
+name|InsnRange
+init|=
 name|std
 operator|::
 name|pair
@@ -156,13 +149,11 @@ operator|<
 specifier|const
 name|MachineInstr
 operator|*
-operator|,
-specifier|const
+decl_stmt|, const
 name|MachineInstr
-operator|*
-operator|>
-name|InsnRange
-expr_stmt|;
+modifier|*
+decl|>
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// LexicalScope - This class is used to track scope information.
 comment|///
@@ -199,40 +190,40 @@ argument_list|)
 operator|,
 name|AbstractScope
 argument_list|(
-name|A
-argument_list|)
-operator|,
-name|LastInsn
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|FirstInsn
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|DFSIn
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|DFSOut
-argument_list|(
-literal|0
+argument|A
 argument_list|)
 block|{
 name|assert
 argument_list|(
-operator|(
-operator|!
 name|D
-operator|||
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|D
+operator|->
+name|getSubprogram
+argument_list|()
+operator|->
+name|getUnit
+argument_list|()
+operator|->
+name|getEmissionKind
+argument_list|()
+operator|!=
+name|DICompileUnit
+operator|::
+name|NoDebug
+operator|&&
+literal|"Don't build lexical scopes for non-debug locations"
+argument_list|)
+block|;
+name|assert
+argument_list|(
 name|D
 operator|->
 name|isResolved
 argument_list|()
-operator|)
 operator|&&
 literal|"Expected resolved node"
 argument_list|)
@@ -635,21 +626,29 @@ specifier|const
 name|MachineInstr
 modifier|*
 name|LastInsn
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Last instruction of this scope.
 specifier|const
 name|MachineInstr
 modifier|*
 name|FirstInsn
+init|=
+name|nullptr
 decl_stmt|;
 comment|// First instruction of this scope.
 name|unsigned
 name|DFSIn
-decl_stmt|,
-name|DFSOut
+init|=
+literal|0
 decl_stmt|;
-comment|// In& Out Depth use to determine
-comment|// scope nesting.
+comment|// In& Out Depth use to determine scope nesting.
+name|unsigned
+name|DFSOut
+init|=
+literal|0
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -663,27 +662,19 @@ name|public
 label|:
 name|LexicalScopes
 argument_list|()
-operator|:
-name|MF
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|CurrentFnLexicalScope
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// initialize - Scan machine function and constuct lexical scope nest, resets
 comment|/// the instance if necessary.
 name|void
 name|initialize
-argument_list|(
+parameter_list|(
 specifier|const
 name|MachineFunction
-operator|&
-argument_list|)
-expr_stmt|;
+modifier|&
+parameter_list|)
+function_decl|;
 comment|/// releaseMemory - release memory.
 name|void
 name|reset
@@ -899,8 +890,9 @@ block|}
 comment|/// dump - Print data structures to dbgs().
 name|void
 name|dump
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getOrCreateAbstractScope - Find or create an abstract lexical scope.
 name|LexicalScope
 modifier|*
@@ -1045,12 +1037,12 @@ operator|&
 name|M
 argument_list|)
 decl_stmt|;
-name|private
-label|:
 specifier|const
 name|MachineFunction
 modifier|*
 name|MF
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// LexicalScopeMap - Tracks the scopes in the current function.
 comment|// Use an unordered_map to ensure value pointer validity over insertion.
@@ -1129,6 +1121,8 @@ comment|///
 name|LexicalScope
 modifier|*
 name|CurrentFnLexicalScope
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1136,13 +1130,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_LEXICALSCOPES_H
+end_comment
 
 end_unit
 

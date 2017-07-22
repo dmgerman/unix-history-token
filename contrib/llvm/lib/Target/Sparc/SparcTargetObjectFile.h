@@ -73,6 +73,15 @@ operator|:
 name|TargetLoweringObjectFileELF
 argument_list|()
 block|{}
+name|void
+name|Initialize
+argument_list|(
+argument|MCContext&Ctx
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+name|override
+block|;
 specifier|const
 name|MCExpr
 operator|*

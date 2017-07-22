@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/lib/CodeGen/AsmPrinter/CodeViewDebug.h ----*- C++ -*--===//
+comment|//===- llvm/lib/CodeGen/AsmPrinter/CodeViewDebug.h --------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,7 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"DbgValueHistoryCalculator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"DebugHandlerBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -74,25 +86,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/AsmPrinter.h"
+file|"llvm/ADT/MapVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunction.h"
+file|"llvm/ADT/SetVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineModuleInfo.h"
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/CodeView.h"
 end_include
 
 begin_include
@@ -110,40 +128,94 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DebugInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DebugLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCStreamer.h"
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetLoweringObjectFile.h"
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tuple>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unordered_map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct_decl|struct
+name|ClassInfo
+struct_decl|;
 name|class
 name|StringRef
 decl_stmt|;
 name|class
-name|LexicalScope
+name|AsmPrinter
 decl_stmt|;
-struct_decl|struct
-name|ClassInfo
-struct_decl|;
+name|class
+name|Function
+decl_stmt|;
+name|class
+name|GlobalVariable
+decl_stmt|;
+name|class
+name|MCSectionCOFF
+decl_stmt|;
+name|class
+name|MCStreamer
+decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
 comment|/// \brief Collects and handles line tables information in a CodeView format.
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -156,8 +228,6 @@ name|MCStreamer
 operator|&
 name|OS
 block|;
-name|llvm
-operator|::
 name|BumpPtrAllocator
 name|Allocator
 block|;
@@ -377,9 +447,6 @@ literal|1
 operator|>
 name|Locals
 block|;
-name|DebugLoc
-name|LastLoc
-block|;
 specifier|const
 name|MCSymbol
 operator|*
@@ -413,6 +480,8 @@ block|;
 name|FunctionInfo
 operator|*
 name|CurFn
+operator|=
+name|nullptr
 block|;
 comment|/// The set of comdat .debug$S sections that we've seen so far. Each section
 comment|/// must start with a magic version number that must only be emitted once.
@@ -620,7 +689,9 @@ name|LocalUDTs
 block|,
 name|GlobalUDTs
 block|;
-typedef|typedef
+name|using
+name|FileToFilepathMapTy
+operator|=
 name|std
 operator|::
 name|map
@@ -628,110 +699,105 @@ operator|<
 specifier|const
 name|DIFile
 operator|*
-operator|,
+block|,
 name|std
 operator|::
 name|string
 operator|>
-name|FileToFilepathMapTy
-expr_stmt|;
+block|;
 name|FileToFilepathMapTy
 name|FileToFilepathMap
-decl_stmt|;
+block|;
 name|StringRef
 name|getFullFilepath
-parameter_list|(
+argument_list|(
 specifier|const
 name|DIFile
-modifier|*
+operator|*
 name|S
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|unsigned
 name|maybeRecordFile
-parameter_list|(
+argument_list|(
 specifier|const
 name|DIFile
-modifier|*
+operator|*
 name|F
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|maybeRecordLocation
-parameter_list|(
+argument_list|(
 specifier|const
 name|DebugLoc
-modifier|&
+operator|&
 name|DL
-parameter_list|,
+argument_list|,
 specifier|const
 name|MachineFunction
-modifier|*
+operator|*
 name|MF
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|clear
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|setCurrentSubprogram
-parameter_list|(
-specifier|const
-name|DISubprogram
-modifier|*
-name|SP
-parameter_list|)
+argument_list|(
+argument|const DISubprogram *SP
+argument_list|)
 block|{
 name|CurrentSubprogram
 operator|=
 name|SP
-expr_stmt|;
+block|;
 name|LocalUDTs
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Emit the magic version number at the start of a CodeView type or symbol
 comment|/// section. Appears at the front of every .debug$S or .debug$T section.
 name|void
 name|emitCodeViewMagicVersion
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|emitTypeInformation
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|emitCompilerInformation
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|emitInlineeLinesSubsection
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|emitDebugInfoForFunction
-parameter_list|(
+argument_list|(
 specifier|const
 name|Function
-modifier|*
+operator|*
 name|GV
-parameter_list|,
+argument_list|,
 name|FunctionInfo
-modifier|&
+operator|&
 name|FI
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|emitDebugInfoForGlobals
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|emitDebugInfoForRetainedTypes
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|emitDebugInfoForUDTs
 argument_list|(
@@ -751,80 +817,78 @@ name|TypeIndex
 operator|>>
 name|UDTs
 argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|emitDebugInfoForGlobal
-parameter_list|(
+argument_list|(
 specifier|const
 name|DIGlobalVariable
-modifier|*
+operator|*
 name|DIGV
-parameter_list|,
+argument_list|,
 specifier|const
 name|GlobalVariable
-modifier|*
+operator|*
 name|GV
-parameter_list|,
+argument_list|,
 name|MCSymbol
-modifier|*
+operator|*
 name|GVSym
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Opens a subsection of the given kind in a .debug$S codeview section.
 comment|/// Returns an end label for use with endCVSubsection when the subsection is
 comment|/// finished.
 name|MCSymbol
-modifier|*
+operator|*
 name|beginCVSubsection
 argument_list|(
-name|codeview
-operator|::
-name|ModuleSubstreamKind
-name|Kind
+argument|codeview::DebugSubsectionKind Kind
 argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|endCVSubsection
-parameter_list|(
+argument_list|(
 name|MCSymbol
-modifier|*
+operator|*
 name|EndLabel
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|emitInlinedCallSite
-parameter_list|(
+argument_list|(
 specifier|const
 name|FunctionInfo
-modifier|&
+operator|&
 name|FI
-parameter_list|,
+argument_list|,
 specifier|const
 name|DILocation
-modifier|*
+operator|*
 name|InlinedAt
-parameter_list|,
+argument_list|,
 specifier|const
 name|InlineSite
-modifier|&
+operator|&
 name|Site
-parameter_list|)
-function_decl|;
-typedef|typedef
+argument_list|)
+block|;
+name|using
+name|InlinedVariable
+operator|=
 name|DbgValueHistoryMap
 operator|::
 name|InlinedVariable
-name|InlinedVariable
-expr_stmt|;
+block|;
 name|void
 name|collectVariableInfo
-parameter_list|(
+argument_list|(
 specifier|const
 name|DISubprogram
-modifier|*
+operator|*
 name|SP
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|collectVariableInfoFromMFTable
 argument_list|(
@@ -835,7 +899,7 @@ operator|>
 operator|&
 name|Processed
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Records information about a local variable in the appropriate scope. In
 comment|/// particular, locals from inlined code live inside the inlining site.
 name|void
@@ -850,7 +914,7 @@ name|DILocation
 operator|*
 name|Loc
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Emits local variables in the appropriate order.
 name|void
 name|emitLocalVariableList
@@ -861,17 +925,17 @@ name|LocalVariable
 operator|>
 name|Locals
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Emits an S_LOCAL record and its associated defined ranges.
 name|void
 name|emitLocalVariable
-parameter_list|(
+argument_list|(
 specifier|const
 name|LocalVariable
-modifier|&
+operator|&
 name|Var
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Translates the DIType to codeview if necessary and returns a type index
 comment|/// for it.
 name|codeview
@@ -883,7 +947,7 @@ argument|DITypeRef TypeRef
 argument_list|,
 argument|DITypeRef ClassTyRef = DITypeRef()
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -899,7 +963,7 @@ name|DICompositeType
 operator|*
 name|Class
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -910,27 +974,21 @@ name|DIScope
 operator|*
 name|Scope
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
 name|getVBPTypeIndex
 argument_list|()
-expr_stmt|;
+block|;
 name|void
 name|addToUDTs
 argument_list|(
-specifier|const
-name|DIType
-operator|*
-name|Ty
+argument|const DIType *Ty
 argument_list|,
-name|codeview
-operator|::
-name|TypeIndex
-name|TI
+argument|codeview::TypeIndex TI
 argument_list|)
-decl_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -946,7 +1004,7 @@ name|DIType
 operator|*
 name|ClassTy
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -957,7 +1015,7 @@ name|DIDerivedType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -968,7 +1026,7 @@ name|DICompositeType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -979,7 +1037,7 @@ name|DIBasicType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -990,7 +1048,7 @@ name|DIDerivedType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -1001,7 +1059,7 @@ name|DIDerivedType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -1012,7 +1070,7 @@ name|DIDerivedType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -1023,7 +1081,7 @@ name|DISubroutineType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -1034,7 +1092,7 @@ name|DIDerivedType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -1046,7 +1104,7 @@ argument|const DIType *ClassTy
 argument_list|,
 argument|int ThisAdjustment
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -1057,7 +1115,7 @@ name|DICompositeType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -1068,7 +1126,7 @@ name|DICompositeType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -1079,7 +1137,7 @@ name|DICompositeType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// Symbol records should point to complete types, but type records should
 comment|/// always point to incomplete types to avoid cycles in the type graph. Only
 comment|/// use this entry point when generating symbol records. The complete and
@@ -1092,7 +1150,7 @@ name|getCompleteTypeIndex
 argument_list|(
 argument|DITypeRef TypeRef
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -1103,7 +1161,7 @@ name|DICompositeType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 name|codeview
 operator|::
 name|TypeIndex
@@ -1114,36 +1172,35 @@ name|DICompositeType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
-struct_decl|struct
+block|;    struct
 name|TypeLoweringScope
-struct_decl|;
+block|;
 name|void
 name|emitDeferredCompleteTypes
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|collectMemberInfo
-parameter_list|(
+argument_list|(
 name|ClassInfo
-modifier|&
+operator|&
 name|Info
-parameter_list|,
+argument_list|,
 specifier|const
 name|DIDerivedType
-modifier|*
+operator|*
 name|DDTy
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|ClassInfo
 name|collectClassInfo
-parameter_list|(
+argument_list|(
 specifier|const
 name|DICompositeType
-modifier|*
+operator|*
 name|Ty
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// Common record member lowering functionality for record types, which are
 comment|/// structs, classes, and unions. Returns the field list index and the member
 comment|/// count.
@@ -1154,13 +1211,13 @@ operator|<
 name|codeview
 operator|::
 name|TypeIndex
-operator|,
+block|,
 name|codeview
 operator|::
 name|TypeIndex
-operator|,
+block|,
 name|unsigned
-operator|,
+block|,
 name|bool
 operator|>
 name|lowerRecordFieldList
@@ -1170,7 +1227,7 @@ name|DICompositeType
 operator|*
 name|Ty
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// Inserts {{Node, ClassTy}, TI} into TypeIndices and checks for duplicates.
 name|codeview
 operator|::
@@ -1183,30 +1240,44 @@ argument|codeview::TypeIndex TI
 argument_list|,
 argument|const DIType *ClassTy = nullptr
 argument_list|)
-expr_stmt|;
+block|;
 name|unsigned
 name|getPointerSizeInBytes
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
+name|protected
+operator|:
+comment|/// \brief Gather pre-function debug information.
+name|void
+name|beginFunctionImpl
+argument_list|(
+argument|const MachineFunction *MF
+argument_list|)
+name|override
+block|;
+comment|/// \brief Gather post-function debug information.
+name|void
+name|endFunctionImpl
+argument_list|(
+argument|const MachineFunction *
+argument_list|)
+name|override
+block|;
 name|public
-label|:
+operator|:
 name|CodeViewDebug
 argument_list|(
 name|AsmPrinter
 operator|*
 name|Asm
 argument_list|)
-expr_stmt|;
+block|;
 name|void
 name|setSymbolSize
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|MCSymbol
-operator|*
+argument|const MCSymbol *
 argument_list|,
-name|uint64_t
+argument|uint64_t
 argument_list|)
 name|override
 block|{}
@@ -1215,55 +1286,31 @@ name|void
 name|endModule
 argument_list|()
 name|override
-expr_stmt|;
-comment|/// \brief Gather pre-function debug information.
-name|void
-name|beginFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-name|override
-decl_stmt|;
-comment|/// \brief Gather post-function debug information.
-name|void
-name|endFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-argument_list|)
-name|override
-decl_stmt|;
+block|;
 comment|/// \brief Process beginning of an instruction.
 name|void
 name|beginInstruction
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|)
 name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
-comment|// End of namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_CODEGEN_ASMPRINTER_CODEVIEWDEBUG_H
+end_comment
 
 end_unit
 

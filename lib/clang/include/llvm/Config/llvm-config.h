@@ -194,17 +194,6 @@ comment|/* #undef LLVM_ON_WIN32 */
 end_comment
 
 begin_comment
-comment|/* Installation prefix directory */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_PREFIX
-value|"/usr"
-end_define
-
-begin_comment
 comment|/* Define if we have the Intel JIT API runtime support library */
 end_comment
 
@@ -234,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MAJOR
-value|4
+value|5
 end_define
 
 begin_comment
@@ -267,7 +256,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"4.0.0"
+value|"5.0.0svn"
 end_define
 
 begin_endif

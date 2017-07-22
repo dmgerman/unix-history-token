@@ -300,6 +300,9 @@ comment|///< Promotion
 name|ICR_Conversion
 block|,
 comment|///< Conversion
+name|ICR_OCL_Scalar_Widening
+block|,
+comment|///< OpenCL Scalar Widening
 name|ICR_Complex_Real_Conversion
 block|,
 comment|///< Complex<-> Real conversion
@@ -1864,22 +1867,14 @@ comment|/// Might be a UsingShadowDecl or a FunctionTemplateDecl.
 name|DeclAccessPair
 name|FoundDecl
 decl_stmt|;
-comment|// BuiltinTypes - Provides the return and parameter types of a
-comment|// built-in overload candidate. Only valid when Function is NULL.
-struct|struct
-block|{
+comment|/// BuiltinParamTypes - Provides the parameter types of a built-in overload
+comment|/// candidate. Only valid when Function is NULL.
 name|QualType
-name|ResultTy
-decl_stmt|;
-name|QualType
-name|ParamTypes
+name|BuiltinParamTypes
 index|[
 literal|3
 index|]
 decl_stmt|;
-block|}
-name|BuiltinTypes
-struct|;
 comment|/// Surrogate - The conversion function for which this candidate
 comment|/// is a surrogate, but only if IsSurrogate is true.
 name|CXXConversionDecl

@@ -68,7 +68,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/AMDGPUMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"SIRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/PseudoSourceValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -80,16 +104,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MachineRegisterInfo
-decl_stmt|;
 name|class
 name|AMDGPUImagePseudoSourceValue
 range|:
@@ -237,9 +270,19 @@ block|;
 name|unsigned
 name|ScratchWaveOffsetReg
 block|;
+comment|// This is the current function's incremented size from the kernel's scratch
+comment|// wave offset register. For an entry function, this is exactly the same as
+comment|// the ScratchWaveOffsetReg.
+name|unsigned
+name|FrameOffsetReg
+block|;
+comment|// Top of the stack SGPR offset derived from the ScratchWaveOffsetReg.
+name|unsigned
+name|StackPtrOffsetReg
+block|;
 comment|// Input registers for non-HSA ABI
 name|unsigned
-name|PrivateMemoryPtrUserSGPR
+name|ImplicitBufferPtrUserSGPR
 block|;
 comment|// Input registers setup for the HSA ABI.
 comment|// User SGPRs in allocation order.
@@ -289,9 +332,22 @@ block|;
 name|unsigned
 name|PrivateSegmentWaveByteOffsetSystemSGPR
 block|;
+comment|// VGPR inputs. These are always v0, v1 and v2 for entry functions.
+name|unsigned
+name|WorkItemIDXVGPR
+block|;
+name|unsigned
+name|WorkItemIDYVGPR
+block|;
+name|unsigned
+name|WorkItemIDZVGPR
+block|;
 comment|// Graphics info.
 name|unsigned
 name|PSInputAddr
+block|;
+name|unsigned
+name|PSInputEnable
 block|;
 name|bool
 name|ReturnsVoid
@@ -348,24 +404,10 @@ block|;
 name|AMDGPUImagePseudoSourceValue
 name|ImagePSV
 block|;
-name|public
+name|private
 operator|:
-comment|// FIXME: Make private
 name|unsigned
 name|LDSWaveSpillSize
-block|;
-name|unsigned
-name|PSInputEna
-block|;
-name|std
-operator|::
-name|map
-operator|<
-name|unsigned
-block|,
-name|unsigned
-operator|>
-name|LaneVGPRs
 block|;
 name|unsigned
 name|ScratchOffsetReg
@@ -376,8 +418,6 @@ block|;
 name|unsigned
 name|NumSystemSGPRs
 block|;
-name|private
-operator|:
 name|bool
 name|HasSpilledSGPRs
 block|;
@@ -486,7 +526,7 @@ comment|// Private memory buffer
 comment|// Compute directly in sgpr[0:1]
 comment|// Other shaders indirect 64-bits at sgpr[0:1]
 name|bool
-name|PrivateMemoryInputPtr
+name|ImplicitBufferPtr
 operator|:
 literal|1
 block|;
@@ -534,9 +574,21 @@ name|SpilledReg
 block|{
 name|unsigned
 name|VGPR
+operator|=
+name|AMDGPU
+operator|::
+name|NoRegister
 block|;
 name|int
 name|Lane
+operator|=
+operator|-
+literal|1
+block|;
+name|SpilledReg
+argument_list|()
+operator|=
+expr|default
 block|;
 name|SpilledReg
 argument_list|(
@@ -553,22 +605,6 @@ block|,
 name|Lane
 argument_list|(
 argument|L
-argument_list|)
-block|{ }
-name|SpilledReg
-argument_list|()
-operator|:
-name|VGPR
-argument_list|(
-name|AMDGPU
-operator|::
-name|NoRegister
-argument_list|)
-block|,
-name|Lane
-argument_list|(
-argument|-
-literal|1
 argument_list|)
 block|{ }
 name|bool
@@ -596,7 +632,49 @@ return|;
 block|}
 expr|}
 block|;
-comment|// SIMachineFunctionInfo definition
+name|private
+operator|:
+comment|// SGPR->VGPR spilling support.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|SpillRegMask
+expr_stmt|;
+comment|// Track VGPR + wave index for each subregister of the SGPR spilled to
+comment|// frameindex key.
+name|DenseMap
+operator|<
+name|int
+block|,
+name|std
+operator|::
+name|vector
+operator|<
+name|SpilledReg
+operator|>>
+name|SGPRToVGPRSpills
+block|;
+name|unsigned
+name|NumVGPRSpillLanes
+operator|=
+literal|0
+block|;
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|2
+operator|>
+name|SpillVGPRs
+block|;
+name|public
+operator|:
 name|SIMachineFunctionInfo
 argument_list|(
 specifier|const
@@ -605,14 +683,65 @@ operator|&
 name|MF
 argument_list|)
 block|;
+name|ArrayRef
+operator|<
 name|SpilledReg
-name|getSpilledReg
+operator|>
+name|getSGPRToVGPRSpills
 argument_list|(
-argument|MachineFunction *MF
+argument|int FrameIndex
+argument_list|)
+specifier|const
+block|{
+name|auto
+name|I
+operator|=
+name|SGPRToVGPRSpills
+operator|.
+name|find
+argument_list|(
+name|FrameIndex
+argument_list|)
+block|;
+return|return
+operator|(
+name|I
+operator|==
+name|SGPRToVGPRSpills
+operator|.
+name|end
+argument_list|()
+operator|)
+condition|?
+name|ArrayRef
+operator|<
+name|SpilledReg
+operator|>
+operator|(
+operator|)
+else|:
+name|makeArrayRef
+argument_list|(
+name|I
+operator|->
+name|second
+argument_list|)
+return|;
+block|}
+name|bool
+name|allocateSGPRSpillToVGPR
+argument_list|(
+argument|MachineFunction&MF
 argument_list|,
-argument|unsigned FrameIndex
-argument_list|,
-argument|unsigned SubIdx
+argument|int FI
+argument_list|)
+block|;
+name|void
+name|removeSGPRToVGPRFrameIndices
+argument_list|(
+name|MachineFrameInfo
+operator|&
+name|MFI
 argument_list|)
 block|;
 name|bool
@@ -705,7 +834,7 @@ name|TRI
 argument_list|)
 block|;
 name|unsigned
-name|addPrivateMemoryPtr
+name|addImplicitBufferPtr
 argument_list|(
 specifier|const
 name|SIRegisterInfo
@@ -963,12 +1092,12 @@ name|WorkItemIDZ
 return|;
 block|}
 name|bool
-name|hasPrivateMemoryInputPtr
+name|hasImplicitBufferPtr
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PrivateMemoryInputPtr
+name|ImplicitBufferPtr
 return|;
 block|}
 name|unsigned
@@ -1041,6 +1170,38 @@ return|return
 name|ScratchWaveOffsetReg
 return|;
 block|}
+name|unsigned
+name|getFrameOffsetReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FrameOffsetReg
+return|;
+block|}
+name|void
+name|setStackPtrOffsetReg
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|StackPtrOffsetReg
+operator|=
+name|Reg
+block|;   }
+comment|// Note the unset value for this is AMDGPU::SP_REG rather than
+comment|// NoRegister. This is mostly a workaround for MIR tests where state that
+comment|// can't be directly computed from the function is not preserved in serialized
+comment|// MIR.
+name|unsigned
+name|getStackPtrOffsetReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackPtrOffsetReg
+return|;
+block|}
 name|void
 name|setScratchWaveOffsetReg
 argument_list|(
@@ -1061,7 +1222,17 @@ block|;
 name|ScratchWaveOffsetReg
 operator|=
 name|Reg
-block|;   }
+block|;
+if|if
+condition|(
+name|isEntryFunction
+argument_list|()
+condition|)
+name|FrameOffsetReg
+operator|=
+name|ScratchWaveOffsetReg
+expr_stmt|;
+block|}
 name|unsigned
 name|getQueuePtrUserSGPR
 argument_list|()
@@ -1072,12 +1243,12 @@ name|QueuePtrUserSGPR
 return|;
 block|}
 name|unsigned
-name|getPrivateMemoryPtrUserSGPR
+name|getImplicitBufferPtrUserSGPR
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PrivateMemoryPtrUserSGPR
+name|ImplicitBufferPtrUserSGPR
 return|;
 block|}
 name|bool
@@ -1184,6 +1355,15 @@ return|return
 name|PSInputAddr
 return|;
 block|}
+name|unsigned
+name|getPSInputEnable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PSInputEnable
+return|;
+block|}
 name|bool
 name|isPSInputAllocated
 argument_list|(
@@ -1208,6 +1388,18 @@ argument|unsigned Index
 argument_list|)
 block|{
 name|PSInputAddr
+operator||=
+literal|1
+operator|<<
+name|Index
+block|;   }
+name|void
+name|markPSInputEnabled
+argument_list|(
+argument|unsigned Index
+argument_list|)
+block|{
+name|PSInputEnable
 operator||=
 literal|1
 operator|<<
@@ -1524,6 +1716,15 @@ literal|"unexpected dimension"
 argument_list|)
 expr_stmt|;
 block|}
+name|unsigned
+name|getLDSWaveSpillSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LDSWaveSpillSize
+return|;
+block|}
 specifier|const
 name|AMDGPUBufferPseudoSourceValue
 operator|*
@@ -1553,13 +1754,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_AMDGPU_SIMACHINEFUNCTIONINFO_H
+end_comment
 
 end_unit
 

@@ -130,6 +130,10 @@ name|Kind
 block|{
 name|AK_Matcher
 block|,
+name|AK_Boolean
+block|,
+name|AK_Double
+block|,
 name|AK_Unsigned
 block|,
 name|AK_String
@@ -202,7 +206,7 @@ comment|///
 comment|/// \param To the requested destination type.
 comment|///
 comment|/// \param Specificity value corresponding to the "specificity" of the
-comment|///   convertion.
+comment|///   conversion.
 name|bool
 name|isConvertibleTo
 argument_list|(
@@ -578,7 +582,7 @@ comment|///
 comment|/// \param Kind the requested destination type.
 comment|///
 comment|/// \param Specificity value corresponding to the "specificity" of the
-comment|///   convertion.
+comment|///   conversion.
 name|bool
 name|isConvertibleTo
 argument_list|(
@@ -791,6 +795,8 @@ comment|/// It can be constructed from any of the supported types. It supports
 comment|/// copy/assignment.
 comment|///
 comment|/// Supported types:
+comment|///  - \c bool
+comment|//   - \c double
 comment|///  - \c unsigned
 comment|///  - \c llvm::StringRef
 comment|///  - \c VariantMatcher (\c DynTypedMatcher / \c Matcher<T>)
@@ -833,6 +839,16 @@ decl_stmt|;
 comment|/// \brief Specific constructors for each supported type.
 name|VariantValue
 argument_list|(
+argument|bool Boolean
+argument_list|)
+empty_stmt|;
+name|VariantValue
+argument_list|(
+argument|double Double
+argument_list|)
+empty_stmt|;
+name|VariantValue
+argument_list|(
 argument|unsigned Unsigned
 argument_list|)
 empty_stmt|;
@@ -849,6 +865,17 @@ operator|&
 name|Matchers
 argument_list|)
 expr_stmt|;
+comment|/// \brief Constructs an \c unsigned value (disambiguation from bool).
+name|VariantValue
+argument_list|(
+argument|int Signed
+argument_list|)
+block|:
+name|VariantValue
+argument_list|(
+argument|static_cast<unsigned>(Signed)
+argument_list|)
+block|{}
 comment|/// \brief Returns true iff this is not an empty value.
 name|explicit
 name|operator
@@ -872,6 +899,42 @@ operator|!=
 name|VT_Nothing
 return|;
 block|}
+comment|/// \brief Boolean value functions.
+name|bool
+name|isBoolean
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|getBoolean
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setBoolean
+parameter_list|(
+name|bool
+name|Boolean
+parameter_list|)
+function_decl|;
+comment|/// \brief Double value functions.
+name|bool
+name|isDouble
+argument_list|()
+specifier|const
+expr_stmt|;
+name|double
+name|getDouble
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setDouble
+parameter_list|(
+name|double
+name|Double
+parameter_list|)
+function_decl|;
 comment|/// \brief Unsigned value functions.
 name|bool
 name|isUnsigned
@@ -939,7 +1002,7 @@ comment|///
 comment|/// \param Kind the requested destination type.
 comment|///
 comment|/// \param Specificity value corresponding to the "specificity" of the
-comment|///   convertion.
+comment|///   conversion.
 name|bool
 name|isConvertibleTo
 argument_list|(
@@ -958,7 +1021,7 @@ comment|///
 comment|/// \param Kinds the requested destination types.
 comment|///
 comment|/// \param Specificity value corresponding to the "specificity" of the
-comment|///   convertion. It is the maximum specificity of all the possible
+comment|///   conversion. It is the maximum specificity of all the possible
 comment|///   conversions.
 name|bool
 name|isConvertibleTo
@@ -995,6 +1058,10 @@ name|ValueType
 block|{
 name|VT_Nothing
 block|,
+name|VT_Boolean
+block|,
+name|VT_Double
+block|,
 name|VT_Unsigned
 block|,
 name|VT_String
@@ -1008,6 +1075,12 @@ name|AllValues
 block|{
 name|unsigned
 name|Unsigned
+decl_stmt|;
+name|double
+name|Double
+decl_stmt|;
+name|bool
+name|Boolean
 decl_stmt|;
 name|std
 operator|::

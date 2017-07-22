@@ -88,7 +88,7 @@ block|{
 name|namespace
 name|bitc
 block|{
-comment|// The only top-level block type defined is for a module.
+comment|// The only top-level block types are MODULE, IDENTIFICATION, STRTAB and SYMTAB.
 enum|enum
 name|BlockIDs
 block|{
@@ -128,7 +128,15 @@ block|,
 name|OPERAND_BUNDLE_TAGS_BLOCK_ID
 block|,
 name|METADATA_KIND_BLOCK_ID
-block|}
+block|,
+name|STRTAB_BLOCK_ID
+block|,
+name|FULL_LTO_GLOBALVAL_SUMMARY_BLOCK_ID
+block|,
+name|SYMTAB_BLOCK_ID
+block|,
+name|SYNC_SCOPE_NAMES_BLOCK_ID
+block|, }
 enum|;
 comment|/// Identification block contains a string that describes the producer details,
 comment|/// and an epoch that defines the auto-upgrade capability.
@@ -211,11 +219,6 @@ comment|// ALIAS: [alias type, aliasee val#, linkage, visibility]
 name|MODULE_CODE_ALIAS_OLD
 init|=
 literal|9
-block|,
-comment|// MODULE_CODE_PURGEVALS: [numvals]
-name|MODULE_CODE_PURGEVALS
-init|=
-literal|10
 block|,
 name|MODULE_CODE_GCNAME
 init|=
@@ -409,6 +412,14 @@ block|,
 comment|// TAG: [strchr x N]
 block|}
 enum|;
+enum|enum
+name|SyncScopeNameCode
+block|{
+name|SYNC_SCOPE_NAME
+init|=
+literal|1
+block|, }
+enum|;
 comment|// Value symbol table codes.
 enum|enum
 name|ValueSymtabCodes
@@ -511,10 +522,63 @@ name|FS_VERSION
 init|=
 literal|10
 block|,
-comment|// The list of llvm.type.test type identifiers used by the following function.
+comment|// The list of llvm.type.test type identifiers used by the following function
+comment|// that are used other than by an llvm.assume.
+comment|// [n x typeid]
 name|FS_TYPE_TESTS
 init|=
 literal|11
+block|,
+comment|// The list of virtual calls made by this function using
+comment|// llvm.assume(llvm.type.test) intrinsics that do not have all constant
+comment|// integer arguments.
+comment|// [n x (typeid, offset)]
+name|FS_TYPE_TEST_ASSUME_VCALLS
+init|=
+literal|12
+block|,
+comment|// The list of virtual calls made by this function using
+comment|// llvm.type.checked.load intrinsics that do not have all constant integer
+comment|// arguments.
+comment|// [n x (typeid, offset)]
+name|FS_TYPE_CHECKED_LOAD_VCALLS
+init|=
+literal|13
+block|,
+comment|// Identifies a virtual call made by this function using an
+comment|// llvm.assume(llvm.type.test) intrinsic with all constant integer arguments.
+comment|// [typeid, offset, n x arg]
+name|FS_TYPE_TEST_ASSUME_CONST_VCALL
+init|=
+literal|14
+block|,
+comment|// Identifies a virtual call made by this function using an
+comment|// llvm.type.checked.load intrinsic with all constant integer arguments.
+comment|// [typeid, offset, n x arg]
+name|FS_TYPE_CHECKED_LOAD_CONST_VCALL
+init|=
+literal|15
+block|,
+comment|// Assigns a GUID to a value ID. This normally appears only in combined
+comment|// summaries, but it can also appear in per-module summaries for PGO data.
+comment|// [valueid, guid]
+name|FS_VALUE_GUID
+init|=
+literal|16
+block|,
+comment|// The list of local functions with CFI jump tables. Function names are
+comment|// strings in strtab.
+comment|// [n * name]
+name|FS_CFI_FUNCTION_DEFS
+init|=
+literal|17
+block|,
+comment|// The list of external functions with CFI jump tables. Function names are
+comment|// strings in strtab.
+comment|// [n * name]
+name|FS_CFI_FUNCTION_DECLS
+init|=
+literal|18
 block|, }
 enum|;
 enum|enum
@@ -1076,19 +1140,6 @@ init|=
 literal|6
 block|}
 enum|;
-comment|/// Encoded SynchronizationScope values.
-enum|enum
-name|AtomicSynchScopeCodes
-block|{
-name|SYNCHSCOPE_SINGLETHREAD
-init|=
-literal|0
-block|,
-name|SYNCHSCOPE_CROSSTHREAD
-init|=
-literal|1
-block|}
-enum|;
 comment|/// Markers and flags for call instruction.
 enum|enum
 name|CallMarkersFlags
@@ -1602,6 +1653,10 @@ block|,
 name|ATTR_KIND_WRITEONLY
 init|=
 literal|52
+block|,
+name|ATTR_KIND_SPECULATABLE
+init|=
+literal|53
 block|}
 enum|;
 enum|enum
@@ -1626,6 +1681,22 @@ block|,
 name|COMDAT_SELECTION_KIND_SAME_SIZE
 init|=
 literal|5
+block|, }
+enum|;
+enum|enum
+name|StrtabCodes
+block|{
+name|STRTAB_BLOB
+init|=
+literal|1
+block|, }
+enum|;
+enum|enum
+name|SymtabCodes
+block|{
+name|SYMTAB_BLOB
+init|=
+literal|1
 block|, }
 enum|;
 block|}

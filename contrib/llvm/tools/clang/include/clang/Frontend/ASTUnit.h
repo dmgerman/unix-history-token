@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/PrecompiledPreamble.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
@@ -230,7 +236,16 @@ name|class
 name|HeaderSearch
 decl_stmt|;
 name|class
+name|InputKind
+decl_stmt|;
+name|class
+name|MemoryBufferCache
+decl_stmt|;
+name|class
 name|Preprocessor
+decl_stmt|;
+name|class
+name|PreprocessorOptions
 decl_stmt|;
 name|class
 name|PCHContainerOperations
@@ -247,17 +262,21 @@ decl_stmt|;
 name|class
 name|ASTDeserializationListener
 decl_stmt|;
+name|namespace
+name|vfs
+block|{
+name|class
+name|FileSystem
+decl_stmt|;
+block|}
 comment|/// \brief Utility class for loading a ASTContext from an AST file.
 comment|///
 name|class
 name|ASTUnit
-range|:
-name|public
-name|ModuleLoader
 block|{
 name|public
-operator|:
-expr|struct
+label|:
+struct|struct
 name|StandaloneFixIt
 block|{
 name|std
@@ -265,53 +284,55 @@ operator|::
 name|pair
 operator|<
 name|unsigned
-block|,
+operator|,
 name|unsigned
 operator|>
 name|RemoveRange
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|pair
 operator|<
 name|unsigned
-block|,
+operator|,
 name|unsigned
 operator|>
 name|InsertFromRange
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|string
 name|CodeToInsert
-block|;
+expr_stmt|;
 name|bool
 name|BeforePreviousInsertions
-block|;   }
-block|;    struct
+decl_stmt|;
+block|}
+struct|;
+struct|struct
 name|StandaloneDiagnostic
 block|{
 name|unsigned
 name|ID
-block|;
+decl_stmt|;
 name|DiagnosticsEngine
 operator|::
 name|Level
 name|Level
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|string
 name|Message
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|string
 name|Filename
-block|;
+expr_stmt|;
 name|unsigned
 name|LocOffset
-block|;
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -321,12 +342,12 @@ operator|::
 name|pair
 operator|<
 name|unsigned
-block|,
+operator|,
 name|unsigned
 operator|>
 expr|>
 name|Ranges
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -334,10 +355,11 @@ operator|<
 name|StandaloneFixIt
 operator|>
 name|FixIts
-block|;   }
-block|;
+expr_stmt|;
+block|}
+struct|;
 name|private
-operator|:
+label|:
 name|std
 operator|::
 name|shared_ptr
@@ -345,25 +367,31 @@ operator|<
 name|LangOptions
 operator|>
 name|LangOpts
-block|;
+expr_stmt|;
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticsEngine
 operator|>
 name|Diagnostics
-block|;
+expr_stmt|;
 name|IntrusiveRefCntPtr
 operator|<
 name|FileManager
 operator|>
 name|FileMgr
-block|;
+expr_stmt|;
 name|IntrusiveRefCntPtr
 operator|<
 name|SourceManager
 operator|>
 name|SourceMgr
-block|;
+expr_stmt|;
+name|IntrusiveRefCntPtr
+operator|<
+name|MemoryBufferCache
+operator|>
+name|PCMCache
+expr_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -371,13 +399,13 @@ operator|<
 name|HeaderSearch
 operator|>
 name|HeaderInfo
-block|;
+expr_stmt|;
 name|IntrusiveRefCntPtr
 operator|<
 name|TargetInfo
 operator|>
 name|Target
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|shared_ptr
@@ -385,13 +413,13 @@ operator|<
 name|Preprocessor
 operator|>
 name|PP
-block|;
+expr_stmt|;
 name|IntrusiveRefCntPtr
 operator|<
 name|ASTContext
 operator|>
 name|Ctx
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|shared_ptr
@@ -399,7 +427,7 @@ operator|<
 name|TargetOptions
 operator|>
 name|TargetOpts
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|shared_ptr
@@ -407,18 +435,27 @@ operator|<
 name|HeaderSearchOptions
 operator|>
 name|HSOpts
-block|;
+expr_stmt|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PreprocessorOptions
+operator|>
+name|PPOpts
+expr_stmt|;
 name|IntrusiveRefCntPtr
 operator|<
 name|ASTReader
 operator|>
 name|Reader
-block|;
+expr_stmt|;
 name|bool
 name|HadModuleLoaderFatalFailure
-block|;    struct
+decl_stmt|;
+struct_decl|struct
 name|ASTWriterData
-block|;
+struct_decl|;
 name|std
 operator|::
 name|unique_ptr
@@ -426,10 +463,10 @@ operator|<
 name|ASTWriterData
 operator|>
 name|WriterData
-block|;
+expr_stmt|;
 name|FileSystemOptions
 name|FileSystemOpts
-block|;
+decl_stmt|;
 comment|/// \brief The AST consumer that received information about the translation
 comment|/// unit as it was parsed or loaded.
 name|std
@@ -439,7 +476,7 @@ operator|<
 name|ASTConsumer
 operator|>
 name|Consumer
-block|;
+expr_stmt|;
 comment|/// \brief The semantic analysis object used to type-check the translation
 comment|/// unit.
 name|std
@@ -449,7 +486,7 @@ operator|<
 name|Sema
 operator|>
 name|TheSema
-block|;
+expr_stmt|;
 comment|/// Optional owned invocation, just used to make the invocation used in
 comment|/// LoadFromCommandLine available.
 name|std
@@ -459,33 +496,37 @@ operator|<
 name|CompilerInvocation
 operator|>
 name|Invocation
-block|;
+expr_stmt|;
+comment|/// Fake module loader: the AST unit doesn't need to load any modules.
+name|TrivialModuleLoader
+name|ModuleLoader
+decl_stmt|;
 comment|// OnlyLocalDecls - when true, walking this AST should only visit declarations
 comment|// that come from the AST itself, not from included precompiled headers.
 comment|// FIXME: This is temporary; eventually, CIndex will always do this.
 name|bool
 name|OnlyLocalDecls
-block|;
+decl_stmt|;
 comment|/// \brief Whether to capture any diagnostics produced.
 name|bool
 name|CaptureDiagnostics
-block|;
+decl_stmt|;
 comment|/// \brief Track whether the main file was loaded from an AST or not.
 name|bool
 name|MainFileIsAST
-block|;
+decl_stmt|;
 comment|/// \brief What kind of translation unit this AST represents.
 name|TranslationUnitKind
 name|TUKind
-block|;
+decl_stmt|;
 comment|/// \brief Whether we should time each operation.
 name|bool
 name|WantTiming
-block|;
+decl_stmt|;
 comment|/// \brief Whether the ASTUnit should delete the remapped buffers.
 name|bool
 name|OwnsRemappedFileBuffers
-block|;
+decl_stmt|;
 comment|/// Track the top-level decls which appeared in an ASTUnit which was loaded
 comment|/// from a source file.
 comment|//
@@ -501,7 +542,7 @@ name|Decl
 operator|*
 operator|>
 name|TopLevelDecls
-block|;
+expr_stmt|;
 comment|/// \brief Sorted (by file offset) vector of pairs of file offset/Decl.
 typedef|typedef
 name|SmallVector
@@ -592,393 +633,34 @@ comment|/// some number of calls.
 name|unsigned
 name|PreambleRebuildCounter
 decl_stmt|;
-name|public
-label|:
-name|class
-name|PreambleData
-block|{
-specifier|const
-name|FileEntry
-modifier|*
-name|File
-decl_stmt|;
-name|std
-operator|::
-name|vector
-operator|<
-name|char
-operator|>
-name|Buffer
-expr_stmt|;
-name|mutable
-name|unsigned
-name|NumLines
-decl_stmt|;
-name|public
-label|:
-name|PreambleData
-argument_list|()
-operator|:
-name|File
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NumLines
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
-name|void
-name|assign
-argument_list|(
-argument|const FileEntry *F
-argument_list|,
-argument|const char *begin
-argument_list|,
-argument|const char *end
-argument_list|)
-block|{
-name|File
-operator|=
-name|F
-block|;
-name|Buffer
-operator|.
-name|assign
-argument_list|(
-name|begin
-argument_list|,
-name|end
-argument_list|)
-block|;
-name|NumLines
-operator|=
-literal|0
-block|;     }
-name|void
-name|clear
-argument_list|()
-block|{
-name|Buffer
-operator|.
-name|clear
-argument_list|()
-block|;
-name|File
-operator|=
-name|nullptr
-block|;
-name|NumLines
-operator|=
-literal|0
-block|; }
-name|size_t
-name|size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Buffer
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-name|bool
-name|empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Buffer
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getBufferStart
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|Buffer
-index|[
-literal|0
-index|]
-return|;
-block|}
-name|unsigned
-name|getNumLines
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|NumLines
-condition|)
-return|return
-name|NumLines
-return|;
-name|countLines
-argument_list|()
-expr_stmt|;
-return|return
-name|NumLines
-return|;
-block|}
-name|SourceRange
-name|getSourceRange
-argument_list|(
-specifier|const
-name|SourceManager
-operator|&
-name|SM
-argument_list|)
-decl|const
-block|{
-name|SourceLocation
-name|FileLoc
-init|=
-name|SM
-operator|.
-name|getLocForStartOfFile
-argument_list|(
-name|SM
-operator|.
-name|getPreambleFileID
-argument_list|()
-argument_list|)
-decl_stmt|;
-return|return
-name|SourceRange
-argument_list|(
-name|FileLoc
-argument_list|,
-name|FileLoc
-operator|.
-name|getLocWithOffset
-argument_list|(
-name|size
-argument_list|()
-operator|-
-literal|1
-argument_list|)
-argument_list|)
-return|;
-block|}
-name|private
-label|:
-name|void
-name|countLines
-argument_list|()
-specifier|const
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-specifier|const
-name|PreambleData
-operator|&
-name|getPreambleData
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Preamble
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Data used to determine if a file used in the preamble has been changed.
-end_comment
-
-begin_struct
-struct|struct
-name|PreambleFileHash
-block|{
-comment|/// All files have size set.
-name|off_t
-name|Size
-decl_stmt|;
-comment|/// Modification time is set for files that are on disk.  For memory
-comment|/// buffers it is zero.
-name|time_t
-name|ModTime
-decl_stmt|;
-comment|/// Memory buffers have MD5 instead of modification time.  We don't
-comment|/// compute MD5 for on-disk files because we hope that modification time is
-comment|/// enough to tell if the file was changed.
-name|llvm
-operator|::
-name|MD5
-operator|::
-name|MD5Result
-name|MD5
-expr_stmt|;
-specifier|static
-name|PreambleFileHash
-name|createForFile
-parameter_list|(
-name|off_t
-name|Size
-parameter_list|,
-name|time_t
-name|ModTime
-parameter_list|)
-function_decl|;
-specifier|static
-name|PreambleFileHash
-name|createForMemoryBuffer
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|*
-name|Buffer
-argument_list|)
-decl_stmt|;
-name|friend
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|PreambleFileHash
-operator|&
-name|LHS
-operator|,
-specifier|const
-name|PreambleFileHash
-operator|&
-name|RHS
-operator|)
-expr_stmt|;
-name|friend
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|PreambleFileHash
-operator|&
-name|LHS
-operator|,
-specifier|const
-name|PreambleFileHash
-operator|&
-name|RHS
-operator|)
-block|{
-return|return
-operator|!
-operator|(
-name|LHS
-operator|==
-name|RHS
-operator|)
-return|;
-block|}
-block|}
-struct|;
-end_struct
-
-begin_label
-name|private
-label|:
-end_label
-
-begin_comment
-comment|/// \brief The contents of the preamble that has been precompiled to
-end_comment
-
-begin_comment
-comment|/// \c PreambleFile.
-end_comment
-
-begin_decl_stmt
-name|PreambleData
-name|Preamble
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Whether the preamble ends at the start of a new line.
-end_comment
-
-begin_comment
+comment|/// \brief Cache pairs "filename - source location"
 comment|///
-end_comment
-
-begin_comment
-comment|/// Used to inform the lexer as to whether it's starting at the beginning of
-end_comment
-
-begin_comment
-comment|/// a line after skipping the preamble.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|PreambleEndsAtStartOfLine
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Keeps track of the files that were used when computing the
-end_comment
-
-begin_comment
-comment|/// preamble, with both their buffer size and their modification time.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// If any of the files have changed from one compile to the next,
-end_comment
-
-begin_comment
-comment|/// the preamble must be thrown away.
-end_comment
-
-begin_expr_stmt
+comment|/// Cache contains only source locations from preamble so it is
+comment|/// guaranteed that they stay valid when the SourceManager is recreated.
+comment|/// This cache is used when loading preambule to increase performance
+comment|/// of that loading. It must be cleared when preamble is recreated.
 name|llvm
 operator|::
 name|StringMap
 operator|<
-name|PreambleFileHash
+name|SourceLocation
 operator|>
-name|FilesInPreamble
+name|PreambleSrcLocCache
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
+name|private
+label|:
+comment|/// The contents of the preamble.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|PrecompiledPreamble
+operator|>
+name|Preamble
+expr_stmt|;
 comment|/// \brief When non-NULL, this is the buffer used to store the contents of
-end_comment
-
-begin_comment
 comment|/// the main file when it has been padded for use with the precompiled
-end_comment
-
-begin_comment
 comment|/// preamble.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
@@ -989,72 +671,17 @@ name|MemoryBuffer
 operator|>
 name|SavedMainFileBuffer
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// \brief When non-NULL, this is the buffer used to store the
-end_comment
-
-begin_comment
-comment|/// contents of the preamble when it has been padded to build the
-end_comment
-
-begin_comment
-comment|/// precompiled preamble.
-end_comment
-
-begin_expr_stmt
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|>
-name|PreambleBuffer
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The number of warnings that occurred while parsing the preamble.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This value will be used to restore the state of the \c DiagnosticsEngine
-end_comment
-
-begin_comment
 comment|/// object when re-using the precompiled preamble. Note that only the
-end_comment
-
-begin_comment
 comment|/// number of warnings matters, since we will not save the preamble
-end_comment
-
-begin_comment
 comment|/// when any errors are present.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|NumWarningsInPreamble
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief A list of the serialization ID numbers for each of the top-level
-end_comment
-
-begin_comment
 comment|/// declarations parsed within the precompiled preamble.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -1065,63 +692,26 @@ name|DeclID
 operator|>
 name|TopLevelDeclsInPreamble
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Whether we should be caching code-completion results.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|ShouldCacheCodeCompletionResults
 range|:
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Whether to include brief documentation within the set of code
-end_comment
-
-begin_comment
 comment|/// completions cached.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|IncludeBriefCommentsInCodeCompletion
 range|:
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief True if non-system source files should be treated as volatile
-end_comment
-
-begin_comment
 comment|/// (likely to change while trying to use them).
-end_comment
-
-begin_decl_stmt
 name|bool
 name|UserFilesAreVolatile
 range|:
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief The language options used when we load an AST file.
-end_comment
-
-begin_decl_stmt
-name|LangOptions
-name|ASTFileLangOpts
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|void
 name|ConfigureDiags
@@ -1140,9 +730,6 @@ name|bool
 name|CaptureDiagnostics
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|TranslateStoredDiagnostics
 argument_list|(
@@ -1170,29 +757,14 @@ operator|&
 name|Out
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|void
 name|clearFileLevelDecls
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_comment
 comment|/// \brief A cached code-completion result, which may be introduced in one of
-end_comment
-
-begin_comment
 comment|/// many different contexts.
-end_comment
-
-begin_struct
 struct|struct
 name|CachedCodeCompletionResult
 block|{
@@ -1240,17 +812,8 @@ name|Type
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/// \brief Retrieve the mapping from formatted type names to unique type
-end_comment
-
-begin_comment
 comment|/// identifiers.
-end_comment
-
-begin_expr_stmt
 name|llvm
 operator|::
 name|StringMap
@@ -1265,13 +828,7 @@ return|return
 name|CachedCompletionTypes
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the allocator used to cache global code completions.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|shared_ptr
@@ -1285,9 +842,6 @@ return|return
 name|CachedCompletionAllocator
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|CodeCompletionTUInfo
 modifier|&
 name|getCodeCompletionTUInfo
@@ -1322,18 +876,9 @@ operator|*
 name|CCTUInfo
 return|;
 block|}
-end_function
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_comment
 comment|/// \brief Allocator used to store cached code completions.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|shared_ptr
@@ -1342,9 +887,6 @@ name|GlobalCodeCompletionAllocator
 operator|>
 name|CachedCompletionAllocator
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
@@ -1353,13 +895,7 @@ name|CodeCompletionTUInfo
 operator|>
 name|CCTUInfo
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The set of cached code-completion results.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -1368,17 +904,8 @@ name|CachedCodeCompletionResult
 operator|>
 name|CachedCompletionResults
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief A mapping from the formatted type name to a unique number for that
-end_comment
-
-begin_comment
 comment|/// type, which is used for type equality comparisons.
-end_comment
-
-begin_expr_stmt
 name|llvm
 operator|::
 name|StringMap
@@ -1387,117 +914,45 @@ name|unsigned
 operator|>
 name|CachedCompletionTypes
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief A string hash of the top-level declaration and macro definition
-end_comment
-
-begin_comment
 comment|/// names processed the last time that we reparsed the file.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This hash value is used to determine when we need to refresh the
-end_comment
-
-begin_comment
 comment|/// global code-completion cache.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|CompletionCacheTopLevelHashValue
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief A string hash of the top-level declaration and macro definition
-end_comment
-
-begin_comment
 comment|/// names processed the last time that we reparsed the precompiled preamble.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This hash value is used to determine when we need to refresh the
-end_comment
-
-begin_comment
 comment|/// global code-completion cache after a rebuild of the precompiled preamble.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|PreambleTopLevelHashValue
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief The current hash value for the top-level declaration and macro
-end_comment
-
-begin_comment
 comment|/// definition names
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|CurrentTopLevelHashValue
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Bit used by CIndex to mark when a translation unit may be in an
-end_comment
-
-begin_comment
 comment|/// inconsistent state, and is not safe to free.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|UnsafeToFree
 range|:
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Cache any "global" code-completion results, so that we can avoid
-end_comment
-
-begin_comment
 comment|/// recomputing them with each completion.
-end_comment
-
-begin_function_decl
 name|void
 name|CacheCodeCompletionResults
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Clear out and deallocate
-end_comment
-
-begin_function_decl
 name|void
 name|ClearCachedCompletionResults
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|ASTUnit
 argument_list|(
 specifier|const
@@ -1507,9 +962,6 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|operator
 init|=
@@ -1521,9 +973,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|explicit
 name|ASTUnit
 parameter_list|(
@@ -1531,16 +980,6 @@ name|bool
 name|MainFileIsAST
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|CleanTemporaryFiles
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
 name|bool
 name|Parse
 argument_list|(
@@ -1561,91 +1000,16 @@ operator|::
 name|MemoryBuffer
 operator|>
 name|OverrideMainBuffer
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_struct
-struct|struct
-name|ComputedPreamble
-block|{
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|*
-name|Buffer
-expr_stmt|;
-name|std
-operator|::
-name|unique_ptr
+argument_list|,
+name|IntrusiveRefCntPtr
 operator|<
-name|llvm
+name|vfs
 operator|::
-name|MemoryBuffer
+name|FileSystem
 operator|>
-name|Owner
-expr_stmt|;
-name|unsigned
-name|Size
+name|VFS
+argument_list|)
 decl_stmt|;
-name|bool
-name|PreambleEndsAtStartOfLine
-decl_stmt|;
-name|ComputedPreamble
-argument_list|(
-argument|llvm::MemoryBuffer *Buffer
-argument_list|,
-argument|std::unique_ptr<llvm::MemoryBuffer> Owner
-argument_list|,
-argument|unsigned Size
-argument_list|,
-argument|bool PreambleEndsAtStartOfLine
-argument_list|)
-block|:
-name|Buffer
-argument_list|(
-name|Buffer
-argument_list|)
-operator|,
-name|Owner
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Owner
-argument_list|)
-argument_list|)
-operator|,
-name|Size
-argument_list|(
-name|Size
-argument_list|)
-operator|,
-name|PreambleEndsAtStartOfLine
-argument_list|(
-argument|PreambleEndsAtStartOfLine
-argument_list|)
-block|{}
-block|}
-struct|;
-end_struct
-
-begin_function_decl
-name|ComputedPreamble
-name|ComputePreamble
-parameter_list|(
-name|CompilerInvocation
-modifier|&
-name|Invocation
-parameter_list|,
-name|unsigned
-name|MaxLines
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
@@ -1660,30 +1024,20 @@ argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps
 argument_list|,
 argument|const CompilerInvocation&PreambleInvocationIn
 argument_list|,
+argument|IntrusiveRefCntPtr<vfs::FileSystem> VFS
+argument_list|,
 argument|bool AllowRebuild = true
 argument_list|,
 argument|unsigned MaxLines =
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 name|void
 name|RealizeTopLevelDeclsFromPreamble
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Transfers ownership of the objects (like SourceManager) from
-end_comment
-
-begin_comment
 comment|/// \param CI to this ASTUnit.
-end_comment
-
-begin_function_decl
 name|void
 name|transferASTDataFromCompilerInstance
 parameter_list|(
@@ -1692,37 +1046,13 @@ modifier|&
 name|CI
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Allows us to assert that ASTUnit is not being used concurrently,
-end_comment
-
-begin_comment
 comment|/// which is not supported.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Clients should create instances of the ConcurrencyCheck class whenever
-end_comment
-
-begin_comment
 comment|/// using the ASTUnit in a way that isn't intended to be concurrent, which is
-end_comment
-
-begin_comment
 comment|/// just about any usage.
-end_comment
-
-begin_comment
 comment|/// Becomes a noop in release mode; only useful for debug mode checking.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ConcurrencyState
 block|{
@@ -1749,24 +1079,12 @@ name|finish
 parameter_list|()
 function_decl|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|ConcurrencyState
 name|ConcurrencyCheckValue
 decl_stmt|;
-end_decl_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_decl_stmt
 name|class
 name|ConcurrencyCheck
 block|{
@@ -1808,28 +1126,15 @@ name|finish
 argument_list|()
 block|;     }
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|ConcurrencyCheck
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 operator|~
 name|ASTUnit
 argument_list|()
-name|override
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|isMainFileAST
 argument_list|()
@@ -1839,9 +1144,6 @@ return|return
 name|MainFileIsAST
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|isUnsafeToFree
 argument_list|()
@@ -1851,9 +1153,6 @@ return|return
 name|UnsafeToFree
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setUnsafeToFree
 parameter_list|(
@@ -1866,9 +1165,6 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|DiagnosticsEngine
 operator|&
@@ -1881,9 +1177,6 @@ operator|*
 name|Diagnostics
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|DiagnosticsEngine
 modifier|&
 name|getDiagnostics
@@ -1894,9 +1187,6 @@ operator|*
 name|Diagnostics
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|SourceManager
 operator|&
@@ -1909,9 +1199,6 @@ operator|*
 name|SourceMgr
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|SourceManager
 modifier|&
 name|getSourceManager
@@ -1922,9 +1209,6 @@ operator|*
 name|SourceMgr
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|Preprocessor
 operator|&
@@ -1937,9 +1221,6 @@ operator|*
 name|PP
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|Preprocessor
 modifier|&
 name|getPreprocessor
@@ -1950,9 +1231,6 @@ operator|*
 name|PP
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|std
 operator|::
 name|shared_ptr
@@ -1967,9 +1245,6 @@ return|return
 name|PP
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|const
 name|ASTContext
 operator|&
@@ -1982,9 +1257,6 @@ operator|*
 name|Ctx
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|ASTContext
 modifier|&
 name|getASTContext
@@ -1995,9 +1267,6 @@ operator|*
 name|Ctx
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|setASTContext
 parameter_list|(
@@ -2011,9 +1280,6 @@ operator|=
 name|ctx
 expr_stmt|;
 block|}
-end_function
-
-begin_decl_stmt
 name|void
 name|setPreprocessor
 argument_list|(
@@ -2026,9 +1292,6 @@ operator|>
 name|pp
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|bool
 name|hasSema
 argument_list|()
@@ -2041,9 +1304,6 @@ operator|)
 name|TheSema
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|Sema
 operator|&
 name|getSema
@@ -2062,9 +1322,6 @@ operator|*
 name|TheSema
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|const
 name|LangOptions
 operator|&
@@ -2076,7 +1333,7 @@ name|assert
 argument_list|(
 name|LangOpts
 operator|&&
-literal|" ASTUnit does not have language options"
+literal|"ASTUnit does not have language options"
 argument_list|)
 block|;
 return|return
@@ -2084,9 +1341,44 @@ operator|*
 name|LangOpts
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
+specifier|const
+name|HeaderSearchOptions
+operator|&
+name|getHeaderSearchOpts
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|HSOpts
+operator|&&
+literal|"ASTUnit does not have header search options"
+argument_list|)
+block|;
+return|return
+operator|*
+name|HSOpts
+return|;
+block|}
+specifier|const
+name|PreprocessorOptions
+operator|&
+name|getPreprocessorOpts
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|PPOpts
+operator|&&
+literal|"ASTUnit does not have preprocessor options"
+argument_list|)
+block|;
+return|return
+operator|*
+name|PPOpts
+return|;
+block|}
 specifier|const
 name|FileManager
 operator|&
@@ -2099,9 +1391,6 @@ operator|*
 name|FileMgr
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|FileManager
 modifier|&
 name|getFileManager
@@ -2112,9 +1401,6 @@ operator|*
 name|FileMgr
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|FileSystemOptions
 operator|&
@@ -2126,9 +1412,14 @@ return|return
 name|FileSystemOpts
 return|;
 block|}
-end_expr_stmt
-
-begin_function
+name|IntrusiveRefCntPtr
+operator|<
+name|ASTReader
+operator|>
+name|getASTReader
+argument_list|()
+specifier|const
+expr_stmt|;
 name|StringRef
 name|getOriginalSourceFileName
 parameter_list|()
@@ -2137,47 +1428,16 @@ return|return
 name|OriginalSourceFile
 return|;
 block|}
-end_function
-
-begin_function_decl
 name|ASTMutationListener
 modifier|*
 name|getASTMutationListener
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ASTDeserializationListener
 modifier|*
 name|getDeserializationListener
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Add a temporary file that the ASTUnit depends on.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This file will be erased when the ASTUnit is destroyed.
-end_comment
-
-begin_function_decl
-name|void
-name|addTemporaryFile
-parameter_list|(
-name|StringRef
-name|TempFile
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|bool
 name|getOnlyLocalDecls
 argument_list|()
@@ -2187,9 +1447,6 @@ return|return
 name|OnlyLocalDecls
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|getOwnsRemappedFileBuffers
 argument_list|()
@@ -2199,9 +1456,6 @@ return|return
 name|OwnsRemappedFileBuffers
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setOwnsRemappedFileBuffers
 parameter_list|(
@@ -2214,29 +1468,17 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|StringRef
 name|getMainFileName
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief If this ASTUnit came from an AST file, returns the filename for it.
-end_comment
-
-begin_expr_stmt
 name|StringRef
 name|getASTFileName
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -2249,9 +1491,6 @@ operator|::
 name|iterator
 name|top_level_iterator
 expr_stmt|;
-end_typedef
-
-begin_function
 name|top_level_iterator
 name|top_level_begin
 parameter_list|()
@@ -2283,9 +1522,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|top_level_iterator
 name|top_level_end
 parameter_list|()
@@ -2317,9 +1553,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|std
 operator|::
 name|size_t
@@ -2348,9 +1581,6 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|top_level_empty
 argument_list|()
@@ -2377,13 +1607,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Add a new top-level declaration.
-end_comment
-
-begin_function
 name|void
 name|addTopLevelDecl
 parameter_list|(
@@ -2400,13 +1624,7 @@ name|D
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Add a new local file-level declaration.
-end_comment
-
-begin_function_decl
 name|void
 name|addFileLevelDecl
 parameter_list|(
@@ -2415,21 +1633,9 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Get the decls that are contained in a file in the Offset/Length
-end_comment
-
-begin_comment
 comment|/// range. \p Length can be 0 to indicate a point at \p Offset instead of
-end_comment
-
-begin_comment
 comment|/// a range.
-end_comment
-
-begin_decl_stmt
 name|void
 name|findFileRegionDecls
 argument_list|(
@@ -2451,49 +1657,9 @@ operator|&
 name|Decls
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Add a new top-level declaration, identified by its ID in
-end_comment
-
-begin_comment
-comment|/// the precompiled preamble.
-end_comment
-
-begin_decl_stmt
-name|void
-name|addTopLevelDeclFromPreamble
-argument_list|(
-name|serialization
-operator|::
-name|DeclID
-name|D
-argument_list|)
-block|{
-name|TopLevelDeclsInPreamble
-operator|.
-name|push_back
-argument_list|(
-name|D
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Retrieve a reference to the current top-level name hash value.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note: This is used internally by the top-level tracking action
-end_comment
-
-begin_function
 name|unsigned
 modifier|&
 name|getCurrentTopLevelHashValue
@@ -2503,29 +1669,11 @@ return|return
 name|CurrentTopLevelHashValue
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Get the source location for the given file:line:col triplet.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The difference with SourceManager::getLocation is that this method checks
-end_comment
-
-begin_comment
 comment|/// whether the requested location points inside the precompiled preamble
-end_comment
-
-begin_comment
 comment|/// in which case the returned source location will be a "loaded" one.
-end_comment
-
-begin_decl_stmt
 name|SourceLocation
 name|getLocation
 argument_list|(
@@ -2542,13 +1690,7 @@ name|Col
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Get the source location for the given file:offset pair.
-end_comment
-
-begin_decl_stmt
 name|SourceLocation
 name|getLocation
 argument_list|(
@@ -2562,21 +1704,9 @@ name|Offset
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief If \p Loc is a loaded location from the preamble, returns
-end_comment
-
-begin_comment
 comment|/// the corresponding local location of the main file, otherwise it returns
-end_comment
-
-begin_comment
 comment|/// \p Loc.
-end_comment
-
-begin_function_decl
 name|SourceLocation
 name|mapLocationFromPreamble
 parameter_list|(
@@ -2584,21 +1714,9 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief If \p Loc is a local location of the main file but inside the
-end_comment
-
-begin_comment
 comment|/// preamble chunk, returns the corresponding loaded location from the
-end_comment
-
-begin_comment
 comment|/// preamble, otherwise it returns \p Loc.
-end_comment
-
-begin_function_decl
 name|SourceLocation
 name|mapLocationToPreamble
 parameter_list|(
@@ -2606,9 +1724,6 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|isInPreambleFileID
 parameter_list|(
@@ -2616,9 +1731,6 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|isInMainFileID
 parameter_list|(
@@ -2626,27 +1738,15 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|SourceLocation
 name|getStartOfMainFileID
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|SourceLocation
 name|getEndOfPreambleFileID
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \see mapLocationFromPreamble.
-end_comment
-
-begin_function
 name|SourceRange
 name|mapRangeFromPreamble
 parameter_list|(
@@ -2675,13 +1775,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \see mapLocationToPreamble.
-end_comment
-
-begin_function
 name|SourceRange
 name|mapRangeToPreamble
 parameter_list|(
@@ -2710,30 +1804,18 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Retrieve the diagnostics associated with this AST
-end_comment
-
-begin_typedef
 typedef|typedef
 name|StoredDiagnostic
 modifier|*
 name|stored_diag_iterator
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 specifier|const
 name|StoredDiagnostic
 modifier|*
 name|stored_diag_const_iterator
 typedef|;
-end_typedef
-
-begin_expr_stmt
 name|stored_diag_const_iterator
 name|stored_diag_begin
 argument_list|()
@@ -2746,9 +1828,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|stored_diag_iterator
 name|stored_diag_begin
 parameter_list|()
@@ -2760,9 +1839,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|stored_diag_const_iterator
 name|stored_diag_end
 argument_list|()
@@ -2775,9 +1851,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|stored_diag_iterator
 name|stored_diag_end
 parameter_list|()
@@ -2789,9 +1862,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|unsigned
 name|stored_diag_size
 argument_list|()
@@ -2804,9 +1874,6 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|stored_diag_iterator
 name|stored_diag_afterDriver_begin
 parameter_list|()
@@ -2833,9 +1900,6 @@ operator|+
 name|NumStoredDiagnosticsFromDriver
 return|;
 block|}
-end_function
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -2847,9 +1911,6 @@ operator|::
 name|iterator
 name|cached_completion_iterator
 expr_stmt|;
-end_typedef
-
-begin_function
 name|cached_completion_iterator
 name|cached_completion_begin
 parameter_list|()
@@ -2861,9 +1922,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|cached_completion_iterator
 name|cached_completion_end
 parameter_list|()
@@ -2875,9 +1933,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|unsigned
 name|cached_completion_size
 argument_list|()
@@ -2890,21 +1945,9 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Returns an iterator range for the local preprocessing entities
-end_comment
-
-begin_comment
 comment|/// of the local Preprocessor, if this is a parsed source file, or the loaded
-end_comment
-
-begin_comment
 comment|/// preprocessing entities of the primary module if this is an AST file.
-end_comment
-
-begin_expr_stmt
 name|llvm
 operator|::
 name|iterator_range
@@ -2917,17 +1960,8 @@ name|getLocalPreprocessingEntities
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Type for a function iterating over a number of declarations.
-end_comment
-
-begin_comment
 comment|/// \returns true to continue iteration and false to abort.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|bool
 function_decl|(
@@ -2945,25 +1979,10 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-end_typedef
-
-begin_comment
 comment|/// \brief Iterate over local declarations (locally parsed if this is a parsed
-end_comment
-
-begin_comment
 comment|/// source file or the loaded declarations of the primary module if this is an
-end_comment
-
-begin_comment
 comment|/// AST file).
-end_comment
-
-begin_comment
 comment|/// \returns true if the iteration was complete or false if it was aborted.
-end_comment
-
-begin_function_decl
 name|bool
 name|visitLocalTopLevelDecls
 parameter_list|(
@@ -2975,37 +1994,19 @@ name|DeclVisitorFn
 name|Fn
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Get the PCH file if one was included.
-end_comment
-
-begin_function_decl
 specifier|const
 name|FileEntry
 modifier|*
 name|getPCHFile
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Returns true if the ASTUnit was constructed from a serialized
-end_comment
-
-begin_comment
 comment|/// module file.
-end_comment
-
-begin_function_decl
 name|bool
 name|isModuleFile
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
@@ -3021,13 +2022,7 @@ argument_list|,
 argument|std::string *ErrorStr = nullptr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine what kind of translation unit this AST represents.
-end_comment
-
-begin_expr_stmt
 name|TranslationUnitKind
 name|getTranslationUnitKind
 argument_list|()
@@ -3037,17 +2032,14 @@ return|return
 name|TUKind
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
+comment|/// \brief Determine the input kind this AST unit represents.
+name|InputKind
+name|getInputKind
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief A mapping from a file name to the memory buffer that stores the
-end_comment
-
-begin_comment
 comment|/// remapped contents of that file.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -3064,13 +2056,7 @@ operator|*
 operator|>
 name|RemappedFile
 expr_stmt|;
-end_typedef
-
-begin_comment
 comment|/// \brief Create a ASTUnit. Gets ownership of the passed CompilerInvocation.
-end_comment
-
-begin_expr_stmt
 specifier|static
 name|std
 operator|::
@@ -3089,49 +2075,29 @@ argument_list|,
 argument|bool UserFilesAreVolatile
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
+enum|enum
+name|WhatToLoad
+block|{
+comment|/// Load options and the preprocessor state.
+name|LoadPreprocessorOnly
+block|,
+comment|/// Load the AST, but do not restore Sema state.
+name|LoadASTOnly
+block|,
+comment|/// Load everything, including Sema.
+name|LoadEverything
+block|}
+enum|;
 comment|/// \brief Create a ASTUnit from an AST file.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Filename - The AST file to load.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param PCHContainerRdr - The PCHContainerOperations to use for loading and
-end_comment
-
-begin_comment
 comment|/// creating modules.
-end_comment
-
-begin_comment
 comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
-end_comment
-
-begin_comment
 comment|/// lifetime is expected to extend past that of the returned ASTUnit.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns - The initialized ASTUnit or null if the AST failed to load.
-end_comment
-
-begin_expr_stmt
 specifier|static
 name|std
 operator|::
@@ -3144,6 +2110,8 @@ argument_list|(
 argument|const std::string&Filename
 argument_list|,
 argument|const PCHContainerReader&PCHContainerRdr
+argument_list|,
+argument|WhatToLoad ToLoad
 argument_list|,
 argument|IntrusiveRefCntPtr<DiagnosticsEngine> Diags
 argument_list|,
@@ -3162,50 +2130,22 @@ argument_list|,
 argument|bool UserFilesAreVolatile = false
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_comment
 comment|/// \brief Helper function for \c LoadFromCompilerInvocation() and
-end_comment
-
-begin_comment
 comment|/// \c LoadFromCommandLine(), which loads an AST from a compiler invocation.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param PrecompilePreambleAfterNParses After how many parses the preamble
-end_comment
-
-begin_comment
 comment|/// of this translation unit should be precompiled, to improve the performance
-end_comment
-
-begin_comment
 comment|/// of reparsing. Set to zero to disable preambles.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
+comment|/// \param VFS - A vfs::FileSystem to be used for all file accesses. Note that
+comment|/// preamble is saved to a temporary directory on a RealFileSystem, so in order
+comment|/// for it to be loaded correctly, VFS should have access to it(i.e., be an
+comment|/// overlay over RealFileSystem).
+comment|///
 comment|/// \returns \c true if a catastrophic failure occurred (which means that the
-end_comment
-
-begin_comment
 comment|/// \c ASTUnit itself is invalid), or \c false otherwise.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|LoadFromCompilerInvocation
 argument_list|(
@@ -3219,128 +2159,46 @@ name|PCHContainerOps
 argument_list|,
 name|unsigned
 name|PrecompilePreambleAfterNParses
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VFS
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_comment
 comment|/// \brief Create an ASTUnit from a source file, via a CompilerInvocation
-end_comment
-
-begin_comment
 comment|/// object, by invoking the optionally provided ASTFrontendAction.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param CI - The compiler invocation to use; it must have exactly one input
-end_comment
-
-begin_comment
 comment|/// source file. The ASTUnit takes ownership of the CompilerInvocation object.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param PCHContainerOps - The PCHContainerOperations to use for loading and
-end_comment
-
-begin_comment
 comment|/// creating modules.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
-end_comment
-
-begin_comment
 comment|/// lifetime is expected to extend past that of the returned ASTUnit.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Action - The ASTFrontendAction to invoke. Its ownership is not
-end_comment
-
-begin_comment
 comment|/// transferred.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Unit - optionally an already created ASTUnit. Its ownership is not
-end_comment
-
-begin_comment
 comment|/// transferred.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Persistent - if true the returned ASTUnit will be complete.
-end_comment
-
-begin_comment
 comment|/// false means the caller is only interested in getting info through the
-end_comment
-
-begin_comment
 comment|/// provided \see Action.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param ErrAST - If non-null and parsing failed without any AST to return
-end_comment
-
-begin_comment
 comment|/// (e.g. because the PCH could not be loaded), this accepts the ASTUnit
-end_comment
-
-begin_comment
 comment|/// mainly to allow the caller to see the diagnostics.
-end_comment
-
-begin_comment
 comment|/// This will only receive an ASTUnit if a new one was created. If an already
-end_comment
-
-begin_comment
 comment|/// created ASTUnit was passed in \p Unit then the caller can check that.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|ASTUnit
 modifier|*
@@ -3433,65 +2291,20 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// LoadFromCompilerInvocation - Create an ASTUnit from a source file, via a
-end_comment
-
-begin_comment
 comment|/// CompilerInvocation object.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param CI - The compiler invocation to use; it must have exactly one input
-end_comment
-
-begin_comment
 comment|/// source file. The ASTUnit takes ownership of the CompilerInvocation object.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param PCHContainerOps - The PCHContainerOperations to use for loading and
-end_comment
-
-begin_comment
 comment|/// creating modules.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
-end_comment
-
-begin_comment
 comment|/// lifetime is expected to extend past that of the returned ASTUnit.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// FIXME: Move OnlyLocalDecls, UseBumpAllocator to setters on the ASTUnit, we
-end_comment
-
-begin_comment
 comment|// shouldn't need to specify them at construction time.
-end_comment
-
-begin_expr_stmt
 specifier|static
 name|std
 operator|::
@@ -3525,101 +2338,34 @@ argument_list|,
 argument|bool UserFilesAreVolatile = false
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// LoadFromCommandLine - Create an ASTUnit from a vector of command line
-end_comment
-
-begin_comment
 comment|/// arguments, which must specify exactly one source file.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param ArgBegin - The beginning of the argument vector.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param ArgEnd - The end of the argument vector.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param PCHContainerOps - The PCHContainerOperations to use for loading and
-end_comment
-
-begin_comment
 comment|/// creating modules.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
-end_comment
-
-begin_comment
 comment|/// lifetime is expected to extend past that of the returned ASTUnit.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param ResourceFilesPath - The path to the compiler resource files.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param ModuleFormat - If provided, uses the specific module format.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param ErrAST - If non-null and parsing failed without any AST to return
-end_comment
-
-begin_comment
 comment|/// (e.g. because the PCH could not be loaded), this accepts the ASTUnit
-end_comment
-
-begin_comment
 comment|/// mainly to allow the caller to see the diagnostics.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
+comment|/// \param VFS - A vfs::FileSystem to be used for all file accesses. Note that
+comment|/// preamble is saved to a temporary directory on a RealFileSystem, so in order
+comment|/// for it to be loaded correctly, VFS should have access to it(i.e., be an
+comment|/// overlay over RealFileSystem). RealFileSystem will be used if \p VFS is nullptr.
+comment|///
 comment|// FIXME: Move OnlyLocalDecls, UseBumpAllocator to setters on the ASTUnit, we
-end_comment
-
-begin_comment
 comment|// shouldn't need to specify them at construction time.
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|ASTUnit
 modifier|*
@@ -3708,6 +2454,11 @@ operator|=
 name|false
 argument_list|,
 name|bool
+name|SingleFileParse
+operator|=
+name|false
+argument_list|,
+name|bool
 name|UserFilesAreVolatile
 operator|=
 name|false
@@ -3739,31 +2490,29 @@ operator|*
 name|ErrAST
 operator|=
 name|nullptr
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VFS
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Reparse the source files using the same command-line options that
-end_comment
-
-begin_comment
 comment|/// were originally used to produce this translation unit.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
+comment|/// \param VFS - A vfs::FileSystem to be used for all file accesses. Note that
+comment|/// preamble is saved to a temporary directory on a RealFileSystem, so in order
+comment|/// for it to be loaded correctly, VFS should give an access to this(i.e. be an
+comment|/// overlay over RealFileSystem). FileMgr->getVirtualFileSystem() will be used if
+comment|/// \p VFS is nullptr.
+comment|///
 comment|/// \returns True if a failure occurred that causes the ASTUnit not to
-end_comment
-
-begin_comment
 comment|/// contain any translation-unit information, false otherwise.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|Reparse
 argument_list|(
@@ -3782,91 +2531,45 @@ operator|>
 name|RemappedFiles
 operator|=
 name|None
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VFS
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
+comment|/// \brief Free data that will be re-generated on the next parse.
+comment|///
+comment|/// Preamble-related data is not affected.
+name|void
+name|ResetForParse
+parameter_list|()
+function_decl|;
 comment|/// \brief Perform code completion at the given file, line, and
-end_comment
-
-begin_comment
 comment|/// column within this translation unit.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param File The file in which code completion will occur.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Line The line at which code completion will occur.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Column The column at which code completion will occur.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param IncludeMacros Whether to include macros in the code-completion
-end_comment
-
-begin_comment
 comment|/// results.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param IncludeCodePatterns Whether to include code patterns (such as a
-end_comment
-
-begin_comment
 comment|/// for loop) in the code-completion results.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param IncludeBriefComments Whether to include brief documentation within
-end_comment
-
-begin_comment
 comment|/// the set of code completions returned.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// FIXME: The Diag, LangOpts, SourceMgr, FileMgr, StoredDiagnostics, and
-end_comment
-
-begin_comment
 comment|/// OwnedBuffers parameters are all disgusting hacks. They will go away.
-end_comment
-
-begin_decl_stmt
 name|void
 name|CodeComplete
 argument_list|(
@@ -3941,25 +2644,10 @@ operator|&
 name|OwnedBuffers
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Save this translation unit to a file with the given name.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns true if there was a file error or false if the save was
-end_comment
-
-begin_comment
 comment|/// successful.
-end_comment
-
-begin_function_decl
 name|bool
 name|Save
 parameter_list|(
@@ -3967,21 +2655,9 @@ name|StringRef
 name|File
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Serialize this translation unit with the given output stream.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns True if an error occurred, false otherwise.
-end_comment
-
-begin_function_decl
 name|bool
 name|serialize
 parameter_list|(
@@ -3990,92 +2666,12 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|ModuleLoadResult
-name|loadModule
-argument_list|(
-name|SourceLocation
-name|ImportLoc
-argument_list|,
-name|ModuleIdPath
-name|Path
-argument_list|,
-name|Module
-operator|::
-name|NameVisibilityKind
-name|Visibility
-argument_list|,
-name|bool
-name|IsInclusionDirective
-argument_list|)
-name|override
-block|{
-comment|// ASTUnit doesn't know how to load modules (not that this matters).
-return|return
-name|ModuleLoadResult
-argument_list|()
-return|;
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|makeModuleVisible
-argument_list|(
-name|Module
-operator|*
-name|Mod
-argument_list|,
-name|Module
-operator|::
-name|NameVisibilityKind
-name|Visibility
-argument_list|,
-name|SourceLocation
-name|ImportLoc
-argument_list|)
-name|override
-block|{}
-end_decl_stmt
-
-begin_function
-name|GlobalModuleIndex
-modifier|*
-name|loadGlobalModuleIndex
-parameter_list|(
-name|SourceLocation
-name|TriggerLoc
-parameter_list|)
-function|override
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-end_function
-
-begin_function
-name|bool
-name|lookupMissingImports
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|SourceLocation
-name|TriggerLoc
-parameter_list|)
-function|override
-block|{
-return|return
-literal|0
-return|;
-block|}
-end_function
 
 begin_comment
-unit|};  }
 comment|// namespace clang
 end_comment
 

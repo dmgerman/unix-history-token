@@ -146,6 +146,14 @@ comment|/* #undef CLANG_HAVE_LIBXML */
 end_comment
 
 begin_comment
+comment|/* Define if we have z3 and want to build it */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_ANALYZER_WITH_Z3 */
+end_comment
+
+begin_comment
 comment|/* Define if we have sys/resource.h (rlimits) */
 end_comment
 
@@ -164,7 +172,7 @@ begin_define
 define|#
 directive|define
 name|BACKEND_PACKAGE_STRING
-value|"LLVM 4.0.0"
+value|"LLVM 5.0.0svn"
 end_define
 
 begin_comment

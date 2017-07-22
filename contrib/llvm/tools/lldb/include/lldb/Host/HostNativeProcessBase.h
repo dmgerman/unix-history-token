@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Host/HostProcess.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/HostProcess.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -109,14 +109,14 @@ name|HostNativeProcessBase
 argument_list|()
 block|{}
 name|virtual
-name|Error
+name|Status
 name|Terminate
 argument_list|()
 operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|Error
+name|Status
 name|GetMainModule
 argument_list|(
 name|FileSpec

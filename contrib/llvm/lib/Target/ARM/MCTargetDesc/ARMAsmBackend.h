@@ -189,56 +189,50 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// processFixupValue - Target hook to process the literal value of a fixup
-comment|/// if necessary.
-name|void
-name|processFixupValue
+name|bool
+name|shouldForceRelocation
 argument_list|(
 argument|const MCAssembler&Asm
 argument_list|,
-argument|const MCAsmLayout&Layout
-argument_list|,
 argument|const MCFixup&Fixup
 argument_list|,
-argument|const MCFragment *DF
-argument_list|,
 argument|const MCValue&Target
-argument_list|,
-argument|uint64_t&Value
-argument_list|,
-argument|bool&IsResolved
 argument_list|)
 name|override
 block|;
 name|unsigned
 name|adjustFixupValue
 argument_list|(
+argument|const MCAssembler&Asm
+argument_list|,
 argument|const MCFixup&Fixup
+argument_list|,
+argument|const MCValue&Target
 argument_list|,
 argument|uint64_t Value
 argument_list|,
-argument|bool IsPCRel
+argument|bool IsResolved
 argument_list|,
-argument|MCContext *Ctx
+argument|MCContext&Ctx
 argument_list|,
 argument|bool IsLittleEndian
-argument_list|,
-argument|bool IsResolved
 argument_list|)
 specifier|const
 block|;
 name|void
 name|applyFixup
 argument_list|(
+argument|const MCAssembler&Asm
+argument_list|,
 argument|const MCFixup&Fixup
 argument_list|,
-argument|char *Data
+argument|const MCValue&Target
 argument_list|,
-argument|unsigned DataSize
+argument|MutableArrayRef<char> Data
 argument_list|,
 argument|uint64_t Value
 argument_list|,
-argument|bool IsPCRel
+argument|bool IsResolved
 argument_list|)
 specifier|const
 name|override

@@ -123,9 +123,14 @@ name|AdditionalKeywords
 operator|&
 name|Keywords
 argument_list|,
-name|bool
+specifier|const
+name|SourceManager
+operator|&
+name|SourceMgr
+argument_list|,
+name|FormattingAttemptStatus
 operator|*
-name|IncompleteFormat
+name|Status
 argument_list|)
 operator|:
 name|Indenter
@@ -148,9 +153,14 @@ argument_list|(
 name|Keywords
 argument_list|)
 operator|,
-name|IncompleteFormat
+name|SourceMgr
 argument_list|(
-argument|IncompleteFormat
+name|SourceMgr
+argument_list|)
+operator|,
+name|Status
+argument_list|(
+argument|Status
 argument_list|)
 block|{}
 comment|/// \brief Format the current block and return the penalty.
@@ -174,9 +184,10 @@ comment|/// of the \c UnwrappedLine if there was no structural parsing error.
 name|void
 name|formatFirstToken
 parameter_list|(
-name|FormatToken
+specifier|const
+name|AnnotatedLine
 modifier|&
-name|RootToken
+name|Line
 parameter_list|,
 specifier|const
 name|AnnotatedLine
@@ -184,13 +195,7 @@ modifier|*
 name|PreviousLine
 parameter_list|,
 name|unsigned
-name|IndentLevel
-parameter_list|,
-name|unsigned
 name|Indent
-parameter_list|,
-name|bool
-name|InPPDirective
 parameter_list|)
 function_decl|;
 comment|/// \brief Returns the column limit for a line, taking into account whether we
@@ -252,9 +257,14 @@ name|AdditionalKeywords
 modifier|&
 name|Keywords
 decl_stmt|;
-name|bool
+specifier|const
+name|SourceManager
+modifier|&
+name|SourceMgr
+decl_stmt|;
+name|FormattingAttemptStatus
 modifier|*
-name|IncompleteFormat
+name|Status
 decl_stmt|;
 block|}
 empty_stmt|;

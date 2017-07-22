@@ -244,9 +244,6 @@ parameter_list|(
 name|CompilerInstance
 modifier|&
 name|CI
-parameter_list|,
-name|StringRef
-name|Filename
 parameter_list|)
 block|{
 return|return
@@ -431,6 +428,12 @@ operator|*
 name|CurrentASTUnit
 return|;
 block|}
+name|Module
+operator|*
+name|getCurrentModule
+argument_list|()
+specifier|const
+expr_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -516,9 +519,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|usesPreprocessorOnly
-argument_list|()
+name|true
 return|;
 block|}
 comment|/// \brief Does this action support use with AST files?
@@ -529,9 +530,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|usesPreprocessorOnly
-argument_list|()
+name|true
 return|;
 block|}
 comment|/// \brief Does this action support use with IR files?
@@ -817,8 +816,6 @@ name|bool
 name|BeginSourceFileAction
 argument_list|(
 argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
 argument_list|)
 name|override
 block|;

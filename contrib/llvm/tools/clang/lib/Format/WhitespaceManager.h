@@ -140,14 +140,16 @@ argument_list|)
 block|{}
 comment|/// \brief Replaces the whitespace in front of \p Tok. Only call once for
 comment|/// each \c AnnotatedToken.
+comment|///
+comment|/// \p StartOfTokenColumn is the column at which the token will start after
+comment|/// this replacement. It is needed for determining how \p Spaces is turned
+comment|/// into tabs and spaces for some format styles.
 name|void
 name|replaceWhitespace
 argument_list|(
 argument|FormatToken&Tok
 argument_list|,
 argument|unsigned Newlines
-argument_list|,
-argument|unsigned IndentLevel
 argument_list|,
 argument|unsigned Spaces
 argument_list|,
@@ -212,9 +214,6 @@ parameter_list|,
 name|unsigned
 name|Newlines
 parameter_list|,
-name|unsigned
-name|IndentLevel
-parameter_list|,
 name|int
 name|Spaces
 parameter_list|)
@@ -277,9 +276,6 @@ name|SourceMgr
 decl_stmt|;
 block|}
 empty_stmt|;
-name|Change
-argument_list|()
-block|{}
 comment|/// \brief Creates a \c Change.
 comment|///
 comment|/// The generated \c Change will replace the characters at
@@ -291,11 +287,11 @@ comment|/// \p StartOfTokenColumn and \p InPPDirective will be used to lay out
 comment|/// trailing comments and escaped newlines.
 name|Change
 argument_list|(
+argument|const FormatToken&Tok
+argument_list|,
 argument|bool CreateReplacement
 argument_list|,
 argument|SourceRange OriginalWhitespaceRange
-argument_list|,
-argument|unsigned IndentLevel
 argument_list|,
 argument|int Spaces
 argument_list|,
@@ -307,15 +303,20 @@ argument|StringRef PreviousLinePostfix
 argument_list|,
 argument|StringRef CurrentLinePrefix
 argument_list|,
-argument|tok::TokenKind Kind
-argument_list|,
 argument|bool ContinuesPPDirective
-argument_list|,
-argument|bool IsStartOfDeclName
 argument_list|,
 argument|bool IsInsideToken
 argument_list|)
 empty_stmt|;
+comment|// The kind of the token whose whitespace this change replaces, or in which
+comment|// this change inserts whitespace.
+comment|// FIXME: Currently this is not set correctly for breaks inside comments, as
+comment|// the \c BreakableToken is still doing its own alignment.
+specifier|const
+name|FormatToken
+modifier|*
+name|Tok
+decl_stmt|;
 name|bool
 name|CreateReplacement
 decl_stmt|;
@@ -340,26 +341,8 @@ operator|::
 name|string
 name|CurrentLinePrefix
 expr_stmt|;
-comment|// The kind of the token whose whitespace this change replaces, or in which
-comment|// this change inserts whitespace.
-comment|// FIXME: Currently this is not set correctly for breaks inside comments, as
-comment|// the \c BreakableToken is still doing its own alignment.
-name|tok
-operator|::
-name|TokenKind
-name|Kind
-expr_stmt|;
 name|bool
 name|ContinuesPPDirective
-decl_stmt|;
-name|bool
-name|IsStartOfDeclName
-decl_stmt|;
-comment|// The number of nested blocks the token is in. This is used to add tabs
-comment|// only for the indentation, and not for alignment, when
-comment|// UseTab = US_ForIndentation.
-name|unsigned
-name|IndentLevel
 decl_stmt|;
 comment|// The number of spaces in front of the token or broken part of the token.
 comment|// This will be adapted when aligning tokens.
@@ -405,6 +388,36 @@ decl_stmt|;
 name|int
 name|IndentationOffset
 decl_stmt|;
+comment|// A combination of nesting level and indent level, which are used in
+comment|// tandem to compute lexical scope, for the purposes of deciding
+comment|// when to stop consecutive alignment runs.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|nestingAndIndentLevel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Tok
+operator|->
+name|NestingLevel
+argument_list|,
+name|Tok
+operator|->
+name|IndentLevel
+argument_list|)
+return|;
+block|}
 block|}
 struct|;
 name|private

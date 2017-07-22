@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/SymbolTableListTraits.h - Traits for iplist --------*- C++ -*-===//
+comment|//===- llvm/SymbolTableListTraits.h - Traits for iplist ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -109,10 +109,46 @@ directive|include
 file|"llvm/ADT/ilist.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/simple_ilist.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Argument
+decl_stmt|;
+name|class
+name|BasicBlock
+decl_stmt|;
+name|class
+name|Function
+decl_stmt|;
+name|class
+name|GlobalAlias
+decl_stmt|;
+name|class
+name|GlobalIFunc
+decl_stmt|;
+name|class
+name|GlobalVariable
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
 name|class
 name|ValueSymbolTable
 decl_stmt|;
@@ -129,30 +165,6 @@ expr|struct
 name|SymbolTableListParentType
 block|{}
 expr_stmt|;
-name|class
-name|Argument
-decl_stmt|;
-name|class
-name|BasicBlock
-decl_stmt|;
-name|class
-name|Function
-decl_stmt|;
-name|class
-name|Instruction
-decl_stmt|;
-name|class
-name|GlobalVariable
-decl_stmt|;
-name|class
-name|GlobalAlias
-decl_stmt|;
-name|class
-name|GlobalIFunc
-decl_stmt|;
-name|class
-name|Module
-decl_stmt|;
 define|#
 directive|define
 name|DEFINE_SYMBOL_TABLE_PARENT_TYPE
@@ -162,7 +174,7 @@ parameter_list|,
 name|PARENT
 parameter_list|)
 define|\
-value|template<> struct SymbolTableListParentType<NODE> { typedef PARENT type; };
+value|template<> struct SymbolTableListParentType<NODE> { using type = PARENT; };
 name|DEFINE_SYMBOL_TABLE_PARENT_TYPE
 argument_list|(
 argument|Instruction
@@ -233,14 +245,17 @@ operator|<
 name|ValueSubClass
 operator|>
 block|{
-typedef|typedef
+name|using
+name|ListTy
+operator|=
 name|SymbolTableList
 operator|<
 name|ValueSubClass
 operator|>
-name|ListTy
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|iterator
+operator|=
 name|typename
 name|simple_ilist
 operator|<
@@ -248,9 +263,10 @@ name|ValueSubClass
 operator|>
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|ItemParentClass
+operator|=
 name|typename
 name|SymbolTableListParentType
 operator|<
@@ -258,21 +274,22 @@ name|ValueSubClass
 operator|>
 operator|::
 name|type
-name|ItemParentClass
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|SymbolTableListTraits
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|private
-label|:
+operator|:
 comment|/// getListOwner - Return the object that owns this list.  If this is a list
 comment|/// of instructions, it returns the BasicBlock that owns them.
 name|ItemParentClass
-modifier|*
+operator|*
 name|getListOwner
-parameter_list|()
+argument_list|()
 block|{
 name|size_t
 name|Offset
@@ -303,9 +320,9 @@ argument_list|)
 operator|)
 argument_list|)
 argument_list|)
-decl_stmt|;
+block|;
 name|ListTy
-modifier|*
+operator|*
 name|Anchor
 argument_list|(
 name|static_cast
@@ -317,7 +334,7 @@ operator|(
 name|this
 operator|)
 argument_list|)
-decl_stmt|;
+block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -340,13 +357,11 @@ return|;
 block|}
 specifier|static
 name|ListTy
-modifier|&
+operator|&
 name|getList
-parameter_list|(
-name|ItemParentClass
-modifier|*
-name|Par
-parameter_list|)
+argument_list|(
+argument|ItemParentClass *Par
+argument_list|)
 block|{
 return|return
 name|Par
@@ -367,17 +382,15 @@ return|;
 block|}
 specifier|static
 name|ValueSymbolTable
-modifier|*
+operator|*
 name|getSymTab
-parameter_list|(
-name|ItemParentClass
-modifier|*
-name|Par
-parameter_list|)
+argument_list|(
+argument|ItemParentClass *Par
+argument_list|)
 block|{
 return|return
 name|Par
-condition|?
+operator|?
 name|toPtr
 argument_list|(
 name|Par
@@ -385,42 +398,38 @@ operator|->
 name|getValueSymbolTable
 argument_list|()
 argument_list|)
-else|:
+operator|:
 name|nullptr
 return|;
 block|}
 name|public
-label|:
+operator|:
 name|void
 name|addNodeToList
-parameter_list|(
+argument_list|(
 name|ValueSubClass
-modifier|*
+operator|*
 name|V
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|removeNodeFromList
-parameter_list|(
+argument_list|(
 name|ValueSubClass
-modifier|*
+operator|*
 name|V
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|transferNodesFromList
-parameter_list|(
-name|SymbolTableListTraits
-modifier|&
-name|L2
-parameter_list|,
-name|iterator
-name|first
-parameter_list|,
-name|iterator
-name|last
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|SymbolTableListTraits&L2
+argument_list|,
+argument|iterator first
+argument_list|,
+argument|iterator last
+argument_list|)
+block|;
 comment|// private:
 name|template
 operator|<
@@ -435,16 +444,14 @@ operator|*
 argument_list|,
 name|TPtr
 argument_list|)
-expr_stmt|;
+block|;
 specifier|static
 name|ValueSymbolTable
-modifier|*
+operator|*
 name|toPtr
-parameter_list|(
-name|ValueSymbolTable
-modifier|*
-name|P
-parameter_list|)
+argument_list|(
+argument|ValueSymbolTable *P
+argument_list|)
 block|{
 return|return
 name|P
@@ -452,47 +459,24 @@ return|;
 block|}
 specifier|static
 name|ValueSymbolTable
-modifier|*
+operator|*
 name|toPtr
-parameter_list|(
-name|ValueSymbolTable
-modifier|&
-name|R
-parameter_list|)
+argument_list|(
+argument|ValueSymbolTable&R
+argument_list|)
 block|{
 return|return
 operator|&
 name|R
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// List that automatically updates parent links and symbol tables.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When nodes are inserted into and removed from this list, the associated
-end_comment
-
-begin_comment
 comment|/// symbol table will be automatically updated.  Similarly, parent links get
-end_comment
-
-begin_comment
 comment|/// updated automatically.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -508,24 +492,27 @@ name|simple_ilist
 operator|<
 name|T
 operator|>
-operator|,
+block|,
 name|SymbolTableListTraits
 operator|<
 name|T
 operator|>>
 block|{}
-expr_stmt|;
-end_expr_stmt
+block|;  }
+end_decl_stmt
 
 begin_comment
-unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_SYMBOLTABLELISTTRAITS_H
+end_comment
 
 end_unit
 

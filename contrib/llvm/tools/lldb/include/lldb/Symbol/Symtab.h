@@ -142,6 +142,10 @@ name|Symtab
 argument_list|()
 expr_stmt|;
 name|void
+name|PreloadSymbols
+parameter_list|()
+function_decl|;
+name|void
 name|Reserve
 parameter_list|(
 name|size_t

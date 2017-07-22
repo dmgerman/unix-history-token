@@ -70,13 +70,37 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ObjectYAML/YAML.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ELF.h"
+file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -520,7 +544,7 @@ block|;
 name|StringRef
 name|Symbol
 block|; }
-block|; struct
+block|;  struct
 name|RelocationSection
 operator|:
 name|Section
@@ -1431,6 +1455,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_ELFYAML_H
+end_comment
 
 end_unit
 

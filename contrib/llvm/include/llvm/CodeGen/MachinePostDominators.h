@@ -91,7 +91,7 @@ name|MachineFunctionPass
 block|{
 name|private
 operator|:
-name|DominatorTreeBase
+name|PostDomTreeBase
 operator|<
 name|MachineBasicBlock
 operator|>

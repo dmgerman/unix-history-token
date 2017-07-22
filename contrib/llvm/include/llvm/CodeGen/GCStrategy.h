@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/GCStrategy.h - Garbage collection ----------*- C++ -*-===//
+comment|//===- llvm/CodeGen/GCStrategy.h - Garbage collection -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -194,43 +194,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_IR_GCSTRATEGY_H
+name|LLVM_CODEGEN_GCSTRATEGY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_IR_GCSTRATEGY_H
+name|LLVM_CODEGEN_GCSTRATEGY_H
 end_define
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Function.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Module.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Value.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -249,6 +231,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Type
+decl_stmt|;
 name|namespace
 name|GC
 block|{
@@ -267,6 +252,7 @@ comment|///< Instr is the return address of a call.
 block|}
 enum|;
 block|}
+comment|// end namespace GC
 comment|/// GCStrategy describes a garbage collector algorithm's code generation
 comment|/// requirements, and provides overridable hooks for those needs which cannot
 comment|/// be abstractly described.  GCStrategy objects must be looked up through
@@ -277,45 +263,59 @@ name|GCStrategy
 block|{
 name|private
 label|:
+name|friend
+name|class
+name|GCModuleInfo
+decl_stmt|;
 name|std
 operator|::
 name|string
 name|Name
 expr_stmt|;
-name|friend
-name|class
-name|GCModuleInfo
-decl_stmt|;
 name|protected
 label|:
 name|bool
 name|UseStatepoints
+init|=
+name|false
 decl_stmt|;
 comment|/// Uses gc.statepoints as opposed to gc.roots,
 comment|/// if set, none of the other options can be
 comment|/// anything but their default values.
 name|unsigned
 name|NeededSafePoints
+init|=
+literal|0
 decl_stmt|;
 comment|///< Bitmask of required safe points.
 name|bool
 name|CustomReadBarriers
+init|=
+name|false
 decl_stmt|;
 comment|///< Default is to insert loads.
 name|bool
 name|CustomWriteBarriers
+init|=
+name|false
 decl_stmt|;
 comment|///< Default is to insert stores.
 name|bool
 name|CustomRoots
+init|=
+name|false
 decl_stmt|;
 comment|///< Default is to pass through to backend.
 name|bool
 name|InitRoots
+init|=
+name|true
 decl_stmt|;
 comment|///< If set, roots are nulled during lowering.
 name|bool
 name|UsesMetadata
+init|=
+name|false
 decl_stmt|;
 comment|///< If set, backend must emit metadata tables.
 name|public
@@ -327,7 +327,9 @@ name|virtual
 operator|~
 name|GCStrategy
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Return the name of the GC strategy.  This is the value of the collector
 comment|/// name string specified on functions which use this strategy.
 specifier|const
@@ -489,20 +491,29 @@ comment|///
 comment|/// Note that to use a custom GCMetadataPrinter w/gc.roots, you must also
 comment|/// register your GCMetadataPrinter subclass with the
 comment|/// GCMetadataPrinterRegistery as well.
-typedef|typedef
+name|using
+name|GCRegistry
+init|=
 name|Registry
 operator|<
 name|GCStrategy
 operator|>
-name|GCRegistry
-expr_stmt|;
+decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GCSTRATEGY_H
+end_comment
 
 end_unit
 

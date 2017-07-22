@@ -491,7 +491,43 @@ name|AddressRange
 modifier|&
 name|range
 parameter_list|,
-name|Error
+name|Status
+modifier|&
+name|error
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Find the best global data symbol visible from this context.
+comment|///
+comment|/// Symbol priority is:
+comment|///     - extern symbol in the current module if there is one
+comment|///     - non-extern symbol in the current module if there is one
+comment|///     - extern symbol in the target
+comment|///     - non-extern symbol in the target
+comment|/// It is an error if the highest-priority result is ambiguous.
+comment|///
+comment|/// @param[in] name
+comment|///     The name of the symbol to search for.
+comment|///
+comment|/// @param[out] error
+comment|///     An error that will be populated with a message if there was an
+comment|///     ambiguous result.  The error will not be populated if no result
+comment|///     was found.
+comment|///
+comment|/// @return
+comment|///     The symbol that was found, or \b nullptr if none was found.
+comment|//------------------------------------------------------------------
+specifier|const
+name|Symbol
+modifier|*
+name|FindBestGlobalDataSymbol
+parameter_list|(
+specifier|const
+name|ConstString
+modifier|&
+name|name
+parameter_list|,
+name|Status
 modifier|&
 name|error
 parameter_list|)

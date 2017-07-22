@@ -326,7 +326,12 @@ comment|/// the offset from beginning of section.
 comment|///
 comment|/// This is the TLS offset for the COFF/Windows TLS mechanism.
 name|MO_SECREL
-block|}
+block|,
+comment|/// MO_ABS8 - On a symbol operand this indicates that the symbol is known
+comment|/// to be an absolute symbol in range [0,128), so we can use the @ABS8
+comment|/// symbol modifier.
+name|MO_ABS8
+block|,   }
 enum|;
 enum_decl|enum :
 name|uint64_t

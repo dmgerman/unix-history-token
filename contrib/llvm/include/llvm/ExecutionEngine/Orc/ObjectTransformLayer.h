@@ -65,6 +65,24 @@ directive|include
 file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -74,7 +92,7 @@ name|orc
 block|{
 comment|/// @brief Object mutating layer.
 comment|///
-comment|///   This layer accepts sets of ObjectFiles (via addObjectSet). It
+comment|///   This layer accepts sets of ObjectFiles (via addObject). It
 comment|/// immediately applies the user supplied functor to each object, then adds
 comment|/// the set of transformed objects to the layer below.
 name|template
@@ -91,13 +109,14 @@ block|{
 name|public
 operator|:
 comment|/// @brief Handle to a set of added objects.
-typedef|typedef
+name|using
+name|ObjHandleT
+operator|=
 name|typename
 name|BaseLayerT
 operator|::
-name|ObjSetHandleT
-name|ObjSetHandleT
-expr_stmt|;
+name|ObjHandleT
+block|;
 comment|/// @brief Construct an ObjectTransformLayer with the given BaseLayer
 name|ObjectTransformLayer
 argument_list|(
@@ -110,7 +129,7 @@ name|BaseLayer
 argument_list|(
 name|BaseLayer
 argument_list|)
-operator|,
+block|,
 name|Transform
 argument_list|(
 argument|std::move(Transform)
@@ -124,79 +143,32 @@ comment|/// @return A handle for the added objects.
 name|template
 operator|<
 name|typename
-name|ObjSetT
-operator|,
-name|typename
-name|MemoryManagerPtrT
-operator|,
-name|typename
-name|SymbolResolverPtrT
+name|ObjectPtr
 operator|>
-name|ObjSetHandleT
-name|addObjectSet
+name|Expected
+operator|<
+name|ObjHandleT
+operator|>
+name|addObject
 argument_list|(
-argument|ObjSetT Objects
+argument|ObjectPtr Obj
 argument_list|,
-argument|MemoryManagerPtrT MemMgr
-argument_list|,
-argument|SymbolResolverPtrT Resolver
+argument|std::shared_ptr<JITSymbolResolver> Resolver
 argument_list|)
 block|{
-for|for
-control|(
-name|auto
-name|I
-init|=
-name|Objects
+return|return
+name|BaseLayer
 operator|.
-name|begin
-argument_list|()
-init|,
-name|E
-init|=
-name|Objects
-operator|.
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-control|)
-operator|*
-name|I
-operator|=
+name|addObject
+argument_list|(
 name|Transform
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
-operator|*
-name|I
+name|Obj
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|BaseLayer
-operator|.
-name|addObjectSet
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Objects
-argument_list|)
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|MemMgr
 argument_list|)
 argument_list|,
 name|std
@@ -209,20 +181,20 @@ argument_list|)
 return|;
 block|}
 comment|/// @brief Remove the object set associated with the handle H.
-name|void
-name|removeObjectSet
-parameter_list|(
-name|ObjSetHandleT
-name|H
-parameter_list|)
+name|Error
+name|removeObject
+argument_list|(
+argument|ObjHandleT H
+argument_list|)
 block|{
+return|return
 name|BaseLayer
 operator|.
-name|removeObjectSet
+name|removeObject
 argument_list|(
 name|H
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 comment|/// @brief Search for the given named symbol.
 comment|/// @param Name The name of the symbol to search for.
@@ -231,15 +203,9 @@ comment|/// @return A handle for the given named symbol, if it exists.
 name|JITSymbol
 name|findSymbol
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|bool
-name|ExportedSymbolsOnly
+argument|bool ExportedSymbolsOnly
 argument_list|)
 block|{
 return|return
@@ -264,18 +230,11 @@ comment|///         given object set.
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
-name|ObjSetHandleT
-name|H
+argument|ObjHandleT H
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|bool
-name|ExportedSymbolsOnly
+argument|bool ExportedSymbolsOnly
 argument_list|)
 block|{
 return|return
@@ -294,36 +253,31 @@ block|}
 comment|/// @brief Immediately emit and finalize the object set represented by the
 comment|///        given handle.
 comment|/// @param H Handle for object set to emit/finalize.
-name|void
+name|Error
 name|emitAndFinalize
-parameter_list|(
-name|ObjSetHandleT
-name|H
-parameter_list|)
+argument_list|(
+argument|ObjHandleT H
+argument_list|)
 block|{
+return|return
 name|BaseLayer
 operator|.
 name|emitAndFinalize
 argument_list|(
 name|H
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 comment|/// @brief Map section addresses for the objects associated with the handle H.
 name|void
 name|mapSectionAddress
-parameter_list|(
-name|ObjSetHandleT
-name|H
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|LocalAddress
-parameter_list|,
-name|JITTargetAddress
-name|TargetAddr
-parameter_list|)
+argument_list|(
+argument|ObjHandleT H
+argument_list|,
+argument|const void *LocalAddress
+argument_list|,
+argument|JITTargetAddress TargetAddr
+argument_list|)
 block|{
 name|BaseLayer
 operator|.
@@ -335,13 +289,12 @@ name|LocalAddress
 argument_list|,
 name|TargetAddr
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// @brief Access the transform functor directly.
 name|TransformFtor
-modifier|&
+operator|&
 name|getTransform
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Transform
@@ -360,29 +313,22 @@ name|Transform
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|BaseLayerT
-modifier|&
+operator|&
 name|BaseLayer
-decl_stmt|;
+block|;
 name|TransformFtor
 name|Transform
-decl_stmt|;
+block|; }
+expr_stmt|;
+block|}
+comment|// end namespace orc
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
-comment|// End namespace orc.
-end_comment
-
-begin_comment
-unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif

@@ -79,19 +79,19 @@ name|HostThreadPosix
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|Join
 argument_list|(
 argument|lldb::thread_result_t *result
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Cancel
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|Detach
 argument_list|()
 block|; }

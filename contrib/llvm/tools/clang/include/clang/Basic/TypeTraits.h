@@ -95,6 +95,8 @@ name|UTT_HasVirtualDestructor
 block|,
 name|UTT_IsAbstract
 block|,
+name|UTT_IsAggregate
+block|,
 name|UTT_IsArithmetic
 block|,
 name|UTT_IsArray
@@ -160,6 +162,8 @@ block|,
 name|UTT_IsTrivial
 block|,
 name|UTT_IsTriviallyCopyable
+block|,
+name|UTT_IsTriviallyDestructible
 block|,
 name|UTT_IsUnion
 block|,

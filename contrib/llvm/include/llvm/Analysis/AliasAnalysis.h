@@ -158,6 +158,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/MemoryLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/TargetLibraryInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/CallSite.h"
 end_include
 
@@ -171,18 +183,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/PassManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/MemoryLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/TargetLibraryInfo.h"
 end_include
 
 begin_decl_stmt
@@ -1386,13 +1386,7 @@ name|MemoryLocation
 modifier|&
 name|Loc
 parameter_list|)
-block|{
-comment|// Conservatively correct.  (We could possibly be a bit smarter if
-comment|// Loc is a alloca that doesn't escape.)
-return|return
-name|MRI_ModRef
-return|;
-block|}
+function_decl|;
 comment|/// getModRefInfo (for fences) - A convenience wrapper.
 name|ModRefInfo
 name|getModRefInfo
@@ -1746,6 +1740,14 @@ return|;
 block|}
 comment|/// Check whether or not an instruction may read or write the specified
 comment|/// memory location.
+comment|///
+comment|/// Note explicitly that getModRefInfo considers the effects of reading and
+comment|/// writing the memory location, and not the effect of ordering relative to
+comment|/// other instructions.  Thus, a volatile load is considered to be Ref,
+comment|/// because it does not actually write memory, it just can't be reordered
+comment|/// relative to other volatiles (or removed).  Atomic ordered loads/stores are
+comment|/// considered ModRef ATM because conservatively, the visible effect appears
+comment|/// as if memory was written, not just an ordering constraint.
 comment|///
 comment|/// An instruction that doesn't read or write memory may be trivially LICM'd
 comment|/// for example.

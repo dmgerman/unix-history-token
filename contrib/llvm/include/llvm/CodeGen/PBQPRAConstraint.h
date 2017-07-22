@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegAllocPBQP.h ------------------------------------------*- C++ -*-===//
+comment|//===- RegAllocPBQP.h -------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -94,27 +100,18 @@ name|class
 name|PBQPRAGraph
 decl_stmt|;
 block|}
+comment|// end namespace RegAlloc
 block|}
-name|class
-name|LiveIntervals
-decl_stmt|;
-name|class
-name|MachineBlockFrequencyInfo
-decl_stmt|;
-name|class
-name|MachineFunction
-decl_stmt|;
-name|class
-name|TargetRegisterInfo
-decl_stmt|;
-typedef|typedef
+comment|// end namespace PBQP
+name|using
+name|PBQPRAGraph
+init|=
 name|PBQP
 operator|::
 name|RegAlloc
 operator|::
 name|PBQPRAGraph
-name|PBQPRAGraph
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief Abstract base for classes implementing PBQP register allocation
 comment|///        constraints (e.g. Spill-costs, interference, coalescing).
 name|class
@@ -230,13 +227,17 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* LLVM_CODEGEN_PBQPRACONSTRAINT_H */
+comment|// LLVM_CODEGEN_PBQPRACONSTRAINT_H
 end_comment
 
 end_unit

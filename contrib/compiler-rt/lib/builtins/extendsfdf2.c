@@ -53,15 +53,6 @@ directive|include
 file|"fp_extend_impl.inc"
 end_include
 
-begin_macro
-name|ARM_EABI_FNALIAS
-argument_list|(
-argument|f2d
-argument_list|,
-argument|extendsfdf2
-argument_list|)
-end_macro
-
 begin_function
 name|COMPILER_RT_ABI
 name|double
@@ -79,6 +70,38 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
+begin_function
+name|AEABI_RTABI
+name|double
+name|__aeabi_f2d
+parameter_list|(
+name|float
+name|a
+parameter_list|)
+block|{
+return|return
+name|__extendsfdf2
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

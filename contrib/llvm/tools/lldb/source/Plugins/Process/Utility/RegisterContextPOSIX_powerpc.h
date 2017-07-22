@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Log.h"
+file|"lldb/Target/RegisterContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/RegisterContext.h"
+file|"lldb/Utility/Log.h"
 end_include
 
 begin_decl_stmt

@@ -68,13 +68,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/BinaryFormat/COFF.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ObjectYAML/CodeViewYAMLDebugSections.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ObjectYAML/CodeViewYAMLTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ObjectYAML/YAML.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/COFF.h"
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -208,6 +238,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|// end namespace COFF
 comment|// The structure of the yaml files is not an exact 1:1 match to COFF. In order
 comment|// to use yaml::IO, we use these structures which are closer to the source.
 name|namespace
@@ -262,6 +293,26 @@ name|yaml
 operator|::
 name|BinaryRef
 name|SectionData
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|CodeViewYAML
+operator|::
+name|YAMLDebugSubsection
+operator|>
+name|DebugS
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|CodeViewYAML
+operator|::
+name|LeafRecord
+operator|>
+name|DebugT
 expr_stmt|;
 name|std
 operator|::
@@ -415,8 +466,13 @@ expr_stmt|;
 block|}
 struct|;
 block|}
+comment|// end namespace COFFYAML
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
@@ -1134,6 +1190,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_COFFYAML_H
+end_comment
 
 end_unit
 

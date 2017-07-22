@@ -96,6 +96,9 @@ decl_stmt|;
 name|class
 name|LoopInfo
 decl_stmt|;
+name|class
+name|TargetLibraryInfo
+decl_stmt|;
 comment|/// \brief This is an alternative analysis pass to
 comment|/// BranchProbabilityInfoWrapperPass.  The difference is that with this pass the
 comment|/// branch probabilities are not computed when the analysis pass is executed but
@@ -144,6 +147,11 @@ specifier|const
 name|LoopInfo
 operator|*
 name|LI
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 argument_list|)
 operator|:
 name|Calculated
@@ -158,7 +166,12 @@ argument_list|)
 block|,
 name|LI
 argument_list|(
-argument|LI
+name|LI
+argument_list|)
+block|,
+name|TLI
+argument_list|(
+argument|TLI
 argument_list|)
 block|{}
 comment|/// Retrieve the BPI with the branch probabilities computed.
@@ -191,6 +204,8 @@ name|F
 argument_list|,
 operator|*
 name|LI
+argument_list|,
+name|TLI
 argument_list|)
 expr_stmt|;
 name|Calculated
@@ -240,6 +255,11 @@ specifier|const
 name|LoopInfo
 operator|*
 name|LI
+block|;
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
 block|;   }
 block|;
 name|std
@@ -338,7 +358,57 @@ modifier|&
 name|Registry
 parameter_list|)
 function_decl|;
+comment|/// \brief Simple trait class that provides a mapping between BPI passes and the
+comment|/// corresponding BPInfo.
+name|template
+operator|<
+name|typename
+name|PassT
+operator|>
+expr|struct
+name|BPIPassTrait
+block|{
+specifier|static
+name|PassT
+operator|&
+name|getBPI
+argument_list|(
+argument|PassT *P
+argument_list|)
+block|{
+return|return
+operator|*
+name|P
+return|;
 block|}
+expr|}
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|BPIPassTrait
+operator|<
+name|LazyBranchProbabilityInfoPass
+operator|>
+block|{
+specifier|static
+name|BranchProbabilityInfo
+operator|&
+name|getBPI
+argument_list|(
+argument|LazyBranchProbabilityInfoPass *P
+argument_list|)
+block|{
+return|return
+name|P
+operator|->
+name|getBPI
+argument_list|()
+return|;
+block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_endif

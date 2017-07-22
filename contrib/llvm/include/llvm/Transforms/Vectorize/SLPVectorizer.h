@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/OptimizationDiagnosticInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/ScalarEvolution.h"
 end_include
 
@@ -178,11 +184,11 @@ expr_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 literal|8
 operator|>
-name|WeakVHList
+name|WeakTrackingVHList
 expr_stmt|;
 typedef|typedef
 name|MapVector
@@ -190,9 +196,9 @@ operator|<
 name|Value
 operator|*
 operator|,
-name|WeakVHList
+name|WeakTrackingVHList
 operator|>
-name|WeakVHListMap
+name|WeakTrackingVHListMap
 expr_stmt|;
 name|ScalarEvolution
 modifier|*
@@ -302,6 +308,10 @@ parameter_list|,
 name|DemandedBits
 modifier|*
 name|DB_
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE_
 parameter_list|)
 function_decl|;
 name|private
@@ -375,7 +385,7 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-comment|/// \brief Try to vectorize a chain that may start at the operands of \V;
+comment|/// \brief Try to vectorize a chain that may start at the operands of \p V.
 name|bool
 name|tryToVectorize
 argument_list|(
@@ -415,6 +425,34 @@ operator|::
 name|BoUpSLP
 operator|&
 name|R
+argument_list|)
+decl_stmt|;
+comment|/// Try to find horizontal reduction or otherwise vectorize a chain of binary
+comment|/// operators.
+name|bool
+name|vectorizeRootInstruction
+argument_list|(
+name|PHINode
+operator|*
+name|P
+argument_list|,
+name|Value
+operator|*
+name|V
+argument_list|,
+name|BasicBlock
+operator|*
+name|BB
+argument_list|,
+name|slpvectorizer
+operator|::
+name|BoUpSLP
+operator|&
+name|R
+argument_list|,
+name|TargetTransformInfo
+operator|*
+name|TTI
 argument_list|)
 decl_stmt|;
 comment|/// \brief Scan the basic block and look for patterns that are likely to start
@@ -475,7 +513,7 @@ name|StoreListMap
 name|Stores
 decl_stmt|;
 comment|/// The getelementptr instructions in a basic block organized by base pointer.
-name|WeakVHListMap
+name|WeakTrackingVHListMap
 name|GEPs
 decl_stmt|;
 block|}

@@ -274,6 +274,11 @@ return|return
 name|false
 return|;
 block|}
+name|bool
+name|shouldEraseOutputFiles
+argument_list|()
+name|override
+block|;
 name|public
 operator|:
 comment|/// \brief Compute the AST consumer arguments that will be used to
@@ -302,8 +307,6 @@ name|bool
 name|BeginSourceFileAction
 argument_list|(
 argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
 argument_list|)
 name|override
 block|; }
@@ -332,15 +335,6 @@ literal|0
 block|;
 name|protected
 operator|:
-name|bool
-name|BeginSourceFileAction
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
-argument_list|)
-name|override
-block|;
 name|std
 operator|::
 name|unique_ptr
@@ -382,34 +376,12 @@ operator|:
 name|public
 name|GenerateModuleAction
 block|{
-name|clang
-operator|::
-name|Module
-operator|*
-name|Module
-operator|=
-name|nullptr
-block|;
-specifier|const
-name|FileEntry
-operator|*
-name|ModuleMapForUniquing
-operator|=
-name|nullptr
-block|;
-name|bool
-name|IsSystem
-operator|=
-name|false
-block|;
 name|private
 operator|:
 name|bool
 name|BeginSourceFileAction
 argument_list|(
 argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
 argument_list|)
 name|override
 block|;
@@ -426,30 +398,7 @@ argument_list|,
 argument|StringRef InFile
 argument_list|)
 name|override
-block|;
-name|public
-operator|:
-name|GenerateModuleFromModuleMapAction
-argument_list|()
-block|{}
-name|GenerateModuleFromModuleMapAction
-argument_list|(
-argument|const FileEntry *ModuleMap
-argument_list|,
-argument|bool IsSystem
-argument_list|)
-operator|:
-name|ModuleMapForUniquing
-argument_list|(
-name|ModuleMap
-argument_list|)
-block|,
-name|IsSystem
-argument_list|(
-argument|IsSystem
-argument_list|)
-block|{}
-block|}
+block|; }
 block|;
 name|class
 name|GenerateModuleInterfaceAction
@@ -463,8 +412,6 @@ name|bool
 name|BeginSourceFileAction
 argument_list|(
 argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
 argument_list|)
 name|override
 block|;
@@ -692,8 +639,6 @@ name|bool
 name|BeginSourceFileAction
 argument_list|(
 argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
 argument_list|)
 name|override
 block|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugInfoEntry.h -----------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugInfoEntry.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,25 +34,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGINFOENTRY_H
+name|LLVM_DEBUGINFO_DWARFDEBUGINFOENTRY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGINFOENTRY_H
+name|LLVM_DEBUGINFO_DWARFDEBUGINFOENTRY_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/DIContext.h"
+file|"llvm/BinaryFormat/Dwarf.h"
 end_include
 
 begin_include
@@ -64,19 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/DWARF/DWARFDebugRangeList.h"
+file|"llvm/DebugInfo/DWARF/DWARFDataExtractor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Dwarf.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -84,23 +72,11 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|DWARFDebugAranges
-decl_stmt|;
-name|class
-name|DWARFCompileUnit
+name|DataExtractor
 decl_stmt|;
 name|class
 name|DWARFUnit
 decl_stmt|;
-name|class
-name|DWARFContext
-decl_stmt|;
-name|class
-name|DWARFFormValue
-decl_stmt|;
-struct_decl|struct
-name|DWARFDebugInfoEntryInlinedChain
-struct_decl|;
 comment|/// DWARFDebugInfoEntry - A DIE with only the minimum required data.
 name|class
 name|DWARFDebugInfoEntry
@@ -108,53 +84,46 @@ block|{
 comment|/// Offset within the .debug_info of the start of this entry.
 name|uint32_t
 name|Offset
+init|=
+literal|0
 decl_stmt|;
 comment|/// The integer depth of this DIE within the compile unit DIEs where the
 comment|/// compile/type unit DIE has a depth of zero.
 name|uint32_t
 name|Depth
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|DWARFAbbreviationDeclaration
 modifier|*
 name|AbbrevDecl
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|DWARFDebugInfoEntry
 argument_list|()
-operator|:
-name|Offset
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Depth
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|AbbrevDecl
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Extracts a debug info entry, which is a child of a given unit,
 comment|/// starting at a given offset. If DIE can't be extracted, returns false and
 comment|/// doesn't change OffsetPtr.
 name|bool
 name|extractFast
-argument_list|(
+parameter_list|(
 specifier|const
 name|DWARFUnit
-operator|&
+modifier|&
 name|U
-argument_list|,
+parameter_list|,
 name|uint32_t
-operator|*
+modifier|*
 name|OffsetPtr
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// High performance extraction should use this call.
 name|bool
 name|extractFast
@@ -169,7 +138,7 @@ modifier|*
 name|OffsetPtr
 parameter_list|,
 specifier|const
-name|DataExtractor
+name|DWARFDataExtractor
 modifier|&
 name|DebugInfoData
 parameter_list|,
@@ -248,10 +217,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARFDEBUGINFOENTRY_H
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCAsmParserExtension.h - Asm Parser Hooks -------*- C++ -*-===//
+comment|//===- llvm/MC/MCAsmParserExtension.h - Asm Parser Hooks --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,7 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCParser/MCAsmLexer.h"
 end_include
 
 begin_include
@@ -74,26 +86,6 @@ comment|/// implementations.
 name|class
 name|MCAsmParserExtension
 block|{
-name|MCAsmParserExtension
-argument_list|(
-specifier|const
-name|MCAsmParserExtension
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCAsmParserExtension
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|MCAsmParser
 modifier|*
 name|Parser
@@ -161,9 +153,32 @@ return|;
 block|}
 name|bool
 name|BracketExpressionsSupported
+init|=
+name|false
 decl_stmt|;
 name|public
 label|:
+name|MCAsmParserExtension
+argument_list|(
+specifier|const
+name|MCAsmParserExtension
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCAsmParserExtension
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCAsmParserExtension
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|virtual
 operator|~
 name|MCAsmParserExtension
@@ -444,9 +459,7 @@ block|}
 name|bool
 name|parseMany
 argument_list|(
-name|std
-operator|::
-name|function
+name|function_ref
 operator|<
 name|bool
 argument_list|()
@@ -492,17 +505,15 @@ return|;
 block|}
 name|bool
 name|check
-argument_list|(
+parameter_list|(
 name|bool
 name|P
-argument_list|,
+parameter_list|,
 specifier|const
-name|llvm
-operator|::
 name|Twine
-operator|&
+modifier|&
 name|Msg
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|getParser
@@ -518,20 +529,18 @@ return|;
 block|}
 name|bool
 name|check
-argument_list|(
+parameter_list|(
 name|bool
 name|P
-argument_list|,
+parameter_list|,
 name|SMLoc
 name|Loc
-argument_list|,
+parameter_list|,
 specifier|const
-name|llvm
-operator|::
 name|Twine
-operator|&
+modifier|&
 name|Msg
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|getParser
@@ -582,13 +591,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCPARSER_MCASMPARSEREXTENSION_H
+end_comment
 
 end_unit
 

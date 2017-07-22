@@ -90,7 +90,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -98,13 +110,19 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|APInt
+decl_stmt|;
+name|class
 name|Function
 decl_stmt|;
 name|class
 name|FunctionPass
 decl_stmt|;
 name|class
-name|ModulePass
+name|Instruction
+decl_stmt|;
+name|class
+name|MDNode
 decl_stmt|;
 name|class
 name|Module
@@ -149,17 +167,18 @@ comment|///  \c BitWidth, if non-zero, is the bitwidth of the integer used to de
 comment|///    the offset of the access.  If zero, only a zero offset is allowed.
 comment|///
 comment|/// \c BitWidth has no meaning if \c IsInvalid is true.
-typedef|typedef
+name|using
+name|TBAABaseNodeSummary
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|bool
-operator|,
+decl_stmt|,
 name|unsigned
-operator|>
-name|TBAABaseNodeSummary
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|DenseMap
 operator|<
 specifier|const
@@ -474,13 +493,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_VERIFIER_H
+end_comment
 
 end_unit
 

@@ -49,6 +49,12 @@ directive|include
 file|"clang/Frontend/FrontendAction.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -127,8 +133,6 @@ name|bool
 name|BeginSourceFileAction
 argument_list|(
 argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
 argument_list|)
 name|override
 block|;
@@ -251,8 +255,26 @@ range|:
 name|public
 name|PreprocessorFrontendAction
 block|{
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|raw_ostream
+operator|>
+name|OutputStream
+block|;
+name|class
+name|RewriteImportsListener
+block|;
 name|protected
 operator|:
+name|bool
+name|BeginSourceFileAction
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|)
+name|override
+block|;
 name|void
 name|ExecuteAction
 argument_list|()

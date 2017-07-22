@@ -81,8 +81,37 @@ block|{
 name|NAIVE_LOG
 init|=
 literal|0
+block|,
+name|FDR_LOG
+init|=
+literal|1
 block|, }
 enum|;
+comment|// FDR mode use of the union field in the XRayFileHeader.
+struct|struct
+name|alignas
+argument_list|(
+literal|16
+argument_list|)
+name|FdrAdditionalHeaderData
+block|{
+name|uint64_t
+name|ThreadBufferSize
+decl_stmt|;
+block|}
+struct|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|FdrAdditionalHeaderData
+argument_list|)
+operator|==
+literal|16
+argument_list|,
+literal|"FdrAdditionalHeaderData != 16 bytes"
+argument_list|)
+expr_stmt|;
 comment|// This data structure is used to describe the contents of the file. We use this
 comment|// for versioning the supported XRay file formats.
 struct|struct
@@ -127,6 +156,27 @@ name|CycleFrequency
 init|=
 literal|0
 decl_stmt|;
+union|union
+block|{
+name|char
+name|FreeForm
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|// The current civiltime timestamp, as retrived from 'clock_gettime'. This
+comment|// allows readers of the file to determine when the file was created or
+comment|// written down.
+name|struct
+name|timespec
+name|TS
+decl_stmt|;
+name|struct
+name|FdrAdditionalHeaderData
+name|FdrData
+decl_stmt|;
+block|}
+union|;
 block|}
 name|__attribute__
 argument_list|(

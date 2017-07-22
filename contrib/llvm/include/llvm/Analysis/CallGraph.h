@@ -172,30 +172,6 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// The CallGraph class also attempts to figure out what the root of the
-end_comment
-
-begin_comment
-comment|/// CallGraph is, which it currently does by looking for a function named
-end_comment
-
-begin_comment
-comment|/// 'main'. If no function named 'main' is found, the external node is used as
-end_comment
-
-begin_comment
-comment|/// the entry node, reflecting the fact that any function without internal
-end_comment
-
-begin_comment
-comment|/// linkage could be called into (which is common for libraries).
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -310,12 +286,6 @@ expr_stmt|;
 comment|/// \brief A map from \c Function* to \c CallGraphNode*.
 name|FunctionMapTy
 name|FunctionMap
-decl_stmt|;
-comment|/// \brief Root is root of the call graph, or the external node if a 'main'
-comment|/// function couldn't be found.
-name|CallGraphNode
-modifier|*
-name|Root
 decl_stmt|;
 comment|/// \brief This node has edges to all external functions and those internal
 comment|/// functions that have their address taken.
@@ -634,7 +604,7 @@ name|std
 operator|::
 name|pair
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 name|CallGraphNode
 operator|*
@@ -1074,12 +1044,10 @@ name|friend
 name|class
 name|CallGraph
 decl_stmt|;
-name|AssertingVH
-operator|<
 name|Function
-operator|>
+modifier|*
 name|F
-expr_stmt|;
+decl_stmt|;
 name|std
 operator|::
 name|vector

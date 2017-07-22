@@ -43,25 +43,47 @@ directive|define
 name|liblldb_Broadcaster_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<functional>
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<list>
+file|"lldb/lldb-defines.h"
 end_include
+
+begin_comment
+comment|// for DISALLOW_COPY_AND_ASSIGN
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_comment
+comment|// for ListenerSP, EventSP, Broadcast...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_comment
+comment|// for uint32_t, UINT32_MAX
+end_comment
 
 begin_include
 include|#
@@ -72,8 +94,28 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_comment
+comment|// for shared_ptr, operator==, enable...
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<mutex>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<set>
+end_include
+
+begin_comment
+comment|// for set
+end_comment
 
 begin_include
 include|#
@@ -84,34 +126,58 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_comment
+comment|// for pair
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Broadcaster
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_comment
-comment|// Project includes
-end_comment
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|EventData
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/ConstString.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Listener
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -306,8 +372,8 @@ block|;
 name|public
 operator|:
 comment|// Listeners hold onto weak pointers to their broadcaster managers.  So they
-comment|// must be
-comment|// made into shared pointers, which you do with MakeBroadcasterManager.
+comment|// must be made into shared pointers, which you do with
+comment|// MakeBroadcasterManager.
 specifier|static
 name|lldb
 operator|::

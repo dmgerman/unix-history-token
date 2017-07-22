@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataExtractor.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ModuleChild.h"
 end_include
 
@@ -80,13 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Endian.h"
+file|"lldb/Utility/DataExtractor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Utility/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include

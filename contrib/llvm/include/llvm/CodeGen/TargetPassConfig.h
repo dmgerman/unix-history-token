@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- TargetPassConfig.h - Code Generation pass options -------*- C++ -*-===//
+comment|//===- TargetPassConfig.h - Code Generation pass options --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -82,17 +88,17 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|LLVMTargetMachine
+decl_stmt|;
+struct_decl|struct
+name|MachineSchedContext
+struct_decl|;
+name|class
 name|PassConfigImpl
 decl_stmt|;
 name|class
 name|ScheduleDAGInstrs
 decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
-struct_decl|struct
-name|MachineSchedContext
-struct_decl|;
 comment|// The old pass manager infrastructure is hidden in a legacy namespace now.
 name|namespace
 name|legacy
@@ -101,6 +107,7 @@ name|class
 name|PassManagerBase
 decl_stmt|;
 block|}
+comment|// end namespace legacy
 name|using
 name|legacy
 operator|::
@@ -136,6 +143,8 @@ block|}
 union|;
 name|bool
 name|IsInstance
+init|=
+name|false
 decl_stmt|;
 name|public
 label|:
@@ -144,12 +153,7 @@ argument_list|()
 operator|:
 name|P
 argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|IsInstance
-argument_list|(
-argument|false
+argument|nullptr
 argument_list|)
 block|{}
 name|IdentifyingPassPtr
@@ -159,12 +163,7 @@ argument_list|)
 operator|:
 name|ID
 argument_list|(
-name|IDPtr
-argument_list|)
-operator|,
-name|IsInstance
-argument_list|(
-argument|false
+argument|IDPtr
 argument_list|)
 block|{}
 name|IdentifyingPassPtr
@@ -288,6 +287,8 @@ operator|:
 name|PassManagerBase
 operator|*
 name|PM
+operator|=
+name|nullptr
 block|;
 name|AnalysisID
 name|StartBefore
@@ -311,45 +312,71 @@ name|nullptr
 block|;
 name|bool
 name|Started
+operator|=
+name|true
 block|;
 name|bool
 name|Stopped
+operator|=
+name|false
 block|;
 name|bool
 name|AddingMachinePasses
+operator|=
+name|false
 block|;
 name|protected
 operator|:
-name|TargetMachine
+name|LLVMTargetMachine
 operator|*
 name|TM
 block|;
 name|PassConfigImpl
 operator|*
 name|Impl
+operator|=
+name|nullptr
 block|;
 comment|// Internal data structures
 name|bool
 name|Initialized
+operator|=
+name|false
 block|;
 comment|// Flagged after all passes are configured.
 comment|// Target Pass Options
 comment|// Targets provide a default setting, user flags override.
-comment|//
 name|bool
 name|DisableVerify
+operator|=
+name|false
 block|;
 comment|/// Default setting for -enable-tail-merge on this target.
 name|bool
 name|EnableTailMerge
+operator|=
+name|true
+block|;
+comment|/// Require processing of functions such that callees are generated before
+comment|/// callers.
+name|bool
+name|RequireCodeGenSCCOrder
+operator|=
+name|false
+block|;
+comment|/// Add the actual instruction selection passes. This does not include
+comment|/// preparation passes on IR.
+name|bool
+name|addCoreISelPasses
+argument_list|()
 block|;
 name|public
 operator|:
 name|TargetPassConfig
 argument_list|(
-name|TargetMachine
-operator|*
-name|tm
+name|LLVMTargetMachine
+operator|&
+name|TM
 argument_list|,
 name|PassManagerBase
 operator|&
@@ -528,6 +555,28 @@ argument_list|,
 name|Enable
 argument_list|)
 block|; }
+name|bool
+name|requiresCodeGenSCCOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RequireCodeGenSCCOrder
+return|;
+block|}
+name|void
+name|setRequiresCodeGenSCCOrder
+argument_list|(
+argument|bool Enable = true
+argument_list|)
+block|{
+name|setOpt
+argument_list|(
+name|RequireCodeGenSCCOrder
+argument_list|,
+name|Enable
+argument_list|)
+block|;   }
 comment|/// Allow the target to override a specific pass without overriding the pass
 comment|/// pipeline. When passes are added to the standard pipeline at the
 comment|/// point where StandardID is expected, add TargetID in its place.
@@ -617,6 +666,15 @@ name|bool
 name|usingDefaultRegAlloc
 argument_list|()
 specifier|const
+block|;
+comment|/// High level function that adds all passes necessary to go from llvm IR
+comment|/// representation to the MI representation.
+comment|/// Adds IR based lowering and target specific optimization passes and finally
+comment|/// the core instruction selection passes.
+comment|/// \returns true if an error occured, false otherwise.
+name|bool
+name|addISelPasses
+argument_list|()
 block|;
 comment|/// Add common target configurable passes that perform LLVM IR to IR
 comment|/// transforms following machine independent optimization.
@@ -769,7 +827,6 @@ return|;
 block|}
 comment|/// printAndVerify - Add a pass to dump then verify the machine function, if
 comment|/// those steps are enabled.
-comment|///
 name|void
 name|printAndVerify
 argument_list|(
@@ -805,6 +862,14 @@ name|string
 operator|&
 name|Banner
 argument_list|)
+block|;
+comment|/// Check whether or not GlobalISel should be enabled by default.
+comment|/// Fallback/abort behavior is controlled via other methods.
+name|virtual
+name|bool
+name|isGlobalISelEnabled
+argument_list|()
+specifier|const
 block|;
 comment|/// Check whether or not GlobalISel should abort on error.
 comment|/// When this is disable, GlobalISel will fall back on SDISel instead of
@@ -1027,6 +1092,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_TARGETPASSCONFIG_H
+end_comment
 
 end_unit
 

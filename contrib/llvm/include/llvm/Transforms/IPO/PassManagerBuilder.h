@@ -92,6 +92,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|ModuleSummaryIndex
+decl_stmt|;
+name|class
 name|Pass
 decl_stmt|;
 name|class
@@ -203,6 +206,14 @@ comment|/// peephole optimizations similar to the instruction combiner. These pa
 comment|/// will be inserted after each instance of the instruction combiner pass.
 name|EP_Peephole
 block|,
+comment|/// EP_LateLoopOptimizations - This extension point allows adding late loop
+comment|/// canonicalization and simplification passes. This is the last point in
+comment|/// the loop optimization pipeline before loop deletion. Each pass added
+comment|/// here must be an instance of LoopPass.
+comment|/// This is the place to add passes that can remove loops, such as target-
+comment|/// specific loop idiom recognition.
+name|EP_LateLoopOptimizations
+block|,
 comment|/// EP_CGSCCOptimizerLate - This extension point allows adding CallGraphSCC
 comment|/// passes at the end of the main CallGraphSCC passes and before any
 comment|/// function simplification passes run by CGPassManager.
@@ -232,6 +243,25 @@ name|Pass
 modifier|*
 name|Inliner
 decl_stmt|;
+comment|/// The module summary index to use for exporting information from the
+comment|/// regular LTO phase, for example for the CFI and devirtualization type
+comment|/// tests.
+name|ModuleSummaryIndex
+modifier|*
+name|ExportSummary
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// The module summary index to use for importing information to the
+comment|/// thin LTO backends, for example for the CFI and devirtualization type
+comment|/// tests.
+specifier|const
+name|ModuleSummaryIndex
+modifier|*
+name|ImportSummary
+init|=
+name|nullptr
+decl_stmt|;
 name|bool
 name|DisableTailCalls
 decl_stmt|;
@@ -242,9 +272,6 @@ name|bool
 name|DisableUnrollLoops
 decl_stmt|;
 name|bool
-name|BBVectorize
-decl_stmt|;
-name|bool
 name|SLPVectorize
 decl_stmt|;
 name|bool
@@ -252,9 +279,6 @@ name|LoopVectorize
 decl_stmt|;
 name|bool
 name|RerollLoops
-decl_stmt|;
-name|bool
-name|LoadCombine
 decl_stmt|;
 name|bool
 name|NewGVN
@@ -279,6 +303,9 @@ name|PrepareForThinLTO
 decl_stmt|;
 name|bool
 name|PerformThinLTO
+decl_stmt|;
+name|bool
+name|DivergentTarget
 decl_stmt|;
 comment|/// Enable profile instrumentation pass.
 name|bool

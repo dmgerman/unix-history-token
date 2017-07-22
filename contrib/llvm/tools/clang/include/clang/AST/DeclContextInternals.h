@@ -619,23 +619,28 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|std
-operator|::
-name|mem_fun
-argument_list|(
-operator|&
+index|[]
+operator|(
 name|Decl
-operator|::
+operator|*
+name|D
+operator|)
+block|{
+return|return
+name|D
+operator|->
 name|isFromASTFile
-argument_list|)
-argument_list|)
-argument_list|,
+argument_list|()
+return|;
+block|}
+block|)
+operator|,
 name|Vec
 operator|.
 name|end
 argument_list|()
-argument_list|)
-expr_stmt|;
+block|)
+struct|;
 comment|// Don't have any external decls any more.
 name|Data
 operator|=
@@ -648,11 +653,20 @@ name|false
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+end_decl_stmt
+
+begin_comment
+unit|}
 comment|/// getLookupResult - Return an array of all the decls that this list
+end_comment
+
+begin_comment
 comment|/// represents.
-name|DeclContext
-decl|::
+end_comment
+
+begin_expr_stmt
+unit|DeclContext
+operator|::
 name|lookup_result
 name|getLookupResult
 argument_list|()
@@ -668,7 +682,13 @@ operator|::
 name|lookup_result
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_comment
 comment|// If we have a single NamedDecl, return it.
+end_comment
+
+begin_if
 if|if
 condition|(
 name|NamedDecl
@@ -698,6 +718,9 @@ name|ND
 argument_list|)
 return|;
 block|}
+end_if
+
+begin_expr_stmt
 name|assert
 argument_list|(
 name|getAsVector
@@ -706,6 +729,9 @@ operator|&&
 literal|"Must have a vector at this point"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|DeclsTy
 modifier|&
 name|Vector
@@ -714,7 +740,13 @@ operator|*
 name|getAsVector
 argument_list|()
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Otherwise, we have a range result.
+end_comment
+
+begin_return
 return|return
 name|DeclContext
 operator|::
@@ -723,19 +755,28 @@ argument_list|(
 name|Vector
 argument_list|)
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// HandleRedeclaration - If this is a redeclaration of an existing decl,
+end_comment
+
+begin_comment
 comment|/// replace the old one with D and return true.  Otherwise return false.
-name|bool
+end_comment
+
+begin_macro
+unit|bool
 name|HandleRedeclaration
 argument_list|(
-name|NamedDecl
-operator|*
-name|D
+argument|NamedDecl *D
 argument_list|,
-name|bool
-name|IsKnownNewer
+argument|bool IsKnownNewer
 argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|// Most decls only have one entry in their list, special case it.
 if|if
@@ -841,16 +882,28 @@ return|return
 name|false
 return|;
 block|}
+end_block
+
+begin_comment
 comment|/// AddSubsequentDecl - This is called on the second and later decl when it is
+end_comment
+
+begin_comment
 comment|/// not a redeclaration to merge it into the appropriate place in our list.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function
 name|void
 name|AddSubsequentDecl
-argument_list|(
+parameter_list|(
 name|NamedDecl
-operator|*
+modifier|*
 name|D
-argument_list|)
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1055,14 +1108,10 @@ name|D
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_decl_stmt
+unit|};
 name|class
 name|StoredDeclsMap
 range|:

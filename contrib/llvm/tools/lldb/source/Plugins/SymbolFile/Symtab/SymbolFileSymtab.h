@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 

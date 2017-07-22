@@ -132,7 +132,8 @@ decl_stmt|;
 name|namespace
 name|lto
 block|{
-comment|/// Runs a regular LTO backend.
+comment|/// Runs a regular LTO backend. The regular LTO backend can also act as the
+comment|/// regular LTO phase of ThinLTO, which may need to access the combined index.
 name|Error
 name|backend
 argument_list|(
@@ -153,6 +154,10 @@ operator|<
 name|Module
 operator|>
 name|M
+argument_list|,
+name|ModuleSummaryIndex
+operator|&
+name|CombinedIndex
 argument_list|)
 decl_stmt|;
 comment|/// Runs a ThinLTO backend.
@@ -173,6 +178,7 @@ name|Module
 operator|&
 name|M
 argument_list|,
+specifier|const
 name|ModuleSummaryIndex
 operator|&
 name|CombinedIndex

@@ -37,34 +37,32 @@ directive|include
 file|<stdint.h>
 end_include
 
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(pcs(
-literal|"aapcs"
-argument|))
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|"../int_lib.h"
+end_include
 
-begin_macro
+begin_decl_stmt
+name|AEABI_RTABI
 name|__attribute__
 argument_list|(
-argument|(visibility(
+operator|(
+name|visibility
+argument_list|(
 literal|"hidden"
-argument|))
 argument_list|)
-end_macro
-
-begin_function
+operator|)
+argument_list|)
 name|int
 name|__aeabi_cfcmpeq_check_nan
-parameter_list|(
+argument_list|(
 name|float
 name|a
-parameter_list|,
+argument_list|,
 name|float
 name|b
-parameter_list|)
+argument_list|)
 block|{
 return|return
 name|__builtin_isnan
@@ -78,7 +76,7 @@ name|b
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 end_unit
 

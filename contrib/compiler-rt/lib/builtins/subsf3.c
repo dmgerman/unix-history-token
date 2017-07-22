@@ -63,15 +63,6 @@ directive|include
 file|"fp_lib.h"
 end_include
 
-begin_macro
-name|ARM_EABI_FNALIAS
-argument_list|(
-argument|fsub
-argument_list|,
-argument|subsf3
-argument_list|)
-end_macro
-
 begin_comment
 comment|// Subtraction; flip the sign bit of b and add.
 end_comment
@@ -106,6 +97,43 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
+begin_function
+name|AEABI_RTABI
+name|fp_t
+name|__aeabi_fsub
+parameter_list|(
+name|fp_t
+name|a
+parameter_list|,
+name|fp_t
+name|b
+parameter_list|)
+block|{
+return|return
+name|__subsf3
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

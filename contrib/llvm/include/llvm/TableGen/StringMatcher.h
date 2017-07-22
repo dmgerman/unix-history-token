@@ -101,7 +101,9 @@ name|StringMatcher
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|StringPair
+init|=
 name|std
 operator|::
 name|pair
@@ -109,13 +111,12 @@ operator|<
 name|std
 operator|::
 name|string
-operator|,
+decl_stmt|,
 name|std
-operator|::
+decl|::
 name|string
-operator|>
-name|StringPair
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|private
 label|:
 name|StringRef
@@ -200,13 +201,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TABLEGEN_STRINGMATCHER_H
+end_comment
 
 end_unit
 

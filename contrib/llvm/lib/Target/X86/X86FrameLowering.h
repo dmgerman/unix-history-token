@@ -76,6 +76,9 @@ name|class
 name|MCCFIInstruction
 decl_stmt|;
 name|class
+name|X86InstrInfo
+decl_stmt|;
+name|class
 name|X86Subtarget
 decl_stmt|;
 name|class
@@ -103,7 +106,7 @@ operator|&
 name|STI
 block|;
 specifier|const
-name|TargetInstrInfo
+name|X86InstrInfo
 operator|&
 name|TII
 block|;
@@ -308,6 +311,19 @@ argument|unsigned&FrameReg
 argument_list|)
 specifier|const
 name|override
+block|;
+name|int
+name|getFrameIndexReferenceSP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&SPReg
+argument_list|,
+argument|int Adjustment
+argument_list|)
+specifier|const
 block|;
 name|int
 name|getFrameIndexReferencePreferSP

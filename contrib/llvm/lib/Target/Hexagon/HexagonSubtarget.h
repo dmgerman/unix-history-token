@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- HexagonSubtarget.h - Define Subtarget for the Hexagon ---*- C++ -*-===//
+comment|//===- HexagonSubtarget.h - Define Subtarget for the Hexagon ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"HexagonISelLowering.h"
+file|"HexagonInstrInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"HexagonInstrInfo.h"
+file|"HexagonISelLowering.h"
 end_include
 
 begin_include
@@ -86,7 +86,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/ADT/SmallSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ScheduleDAGMutation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCInstrItineraries.h"
 end_include
 
 begin_include
@@ -98,7 +116,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_define
@@ -132,6 +162,21 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MachineInstr
+decl_stmt|;
+name|class
+name|SDep
+decl_stmt|;
+name|class
+name|SUnit
+decl_stmt|;
+name|class
+name|TargetMachine
+decl_stmt|;
+name|class
+name|Triple
+decl_stmt|;
+name|class
 name|HexagonSubtarget
 range|:
 name|public
@@ -157,18 +202,9 @@ name|ModeIEEERndNear
 block|;
 name|public
 operator|:
-expr|enum
-name|HexagonArchEnum
-block|{
-name|V4
-block|,
-name|V5
-block|,
-name|V55
-block|,
-name|V60
-block|}
-block|;
+include|#
+directive|include
+file|"HexagonDepArch.h"
 name|HexagonArchEnum
 name|HexagonArchVersion
 block|;
@@ -416,6 +452,30 @@ name|V60
 return|;
 block|}
 name|bool
+name|hasV62TOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getHexagonArchVersion
+argument_list|()
+operator|>=
+name|V62
+return|;
+block|}
+name|bool
+name|hasV62TOpsOnly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getHexagonArchVersion
+argument_list|()
+operator|==
+name|V62
+return|;
+block|}
+name|bool
 name|modeIEEERndNear
 argument_list|()
 specifier|const
@@ -465,6 +525,11 @@ return|return
 name|UseLongCalls
 return|;
 block|}
+name|bool
+name|usePredicatedCalls
+argument_list|()
+specifier|const
+block|;
 name|bool
 name|useBSBScheduling
 argument_list|()
@@ -608,14 +673,18 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|changeLatency
+name|restoreLatency
 argument_list|(
 argument|SUnit *Src
 argument_list|,
-argument|SmallVector<SDep
-argument_list|,
-literal|4
-argument|>&Deps
+argument|SUnit *Dst
+argument_list|)
+specifier|const
+block|;
+name|void
+name|changeLatency
+argument_list|(
+argument|SUnit *Src
 argument_list|,
 argument|SUnit *Dst
 argument_list|,
@@ -631,17 +700,16 @@ argument_list|,
 argument|SUnit *Dst
 argument_list|,
 argument|const HexagonInstrInfo *TII
-argument_list|)
-specifier|const
-block|;
-name|void
-name|changePhiLatency
-argument_list|(
-argument|MachineInstr&SrcInst
 argument_list|,
-argument|SUnit *Dst
+argument|SmallSet<SUnit*
 argument_list|,
-argument|SDep&Dep
+literal|4
+argument|>&ExclSrc
+argument_list|,
+argument|SmallSet<SUnit*
+argument_list|,
+literal|4
+argument|>&ExclDst
 argument_list|)
 specifier|const
 block|; }
@@ -657,6 +725,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_HEXAGONSUBTARGET_H
+end_comment
 
 end_unit
 

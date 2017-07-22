@@ -98,12 +98,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataBufferHeap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Expression/IRMemoryMap.h"
 end_include
 
@@ -117,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/SymbolContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/DataBufferHeap.h"
 end_include
 
 begin_include
@@ -156,7 +156,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// @class IRExecutionUnit IRExecutionUnit.h "lldb/Expression/IRExecutionUnit.h"
@@ -310,7 +310,7 @@ block|}
 name|void
 name|GetRunnableInfo
 argument_list|(
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -341,7 +341,7 @@ argument|const uint8_t *bytes
 argument_list|,
 argument|size_t size
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 name|void
@@ -717,7 +717,7 @@ operator|&
 name|process_sp
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|DisassembleFunction
 argument_list|(
 name|Stream
@@ -1210,7 +1210,7 @@ name|ProcessSP
 operator|&
 name|process_sp
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,

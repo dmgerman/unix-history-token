@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARMSubtarget.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -110,12 +110,16 @@ comment|/// isThumb - True if this function is compiled under Thumb mode.
 comment|/// Used to initialized Align, so must precede it.
 name|bool
 name|isThumb
+operator|=
+name|false
 block|;
 comment|/// hasThumb2 - True if the target architecture supports Thumb2. Do not use
 comment|/// to determine if function is compiled under Thumb mode, for that use
 comment|/// 'isThumb'.
 name|bool
 name|hasThumb2
+operator|=
+name|false
 block|;
 comment|/// StByValParamsPadding - For parameter that is split between
 comment|/// GPRs and memory; while recovering GPRs part, when
@@ -124,35 +128,49 @@ comment|/// we need to insert gap before parameter start address. It allows to
 comment|/// "attach" GPR-part to the part that was passed via stack.
 name|unsigned
 name|StByValParamsPadding
+operator|=
+literal|0
 block|;
 comment|/// VarArgsRegSaveSize - Size of the register save area for vararg functions.
 comment|///
 name|unsigned
 name|ArgRegsSaveSize
+operator|=
+literal|0
 block|;
 comment|/// ReturnRegsCount - Number of registers used up in the return.
 name|unsigned
 name|ReturnRegsCount
+operator|=
+literal|0
 block|;
 comment|/// HasStackFrame - True if this function has a stack frame. Set by
 comment|/// determineCalleeSaves().
 name|bool
 name|HasStackFrame
+operator|=
+name|false
 block|;
 comment|/// RestoreSPFromFP - True if epilogue should restore SP from FP. Set by
 comment|/// emitPrologue.
 name|bool
 name|RestoreSPFromFP
+operator|=
+name|false
 block|;
 comment|/// LRSpilledForFarJump - True if the LR register has been for spilled to
 comment|/// enable far jump.
 name|bool
 name|LRSpilledForFarJump
+operator|=
+name|false
 block|;
 comment|/// FramePtrSpillOffset - If HasStackFrame, this records the frame pointer
 comment|/// spill stack offset.
 name|unsigned
 name|FramePtrSpillOffset
+operator|=
+literal|0
 block|;
 comment|/// GPRCS1Offset, GPRCS2Offset, DPRCSOffset - Starting offset of callee saved
 comment|/// register spills areas. For Mac OS X:
@@ -167,26 +185,40 @@ comment|/// Also see AlignedDPRCSRegs below. Not all D-regs need to go in area 3
 comment|/// Some may be spilled after the stack has been realigned.
 name|unsigned
 name|GPRCS1Offset
+operator|=
+literal|0
 block|;
 name|unsigned
 name|GPRCS2Offset
+operator|=
+literal|0
 block|;
 name|unsigned
 name|DPRCSOffset
+operator|=
+literal|0
 block|;
 comment|/// GPRCS1Size, GPRCS2Size, DPRCSSize - Sizes of callee saved register spills
 comment|/// areas.
 name|unsigned
 name|GPRCS1Size
+operator|=
+literal|0
 block|;
 name|unsigned
 name|GPRCS2Size
+operator|=
+literal|0
 block|;
 name|unsigned
 name|DPRCSAlignGapSize
+operator|=
+literal|0
 block|;
 name|unsigned
 name|DPRCSSize
+operator|=
+literal|0
 block|;
 comment|/// NumAlignedDPRCS2Regs - The number of callee-saved DPRs that are saved in
 comment|/// the aligned portion of the stack frame.  This is always a contiguous
@@ -197,17 +229,25 @@ comment|/// behave like any other frame index in the aligned stack frame.  These
 comment|/// registers also aren't included in DPRCSSize above.
 name|unsigned
 name|NumAlignedDPRCS2Regs
+operator|=
+literal|0
 block|;
 name|unsigned
 name|PICLabelUId
+operator|=
+literal|0
 block|;
 comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
 name|int
 name|VarArgsFrameIndex
+operator|=
+literal|0
 block|;
 comment|/// HasITBlocks - True if IT blocks have been inserted.
 name|bool
 name|HasITBlocks
+operator|=
+name|false
 block|;
 comment|/// CPEClones - Track constant pool entries clones created by Constant Island
 comment|/// pass.
@@ -223,6 +263,8 @@ comment|/// ArgumentStackSize - amount of bytes on stack consumed by the argumen
 comment|/// being passed on the stack
 name|unsigned
 name|ArgumentStackSize
+operator|=
+literal|0
 block|;
 comment|/// CoalescedWeights - mapping of basic blocks to the rolling counter of
 comment|/// coalesced weights.
@@ -240,6 +282,8 @@ comment|/// True if this function has a subset of CSRs that is handled explicitl
 comment|/// copies.
 name|bool
 name|IsSplitCSR
+operator|=
+name|false
 block|;
 comment|/// Globals that have had their storage promoted into the constant pool.
 name|SmallPtrSet
@@ -255,117 +299,16 @@ block|;
 comment|/// The amount the literal pool has been increasedby due to promoted globals.
 name|int
 name|PromotedGlobalsIncrease
+operator|=
+literal|0
 block|;
 name|public
 operator|:
 name|ARMFunctionInfo
 argument_list|()
-operator|:
-name|isThumb
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|hasThumb2
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|ArgRegsSaveSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ReturnRegsCount
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasStackFrame
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|RestoreSPFromFP
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|LRSpilledForFarJump
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|FramePtrSpillOffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|GPRCS1Offset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|GPRCS2Offset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DPRCSOffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|GPRCS1Size
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|GPRCS2Size
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DPRCSAlignGapSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DPRCSSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NumAlignedDPRCS2Regs
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|PICLabelUId
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsFrameIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasITBlocks
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|IsSplitCSR
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|PromotedGlobalsIncrease
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|explicit
 name|ARMFunctionInfo
 argument_list|(
@@ -982,17 +925,21 @@ operator|=
 name|Sz
 block|;   }
 expr|}
-block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_ARM_ARMMACHINEFUNCTIONINFO_H
+end_comment
 
 end_unit
 

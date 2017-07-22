@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- SampleProfReader.h - Read LLVM sample profile data -----------------===//
+comment|//===- SampleProfReader.h - Read LLVM sample profile data -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -842,6 +842,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -878,7 +884,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ProfileData/ProfileCommon.h"
+file|"llvm/IR/ProfileSummary.h"
 end_include
 
 begin_include
@@ -891,12 +897,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Debug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -920,13 +920,46 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 name|namespace
 name|sampleprof
 block|{
@@ -996,7 +1029,9 @@ name|virtual
 operator|~
 name|SampleProfileReader
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// \brief Read and validate the file header.
 name|virtual
 name|std
@@ -1055,15 +1090,49 @@ modifier|&
 name|F
 parameter_list|)
 block|{
-return|return
-operator|&
+comment|// The function name may have been updated by adding suffix. In sample
+comment|// profile, the function names are all stripped, so we need to strip
+comment|// the function name suffix before matching with profile.
+if|if
+condition|(
 name|Profiles
-index|[
+operator|.
+name|count
+argument_list|(
 name|F
 operator|.
 name|getName
 argument_list|()
+operator|.
+name|split
+argument_list|(
+literal|'.'
+argument_list|)
+operator|.
+name|first
+argument_list|)
+condition|)
+return|return
+operator|&
+name|Profiles
+index|[
+operator|(
+name|F
+operator|.
+name|getName
+argument_list|()
+operator|.
+name|split
+argument_list|(
+literal|'.'
+argument_list|)
+operator|.
+name|first
+operator|)
 index|]
+return|;
+return|return
+name|nullptr
 return|;
 block|}
 comment|/// \brief Return all the profiles.
@@ -1305,24 +1374,9 @@ argument_list|)
 operator|:
 name|SampleProfileReader
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|B
-argument_list|)
+argument|std::move(B)
 argument_list|,
-name|C
-argument_list|)
-block|,
-name|Data
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|End
-argument_list|(
-argument|nullptr
+argument|C
 argument_list|)
 block|{}
 comment|/// \brief Read and validate the file header.
@@ -1421,12 +1475,16 @@ specifier|const
 name|uint8_t
 operator|*
 name|Data
+operator|=
+name|nullptr
 block|;
 comment|/// \brief Points to the end of the buffer.
 specifier|const
 name|uint8_t
 operator|*
 name|End
+operator|=
+name|nullptr
 block|;
 comment|/// Function name table.
 name|std
@@ -1462,16 +1520,14 @@ name|readSummary
 argument_list|()
 block|; }
 decl_stmt|;
-typedef|typedef
+name|using
+name|InlineCallStack
+init|=
 name|SmallVector
 operator|<
 name|FunctionSamples
 operator|*
-operator|,
-literal|10
-operator|>
-name|InlineCallStack
-expr_stmt|;
+decl_stmt|, 10>;
 comment|// Supported histogram types in GCC.  Currently, we only need support for
 comment|// call target histograms.
 enum|enum
@@ -1653,12 +1709,12 @@ literal|0xac000000
 block|; }
 decl_stmt|;
 block|}
-comment|// End namespace sampleprof
+comment|// end namespace sampleprof
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

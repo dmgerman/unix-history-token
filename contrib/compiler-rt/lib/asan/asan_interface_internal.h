@@ -219,6 +219,40 @@ modifier|*
 name|flag
 parameter_list|)
 function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__asan_register_elf_globals
+parameter_list|(
+name|uptr
+modifier|*
+name|flag
+parameter_list|,
+name|void
+modifier|*
+name|start
+parameter_list|,
+name|void
+modifier|*
+name|stop
+parameter_list|)
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__asan_unregister_elf_globals
+parameter_list|(
+name|uptr
+modifier|*
+name|flag
+parameter_list|,
+name|void
+modifier|*
+name|start
+parameter_list|,
+name|void
+modifier|*
+name|stop
+parameter_list|)
+function_decl|;
 comment|// These two functions should be called by the instrumented code.
 comment|// 'globals' is an array of structures describing 'n' globals.
 name|SANITIZER_INTERFACE_ATTRIBUTE
@@ -596,7 +630,6 @@ parameter_list|)
 function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|SANITIZER_WEAK_ATTRIBUTE
-comment|/* OPTIONAL */
 name|void
 name|__asan_on_error
 parameter_list|()
@@ -608,7 +641,6 @@ parameter_list|()
 function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|SANITIZER_WEAK_ATTRIBUTE
-comment|/* OPTIONAL */
 specifier|const
 name|char
 modifier|*
@@ -1086,6 +1118,14 @@ parameter_list|,
 name|uptr
 name|bottom
 parameter_list|)
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|SANITIZER_WEAK_ATTRIBUTE
+specifier|const
+name|char
+modifier|*
+name|__asan_default_suppressions
+parameter_list|()
 function_decl|;
 block|}
 end_extern

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Symbolize.h --------------------------------------------- C++ -----===//
+comment|//===- Symbolize.h ----------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,13 +68,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Object/Binary.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/ObjectFile.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorOr.h"
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -99,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -277,26 +301,27 @@ argument_list|,
 specifier|const
 name|SymbolizableModule
 operator|*
-name|ModInfo
+name|DbiModuleDescriptor
 argument_list|)
 expr_stmt|;
 name|private
 label|:
 comment|// Bundles together object file with code/data and object file with
 comment|// corresponding debug info. These objects can be the same.
-typedef|typedef
+name|using
+name|ObjectPair
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|ObjectFile
 operator|*
-operator|,
+decl_stmt|,
 name|ObjectFile
-operator|*
-operator|>
-name|ObjectPair
-expr_stmt|;
+modifier|*
+decl|>
+decl_stmt|;
 comment|/// Returns a SymbolizableModule or an error if loading debug info failed.
 comment|/// Only one attempt is made to load a module, and errors during loading are
 comment|/// only reported once. Subsequent calls to get module info for a module that
@@ -497,18 +522,22 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
-comment|// namespace symbolize
+comment|// end namespace symbolize
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_SYMBOLIZE_SYMBOLIZE_H
+end_comment
 
 end_unit
 

@@ -90,6 +90,45 @@ define|\
 value|auto MethodName() const->decltype(RawSymbol->MethodName()) {                 \     return RawSymbol->MethodName();                                            \   }
 end_define
 
+begin_define
+define|#
+directive|define
+name|FORWARD_CONCRETE_SYMBOL_ID_METHOD_WITH_NAME
+parameter_list|(
+name|ConcreteType
+parameter_list|,
+name|PrivateName
+parameter_list|, \
+name|PublicName
+parameter_list|)
+define|\
+value|auto PublicName##Id() const->decltype(RawSymbol->PrivateName##Id()) {        \     return RawSymbol->PrivateName##Id();                                       \   }                                                                            \   std::unique_ptr<ConcreteType> PublicName() const {                           \     uint32_t Id = PublicName##Id();                                            \     return getConcreteSymbolByIdHelper<ConcreteType>(Id);                      \   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|FORWARD_SYMBOL_ID_METHOD_WITH_NAME
+parameter_list|(
+name|PrivateName
+parameter_list|,
+name|PublicName
+parameter_list|)
+define|\
+value|FORWARD_CONCRETE_SYMBOL_ID_METHOD_WITH_NAME(PDBSymbol, PrivateName,          \                                               PublicName)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FORWARD_SYMBOL_ID_METHOD
+parameter_list|(
+name|MethodName
+parameter_list|)
+define|\
+value|FORWARD_SYMBOL_ID_METHOD_WITH_NAME(MethodName, MethodName)
+end_define
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -105,6 +144,9 @@ name|pdb
 block|{
 name|class
 name|IPDBRawSymbol
+decl_stmt|;
+name|class
+name|IPDBSession
 decl_stmt|;
 define|#
 directive|define
@@ -138,6 +180,13 @@ name|unique_ptr
 operator|<
 name|IPDBRawSymbol
 operator|>
+name|Symbol
+argument_list|)
+expr_stmt|;
+name|PDBSymbol
+argument_list|(
+name|PDBSymbol
+operator|&
 name|Symbol
 argument_list|)
 expr_stmt|;
@@ -187,6 +236,18 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// For certain PDBSymbolTypes, dumps additional information for the type that
+comment|/// normally goes on the right side of the symbol.
+name|virtual
+name|void
+name|dumpRight
+argument_list|(
+name|PDBSymDumper
+operator|&
+name|Dumper
+argument_list|)
+decl|const
+block|{}
 name|void
 name|defaultDump
 argument_list|(
@@ -199,6 +260,16 @@ name|Indent
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|dumpProperties
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|dumpChildStats
+argument_list|()
+specifier|const
+expr_stmt|;
 name|PDB_SymType
 name|getSymTag
 argument_list|()
@@ -235,6 +306,14 @@ operator|(
 operator|)
 argument_list|)
 block|;
+if|if
+condition|(
+operator|!
+name|Enumerator
+condition|)
+return|return
+name|nullptr
+return|;
 return|return
 name|Enumerator
 operator|->
@@ -242,6 +321,16 @@ name|getNext
 argument_list|()
 return|;
 block|}
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PDBSymbol
+operator|>
+name|clone
+argument_list|()
+specifier|const
+expr_stmt|;
 name|template
 operator|<
 name|typename
@@ -271,6 +360,14 @@ operator|::
 name|Tag
 argument_list|)
 block|;
+if|if
+condition|(
+operator|!
+name|BaseIter
+condition|)
+return|return
+name|nullptr
+return|;
 return|return
 name|llvm
 operator|::
@@ -405,12 +502,53 @@ specifier|const
 expr_stmt|;
 name|protected
 label|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PDBSymbol
+operator|>
+name|getSymbolByIdHelper
+argument_list|(
+argument|uint32_t Id
+argument_list|)
+specifier|const
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|ConcreteType
+operator|>
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ConcreteType
+operator|>
+name|getConcreteSymbolByIdHelper
+argument_list|(
+argument|uint32_t Id
+argument_list|)
+specifier|const
+block|{
+return|return
+name|unique_dyn_cast_or_null
+operator|<
+name|ConcreteType
+operator|>
+operator|(
+name|getSymbolByIdHelper
+argument_list|(
+name|Id
+argument_list|)
+operator|)
+return|;
+block|}
 specifier|const
 name|IPDBSession
 modifier|&
 name|Session
 decl_stmt|;
-specifier|const
 name|std
 operator|::
 name|unique_ptr
@@ -420,13 +558,19 @@ operator|>
 name|RawSymbol
 expr_stmt|;
 block|}
-empty_stmt|;
-block|}
-comment|// namespace llvm
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+unit|}
+comment|// namespace llvm
+end_comment
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

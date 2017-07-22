@@ -250,12 +250,10 @@ operator|::
 name|ptrdiff_t
 name|difference_type
 expr_stmt|;
-comment|/// Ptr - There are 3 forms that 'Ptr' represents:
+comment|/// Ptr - There are 2 forms that 'Ptr' represents:
 comment|/// 1) A single NamedDecl. (Ptr& 0x1 == 0)
 comment|/// 2) A IdDeclInfo::DeclsTy::iterator that traverses only the decls of the
-comment|///    same declaration context. (Ptr& 0x3 == 0x1)
-comment|/// 3) A IdDeclInfo::DeclsTy::iterator that traverses the decls of parent
-comment|///    declaration contexts too. (Ptr& 0x3 == 0x3)
+comment|///    same declaration context. (Ptr& 0x1 == 0x1)
 name|uintptr_t
 name|Ptr
 decl_stmt|;
@@ -352,7 +350,7 @@ operator|(
 name|Ptr
 operator|&
 operator|~
-literal|0x3
+literal|0x1
 operator|)
 return|;
 block|}
@@ -468,36 +466,6 @@ expr_stmt|;
 return|return
 operator|*
 name|this
-return|;
-block|}
-name|uintptr_t
-name|getAsOpaqueValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Ptr
-return|;
-block|}
-specifier|static
-name|iterator
-name|getFromOpaqueValue
-parameter_list|(
-name|uintptr_t
-name|P
-parameter_list|)
-block|{
-name|iterator
-name|Result
-decl_stmt|;
-name|Result
-operator|.
-name|Ptr
-operator|=
-name|P
-expr_stmt|;
-return|return
-name|Result
 return|;
 block|}
 block|}

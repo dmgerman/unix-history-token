@@ -43,22 +43,24 @@ directive|define
 name|liblldb_SelectHelper_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
+comment|// for Status
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<chrono>
+file|"lldb/lldb-types.h"
 end_include
 
 begin_comment
-comment|// Other libraries and framework includes
+comment|// for socket_t
 end_comment
 
 begin_include
@@ -73,14 +75,10 @@ directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
-begin_comment
-comment|// Project includes
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
+file|<chrono>
 end_include
 
 begin_decl_stmt
@@ -181,7 +179,7 @@ comment|// timeout provided in a call the SelectHelper::SetTimeout(),
 comment|// or infinite wait if no timeout was set.
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|Select
 argument_list|()
 expr_stmt|;

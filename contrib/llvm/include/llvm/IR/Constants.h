@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -234,11 +240,6 @@ name|friend
 name|class
 name|Constant
 block|;
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|Value
 operator|*
 name|handleOperandChangeImpl
@@ -297,27 +298,10 @@ block|}
 name|public
 operator|:
 name|ConstantData
-argument_list|()
-operator|=
-name|delete
-block|;
-name|ConstantData
 argument_list|(
 specifier|const
 name|ConstantData
 operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
 argument_list|)
 operator|=
 name|delete
@@ -377,11 +361,6 @@ name|APInt
 operator|&
 name|V
 argument_list|)
-block|;
-name|void
-name|anchor
-argument_list|()
-name|override
 block|;
 name|void
 name|destroyConstantImpl
@@ -544,7 +523,7 @@ name|V
 argument_list|)
 block|;
 comment|/// Return the constant as an APInt value reference. This allows clients to
-comment|/// obtain a copy of the value, with all its precision in tact.
+comment|/// obtain a full-precision copy of the value.
 comment|/// @brief Return the constant's value.
 specifier|inline
 specifier|const
@@ -694,8 +673,9 @@ specifier|const
 block|{
 return|return
 name|Val
-operator|==
-literal|0
+operator|.
+name|isNullValue
+argument_list|()
 return|;
 block|}
 comment|/// This is just a convenience method to make client code smaller for a
@@ -709,8 +689,9 @@ specifier|const
 block|{
 return|return
 name|Val
-operator|==
-literal|1
+operator|.
+name|isOneValue
+argument_list|()
 return|;
 block|}
 comment|/// This function will return true iff every bit in this constant is set
@@ -804,17 +785,10 @@ block|{
 return|return
 name|Val
 operator|.
-name|getActiveBits
-argument_list|()
-operator|>
-literal|64
-operator|||
-name|Val
-operator|.
-name|getZExtValue
-argument_list|()
-operator|>=
+name|uge
+argument_list|(
 name|Num
+argument_list|)
 return|;
 block|}
 comment|/// getLimitedValue - If the value is smaller than the specified limit,
@@ -886,11 +860,6 @@ name|APFloat
 operator|&
 name|V
 argument_list|)
-block|;
-name|void
-name|anchor
-argument_list|()
-name|override
 block|;
 name|void
 name|destroyConstantImpl
@@ -1550,17 +1519,64 @@ operator|>
 name|V
 argument_list|)
 block|;
+name|template
+operator|<
+name|typename
+operator|...
+name|Csts
+operator|>
 specifier|static
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|are_base_of
+operator|<
+name|Constant
+block|,
+name|Csts
+operator|...
+operator|>
+operator|::
+name|value
+block|,
 name|Constant
 operator|*
+operator|>
+operator|::
+name|type
 name|get
 argument_list|(
 argument|StructType *T
 argument_list|,
-argument|...
+argument|Csts *... Vs
 argument_list|)
-name|LLVM_END_WITH_NULL
+block|{
+name|SmallVector
+operator|<
+name|Constant
+operator|*
+block|,
+literal|8
+operator|>
+name|Values
+argument_list|(
+block|{
+name|Vs
+operator|...
+block|}
+argument_list|)
 block|;
+return|return
+name|get
+argument_list|(
+name|T
+argument_list|,
+name|Values
+argument_list|)
+return|;
+block|}
 comment|/// Return an anonymous struct that has the specified elements.
 comment|/// If the struct is possibly empty, then you must specify a context.
 specifier|static
@@ -1995,7 +2011,6 @@ block|{}
 operator|~
 name|ConstantDataSequential
 argument_list|()
-name|override
 block|{
 name|delete
 name|Next
@@ -2038,6 +2053,15 @@ comment|/// If this is a sequential container of integers (of any size), return 
 comment|/// specified element in the low bits of a uint64_t.
 name|uint64_t
 name|getElementAsInteger
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+comment|/// If this is a sequential container of integers (of any size), return the
+comment|/// specified element as an APInt.
+name|APInt
+name|getElementAsAPInt
 argument_list|(
 argument|unsigned i
 argument_list|)
@@ -2123,10 +2147,13 @@ name|getElementByteSize
 argument_list|()
 specifier|const
 block|;
-comment|/// This method returns true if this is an array of i8.
+comment|/// This method returns true if this is an array of \p CharSize integers.
 name|bool
 name|isString
-argument_list|()
+argument_list|(
+argument|unsigned CharSize =
+literal|8
+argument_list|)
 specifier|const
 block|;
 comment|/// This method returns true if the array "isString", ends with a null byte,
@@ -2276,32 +2303,6 @@ argument_list|,
 argument|Data
 argument_list|)
 block|{}
-comment|/// Allocate space for exactly zero operands.
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|public
 operator|:
 name|ConstantDataArray
@@ -2309,18 +2310,6 @@ argument_list|(
 specifier|const
 name|ConstantDataArray
 operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
 argument_list|)
 operator|=
 name|delete
@@ -2574,32 +2563,6 @@ argument_list|,
 argument|Data
 argument_list|)
 block|{}
-comment|// allocate space for exactly zero operands.
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|public
 operator|:
 name|ConstantDataVector
@@ -2607,18 +2570,6 @@ argument_list|(
 specifier|const
 name|ConstantDataVector
 operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
 argument_list|)
 operator|=
 name|delete
@@ -2787,6 +2738,13 @@ argument|unsigned NumElts
 argument_list|,
 argument|Constant *Elt
 argument_list|)
+block|;
+comment|/// Returns true if this is a splat constant, meaning that all elements have
+comment|/// the same value.
+name|bool
+name|isSplat
+argument_list|()
+specifier|const
 block|;
 comment|/// If this is a splat constant, meaning that all of the elements have the
 comment|/// same value, return that value. Otherwise return NULL.
@@ -2974,18 +2932,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Return a BlockAddress for the specified function and basic block.
 specifier|static
 name|BlockAddress
@@ -3079,7 +3025,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -4708,7 +4653,6 @@ argument_list|()
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

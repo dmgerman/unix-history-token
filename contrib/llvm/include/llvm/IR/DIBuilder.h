@@ -337,6 +337,16 @@ name|void
 name|finalize
 parameter_list|()
 function_decl|;
+comment|/// Finalize a specific subprogram - no new variables may be added to this
+comment|/// subprogram afterwards.
+name|void
+name|finalizeSubprogram
+parameter_list|(
+name|DISubprogram
+modifier|*
+name|SP
+parameter_list|)
+function_decl|;
 comment|/// A CompileUnit provides an anchor for all debugging
 comment|/// information generated during this instance of compilation.
 comment|/// \param Lang          Source programming language, eg. dwarf::DW_LANG_C99
@@ -356,6 +366,9 @@ comment|/// \param SplitName     The name of the file that we'll split debug inf
 comment|///                      out into.
 comment|/// \param Kind          The kind of debug information to generate.
 comment|/// \param DWOId         The DWOId if this is a split skeleton compile unit.
+comment|/// \param SplitDebugInlining    Whether to emit inline debug info.
+comment|/// \param DebugInfoForProfiling Whether to emit extra debug info for
+comment|///                              profile collection.
 name|DICompileUnit
 modifier|*
 name|createCompileUnit
@@ -405,6 +418,11 @@ name|bool
 name|SplitDebugInlining
 operator|=
 name|true
+argument_list|,
+name|bool
+name|DebugInfoForProfiling
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// Create a file descriptor to hold debugging information for a file.
@@ -553,32 +571,41 @@ name|FromTy
 parameter_list|)
 function_decl|;
 comment|/// Create debugging information entry for a pointer.
-comment|/// \param PointeeTy   Type pointed by this pointer.
-comment|/// \param SizeInBits  Size.
-comment|/// \param AlignInBits Alignment. (optional)
-comment|/// \param Name        Pointer type name. (optional)
+comment|/// \param PointeeTy         Type pointed by this pointer.
+comment|/// \param SizeInBits        Size.
+comment|/// \param AlignInBits       Alignment. (optional)
+comment|/// \param DWARFAddressSpace DWARF address space. (optional)
+comment|/// \param Name              Pointer type name. (optional)
 name|DIDerivedType
 modifier|*
 name|createPointerType
-parameter_list|(
+argument_list|(
 name|DIType
-modifier|*
+operator|*
 name|PointeeTy
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|AlignInBits
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|DWARFAddressSpace
+operator|=
+name|None
+argument_list|,
 name|StringRef
 name|Name
-init|=
+operator|=
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for a pointer to member.
 comment|/// \param PointeeTy Type pointed to by this pointer.
 comment|/// \param SizeInBits  Size.
@@ -619,25 +646,33 @@ comment|/// style reference or rvalue reference type.
 name|DIDerivedType
 modifier|*
 name|createReferenceType
-parameter_list|(
+argument_list|(
 name|unsigned
 name|Tag
-parameter_list|,
+argument_list|,
 name|DIType
-modifier|*
+operator|*
 name|RTy
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SizeInBits
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|AlignInBits
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|,
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|DWARFAddressSpace
+operator|=
+name|None
+argument_list|)
+decl_stmt|;
 comment|/// Create debugging information entry for a typedef.
 comment|/// \param Ty          Original type.
 comment|/// \param Name        Typedef name.
@@ -1343,25 +1378,6 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/// Create an external type reference.
-comment|/// \param Tag              Dwarf TAG.
-comment|/// \param File             File in which the type is defined.
-comment|/// \param UniqueIdentifier A unique identifier for the type.
-name|DICompositeType
-modifier|*
-name|createExternalTypeRef
-parameter_list|(
-name|unsigned
-name|Tag
-parameter_list|,
-name|DIFile
-modifier|*
-name|File
-parameter_list|,
-name|StringRef
-name|UniqueIdentifier
-parameter_list|)
-function_decl|;
 comment|/// Create a new DIType* with "artificial" flag set.
 name|DIType
 modifier|*
@@ -1836,6 +1852,7 @@ comment|/// \param Flags         e.g. is this function prototyped or not.
 comment|///                      These flags are used to emit dwarf attributes.
 comment|/// \param isOptimized   True if optimization is ON.
 comment|/// \param TParams       Function template parameters.
+comment|/// \param ThrownTypes   Exception types this function may throw.
 name|DISubprogram
 modifier|*
 name|createFunction
@@ -1892,6 +1909,11 @@ argument_list|,
 name|DISubprogram
 operator|*
 name|Decl
+operator|=
+name|nullptr
+argument_list|,
+name|DITypeArray
+name|ThrownTypes
 operator|=
 name|nullptr
 argument_list|)
@@ -1956,6 +1978,11 @@ operator|*
 name|Decl
 operator|=
 name|nullptr
+argument_list|,
+name|DITypeArray
+name|ThrownTypes
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// Create a new descriptor for the specified C++ method.
@@ -1980,6 +2007,7 @@ comment|/// \param Flags         e.g. is this function prototyped or not.
 comment|///                      This flags are used to emit dwarf attributes.
 comment|/// \param isOptimized   True if optimization is ON.
 comment|/// \param TParams       Function template parameters.
+comment|/// \param ThrownTypes   Exception types this function may throw.
 name|DISubprogram
 modifier|*
 name|createMethod
@@ -2050,14 +2078,17 @@ name|DITemplateParameterArray
 name|TParams
 operator|=
 name|nullptr
+argument_list|,
+name|DITypeArray
+name|ThrownTypes
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// This creates new descriptor for a namespace with the specified
 comment|/// parent scope.
 comment|/// \param Scope       Namespace scope
 comment|/// \param Name        Name of this namespace
-comment|/// \param File        Source file
-comment|/// \param LineNo      Line number
 comment|/// \param ExportSymbols True for C++ inline namespaces.
 name|DINamespace
 modifier|*
@@ -2069,13 +2100,6 @@ name|Scope
 parameter_list|,
 name|StringRef
 name|Name
-parameter_list|,
-name|DIFile
-modifier|*
-name|File
-parameter_list|,
-name|unsigned
-name|LineNo
 parameter_list|,
 name|bool
 name|ExportSymbols
@@ -2162,8 +2186,9 @@ parameter_list|)
 function_decl|;
 comment|/// Create a descriptor for an imported module.
 comment|/// \param Context The scope this module is imported into
-comment|/// \param NS The namespace being imported here
-comment|/// \param Line Line number
+comment|/// \param NS      The namespace being imported here.
+comment|/// \param File    File where the declaration is located.
+comment|/// \param Line    Line number of the declaration.
 name|DIImportedEntity
 modifier|*
 name|createImportedModule
@@ -2176,14 +2201,19 @@ name|DINamespace
 modifier|*
 name|NS
 parameter_list|,
+name|DIFile
+modifier|*
+name|File
+parameter_list|,
 name|unsigned
 name|Line
 parameter_list|)
 function_decl|;
 comment|/// Create a descriptor for an imported module.
-comment|/// \param Context The scope this module is imported into
-comment|/// \param NS An aliased namespace
-comment|/// \param Line Line number
+comment|/// \param Context The scope this module is imported into.
+comment|/// \param NS      An aliased namespace.
+comment|/// \param File    File where the declaration is located.
+comment|/// \param Line    Line number of the declaration.
 name|DIImportedEntity
 modifier|*
 name|createImportedModule
@@ -2196,14 +2226,19 @@ name|DIImportedEntity
 modifier|*
 name|NS
 parameter_list|,
+name|DIFile
+modifier|*
+name|File
+parameter_list|,
 name|unsigned
 name|Line
 parameter_list|)
 function_decl|;
 comment|/// Create a descriptor for an imported module.
-comment|/// \param Context The scope this module is imported into
-comment|/// \param M The module being imported here
-comment|/// \param Line Line number
+comment|/// \param Context The scope this module is imported into.
+comment|/// \param M       The module being imported here
+comment|/// \param File    File where the declaration is located.
+comment|/// \param Line    Line number of the declaration.
 name|DIImportedEntity
 modifier|*
 name|createImportedModule
@@ -2216,15 +2251,20 @@ name|DIModule
 modifier|*
 name|M
 parameter_list|,
+name|DIFile
+modifier|*
+name|File
+parameter_list|,
 name|unsigned
 name|Line
 parameter_list|)
 function_decl|;
 comment|/// Create a descriptor for an imported function.
-comment|/// \param Context The scope this module is imported into
-comment|/// \param Decl The declaration (or definition) of a function, type, or
-comment|///             variable
-comment|/// \param Line Line number
+comment|/// \param Context The scope this module is imported into.
+comment|/// \param Decl    The declaration (or definition) of a function, type, or
+comment|///                variable.
+comment|/// \param File    File where the declaration is located.
+comment|/// \param Line    Line number of the declaration.
 name|DIImportedEntity
 modifier|*
 name|createImportedDeclaration
@@ -2236,6 +2276,10 @@ parameter_list|,
 name|DINode
 modifier|*
 name|Decl
+parameter_list|,
+name|DIFile
+modifier|*
+name|File
 parameter_list|,
 name|unsigned
 name|Line
@@ -2494,7 +2538,21 @@ block|}
 end_decl_stmt
 
 begin_comment
-unit|};  }
+unit|};
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+end_comment
+
+begin_macro
+name|DEFINE_ISA_CONVERSION_FUNCTIONS
+argument_list|(
+argument|DIBuilder
+argument_list|,
+argument|LLVMDIBuilderRef
+argument_list|)
+end_macro
+
+begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

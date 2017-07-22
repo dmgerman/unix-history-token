@@ -43,15 +43,81 @@ directive|define
 name|liblldb_AddressResolverFileLine_h_
 end_define
 
-begin_comment
-comment|// Project includes
-end_comment
-
 begin_include
 include|#
 directive|include
 file|"lldb/Core/AddressResolver.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/SearchFilter.h"
+end_include
+
+begin_comment
+comment|// for Searcher, Searcher::CallbackR...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_comment
+comment|// for FileSpec
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_comment
+comment|// for DISALLOW_COPY_AND_ASSIGN
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Address
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|SymbolContext
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

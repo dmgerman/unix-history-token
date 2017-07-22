@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- LiveIntervalAnalysis.h - Live Interval Analysis ---------*- C++ -*-===//
+comment|//===- LiveIntervalAnalysis.h - Live Interval Analysis ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,31 +36,31 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file implements the LiveInterval analysis pass.  Given some numbering of
+comment|/// \file This file implements the LiveInterval analysis pass.  Given some
 end_comment
 
 begin_comment
-comment|// each the machine instructions (in this implemention depth-first order) an
+comment|/// numbering of each the machine instructions (in this implemention depth-first
 end_comment
 
 begin_comment
-comment|// interval [i, j) is said to be a live interval for register v if there is no
+comment|/// order) an interval [i, j) is said to be a live interval for register v if
 end_comment
 
 begin_comment
-comment|// instruction with number j'> j such that v is live at j' and there is no
+comment|/// there is no instruction with number j'> j such that v is live at j' and
 end_comment
 
 begin_comment
-comment|// instruction with number i'< i such that v is live at i'. In this
+comment|/// there is no instruction with number i'< i such that v is live at i'. In
 end_comment
 
 begin_comment
-comment|// implementation intervals can have holes, i.e. an interval might look like
+comment|/// this implementation intervals can have holes, i.e. an interval might look
 end_comment
 
 begin_comment
-comment|// [1,20), [50,65), [1000,1001).
+comment|/// like [1,20), [50,65), [1000,1001).
 end_comment
 
 begin_comment
@@ -82,6 +82,12 @@ define|#
 directive|define
 name|LLVM_CODEGEN_LIVEINTERVALANALYSIS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
 
 begin_include
 include|#
@@ -128,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|"llvm/MC/LaneBitmask.h"
 end_include
 
 begin_include
@@ -140,13 +146,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cmath>
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -158,37 +188,31 @@ name|class
 name|BitVector
 decl_stmt|;
 name|class
-name|BlockFrequency
-decl_stmt|;
-name|class
 name|LiveRangeCalc
 decl_stmt|;
 name|class
-name|LiveVariables
+name|MachineBlockFrequencyInfo
 decl_stmt|;
 name|class
 name|MachineDominatorTree
 decl_stmt|;
 name|class
-name|MachineLoopInfo
+name|MachineFunction
 decl_stmt|;
 name|class
-name|TargetRegisterInfo
+name|MachineInstr
 decl_stmt|;
 name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|raw_ostream
+decl_stmt|;
+name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
-name|TargetRegisterClass
-decl_stmt|;
-name|class
 name|VirtRegMap
-decl_stmt|;
-name|class
-name|MachineBlockFrequencyInfo
 decl_stmt|;
 name|class
 name|LiveIntervals
@@ -225,13 +249,16 @@ block|;
 name|MachineDominatorTree
 operator|*
 name|DomTree
+operator|=
+name|nullptr
 block|;
 name|LiveRangeCalc
 operator|*
 name|LRCalc
+operator|=
+name|nullptr
 block|;
 comment|/// Special pool allocator for VNInfo's (LiveInterval val#).
-comment|///
 name|VNInfo
 operator|::
 name|Allocator
@@ -247,9 +274,8 @@ name|VirtReg2IndexFunctor
 operator|>
 name|VirtRegIntervals
 block|;
-comment|/// RegMaskSlots - Sorted list of instructions with register mask operands.
-comment|/// Always use the 'r' slot, RegMasks are normal clobbers, not early
-comment|/// clobbers.
+comment|/// Sorted list of instructions with register mask operands. Always use the
+comment|/// 'r' slot, RegMasks are normal clobbers, not early clobbers.
 name|SmallVector
 operator|<
 name|SlotIndex
@@ -258,9 +284,8 @@ literal|8
 operator|>
 name|RegMaskSlots
 block|;
-comment|/// RegMaskBits - This vector is parallel to RegMaskSlots, it holds a
-comment|/// pointer to the corresponding register mask.  This pointer can be
-comment|/// recomputed as:
+comment|/// This vector is parallel to RegMaskSlots, it holds a pointer to the
+comment|/// corresponding register mask.  This pointer can be recomputed as:
 comment|///
 comment|///   MI = Indexes->getInstructionFromIndex(RegMaskSlot[N]);
 comment|///   unsigned OpNum = findRegMaskOperand(MI);
@@ -317,7 +342,6 @@ specifier|static
 name|char
 name|ID
 block|;
-comment|// Pass identification, replacement for typeid
 name|LiveIntervals
 argument_list|()
 block|;
@@ -326,7 +350,7 @@ name|LiveIntervals
 argument_list|()
 name|override
 block|;
-comment|// Calculate the spill weight to assign to a single instruction.
+comment|/// Calculate the spill weight to assign to a single instruction.
 specifier|static
 name|float
 name|getSpillWeight
@@ -415,7 +439,7 @@ name|Reg
 index|]
 return|;
 block|}
-comment|// Interval creation.
+comment|/// Interval creation.
 name|LiveInterval
 operator|&
 name|createEmptyInterval
@@ -484,7 +508,7 @@ return|return
 name|LI
 return|;
 block|}
-comment|// Interval removal.
+comment|/// Interval removal.
 name|void
 name|removeInterval
 argument_list|(
@@ -554,16 +578,16 @@ argument_list|,
 argument|unsigned Reg
 argument_list|)
 block|;
-comment|/// Extend the live range @p LR to reach all points in @p Indices. The
-comment|/// points in the @p Indices array must be jointly dominated by the union
-comment|/// of the existing defs in @p LR and points in @p Undefs.
+comment|/// Extend the live range \p LR to reach all points in \p Indices. The
+comment|/// points in the \p Indices array must be jointly dominated by the union
+comment|/// of the existing defs in \p LR and points in \p Undefs.
 comment|///
 comment|/// PHI-defs are added as needed to maintain SSA form.
 comment|///
-comment|/// If a SlotIndex in @p Indices is the end index of a basic block, @p LR
+comment|/// If a SlotIndex in \p Indices is the end index of a basic block, \p LR
 comment|/// will be extended to be live out of the basic block.
-comment|/// If a SlotIndex in @p Indices is jointy dominated only by points in
-comment|/// @p Undefs, the live range will not be extended to that point.
+comment|/// If a SlotIndex in \p Indices is jointy dominated only by points in
+comment|/// \p Undefs, the live range will not be extended to that point.
 comment|///
 comment|/// See also LiveRangeCalc::extend().
 name|void
@@ -605,7 +629,7 @@ block|{
 block|}
 block|)
 block|;     }
-comment|/// If @p LR has a live value at @p Kill, prune its live range by removing
+comment|/// If \p LR has a live value at \p Kill, prune its live range by removing
 comment|/// any liveness reachable from Kill. Add live range end points to
 comment|/// EndPoints such that extendToIndices(LI, EndPoints) will reconstruct the
 comment|/// value's live range.
@@ -622,6 +646,32 @@ argument_list|,
 argument|SmallVectorImpl<SlotIndex> *EndPoints
 argument_list|)
 decl_stmt|;
+comment|/// This function should not be used. Its intend is to tell you that
+comment|/// you are doing something wrong if you call pruveValue directly on a
+comment|/// LiveInterval. Indeed, you are supposed to call pruneValue on the main
+comment|/// LiveRange and all the LiveRange of the subranges if any.
+name|LLVM_ATTRIBUTE_UNUSED
+name|void
+name|pruneValue
+argument_list|(
+name|LiveInterval
+operator|&
+argument_list|,
+name|SlotIndex
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|SlotIndex
+operator|>
+operator|*
+argument_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Use pruneValue on the main LiveRange and on each subrange"
+argument_list|)
+expr_stmt|;
+block|}
 name|SlotIndexes
 operator|*
 name|getSlotIndexes
@@ -642,8 +692,8 @@ return|return
 name|AA
 return|;
 block|}
-comment|/// isNotInMIMap - returns true if the specified machine instr has been
-comment|/// removed or was never entered in the map.
+comment|/// Returns true if the specified machine instr has been removed or was
+comment|/// never entered in the map.
 name|bool
 name|isNotInMIMap
 argument_list|(
@@ -990,7 +1040,7 @@ name|releaseMemory
 argument_list|()
 name|override
 expr_stmt|;
-comment|/// runOnMachineFunction - pass entry point
+comment|/// Pass entry point; Calculates LiveIntervals.
 name|bool
 name|runOnMachineFunction
 argument_list|(
@@ -999,7 +1049,7 @@ operator|&
 argument_list|)
 name|override
 decl_stmt|;
-comment|/// print - Implement the dump method.
+comment|/// Implement the dump method.
 name|void
 name|print
 argument_list|(
@@ -1016,9 +1066,8 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-comment|/// intervalIsInOneMBB - If LI is confined to a single basic block, return
-comment|/// a pointer to that block.  If LI is live in to or out of any block,
-comment|/// return NULL.
+comment|/// If LI is confined to a single basic block, return a pointer to that
+comment|/// block.  If LI is live in to or out of any block, return NULL.
 name|MachineBasicBlock
 modifier|*
 name|intervalIsInOneMBB
@@ -1047,8 +1096,7 @@ name|VNI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// addKillFlags - Add kill flags to any instruction that kills a virtual
-comment|/// register.
+comment|/// Add kill flags to any instruction that kills a virtual register.
 name|void
 name|addKillFlags
 parameter_list|(
@@ -1057,10 +1105,9 @@ name|VirtRegMap
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/// handleMove - call this method to notify LiveIntervals that
-comment|/// instruction 'mi' has been moved within a basic block. This will update
-comment|/// the live intervals for all operands of mi. Moves between basic blocks
-comment|/// are not supported.
+comment|/// Call this method to notify LiveIntervals that instruction \p MI has been
+comment|/// moved within a basic block. This will update the live intervals for all
+comment|/// operands of \p MI. Moves between basic blocks are not supported.
 comment|///
 comment|/// \param UpdateFlags Update live intervals for nonallocatable physregs.
 name|void
@@ -1076,8 +1123,8 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// moveIntoBundle - Update intervals for operands of MI so that they
-comment|/// begin/end on the SlotIndex for BundleStart.
+comment|/// Update intervals for operands of \p MI so that they begin/end on the
+comment|/// SlotIndex for \p BundleStart.
 comment|///
 comment|/// \param UpdateFlags Update live intervals for nonallocatable physregs.
 comment|///
@@ -1101,10 +1148,9 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// repairIntervalsInRange - Update live intervals for instructions in a
-comment|/// range of iterators. It is intended for use after target hooks that may
-comment|/// insert or remove instructions, and is only efficient for a small number
-comment|/// of instructions.
+comment|/// Update live intervals for instructions in a range of iterators. It is
+comment|/// intended for use after target hooks that may insert or remove
+comment|/// instructions, and is only efficient for a small number of instructions.
 comment|///
 comment|/// OrigRegs is a vector of registers that were originally used by the
 comment|/// instructions in the range between the two iterators.
@@ -1145,8 +1191,8 @@ comment|// For compile time performance reasons, these clobbers are not recorded
 comment|// the live intervals for individual physical registers.  Instead,
 comment|// LiveIntervalAnalysis maintains a sorted list of instructions with
 comment|// register mask operands.
-comment|/// getRegMaskSlots - Returns a sorted array of slot indices of all
-comment|/// instructions with register mask operands.
+comment|/// Returns a sorted array of slot indices of all instructions with
+comment|/// register mask operands.
 name|ArrayRef
 operator|<
 name|SlotIndex
@@ -1159,9 +1205,8 @@ return|return
 name|RegMaskSlots
 return|;
 block|}
-comment|/// getRegMaskSlotsInBlock - Returns a sorted array of slot indices of all
-comment|/// instructions with register mask operands in the basic block numbered
-comment|/// MBBNum.
+comment|/// Returns a sorted array of slot indices of all instructions with register
+comment|/// mask operands in the basic block numbered \p MBBNum.
 name|ArrayRef
 operator|<
 name|SlotIndex
@@ -1203,8 +1248,8 @@ name|second
 argument_list|)
 return|;
 block|}
-comment|/// getRegMaskBits() - Returns an array of register mask pointers
-comment|/// corresponding to getRegMaskSlots().
+comment|/// Returns an array of register mask pointers corresponding to
+comment|/// getRegMaskSlots().
 name|ArrayRef
 operator|<
 specifier|const
@@ -1219,8 +1264,8 @@ return|return
 name|RegMaskBits
 return|;
 block|}
-comment|/// getRegMaskBitsInBlock - Returns an array of mask pointers corresponding
-comment|/// to getRegMaskSlotsInBlock(MBBNum).
+comment|/// Returns an array of mask pointers corresponding to
+comment|/// getRegMaskSlotsInBlock(MBBNum).
 name|ArrayRef
 operator|<
 specifier|const
@@ -1264,11 +1309,11 @@ name|second
 argument_list|)
 return|;
 block|}
-comment|/// checkRegMaskInterference - Test if LI is live across any register mask
-comment|/// instructions, and compute a bit mask of physical registers that are not
-comment|/// clobbered by any of them.
+comment|/// Test if \p LI is live across any register mask instructions, and
+comment|/// compute a bit mask of physical registers that are not clobbered by any
+comment|/// of them.
 comment|///
-comment|/// Returns false if LI doesn't cross any register mask instructions. In
+comment|/// Returns false if \p LI doesn't cross any register mask instructions. In
 comment|/// that case, the bit vector is not filled in.
 name|bool
 name|checkRegMaskInterference
@@ -1292,8 +1337,8 @@ comment|//
 comment|// Each physreg has one or more register units, see MCRegisterInfo. We
 comment|// track liveness per register unit to handle aliasing registers more
 comment|// efficiently.
-comment|/// getRegUnit - Return the live range for Unit.
-comment|/// It will be computed if it doesn't exist.
+comment|/// Return the live range for register unit \p Unit. It will be computed if
+comment|/// it doesn't exist.
 name|LiveRange
 modifier|&
 name|getRegUnit
@@ -1346,8 +1391,8 @@ operator|*
 name|LR
 return|;
 block|}
-comment|/// getCachedRegUnit - Return the live range for Unit if it has already
-comment|/// been computed, or NULL if it hasn't been computed yet.
+comment|/// Return the live range for register unit \p Unit if it has already been
+comment|/// computed, or nullptr if it hasn't been computed yet.
 name|LiveRange
 modifier|*
 name|getCachedRegUnit
@@ -1380,7 +1425,7 @@ name|Unit
 index|]
 return|;
 block|}
-comment|/// removeRegUnit - Remove computed live range for Unit. Subsequent uses
+comment|/// Remove computed live range for register unit \p Unit. Subsequent uses
 comment|/// should rely on on-demand recomputation.
 name|void
 name|removeRegUnit
@@ -1404,7 +1449,7 @@ name|nullptr
 expr_stmt|;
 block|}
 comment|/// Remove value numbers and related live segments starting at position
-comment|/// @p Pos that are part of any liverange of physical register @p Reg or one
+comment|/// \p Pos that are part of any liverange of physical register \p Reg or one
 comment|/// of its subregisters.
 name|void
 name|removePhysRegDefAt
@@ -1416,8 +1461,8 @@ name|SlotIndex
 name|Pos
 parameter_list|)
 function_decl|;
-comment|/// Remove value number and related live segments of @p LI and its subranges
-comment|/// that start at position @p Pos.
+comment|/// Remove value number and related live segments of \p LI and its subranges
+comment|/// that start at position \p Pos.
 name|void
 name|removeVRegDefAt
 parameter_list|(
@@ -1469,10 +1514,10 @@ name|void
 name|computeRegMasks
 parameter_list|()
 function_decl|;
-comment|/// Walk the values in @p LI and check for dead values:
+comment|/// Walk the values in \p LI and check for dead values:
 comment|/// - Dead PHIDef values are marked as unused.
 comment|/// - Dead operands are marked as such.
-comment|/// - Completely dead machine instructions are added to the @p dead vector
+comment|/// - Completely dead machine instructions are added to the \p dead vector
 comment|///   if it is not nullptr.
 comment|/// Returns true if any PHI value numbers have been removed which may
 comment|/// have separated the interval into multiple connected components.
@@ -1537,8 +1582,8 @@ modifier|&
 parameter_list|)
 function_decl|;
 comment|/// Helper function for repairIntervalsInRange(), walks backwards and
-comment|/// creates/modifies live segments in @p LR to match the operands found.
-comment|/// Only full operands or operands with subregisters matching @p LaneMask
+comment|/// creates/modifies live segments in \p LR to match the operands found.
+comment|/// Only full operands or operands with subregisters matching \p LaneMask
 comment|/// are considered.
 name|void
 name|repairOldRegInRange
@@ -1585,13 +1630,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_LIVEINTERVALANALYSIS_H
+end_comment
 
 end_unit
 

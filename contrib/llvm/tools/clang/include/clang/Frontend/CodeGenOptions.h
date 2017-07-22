@@ -235,18 +235,6 @@ block|,
 name|LocalExecTLSModel
 block|}
 block|;    enum
-name|FPContractModeKind
-block|{
-name|FPC_Off
-block|,
-comment|// Form fused FP ops only where result will not be affected.
-name|FPC_On
-block|,
-comment|// Form fused FP ops according to FP_CONTRACT rules.
-name|FPC_Fast
-comment|// Aggressively fuse FP ops (E.g. FMA).
-block|}
-block|;    enum
 name|StructReturnConventionKind
 block|{
 name|SRCK_Default
@@ -365,22 +353,43 @@ name|std
 operator|::
 name|string
 name|LimitFloatPrecision
+block|;    struct
+name|BitcodeFileToLink
+block|{
+comment|/// The filename of the bitcode file to link in.
+name|std
+operator|::
+name|string
+name|Filename
 block|;
-comment|/// The name of the bitcode file to link before optzns.
+comment|/// If true, we set attributes functions in the bitcode library according to
+comment|/// our CodeGenOptions, much as we set attrs on functions that we generate
+comment|/// ourselves.
+name|bool
+name|PropagateAttrs
+operator|=
+name|false
+block|;
+comment|/// If true, we use LLVM module internalizer.
+name|bool
+name|Internalize
+operator|=
+name|false
+block|;
+comment|/// Bitwise combination of llvm::Linker::Flags, passed to the LLVM linker.
+name|unsigned
+name|LinkFlags
+operator|=
+literal|0
+block|;   }
+block|;
+comment|/// The files specified here are linked in to the module before optimizations.
 name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-block|,
-name|std
-operator|::
-name|string
-operator|>>
+name|BitcodeFileToLink
+operator|>
 name|LinkBitcodeFiles
 block|;
 comment|/// The user provided name for the "main file", if non-empty. This is useful
@@ -476,6 +485,14 @@ operator|::
 name|string
 name|ThinLTOIndexFile
 block|;
+comment|/// Name of a file that can optionally be written with minimized bitcode
+comment|/// to be used as input for the ThinLTO thin link step, which only needs
+comment|/// the summary and module symbol table (and not, e.g. any debug metadata).
+name|std
+operator|::
+name|string
+name|ThinLinkBitcodeFile
+block|;
 comment|/// A list of file names passed with -fcuda-include-gpubinary options to
 comment|/// forward to CUDA runtime back-end for incorporating them into host-side
 comment|/// object file.
@@ -542,7 +559,7 @@ name|Regex
 operator|>
 name|OptimizationRemarkAnalysisPattern
 block|;
-comment|/// Set of files definining the rules for the symbol rewriting.
+comment|/// Set of files defining the rules for the symbol rewriting.
 name|std
 operator|::
 name|vector

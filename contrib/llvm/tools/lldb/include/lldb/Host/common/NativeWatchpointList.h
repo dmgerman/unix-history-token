@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -89,7 +89,7 @@ name|NativeWatchpointList
 block|{
 name|public
 label|:
-name|Error
+name|Status
 name|Add
 argument_list|(
 name|lldb
@@ -107,7 +107,7 @@ name|bool
 name|hardware
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|Remove
 argument_list|(
 name|lldb

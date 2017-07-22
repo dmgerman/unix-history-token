@@ -86,6 +86,42 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -107,8 +143,6 @@ operator|,
 name|typename
 name|MapType
 operator|=
-name|llvm
-operator|::
 name|DenseMap
 operator|<
 name|KeyT
@@ -130,72 +164,76 @@ operator|<
 name|KeyT
 operator|,
 name|ValueT
-operator|>
-expr|>
-operator|>
+operator|>>>
 name|class
 name|MapVector
 block|{
-typedef|typedef
+name|using
+name|value_type
+operator|=
 name|typename
 name|VectorType
 operator|::
 name|value_type
-name|value_type
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|size_type
+operator|=
 name|typename
 name|VectorType
 operator|::
 name|size_type
-name|size_type
-expr_stmt|;
+block|;
 name|MapType
 name|Map
-decl_stmt|;
+block|;
 name|VectorType
 name|Vector
-decl_stmt|;
+block|;
 name|public
-label|:
-typedef|typedef
+operator|:
+name|using
+name|iterator
+operator|=
 name|typename
 name|VectorType
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_iterator
+operator|=
 name|typename
 name|VectorType
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|reverse_iterator
+operator|=
 name|typename
 name|VectorType
 operator|::
 name|reverse_iterator
-name|reverse_iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_reverse_iterator
+operator|=
 name|typename
 name|VectorType
 operator|::
 name|const_reverse_iterator
-name|const_reverse_iterator
-expr_stmt|;
+block|;
 comment|/// Clear the MapVector and return the underlying vector.
 name|VectorType
 name|takeVector
-parameter_list|()
+argument_list|()
 block|{
 name|Map
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
+block|;
 return|return
 name|std
 operator|::
@@ -219,7 +257,7 @@ return|;
 block|}
 name|iterator
 name|begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Vector
@@ -242,7 +280,7 @@ return|;
 block|}
 name|iterator
 name|end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Vector
@@ -265,7 +303,7 @@ return|;
 block|}
 name|reverse_iterator
 name|rbegin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Vector
@@ -288,7 +326,7 @@ return|;
 block|}
 name|reverse_iterator
 name|rend
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Vector
@@ -326,7 +364,7 @@ operator|::
 name|pair
 operator|<
 name|KeyT
-operator|,
+block|,
 name|ValueT
 operator|>
 operator|&
@@ -346,7 +384,7 @@ operator|::
 name|pair
 operator|<
 name|KeyT
-operator|,
+block|,
 name|ValueT
 operator|>
 operator|&
@@ -366,7 +404,7 @@ operator|::
 name|pair
 operator|<
 name|KeyT
-operator|,
+block|,
 name|ValueT
 operator|>
 operator|&
@@ -386,7 +424,7 @@ operator|::
 name|pair
 operator|<
 name|KeyT
-operator|,
+block|,
 name|ValueT
 operator|>
 operator|&
@@ -403,26 +441,23 @@ return|;
 block|}
 name|void
 name|clear
-parameter_list|()
+argument_list|()
 block|{
 name|Map
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
+block|;
 name|Vector
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
-block|}
+block|;   }
 name|void
 name|swap
-parameter_list|(
-name|MapVector
-modifier|&
-name|RHS
-parameter_list|)
+argument_list|(
+argument|MapVector&RHS
+argument_list|)
 block|{
 name|std
 operator|::
@@ -434,7 +469,7 @@ name|RHS
 operator|.
 name|Map
 argument_list|)
-expr_stmt|;
+block|;
 name|std
 operator|::
 name|swap
@@ -445,25 +480,24 @@ name|RHS
 operator|.
 name|Vector
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|ValueT
-modifier|&
+operator|&
 name|operator
-function|[]
-parameter_list|(
+index|[]
+operator|(
 specifier|const
 name|KeyT
-modifier|&
+operator|&
 name|Key
-parameter_list|)
+operator|)
 block|{
 name|std
 operator|::
 name|pair
 operator|<
 name|KeyT
-operator|,
+block|,
 name|unsigned
 operator|>
 name|Pair
@@ -476,7 +510,7 @@ name|Key
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+block|;
 name|std
 operator|::
 name|pair
@@ -485,7 +519,7 @@ name|typename
 name|MapType
 operator|::
 name|iterator
-operator|,
+block|,
 name|bool
 operator|>
 name|Result
@@ -496,17 +530,17 @@ name|insert
 argument_list|(
 name|Pair
 argument_list|)
-expr_stmt|;
+block|;
 name|unsigned
-modifier|&
+operator|&
 name|I
-init|=
+operator|=
 name|Result
 operator|.
 name|first
 operator|->
 name|second
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|Result
@@ -552,12 +586,9 @@ comment|// Returns a copy of the value.  Only allowed if ValueT is copyable.
 name|ValueT
 name|lookup
 argument_list|(
-specifier|const
-name|KeyT
-operator|&
-name|Key
+argument|const KeyT&Key
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|static_assert
 argument_list|(
@@ -572,7 +603,7 @@ name|value
 argument_list|,
 literal|"Cannot call lookup() if ValueT is not copyable."
 argument_list|)
-expr_stmt|;
+block|;
 name|typename
 name|MapType
 operator|::
@@ -585,7 +616,7 @@ name|find
 argument_list|(
 name|Key
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Pos
 operator|==
@@ -612,7 +643,7 @@ operator|::
 name|pair
 operator|<
 name|iterator
-operator|,
+block|,
 name|bool
 operator|>
 name|insert
@@ -743,7 +774,7 @@ operator|::
 name|pair
 operator|<
 name|iterator
-operator|,
+block|,
 name|bool
 operator|>
 name|insert
@@ -867,12 +898,9 @@ block|}
 name|size_type
 name|count
 argument_list|(
-specifier|const
-name|KeyT
-operator|&
-name|Key
+argument|const KeyT&Key
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|typename
 name|MapType
@@ -886,7 +914,7 @@ name|find
 argument_list|(
 name|Key
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Pos
 operator|==
@@ -902,12 +930,9 @@ return|;
 block|}
 name|iterator
 name|find
-parameter_list|(
-specifier|const
-name|KeyT
-modifier|&
-name|Key
-parameter_list|)
+argument_list|(
+argument|const KeyT&Key
+argument_list|)
 block|{
 name|typename
 name|MapType
@@ -921,7 +946,7 @@ name|find
 argument_list|(
 name|Key
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Pos
 operator|==
@@ -950,12 +975,9 @@ block|}
 name|const_iterator
 name|find
 argument_list|(
-specifier|const
-name|KeyT
-operator|&
-name|Key
+argument|const KeyT&Key
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|typename
 name|MapType
@@ -969,7 +991,7 @@ name|find
 argument_list|(
 name|Key
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Pos
 operator|==
@@ -998,7 +1020,7 @@ block|}
 comment|/// \brief Remove the last element from the vector.
 name|void
 name|pop_back
-parameter_list|()
+argument_list|()
 block|{
 name|typename
 name|MapType
@@ -1017,20 +1039,19 @@ argument_list|()
 operator|.
 name|first
 argument_list|)
-expr_stmt|;
+block|;
 name|Map
 operator|.
 name|erase
 argument_list|(
 name|Pos
 argument_list|)
-expr_stmt|;
+block|;
 name|Vector
 operator|.
 name|pop_back
 argument_list|()
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Remove the element given by Iterator.
 comment|///
 comment|/// Returns an iterator to the element following the one which was removed,
@@ -1088,7 +1109,7 @@ name|Vector
 operator|.
 name|begin
 argument_list|()
-expr_stmt|;
+block|;
 for|for
 control|(
 name|auto
@@ -1127,21 +1148,9 @@ return|return
 name|Next
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Remove all elements with the key value Key.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Returns the number of elements removed.
-end_comment
-
-begin_function
 name|size_type
 name|erase
 parameter_list|(
@@ -1178,25 +1187,10 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Remove the elements that match the predicate.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Erase all elements that match \c Pred in a single pass.  Takes linear
-end_comment
-
-begin_comment
 comment|/// time.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1208,10 +1202,14 @@ argument_list|(
 argument|Predicate Pred
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
-unit|};
 name|template
 operator|<
 name|typename
@@ -1429,6 +1427,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_MAPVECTOR_H
+end_comment
 
 end_unit
 

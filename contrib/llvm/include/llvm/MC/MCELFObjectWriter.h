@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCELFObjectWriter.h - ELF Object Writer ---------*- C++ -*-===//
+comment|//===- llvm/MC/MCELFObjectWriter.h - ELF Object Writer ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -52,25 +52,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCValue.h"
+file|"llvm/BinaryFormat/ELF.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ELF.h"
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -93,9 +93,6 @@ name|class
 name|MCFixup
 decl_stmt|;
 name|class
-name|MCFragment
-decl_stmt|;
-name|class
 name|MCObjectWriter
 decl_stmt|;
 name|class
@@ -106,9 +103,6 @@ name|MCSymbolELF
 decl_stmt|;
 name|class
 name|MCValue
-decl_stmt|;
-name|class
-name|raw_pwrite_stream
 decl_stmt|;
 struct|struct
 name|ELFRelocationEntry
@@ -273,11 +267,18 @@ argument|uint16_t EMachine_
 argument_list|,
 argument|bool HasRelocationAddend
 argument_list|,
-argument|bool IsN64=false
+argument|bool IsN64 = false
 argument_list|)
 empty_stmt|;
 name|public
 label|:
+name|virtual
+operator|~
+name|MCELFObjectTargetWriter
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 specifier|static
 name|uint8_t
 name|getOSABI
@@ -327,26 +328,30 @@ return|;
 block|}
 block|}
 name|virtual
-operator|~
-name|MCELFObjectTargetWriter
-argument_list|()
-block|{}
-name|virtual
 name|unsigned
 name|getRelocType
 argument_list|(
-argument|MCContext&Ctx
+name|MCContext
+operator|&
+name|Ctx
 argument_list|,
-argument|const MCValue&Target
-argument_list|,
-argument|const MCFixup&Fixup
-argument_list|,
-argument|bool IsPCRel
-argument_list|)
 specifier|const
-operator|=
+name|MCValue
+operator|&
+name|Target
+argument_list|,
+specifier|const
+name|MCFixup
+operator|&
+name|Fixup
+argument_list|,
+name|bool
+name|IsPCRel
+argument_list|)
+decl|const
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|virtual
 name|bool
 name|needsRelocateWithSymbol
@@ -701,13 +706,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCELFOBJECTWRITER_H
+end_comment
 
 end_unit
 

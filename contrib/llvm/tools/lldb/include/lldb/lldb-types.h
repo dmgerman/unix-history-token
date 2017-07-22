@@ -58,18 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdint.h>
 end_include
 
@@ -79,22 +67,6 @@ end_comment
 
 begin_comment
 comment|// All host systems must define:
-end_comment
-
-begin_comment
-comment|//  lldb::condition_t       The native condition type (or a substitute class)
-end_comment
-
-begin_comment
-comment|//  for conditions on the host system.
-end_comment
-
-begin_comment
-comment|//  lldb::mutex_t           The native mutex type for mutex objects on the host
-end_comment
-
-begin_comment
-comment|//  system.
 end_comment
 
 begin_comment
@@ -142,10 +114,6 @@ comment|//  #define LLDB_INVALID_HOST_THREAD ...
 end_comment
 
 begin_comment
-comment|//  #define IS_VALID_LLDB_HOST_THREAD ...
-end_comment
-
-begin_comment
 comment|//----------------------------------------------------------------------
 end_comment
 
@@ -160,29 +128,6 @@ end_comment
 begin_comment
 comment|// since that is what lldb was first developed for.
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_MSC_VER
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<stdbool.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -200,16 +145,6 @@ begin_decl_stmt
 name|namespace
 name|lldb
 block|{
-typedef|typedef
-name|void
-modifier|*
-name|mutex_t
-typedef|;
-typedef|typedef
-name|void
-modifier|*
-name|condition_t
-typedef|;
 typedef|typedef
 name|void
 modifier|*
@@ -234,22 +169,12 @@ name|file_t
 typedef|;
 comment|// Host file type
 typedef|typedef
-name|void
-modifier|*
-name|pipe_t
-typedef|;
-comment|// Host pipe type
-typedef|typedef
 name|unsigned
 name|int
 name|__w64
 name|socket_t
 typedef|;
 comment|// Host socket type
-typedef|typedef
-name|uint32_t
-name|thread_key_t
-typedef|;
 typedef|typedef
 name|void
 modifier|*
@@ -295,15 +220,6 @@ comment|//----------------------------------------------------------------------
 comment|// MacOSX Types
 comment|//----------------------------------------------------------------------
 typedef|typedef
-operator|::
-name|pthread_mutex_t
-name|mutex_t
-expr_stmt|;
-typedef|typedef
-name|pthread_cond_t
-name|condition_t
-typedef|;
-typedef|typedef
 name|pthread_rwlock_t
 name|rwlock_t
 typedef|;
@@ -324,18 +240,9 @@ typedef|;
 comment|// Host file type
 typedef|typedef
 name|int
-name|pipe_t
-typedef|;
-comment|// Host pipe type
-typedef|typedef
-name|int
 name|socket_t
 typedef|;
 comment|// Host socket type
-typedef|typedef
-name|pthread_key_t
-name|thread_key_t
-typedef|;
 typedef|typedef
 name|void
 modifier|*
@@ -465,24 +372,6 @@ define|#
 directive|define
 name|LLDB_INVALID_HOST_THREAD
 value|((lldb::thread_t)NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_VALID_LLDB_HOST_THREAD
-parameter_list|(
-name|t
-parameter_list|)
-value|((t) != LLDB_INVALID_HOST_THREAD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLDB_INVALID_HOST_TIME
-define|\
-value|{ 0, 0 }
 end_define
 
 begin_decl_stmt

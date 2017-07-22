@@ -137,7 +137,7 @@ argument|uint32_t dump_mask
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 argument|llvm::StringRef value
@@ -231,12 +231,12 @@ argument|llvm::StringRef name
 argument_list|,
 argument|bool will_modify
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 specifier|const
 name|override
 block|;
-name|Error
+name|Status
 name|SetSubValue
 argument_list|(
 argument|const ExecutionContext *exe_ctx
@@ -275,7 +275,7 @@ argument|Args&args
 argument_list|)
 specifier|const
 block|;
-name|Error
+name|Status
 name|SetArgs
 argument_list|(
 argument|const Args&args

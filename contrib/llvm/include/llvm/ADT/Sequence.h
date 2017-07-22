@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ADT_SEQ_H
+name|LLVM_ADT_SEQUENCE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ADT_SEQ_H
+name|LLVM_ADT_SEQUENCE_H
 end_define
 
 begin_include
@@ -77,6 +77,24 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -110,37 +128,40 @@ specifier|const
 name|ValueT
 operator|>
 block|{
-typedef|typedef
+name|using
+name|BaseT
+operator|=
 name|typename
 name|value_sequence_iterator
 operator|::
 name|iterator_facade_base
-name|BaseT
-expr_stmt|;
+block|;
 name|ValueT
 name|Value
-expr_stmt|;
+block|;
 name|public
-label|:
-typedef|typedef
+operator|:
+name|using
+name|difference_type
+operator|=
 name|typename
 name|BaseT
 operator|::
 name|difference_type
-name|difference_type
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|reference
+operator|=
 name|typename
 name|BaseT
 operator|::
 name|reference
-name|reference
-expr_stmt|;
+block|;
 name|value_sequence_iterator
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|value_sequence_iterator
 argument_list|(
 specifier|const
@@ -149,7 +170,7 @@ operator|&
 argument_list|)
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|value_sequence_iterator
 argument_list|(
 name|value_sequence_iterator
@@ -166,7 +187,7 @@ name|template
 operator|<
 name|typename
 name|U
-operator|,
+block|,
 name|typename
 name|Enabler
 operator|=
@@ -238,7 +259,7 @@ name|BaseT
 operator|::
 name|operator
 operator|-
-expr_stmt|;
+block|;
 name|difference_type
 name|operator
 operator|-
@@ -307,16 +328,9 @@ return|return
 name|Value
 return|;
 block|}
-block|}
-empty_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// End detail namespace.
-end_comment
-
-begin_expr_stmt
+expr|}
+block|;  }
+comment|// end namespace detail
 name|template
 operator|<
 name|typename
@@ -362,13 +376,21 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_SEQUENCE_H
+end_comment
 
 end_unit
 

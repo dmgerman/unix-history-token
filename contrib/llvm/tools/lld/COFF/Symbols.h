@@ -142,9 +142,6 @@ name|class
 name|ArchiveFile
 decl_stmt|;
 name|class
-name|BitcodeFile
-decl_stmt|;
-name|class
 name|InputFile
 decl_stmt|;
 name|class
@@ -184,9 +181,7 @@ name|DefinedImportDataKind
 block|,
 name|DefinedAbsoluteKind
 block|,
-name|DefinedRelativeKind
-block|,
-name|DefinedBitcodeKind
+name|DefinedSyntheticKind
 block|,
 name|UndefinedKind
 block|,
@@ -198,7 +193,7 @@ name|DefinedCommonKind
 block|,
 name|LastDefinedKind
 init|=
-name|DefinedBitcodeKind
+name|DefinedSyntheticKind
 block|,   }
 enum|;
 name|Kind
@@ -291,11 +286,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|IsReplaceable
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|WrittenToSymtab
 argument_list|(
 name|false
@@ -323,15 +313,10 @@ name|IsCOMDAT
 range|:
 literal|1
 decl_stmt|;
-comment|// This bit is used by the \c DefinedBitcode subclass.
-name|unsigned
-name|IsReplaceable
-range|:
-literal|1
-decl_stmt|;
 name|public
 label|:
-comment|// This bit is used by Writer::createSymbolAndStringTable().
+comment|// This bit is used by Writer::createSymbolAndStringTable() to prevent
+comment|// symbols from being written to the symbol table more than once.
 name|unsigned
 name|WrittenToSymtab
 range|:
@@ -358,8 +343,7 @@ name|Defined
 argument_list|(
 argument|Kind K
 argument_list|,
-argument|StringRef N =
-literal|""
+argument|StringRef N
 argument_list|)
 operator|:
 name|SymbolBody
@@ -391,26 +375,18 @@ name|uint64_t
 name|getRVA
 argument_list|()
 block|;
-comment|// Returns the RVA relative to the beginning of the output section.
-comment|// Used to implement SECREL relocation type.
-name|uint64_t
-name|getSecrel
-argument_list|()
-block|;
-comment|// Returns the output section index.
-comment|// Used to implement SECTION relocation type.
-name|uint64_t
-name|getSectionIndex
-argument_list|()
-block|;
-comment|// Returns true if this symbol points to an executable (e.g. .text) section.
-comment|// Used to implement ARM relocations.
-name|bool
-name|isExecutable
+comment|// Returns the chunk containing this symbol. Absolute symbols and __ImageBase
+comment|// do not have chunks, so this may return null.
+name|Chunk
+operator|*
+name|getChunk
 argument_list|()
 block|; }
 decl_stmt|;
-comment|// Symbols defined via a COFF object file.
+comment|// Symbols defined via a COFF object file or bitcode file.  For COFF files, this
+comment|// stores a coff_symbol_generic*, and names of internal symbols are lazily
+comment|// loaded through that. For bitcode files, Sym is nullptr and the name is stored
+comment|// as a StringRef.
 name|class
 name|DefinedCOFF
 range|:
@@ -426,14 +402,18 @@ name|DefinedCOFF
 argument_list|(
 argument|Kind K
 argument_list|,
-argument|ObjectFile *F
+argument|InputFile *F
 argument_list|,
-argument|COFFSymbolRef S
+argument|StringRef N
+argument_list|,
+argument|const coff_symbol_generic *S
 argument_list|)
 operator|:
 name|Defined
 argument_list|(
 name|K
+argument_list|,
+name|N
 argument_list|)
 block|,
 name|File
@@ -443,7 +423,7 @@ argument_list|)
 block|,
 name|Sym
 argument_list|(
-argument|S.getGeneric()
+argument|S
 argument_list|)
 block|{}
 specifier|static
@@ -462,7 +442,7 @@ operator|<=
 name|LastDefinedCOFFKind
 return|;
 block|}
-name|ObjectFile
+name|InputFile
 operator|*
 name|getFile
 argument_list|()
@@ -475,7 +455,7 @@ name|COFFSymbolRef
 name|getCOFFSymbol
 argument_list|()
 block|;
-name|ObjectFile
+name|InputFile
 operator|*
 name|File
 block|;
@@ -498,11 +478,17 @@ name|public
 operator|:
 name|DefinedRegular
 argument_list|(
-argument|ObjectFile *F
+argument|InputFile *F
 argument_list|,
-argument|COFFSymbolRef S
+argument|StringRef N
 argument_list|,
-argument|SectionChunk *C
+argument|bool IsCOMDAT
+argument_list|,
+argument|bool IsExternal = false
+argument_list|,
+argument|const coff_symbol_generic *S = nullptr
+argument_list|,
+argument|SectionChunk *C = nullptr
 argument_list|)
 operator|:
 name|DefinedCOFF
@@ -511,27 +497,27 @@ name|DefinedRegularKind
 argument_list|,
 name|F
 argument_list|,
+name|N
+argument_list|,
 name|S
 argument_list|)
 block|,
 name|Data
 argument_list|(
-argument|&C->Repl
+argument|C ?&C->Repl : nullptr
 argument_list|)
 block|{
+name|this
+operator|->
 name|IsExternal
 operator|=
-name|S
-operator|.
-name|isExternal
-argument_list|()
+name|IsExternal
 block|;
+name|this
+operator|->
 name|IsCOMDAT
 operator|=
-name|C
-operator|->
-name|isCOMDAT
-argument_list|()
+name|IsCOMDAT
 block|;   }
 specifier|static
 name|bool
@@ -613,11 +599,15 @@ name|public
 operator|:
 name|DefinedCommon
 argument_list|(
-argument|ObjectFile *F
+argument|InputFile *F
 argument_list|,
-argument|COFFSymbolRef S
+argument|StringRef N
 argument_list|,
-argument|CommonChunk *C
+argument|uint64_t Size
+argument_list|,
+argument|const coff_symbol_generic *S = nullptr
+argument_list|,
+argument|CommonChunk *C = nullptr
 argument_list|)
 operator|:
 name|DefinedCOFF
@@ -626,20 +616,26 @@ name|DefinedCommonKind
 argument_list|,
 name|F
 argument_list|,
+name|N
+argument_list|,
 name|S
 argument_list|)
 block|,
 name|Data
 argument_list|(
-argument|C
+name|C
+argument_list|)
+block|,
+name|Size
+argument_list|(
+argument|Size
 argument_list|)
 block|{
+name|this
+operator|->
 name|IsExternal
 operator|=
-name|S
-operator|.
-name|isExternal
-argument_list|()
+name|true
 block|;   }
 specifier|static
 name|bool
@@ -668,6 +664,15 @@ name|getRVA
 argument_list|()
 return|;
 block|}
+name|Chunk
+operator|*
+name|getChunk
+argument_list|()
+block|{
+return|return
+name|Data
+return|;
+block|}
 name|private
 operator|:
 name|friend
@@ -676,16 +681,18 @@ block|;
 name|uint64_t
 name|getSize
 argument_list|()
+specifier|const
 block|{
 return|return
-name|Sym
-operator|->
-name|Value
+name|Size
 return|;
 block|}
 name|CommonChunk
 operator|*
 name|Data
+block|;
+name|uint64_t
+name|Size
 block|; }
 decl_stmt|;
 comment|// Absolute symbols.
@@ -780,18 +787,31 @@ name|VA
 operator|=
 name|V
 block|; }
+comment|// The sentinel absolute symbol section index. Section index relocations
+comment|// against absolute symbols resolve to this 16 bit number, and it is the
+comment|// largest valid section index plus one. This is written by the Writer.
+specifier|static
+name|uint16_t
+name|OutputSectionIndex
+block|;
+name|uint16_t
+name|getSecIdx
+argument_list|()
+block|{
+return|return
+name|OutputSectionIndex
+return|;
+block|}
 name|private
 operator|:
 name|uint64_t
 name|VA
 block|; }
 decl_stmt|;
-comment|// This is a kind of absolute symbol but relative to the image base.
-comment|// Unlike absolute symbols, relocations referring this kind of symbols
-comment|// are subject of the base relocation. This type is used rarely --
-comment|// mainly for __ImageBase.
+comment|// This symbol is used for linker-synthesized symbols like __ImageBase and
+comment|// __safe_se_handler_table.
 name|class
-name|DefinedRelative
+name|DefinedSynthetic
 range|:
 name|public
 name|Defined
@@ -799,24 +819,23 @@ block|{
 name|public
 operator|:
 name|explicit
-name|DefinedRelative
+name|DefinedSynthetic
 argument_list|(
 argument|StringRef Name
 argument_list|,
-argument|uint64_t V =
-literal|0
+argument|Chunk *C
 argument_list|)
 operator|:
 name|Defined
 argument_list|(
-name|DefinedRelativeKind
+name|DefinedSyntheticKind
 argument_list|,
 name|Name
 argument_list|)
 block|,
-name|RVA
+name|C
 argument_list|(
-argument|V
+argument|C
 argument_list|)
 block|{}
 specifier|static
@@ -832,31 +851,40 @@ operator|->
 name|kind
 argument_list|()
 operator|==
-name|DefinedRelativeKind
+name|DefinedSyntheticKind
 return|;
 block|}
-name|uint64_t
+comment|// A null chunk indicates that this is __ImageBase. Otherwise, this is some
+comment|// other synthesized chunk, like SEHTableChunk.
+name|uint32_t
 name|getRVA
 argument_list|()
 block|{
 return|return
-name|RVA
+name|C
+operator|?
+name|C
+operator|->
+name|getRVA
+argument_list|()
+operator|:
+literal|0
 return|;
 block|}
-name|void
-name|setRVA
-argument_list|(
-argument|uint64_t V
-argument_list|)
+name|Chunk
+operator|*
+name|getChunk
+argument_list|()
 block|{
-name|RVA
-operator|=
-name|V
-block|; }
+return|return
+name|C
+return|;
+block|}
 name|private
 operator|:
-name|uint64_t
-name|RVA
+name|Chunk
+operator|*
+name|C
 block|; }
 decl_stmt|;
 comment|// This class represents a symbol defined in an archive file. It is
@@ -1051,6 +1079,29 @@ name|getRVA
 argument_list|()
 return|;
 block|}
+name|Chunk
+operator|*
+name|getChunk
+argument_list|()
+block|{
+return|return
+name|File
+operator|->
+name|Location
+return|;
+block|}
+name|void
+name|setLocation
+argument_list|(
+argument|Chunk *AddressTable
+argument_list|)
+block|{
+name|File
+operator|->
+name|Location
+operator|=
+name|AddressTable
+block|; }
 name|StringRef
 name|getDLLName
 argument_list|()
@@ -1071,18 +1122,6 @@ operator|->
 name|ExternalName
 return|;
 block|}
-name|void
-name|setLocation
-argument_list|(
-argument|Chunk *AddressTable
-argument_list|)
-block|{
-name|File
-operator|->
-name|Location
-operator|=
-name|AddressTable
-block|; }
 name|uint16_t
 name|getOrdinal
 argument_list|()
@@ -1095,8 +1134,6 @@ operator|->
 name|OrdinalHint
 return|;
 block|}
-name|private
-operator|:
 name|ImportFile
 operator|*
 name|File
@@ -1160,6 +1197,10 @@ return|return
 name|Data
 return|;
 block|}
+name|DefinedImportData
+operator|*
+name|WrappedSym
+block|;
 name|private
 operator|:
 name|Chunk
@@ -1242,70 +1283,6 @@ operator|*
 name|Data
 block|; }
 decl_stmt|;
-name|class
-name|DefinedBitcode
-range|:
-name|public
-name|Defined
-block|{
-name|friend
-name|SymbolBody
-block|;
-name|public
-operator|:
-name|DefinedBitcode
-argument_list|(
-argument|BitcodeFile *F
-argument_list|,
-argument|StringRef N
-argument_list|,
-argument|bool IsReplaceable
-argument_list|)
-operator|:
-name|Defined
-argument_list|(
-name|DefinedBitcodeKind
-argument_list|,
-name|N
-argument_list|)
-block|,
-name|File
-argument_list|(
-argument|F
-argument_list|)
-block|{
-comment|// IsReplaceable tracks whether the bitcode symbol may be replaced with some
-comment|// other (defined, common or bitcode) symbol. This is the case for common,
-comment|// comdat and weak external symbols. We try to replace bitcode symbols with
-comment|// "real" symbols (see SymbolTable::add{Regular,Bitcode}), and resolve the
-comment|// result against the real symbol from the combined LTO object.
-name|this
-operator|->
-name|IsReplaceable
-operator|=
-name|IsReplaceable
-block|;   }
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SymbolBody *S
-argument_list|)
-block|{
-return|return
-name|S
-operator|->
-name|kind
-argument_list|()
-operator|==
-name|DefinedBitcodeKind
-return|;
-block|}
-name|BitcodeFile
-operator|*
-name|File
-block|; }
-decl_stmt|;
 specifier|inline
 name|uint64_t
 name|Defined
@@ -1335,12 +1312,12 @@ name|getRVA
 argument_list|()
 return|;
 case|case
-name|DefinedRelativeKind
+name|DefinedSyntheticKind
 case|:
 return|return
 name|cast
 operator|<
-name|DefinedRelative
+name|DefinedSynthetic
 operator|>
 operator|(
 name|this
@@ -1425,14 +1402,6 @@ name|getRVA
 argument_list|()
 return|;
 case|case
-name|DefinedBitcodeKind
-case|:
-name|llvm_unreachable
-argument_list|(
-literal|"There is no address for a bitcode symbol."
-argument_list|)
-expr_stmt|;
-case|case
 name|LazyKind
 case|:
 case|case
@@ -1441,6 +1410,134 @@ case|:
 name|llvm_unreachable
 argument_list|(
 literal|"Cannot get the address for an undefined symbol."
+argument_list|)
+expr_stmt|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"unknown symbol kind"
+argument_list|)
+expr_stmt|;
+block|}
+specifier|inline
+name|Chunk
+operator|*
+name|Defined
+operator|::
+name|getChunk
+argument_list|()
+block|{
+switch|switch
+condition|(
+name|kind
+argument_list|()
+condition|)
+block|{
+case|case
+name|DefinedRegularKind
+case|:
+return|return
+name|cast
+operator|<
+name|DefinedRegular
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getChunk
+argument_list|()
+return|;
+case|case
+name|DefinedAbsoluteKind
+case|:
+return|return
+name|nullptr
+return|;
+case|case
+name|DefinedSyntheticKind
+case|:
+return|return
+name|cast
+operator|<
+name|DefinedSynthetic
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getChunk
+argument_list|()
+return|;
+case|case
+name|DefinedImportDataKind
+case|:
+return|return
+name|cast
+operator|<
+name|DefinedImportData
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getChunk
+argument_list|()
+return|;
+case|case
+name|DefinedImportThunkKind
+case|:
+return|return
+name|cast
+operator|<
+name|DefinedImportThunk
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getChunk
+argument_list|()
+return|;
+case|case
+name|DefinedLocalImportKind
+case|:
+return|return
+name|cast
+operator|<
+name|DefinedLocalImport
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getChunk
+argument_list|()
+return|;
+case|case
+name|DefinedCommonKind
+case|:
+return|return
+name|cast
+operator|<
+name|DefinedCommon
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getChunk
+argument_list|()
+return|;
+case|case
+name|LazyKind
+case|:
+case|case
+name|UndefinedKind
+case|:
+name|llvm_unreachable
+argument_list|(
+literal|"Cannot get the chunk of an undefined symbol."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1484,7 +1581,7 @@ name|DefinedCommon
 block|,
 name|DefinedAbsolute
 block|,
-name|DefinedRelative
+name|DefinedSynthetic
 block|,
 name|Lazy
 block|,
@@ -1495,8 +1592,6 @@ block|,
 name|DefinedImportThunk
 block|,
 name|DefinedLocalImport
-block|,
-name|DefinedBitcode
 operator|>
 name|Body
 block|;

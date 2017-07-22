@@ -286,6 +286,16 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getSectionLoadAddress
+argument_list|(
+argument|void *LocalAddr
+argument_list|)
+specifier|const
+expr_stmt|;
 name|void
 name|registerSection
 parameter_list|(

@@ -86,25 +86,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<functional>
+file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -119,46 +113,45 @@ operator|,
 name|typename
 name|ToIndexT
 operator|=
-name|llvm
-operator|::
 name|identity
 operator|<
 name|unsigned
-operator|>
-expr|>
+operator|>>
 name|class
 name|IndexedMap
 block|{
-typedef|typedef
+name|using
+name|IndexT
+operator|=
 name|typename
 name|ToIndexT
 operator|::
 name|argument_type
-name|IndexT
-expr_stmt|;
+block|;
 comment|// Prefer SmallVector with zero inline storage over std::vector. IndexedMaps
 comment|// can grow very large and SmallVector grows more efficiently as long as T
 comment|// is trivially copyable.
-typedef|typedef
+name|using
+name|StorageT
+operator|=
 name|SmallVector
 operator|<
 name|T
-operator|,
+block|,
 literal|0
 operator|>
-name|StorageT
-expr_stmt|;
+block|;
 name|StorageT
 name|storage_
-decl_stmt|;
+block|;
 name|T
 name|nullVal_
-decl_stmt|;
+block|;
 name|ToIndexT
 name|toIndex_
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|IndexedMap
 argument_list|()
 operator|:
@@ -166,7 +159,7 @@ name|nullVal_
 argument_list|(
 argument|T()
 argument_list|)
-block|{ }
+block|{}
 name|explicit
 name|IndexedMap
 argument_list|(
@@ -180,7 +173,7 @@ name|nullVal_
 argument_list|(
 argument|val
 argument_list|)
-block|{ }
+block|{}
 name|typename
 name|StorageT
 operator|::
@@ -257,11 +250,7 @@ block|}
 name|void
 name|reserve
 argument_list|(
-name|typename
-name|StorageT
-operator|::
-name|size_type
-name|s
+argument|typename StorageT::size_type s
 argument_list|)
 block|{
 name|storage_
@@ -270,16 +259,11 @@ name|reserve
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-block|}
+block|;     }
 name|void
 name|resize
 argument_list|(
-name|typename
-name|StorageT
-operator|::
-name|size_type
-name|s
+argument|typename StorageT::size_type s
 argument_list|)
 block|{
 name|storage_
@@ -290,35 +274,32 @@ name|s
 argument_list|,
 name|nullVal_
 argument_list|)
-expr_stmt|;
-block|}
+block|;     }
 name|void
 name|clear
-parameter_list|()
+argument_list|()
 block|{
 name|storage_
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
-block|}
+block|;     }
 name|void
 name|grow
-parameter_list|(
-name|IndexT
-name|n
-parameter_list|)
+argument_list|(
+argument|IndexT n
+argument_list|)
 block|{
 name|unsigned
 name|NewSize
-init|=
+operator|=
 name|toIndex_
 argument_list|(
 name|n
 argument_list|)
 operator|+
 literal|1
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|NewSize
@@ -337,10 +318,9 @@ block|}
 name|bool
 name|inBounds
 argument_list|(
-name|IndexT
-name|n
+argument|IndexT n
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|toIndex_
@@ -369,22 +349,22 @@ name|size
 argument_list|()
 return|;
 block|}
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_INDEXEDMAP_H
+end_comment
 
 end_unit
 

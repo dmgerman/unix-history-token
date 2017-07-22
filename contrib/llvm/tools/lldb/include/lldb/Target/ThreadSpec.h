@@ -43,32 +43,22 @@ directive|define
 name|liblldb_ThreadSpec_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<string>
+file|"lldb/Utility/StructuredData.h"
 end_include
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
 
 begin_include
 include|#
 directive|include
 file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -133,7 +123,7 @@ name|Dictionary
 operator|&
 name|data_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -183,12 +173,12 @@ expr_stmt|;
 block|}
 name|void
 name|SetName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|name
-parameter_list|)
+argument_list|)
 block|{
 name|m_name
 operator|=
@@ -197,12 +187,12 @@ expr_stmt|;
 block|}
 name|void
 name|SetQueueName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|queue_name
-parameter_list|)
+argument_list|)
 block|{
 name|m_queue_name
 operator|=

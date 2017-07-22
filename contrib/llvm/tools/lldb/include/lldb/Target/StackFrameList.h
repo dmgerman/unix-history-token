@@ -247,6 +247,11 @@ parameter_list|,
 name|uint32_t
 name|num_frames_with_source
 parameter_list|,
+name|bool
+name|show_unique
+init|=
+name|false
+parameter_list|,
 specifier|const
 name|char
 modifier|*

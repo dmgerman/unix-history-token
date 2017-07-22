@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugAbbrev.h --------------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugAbbrev.h ---------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,19 +34,31 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGABBREV_H
+name|LLVM_DEBUGINFO_DWARFDEBUGABBREV_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGABBREV_H
+name|LLVM_DEBUGINFO_DWARFDEBUGABBREV_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/DWARF/DWARFAbbreviationDeclaration.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -66,6 +78,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|raw_ostream
+decl_stmt|;
+name|class
 name|DWARFAbbreviationDeclarationSet
 block|{
 name|uint32_t
@@ -84,7 +99,9 @@ name|DWARFAbbreviationDeclaration
 operator|>
 name|Decls
 expr_stmt|;
-typedef|typedef
+name|using
+name|const_iterator
+init|=
 name|std
 operator|::
 name|vector
@@ -93,8 +110,7 @@ name|DWARFAbbreviationDeclaration
 operator|>
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 name|DWARFAbbreviationDeclarationSet
@@ -174,17 +190,18 @@ empty_stmt|;
 name|class
 name|DWARFDebugAbbrev
 block|{
-typedef|typedef
+name|using
+name|DWARFAbbreviationDeclarationSetMap
+init|=
 name|std
 operator|::
 name|map
 operator|<
 name|uint64_t
-operator|,
+decl_stmt|,
 name|DWARFAbbreviationDeclarationSet
-operator|>
-name|DWARFAbbreviationDeclarationSetMap
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|DWARFAbbreviationDeclarationSetMap
 name|AbbrDeclSets
 decl_stmt|;
@@ -264,10 +281,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARFDEBUGABBREV_H
+end_comment
 
 end_unit
 

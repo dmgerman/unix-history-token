@@ -52,18 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UserID.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Symbol/CompilerDecl.h"
 end_include
 
@@ -77,6 +65,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/Declaration.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_include

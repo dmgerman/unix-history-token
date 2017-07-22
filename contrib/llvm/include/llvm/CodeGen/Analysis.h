@@ -411,20 +411,6 @@ modifier|&
 name|TLI
 parameter_list|)
 function_decl|;
-comment|// True if GV can be left out of the object symbol table. This is the case
-comment|// for linkonce_odr values whose address is not significant. While legal, it is
-comment|// not normally profitable to omit them from the .o symbol table. Using this
-comment|// analysis makes sense when the information can be passed down to the linker
-comment|// or we are in LTO.
-name|bool
-name|canBeOmittedFromSymbolTable
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|GV
-parameter_list|)
-function_decl|;
 name|DenseMap
 operator|<
 specifier|const

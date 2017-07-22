@@ -43,18 +43,46 @@ directive|define
 name|liblldb_Select_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Broadcaster.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
+comment|// for Broadcaster::BroadcasterImplWP
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<chrono>
+file|"lldb/Utility/Timeout.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_comment
+comment|// for DISALLOW_COPY_AND_ASSIGN
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_comment
+comment|// for BroadcasterManagerWP, EventSP
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<condition_variable>
 end_include
 
 begin_include
@@ -72,8 +100,28 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_comment
+comment|// for owner_less, enable_shared_from_this
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<mutex>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<ratio>
+end_include
+
+begin_comment
+comment|// for micro
+end_comment
 
 begin_include
 include|#
@@ -87,31 +135,45 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_comment
-comment|// Other libraries and framework includes
+comment|// for size_t
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_comment
-comment|// Project includes
+comment|// for uint32_t
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Event.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ConstString
+decl_stmt|;
+block|}
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"lldb/Utility/Timeout.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Event
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -161,8 +223,7 @@ comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
 comment|//
 comment|// Listeners have to be constructed into shared pointers - at least if you
-comment|// want them to listen to
-comment|// Broadcasters,
+comment|// want them to listen to Broadcasters,
 name|protected
 label|:
 name|Listener

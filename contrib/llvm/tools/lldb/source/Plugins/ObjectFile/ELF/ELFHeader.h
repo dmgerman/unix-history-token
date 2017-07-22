@@ -90,13 +90,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ELF.h"
+file|"llvm/BinaryFormat/ELF.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
 end_include
 
 begin_decl_stmt
@@ -215,7 +221,7 @@ name|e_phentsize
 decl_stmt|;
 comment|///< Size of a program header table entry.
 name|elf_half
-name|e_phnum
+name|e_phnum_hdr
 decl_stmt|;
 comment|///< Number of program header entries.
 name|elf_half
@@ -223,10 +229,25 @@ name|e_shentsize
 decl_stmt|;
 comment|///< Size of a section header table entry.
 name|elf_half
-name|e_shnum
+name|e_shnum_hdr
 decl_stmt|;
 comment|///< Number of section header entries.
 name|elf_half
+name|e_shstrndx_hdr
+decl_stmt|;
+comment|///< String table section index.
+comment|// In some cases these numbers do not fit in 16 bits and they are
+comment|// stored outside of the header in section #0. Here are the actual
+comment|// values.
+name|elf_word
+name|e_phnum
+decl_stmt|;
+comment|///< Number of program header entries.
+name|elf_word
+name|e_shnum
+decl_stmt|;
+comment|///< Number of section header entries.
+name|elf_word
 name|e_shstrndx
 decl_stmt|;
 comment|///< String table section index.
@@ -307,6 +328,17 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//--------------------------------------------------------------------------
+comment|/// Check if there should be header extension in section header #0
+comment|///
+comment|/// @return
+comment|///    True if parsing the ELFHeader requires reading header extension
+comment|///    and false otherwise.
+name|bool
+name|HasHeaderExtension
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//--------------------------------------------------------------------------
 comment|/// Parse an ELFHeader entry starting at position \p offset and
 comment|/// update the data extractor with the address size and byte order
 comment|/// attributes as defined by the header.
@@ -373,6 +405,24 @@ modifier|*
 name|magic
 parameter_list|)
 function_decl|;
+name|private
+label|:
+comment|//--------------------------------------------------------------------------
+comment|/// Parse an ELFHeader header extension entry.  This method is called
+comment|/// by Parse().
+comment|///
+comment|/// @param[in] data
+comment|///    The DataExtractor to read from.
+name|void
+name|ParseHeaderExtension
+argument_list|(
+name|lldb_private
+operator|::
+name|DataExtractor
+operator|&
+name|data
+argument_list|)
+decl_stmt|;
 block|}
 struct|;
 comment|//------------------------------------------------------------------------------

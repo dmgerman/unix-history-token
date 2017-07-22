@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<atomic>
 end_include
 
@@ -87,10 +81,13 @@ operator|<
 name|class
 name|C
 operator|>
-name|LLVM_LIBRARY_VISIBILITY
+expr|struct
+name|object_creator
+block|{
+specifier|static
 name|void
 operator|*
-name|object_creator
+name|call
 argument_list|()
 block|{
 return|return
@@ -99,6 +96,8 @@ name|C
 argument_list|()
 return|;
 block|}
+expr|}
+block|;
 comment|/// object_deleter - Helper method for ManagedStatic.
 comment|///
 name|template
@@ -107,7 +106,6 @@ name|typename
 name|T
 operator|>
 expr|struct
-name|LLVM_LIBRARY_VISIBILITY
 name|object_deleter
 block|{
 specifier|static
@@ -124,17 +122,16 @@ argument_list|)
 name|Ptr
 block|; }
 block|}
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|typename
 name|T
-operator|,
+block|,
 name|size_t
 name|N
 operator|>
 expr|struct
-name|LLVM_LIBRARY_VISIBILITY
 name|object_deleter
 operator|<
 name|T
@@ -159,13 +156,13 @@ operator|)
 name|Ptr
 block|; }
 block|}
-expr_stmt|;
+block|;
 comment|/// ManagedStaticBase - Common base class for ManagedStatic instances.
 name|class
 name|ManagedStaticBase
 block|{
 name|protected
-label|:
+operator|:
 comment|// This should only be used as a static variable, which guarantees that this
 comment|// will be zero initialized.
 name|mutable
@@ -177,49 +174,35 @@ name|void
 operator|*
 operator|>
 name|Ptr
-expr_stmt|;
+block|;
 name|mutable
 name|void
-function_decl|(
-modifier|*
+argument_list|(
+operator|*
 name|DeleterFn
-function_decl|)
-parameter_list|(
+argument_list|)
+argument_list|(
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|)
+block|;
 name|mutable
 specifier|const
 name|ManagedStaticBase
-modifier|*
+operator|*
 name|Next
-decl_stmt|;
+block|;
 name|void
 name|RegisterManagedStatic
 argument_list|(
-name|void
-operator|*
-call|(
-modifier|*
-name|creator
-call|)
-argument_list|()
+argument|void *(*creator)()
 argument_list|,
-name|void
-argument_list|(
-operator|*
-name|deleter
+argument|void (*deleter)(void*)
 argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|public
-label|:
+operator|:
 comment|/// isConstructed - Return true if this object has not been created yet.
 name|bool
 name|isConstructed
@@ -236,9 +219,8 @@ name|void
 name|destroy
 argument_list|()
 specifier|const
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+block|;
 comment|/// ManagedStatic - This transparently changes the behavior of global statics to
 comment|/// be lazily constructed on demand (good for reducing startup times of dynamic
 comment|/// libraries that link in LLVM components) and for making destruction be
@@ -248,7 +230,22 @@ name|template
 operator|<
 name|class
 name|C
+block|,
+name|class
+name|Creator
+operator|=
+name|object_creator
+operator|<
+name|C
 operator|>
+block|,
+name|class
+name|Deleter
+operator|=
+name|object_deleter
+operator|<
+name|C
+operator|>>
 name|class
 name|ManagedStatic
 operator|:
@@ -285,15 +282,11 @@ name|Tmp
 condition|)
 name|RegisterManagedStatic
 argument_list|(
-name|object_creator
-operator|<
-name|C
-operator|>
+name|Creator
+operator|::
+name|call
 argument_list|,
-name|object_deleter
-operator|<
-name|C
-operator|>
+name|Deleter
 operator|::
 name|call
 argument_list|)
@@ -331,9 +324,6 @@ operator|*
 name|this
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 specifier|const
 name|C
 operator|&
@@ -363,22 +353,15 @@ name|Tmp
 condition|)
 name|RegisterManagedStatic
 argument_list|(
-name|object_creator
-operator|<
-name|C
-operator|>
+name|Creator
+operator|::
+name|call
 argument_list|,
-name|object_deleter
-operator|<
-name|C
-operator|>
+name|Deleter
 operator|::
 name|call
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|*
 name|static_cast
@@ -397,10 +380,11 @@ name|memory_order_relaxed
 argument_list|)
 operator|)
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_expr_stmt
-unit|}    const
+specifier|const
 name|C
 operator|*
 name|operator

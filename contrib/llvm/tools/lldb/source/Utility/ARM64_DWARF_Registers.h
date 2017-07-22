@@ -217,31 +217,6 @@ name|v31
 comment|// 96-127 reserved
 block|}
 enum|;
-specifier|const
-name|char
-modifier|*
-name|GetRegisterName
-parameter_list|(
-name|unsigned
-name|reg_num
-parameter_list|,
-name|bool
-name|altnernate_name
-parameter_list|)
-function_decl|;
-name|bool
-name|GetRegisterInfo
-argument_list|(
-name|unsigned
-name|reg_num
-argument_list|,
-name|lldb_private
-operator|::
-name|RegisterInfo
-operator|&
-name|reg_info
-argument_list|)
-decl_stmt|;
 block|}
 end_decl_stmt
 

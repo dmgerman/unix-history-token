@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===------ Math.h - PBQP Vector and Matrix classes -------------*- C++ -*-===//
+comment|//===- Math.h - PBQP Vector and Matrix classes ------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
 end_include
 
@@ -67,6 +73,12 @@ directive|include
 file|<functional>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -74,10 +86,11 @@ block|{
 name|namespace
 name|PBQP
 block|{
-typedef|typedef
-name|float
+name|using
 name|PBQPNum
-typedef|;
+init|=
+name|float
+decl_stmt|;
 comment|/// \brief PBQP Vector class.
 name|class
 name|Vector
@@ -1681,7 +1694,7 @@ name|md
 argument_list|(
 argument|*this
 argument_list|)
-block|{ }
+block|{}
 name|MDVector
 argument_list|(
 name|Vector
@@ -1784,7 +1797,7 @@ name|md
 argument_list|(
 argument|*this
 argument_list|)
-block|{ }
+block|{}
 name|MDMatrix
 argument_list|(
 name|Matrix
@@ -1858,12 +1871,12 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace PBQP
+comment|// end namespace PBQP
 end_comment
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

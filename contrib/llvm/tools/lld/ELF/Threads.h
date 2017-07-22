@@ -68,7 +68,7 @@ comment|// Complex multi-threaded algorithms are sometimes extremely hard to
 end_comment
 
 begin_comment
-comment|// justify the correctness and can easily mess up the entire design.
+comment|// reason about and can easily mess up the entire design.
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ comment|// without any coordination between them. That's very easy to understand
 end_comment
 
 begin_comment
-comment|// and justify.
+comment|// and reason about.
 end_comment
 
 begin_comment
@@ -248,13 +248,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lld/Core/Parallel.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<algorithm>
+file|"llvm/Support/Parallel.h"
 end_include
 
 begin_include
@@ -279,7 +273,7 @@ name|class
 name|FuncTy
 operator|>
 name|void
-name|forEach
+name|parallelForEach
 argument_list|(
 argument|IterTy Begin
 argument_list|,
@@ -294,8 +288,14 @@ name|Config
 operator|->
 name|Threads
 condition|)
-name|parallel_for_each
+name|for_each
 argument_list|(
+name|llvm
+operator|::
+name|parallel
+operator|::
+name|par
+argument_list|,
 name|Begin
 argument_list|,
 name|End
@@ -304,10 +304,14 @@ name|Fn
 argument_list|)
 expr_stmt|;
 else|else
-name|std
-operator|::
 name|for_each
 argument_list|(
+name|llvm
+operator|::
+name|parallel
+operator|::
+name|seq
+argument_list|,
 name|Begin
 argument_list|,
 name|End
@@ -318,7 +322,7 @@ expr_stmt|;
 block|}
 specifier|inline
 name|void
-name|forLoop
+name|parallelForEachN
 argument_list|(
 name|size_t
 name|Begin
@@ -344,9 +348,14 @@ name|Config
 operator|->
 name|Threads
 condition|)
-block|{
-name|parallel_for
+name|for_each_n
 argument_list|(
+name|llvm
+operator|::
+name|parallel
+operator|::
+name|par
+argument_list|,
 name|Begin
 argument_list|,
 name|End
@@ -354,33 +363,31 @@ argument_list|,
 name|Fn
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
-for|for
-control|(
-name|size_t
-name|I
-init|=
-name|Begin
-init|;
-name|I
-operator|<
-name|End
-condition|;
-operator|++
-name|I
-control|)
-name|Fn
+name|for_each_n
 argument_list|(
-name|I
+name|llvm
+operator|::
+name|parallel
+operator|::
+name|seq
+argument_list|,
+name|Begin
+argument_list|,
+name|End
+argument_list|,
+name|Fn
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
+comment|// namespace elf
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lld
+end_comment
 
 begin_endif
 endif|#

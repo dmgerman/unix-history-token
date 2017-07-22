@@ -239,6 +239,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Temporarily suspend SIGKILL. Return value of 1 means a restore is needed.  * Other return values mean no restore is needed.  */
+end_comment
+
+begin_function_decl
+name|int
+name|lprofSuspendSigKill
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Restore previously suspended SIGKILL. */
+end_comment
+
+begin_function_decl
+name|void
+name|lprofRestoreSigKill
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

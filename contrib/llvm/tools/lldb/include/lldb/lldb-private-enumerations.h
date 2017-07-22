@@ -43,6 +43,24 @@ directive|define
 name|LLDB_lldb_private_enumerations_h_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FormatProviders.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -253,27 +271,6 @@ block|}
 name|LazyBool
 typedef|;
 comment|//------------------------------------------------------------------
-comment|/// Name matching
-comment|//------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|NameMatchType
-block|{
-name|eNameMatchIgnore
-block|,
-name|eNameMatchEquals
-block|,
-name|eNameMatchContains
-block|,
-name|eNameMatchStartsWith
-block|,
-name|eNameMatchEndsWith
-block|,
-name|eNameMatchRegularExpression
-block|}
-name|NameMatchType
-typedef|;
-comment|//------------------------------------------------------------------
 comment|/// Instruction types
 comment|//------------------------------------------------------------------
 typedef|typedef
@@ -470,38 +467,15 @@ name|Success
 operator|,
 comment|// The line that was just edited if good and should be added to the
 comment|// lines
-name|Error
+name|Status
 operator|,
-comment|// There is an error with the current line and it needs to be re-edited
+comment|// There is an error with the current line and it needs to be
+comment|// re-edited
 comment|// before it can be accepted
 name|Done
 comment|// Lines are complete
 block|}
 empty_stmt|;
-comment|//----------------------------------------------------------------------
-comment|// Exit Type for inferior processes
-comment|//----------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|ExitType
-block|{
-name|eExitTypeInvalid
-block|,
-name|eExitTypeExit
-block|,
-comment|// The exit status represents the return code from normal
-comment|// program exit (i.e. WIFEXITED() was true)
-name|eExitTypeSignal
-block|,
-comment|// The exit status represents the signal number that caused
-comment|// the program to exit (i.e. WIFSIGNALED() was true)
-name|eExitTypeStop
-block|,
-comment|// The exit status represents the stop signal that caused the
-comment|// program to exit (i.e. WIFSTOPPED() was true)
-block|}
-name|ExitType
-typedef|;
 comment|//----------------------------------------------------------------------
 comment|// Boolean result of running a Type Validator
 comment|//----------------------------------------------------------------------
@@ -559,6 +533,78 @@ end_decl_stmt
 begin_comment
 comment|// namespace lldb_private
 end_comment
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|format_provider
+operator|<
+name|lldb_private
+operator|::
+name|Vote
+operator|>
+block|{
+specifier|static
+name|void
+name|format
+argument_list|(
+argument|const lldb_private::Vote&V
+argument_list|,
+argument|llvm::raw_ostream&Stream
+argument_list|,
+argument|StringRef Style
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|V
+condition|)
+block|{
+case|case
+name|lldb_private
+operator|::
+name|eVoteNo
+case|:
+name|Stream
+operator|<<
+literal|"no"
+expr_stmt|;
+return|return;
+case|case
+name|lldb_private
+operator|::
+name|eVoteNoOpinion
+case|:
+name|Stream
+operator|<<
+literal|"no opinion"
+expr_stmt|;
+return|return;
+case|case
+name|lldb_private
+operator|::
+name|eVoteYes
+case|:
+name|Stream
+operator|<<
+literal|"yes"
+expr_stmt|;
+return|return;
+block|}
+name|Stream
+operator|<<
+literal|"invalid"
+expr_stmt|;
+block|}
+block|}
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

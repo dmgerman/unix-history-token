@@ -2281,6 +2281,11 @@ argument_list|(
 name|false
 argument_list|)
 block|,
+name|IsCalleeAnAutosynthesizedPropertyAccessor
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|callReturn
 argument_list|(
 argument|callReturnPos
@@ -2318,6 +2323,11 @@ argument_list|(
 name|true
 argument_list|)
 block|,
+name|IsCalleeAnAutosynthesizedPropertyAccessor
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|path
 argument_list|(
 argument|oldPath
@@ -2337,6 +2347,11 @@ comment|// Flag signifying that this diagnostic has only call enter and no match
 comment|// call exit.
 name|bool
 name|NoExit
+block|;
+comment|// Flag signifying that the callee function is an Objective-C autosynthesized
+comment|// property getter or setter.
+name|bool
+name|IsCalleeAnAutosynthesizedPropertyAccessor
 block|;
 comment|// The custom string, which should appear after the call Return Diagnostic.
 comment|// TODO: Should we allow multiple diagnostics?

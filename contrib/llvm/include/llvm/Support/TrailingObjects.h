@@ -1194,11 +1194,37 @@ block|}
 name|public
 label|:
 comment|// Make this (privately inherited) member public.
+ifndef|#
+directive|ifndef
+name|_MSC_VER
 name|using
 name|ParentType
 operator|::
 name|OverloadToken
 expr_stmt|;
+else|#
+directive|else
+comment|// MSVC bug prevents the above from working, at least up through CL
+comment|// 19.10.24629.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|using
+name|OverloadToken
+operator|=
+name|typename
+name|ParentType
+operator|::
+name|template
+name|OverloadToken
+operator|<
+name|T
+operator|>
+expr_stmt|;
+endif|#
+directive|endif
 comment|/// Returns a pointer to the trailing object array of the given type
 comment|/// (which must be one of those specified in the class template). The
 comment|/// array may have zero or more elements in it.

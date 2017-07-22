@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -104,7 +110,7 @@ decl_stmt|;
 struct|struct
 name|PCHBuffer
 block|{
-name|uint64_t
+name|ASTFileSignature
 name|Signature
 decl_stmt|;
 name|llvm

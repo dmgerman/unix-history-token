@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerSumType.h"
+file|"llvm/ADT/PointerEmbeddedInt.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerEmbeddedInt.h"
+file|"llvm/ADT/PointerSumType.h"
 end_include
 
 begin_include

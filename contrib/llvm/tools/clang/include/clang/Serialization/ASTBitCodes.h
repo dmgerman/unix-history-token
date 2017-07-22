@@ -713,6 +713,12 @@ name|OPTIONS_BLOCK_ID
 block|,
 comment|/// \brief A block containing a module file extension.
 name|EXTENSION_BLOCK_ID
+block|,
+comment|/// A block with unhashed content.
+comment|///
+comment|/// These records should not change the \a ASTFileSignature.  See \a
+comment|/// UnhashedControlBlockRecordTypes for the list of records.
+name|UNHASHED_CONTROL_BLOCK_ID
 block|,     }
 enum|;
 comment|/// \brief Record types that occur within the control block.
@@ -752,9 +758,6 @@ comment|/// \brief Record code for the module map file that was used to build th
 comment|/// AST file.
 name|MODULE_MAP_FILE
 block|,
-comment|/// \brief Record code for the signature that identifiers this AST file.
-name|SIGNATURE
-block|,
 comment|/// \brief Record code for the module build directory.
 name|MODULE_DIRECTORY
 block|,     }
@@ -777,9 +780,6 @@ block|,
 comment|/// \brief Record code for the target options table.
 name|TARGET_OPTIONS
 block|,
-comment|/// \brief Record code for the diagnostic options table.
-name|DIAGNOSTIC_OPTIONS
-block|,
 comment|/// \brief Record code for the filesystem options table.
 name|FILE_SYSTEM_OPTIONS
 block|,
@@ -788,6 +788,22 @@ name|HEADER_SEARCH_OPTIONS
 block|,
 comment|/// \brief Record code for the preprocessor options table.
 name|PREPROCESSOR_OPTIONS
+block|,     }
+enum|;
+comment|/// Record codes for the unhashed control block.
+enum|enum
+name|UnhashedControlBlockRecordTypes
+block|{
+comment|/// Record code for the signature that identifiers this AST file.
+name|SIGNATURE
+init|=
+literal|1
+block|,
+comment|/// Record code for the diagnostic options table.
+name|DIAGNOSTIC_OPTIONS
+block|,
+comment|/// Record code for \#pragma diagnostic mappings.
+name|DIAG_PRAGMA_MAPPINGS
 block|,     }
 enum|;
 comment|/// \brief Record code for extension blocks.
@@ -1017,11 +1033,7 @@ block|,
 comment|// ID 30 used to be a decl update record. These are now in the DECLTYPES
 comment|// block.
 comment|// ID 31 used to be a list of offsets to DECL_CXX_BASE_SPECIFIERS records.
-comment|/// \brief Record code for \#pragma diagnostic mappings.
-name|DIAG_PRAGMA_MAPPINGS
-init|=
-literal|32
-block|,
+comment|// ID 32 used to be the code for \#pragma diagnostic mappings.
 comment|/// \brief Record code for special CUDA declarations.
 name|CUDA_SPECIAL_DECL_REFS
 init|=
@@ -1163,6 +1175,20 @@ comment|/// \brief Record code for declarations associated with OpenCL extension
 name|OPENCL_EXTENSION_DECLS
 init|=
 literal|59
+block|,
+name|MODULAR_CODEGEN_DECLS
+init|=
+literal|60
+block|,
+comment|/// \brief Record code for \#pragma pack options.
+name|PACK_PRAGMA_OPTIONS
+init|=
+literal|61
+block|,
+comment|/// \brief The stack of open #ifs/#ifdefs recorded in a preamble.
+name|PP_CONDITIONAL_STACK
+init|=
+literal|62
 block|,     }
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -1588,25 +1614,20 @@ name|PREDEF_TYPE_QUEUE_ID
 init|=
 literal|40
 block|,
-comment|/// \brief OpenCL ndrange type.
-name|PREDEF_TYPE_NDRANGE_ID
-init|=
-literal|41
-block|,
 comment|/// \brief OpenCL reserve_id type.
 name|PREDEF_TYPE_RESERVE_ID_ID
 init|=
-literal|42
+literal|41
 block|,
 comment|/// \brief The placeholder type for OpenMP array section.
 name|PREDEF_TYPE_OMP_ARRAY_SECTION
 init|=
-literal|43
+literal|42
 block|,
 comment|/// \brief The '__float128' type
 name|PREDEF_TYPE_FLOAT128_ID
 init|=
-literal|44
+literal|43
 block|,
 comment|/// \brief OpenCL image types with auto numeration
 define|#
@@ -1864,6 +1885,16 @@ comment|/// \brief An ObjCTypeParamType record.
 name|TYPE_OBJC_TYPE_PARAM
 init|=
 literal|44
+block|,
+comment|/// \brief A DeducedTemplateSpecializationType record.
+name|TYPE_DEDUCED_TEMPLATE_SPECIALIZATION
+init|=
+literal|45
+block|,
+comment|/// \brief A DependentSizedExtVectorType record.
+name|TYPE_DEPENDENT_SIZED_EXT_VECTOR
+init|=
+literal|46
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -2195,6 +2226,9 @@ name|DECL_EXPORT
 block|,
 comment|/// \brief A CXXRecordDecl record.
 name|DECL_CXX_RECORD
+block|,
+comment|/// \brief A CXXDeductionGuideDecl record.
+name|DECL_CXX_DEDUCTION_GUIDE
 block|,
 comment|/// \brief A CXXMethodDecl record.
 name|DECL_CXX_METHOD
@@ -3210,6 +3244,12 @@ operator|==
 name|DeclarationName
 operator|::
 name|CXXLiteralOperatorName
+operator|||
+name|Kind
+operator|==
+name|DeclarationName
+operator|::
+name|CXXDeductionGuideName
 argument_list|)
 block|;
 return|return

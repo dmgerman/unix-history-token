@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/TinyPtrVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -354,6 +360,27 @@ comment|// Adjust the HeaderFileInfoTrait::EmitData streaming.
 comment|// Adjust ModuleMap::addHeader.
 block|}
 enum|;
+comment|/// Convert a header kind to a role. Requires Kind to not be HK_Excluded.
+specifier|static
+name|ModuleHeaderRole
+name|headerKindToRole
+argument_list|(
+name|Module
+operator|::
+name|HeaderKind
+name|Kind
+argument_list|)
+decl_stmt|;
+comment|/// Convert a header role to a kind.
+specifier|static
+name|Module
+operator|::
+name|HeaderKind
+name|headerRoleToKind
+argument_list|(
+argument|ModuleHeaderRole Role
+argument_list|)
+expr_stmt|;
 comment|/// \brief A header that is known to reside within a given module,
 comment|/// whether it was included or excluded.
 name|class
@@ -582,6 +609,40 @@ comment|/// that header.
 name|HeadersMap
 name|Headers
 decl_stmt|;
+comment|/// Map from file sizes to modules with lazy header directives of that size.
+name|mutable
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|off_t
+operator|,
+name|llvm
+operator|::
+name|TinyPtrVector
+operator|<
+name|Module
+operator|*
+operator|>>
+name|LazyHeadersBySize
+expr_stmt|;
+comment|/// Map from mtimes to modules with lazy header directives with those mtimes.
+name|mutable
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|time_t
+operator|,
+name|llvm
+operator|::
+name|TinyPtrVector
+operator|<
+name|Module
+operator|*
+operator|>>
+name|LazyHeadersByModTime
+expr_stmt|;
 comment|/// \brief Mapping from directories with umbrella headers to the module
 comment|/// that is generated from the umbrella header.
 comment|///
@@ -801,6 +862,85 @@ name|bool
 name|Complain
 argument_list|)
 decl|const
+decl_stmt|;
+comment|/// Add an unresolved header to a module.
+name|void
+name|addUnresolvedHeader
+argument_list|(
+name|Module
+operator|*
+name|Mod
+argument_list|,
+name|Module
+operator|::
+name|UnresolvedHeaderDirective
+name|Header
+argument_list|)
+decl_stmt|;
+comment|/// Look up the given header directive to find an actual header file.
+comment|///
+comment|/// \param M The module in which we're resolving the header directive.
+comment|/// \param Header The header directive to resolve.
+comment|/// \param RelativePathName Filled in with the relative path name from the
+comment|///        module to the resolved header.
+comment|/// \return The resolved file, if any.
+specifier|const
+name|FileEntry
+modifier|*
+name|findHeader
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+specifier|const
+name|Module
+operator|::
+name|UnresolvedHeaderDirective
+operator|&
+name|Header
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|RelativePathName
+argument_list|)
+decl_stmt|;
+comment|/// Resolve the given header directive.
+name|void
+name|resolveHeader
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+specifier|const
+name|Module
+operator|::
+name|UnresolvedHeaderDirective
+operator|&
+name|Header
+argument_list|)
+decl_stmt|;
+comment|/// Attempt to resolve the specified header directive as naming a builtin
+comment|/// header.
+comment|/// \return \c true if a corresponding builtin header was found.
+name|bool
+name|resolveAsBuiltinHeader
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+specifier|const
+name|Module
+operator|::
+name|UnresolvedHeaderDirective
+operator|&
+name|Header
+argument_list|)
 decl_stmt|;
 comment|/// \brief Looks up the modules that \p File corresponds to.
 comment|///
@@ -1064,6 +1204,30 @@ argument|const FileEntry *File
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// Resolve all lazy header directives for the specified file.
+comment|///
+comment|/// This ensures that the HeaderFileInfo on HeaderSearch is up to date. This
+comment|/// is effectively internal, but is exposed so HeaderSearch can call it.
+name|void
+name|resolveHeaderDirectives
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Resolve all lazy header directives for the specified module.
+name|void
+name|resolveHeaderDirectives
+argument_list|(
+name|Module
+operator|*
+name|Mod
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Reports errors if a module must not include a specific file.
 comment|///
 comment|/// \param RequestingModule The module including a file.
@@ -1436,22 +1600,6 @@ name|bool
 name|Complain
 parameter_list|)
 function_decl|;
-comment|/// \brief Infers the (sub)module based on the given source location and
-comment|/// source manager.
-comment|///
-comment|/// \param Loc The location within the source that we are querying, along
-comment|/// with its source manager.
-comment|///
-comment|/// \returns The module that owns this source location, or null if no
-comment|/// module owns this source location.
-name|Module
-modifier|*
-name|inferModuleFromLocation
-parameter_list|(
-name|FullSourceLoc
-name|Loc
-parameter_list|)
-function_decl|;
 comment|/// \brief Sets the umbrella header of the given module to the given
 comment|/// header.
 name|void
@@ -1536,6 +1684,11 @@ comment|///
 comment|/// \param HomeDir The directory in which relative paths within this module
 comment|///        map file will be resolved.
 comment|///
+comment|/// \param ID The FileID of the file to process, if we've already entered it.
+comment|///
+comment|/// \param Offset [inout] On input the offset at which to start parsing. On
+comment|///        output, the offset at which the module map terminated.
+comment|///
 comment|/// \param ExternModuleLoc The location of the "extern module" declaration
 comment|///        that caused us to load this module map file, if any.
 comment|///
@@ -1555,6 +1708,18 @@ specifier|const
 name|DirectoryEntry
 modifier|*
 name|HomeDir
+parameter_list|,
+name|FileID
+name|ID
+init|=
+name|FileID
+argument_list|()
+parameter_list|,
+name|unsigned
+modifier|*
+name|Offset
+init|=
+name|nullptr
 parameter_list|,
 name|SourceLocation
 name|ExternModuleLoc

@@ -133,6 +133,11 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getSymbolsFileName
 argument_list|)
+name|uint32_t
+name|getPointerByteSize
+argument_list|()
+specifier|const
+block|;
 name|private
 operator|:
 name|void

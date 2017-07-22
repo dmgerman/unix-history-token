@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCCodeEmitter.h - Instruction Encoding ----------*- C++ -*-===//
+comment|//===- llvm/MC/MCCodeEmitter.h - Instruction Encoding -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -43,12 +43,6 @@ directive|define
 name|LLVM_MC_MCCODEEMITTER_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -77,7 +71,13 @@ comment|/// MCCodeEmitter - Generic instruction encoding interface.
 name|class
 name|MCCodeEmitter
 block|{
-name|private
+name|protected
+label|:
+comment|// Can only create subclasses.
+name|MCCodeEmitter
+argument_list|()
+expr_stmt|;
+name|public
 label|:
 name|MCCodeEmitter
 argument_list|(
@@ -88,7 +88,8 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|void
+name|MCCodeEmitter
+modifier|&
 name|operator
 init|=
 operator|(
@@ -99,14 +100,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|protected
-label|:
-comment|// Can only create subclasses.
-name|MCCodeEmitter
-argument_list|()
-expr_stmt|;
-name|public
-label|:
 name|virtual
 operator|~
 name|MCCodeEmitter
@@ -155,13 +148,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCCODEEMITTER_H
+end_comment
 
 end_unit
 

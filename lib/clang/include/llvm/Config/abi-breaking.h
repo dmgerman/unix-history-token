@@ -63,15 +63,19 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to disable the link-time checking of mismatch for    LLVM_ENABLE_ABI_BREAKING_CHECKS */
+comment|/* Define to enable reverse iteration of unordered llvm containers */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LLVM_DISABLE_ABI_BREAKING_CHECKS_ENFORCING
+name|LLVM_ENABLE_REVERSE_ITERATION
 value|0
 end_define
+
+begin_comment
+comment|/* Allow selectively disabling link-time mismatch checking so that header-only    ADT content from LLVM can be used without linking libSupport. */
+end_comment
 
 begin_if
 if|#

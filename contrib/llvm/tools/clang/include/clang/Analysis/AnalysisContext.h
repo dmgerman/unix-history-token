@@ -1564,6 +1564,8 @@ argument|bool addInitializers = false
 argument_list|,
 argument|bool addTemporaryDtors = false
 argument_list|,
+argument|bool addLifetime = false
+argument_list|,
 argument|bool synthesizeBodies = false
 argument_list|,
 argument|bool addStaticInitBranches = false

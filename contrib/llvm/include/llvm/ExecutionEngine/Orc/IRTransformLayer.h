@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===----- IRTransformLayer.h - Run all IR through a functor ----*- C++ -*-===//
+comment|//===- IRTransformLayer.h - Run all IR through a functor --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -65,18 +65,32 @@ directive|include
 file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Module
+decl_stmt|;
 name|namespace
 name|orc
 block|{
 comment|/// @brief IR mutating layer.
 comment|///
-comment|///   This layer accepts sets of LLVM IR Modules (via addModuleSet). It
-comment|/// immediately applies the user supplied functor to each module, then adds
-comment|/// the set of transformed modules to the layer below.
+comment|///   This layer applies a user supplied transform to each module that is added,
+comment|/// then adds the transformed module to the layer below.
 name|template
 operator|<
 name|typename
@@ -91,13 +105,14 @@ block|{
 name|public
 operator|:
 comment|/// @brief Handle to a set of added modules.
-typedef|typedef
+name|using
+name|ModuleHandleT
+operator|=
 name|typename
 name|BaseLayerT
 operator|::
-name|ModuleSetHandleT
-name|ModuleSetHandleT
-expr_stmt|;
+name|ModuleHandleT
+block|;
 comment|/// @brief Construct an IRTransformLayer with the given BaseLayer
 name|IRTransformLayer
 argument_list|(
@@ -110,93 +125,40 @@ name|BaseLayer
 argument_list|(
 name|BaseLayer
 argument_list|)
-operator|,
+block|,
 name|Transform
 argument_list|(
 argument|std::move(Transform)
 argument_list|)
 block|{}
-comment|/// @brief Apply the transform functor to each module in the module set, then
-comment|///        add the resulting set of modules to the base layer, along with the
-comment|///        memory manager and symbol resolver.
+comment|/// @brief Apply the transform functor to the module, then add the module to
+comment|///        the layer below, along with the memory manager and symbol resolver.
 comment|///
 comment|/// @return A handle for the added modules.
-name|template
+name|Expected
 operator|<
-name|typename
-name|ModuleSetT
-operator|,
-name|typename
-name|MemoryManagerPtrT
-operator|,
-name|typename
-name|SymbolResolverPtrT
+name|ModuleHandleT
 operator|>
-name|ModuleSetHandleT
-name|addModuleSet
+name|addModule
 argument_list|(
-argument|ModuleSetT Ms
+argument|std::shared_ptr<Module> M
 argument_list|,
-argument|MemoryManagerPtrT MemMgr
-argument_list|,
-argument|SymbolResolverPtrT Resolver
+argument|std::shared_ptr<JITSymbolResolver> Resolver
 argument_list|)
 block|{
-for|for
-control|(
-name|auto
-name|I
-init|=
-name|Ms
+return|return
+name|BaseLayer
 operator|.
-name|begin
-argument_list|()
-init|,
-name|E
-init|=
-name|Ms
-operator|.
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-control|)
-operator|*
-name|I
-operator|=
+name|addModule
+argument_list|(
 name|Transform
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
-operator|*
-name|I
+name|M
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|BaseLayer
-operator|.
-name|addModuleSet
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Ms
-argument_list|)
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|MemMgr
 argument_list|)
 argument_list|,
 name|std
@@ -208,21 +170,21 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// @brief Remove the module set associated with the handle H.
-name|void
-name|removeModuleSet
-parameter_list|(
-name|ModuleSetHandleT
-name|H
-parameter_list|)
+comment|/// @brief Remove the module associated with the handle H.
+name|Error
+name|removeModule
+argument_list|(
+argument|ModuleHandleT H
+argument_list|)
 block|{
+return|return
 name|BaseLayer
 operator|.
-name|removeModuleSet
+name|removeModule
 argument_list|(
 name|H
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 comment|/// @brief Search for the given named symbol.
 comment|/// @param Name The name of the symbol to search for.
@@ -231,15 +193,9 @@ comment|/// @return A handle for the given named symbol, if it exists.
 name|JITSymbol
 name|findSymbol
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|bool
-name|ExportedSymbolsOnly
+argument|bool ExportedSymbolsOnly
 argument_list|)
 block|{
 return|return
@@ -253,29 +209,22 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-comment|/// @brief Get the address of the given symbol in the context of the set of
-comment|///        modules represented by the handle H. This call is forwarded to the
-comment|///        base layer's implementation.
-comment|/// @param H The handle for the module set to search in.
+comment|/// @brief Get the address of the given symbol in the context of the module
+comment|///        represented by the handle H. This call is forwarded to the base
+comment|///        layer's implementation.
+comment|/// @param H The handle for the module to search in.
 comment|/// @param Name The name of the symbol to search for.
 comment|/// @param ExportedSymbolsOnly If true, search only for exported symbols.
 comment|/// @return A handle for the given named symbol, if it is found in the
-comment|///         given module set.
+comment|///         given module.
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
-name|ModuleSetHandleT
-name|H
+argument|ModuleHandleT H
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|bool
-name|ExportedSymbolsOnly
+argument|bool ExportedSymbolsOnly
 argument_list|)
 block|{
 return|return
@@ -291,29 +240,29 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-comment|/// @brief Immediately emit and finalize the module set represented by the
-comment|///        given handle.
-comment|/// @param H Handle for module set to emit/finalize.
-name|void
+comment|/// @brief Immediately emit and finalize the module represented by the given
+comment|///        handle.
+comment|/// @param H Handle for module to emit/finalize.
+name|Error
 name|emitAndFinalize
-parameter_list|(
-name|ModuleSetHandleT
-name|H
-parameter_list|)
+argument_list|(
+argument|ModuleHandleT H
+argument_list|)
 block|{
+return|return
 name|BaseLayer
 operator|.
 name|emitAndFinalize
 argument_list|(
 name|H
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 comment|/// @brief Access the transform functor directly.
 name|TransformFtor
-modifier|&
+operator|&
 name|getTransform
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Transform
@@ -332,29 +281,22 @@ name|Transform
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|BaseLayerT
-modifier|&
+operator|&
 name|BaseLayer
-decl_stmt|;
+block|;
 name|TransformFtor
 name|Transform
-decl_stmt|;
+block|; }
+expr_stmt|;
+block|}
+comment|// end namespace orc
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
-comment|// End namespace orc.
-end_comment
-
-begin_comment
-unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif

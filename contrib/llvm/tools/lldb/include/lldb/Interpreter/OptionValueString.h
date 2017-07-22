@@ -68,7 +68,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Flags.h"
+file|"lldb/Utility/Flags.h"
 end_include
 
 begin_include
@@ -90,7 +90,7 @@ block|{
 name|public
 operator|:
 typedef|typedef
-name|Error
+name|Status
 function_decl|(
 modifier|*
 name|ValidatorCallback
@@ -491,7 +491,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 name|llvm
@@ -509,7 +509,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|Error
+name|Status
 name|SetValueFromString
 parameter_list|(
 specifier|const
@@ -691,7 +691,7 @@ block|}
 end_expr_stmt
 
 begin_function_decl
-name|Error
+name|Status
 name|SetCurrentValue
 parameter_list|(
 specifier|const
@@ -704,7 +704,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|Error
+name|Status
 name|SetCurrentValue
 argument_list|(
 name|llvm
@@ -716,7 +716,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|Error
+name|Status
 name|AppendToCurrentValue
 parameter_list|(
 specifier|const

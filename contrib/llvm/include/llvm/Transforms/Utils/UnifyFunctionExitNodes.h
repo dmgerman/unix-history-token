@@ -81,6 +81,12 @@ directive|include
 file|"llvm/Pass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/PassRegistry.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -94,10 +100,16 @@ block|{
 name|BasicBlock
 operator|*
 name|ReturnBlock
-block|,
+operator|=
+name|nullptr
+block|;
+name|BasicBlock
 operator|*
 name|UnwindBlock
-block|,
+operator|=
+name|nullptr
+block|;
+name|BasicBlock
 operator|*
 name|UnreachableBlock
 block|;
@@ -113,17 +125,7 @@ argument_list|()
 operator|:
 name|FunctionPass
 argument_list|(
-name|ID
-argument_list|)
-block|,
-name|ReturnBlock
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|UnwindBlock
-argument_list|(
-argument|nullptr
+argument|ID
 argument_list|)
 block|{
 name|initializeUnifyFunctionExitNodesPass
@@ -194,13 +196,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_UTILS_UNIFYFUNCTIONEXITNODES_H
+end_comment
 
 end_unit
 

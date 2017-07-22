@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- OptTable.h - Option Table ------------------------------*- C++ -*-===//
+comment|//===- OptTable.h - Option Table --------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringSet.h"
 end_include
 
@@ -59,6 +65,24 @@ begin_include
 include|#
 directive|include
 file|"llvm/Option/OptSpecifier.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -151,6 +175,11 @@ name|char
 modifier|*
 name|AliasArgs
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|Values
+decl_stmt|;
 block|}
 struct|;
 name|private
@@ -167,14 +196,20 @@ name|IgnoreCase
 decl_stmt|;
 name|unsigned
 name|TheInputOptionID
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|TheUnknownOptionID
+init|=
+literal|0
 decl_stmt|;
 comment|/// The index of the first option which can be parsed (i.e., is not a
 comment|/// special option like 'input' or 'unknown', and is not an option group).
 name|unsigned
 name|FirstSearchableIndex
+init|=
+literal|0
 decl_stmt|;
 comment|/// The union of all option prefixes. If an argument does not begin with
 comment|/// one of these, it is an input.
@@ -371,6 +406,54 @@ operator|.
 name|MetaVar
 return|;
 block|}
+comment|/// Find possible value for given flags. This is used for shell
+comment|/// autocompletion.
+comment|///
+comment|/// \param [in] Option - Key flag like "-stdlib=" when "-stdlib=l"
+comment|/// was passed to clang.
+comment|///
+comment|/// \param [in] Arg - Value which we want to autocomplete like "l"
+comment|/// when "-stdlib=l" was passed to clang.
+comment|///
+comment|/// \return The vector of possible values.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|suggestValueCompletions
+argument_list|(
+argument|StringRef Option
+argument_list|,
+argument|StringRef Arg
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// Find flags from OptTable which starts with Cur.
+comment|///
+comment|/// \param [in] Cur - String prefix that all returned flags need
+comment|//  to start with.
+comment|///
+comment|/// \return The vector of flags which start with Cur.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|findByPrefix
+argument_list|(
+argument|StringRef Cur
+argument_list|,
+argument|unsigned short DisableFlags
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// \brief Parse a single argument; returning the new argument and
 comment|/// updating Index.
 comment|///
@@ -531,6 +614,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OPTION_OPTTABLE_H
+end_comment
 
 end_unit
 

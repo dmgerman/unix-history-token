@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/LiveInterval.h - Interval representation ---*- C++ -*-===//
+comment|//===- llvm/CodeGen/LiveInterval.h - Interval representation ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -90,7 +90,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntEqClasses.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -102,13 +126,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/LaneBitmask.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
 end_include
 
 begin_include
@@ -120,13 +156,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<climits>
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tuple>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -140,28 +200,11 @@ name|class
 name|LiveIntervals
 decl_stmt|;
 name|class
-name|MachineInstr
-decl_stmt|;
-name|class
 name|MachineRegisterInfo
-decl_stmt|;
-name|class
-name|TargetRegisterInfo
 decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|,
-name|unsigned
-name|Small
-operator|>
-name|class
-name|SmallPtrSet
-expr_stmt|;
 comment|/// VNInfo - Value Number Information.
 comment|/// This class holds information about a machine level values, including
 comment|/// definition and use points.
@@ -171,10 +214,11 @@ name|VNInfo
 block|{
 name|public
 label|:
-typedef|typedef
-name|BumpPtrAllocator
+name|using
 name|Allocator
-typedef|;
+init|=
+name|BumpPtrAllocator
+decl_stmt|;
 comment|/// The ID number of this value.
 name|unsigned
 name|id
@@ -200,7 +244,7 @@ name|def
 argument_list|(
 argument|d
 argument_list|)
-block|{ }
+block|{}
 comment|/// VNInfo constructor, copies values from orig, except for the value number.
 name|VNInfo
 argument_list|(
@@ -218,7 +262,7 @@ name|def
 argument_list|(
 argument|orig.def
 argument_list|)
-block|{ }
+block|{}
 comment|/// Copy from the parameter into this VNInfo.
 name|void
 name|copyFrom
@@ -463,16 +507,16 @@ comment|// End point of the interval (exclusive)
 name|VNInfo
 modifier|*
 name|valno
+init|=
+name|nullptr
 decl_stmt|;
-comment|// identifier for the value contained in this segment.
+comment|// identifier for the value contained in this
+comment|// segment.
 name|Segment
 argument_list|()
-operator|:
-name|valno
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|Segment
 argument_list|(
 argument|SlotIndex S
@@ -481,7 +525,7 @@ argument|SlotIndex E
 argument_list|,
 argument|VNInfo *V
 argument_list|)
-operator|:
+block|:
 name|start
 argument_list|(
 name|S
@@ -636,25 +680,21 @@ specifier|const
 expr_stmt|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|Segments
+init|=
 name|SmallVector
 operator|<
 name|Segment
-operator|,
-literal|2
-operator|>
-name|Segments
-expr_stmt|;
-typedef|typedef
+decl_stmt|, 2>;
+name|using
+name|VNInfoList
+init|=
 name|SmallVector
 operator|<
 name|VNInfo
 operator|*
-operator|,
-literal|2
-operator|>
-name|VNInfoList
-expr_stmt|;
+decl_stmt|, 2>;
 name|Segments
 name|segments
 decl_stmt|;
@@ -666,15 +706,16 @@ comment|// value#'s
 comment|// The segment set is used temporarily to accelerate initial computation
 comment|// of live ranges of physical registers in computeRegUnitRange.
 comment|// After that the set is flushed to the segment vector and deleted.
-typedef|typedef
+name|using
+name|SegmentSet
+init|=
 name|std
 operator|::
 name|set
 operator|<
 name|Segment
 operator|>
-name|SegmentSet
-expr_stmt|;
+decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -683,12 +724,20 @@ name|SegmentSet
 operator|>
 name|segmentSet
 expr_stmt|;
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|Segments
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
+name|Segments
+operator|::
+name|const_iterator
+decl_stmt|;
 name|iterator
 name|begin
 parameter_list|()
@@ -711,12 +760,6 @@ name|end
 argument_list|()
 return|;
 block|}
-typedef|typedef
-name|Segments
-operator|::
-name|const_iterator
-name|const_iterator
-expr_stmt|;
 name|const_iterator
 name|begin
 argument_list|()
@@ -741,12 +784,20 @@ name|end
 argument_list|()
 return|;
 block|}
-typedef|typedef
+name|using
+name|vni_iterator
+init|=
 name|VNInfoList
 operator|::
 name|iterator
-name|vni_iterator
-expr_stmt|;
+decl_stmt|;
+name|using
+name|const_vni_iterator
+init|=
+name|VNInfoList
+operator|::
+name|const_iterator
+decl_stmt|;
 name|vni_iterator
 name|vni_begin
 parameter_list|()
@@ -769,12 +820,6 @@ name|end
 argument_list|()
 return|;
 block|}
-typedef|typedef
-name|VNInfoList
-operator|::
-name|const_iterator
-name|const_vni_iterator
-expr_stmt|;
 name|const_vni_iterator
 name|vni_begin
 argument_list|()
@@ -830,6 +875,47 @@ operator|&&
 literal|"Copying of LiveRanges with active SegmentSets is not supported"
 argument_list|)
 expr_stmt|;
+name|assign
+argument_list|(
+name|Other
+argument_list|,
+name|Allocator
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Copies values numbers and live segments from \p Other into this range.
+name|void
+name|assign
+parameter_list|(
+specifier|const
+name|LiveRange
+modifier|&
+name|Other
+parameter_list|,
+name|BumpPtrAllocator
+modifier|&
+name|Allocator
+parameter_list|)
+block|{
+if|if
+condition|(
+name|this
+operator|==
+operator|&
+name|Other
+condition|)
+return|return;
+name|assert
+argument_list|(
+name|Other
+operator|.
+name|segmentSet
+operator|==
+name|nullptr
+operator|&&
+literal|"Copying of LiveRanges with active SegmentSets is not supported"
+argument_list|)
+expr_stmt|;
 comment|// Duplicate valnos.
 for|for
 control|(
@@ -842,7 +928,6 @@ name|Other
 operator|.
 name|valnos
 control|)
-block|{
 name|createValueCopy
 argument_list|(
 name|VNI
@@ -850,7 +935,6 @@ argument_list|,
 name|Allocator
 argument_list|)
 expr_stmt|;
-block|}
 comment|// Now we can copy segments and remap their valnos.
 for|for
 control|(
@@ -863,7 +947,6 @@ name|Other
 operator|.
 name|segments
 control|)
-block|{
 name|segments
 operator|.
 name|push_back
@@ -889,7 +972,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/// advanceTo - Advance the specified iterator to point to the Segment
 comment|/// containing the specified position, or end() if the position is past the
@@ -2390,10 +2472,11 @@ name|LiveRange
 block|{
 name|public
 operator|:
-typedef|typedef
-name|LiveRange
+name|using
 name|super
-typedef|;
+operator|=
+name|LiveRange
+block|;
 comment|/// A live range for subregisters. The LaneMask specifies which parts of the
 comment|/// super register are covered by the interval.
 comment|/// (@sa TargetRegisterInfo::getSubRegIndexLaneMask()).
@@ -2408,6 +2491,8 @@ operator|:
 name|SubRange
 operator|*
 name|Next
+operator|=
+name|nullptr
 block|;
 name|LaneBitmask
 name|LaneMask
@@ -2418,16 +2503,11 @@ argument_list|(
 argument|LaneBitmask LaneMask
 argument_list|)
 operator|:
-name|Next
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
 name|LaneMask
 argument_list|(
 argument|LaneMask
 argument_list|)
-block|{       }
+block|{}
 comment|/// Constructs a new SubRange object by copying liveness from @p Other.
 name|SubRange
 argument_list|(
@@ -2445,16 +2525,11 @@ argument_list|,
 name|Allocator
 argument_list|)
 block|,
-name|Next
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
 name|LaneMask
 argument_list|(
 argument|LaneMask
 argument_list|)
-block|{       }
+block|{}
 name|void
 name|print
 argument_list|(
@@ -2467,24 +2542,27 @@ name|dump
 argument_list|()
 specifier|const
 block|;     }
-decl_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|SubRange
-modifier|*
+operator|*
 name|SubRanges
-decl_stmt|;
-comment|///< Single linked list of subregister live ranges.
+operator|=
+name|nullptr
+block|;
+comment|///< Single linked list of subregister live
+comment|/// ranges.
 name|public
-label|:
+operator|:
 specifier|const
 name|unsigned
 name|reg
-decl_stmt|;
+block|;
 comment|// the register or stack slot of this interval.
 name|float
 name|weight
-decl_stmt|;
+block|;
 comment|// weight of this interval
 name|LiveInterval
 argument_list|(
@@ -2492,17 +2570,12 @@ argument|unsigned Reg
 argument_list|,
 argument|float Weight
 argument_list|)
-block|:
-name|SubRanges
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
+operator|:
 name|reg
 argument_list|(
 name|Reg
 argument_list|)
-operator|,
+block|,
 name|weight
 argument_list|(
 argument|Weight
@@ -2634,11 +2707,7 @@ name|operator
 operator|->
 expr|(
 block|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
+block|;       }
 name|T
 operator|&
 name|operator
@@ -2652,36 +2721,43 @@ operator|*
 name|P
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|T
 operator|*
 name|operator
 operator|->
 expr|(
-end_expr_stmt
-
-begin_expr_stmt
-unit|)
-specifier|const
+block|)
+decl|const
 block|{
 return|return
 name|P
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
-begin_typedef
+begin_decl_stmt
 unit|};
-typedef|typedef
+name|using
+name|subrange_iterator
+init|=
 name|SingleLinkedListIterator
 operator|<
 name|SubRange
 operator|>
-name|subrange_iterator
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|using
+name|const_subrange_iterator
+init|=
+name|SingleLinkedListIterator
+operator|<
+specifier|const
+name|SubRange
+operator|>
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|subrange_iterator
@@ -2710,17 +2786,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_typedef
-typedef|typedef
-name|SingleLinkedListIterator
-operator|<
-specifier|const
-name|SubRange
-operator|>
-name|const_subrange_iterator
-expr_stmt|;
-end_typedef
 
 begin_expr_stmt
 name|const_subrange_iterator
@@ -2967,8 +3032,6 @@ block|{
 return|return
 name|weight
 operator|!=
-name|llvm
-operator|::
 name|huge_valf
 return|;
 block|}
@@ -2985,8 +3048,6 @@ parameter_list|()
 block|{
 name|weight
 operator|=
-name|llvm
-operator|::
 name|huge_valf
 expr_stmt|;
 block|}
@@ -3025,6 +3086,74 @@ operator|&
 name|Indexes
 argument_list|)
 decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Refines the subranges to support \p LaneMask. This may only be called
+end_comment
+
+begin_comment
+comment|/// for LI.hasSubrange()==true. Subregister ranges are split or created
+end_comment
+
+begin_comment
+comment|/// until \p LaneMask can be matched exactly. \p Mod is executed on the
+end_comment
+
+begin_comment
+comment|/// matching subranges.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Example:
+end_comment
+
+begin_comment
+comment|///    Given an interval with subranges with lanemasks L0F00, L00F0 and
+end_comment
+
+begin_comment
+comment|///    L000F, refining for mask L0018. Will split the L00F0 lane into
+end_comment
+
+begin_comment
+comment|///    L00E0 and L0010 and the L000F lane into L0007 and L0008. The Mod
+end_comment
+
+begin_comment
+comment|///    function will be applied to the L0010 and L0008 subranges.
+end_comment
+
+begin_decl_stmt
+name|void
+name|refineSubRanges
+argument_list|(
+name|BumpPtrAllocator
+operator|&
+name|Allocator
+argument_list|,
+name|LaneBitmask
+name|LaneMask
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|LiveInterval
+operator|::
+name|SubRange
+operator|&
+argument_list|)
+operator|>
+name|Mod
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -3716,11 +3845,19 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_LIVEINTERVAL_H
+end_comment
 
 end_unit
 

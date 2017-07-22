@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/MemoryBuiltins.h"
 end_include
 
@@ -1038,6 +1032,11 @@ operator|!=
 name|nullptr
 argument_list|)
 expr_stmt|;
+comment|// FIXME: This is subtly broken, due to how we model some instructions
+comment|// (e.g. extractvalue, extractelement) as loads. Since those take
+comment|// non-pointer operands, we'll entirely skip adding edges for those.
+comment|//
+comment|// addAssignEdge seems to have a similar issue with insertvalue, etc.
 if|if
 condition|(
 operator|!
@@ -2150,15 +2149,7 @@ comment|// strdup(),
 comment|// etc.
 if|if
 condition|(
-name|isMallocLikeFn
-argument_list|(
-name|Inst
-argument_list|,
-operator|&
-name|TLI
-argument_list|)
-operator|||
-name|isCallocLikeFn
+name|isMallocOrCallocLikeFn
 argument_list|(
 name|Inst
 argument_list|,
@@ -2306,10 +2297,8 @@ operator|||
 operator|!
 name|Fn
 operator|->
-name|doesNotAlias
-argument_list|(
-literal|0
-argument_list|)
+name|returnDoesNotAlias
+argument_list|()
 condition|)
 comment|// No need to call addNode() since we've added Inst at the
 comment|// beginning of this function and we know it is not a global.
@@ -2939,6 +2928,7 @@ argument_list|,
 name|CE
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 case|case
 name|Instruction

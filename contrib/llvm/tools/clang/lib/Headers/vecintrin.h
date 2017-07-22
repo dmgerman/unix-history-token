@@ -471,6 +471,45 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|float
+name|vec_extract
+parameter_list|(
+name|vector
+name|float
+name|__vec
+parameter_list|,
+name|int
+name|__index
+parameter_list|)
+block|{
+return|return
+name|__vec
+index|[
+name|__index
+operator|&
+literal|3
+index|]
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -538,6 +577,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -665,6 +708,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -792,6 +839,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -918,6 +969,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -1011,6 +1066,53 @@ name|__vec
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_insert
+parameter_list|(
+name|float
+name|__scalar
+parameter_list|,
+name|vector
+name|float
+name|__vec
+parameter_list|,
+name|int
+name|__index
+parameter_list|)
+block|{
+name|__vec
+index|[
+name|__index
+operator|&
+literal|1
+index|]
+operator|=
+name|__scalar
+expr_stmt|;
+return|return
+name|__vec
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1696,6 +1798,83 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_promote
+parameter_list|(
+name|float
+name|__scalar
+parameter_list|,
+name|int
+name|__index
+parameter_list|)
+block|{
+specifier|const
+name|vector
+name|float
+name|__zero
+init|=
+operator|(
+name|vector
+name|float
+operator|)
+literal|0
+decl_stmt|;
+name|vector
+name|float
+name|__vec
+init|=
+name|__builtin_shufflevector
+argument_list|(
+name|__zero
+argument_list|,
+name|__zero
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+decl_stmt|;
+name|__vec
+index|[
+name|__index
+operator|&
+literal|3
+index|]
+operator|=
+name|__scalar
+expr_stmt|;
+return|return
+name|__vec
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -2101,6 +2280,57 @@ name|__vec
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_insert_and_zero
+parameter_list|(
+specifier|const
+name|float
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+name|vector
+name|float
+name|__vec
+init|=
+operator|(
+name|vector
+name|float
+operator|)
+literal|0
+decl_stmt|;
+name|__vec
+index|[
+literal|0
+index|]
+operator|=
+operator|*
+name|__ptr
+expr_stmt|;
+return|return
+name|__vec
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -2792,6 +3022,68 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_perm
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+name|__c
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__builtin_s390_vperm
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -2845,6 +3137,10 @@ begin_comment
 comment|/*-- vec_permi --------------------------------------------------------------*/
 end_comment
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function_decl
 specifier|extern
 name|__ATTRS_o
@@ -2882,6 +3178,10 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -2921,6 +3221,10 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function_decl
 specifier|extern
 name|__ATTRS_o
@@ -2958,6 +3262,10 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -3004,6 +3312,55 @@ name|Z
 parameter_list|)
 value|((__typeof__((vec_permi)((X), (Y), (Z)))) \   __builtin_s390_vpdi((vector unsigned long long)(X), \                       (vector unsigned long long)(Y), \                       (((Z)& 2)<< 1) | ((Z)& 1)))
 end_define
+
+begin_comment
+comment|/*-- vec_bperm_u128 ---------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_ai
+name|vector
+name|unsigned
+name|long
+name|long
+name|vec_bperm_u128
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vbperm
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*-- vec_sel ----------------------------------------------------------------*/
@@ -4219,6 +4576,155 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_sel
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|__c
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|float
+call|)
+argument_list|(
+operator|(
+name|__c
+operator|&
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__b
+operator|)
+operator||
+operator|(
+operator|~
+name|__c
+operator|&
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__a
+operator|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_sel
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|,
+name|vector
+name|bool
+name|int
+name|__c
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|int
+name|__ac
+init|=
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__a
+decl_stmt|;
+name|vector
+name|unsigned
+name|int
+name|__bc
+init|=
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__b
+decl_stmt|;
+name|vector
+name|unsigned
+name|int
+name|__cc
+init|=
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__c
+decl_stmt|;
+return|return
+call|(
+name|vector
+name|float
+call|)
+argument_list|(
+operator|(
+name|__cc
+operator|&
+name|__bc
+operator|)
+operator||
+operator|(
+operator|~
+name|__cc
+operator|&
+name|__ac
+operator|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -4822,6 +5328,88 @@ return|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_gather_element
+parameter_list|(
+name|vector
+name|float
+name|__vec
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|__offset
+parameter_list|,
+specifier|const
+name|float
+modifier|*
+name|__ptr
+parameter_list|,
+name|int
+name|__index
+parameter_list|)
+function|__constant_range
+parameter_list|(
+name|__index
+parameter_list|,
+function|0
+operator|,
+function|3
+end_function
+
+begin_block
+unit|)
+block|{
+name|__vec
+index|[
+name|__index
+index|]
+operator|=
+operator|*
+operator|(
+specifier|const
+name|float
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__offset
+index|[
+name|__index
+index|]
+operator|)
+expr_stmt|;
+return|return
+name|__vec
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -5286,6 +5874,79 @@ expr_stmt|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_scatter_element
+parameter_list|(
+name|vector
+name|float
+name|__vec
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|__offset
+parameter_list|,
+name|float
+modifier|*
+name|__ptr
+parameter_list|,
+name|int
+name|__index
+parameter_list|)
+function|__constant_range
+parameter_list|(
+name|__index
+parameter_list|,
+function|0
+operator|,
+function|3
+end_function
+
+begin_block
+unit|)
+block|{
+operator|*
+operator|(
+name|float
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+index|[
+name|__index
+index|]
+operator|)
+operator|=
+name|__vec
+index|[
+name|__index
+index|]
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -5348,7 +6009,428 @@ block|}
 end_block
 
 begin_comment
+comment|/*-- vec_xl -----------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|char
+name|vec_xl
+parameter_list|(
+name|long
+name|__offset
+parameter_list|,
+specifier|const
+name|signed
+name|char
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|vector
+name|signed
+name|char
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|char
+name|vec_xl
+parameter_list|(
+name|long
+name|__offset
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|vector
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|short
+name|vec_xl
+parameter_list|(
+name|long
+name|__offset
+parameter_list|,
+specifier|const
+name|signed
+name|short
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|vector
+name|signed
+name|short
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|short
+name|vec_xl
+parameter_list|(
+name|long
+name|__offset
+parameter_list|,
+specifier|const
+name|unsigned
+name|short
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|vector
+name|unsigned
+name|short
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|int
+name|vec_xl
+parameter_list|(
+name|long
+name|__offset
+parameter_list|,
+specifier|const
+name|signed
+name|int
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|vector
+name|signed
+name|int
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|int
+name|vec_xl
+parameter_list|(
+name|long
+name|__offset
+parameter_list|,
+specifier|const
+name|unsigned
+name|int
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|vector
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_xl
+parameter_list|(
+name|long
+name|__offset
+parameter_list|,
+specifier|const
+name|signed
+name|long
+name|long
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|vector
+name|signed
+name|long
+name|long
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|long
+name|long
+name|vec_xl
+parameter_list|(
+name|long
+name|__offset
+parameter_list|,
+specifier|const
+name|unsigned
+name|long
+name|long
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|vector
+name|unsigned
+name|long
+name|long
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_xl
+parameter_list|(
+name|long
+name|__offset
+parameter_list|,
+specifier|const
+name|float
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|vector
+name|float
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|double
+name|vec_xl
+parameter_list|(
+name|long
+name|__offset
+parameter_list|,
+specifier|const
+name|double
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|vector
+name|double
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*-- vec_xld2 ---------------------------------------------------------------*/
+end_comment
+
+begin_comment
+comment|// This prototype is deprecated.
 end_comment
 
 begin_function
@@ -5391,6 +6473,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -5431,6 +6517,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -5470,6 +6560,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -5511,6 +6605,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -5550,6 +6648,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -5591,6 +6693,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -5634,6 +6740,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -5676,6 +6786,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -5718,6 +6832,10 @@ begin_comment
 comment|/*-- vec_xlw4 ---------------------------------------------------------------*/
 end_comment
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -5757,6 +6875,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -5798,6 +6920,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -5838,6 +6964,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -5877,6 +7007,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -5917,6 +7051,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -5959,7 +7097,448 @@ block|}
 end_function
 
 begin_comment
+comment|/*-- vec_xst ----------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_xst
+parameter_list|(
+name|vector
+name|signed
+name|char
+name|__vec
+parameter_list|,
+name|long
+name|__offset
+parameter_list|,
+name|signed
+name|char
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|vector
+name|signed
+name|char
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+operator|=
+name|__vec
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_xst
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__vec
+parameter_list|,
+name|long
+name|__offset
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+operator|=
+name|__vec
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_xst
+parameter_list|(
+name|vector
+name|signed
+name|short
+name|__vec
+parameter_list|,
+name|long
+name|__offset
+parameter_list|,
+name|signed
+name|short
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|vector
+name|signed
+name|short
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+operator|=
+name|__vec
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_xst
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__vec
+parameter_list|,
+name|long
+name|__offset
+parameter_list|,
+name|unsigned
+name|short
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|vector
+name|unsigned
+name|short
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+operator|=
+name|__vec
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_xst
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__vec
+parameter_list|,
+name|long
+name|__offset
+parameter_list|,
+name|signed
+name|int
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|vector
+name|signed
+name|int
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+operator|=
+name|__vec
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_xst
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__vec
+parameter_list|,
+name|long
+name|__offset
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+operator|=
+name|__vec
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_xst
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__vec
+parameter_list|,
+name|long
+name|__offset
+parameter_list|,
+name|signed
+name|long
+name|long
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|vector
+name|signed
+name|long
+name|long
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+operator|=
+name|__vec
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_xst
+parameter_list|(
+name|vector
+name|unsigned
+name|long
+name|long
+name|__vec
+parameter_list|,
+name|long
+name|__offset
+parameter_list|,
+name|unsigned
+name|long
+name|long
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|vector
+name|unsigned
+name|long
+name|long
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+operator|=
+name|__vec
+expr_stmt|;
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_xst
+parameter_list|(
+name|vector
+name|float
+name|__vec
+parameter_list|,
+name|long
+name|__offset
+parameter_list|,
+name|float
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|vector
+name|float
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+operator|=
+name|__vec
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_xst
+parameter_list|(
+name|vector
+name|double
+name|__vec
+parameter_list|,
+name|long
+name|__offset
+parameter_list|,
+name|double
+modifier|*
+name|__ptr
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|vector
+name|double
+operator|*
+operator|)
+operator|(
+operator|(
+name|__INTPTR_TYPE__
+operator|)
+name|__ptr
+operator|+
+name|__offset
+operator|)
+operator|=
+name|__vec
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*-- vec_xstd2 --------------------------------------------------------------*/
+end_comment
+
+begin_comment
+comment|// This prototype is deprecated.
 end_comment
 
 begin_function
@@ -6004,6 +7583,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -6046,6 +7629,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -6087,6 +7674,10 @@ name|__vec
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -6130,6 +7721,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -6171,6 +7766,10 @@ name|__vec
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -6214,6 +7813,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -6259,6 +7862,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -6303,6 +7910,10 @@ name|__vec
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -6347,6 +7958,10 @@ begin_comment
 comment|/*-- vec_xstw4 --------------------------------------------------------------*/
 end_comment
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -6388,6 +8003,10 @@ name|__vec
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -6431,6 +8050,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -6473,6 +8096,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -6514,6 +8141,10 @@ name|__vec
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -6556,6 +8187,10 @@ name|__vec
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -6862,6 +8497,49 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function_decl
+specifier|extern
+name|__ATTRS_o
+name|vector
+name|float
+name|vec_load_bndry
+parameter_list|(
+specifier|const
+name|float
+modifier|*
+name|__ptr
+parameter_list|,
+name|unsigned
+name|short
+name|__len
+parameter_list|)
+function_decl|__constant_pow2_range
+parameter_list|(
+name|__len
+parameter_list|,
+function_decl|64
+operator|,
+function_decl|4096
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -7203,6 +8881,52 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_load_len
+parameter_list|(
+specifier|const
+name|float
+modifier|*
+name|__ptr
+parameter_list|,
+name|unsigned
+name|int
+name|__len
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__builtin_s390_vll
+argument_list|(
+name|__len
+argument_list|,
+name|__ptr
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -7235,6 +8959,59 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*-- vec_load_len_r ---------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_ai
+name|vector
+name|unsigned
+name|char
+name|vec_load_len_r
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|__ptr
+parameter_list|,
+name|unsigned
+name|int
+name|__len
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__builtin_s390_vlrl
+argument_list|(
+name|__len
+argument_list|,
+name|__ptr
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*-- vec_store_len ----------------------------------------------------------*/
@@ -7556,6 +9333,56 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|void
+name|vec_store_len
+parameter_list|(
+name|vector
+name|float
+name|__vec
+parameter_list|,
+name|float
+modifier|*
+name|__ptr
+parameter_list|,
+name|unsigned
+name|int
+name|__len
+parameter_list|)
+block|{
+name|__builtin_s390_vstl
+argument_list|(
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__vec
+argument_list|,
+name|__len
+argument_list|,
+name|__ptr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -7592,6 +9419,62 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*-- vec_store_len_r --------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_ai
+name|void
+name|vec_store_len_r
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__vec
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|__ptr
+parameter_list|,
+name|unsigned
+name|int
+name|__len
+parameter_list|)
+block|{
+name|__builtin_s390_vstrl
+argument_list|(
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__vec
+argument_list|,
+name|__len
+argument_list|,
+name|__ptr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*-- vec_load_pair ----------------------------------------------------------*/
@@ -8835,6 +10718,59 @@ return|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_splat
+parameter_list|(
+name|vector
+name|float
+name|__vec
+parameter_list|,
+name|int
+name|__index
+parameter_list|)
+function|__constant_range
+parameter_list|(
+name|__index
+parameter_list|,
+function|0
+operator|,
+function|3
+end_function
+
+begin_block
+unit|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__vec
+index|[
+name|__index
+index|]
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -9345,6 +11281,41 @@ name|__scalar
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_splats
+parameter_list|(
+name|float
+name|__scalar
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__scalar
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -10324,6 +12295,66 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_mergeh
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|float
+call|)
+argument_list|(
+name|__a
+index|[
+literal|0
+index|]
+argument_list|,
+name|__b
+index|[
+literal|0
+index|]
+argument_list|,
+name|__a
+index|[
+literal|1
+index|]
+argument_list|,
+name|__b
+index|[
+literal|1
+index|]
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -11198,6 +13229,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_mergel
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|float
+call|)
+argument_list|(
+name|__a
+index|[
+literal|2
+index|]
+argument_list|,
+name|__b
+index|[
+literal|2
+index|]
+argument_list|,
+name|__a
+index|[
+literal|3
+index|]
+argument_list|,
+name|__b
+index|[
+literal|3
+index|]
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -13981,6 +16072,52 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|int
+name|vec_cmpeq
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|bool
+name|int
+call|)
+argument_list|(
+name|__a
+operator|==
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -14307,6 +16444,52 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|int
+name|vec_cmpge
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|bool
+name|int
+call|)
+argument_list|(
+name|__a
+operator|>=
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -14635,6 +16818,52 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|int
+name|vec_cmpgt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|bool
+name|int
+call|)
+argument_list|(
+name|__a
+operator|>
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -14961,6 +17190,52 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|int
+name|vec_cmple
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|bool
+name|int
+call|)
+argument_list|(
+name|__a
+operator|<=
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -15289,6 +17564,52 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|int
+name|vec_cmplt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|bool
+name|int
+call|)
+argument_list|(
+name|__a
+operator|<
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -15367,6 +17688,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -15411,6 +17736,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -15504,6 +17833,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -15553,54 +17886,9 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|int
-name|vec_all_eq
-parameter_list|(
-name|vector
-name|bool
-name|char
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|char
-name|__b
-parameter_list|)
-block|{
-name|int
-name|__cc
-decl_stmt|;
-name|__builtin_s390_vceqbs
-argument_list|(
-operator|(
-name|vector
-name|signed
-name|char
-operator|)
-name|__a
-argument_list|,
-operator|(
-name|vector
-name|signed
-name|char
-operator|)
-name|__b
-argument_list|,
-operator|&
-name|__cc
-argument_list|)
-expr_stmt|;
-return|return
-name|__cc
-operator|==
-literal|0
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -15615,7 +17903,7 @@ name|char
 name|__a
 parameter_list|,
 name|vector
-name|bool
+name|unsigned
 name|char
 name|__b
 parameter_list|)
@@ -15659,6 +17947,55 @@ name|int
 name|vec_all_eq
 parameter_list|(
 name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|char
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vceqbs
+argument_list|(
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_all_eq
+parameter_list|(
+name|vector
 name|signed
 name|short
 name|__a
@@ -15689,6 +18026,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -15733,6 +18074,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -15827,6 +18172,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -15875,6 +18224,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -16013,6 +18366,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -16056,6 +18413,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -16150,6 +18511,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -16198,6 +18563,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -16338,6 +18707,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -16384,6 +18757,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -16485,6 +18862,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -16537,6 +18918,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -16643,6 +19028,56 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_all_eq
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfcesbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -16724,6 +19159,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -16768,6 +19207,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -16861,6 +19304,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -16910,54 +19357,9 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|int
-name|vec_all_ne
-parameter_list|(
-name|vector
-name|bool
-name|char
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|char
-name|__b
-parameter_list|)
-block|{
-name|int
-name|__cc
-decl_stmt|;
-name|__builtin_s390_vceqbs
-argument_list|(
-operator|(
-name|vector
-name|signed
-name|char
-operator|)
-name|__a
-argument_list|,
-operator|(
-name|vector
-name|signed
-name|char
-operator|)
-name|__b
-argument_list|,
-operator|&
-name|__cc
-argument_list|)
-expr_stmt|;
-return|return
-name|__cc
-operator|==
-literal|3
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -16972,7 +19374,7 @@ name|char
 name|__a
 parameter_list|,
 name|vector
-name|bool
+name|unsigned
 name|char
 name|__b
 parameter_list|)
@@ -17016,6 +19418,55 @@ name|int
 name|vec_all_ne
 parameter_list|(
 name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|char
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vceqbs
+argument_list|(
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|3
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_all_ne
+parameter_list|(
+name|vector
 name|signed
 name|short
 name|__a
@@ -17046,6 +19497,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -17090,6 +19545,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -17184,6 +19643,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -17232,6 +19695,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -17370,6 +19837,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -17413,6 +19884,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -17507,6 +19982,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -17555,6 +20034,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -17695,6 +20178,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -17741,6 +20228,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -17842,6 +20333,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -17894,6 +20389,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -18000,6 +20499,56 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_all_ne
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfcesbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|3
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -18081,6 +20630,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18125,6 +20678,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18208,6 +20765,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18252,6 +20813,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18295,6 +20860,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -18384,6 +20953,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18428,6 +21001,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18511,6 +21088,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18555,6 +21136,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18598,6 +21183,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -18687,6 +21276,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18731,6 +21324,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18814,6 +21411,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18858,6 +21459,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -18901,6 +21506,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -18992,6 +21601,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19039,6 +21652,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19127,6 +21744,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19173,6 +21794,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -19221,6 +21846,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19273,6 +21902,56 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_all_ge
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchesbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -19354,6 +22033,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19398,6 +22081,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19481,6 +22168,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19525,6 +22216,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19568,6 +22263,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -19657,6 +22356,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19701,6 +22404,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19784,6 +22491,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19828,6 +22539,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -19871,6 +22586,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -19960,6 +22679,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20004,6 +22727,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20087,6 +22814,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20131,6 +22862,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20174,6 +22909,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -20265,6 +23004,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20312,6 +23055,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20400,6 +23147,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20446,6 +23197,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -20494,6 +23249,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20546,6 +23305,56 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_all_gt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchsbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -20627,6 +23436,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20671,6 +23484,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20754,6 +23571,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20798,6 +23619,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20841,6 +23666,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -20930,6 +23759,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20974,6 +23807,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21057,6 +23894,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21101,6 +23942,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21144,6 +23989,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -21233,6 +24082,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21277,6 +24130,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21360,6 +24217,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21404,6 +24265,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21447,6 +24312,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -21538,6 +24407,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21585,6 +24458,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21673,6 +24550,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21719,6 +24600,10 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -21767,6 +24652,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21819,6 +24708,56 @@ literal|3
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_all_le
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchesbs
+argument_list|(
+name|__b
+argument_list|,
+name|__a
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -21900,6 +24839,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -21944,6 +24887,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22027,6 +24974,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22071,6 +25022,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22114,6 +25069,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -22203,6 +25162,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22247,6 +25210,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22330,6 +25297,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22374,6 +25345,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22417,6 +25392,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -22506,6 +25485,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22550,6 +25533,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22633,6 +25620,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22677,6 +25668,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22720,6 +25715,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -22811,6 +25810,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22858,6 +25861,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22946,6 +25953,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -22992,6 +26003,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -23040,6 +26055,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -23092,6 +26111,56 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_all_lt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchsbs
+argument_list|(
+name|__b
+argument_list|,
+name|__a
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -23134,10 +26203,60 @@ begin_comment
 comment|/*-- vec_all_nge ------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_all_nge
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchesbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|3
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_all_nge
 parameter_list|(
@@ -23175,10 +26294,60 @@ begin_comment
 comment|/*-- vec_all_ngt ------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_all_ngt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchsbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|3
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_all_ngt
 parameter_list|(
@@ -23216,10 +26385,60 @@ begin_comment
 comment|/*-- vec_all_nle ------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_all_nle
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchesbs
+argument_list|(
+name|__b
+argument_list|,
+name|__a
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|3
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_all_nle
 parameter_list|(
@@ -23257,10 +26476,60 @@ begin_comment
 comment|/*-- vec_all_nlt ------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_all_nlt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchsbs
+argument_list|(
+name|__b
+argument_list|,
+name|__a
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|3
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_all_nlt
 parameter_list|(
@@ -23298,10 +26567,56 @@ begin_comment
 comment|/*-- vec_all_nan ------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_all_nan
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vftcisb
+argument_list|(
+name|__a
+argument_list|,
+literal|15
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_all_nan
 parameter_list|(
@@ -23335,10 +26650,56 @@ begin_comment
 comment|/*-- vec_all_numeric --------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_all_numeric
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vftcisb
+argument_list|(
+name|__a
+argument_list|,
+literal|15
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|==
+literal|3
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_all_numeric
 parameter_list|(
@@ -23411,6 +26772,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -23455,6 +26820,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -23548,6 +26917,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -23597,54 +26970,9 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|int
-name|vec_any_eq
-parameter_list|(
-name|vector
-name|bool
-name|char
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|char
-name|__b
-parameter_list|)
-block|{
-name|int
-name|__cc
-decl_stmt|;
-name|__builtin_s390_vceqbs
-argument_list|(
-operator|(
-name|vector
-name|signed
-name|char
-operator|)
-name|__a
-argument_list|,
-operator|(
-name|vector
-name|signed
-name|char
-operator|)
-name|__b
-argument_list|,
-operator|&
-name|__cc
-argument_list|)
-expr_stmt|;
-return|return
-name|__cc
-operator|<=
-literal|1
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -23659,7 +26987,7 @@ name|char
 name|__a
 parameter_list|,
 name|vector
-name|bool
+name|unsigned
 name|char
 name|__b
 parameter_list|)
@@ -23703,6 +27031,55 @@ name|int
 name|vec_any_eq
 parameter_list|(
 name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|char
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vceqbs
+argument_list|(
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|<=
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_any_eq
+parameter_list|(
+name|vector
 name|signed
 name|short
 name|__a
@@ -23733,6 +27110,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -23777,6 +27158,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -23871,6 +27256,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -23919,6 +27308,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -24057,6 +27450,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -24100,6 +27497,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -24194,6 +27595,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -24242,6 +27647,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -24382,6 +27791,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -24428,6 +27841,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -24529,6 +27946,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -24581,6 +28002,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -24687,6 +28112,56 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_any_eq
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfcesbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|<=
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -24768,6 +28243,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -24812,6 +28291,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -24905,6 +28388,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -24954,54 +28441,9 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|int
-name|vec_any_ne
-parameter_list|(
-name|vector
-name|bool
-name|char
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|char
-name|__b
-parameter_list|)
-block|{
-name|int
-name|__cc
-decl_stmt|;
-name|__builtin_s390_vceqbs
-argument_list|(
-operator|(
-name|vector
-name|signed
-name|char
-operator|)
-name|__a
-argument_list|,
-operator|(
-name|vector
-name|signed
-name|char
-operator|)
-name|__b
-argument_list|,
-operator|&
-name|__cc
-argument_list|)
-expr_stmt|;
-return|return
-name|__cc
-operator|!=
-literal|0
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -25016,7 +28458,7 @@ name|char
 name|__a
 parameter_list|,
 name|vector
-name|bool
+name|unsigned
 name|char
 name|__b
 parameter_list|)
@@ -25060,6 +28502,55 @@ name|int
 name|vec_any_ne
 parameter_list|(
 name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|char
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vceqbs
+argument_list|(
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_any_ne
+parameter_list|(
+name|vector
 name|signed
 name|short
 name|__a
@@ -25090,6 +28581,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -25134,6 +28629,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -25228,6 +28727,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -25276,6 +28779,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -25414,6 +28921,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -25457,6 +28968,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -25551,6 +29066,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -25599,6 +29118,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -25739,6 +29262,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -25785,6 +29312,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -25886,6 +29417,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -25938,6 +29473,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -26044,6 +29583,56 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_any_ne
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfcesbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -26125,6 +29714,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26169,6 +29762,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26252,6 +29849,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26296,6 +29897,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26339,6 +29944,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -26428,6 +30037,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26472,6 +30085,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26555,6 +30172,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26599,6 +30220,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26642,6 +30267,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -26731,6 +30360,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26775,6 +30408,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26858,6 +30495,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26902,6 +30543,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -26945,6 +30590,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -27036,6 +30685,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27083,6 +30736,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27171,6 +30828,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27217,6 +30878,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -27265,6 +30930,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27317,6 +30986,56 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_any_ge
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchesbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|<=
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -27398,6 +31117,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27442,6 +31165,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27525,6 +31252,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27569,6 +31300,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27612,6 +31347,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -27701,6 +31440,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27745,6 +31488,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27828,6 +31575,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27872,6 +31623,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -27915,6 +31670,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -28004,6 +31763,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28048,6 +31811,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28131,6 +31898,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28175,6 +31946,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28218,6 +31993,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -28309,6 +32088,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28356,6 +32139,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28444,6 +32231,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28490,6 +32281,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -28538,6 +32333,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28590,6 +32389,56 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_any_gt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchsbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|<=
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -28671,6 +32520,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28715,6 +32568,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28798,6 +32655,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28842,6 +32703,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -28885,6 +32750,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -28974,6 +32843,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29018,6 +32891,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29101,6 +32978,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29145,6 +33026,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29188,6 +33073,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -29277,6 +33166,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29321,6 +33214,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29404,6 +33301,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29448,6 +33349,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29491,6 +33396,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -29582,6 +33491,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29629,6 +33542,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29717,6 +33634,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29763,6 +33684,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -29811,6 +33736,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29863,6 +33792,56 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_any_le
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchesbs
+argument_list|(
+name|__b
+argument_list|,
+name|__a
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|<=
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -29944,6 +33923,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -29988,6 +33971,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30071,6 +34058,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30115,6 +34106,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30158,6 +34153,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -30247,6 +34246,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30291,6 +34294,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30374,6 +34381,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30418,6 +34429,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30461,6 +34476,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -30550,6 +34569,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30594,6 +34617,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30677,6 +34704,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30721,6 +34752,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30764,6 +34799,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -30855,6 +34894,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30902,6 +34945,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -30990,6 +35037,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -31036,6 +35087,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -31084,6 +35139,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -31136,6 +35195,56 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_any_lt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchsbs
+argument_list|(
+name|__b
+argument_list|,
+name|__a
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|<=
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -31178,10 +35287,60 @@ begin_comment
 comment|/*-- vec_any_nge ------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_any_nge
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchesbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_any_nge
 parameter_list|(
@@ -31219,10 +35378,60 @@ begin_comment
 comment|/*-- vec_any_ngt ------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_any_ngt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchsbs
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_any_ngt
 parameter_list|(
@@ -31260,10 +35469,60 @@ begin_comment
 comment|/*-- vec_any_nle ------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_any_nle
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchesbs
+argument_list|(
+name|__b
+argument_list|,
+name|__a
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_any_nle
 parameter_list|(
@@ -31301,10 +35560,60 @@ begin_comment
 comment|/*-- vec_any_nlt ------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_any_nlt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vfchsbs
+argument_list|(
+name|__b
+argument_list|,
+name|__a
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_any_nlt
 parameter_list|(
@@ -31342,10 +35651,56 @@ begin_comment
 comment|/*-- vec_any_nan ------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_any_nan
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vftcisb
+argument_list|(
+name|__a
+argument_list|,
+literal|15
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|!=
+literal|3
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_any_nan
 parameter_list|(
@@ -31379,10 +35734,56 @@ begin_comment
 comment|/*-- vec_any_numeric --------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|int
+name|vec_any_numeric
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+name|int
+name|__cc
+decl_stmt|;
+name|__builtin_s390_vftcisb
+argument_list|(
+name|__a
+argument_list|,
+literal|15
+argument_list|,
+operator|&
+name|__cc
+argument_list|)
+expr_stmt|;
+return|return
+name|__cc
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|int
 name|vec_any_numeric
 parameter_list|(
@@ -31474,6 +35875,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -31503,6 +35908,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -31519,64 +35928,6 @@ name|__a
 parameter_list|,
 name|vector
 name|bool
-name|char
-name|__b
-parameter_list|)
-block|{
-return|return
-name|__a
-operator|&
-operator|~
-name|__b
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|char
-name|vec_andc
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|char
-name|__b
-parameter_list|)
-block|{
-return|return
-name|__a
-operator|&
-operator|~
-name|__b
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|char
-name|vec_andc
-parameter_list|(
-name|vector
-name|bool
-name|char
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
 name|char
 name|__b
 parameter_list|)
@@ -31605,6 +35956,72 @@ name|char
 name|__a
 parameter_list|,
 name|vector
+name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator|&
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|char
+name|vec_andc
+parameter_list|(
+name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator|&
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|char
+name|vec_andc
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|vector
 name|bool
 name|char
 name|__b
@@ -31677,6 +36094,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -31706,6 +36127,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -31722,64 +36147,6 @@ name|__a
 parameter_list|,
 name|vector
 name|bool
-name|short
-name|__b
-parameter_list|)
-block|{
-return|return
-name|__a
-operator|&
-operator|~
-name|__b
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|short
-name|vec_andc
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|short
-name|__b
-parameter_list|)
-block|{
-return|return
-name|__a
-operator|&
-operator|~
-name|__b
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|short
-name|vec_andc
-parameter_list|(
-name|vector
-name|bool
-name|short
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
 name|short
 name|__b
 parameter_list|)
@@ -31808,6 +36175,72 @@ name|short
 name|__a
 parameter_list|,
 name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator|&
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|short
+name|vec_andc
+parameter_list|(
+name|vector
+name|bool
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator|&
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|short
+name|vec_andc
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|vector
 name|bool
 name|short
 name|__b
@@ -31880,6 +36313,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -31908,6 +36345,10 @@ name|__b
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -31967,34 +36408,9 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|int
-name|vec_andc
-parameter_list|(
-name|vector
-name|bool
-name|int
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|int
-name|__b
-parameter_list|)
-block|{
-return|return
-name|__a
-operator|&
-operator|~
-name|__b
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -32006,12 +36422,12 @@ name|int
 name|vec_andc
 parameter_list|(
 name|vector
-name|unsigned
+name|bool
 name|int
 name|__a
 parameter_list|,
 name|vector
-name|bool
+name|unsigned
 name|int
 name|__b
 parameter_list|)
@@ -32025,6 +36441,39 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|int
+name|vec_andc
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator|&
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 specifier|inline
@@ -32089,6 +36538,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -32120,6 +36573,10 @@ name|__b
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -32185,6 +36642,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -32217,6 +36678,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -32248,6 +36713,61 @@ name|__b
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_andc
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|float
+call|)
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__a
+operator|&
+operator|~
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -32293,6 +36813,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -32338,6 +36862,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -32451,6 +36979,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -32482,6 +37014,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -32498,68 +37034,6 @@ name|__a
 parameter_list|,
 name|vector
 name|bool
-name|char
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|~
-operator|(
-name|__a
-operator||
-name|__b
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|char
-name|vec_nor
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|char
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|~
-operator|(
-name|__a
-operator||
-name|__b
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|char
-name|vec_nor
-parameter_list|(
-name|vector
-name|bool
-name|char
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
 name|char
 name|__b
 parameter_list|)
@@ -32590,6 +37064,76 @@ name|char
 name|__a
 parameter_list|,
 name|vector
+name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator||
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|char
+name|vec_nor
+parameter_list|(
+name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator||
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|char
+name|vec_nor
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|vector
 name|bool
 name|char
 name|__b
@@ -32668,6 +37212,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -32699,6 +37247,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -32715,68 +37267,6 @@ name|__a
 parameter_list|,
 name|vector
 name|bool
-name|short
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|~
-operator|(
-name|__a
-operator||
-name|__b
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|short
-name|vec_nor
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|short
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|~
-operator|(
-name|__a
-operator||
-name|__b
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|short
-name|vec_nor
-parameter_list|(
-name|vector
-name|bool
-name|short
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
 name|short
 name|__b
 parameter_list|)
@@ -32807,6 +37297,76 @@ name|short
 name|__a
 parameter_list|,
 name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator||
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|short
+name|vec_nor
+parameter_list|(
+name|vector
+name|bool
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator||
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|short
+name|vec_nor
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|vector
 name|bool
 name|short
 name|__b
@@ -32885,6 +37445,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -32915,6 +37479,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -32978,36 +37546,9 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|int
-name|vec_nor
-parameter_list|(
-name|vector
-name|bool
-name|int
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|int
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|~
-operator|(
-name|__a
-operator||
-name|__b
-operator|)
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -33019,12 +37560,12 @@ name|int
 name|vec_nor
 parameter_list|(
 name|vector
-name|unsigned
+name|bool
 name|int
 name|__a
 parameter_list|,
 name|vector
-name|bool
+name|unsigned
 name|int
 name|__b
 parameter_list|)
@@ -33040,6 +37581,41 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|int
+name|vec_nor
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator||
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 specifier|inline
@@ -33108,6 +37684,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -33141,6 +37721,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -33210,6 +37794,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -33244,6 +37832,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -33277,6 +37869,61 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_nor
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+operator|~
+operator|(
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__a
+operator||
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -33322,6 +37969,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -33368,6 +38019,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -33413,6 +38068,1434 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*-- vec_orc ----------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|char
+name|vec_orc
+parameter_list|(
+name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|char
+name|vec_orc
+parameter_list|(
+name|vector
+name|signed
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|char
+name|vec_orc
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|short
+name|vec_orc
+parameter_list|(
+name|vector
+name|bool
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|short
+name|vec_orc
+parameter_list|(
+name|vector
+name|signed
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|short
+name|vec_orc
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|int
+name|vec_orc
+parameter_list|(
+name|vector
+name|bool
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|int
+name|vec_orc
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|int
+name|vec_orc
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|long
+name|long
+name|vec_orc
+parameter_list|(
+name|vector
+name|bool
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|long
+name|long
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_orc
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|long
+name|long
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|long
+name|long
+name|vec_orc
+parameter_list|(
+name|vector
+name|unsigned
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|long
+name|long
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__a
+operator||
+operator|~
+name|__b
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_orc
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|float
+call|)
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__a
+operator|&
+operator|~
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|double
+name|vec_orc
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|,
+name|vector
+name|double
+name|__b
+parameter_list|)
+block|{
+return|return
+call|(
+name|vector
+name|double
+call|)
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|long
+name|long
+operator|)
+name|__a
+operator|&
+operator|~
+operator|(
+name|vector
+name|unsigned
+name|long
+name|long
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*-- vec_nand ---------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|char
+name|vec_nand
+parameter_list|(
+name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|char
+name|vec_nand
+parameter_list|(
+name|vector
+name|signed
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|char
+name|vec_nand
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|short
+name|vec_nand
+parameter_list|(
+name|vector
+name|bool
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|short
+name|vec_nand
+parameter_list|(
+name|vector
+name|signed
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|short
+name|vec_nand
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|int
+name|vec_nand
+parameter_list|(
+name|vector
+name|bool
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|int
+name|vec_nand
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|int
+name|vec_nand
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|long
+name|long
+name|vec_nand
+parameter_list|(
+name|vector
+name|bool
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|long
+name|long
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_nand
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|long
+name|long
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|long
+name|long
+name|vec_nand
+parameter_list|(
+name|vector
+name|unsigned
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|long
+name|long
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|&
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_nand
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+operator|~
+operator|(
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__a
+operator|&
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|double
+name|vec_nand
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|,
+name|vector
+name|double
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|double
+operator|)
+operator|~
+operator|(
+operator|(
+name|vector
+name|unsigned
+name|long
+name|long
+operator|)
+name|__a
+operator|&
+operator|(
+name|vector
+name|unsigned
+name|long
+name|long
+operator|)
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*-- vec_eqv ----------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|char
+name|vec_eqv
+parameter_list|(
+name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|char
+name|vec_eqv
+parameter_list|(
+name|vector
+name|signed
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|char
+name|vec_eqv
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|short
+name|vec_eqv
+parameter_list|(
+name|vector
+name|bool
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|short
+name|vec_eqv
+parameter_list|(
+name|vector
+name|signed
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|short
+name|vec_eqv
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|int
+name|vec_eqv
+parameter_list|(
+name|vector
+name|bool
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|int
+name|vec_eqv
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|int
+name|vec_eqv
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|bool
+name|long
+name|long
+name|vec_eqv
+parameter_list|(
+name|vector
+name|bool
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|long
+name|long
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_eqv
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|long
+name|long
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|long
+name|long
+name|vec_eqv
+parameter_list|(
+name|vector
+name|unsigned
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|long
+name|long
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|~
+operator|(
+name|__a
+operator|^
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_eqv
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+operator|~
+operator|(
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__a
+operator|^
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|double
+name|vec_eqv
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|,
+name|vector
+name|double
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|double
+operator|)
+operator|~
+operator|(
+operator|(
+name|vector
+name|unsigned
+name|long
+name|long
+operator|)
+name|__a
+operator|^
+operator|(
+name|vector
+name|unsigned
+name|long
+name|long
+operator|)
+name|__b
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*-- vec_cntlz --------------------------------------------------------------*/
@@ -34992,6 +41075,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -35037,6 +41124,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -35084,6 +41175,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -35124,6 +41219,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -35170,6 +41269,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -35248,6 +41351,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -35283,6 +41390,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -35361,6 +41472,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -35407,6 +41522,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -35452,6 +41571,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -35494,6 +41617,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -35539,6 +41666,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -35627,6 +41758,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -35673,118 +41808,35 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|short
-name|vec_sll
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|int
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|unsigned
-name|short
-operator|)
-name|__builtin_s390_vsl
-argument_list|(
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|__ATTRS_o_ai
 name|vector
-name|signed
-name|int
+name|unsigned
+name|short
 name|vec_sll
 parameter_list|(
-name|vector
-name|signed
-name|int
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|char
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|signed
-name|int
-operator|)
-name|__builtin_s390_vsl
-argument_list|(
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|signed
-name|int
-name|vec_sll
-parameter_list|(
-name|vector
-name|signed
-name|int
-name|__a
-parameter_list|,
 name|vector
 name|unsigned
 name|short
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
 name|__b
 parameter_list|)
 block|{
 return|return
 operator|(
 name|vector
-name|signed
-name|int
+name|unsigned
+name|short
 operator|)
 name|__builtin_s390_vsl
 argument_list|(
@@ -35822,6 +41874,101 @@ name|__a
 parameter_list|,
 name|vector
 name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|int
+operator|)
+name|__builtin_s390_vsl
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|int
+name|vec_sll
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|int
+operator|)
+name|__builtin_s390_vsl
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|int
+name|vec_sll
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
 name|int
 name|__b
 parameter_list|)
@@ -35851,6 +41998,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -35892,6 +42043,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -35939,6 +42094,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -36025,6 +42184,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -36072,124 +42235,35 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|int
-name|vec_sll
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|int
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|unsigned
-name|int
-operator|)
-name|__builtin_s390_vsl
-argument_list|(
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|__ATTRS_o_ai
 name|vector
-name|signed
-name|long
-name|long
+name|unsigned
+name|int
 name|vec_sll
 parameter_list|(
 name|vector
-name|signed
-name|long
-name|long
+name|unsigned
+name|int
 name|__a
 parameter_list|,
 name|vector
 name|unsigned
-name|char
+name|int
 name|__b
 parameter_list|)
 block|{
 return|return
 operator|(
 name|vector
-name|signed
-name|long
-name|long
-operator|)
-name|__builtin_s390_vsl
-argument_list|(
-operator|(
-name|vector
 name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|signed
-name|long
-name|long
-name|vec_sll
-parameter_list|(
-name|vector
-name|signed
-name|long
-name|long
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|short
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|signed
-name|long
-name|long
+name|int
 operator|)
 name|__builtin_s390_vsl
 argument_list|(
@@ -36229,6 +42303,107 @@ name|__a
 parameter_list|,
 name|vector
 name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|long
+name|long
+operator|)
+name|__builtin_s390_vsl
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_sll
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|long
+name|long
+operator|)
+name|__builtin_s390_vsl
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_sll
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
 name|int
 name|__b
 parameter_list|)
@@ -36260,6 +42435,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -36303,6 +42482,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -36352,6 +42535,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -36446,6 +42633,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -36494,6 +42685,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -37270,6 +43465,105 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_slb
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__builtin_s390_vslb
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_slb
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__builtin_s390_vslb
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -37401,6 +43695,41 @@ begin_function_decl
 specifier|extern
 name|__ATTRS_o
 name|vector
+name|bool
+name|char
+name|vec_sld
+parameter_list|(
+name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|char
+name|__b
+parameter_list|,
+name|int
+name|__c
+parameter_list|)
+function_decl|__constant_range
+parameter_list|(
+name|__c
+parameter_list|,
+function_decl|0
+operator|,
+function_decl|15
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|__ATTRS_o
+name|vector
 name|unsigned
 name|char
 name|vec_sld
@@ -37471,6 +43800,41 @@ begin_function_decl
 specifier|extern
 name|__ATTRS_o
 name|vector
+name|bool
+name|short
+name|vec_sld
+parameter_list|(
+name|vector
+name|bool
+name|short
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|short
+name|__b
+parameter_list|,
+name|int
+name|__c
+parameter_list|)
+function_decl|__constant_range
+parameter_list|(
+name|__c
+parameter_list|,
+function_decl|0
+operator|,
+function_decl|15
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|__ATTRS_o
+name|vector
 name|unsigned
 name|short
 name|vec_sld
@@ -37541,6 +43905,41 @@ begin_function_decl
 specifier|extern
 name|__ATTRS_o
 name|vector
+name|bool
+name|int
+name|vec_sld
+parameter_list|(
+name|vector
+name|bool
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|int
+name|__b
+parameter_list|,
+name|int
+name|__c
+parameter_list|)
+function_decl|__constant_range
+parameter_list|(
+name|__c
+parameter_list|,
+function_decl|0
+operator|,
+function_decl|15
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|__ATTRS_o
+name|vector
 name|unsigned
 name|int
 name|vec_sld
@@ -37614,6 +44013,44 @@ begin_function_decl
 specifier|extern
 name|__ATTRS_o
 name|vector
+name|bool
+name|long
+name|long
+name|vec_sld
+parameter_list|(
+name|vector
+name|bool
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|long
+name|long
+name|__b
+parameter_list|,
+name|int
+name|__c
+parameter_list|)
+function_decl|__constant_range
+parameter_list|(
+name|__c
+parameter_list|,
+function_decl|0
+operator|,
+function_decl|15
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|__ATTRS_o
+name|vector
 name|unsigned
 name|long
 name|long
@@ -37647,6 +44084,51 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function_decl
+specifier|extern
+name|__ATTRS_o
+name|vector
+name|float
+name|vec_sld
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|,
+name|int
+name|__c
+parameter_list|)
+function_decl|__constant_range
+parameter_list|(
+name|__c
+parameter_list|,
+function_decl|0
+operator|,
+function_decl|15
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -37984,6 +44466,10 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function_decl
 specifier|extern
 name|__ATTRS_o
@@ -38075,6 +44561,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -38120,6 +44610,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -38167,6 +44661,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -38207,6 +44705,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -38253,6 +44755,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -38331,6 +44837,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -38366,6 +44876,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -38444,6 +44958,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -38490,6 +45008,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -38535,6 +45057,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -38577,6 +45103,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -38622,6 +45152,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -38710,6 +45244,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -38756,118 +45294,35 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|short
-name|vec_sral
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|int
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|unsigned
-name|short
-operator|)
-name|__builtin_s390_vsra
-argument_list|(
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|__ATTRS_o_ai
 name|vector
-name|signed
-name|int
+name|unsigned
+name|short
 name|vec_sral
 parameter_list|(
-name|vector
-name|signed
-name|int
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|char
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|signed
-name|int
-operator|)
-name|__builtin_s390_vsra
-argument_list|(
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|signed
-name|int
-name|vec_sral
-parameter_list|(
-name|vector
-name|signed
-name|int
-name|__a
-parameter_list|,
 name|vector
 name|unsigned
 name|short
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
 name|__b
 parameter_list|)
 block|{
 return|return
 operator|(
 name|vector
-name|signed
-name|int
+name|unsigned
+name|short
 operator|)
 name|__builtin_s390_vsra
 argument_list|(
@@ -38905,6 +45360,101 @@ name|__a
 parameter_list|,
 name|vector
 name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|int
+operator|)
+name|__builtin_s390_vsra
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|int
+name|vec_sral
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|int
+operator|)
+name|__builtin_s390_vsra
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|int
+name|vec_sral
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
 name|int
 name|__b
 parameter_list|)
@@ -38934,6 +45484,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -38975,6 +45529,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -39022,6 +45580,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -39108,6 +45670,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -39155,124 +45721,35 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|int
-name|vec_sral
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|int
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|unsigned
-name|int
-operator|)
-name|__builtin_s390_vsra
-argument_list|(
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|__ATTRS_o_ai
 name|vector
-name|signed
-name|long
-name|long
+name|unsigned
+name|int
 name|vec_sral
 parameter_list|(
 name|vector
-name|signed
-name|long
-name|long
+name|unsigned
+name|int
 name|__a
 parameter_list|,
 name|vector
 name|unsigned
-name|char
+name|int
 name|__b
 parameter_list|)
 block|{
 return|return
 operator|(
 name|vector
-name|signed
-name|long
-name|long
-operator|)
-name|__builtin_s390_vsra
-argument_list|(
-operator|(
-name|vector
 name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|signed
-name|long
-name|long
-name|vec_sral
-parameter_list|(
-name|vector
-name|signed
-name|long
-name|long
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|short
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|signed
-name|long
-name|long
+name|int
 operator|)
 name|__builtin_s390_vsra
 argument_list|(
@@ -39312,6 +45789,107 @@ name|__a
 parameter_list|,
 name|vector
 name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|long
+name|long
+operator|)
+name|__builtin_s390_vsra
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_sral
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|long
+name|long
+operator|)
+name|__builtin_s390_vsra
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_sral
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
 name|int
 name|__b
 parameter_list|)
@@ -39343,6 +45921,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -39386,6 +45968,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -39435,6 +46021,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -39529,6 +46119,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -39577,6 +46171,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -40353,6 +46951,105 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_srab
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__builtin_s390_vsrab
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_srab
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__builtin_s390_vsrab
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -40486,6 +47183,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -40531,6 +47232,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -40578,6 +47283,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -40618,6 +47327,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -40664,6 +47377,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -40742,6 +47459,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -40777,6 +47498,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -40855,6 +47580,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -40901,6 +47630,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -40946,6 +47679,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -40988,6 +47725,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -41033,6 +47774,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -41121,6 +47866,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -41167,118 +47916,35 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|short
-name|vec_srl
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|int
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|unsigned
-name|short
-operator|)
-name|__builtin_s390_vsrl
-argument_list|(
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|__ATTRS_o_ai
 name|vector
-name|signed
-name|int
+name|unsigned
+name|short
 name|vec_srl
 parameter_list|(
-name|vector
-name|signed
-name|int
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|char
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|signed
-name|int
-operator|)
-name|__builtin_s390_vsrl
-argument_list|(
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|signed
-name|int
-name|vec_srl
-parameter_list|(
-name|vector
-name|signed
-name|int
-name|__a
-parameter_list|,
 name|vector
 name|unsigned
 name|short
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
 name|__b
 parameter_list|)
 block|{
 return|return
 operator|(
 name|vector
-name|signed
-name|int
+name|unsigned
+name|short
 operator|)
 name|__builtin_s390_vsrl
 argument_list|(
@@ -41316,6 +47982,101 @@ name|__a
 parameter_list|,
 name|vector
 name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|int
+operator|)
+name|__builtin_s390_vsrl
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|int
+name|vec_srl
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|int
+operator|)
+name|__builtin_s390_vsrl
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|int
+name|vec_srl
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
 name|int
 name|__b
 parameter_list|)
@@ -41345,6 +48106,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -41386,6 +48151,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -41433,6 +48202,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -41519,6 +48292,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -41566,124 +48343,35 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|int
-name|vec_srl
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|int
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|unsigned
-name|int
-operator|)
-name|__builtin_s390_vsrl
-argument_list|(
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|__ATTRS_o_ai
 name|vector
-name|signed
-name|long
-name|long
+name|unsigned
+name|int
 name|vec_srl
 parameter_list|(
 name|vector
-name|signed
-name|long
-name|long
+name|unsigned
+name|int
 name|__a
 parameter_list|,
 name|vector
 name|unsigned
-name|char
+name|int
 name|__b
 parameter_list|)
 block|{
 return|return
 operator|(
 name|vector
-name|signed
-name|long
-name|long
-operator|)
-name|__builtin_s390_vsrl
-argument_list|(
-operator|(
-name|vector
 name|unsigned
-name|char
-operator|)
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|signed
-name|long
-name|long
-name|vec_srl
-parameter_list|(
-name|vector
-name|signed
-name|long
-name|long
-name|__a
-parameter_list|,
-name|vector
-name|unsigned
-name|short
-name|__b
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|signed
-name|long
-name|long
+name|int
 operator|)
 name|__builtin_s390_vsrl
 argument_list|(
@@ -41723,6 +48411,107 @@ name|__a
 parameter_list|,
 name|vector
 name|unsigned
+name|char
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|long
+name|long
+operator|)
+name|__builtin_s390_vsrl
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_srl
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|long
+name|long
+operator|)
+name|__builtin_s390_vsrl
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_srl
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
 name|int
 name|__b
 parameter_list|)
@@ -41754,6 +48543,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -41797,6 +48590,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -41846,6 +48643,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -41940,6 +48741,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -41988,6 +48793,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -42764,6 +49573,105 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_srb
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|signed
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__builtin_s390_vsrlb
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_srb
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__builtin_s390_vsrlb
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -43015,6 +49923,41 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_abs
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vflpsb
+argument_list|(
+name|__a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -43041,10 +49984,45 @@ begin_comment
 comment|/*-- vec_nabs ---------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_nabs
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vflnsb
+argument_list|(
+name|__a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_nabs
@@ -43105,6 +50083,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43155,6 +50137,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43243,55 +50229,9 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|char
-name|vec_max
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|vector
-name|bool
-name|char
-name|__b
-parameter_list|)
-block|{
-name|vector
-name|unsigned
-name|char
-name|__bc
-init|=
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__b
-decl_stmt|;
-return|return
-name|vec_sel
-argument_list|(
-name|__bc
-argument_list|,
-name|__a
-argument_list|,
-name|vec_cmpgt
-argument_list|(
-name|__a
-argument_list|,
-name|__bc
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -43303,6 +50243,60 @@ name|char
 name|vec_max
 parameter_list|(
 name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|char
+name|__b
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|char
+name|__bc
+init|=
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+decl_stmt|;
+return|return
+name|vec_sel
+argument_list|(
+name|__bc
+argument_list|,
+name|__a
+argument_list|,
+name|vec_cmpgt
+argument_list|(
+name|__a
+argument_list|,
+name|__bc
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|char
+name|vec_max
+parameter_list|(
+name|vector
 name|bool
 name|char
 name|__a
@@ -43381,6 +50375,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43431,6 +50429,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43519,6 +50521,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43569,6 +50575,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43657,6 +50667,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43707,6 +50721,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43795,6 +50813,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43845,6 +50867,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43936,6 +50962,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -43990,6 +51020,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -44087,6 +51121,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -44142,6 +51180,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -44196,6 +51238,49 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_max
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfmaxsb
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -44214,6 +51299,23 @@ name|double
 name|__b
 parameter_list|)
 block|{
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+return|return
+name|__builtin_s390_vfmaxdb
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+literal|0
+argument_list|)
+return|;
+else|#
+directive|else
 return|return
 name|vec_sel
 argument_list|(
@@ -44229,6 +51331,8 @@ name|__b
 argument_list|)
 argument_list|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -44274,6 +51378,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -44324,6 +51432,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -44412,55 +51524,9 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|__ATTRS_o_ai
-name|vector
-name|unsigned
-name|char
-name|vec_min
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|vector
-name|bool
-name|char
-name|__b
-parameter_list|)
-block|{
-name|vector
-name|unsigned
-name|char
-name|__bc
-init|=
-operator|(
-name|vector
-name|unsigned
-name|char
-operator|)
-name|__b
-decl_stmt|;
-return|return
-name|vec_sel
-argument_list|(
-name|__a
-argument_list|,
-name|__bc
-argument_list|,
-name|vec_cmpgt
-argument_list|(
-name|__a
-argument_list|,
-name|__bc
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -44472,6 +51538,60 @@ name|char
 name|vec_min
 parameter_list|(
 name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|vector
+name|bool
+name|char
+name|__b
+parameter_list|)
+block|{
+name|vector
+name|unsigned
+name|char
+name|__bc
+init|=
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+decl_stmt|;
+return|return
+name|vec_sel
+argument_list|(
+name|__a
+argument_list|,
+name|__bc
+argument_list|,
+name|vec_cmpgt
+argument_list|(
+name|__a
+argument_list|,
+name|__bc
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|char
+name|vec_min
+parameter_list|(
+name|vector
 name|bool
 name|char
 name|__a
@@ -44550,6 +51670,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -44600,6 +51724,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -44688,6 +51816,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -44738,6 +51870,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -44826,6 +51962,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -44876,6 +52016,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -44964,6 +52108,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -45014,6 +52162,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -45105,6 +52257,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -45159,6 +52315,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -45256,6 +52416,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -45311,6 +52475,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -45365,6 +52533,49 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_min
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfminsb
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -45383,6 +52594,23 @@ name|double
 name|__b
 parameter_list|)
 block|{
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+return|return
+name|__builtin_s390_vfmindb
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+literal|0
+argument_list|)
+return|;
+else|#
+directive|else
 return|return
 name|vec_sel
 argument_list|(
@@ -45398,6 +52626,8 @@ name|__b
 argument_list|)
 argument_list|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -48026,6 +55256,40 @@ block|}
 end_function
 
 begin_comment
+comment|/*-- vec_msum_u128 ----------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_define
+define|#
+directive|define
+name|vec_msum_u128
+parameter_list|(
+name|X
+parameter_list|,
+name|Y
+parameter_list|,
+name|Z
+parameter_list|,
+name|W
+parameter_list|)
+define|\
+value|((vector unsigned char)__builtin_s390_vmslg((X), (Y), (Z), (W)));
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*-- vec_sub_u128 -----------------------------------------------------------*/
 end_comment
 
@@ -48822,6 +56086,57 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|int
+name|vec_test_mask
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|__b
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vtm
+argument_list|(
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -48865,10 +56180,57 @@ begin_comment
 comment|/*-- vec_madd ---------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_madd
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|,
+name|vector
+name|float
+name|__c
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfmasb
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_madd
@@ -48903,10 +56265,57 @@ begin_comment
 comment|/*-- vec_msub ---------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_msub
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|,
+name|vector
+name|float
+name|__c
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfmssb
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_msub
@@ -48938,13 +56347,218 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- vec_sqrt ---------------------------------------------------------------*/
+comment|/*-- vec_nmadd ---------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
 
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_nmadd
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|,
+name|vector
+name|float
+name|__c
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfnmasb
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|double
+name|vec_nmadd
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|,
+name|vector
+name|double
+name|__b
+parameter_list|,
+name|vector
+name|double
+name|__c
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfnmadb
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*-- vec_nmsub ---------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_nmsub
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|vector
+name|float
+name|__b
+parameter_list|,
+name|vector
+name|float
+name|__c
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfnmssb
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|double
+name|vec_nmsub
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|,
+name|vector
+name|double
+name|__b
+parameter_list|,
+name|vector
+name|double
+name|__c
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfnmsdb
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*-- vec_sqrt ---------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_sqrt
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfsqsb
+argument_list|(
+name|__a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_sqrt
@@ -48965,6 +56579,10 @@ end_function
 
 begin_comment
 comment|/*-- vec_ld2f ---------------------------------------------------------------*/
+end_comment
+
+begin_comment
+comment|// This prototype is deprecated.
 end_comment
 
 begin_function
@@ -49001,6 +56619,10 @@ end_function
 
 begin_comment
 comment|/*-- vec_st2f ---------------------------------------------------------------*/
+end_comment
+
+begin_comment
+comment|// This prototype is deprecated.
 end_comment
 
 begin_function
@@ -49045,6 +56667,10 @@ end_function
 
 begin_comment
 comment|/*-- vec_ctd ----------------------------------------------------------------*/
+end_comment
+
+begin_comment
+comment|// This prototype is deprecated.
 end_comment
 
 begin_function
@@ -49114,6 +56740,10 @@ name|__conv
 return|;
 block|}
 end_block
+
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
 
 begin_function
 specifier|static
@@ -49187,6 +56817,10 @@ begin_comment
 comment|/*-- vec_ctsl ---------------------------------------------------------------*/
 end_comment
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -49253,6 +56887,10 @@ begin_comment
 comment|/*-- vec_ctul ---------------------------------------------------------------*/
 end_comment
 
+begin_comment
+comment|// This prototype is deprecated.
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -49316,13 +56954,298 @@ block|}
 end_block
 
 begin_comment
-comment|/*-- vec_roundp -------------------------------------------------------------*/
+comment|/*-- vec_doublee ------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
 
 begin_function
 specifier|static
 specifier|inline
 name|__ATTRS_ai
+name|vector
+name|double
+name|vec_doublee
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+typedef|typedef
+name|float
+name|__v2f32
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(8)));
+name|__v2f32
+name|__pack
+init|=
+name|__builtin_shufflevector
+argument_list|(
+name|__a
+argument_list|,
+name|__a
+argument_list|,
+literal|0
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
+return|return
+name|__builtin_convertvector
+argument_list|(
+argument|__pack
+argument_list|,
+argument|vector double
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*-- vec_floate -------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_ai
+name|vector
+name|float
+name|vec_floate
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|)
+block|{
+typedef|typedef
+name|float
+name|__v2f32
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(8)));
+name|__v2f32
+name|__pack
+init|=
+name|__builtin_convertvector
+argument_list|(
+name|__a
+argument_list|,
+name|__v2f32
+argument_list|)
+decl_stmt|;
+return|return
+name|__builtin_shufflevector
+argument_list|(
+name|__pack
+argument_list|,
+name|__pack
+argument_list|,
+literal|0
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*-- vec_double -------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|double
+name|vec_double
+parameter_list|(
+name|vector
+name|signed
+name|long
+name|long
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_convertvector
+argument_list|(
+argument|__a
+argument_list|,
+argument|vector double
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|double
+name|vec_double
+parameter_list|(
+name|vector
+name|unsigned
+name|long
+name|long
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_convertvector
+argument_list|(
+argument|__a
+argument_list|,
+argument|vector double
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*-- vec_signed -------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|signed
+name|long
+name|long
+name|vec_signed
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_convertvector
+argument_list|(
+argument|__a
+argument_list|,
+argument|vector signed long long
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*-- vec_unsigned -----------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|unsigned
+name|long
+name|long
+name|vec_unsigned
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_convertvector
+argument_list|(
+argument|__a
+argument_list|,
+argument|vector unsigned long long
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*-- vec_roundp -------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_roundp
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfisb
+argument_list|(
+name|__a
+argument_list|,
+literal|4
+argument_list|,
+literal|6
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_roundp
@@ -49349,10 +57272,50 @@ begin_comment
 comment|/*-- vec_ceil ---------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_ceil
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+comment|// On this platform, vec_ceil never triggers the IEEE-inexact exception.
+return|return
+name|__builtin_s390_vfisb
+argument_list|(
+name|__a
+argument_list|,
+literal|4
+argument_list|,
+literal|6
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_ceil
@@ -49380,10 +57343,49 @@ begin_comment
 comment|/*-- vec_roundm -------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_roundm
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfisb
+argument_list|(
+name|__a
+argument_list|,
+literal|4
+argument_list|,
+literal|7
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_roundm
@@ -49410,10 +57412,50 @@ begin_comment
 comment|/*-- vec_floor --------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_floor
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+comment|// On this platform, vec_floor never triggers the IEEE-inexact exception.
+return|return
+name|__builtin_s390_vfisb
+argument_list|(
+name|__a
+argument_list|,
+literal|4
+argument_list|,
+literal|7
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_floor
@@ -49441,10 +57483,49 @@ begin_comment
 comment|/*-- vec_roundz -------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_roundz
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfisb
+argument_list|(
+name|__a
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_roundz
@@ -49471,10 +57552,50 @@ begin_comment
 comment|/*-- vec_trunc --------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_trunc
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+comment|// On this platform, vec_trunc never triggers the IEEE-inexact exception.
+return|return
+name|__builtin_s390_vfisb
+argument_list|(
+name|__a
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_trunc
@@ -49502,10 +57623,49 @@ begin_comment
 comment|/*-- vec_roundc -------------------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_roundc
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfisb
+argument_list|(
+name|__a
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_roundc
@@ -49529,13 +57689,123 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- vec_round --------------------------------------------------------------*/
+comment|/*-- vec_rint ---------------------------------------------------------------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
 
 begin_function
 specifier|static
 specifier|inline
-name|__ATTRS_ai
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_rint
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+comment|// vec_rint may trigger the IEEE-inexact exception.
+return|return
+name|__builtin_s390_vfisb
+argument_list|(
+name|__a
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|double
+name|vec_rint
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|)
+block|{
+comment|// vec_rint may trigger the IEEE-inexact exception.
+return|return
+name|__builtin_s390_vfidb
+argument_list|(
+name|__a
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*-- vec_round --------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
+name|vector
+name|float
+name|vec_round
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_s390_vfisb
+argument_list|(
+name|__a
+argument_list|,
+literal|4
+argument_list|,
+literal|4
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+specifier|inline
+name|__ATTRS_o_ai
 name|vector
 name|double
 name|vec_round
@@ -49562,6 +57832,101 @@ begin_comment
 comment|/*-- vec_fp_test_data_class -------------------------------------------------*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ARCH__
+operator|>=
+literal|12
+end_if
+
+begin_function_decl
+specifier|extern
+name|__ATTRS_o
+name|vector
+name|bool
+name|int
+name|vec_fp_test_data_class
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|int
+modifier|*
+name|__c
+parameter_list|)
+function_decl|__constant_range
+parameter_list|(
+name|__b
+parameter_list|,
+function_decl|0
+operator|,
+function_decl|4095
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|__ATTRS_o
+name|vector
+name|bool
+name|long
+name|long
+name|vec_fp_test_data_class
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|int
+modifier|*
+name|__c
+parameter_list|)
+function_decl|__constant_range
+parameter_list|(
+name|__b
+parameter_list|,
+function_decl|0
+operator|,
+function_decl|4095
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|vec_fp_test_data_class
+parameter_list|(
+name|X
+parameter_list|,
+name|Y
+parameter_list|,
+name|Z
+parameter_list|)
+define|\
+value|((__typeof__((vec_fp_test_data_class)((X), (Y), (Z)))) \    __extension__ ({ \      vector unsigned char __res; \      vector unsigned char __x = (vector unsigned char)(X); \      int *__z = (Z); \      switch (sizeof ((X)[0])) { \      case 4:  __res = (vector unsigned char) \                       __builtin_s390_vftcisb((vector float)__x, (Y), __z); \               break; \      default: __res = (vector unsigned char) \                       __builtin_s390_vftcidb((vector double)__x, (Y), __z); \               break; \      } __res; }))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -49575,6 +57940,151 @@ name|Z
 parameter_list|)
 define|\
 value|((vector bool long long)__builtin_s390_vftcidb((X), (Y), (Z)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_ZERO_P
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_ZERO_N
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_ZERO
+value|(__VEC_CLASS_FP_ZERO_P | __VEC_CLASS_FP_ZERO_N)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_NORMAL_P
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_NORMAL_N
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_NORMAL
+value|(__VEC_CLASS_FP_NORMAL_P | \                                __VEC_CLASS_FP_NORMAL_N)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_SUBNORMAL_P
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_SUBNORMAL_N
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_SUBNORMAL
+value|(__VEC_CLASS_FP_SUBNORMAL_P | \                                   __VEC_CLASS_FP_SUBNORMAL_N)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_INFINITY_P
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_INFINITY_N
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_INFINITY
+value|(__VEC_CLASS_FP_INFINITY_P | \                                  __VEC_CLASS_FP_INFINITY_N)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_QNAN_P
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_QNAN_N
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_QNAN
+value|(__VEC_CLASS_FP_QNAN_P | __VEC_CLASS_FP_QNAN_N)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_SNAN_P
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_SNAN_N
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_SNAN
+value|(__VEC_CLASS_FP_SNAN_P | __VEC_CLASS_FP_SNAN_N)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_NAN
+value|(__VEC_CLASS_FP_QNAN | __VEC_CLASS_FP_SNAN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__VEC_CLASS_FP_NOT_NORMAL
+value|(__VEC_CLASS_FP_NAN | \                                    __VEC_CLASS_FP_SUBNORMAL | \                                    __VEC_CLASS_FP_ZERO | \                                    __VEC_CLASS_FP_INFINITY)
 end_define
 
 begin_comment

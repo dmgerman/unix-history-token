@@ -412,15 +412,13 @@ return|;
 block|}
 name|public
 label|:
-comment|// Add a new loop into the loop queue as a child of the given parent, or at
-comment|// the top level if \c ParentLoop is null.
-name|Loop
-modifier|&
+comment|// Add a new loop into the loop queue.
+name|void
 name|addLoop
 parameter_list|(
 name|Loop
-modifier|*
-name|ParentLoop
+modifier|&
+name|L
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//

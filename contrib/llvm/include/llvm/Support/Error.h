@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===----- llvm/Support/Error.h - Recoverable error handling ----*- C++ -*-===//
+comment|//===- llvm/Support/Error.h - Recoverable error handling --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -105,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -271,6 +277,30 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|// Returns the class ID for this type.
+specifier|static
+specifier|const
+name|void
+modifier|*
+name|classID
+parameter_list|()
+block|{
+return|return
+operator|&
+name|ID
+return|;
+block|}
+comment|// Returns the class ID for the dynamic type of this ErrorInfoBase instance.
+name|virtual
+specifier|const
+name|void
+operator|*
+name|dynamicClassID
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|// Check whether this instance is a subclass of the class identified by
 comment|// ClassID.
 name|virtual
@@ -311,19 +341,6 @@ operator|::
 name|classID
 argument_list|()
 argument_list|)
-return|;
-block|}
-comment|// Returns the class ID for this type.
-specifier|static
-specifier|const
-name|void
-modifier|*
-name|classID
-parameter_list|()
-block|{
-return|return
-operator|&
-name|ID
 return|;
 block|}
 name|private
@@ -446,30 +463,26 @@ label|:
 comment|/// Create a success value. Prefer using 'Error::success()' for readability
 name|Error
 argument_list|()
-operator|:
-name|Payload
-argument_list|(
-argument|nullptr
-argument_list|)
 block|{
 name|setPtr
 argument_list|(
 name|nullptr
 argument_list|)
-block|;
+expr_stmt|;
 name|setChecked
 argument_list|(
 name|false
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 name|public
-operator|:
+label|:
 comment|/// Create a success value.
 specifier|static
 name|ErrorSuccess
 name|success
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|// Errors are not copy-constructable.
 name|Error
 argument_list|(
@@ -486,21 +499,14 @@ comment|/// unchecked, even if the source error had been checked. The original e
 comment|/// becomes a checked Success value, regardless of its original state.
 name|Error
 argument_list|(
-name|Error
-operator|&&
-name|Other
-argument_list|)
-operator|:
-name|Payload
-argument_list|(
-argument|nullptr
+argument|Error&&Other
 argument_list|)
 block|{
 name|setChecked
 argument_list|(
 name|true
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|this
 operator|=
@@ -510,7 +516,8 @@ name|move
 argument_list|(
 name|Other
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// Create an error value. Prefer using the 'make_error' function, but
 comment|/// this constructor can be useful when "re-throwing" errors from handlers.
 name|Error
@@ -525,17 +532,18 @@ operator|.
 name|release
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
 name|setChecked
 argument_list|(
 name|false
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|// Errors are not copy-assignable.
 name|Error
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|Error
@@ -544,7 +552,7 @@ name|Other
 operator|)
 operator|=
 name|delete
-expr_stmt|;
+decl_stmt|;
 comment|/// Move-assign an error value. The current error must represent success, you
 comment|/// you cannot overwrite an unhandled error. The current error is then
 comment|/// considered unchecked. The source error becomes a checked success value,
@@ -658,6 +666,32 @@ operator|::
 name|classID
 argument_list|()
 argument_list|)
+return|;
+block|}
+comment|/// Returns the dynamic class id of this error, or null if this is a success
+comment|/// value.
+specifier|const
+name|void
+operator|*
+name|dynamicClassID
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|getPtr
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+return|return
+name|getPtr
+argument_list|()
+operator|->
+name|dynamicClassID
+argument_list|()
 return|;
 block|}
 name|private
@@ -835,6 +869,9 @@ return|;
 endif|#
 directive|endif
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|setChecked
 parameter_list|(
@@ -879,6 +916,9 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
@@ -914,18 +954,19 @@ return|return
 name|Tmp
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|ErrorInfoBase
 modifier|*
 name|Payload
+init|=
+name|nullptr
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// Subclass of Error for the sole purpose of identifying the success path in
 end_comment
 
@@ -1067,12 +1108,48 @@ name|ParentErrT
 block|{
 name|public
 operator|:
+specifier|static
+specifier|const
+name|void
+operator|*
+name|classID
+argument_list|()
+block|{
+return|return
+operator|&
+name|ThisErrT
+operator|::
+name|ID
+return|;
+block|}
+specifier|const
+name|void
+operator|*
+name|dynamicClassID
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|ThisErrT
+operator|::
+name|ID
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|bool
 name|isA
 argument_list|(
-argument|const void *const ClassID
-argument_list|)
 specifier|const
+name|void
+operator|*
+specifier|const
+name|ClassID
+argument_list|)
+decl|const
 name|override
 block|{
 return|return
@@ -1089,21 +1166,7 @@ name|ClassID
 argument_list|)
 return|;
 block|}
-specifier|static
-specifier|const
-name|void
-operator|*
-name|classID
-argument_list|()
-block|{
-return|return
-operator|&
-name|ThisErrT
-operator|::
-name|ID
-return|;
-block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 unit|};
@@ -3004,6 +3067,15 @@ block|{
 name|template
 operator|<
 name|class
+name|T1
+operator|>
+name|friend
+name|class
+name|ExpectedAsOutParameter
+block|;
+name|template
+operator|<
+name|class
 name|OtherT
 operator|>
 name|friend
@@ -3024,7 +3096,9 @@ operator|>
 operator|::
 name|value
 block|;
-typedef|typedef
+name|using
+name|wrap
+operator|=
 name|ReferenceStorage
 operator|<
 name|typename
@@ -3037,76 +3111,60 @@ operator|>
 operator|::
 name|type
 operator|>
-name|wrap
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|error_type
+operator|=
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|ErrorInfoBase
 operator|>
-name|error_type
-expr_stmt|;
-end_typedef
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_typedef
-typedef|typedef
+operator|:
+name|using
+name|storage_type
+operator|=
 name|typename
 name|std
 operator|::
 name|conditional
 operator|<
 name|isRef
-operator|,
+block|,
 name|wrap
-operator|,
+block|,
 name|T
 operator|>
 operator|::
 name|type
-name|storage_type
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|T
+block|;
+name|using
 name|value_type
-typedef|;
-end_typedef
-
-begin_label
+operator|=
+name|T
+block|;
 name|private
-label|:
-end_label
-
-begin_typedef
-typedef|typedef
-name|typename
-name|std
-operator|::
-name|remove_reference
-operator|<
-name|T
-operator|>
-operator|::
-name|type
-operator|&
+operator|:
+name|using
 name|reference
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+operator|=
+name|typename
+name|std
+operator|::
+name|remove_reference
+operator|<
+name|T
+operator|>
+operator|::
+name|type
+operator|&
+block|;
+name|using
+name|const_reference
+operator|=
 specifier|const
 name|typename
 name|std
@@ -3118,12 +3176,10 @@ operator|>
 operator|::
 name|type
 operator|&
-name|const_reference
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|pointer
+operator|=
 name|typename
 name|std
 operator|::
@@ -3134,12 +3190,10 @@ operator|>
 operator|::
 name|type
 operator|*
-name|pointer
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|const_pointer
+operator|=
 specifier|const
 name|typename
 name|std
@@ -3151,28 +3205,15 @@ operator|>
 operator|::
 name|type
 operator|*
-name|const_pointer
-expr_stmt|;
-end_typedef
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|/// Create an Expected<T> error value from the given Error.
-end_comment
-
-begin_macro
 name|Expected
 argument_list|(
 argument|Error Err
 argument_list|)
-end_macro
-
-begin_expr_stmt
-unit|:
+operator|:
 name|HasError
 argument_list|(
 name|true
@@ -3181,7 +3222,7 @@ if|#
 directive|if
 name|LLVM_ENABLE_ABI_BREAKING_CHECKS
 comment|// Expected is unchecked upon construction in Debug builds.
-operator|,
+block|,
 name|Unchecked
 argument_list|(
 argument|true
@@ -3217,18 +3258,9 @@ name|ErrorSuccess
 argument_list|)
 operator|=
 name|delete
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// Create an Expected<T> success value from the given OtherT value, which
-end_comment
-
-begin_comment
 comment|/// must be convertible to T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3251,7 +3283,7 @@ if|#
 directive|if
 name|LLVM_ENABLE_ABI_BREAKING_CHECKS
 comment|// Expected is unchecked upon construction in Debug builds.
-operator|,
+block|,
 name|Unchecked
 argument_list|(
 argument|true
@@ -3371,13 +3403,7 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Destroy an Expected<T>.
-end_comment
-
-begin_expr_stmt
 operator|~
 name|Expected
 argument_list|()
@@ -3504,8 +3530,11 @@ block|{
 return|return
 name|HasError
 operator|&&
+operator|(
+operator|*
 name|getErrorStorage
 argument_list|()
+operator|)
 operator|->
 name|template
 name|isA
@@ -4016,6 +4045,58 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|const
+name|error_type
+operator|*
+name|getErrorStorage
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|HasError
+operator|&&
+literal|"Cannot get error when a value exists!"
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|error_type
+operator|*
+operator|>
+operator|(
+name|ErrorStorage
+operator|.
+name|buffer
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Used by ExpectedAsOutParameter to reset the checked flag.
+end_comment
+
+begin_function
+name|void
+name|setUnchecked
+parameter_list|()
+block|{
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+name|Unchecked
+operator|=
+name|true
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
 begin_function
 name|void
 name|assertIsChecked
@@ -4119,6 +4200,89 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+unit|};
+comment|/// Helper for Expected<T>s used as out-parameters.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// See ErrorAsOutParameter.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ExpectedAsOutParameter
+block|{
+name|public
+operator|:
+name|ExpectedAsOutParameter
+argument_list|(
+name|Expected
+operator|<
+name|T
+operator|>
+operator|*
+name|ValOrErr
+argument_list|)
+operator|:
+name|ValOrErr
+argument_list|(
+argument|ValOrErr
+argument_list|)
+block|{
+if|if
+condition|(
+name|ValOrErr
+condition|)
+operator|(
+name|void
+operator|)
+operator|!
+operator|!
+operator|*
+name|ValOrErr
+expr_stmt|;
+block|}
+operator|~
+name|ExpectedAsOutParameter
+argument_list|()
+block|{
+if|if
+condition|(
+name|ValOrErr
+condition|)
+name|ValOrErr
+operator|->
+name|setUnchecked
+argument_list|()
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_expr_stmt
+name|Expected
+operator|<
+name|T
+operator|>
+operator|*
+name|ValOrErr
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|};
@@ -4474,22 +4638,38 @@ argument_list|()
 specifier|const
 name|override
 block|;
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getMessage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Msg
+return|;
+block|}
 name|private
 operator|:
 name|std
 operator|::
 name|string
 name|Msg
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|error_code
 name|EC
-block|; }
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// Helper for check-and-exit error handling.
 end_comment
 
@@ -4758,6 +4938,247 @@ name|true
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Report a fatal error if Err is a failure value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This function can be used to wrap calls to fallible functions ONLY when it
+end_comment
+
+begin_comment
+comment|/// is known that the Error will always be a success value. E.g.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   @code{.cpp}
+end_comment
+
+begin_comment
+comment|///   // foo only attempts the fallible operation if DoFallibleOperation is
+end_comment
+
+begin_comment
+comment|///   // true. If DoFallibleOperation is false then foo always returns
+end_comment
+
+begin_comment
+comment|///   // Error::success().
+end_comment
+
+begin_comment
+comment|///   Error foo(bool DoFallibleOperation);
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   cantFail(foo(false));
+end_comment
+
+begin_comment
+comment|///   @endcode
+end_comment
+
+begin_function
+specifier|inline
+name|void
+name|cantFail
+parameter_list|(
+name|Error
+name|Err
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Err
+condition|)
+name|llvm_unreachable
+argument_list|(
+literal|"Failure value returned from cantFail wrapped call"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Report a fatal error if ValOrErr is a failure value, otherwise unwraps and
+end_comment
+
+begin_comment
+comment|/// returns the contained value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This function can be used to wrap calls to fallible functions ONLY when it
+end_comment
+
+begin_comment
+comment|/// is known that the Error will always be a success value. E.g.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   @code{.cpp}
+end_comment
+
+begin_comment
+comment|///   // foo only attempts the fallible operation if DoFallibleOperation is
+end_comment
+
+begin_comment
+comment|///   // true. If DoFallibleOperation is false then foo always returns an int.
+end_comment
+
+begin_comment
+comment|///   Expected<int> foo(bool DoFallibleOperation);
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   int X = cantFail(foo(false));
+end_comment
+
+begin_comment
+comment|///   @endcode
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+name|cantFail
+argument_list|(
+argument|Expected<T> ValOrErr
+argument_list|)
+block|{
+if|if
+condition|(
+name|ValOrErr
+condition|)
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+operator|*
+name|ValOrErr
+argument_list|)
+return|;
+else|else
+name|llvm_unreachable
+argument_list|(
+literal|"Failure value returned from cantFail wrapped call"
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Report a fatal error if ValOrErr is a failure value, otherwise unwraps and
+end_comment
+
+begin_comment
+comment|/// returns the contained reference.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This function can be used to wrap calls to fallible functions ONLY when it
+end_comment
+
+begin_comment
+comment|/// is known that the Error will always be a success value. E.g.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   @code{.cpp}
+end_comment
+
+begin_comment
+comment|///   // foo only attempts the fallible operation if DoFallibleOperation is
+end_comment
+
+begin_comment
+comment|///   // true. If DoFallibleOperation is false then foo always returns a Bar&.
+end_comment
+
+begin_comment
+comment|///   Expected<Bar&> foo(bool DoFallibleOperation);
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   Bar&X = cantFail(foo(false));
+end_comment
+
+begin_comment
+comment|///   @endcode
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+operator|&
+name|cantFail
+argument_list|(
+argument|Expected<T&> ValOrErr
+argument_list|)
+block|{
+if|if
+condition|(
+name|ValOrErr
+condition|)
+return|return
+operator|*
+name|ValOrErr
+return|;
+else|else
+name|llvm_unreachable
+argument_list|(
+literal|"Failure value returned from cantFail wrapped call"
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
 
 begin_comment
 unit|}

@@ -552,10 +552,11 @@ operator|&
 name|TP
 argument_list|)
 decl_stmt|;
-comment|/// EnforceVectorSameNumElts - 'this' is now constrained to
-comment|/// be a vector with same num elements as VT.
+comment|/// EnforceSameNumElts - If VTOperand is a scalar, then 'this' is a scalar.
+comment|/// If VTOperand is a vector, then 'this' must have the same number of
+comment|/// elements.
 name|bool
-name|EnforceVectorSameNumElts
+name|EnforceSameNumElts
 argument_list|(
 name|EEVT
 operator|::
@@ -858,16 +859,12 @@ name|Record
 modifier|*
 name|Def
 decl_stmt|;
-name|std
-operator|::
-name|string
+name|StringRef
 name|EnumName
-expr_stmt|;
-name|std
-operator|::
-name|string
+decl_stmt|;
+name|StringRef
 name|SDClassName
-expr_stmt|;
+decl_stmt|;
 name|unsigned
 name|Properties
 decl_stmt|;
@@ -925,11 +922,7 @@ return|return
 name|Def
 return|;
 block|}
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getEnumName
 argument_list|()
 specifier|const
@@ -938,11 +931,7 @@ return|return
 name|EnumName
 return|;
 block|}
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getSDClassName
 argument_list|()
 specifier|const
@@ -3135,7 +3124,7 @@ argument|TreePatternNode *src
 argument_list|,
 argument|TreePatternNode *dst
 argument_list|,
-argument|const std::vector<Record*>&dstregs
+argument|std::vector<Record *> dstregs
 argument_list|,
 argument|int complexity
 argument_list|,
@@ -3164,7 +3153,12 @@ argument_list|)
 operator|,
 name|Dstregs
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|dstregs
+argument_list|)
 argument_list|)
 operator|,
 name|AddedComplexity
@@ -4257,17 +4251,16 @@ parameter_list|()
 function_decl|;
 name|void
 name|AddPatternToMatch
-parameter_list|(
+argument_list|(
 name|TreePattern
-modifier|*
+operator|*
 name|Pattern
-parameter_list|,
-specifier|const
+argument_list|,
 name|PatternToMatch
-modifier|&
+operator|&&
 name|PTM
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|FindPatternInputsAndOutputs
 argument_list|(

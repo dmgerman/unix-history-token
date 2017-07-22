@@ -84,7 +84,7 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|TypeDatabase
+name|TypeCollection
 decl_stmt|;
 comment|/// Dumper for CodeView symbol streams found in COFF object files and PDB files.
 name|class
@@ -96,7 +96,9 @@ name|CVSymbolDumper
 argument_list|(
 argument|ScopedPrinter&W
 argument_list|,
-argument|TypeDatabase&TypeDB
+argument|TypeCollection&Types
+argument_list|,
+argument|CodeViewContainer Container
 argument_list|,
 argument|std::unique_ptr<SymbolDumpDelegate> ObjDelegate
 argument_list|,
@@ -108,9 +110,14 @@ argument_list|(
 name|W
 argument_list|)
 operator|,
-name|TypeDB
+name|Types
 argument_list|(
-name|TypeDB
+name|Types
+argument_list|)
+operator|,
+name|Container
+argument_list|(
+name|Container
 argument_list|)
 operator|,
 name|ObjDelegate
@@ -160,9 +167,12 @@ name|ScopedPrinter
 modifier|&
 name|W
 decl_stmt|;
-name|TypeDatabase
+name|TypeCollection
 modifier|&
-name|TypeDB
+name|Types
+decl_stmt|;
+name|CodeViewContainer
+name|Container
 decl_stmt|;
 name|std
 operator|::

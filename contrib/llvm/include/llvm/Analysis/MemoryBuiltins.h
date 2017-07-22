@@ -133,23 +133,6 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-name|enum
-name|class
-name|ObjSizeMode
-block|{
-name|Exact
-operator|=
-literal|0
-operator|,
-name|Min
-operator|=
-literal|1
-operator|,
-name|Max
-operator|=
-literal|2
-block|}
-empty_stmt|;
 comment|/// \brief Tests if a value is a call or invoke to a library function that
 comment|/// allocates or reallocates memory (either malloc, calloc, realloc, or strdup
 comment|/// like).
@@ -218,6 +201,27 @@ comment|/// \brief Tests if a value is a call or invoke to a library function th
 comment|/// allocates zero-filled memory (such as calloc).
 name|bool
 name|isCallocLikeFn
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+parameter_list|,
+name|bool
+name|LookThroughBitCast
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Tests if a value is a call or invoke to a library function that
+comment|/// allocates memory similar to malloc or calloc.
+name|bool
+name|isMallocOrCallocLikeFn
 parameter_list|(
 specifier|const
 name|Value
@@ -502,49 +506,85 @@ block|}
 comment|//===----------------------------------------------------------------------===//
 comment|//  Utility functions to compute size of objects.
 comment|//
-comment|/// \brief Compute the size of the object pointed by Ptr. Returns true and the
-comment|/// object size in Size if successful, and false otherwise. In this context, by
-comment|/// object we mean the region of memory starting at Ptr to the end of the
-comment|/// underlying object pointed to by Ptr.
-comment|/// If RoundToAlign is true, then Size is rounded up to the aligment of allocas,
-comment|/// byval arguments, and global variables.
-comment|/// If Mode is Min or Max the size will be evaluated even if it depends on
-comment|/// a condition and corresponding value will be returned (min or max).
-name|bool
-name|getObjectSize
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|Ptr
-parameter_list|,
-name|uint64_t
-modifier|&
-name|Size
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|&
-name|DL
-parameter_list|,
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
-parameter_list|,
+comment|/// Various options to control the behavior of getObjectSize.
+struct|struct
+name|ObjectSizeOpts
+block|{
+comment|/// Controls how we handle conditional statements with unknown conditions.
+name|enum
+name|class
+name|Mode
+range|:
+name|uint8_t
+block|{
+comment|/// Fail to evaluate an unknown condition.
+name|Exact
+block|,
+comment|/// Evaluate all branches of an unknown condition. If all evaluations
+comment|/// succeed, pick the minimum size.
+name|Min
+block|,
+comment|/// Same as Min, except we pick the maximum size of all of the branches.
+name|Max
+block|}
+decl_stmt|;
+comment|/// How we want to evaluate this object's size.
+name|Mode
+name|EvalMode
+init|=
+name|Mode
+operator|::
+name|Exact
+decl_stmt|;
+comment|/// Whether to round the result up to the alignment of allocas, byval
+comment|/// arguments, and global variables.
 name|bool
 name|RoundToAlign
 init|=
 name|false
-parameter_list|,
-name|ObjSizeMode
-name|Mode
+decl_stmt|;
+comment|/// If this is true, null pointers in address space 0 will be treated as
+comment|/// though they can't be evaluated. Otherwise, null is always considered to
+comment|/// point to a 0 byte region of memory.
+name|bool
+name|NullIsUnknownSize
 init|=
-name|ObjSizeMode
-operator|::
-name|Exact
-parameter_list|)
-function_decl|;
+name|false
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Compute the size of the object pointed by Ptr. Returns true and the
+comment|/// object size in Size if successful, and false otherwise. In this context, by
+comment|/// object we mean the region of memory starting at Ptr to the end of the
+comment|/// underlying object pointed to by Ptr.
+name|bool
+name|getObjectSize
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|Ptr
+argument_list|,
+name|uint64_t
+operator|&
+name|Size
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
+argument_list|,
+name|ObjectSizeOpts
+name|Opts
+operator|=
+block|{}
+argument_list|)
+decl_stmt|;
 comment|/// Try to turn a call to @llvm.objectsize into an integer value of the given
 comment|/// Type. Returns null on failure.
 comment|/// If MustSucceed is true, this function will not return null, and may return
@@ -606,11 +646,8 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 decl_stmt|;
-name|bool
-name|RoundToAlign
-decl_stmt|;
-name|ObjSizeMode
-name|Mode
+name|ObjectSizeOpts
+name|Options
 decl_stmt|;
 name|unsigned
 name|IntTyBits
@@ -664,9 +701,7 @@ argument|const TargetLibraryInfo *TLI
 argument_list|,
 argument|LLVMContext&Context
 argument_list|,
-argument|bool RoundToAlign = false
-argument_list|,
-argument|ObjSizeMode Mode = ObjSizeMode::Exact
+argument|ObjectSizeOpts Options = {}
 argument_list|)
 empty_stmt|;
 name|SizeOffsetType
@@ -858,6 +893,16 @@ modifier|&
 name|I
 parameter_list|)
 function_decl|;
+name|private
+label|:
+name|bool
+name|CheckedZextOrTrunc
+parameter_list|(
+name|APInt
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 typedef|typedef
@@ -898,9 +943,9 @@ name|std
 operator|::
 name|pair
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|WeakEvalType
 expr_stmt|;

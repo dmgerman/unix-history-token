@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<random>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -180,7 +186,8 @@ name|empty
 block|;
 name|std
 operator|::
-name|srand
+name|mt19937
+name|randomness
 argument_list|(
 literal|0x6e5ea738
 argument_list|)
@@ -350,7 +357,7 @@ argument_list|)
 expr_stmt|;
 name|std
 operator|::
-name|random_shuffle
+name|shuffle
 argument_list|(
 name|ShuffledList
 operator|.
@@ -361,6 +368,8 @@ name|ShuffledList
 operator|.
 name|end
 argument_list|()
+argument_list|,
+name|randomness
 argument_list|)
 expr_stmt|;
 name|errs

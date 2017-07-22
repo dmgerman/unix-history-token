@@ -100,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/HostThread.h"
 end_include
 
@@ -125,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/MemoryRegionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include
@@ -162,7 +162,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 name|class
 name|Scalar
@@ -184,7 +184,7 @@ name|public
 name|NativeProcessProtocol
 block|{
 name|friend
-name|Error
+name|Status
 name|NativeProcessProtocol
 operator|::
 name|Launch
@@ -207,7 +207,7 @@ name|process_sp
 argument_list|)
 block|;
 name|friend
-name|Error
+name|Status
 name|NativeProcessProtocol
 operator|::
 name|Attach
@@ -231,41 +231,41 @@ block|;
 comment|// -----------------------------------------------------------------
 comment|// NativeProcessProtocol Interface
 comment|// -----------------------------------------------------------------
-name|Error
+name|Status
 name|Resume
 argument_list|(
 argument|const ResumeActionList&resume_actions
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Halt
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|Detach
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|Signal
 argument_list|(
 argument|int signo
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Interrupt
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|Kill
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|GetMemoryRegionInfo
 argument_list|(
 argument|lldb::addr_t load_addr
@@ -274,7 +274,7 @@ argument|MemoryRegionInfo&range_info
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ReadMemory
 argument_list|(
 argument|lldb::addr_t addr
@@ -287,7 +287,7 @@ argument|size_t&bytes_read
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ReadMemoryWithoutTrap
 argument_list|(
 argument|lldb::addr_t addr
@@ -300,7 +300,7 @@ argument|size_t&bytes_read
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|WriteMemory
 argument_list|(
 argument|lldb::addr_t addr
@@ -313,7 +313,7 @@ argument|size_t&bytes_written
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|AllocateMemory
 argument_list|(
 argument|size_t size
@@ -324,7 +324,7 @@ argument|lldb::addr_t&addr
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DeallocateMemory
 argument_list|(
 argument|lldb::addr_t addr
@@ -351,7 +351,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|Error
+name|Status
 name|SetBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -369,7 +369,7 @@ argument|uint32_t newBumpId
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|GetLoadedModuleFileSpec
 argument_list|(
 argument|const char *module_path
@@ -378,7 +378,7 @@ argument|FileSpec&file_spec
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|GetFileLoadAddress
 argument_list|(
 argument|const llvm::StringRef&file_name
@@ -406,7 +406,7 @@ comment|// -----------------------------------------------------------------
 comment|// Interface used by NativeRegisterContext-derived classes.
 comment|// -----------------------------------------------------------------
 specifier|static
-name|Error
+name|Status
 name|PtraceWrapper
 argument_list|(
 argument|int req
@@ -433,7 +433,7 @@ operator|:
 comment|// -----------------------------------------------------------------
 comment|// NativeProcessProtocol protected interface
 comment|// -----------------------------------------------------------------
-name|Error
+name|Status
 name|GetSoftwareBreakpointTrapOpcode
 argument_list|(
 argument|size_t trap_opcode_size_hint
@@ -575,7 +575,7 @@ comment|///     Any error that occurred during the aforementioned
 comment|///     operations.  Failure here will force termination of the
 comment|///     launched process and debugging session.
 comment|// -----------------------------------------------------------------
-name|Error
+name|Status
 name|FinalizeLaunch
 argument_list|(
 argument|LaunchFlavor launch_flavor
@@ -583,7 +583,7 @@ argument_list|,
 argument|MainLoop&main_loop
 argument_list|)
 block|;
-name|Error
+name|Status
 name|SaveExceptionPortInfo
 argument_list|()
 block|;
@@ -602,11 +602,11 @@ name|void
 name|MaybeRaiseThreadPriority
 argument_list|()
 block|;
-name|Error
+name|Status
 name|StartExceptionThread
 argument_list|()
 block|;
-name|Error
+name|Status
 name|SendInferiorExitStatusToMainLoop
 argument_list|(
 argument|::pid_t pid
@@ -614,7 +614,7 @@ argument_list|,
 argument|int status
 argument_list|)
 block|;
-name|Error
+name|Status
 name|HandleWaitpidResult
 argument_list|()
 block|;
@@ -648,7 +648,7 @@ operator|::
 name|addr_t
 name|GetDYLDAllImageInfosAddress
 argument_list|(
-argument|Error&error
+argument|Status&error
 argument_list|)
 specifier|const
 block|;
@@ -672,7 +672,7 @@ name|void
 name|StartSTDIOThread
 argument_list|()
 block|;
-name|Error
+name|Status
 name|StartWaitpidThread
 argument_list|(
 name|MainLoop
@@ -698,7 +698,7 @@ block|;
 name|task_t
 name|TaskPortForProcessID
 argument_list|(
-argument|Error&error
+argument|Status&error
 argument_list|,
 argument|bool force = false
 argument_list|)
@@ -713,7 +713,7 @@ argument|MainLoop&mainloop
 argument_list|,
 argument|lldb::pid_t pid
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|;
 operator|::
@@ -722,18 +722,18 @@ name|Attach
 argument_list|(
 argument|lldb::pid_t pid
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|;
-name|Error
+name|Status
 name|PrivateResume
 argument_list|()
 block|;
-name|Error
+name|Status
 name|ReplyToAllExceptions
 argument_list|()
 block|;
-name|Error
+name|Status
 name|ResumeTask
 argument_list|()
 block|;
@@ -759,7 +759,7 @@ name|IsExceptionPortValid
 argument_list|()
 specifier|const
 block|;
-name|Error
+name|Status
 name|GetTaskBasicInfo
 argument_list|(
 argument|task_t task
@@ -768,12 +768,12 @@ argument|struct task_basic_info *info
 argument_list|)
 specifier|const
 block|;
-name|Error
+name|Status
 name|SuspendTask
 argument_list|()
 block|;
 specifier|static
-name|Error
+name|Status
 name|SetDefaultPtraceOpts
 argument_list|(
 specifier|const
@@ -857,7 +857,7 @@ argument_list|,
 argument|bool exited
 argument_list|)
 block|;
-name|Error
+name|Status
 name|SetupSoftwareSingleStepping
 argument_list|(
 name|NativeThreadDarwin
@@ -889,7 +889,7 @@ argument_list|(
 argument|lldb::tid_t thread_id
 argument_list|)
 block|;
-name|Error
+name|Status
 name|GetSoftwareBreakpointPCOffset
 argument_list|(
 name|uint32_t
@@ -897,7 +897,7 @@ operator|&
 name|actual_opcode_size
 argument_list|)
 block|;
-name|Error
+name|Status
 name|FixupBreakpointPCAsNeeded
 argument_list|(
 name|NativeThreadDarwin
@@ -907,7 +907,7 @@ argument_list|)
 block|;
 comment|/// Writes a siginfo_t structure corresponding to the given thread
 comment|/// ID to the memory region pointed to by @p siginfo.
-name|Error
+name|Status
 name|GetSignalInfo
 argument_list|(
 argument|lldb::tid_t tid
@@ -918,7 +918,7 @@ block|;
 comment|/// Writes the raw event message code (vis-a-vis PTRACE_GETEVENTMSG)
 comment|/// corresponding to the given thread ID to the memory pointed to
 comment|/// by @p message.
-name|Error
+name|Status
 name|GetEventMessage
 argument_list|(
 argument|lldb::tid_t tid
@@ -932,7 +932,7 @@ argument_list|(
 argument|lldb::tid_t tid
 argument_list|)
 block|;
-name|Error
+name|Status
 name|Detach
 argument_list|(
 argument|lldb::tid_t tid
@@ -956,7 +956,7 @@ block|;
 comment|// Resume the given thread, optionally passing it the given signal.
 comment|// The type of resume operation (continue, single-step) depends on
 comment|// the state parameter.
-name|Error
+name|Status
 name|ResumeThread
 argument_list|(
 argument|NativeThreadDarwin&thread

@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/AliasSetTracker.h"
+file|"llvm/Analysis/AliasAnalysisEvaluator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/AliasAnalysisEvaluator.h"
+file|"llvm/Analysis/AliasSetTracker.h"
 end_include
 
 begin_include
@@ -204,6 +204,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Valgrind.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Transforms/IPO.h"
 end_include
 
@@ -259,12 +265,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Transforms/Vectorize.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Valgrind.h"
 end_include
 
 begin_include
@@ -416,6 +416,14 @@ operator|)
 name|llvm
 operator|::
 name|createCFGSimplificationPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
+name|createLateCFGSimplificationPass
 argument_list|()
 expr_stmt|;
 operator|(
@@ -591,6 +599,14 @@ name|void
 operator|)
 name|llvm
 operator|::
+name|createPGOMemOPSizeOptLegacyPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
 name|createInstrProfilingLegacyPass
 argument_list|()
 expr_stmt|;
@@ -744,6 +760,14 @@ operator|)
 name|llvm
 operator|::
 name|createLoopInterchangePass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
+name|createLoopPredicationPass
 argument_list|()
 expr_stmt|;
 operator|(
@@ -1362,14 +1386,6 @@ name|void
 operator|)
 name|llvm
 operator|::
-name|createBBVectorizePass
-argument_list|()
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|llvm
-operator|::
 name|createPartiallyInlineLibCallsPass
 argument_list|()
 expr_stmt|;
@@ -1443,6 +1459,14 @@ operator|)
 name|llvm
 operator|::
 name|createEliminateAvailableExternallyPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
+name|createScalarizeMaskedMemIntrinPass
 argument_list|()
 expr_stmt|;
 operator|(
