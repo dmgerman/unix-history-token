@@ -12,13 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/evdev/input.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/evdev/evdev.h>
 end_include
 
@@ -49,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<dev/evdev/evdev_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/evdev/input.h>
 end_include
 
 begin_ifdef

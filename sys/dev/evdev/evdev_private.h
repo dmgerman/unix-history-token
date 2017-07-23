@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/kbio.h>
 end_include
 
 begin_include
@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kbio.h>
+file|<sys/queue.h>
 end_include
 
 begin_include
