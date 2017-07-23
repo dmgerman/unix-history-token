@@ -77,6 +77,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"indent_codes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"indent.h"
 end_include
 
@@ -602,6 +608,12 @@ expr_stmt|;
 if|if
 condition|(
 name|blanklines_before_blockcomments
+operator|&&
+name|ps
+operator|.
+name|last_token
+operator|!=
+name|lbrace
 condition|)
 name|prefix_blankline_requested
 operator|=
