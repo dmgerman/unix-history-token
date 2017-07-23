@@ -446,6 +446,26 @@ parameter_list|)
 value|mtx_assert((evdev)->ev_lock, MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EVDEV_ENTER
+parameter_list|(
+name|evdev
+parameter_list|)
+value|do {					\ 	if ((evdev)->ev_lock_type == EV_LOCK_INTERNAL)			\ 		EVDEV_LOCK(evdev);					\ 	else								\ 		EVDEV_LOCK_ASSERT(evdev);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVDEV_EXIT
+parameter_list|(
+name|evdev
+parameter_list|)
+value|do {					\ 	if ((evdev)->ev_lock_type == EV_LOCK_INTERNAL)			\ 		EVDEV_UNLOCK(evdev);					\ } while (0)
+end_define
+
 begin_struct
 struct|struct
 name|evdev_client
