@@ -272,6 +272,21 @@ block|}
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|mmc_retune_req
+block|{
+name|retune_req_none
+init|=
+literal|0
+block|,
+name|retune_req_normal
+block|,
+name|retune_req_reset
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|mmc_host
@@ -459,7 +474,7 @@ begin_define
 define|#
 directive|define
 name|MMC_VERSION
-value|3
+value|4
 end_define
 
 begin_define
