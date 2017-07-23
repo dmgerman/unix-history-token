@@ -76,31 +76,24 @@ block|}
 enum|;
 name|ConditionalAssemblyType
 name|TheCond
+init|=
+name|NoCond
 decl_stmt|;
 name|bool
 name|CondMet
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|Ignore
+init|=
+name|false
 decl_stmt|;
 name|AsmCond
 argument_list|()
-operator|:
-name|TheCond
-argument_list|(
-name|NoCond
-argument_list|)
-operator|,
-name|CondMet
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Ignore
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}
@@ -114,6 +107,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCPARSER_ASMCOND_H
+end_comment
 
 end_unit
 

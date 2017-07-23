@@ -104,13 +104,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
+file|"lldb/Target/Process.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Process.h"
+file|"lldb/Utility/StreamGDBRemote.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StructuredData.h"
 end_include
 
 begin_include
@@ -149,7 +155,7 @@ comment|//------------------------------------------------------------------
 name|bool
 name|HandshakeWithServer
 argument_list|(
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)
@@ -517,13 +523,13 @@ argument_list|(
 argument|lldb::addr_t addr
 argument_list|)
 block|;
-name|Error
+name|Status
 name|Detach
 argument_list|(
 argument|bool keep_stopped
 argument_list|)
 block|;
-name|Error
+name|Status
 name|GetMemoryRegionInfo
 argument_list|(
 argument|lldb::addr_t addr
@@ -531,7 +537,7 @@ argument_list|,
 argument|MemoryRegionInfo&range_info
 argument_list|)
 block|;
-name|Error
+name|Status
 name|GetWatchpointSupportInfo
 argument_list|(
 name|uint32_t
@@ -539,7 +545,7 @@ operator|&
 name|num
 argument_list|)
 block|;
-name|Error
+name|Status
 name|GetWatchpointSupportInfo
 argument_list|(
 name|uint32_t
@@ -556,7 +562,7 @@ operator|&
 name|arch
 argument_list|)
 block|;
-name|Error
+name|Status
 name|GetWatchpointsTriggerAfterInstruction
 argument_list|(
 name|bool
@@ -888,6 +894,10 @@ name|bool
 name|GetQXferAuxvReadSupported
 argument_list|()
 block|;
+name|void
+name|EnableErrorStringInPacket
+argument_list|()
+block|;
 name|bool
 name|GetQXferLibrariesReadSupported
 argument_list|()
@@ -902,6 +912,10 @@ argument_list|()
 block|;
 name|bool
 name|GetEchoSupported
+argument_list|()
+block|;
+name|bool
+name|GetQPassSignalsSupported
 argument_list|()
 block|;
 name|bool
@@ -954,7 +968,7 @@ argument|uint32_t flags
 argument_list|,
 argument|mode_t mode
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|;
 name|bool
@@ -962,7 +976,7 @@ name|CloseFile
 argument_list|(
 argument|lldb::user_id_t fd
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|;
 name|lldb
@@ -976,7 +990,7 @@ operator|&
 name|file_spec
 argument_list|)
 block|;
-name|Error
+name|Status
 name|GetFilePermissions
 argument_list|(
 specifier|const
@@ -989,7 +1003,7 @@ operator|&
 name|file_permissions
 argument_list|)
 block|;
-name|Error
+name|Status
 name|SetFilePermissions
 argument_list|(
 argument|const FileSpec&file_spec
@@ -1008,7 +1022,7 @@ argument|void *dst
 argument_list|,
 argument|uint64_t dst_len
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|;
 name|uint64_t
@@ -1022,10 +1036,10 @@ argument|const void *src
 argument_list|,
 argument|uint64_t src_len
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|;
-name|Error
+name|Status
 name|CreateSymlink
 argument_list|(
 specifier|const
@@ -1039,7 +1053,7 @@ operator|&
 name|dst
 argument_list|)
 block|;
-name|Error
+name|Status
 name|Unlink
 argument_list|(
 specifier|const
@@ -1048,7 +1062,7 @@ operator|&
 name|file_spec
 argument_list|)
 block|;
-name|Error
+name|Status
 name|MakeDirectory
 argument_list|(
 argument|const FileSpec&file_spec
@@ -1065,7 +1079,7 @@ operator|&
 name|file_spec
 argument_list|)
 block|;
-name|Error
+name|Status
 name|RunShellCommand
 argument_list|(
 argument|const char *command
@@ -1258,7 +1272,7 @@ argument|const lldb_private::ConstString annex
 argument_list|,
 argument|std::string&out
 argument_list|,
-argument|lldb_private::Error&err
+argument|lldb_private::Status&err
 argument_list|)
 block|;
 name|void
@@ -1269,6 +1283,19 @@ operator|::
 name|Process
 operator|*
 name|process
+argument_list|)
+block|;
+comment|// Sends QPassSignals packet to the server with given signals to ignore.
+name|Status
+name|SendSignalsToIgnore
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|int32_t
+operator|>
+name|signals
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -1327,7 +1354,7 @@ comment|/// Configure a StructuredData feature on the remote end.
 comment|///
 comment|/// @see \b Process::ConfigureStructuredData(...) for details.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|ConfigureRemoteStructuredData
 argument_list|(
 specifier|const
@@ -1341,6 +1368,63 @@ operator|::
 name|ObjectSP
 operator|&
 name|config_sp
+argument_list|)
+block|;
+name|lldb
+operator|::
+name|user_id_t
+name|SendStartTracePacket
+argument_list|(
+specifier|const
+name|TraceOptions
+operator|&
+name|options
+argument_list|,
+name|Status
+operator|&
+name|error
+argument_list|)
+block|;
+name|Status
+name|SendStopTracePacket
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread_id
+argument_list|)
+block|;
+name|Status
+name|SendGetDataPacket
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread_id
+argument_list|,
+argument|llvm::MutableArrayRef<uint8_t>&buffer
+argument_list|,
+argument|size_t offset =
+literal|0
+argument_list|)
+block|;
+name|Status
+name|SendGetMetaDataPacket
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread_id
+argument_list|,
+argument|llvm::MutableArrayRef<uint8_t>&buffer
+argument_list|,
+argument|size_t offset =
+literal|0
+argument_list|)
+block|;
+name|Status
+name|SendGetTraceConfigPacket
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|,
+argument|TraceOptions&options
 argument_list|)
 block|;
 name|protected
@@ -1440,6 +1524,12 @@ name|m_supports_jLoadedDynamicLibrariesInfos
 block|;
 name|LazyBool
 name|m_supports_jGetSharedCacheInfo
+block|;
+name|LazyBool
+name|m_supports_QPassSignals
+block|;
+name|LazyBool
+name|m_supports_error_string_reply
 block|;
 name|bool
 name|m_supports_qProcessInfoPID
@@ -1656,6 +1746,20 @@ argument_list|,
 argument|StringExtractorGDBRemote&response
 argument_list|,
 argument|bool send_async
+argument_list|)
+block|;
+name|Status
+name|SendGetTraceDataPacket
+argument_list|(
+argument|StreamGDBRemote&packet
+argument_list|,
+argument|lldb::user_id_t uid
+argument_list|,
+argument|lldb::tid_t thread_id
+argument_list|,
+argument|llvm::MutableArrayRef<uint8_t>&buffer
+argument_list|,
+argument|size_t offset
 argument_list|)
 block|;
 name|private

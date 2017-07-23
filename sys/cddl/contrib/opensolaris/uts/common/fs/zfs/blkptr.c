@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * This file and its contents are supplied un
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include

@@ -246,9 +246,17 @@ name|vnode
 modifier|*
 name|f_vnode
 decl_stmt|;
+define|#
+directive|define
+name|f_inode
+value|f_vnode
 specifier|volatile
 name|u_int
 name|f_count
+decl_stmt|;
+comment|/* anonymous shmem object */
+name|vm_object_t
+name|f_shmem
 decl_stmt|;
 comment|/* kqfilter support */
 name|int
@@ -528,6 +536,18 @@ parameter_list|(
 name|fops
 parameter_list|)
 value|(fops)
+end_define
+
+begin_define
+define|#
+directive|define
+name|replace_fops
+parameter_list|(
+name|f
+parameter_list|,
+name|fops
+parameter_list|)
+value|((f)->f_op = (fops))
 end_define
 
 begin_define
@@ -1022,8 +1042,40 @@ name|whence
 parameter_list|)
 block|{
 return|return
+operator|(
 operator|-
 name|ESPIPE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|loff_t
+name|noop_llseek
+parameter_list|(
+name|struct
+name|linux_file
+modifier|*
+name|file
+parameter_list|,
+name|loff_t
+name|offset
+parameter_list|,
+name|int
+name|whence
+parameter_list|)
+block|{
+return|return
+operator|(
+name|file
+operator|->
+name|_file
+operator|->
+name|f_offset
+operator|)
 return|;
 block|}
 end_function

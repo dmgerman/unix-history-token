@@ -56,7 +56,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
+file|"llvm/BinaryFormat/Dwarf.h"
 end_include
 
 begin_include

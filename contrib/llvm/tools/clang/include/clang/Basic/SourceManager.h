@@ -321,8 +321,50 @@ block|,
 name|C_System
 block|,
 name|C_ExternCSystem
+block|,
+name|C_User_ModuleMap
+block|,
+name|C_System_ModuleMap
 block|}
 enum|;
+comment|/// Determine whether a file / directory characteristic is for system code.
+specifier|inline
+name|bool
+name|isSystem
+parameter_list|(
+name|CharacteristicKind
+name|CK
+parameter_list|)
+block|{
+return|return
+name|CK
+operator|!=
+name|C_User
+operator|&&
+name|CK
+operator|!=
+name|C_User_ModuleMap
+return|;
+block|}
+comment|/// Determine whether a file characteristic is for a module map.
+specifier|inline
+name|bool
+name|isModuleMap
+parameter_list|(
+name|CharacteristicKind
+name|CK
+parameter_list|)
+block|{
+return|return
+name|CK
+operator|==
+name|C_User_ModuleMap
+operator|||
+name|CK
+operator|==
+name|C_System_ModuleMap
+return|;
+block|}
 comment|/// \brief One instance of this struct is kept for every file loaded or used.
 comment|///
 comment|/// This object owns the MemoryBuffer object.
@@ -800,13 +842,30 @@ comment|///
 comment|/// Zero means the preprocessor didn't provide such info for this SLocEntry.
 name|unsigned
 name|NumCreatedFIDs
+range|:
+literal|31
 decl_stmt|;
-comment|/// \brief Contains the ContentCache* and the bits indicating the
-comment|/// characteristic of the file and whether it has \#line info, all
-comment|/// bitmangled together.
-name|uintptr_t
-name|Data
+comment|/// \brief Whether this FileInfo has any \#line directives.
+name|unsigned
+name|HasLineDirectives
+range|:
+literal|1
 decl_stmt|;
+comment|/// \brief The content cache and the characteristic of the file.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|ContentCache
+operator|*
+operator|,
+literal|3
+operator|,
+name|CharacteristicKind
+operator|>
+name|ContentAndKind
+expr_stmt|;
 name|friend
 name|class
 name|clang
@@ -864,48 +923,27 @@ literal|0
 expr_stmt|;
 name|X
 operator|.
-name|Data
+name|HasLineDirectives
 operator|=
-operator|(
-name|uintptr_t
-operator|)
+name|false
+expr_stmt|;
+name|X
+operator|.
+name|ContentAndKind
+operator|.
+name|setPointer
+argument_list|(
 name|Con
-expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|X
-operator|.
-name|Data
-operator|&
-literal|7
-operator|)
-operator|==
-literal|0
-operator|&&
-literal|"ContentCache pointer insufficiently aligned"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|FileCharacter
-operator|<
-literal|4
-operator|&&
-literal|"invalid file character"
 argument_list|)
 expr_stmt|;
 name|X
 operator|.
-name|Data
-operator||=
-operator|(
-name|unsigned
-operator|)
+name|ContentAndKind
+operator|.
+name|setInt
+argument_list|(
 name|FileCharacter
+argument_list|)
 expr_stmt|;
 return|return
 name|X
@@ -933,21 +971,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
-operator|<
-specifier|const
-name|ContentCache
-operator|*
-operator|>
-operator|(
-name|Data
-operator|&
-operator|~
-name|uintptr_t
-argument_list|(
-literal|7
-argument_list|)
-operator|)
+name|ContentAndKind
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 comment|/// \brief Return whether this is a system header or not.
@@ -957,14 +984,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-call|(
-name|CharacteristicKind
-call|)
-argument_list|(
-name|Data
-operator|&
-literal|3
-argument_list|)
+name|ContentAndKind
+operator|.
+name|getInt
+argument_list|()
 return|;
 block|}
 comment|/// \brief Return true if this FileID has \#line directives in it.
@@ -974,13 +997,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|Data
-operator|&
-literal|4
-operator|)
-operator|!=
-literal|0
+name|HasLineDirectives
 return|;
 block|}
 comment|/// \brief Set the flag that indicates that this FileID has
@@ -989,9 +1006,9 @@ name|void
 name|setHasLineDirectives
 parameter_list|()
 block|{
-name|Data
-operator||=
-literal|4
+name|HasLineDirectives
+operator|=
+name|true
 expr_stmt|;
 block|}
 block|}
@@ -1296,6 +1313,18 @@ block|}
 union|;
 name|public
 label|:
+name|SLocEntry
+argument_list|()
+operator|:
+name|Offset
+argument_list|()
+operator|,
+name|IsExpansion
+argument_list|()
+operator|,
+name|File
+argument_list|()
+block|{}
 name|unsigned
 name|getOffset
 argument_list|()
@@ -2190,6 +2219,17 @@ name|void
 name|clearIDTables
 parameter_list|()
 function_decl|;
+comment|/// Initialize this source manager suitably to replay the compilation
+comment|/// described by \p Old. Requires that \p Old outlive \p *this.
+name|void
+name|initializeForReplay
+parameter_list|(
+specifier|const
+name|SourceManager
+modifier|&
+name|Old
+parameter_list|)
+function_decl|;
 name|DiagnosticsEngine
 operator|&
 name|getDiagnostics
@@ -2408,12 +2448,10 @@ name|getOrCreateContentCache
 argument_list|(
 name|SourceFile
 argument_list|,
-comment|/*isSystemFile=*/
+name|isSystem
+argument_list|(
 name|FileCharacter
-operator|!=
-name|SrcMgr
-operator|::
-name|C_User
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|assert
@@ -2699,12 +2737,13 @@ function_decl|;
 comment|/// \brief Returns true if the file contents have been overridden.
 name|bool
 name|isFileOverridden
-parameter_list|(
+argument_list|(
 specifier|const
 name|FileEntry
-modifier|*
+operator|*
 name|File
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 if|if
 condition|(
@@ -5124,14 +5163,13 @@ argument_list|)
 decl|const
 block|{
 return|return
+name|isSystem
+argument_list|(
 name|getFileCharacteristic
 argument_list|(
 name|Loc
 argument_list|)
-operator|!=
-name|SrcMgr
-operator|::
-name|C_User
+argument_list|)
 return|;
 block|}
 end_decl_stmt
@@ -5328,49 +5366,32 @@ begin_comment
 comment|/// If FilenameID is -1, it is considered to be unspecified.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|AddLineNote
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|Loc
-parameter_list|,
+argument_list|,
 name|unsigned
 name|LineNo
-parameter_list|,
+argument_list|,
 name|int
 name|FilenameID
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AddLineNote
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|unsigned
-name|LineNo
-parameter_list|,
-name|int
-name|FilenameID
-parameter_list|,
+argument_list|,
 name|bool
 name|IsFileEntry
-parameter_list|,
+argument_list|,
 name|bool
 name|IsFileExit
-parameter_list|,
-name|bool
-name|IsSystemHeader
-parameter_list|,
-name|bool
-name|IsExternCHeader
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+name|SrcMgr
+operator|::
+name|CharacteristicKind
+name|FileKind
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Determine if the source manager has a line table.
@@ -5675,6 +5696,57 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Determines whether the two decomposed source location is in the
+end_comment
+
+begin_comment
+comment|///        same translation unit. As a byproduct, it also calculates the order
+end_comment
+
+begin_comment
+comment|///        of the source locations in case they are in the same TU.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns Pair of bools the first component is true if the two locations
+end_comment
+
+begin_comment
+comment|///          are in the same TU. The second bool is true if the first is true
+end_comment
+
+begin_comment
+comment|///          and \p LOffs is before \p ROffs.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|bool
+operator|,
+name|bool
+operator|>
+name|isInTheSameTranslationUnit
+argument_list|(
+argument|std::pair<FileID
+argument_list|,
+argument|unsigned>&LOffs
+argument_list|,
+argument|std::pair<FileID
+argument_list|,
+argument|unsigned>&ROffs
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Determines the order of 2 source locations in the "source location

@@ -906,7 +906,11 @@ name|NVME_OPC_ASYNC_EVENT_REQUEST
 init|=
 literal|0x0c
 block|,
-comment|/* 0x0d-0x0f - reserved */
+name|NVME_OPC_NAMESPACE_MANAGEMENT
+init|=
+literal|0x0d
+block|,
+comment|/* 0x0e-0x0f - reserved */
 name|NVME_OPC_FIRMWARE_ACTIVATE
 init|=
 literal|0x10
@@ -914,6 +918,10 @@ block|,
 name|NVME_OPC_FIRMWARE_IMAGE_DOWNLOAD
 init|=
 literal|0x11
+block|,
+name|NVME_OPC_NAMESPACE_ATTACHMENT
+init|=
+literal|0x15
 block|,
 name|NVME_OPC_FORMAT_NVM
 init|=
@@ -1270,10 +1278,14 @@ comment|/** maximum data transfer size */
 name|uint8_t
 name|mdts
 decl_stmt|;
+comment|/** Controller ID */
+name|uint16_t
+name|ctrlr_id
+decl_stmt|;
 name|uint8_t
 name|reserved1
 index|[
-literal|178
+literal|176
 index|]
 decl_stmt|;
 comment|/* bytes 256-511: admin command set attributes */
@@ -1298,10 +1310,16 @@ name|firmware
 range|:
 literal|1
 decl_stmt|;
+comment|/* supports namespace management commands */
+name|uint16_t
+name|nsmgmt
+range|:
+literal|1
+decl_stmt|;
 name|uint16_t
 name|oacs_rsvd
 range|:
-literal|13
+literal|12
 decl_stmt|;
 block|}
 name|__packed
@@ -1386,7 +1404,33 @@ struct|;
 name|uint8_t
 name|reserved2
 index|[
-literal|247
+literal|15
+index|]
+decl_stmt|;
+comment|/** Name space capabilities  */
+struct|struct
+block|{
+comment|/* if nsmgmt, report tnvmcap and unvmcap */
+name|uint8_t
+name|tnvmcap
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|uint8_t
+name|unvmcap
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|__packed
+name|untncap
+struct|;
+name|uint8_t
+name|reserved3
+index|[
+literal|200
 index|]
 decl_stmt|;
 comment|/* bytes 512-703: nvm command set attributes */
@@ -1425,7 +1469,7 @@ name|__packed
 name|cqes
 struct|;
 name|uint8_t
-name|reserved3
+name|reserved4
 index|[
 literal|2
 index|]
@@ -1488,14 +1532,14 @@ name|vwc
 struct|;
 comment|/* TODO: flesh out remaining nvm command set attributes */
 name|uint8_t
-name|reserved4
+name|reserved5
 index|[
 literal|178
 index|]
 decl_stmt|;
 comment|/* bytes 704-2047: i/o command set attributes */
 name|uint8_t
-name|reserved5
+name|reserved6
 index|[
 literal|1344
 index|]

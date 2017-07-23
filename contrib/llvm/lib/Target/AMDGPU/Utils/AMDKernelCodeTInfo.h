@@ -393,7 +393,15 @@ argument_list|,
 name|USER_SGPR
 argument_list|)
 operator|,
-comment|// TODO: enable_trap_handler
+name|COMPPGM2
+argument_list|(
+name|enable_trap_handler
+argument_list|,
+name|compute_pgm_rsrc2_trap_handler
+argument_list|,
+name|TRAP_HANDLER
+argument_list|)
+operator|,
 name|COMPPGM2
 argument_list|(
 name|enable_sgpr_workgroup_id_x

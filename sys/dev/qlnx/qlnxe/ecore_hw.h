@@ -235,27 +235,6 @@ value|32
 end_define
 
 begin_comment
-comment|/** * @brief ecore_gtt_init - Initialize GTT windows * * @param p_hwfn * @param p_ptt */
-end_comment
-
-begin_function_decl
-name|void
-name|ecore_gtt_init
-parameter_list|(
-name|struct
-name|ecore_hwfn
-modifier|*
-name|p_hwfn
-parameter_list|,
-name|struct
-name|ecore_ptt
-modifier|*
-name|p_ptt
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/**  * @brief ecore_ptt_invalidate - Forces all ptt entries to be re-configured  *  * @param p_hwfn  */
 end_comment
 

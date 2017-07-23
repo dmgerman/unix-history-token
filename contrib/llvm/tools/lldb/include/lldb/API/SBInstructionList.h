@@ -109,6 +109,30 @@ argument_list|(
 argument|uint32_t idx
 argument_list|)
 expr_stmt|;
+comment|// ----------------------------------------------------------------------
+comment|// Returns the number of instructions between the start and end address.
+comment|// If canSetBreakpoint is true then the count will be the number of
+comment|// instructions on which a breakpoint can be set.
+comment|// ----------------------------------------------------------------------
+name|size_t
+name|GetInstructionsCount
+parameter_list|(
+specifier|const
+name|SBAddress
+modifier|&
+name|start
+parameter_list|,
+specifier|const
+name|SBAddress
+modifier|&
+name|end
+parameter_list|,
+name|bool
+name|canSetBreakpoint
+init|=
+name|false
+parameter_list|)
+function_decl|;
 name|void
 name|Clear
 parameter_list|()

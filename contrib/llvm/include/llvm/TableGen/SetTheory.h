@@ -257,7 +257,9 @@ name|SetTheory
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|RecVec
+init|=
 name|std
 operator|::
 name|vector
@@ -265,18 +267,15 @@ operator|<
 name|Record
 operator|*
 operator|>
-name|RecVec
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|RecSet
+init|=
 name|SmallSetVector
 operator|<
 name|Record
 operator|*
-operator|,
-literal|16
-operator|>
-name|RecSet
-expr_stmt|;
+decl_stmt|, 16>;
 comment|/// Operator - A callback representing a DAG operator.
 name|class
 name|Operator
@@ -366,18 +365,19 @@ name|private
 label|:
 comment|// Map set defs to their fully expanded contents. This serves as a memoization
 comment|// cache and it makes it possible to return const references on queries.
-typedef|typedef
+name|using
+name|ExpandMap
+init|=
 name|std
 operator|::
 name|map
 operator|<
 name|Record
 operator|*
-operator|,
+decl_stmt|,
 name|RecVec
-operator|>
-name|ExpandMap
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|ExpandMap
 name|Expansions
 decl_stmt|;

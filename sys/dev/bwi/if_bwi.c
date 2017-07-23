@@ -2512,6 +2512,16 @@ literal|1000
 expr_stmt|;
 name|sc
 operator|->
+name|sc_led_ticks
+operator|=
+name|ticks
+operator|-
+name|sc
+operator|->
+name|sc_led_idle
+expr_stmt|;
+name|sc
+operator|->
 name|sc_led_blink
 operator|=
 literal|1

@@ -707,7 +707,7 @@ name|DT
 argument_list|,
 name|SmallVectorImpl
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 operator|&
 name|DeadInsts

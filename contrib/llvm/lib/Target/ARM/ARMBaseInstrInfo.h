@@ -80,19 +80,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineInstr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineInstrBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CodeGen.h"
+file|"llvm/CodeGen/MachineOperand.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<array>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_define
@@ -112,10 +136,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|ARMSubtarget
+name|ARMBaseRegisterInfo
 decl_stmt|;
 name|class
-name|ARMBaseRegisterInfo
+name|ARMSubtarget
 decl_stmt|;
 name|class
 name|ARMBaseInstrInfo
@@ -254,19 +278,6 @@ name|hasNOP
 argument_list|()
 specifier|const
 block|;
-name|virtual
-name|void
-name|getNoopForElfTarget
-argument_list|(
-argument|MCInst&NopInst
-argument_list|)
-specifier|const
-block|{
-name|getNoopForMachoTarget
-argument_list|(
-name|NopInst
-argument_list|)
-block|;   }
 comment|// Return the non-pre/post incrementing version of 'Opc'. Return 0
 comment|// if there is not such an opcode.
 name|virtual
@@ -473,10 +484,95 @@ block|;
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr&MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
+block|;
+comment|// CPSR defined in instruction
+specifier|static
+name|bool
+name|isCPSRDefined
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;
+name|bool
+name|isAddrMode3OpImm
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isAddrMode3OpMinusReg
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+comment|// Load, scaled register offset
+name|bool
+name|isLdstScaledReg
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+comment|// Load, scaled register offset, not plus LSL2
+name|bool
+name|isLdstScaledRegNotPlusLsl2
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+comment|// Minus reg for ldstso addr mode
+name|bool
+name|isLdstSoMinusReg
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+comment|// Scaled register offset in address mode 2
+name|bool
+name|isAm2ScaledReg
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned Op
+argument_list|)
+specifier|const
+block|;
+comment|// Load multiple, base reg in list
+name|bool
+name|isLDMBaseRegInList
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+comment|// get LDM variable defs size
+name|unsigned
+name|getLDMVariableDefsSize
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
 block|;
 comment|/// GetInstSize - Returns the size of the specified MachineInstr.
 comment|///
@@ -1275,120 +1371,145 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
-block|; }
-decl_stmt|;
+block|;
+comment|/// Returns predicate register associated with the given frame instruction.
+name|unsigned
+name|getFramePred
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isFrameInstr
+argument_list|(
+name|MI
+argument_list|)
+argument_list|)
+block|;
+comment|// Operands of ADJCALLSTACKDOWN/ADJCALLSTACKUP:
+comment|// - argument declared in the pattern:
+comment|// 0 - frame size
+comment|// 1 - arg of CALLSEQ_START/CALLSEQ_END
+comment|// 2 - predicate code (like ARMCC::AL)
+comment|// - added by predOps:
+comment|// 3 - predicate reg
+return|return
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+literal|3
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// Get the operands corresponding to the given \p Pred value. By default, the
+comment|/// predicate register is assumed to be 0 (no register), but you can pass in a
+comment|/// \p PredReg if that is not the case.
 specifier|static
 specifier|inline
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|AddDefaultPred
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|)
-block|{
-return|return
-name|MIB
-operator|.
-name|addImm
-argument_list|(
-operator|(
-name|int64_t
-operator|)
-name|ARMCC
+name|std
 operator|::
-name|AL
-argument_list|)
-operator|.
-name|addReg
+name|array
+operator|<
+name|MachineOperand
+block|,
+literal|2
+operator|>
+name|predOps
 argument_list|(
+argument|ARMCC::CondCodes Pred
+argument_list|,
+argument|unsigned PredReg =
 literal|0
 argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|AddDefaultCC
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|)
 block|{
 return|return
-name|MIB
-operator|.
-name|addReg
+block|{
+block|{
+name|MachineOperand
+operator|::
+name|CreateImm
 argument_list|(
-literal|0
+name|static_cast
+operator|<
+name|int64_t
+operator|>
+operator|(
+name|Pred
+operator|)
 argument_list|)
+block|,
+name|MachineOperand
+operator|::
+name|CreateReg
+argument_list|(
+argument|PredReg
+argument_list|,
+argument|false
+argument_list|)
+block|}
+block|}
 return|;
 block|}
+comment|/// Get the operand corresponding to the conditional code result. By default,
+comment|/// this is 0 (no register).
 specifier|static
 specifier|inline
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|AddDefaultT1CC
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|,
-name|bool
-name|isDead
-init|=
+name|MachineOperand
+name|condCodeOp
+argument_list|(
+argument|unsigned CCReg =
+literal|0
+argument_list|)
+block|{
+return|return
+name|MachineOperand
+operator|::
+name|CreateReg
+argument_list|(
+name|CCReg
+argument_list|,
 name|false
-parameter_list|)
+argument_list|)
+return|;
+block|}
+comment|/// Get the operand corresponding to the conditional code result for Thumb1.
+comment|/// This operand will always refer to CPSR and it will have the Define flag set.
+comment|/// You can optionally set the Dead flag by means of \p isDead.
+specifier|static
+specifier|inline
+name|MachineOperand
+name|t1CondCodeOp
+argument_list|(
+argument|bool isDead = false
+argument_list|)
 block|{
 return|return
-name|MIB
-operator|.
-name|addReg
+name|MachineOperand
+operator|::
+name|CreateReg
 argument_list|(
 name|ARM
 operator|::
 name|CPSR
 argument_list|,
-name|getDefRegState
-argument_list|(
+comment|/*Define*/
 name|true
-argument_list|)
-operator||
-name|getDeadRegState
-argument_list|(
+argument_list|,
+comment|/*Implicit*/
+name|false
+argument_list|,
+comment|/*Kill*/
+name|false
+argument_list|,
 name|isDead
-argument_list|)
-argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|AddNoT1CC
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|)
-block|{
-return|return
-name|MIB
-operator|.
-name|addReg
-argument_list|(
-literal|0
 argument_list|)
 return|;
 block|}
@@ -1396,10 +1517,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isUncondBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1425,10 +1545,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isCondBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1454,10 +1573,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isJumpTableBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1495,10 +1613,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isIndirectBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1524,10 +1641,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isPopOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1577,10 +1693,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isPushOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1625,181 +1740,110 @@ name|unsigned
 operator|&
 name|PredReg
 argument_list|)
-expr_stmt|;
+block|;
 name|unsigned
 name|getMatchingCondBranchOpcode
-parameter_list|(
-name|unsigned
-name|Opc
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned Opc
+argument_list|)
+block|;
 comment|/// Determine if MI can be folded into an ARM MOVCC instruction, and return the
 comment|/// opcode of the SSA instruction representing the conditional MI.
 name|unsigned
 name|canFoldARMInstrIntoMOVCC
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|,
-name|MachineInstr
-modifier|*
-modifier|&
-name|MI
-parameter_list|,
-specifier|const
-name|MachineRegisterInfo
-modifier|&
-name|MRI
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|MachineInstr *&MI
+argument_list|,
+argument|const MachineRegisterInfo&MRI
+argument_list|)
+block|;
 comment|/// Map pseudo instructions that imply an 'S' bit onto real opcodes. Whether
 comment|/// the instruction is encoded with an 'S' bit is determined by the optional
 comment|/// CPSR def operand.
 name|unsigned
 name|convertAddSubFlagsOpcode
-parameter_list|(
-name|unsigned
-name|OldOpc
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned OldOpc
+argument_list|)
+block|;
 comment|/// emitARMRegPlusImmediate / emitT2RegPlusImmediate - Emits a series of
 comment|/// instructions to materializea destreg = basereg + immediate in ARM / Thumb2
 comment|/// code.
 name|void
 name|emitARMRegPlusImmediate
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-operator|&
-name|MBBI
+argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
-specifier|const
-name|DebugLoc
-operator|&
-name|dl
+argument|const DebugLoc&dl
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-name|unsigned
-name|BaseReg
+argument|unsigned BaseReg
 argument_list|,
-name|int
-name|NumBytes
+argument|int NumBytes
 argument_list|,
-name|ARMCC
-operator|::
-name|CondCodes
-name|Pred
+argument|ARMCC::CondCodes Pred
 argument_list|,
-name|unsigned
-name|PredReg
+argument|unsigned PredReg
 argument_list|,
-specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|TII
+argument|const ARMBaseInstrInfo&TII
 argument_list|,
-name|unsigned
-name|MIFlags
-operator|=
+argument|unsigned MIFlags =
 literal|0
 argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|emitT2RegPlusImmediate
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-operator|&
-name|MBBI
+argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
-specifier|const
-name|DebugLoc
-operator|&
-name|dl
+argument|const DebugLoc&dl
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-name|unsigned
-name|BaseReg
+argument|unsigned BaseReg
 argument_list|,
-name|int
-name|NumBytes
+argument|int NumBytes
 argument_list|,
-name|ARMCC
-operator|::
-name|CondCodes
-name|Pred
+argument|ARMCC::CondCodes Pred
 argument_list|,
-name|unsigned
-name|PredReg
+argument|unsigned PredReg
 argument_list|,
-specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|TII
+argument|const ARMBaseInstrInfo&TII
 argument_list|,
-name|unsigned
-name|MIFlags
-operator|=
+argument|unsigned MIFlags =
 literal|0
 argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|emitThumbRegPlusImmediate
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-operator|&
-name|MBBI
+argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
-specifier|const
-name|DebugLoc
-operator|&
-name|dl
+argument|const DebugLoc&dl
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-name|unsigned
-name|BaseReg
+argument|unsigned BaseReg
 argument_list|,
-name|int
-name|NumBytes
+argument|int NumBytes
 argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
+argument|const TargetInstrInfo&TII
 argument_list|,
-specifier|const
-name|ARMBaseRegisterInfo
-operator|&
-name|MRI
+argument|const ARMBaseRegisterInfo&MRI
 argument_list|,
-name|unsigned
-name|MIFlags
-operator|=
+argument|unsigned MIFlags =
 literal|0
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Tries to add registers to the reglist of a given base-updating
 comment|/// push/pop instruction to adjust the stack by an additional
 comment|/// NumBytes. This can save a few bytes per function in code-size, but
@@ -1807,85 +1851,62 @@ comment|/// obviously generates more memory traffic. As such, it only takes
 comment|/// effect in functions being optimised for size.
 name|bool
 name|tryFoldSPUpdateIntoPushPop
-parameter_list|(
-specifier|const
-name|ARMSubtarget
-modifier|&
-name|Subtarget
-parameter_list|,
-name|MachineFunction
-modifier|&
-name|MF
-parameter_list|,
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|,
-name|unsigned
-name|NumBytes
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const ARMSubtarget&Subtarget
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineInstr *MI
+argument_list|,
+argument|unsigned NumBytes
+argument_list|)
+block|;
 comment|/// rewriteARMFrameIndex / rewriteT2FrameIndex -
 comment|/// Rewrite MI to access 'Offset' bytes from the FP. Return false if the
 comment|/// offset could not be handled directly in MI, and return the left-over
 comment|/// portion by reference.
 name|bool
 name|rewriteARMFrameIndex
-parameter_list|(
-name|MachineInstr
-modifier|&
-name|MI
-parameter_list|,
-name|unsigned
-name|FrameRegIdx
-parameter_list|,
-name|unsigned
-name|FrameReg
-parameter_list|,
-name|int
-modifier|&
-name|Offset
-parameter_list|,
-specifier|const
-name|ARMBaseInstrInfo
-modifier|&
-name|TII
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned FrameRegIdx
+argument_list|,
+argument|unsigned FrameReg
+argument_list|,
+argument|int&Offset
+argument_list|,
+argument|const ARMBaseInstrInfo&TII
+argument_list|)
+block|;
 name|bool
 name|rewriteT2FrameIndex
-parameter_list|(
-name|MachineInstr
-modifier|&
-name|MI
-parameter_list|,
-name|unsigned
-name|FrameRegIdx
-parameter_list|,
-name|unsigned
-name|FrameReg
-parameter_list|,
-name|int
-modifier|&
-name|Offset
-parameter_list|,
-specifier|const
-name|ARMBaseInstrInfo
-modifier|&
-name|TII
-parameter_list|)
-function_decl|;
-block|}
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned FrameRegIdx
+argument_list|,
+argument|unsigned FrameReg
+argument_list|,
+argument|int&Offset
+argument_list|,
+argument|const ARMBaseInstrInfo&TII
+argument_list|)
+block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_ARM_ARMBASEINSTRINFO_H
+end_comment
 
 end_unit
 

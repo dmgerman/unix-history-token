@@ -1088,7 +1088,15 @@ name|CXXCtorType
 name|CtorKind
 parameter_list|,
 name|unsigned
-name|ExtraArgs
+name|ExtraPrefixArgs
+parameter_list|,
+name|unsigned
+name|ExtraSuffixArgs
+parameter_list|,
+name|bool
+name|PassProtoArgs
+init|=
+name|true
 parameter_list|)
 function_decl|;
 specifier|const
@@ -1108,6 +1116,9 @@ name|type
 parameter_list|,
 name|RequiredArgs
 name|required
+parameter_list|,
+name|unsigned
+name|numPrefixArgs
 parameter_list|)
 function_decl|;
 specifier|const

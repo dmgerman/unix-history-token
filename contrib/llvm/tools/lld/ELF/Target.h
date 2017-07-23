@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"InputSection.h"
+file|"Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"InputSection.h"
 end_include
 
 begin_include
@@ -61,16 +61,18 @@ directive|include
 file|"llvm/Object/ELF.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<memory>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lld
 block|{
+name|std
+operator|::
+name|string
+name|toString
+argument_list|(
+argument|uint32_t RelType
+argument_list|)
+expr_stmt|;
 name|namespace
 name|elf
 block|{
@@ -85,33 +87,6 @@ name|TargetInfo
 block|{
 name|public
 label|:
-name|virtual
-name|bool
-name|isTlsInitialExecRel
-argument_list|(
-name|uint32_t
-name|Type
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
-name|bool
-name|isTlsLocalDynamicRel
-argument_list|(
-name|uint32_t
-name|Type
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
-name|bool
-name|isTlsGlobalDynamicRel
-argument_list|(
-name|uint32_t
-name|Type
-argument_list|)
-decl|const
-decl_stmt|;
 name|virtual
 name|bool
 name|isPicRel
@@ -180,7 +155,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|virtual
-name|uint64_t
+name|int64_t
 name|getImplicitAddend
 argument_list|(
 specifier|const
@@ -228,6 +203,29 @@ name|RelOff
 argument_list|)
 decl|const
 block|{}
+name|virtual
+name|void
+name|addPltHeaderSymbols
+argument_list|(
+name|InputSectionBase
+operator|*
+name|IS
+argument_list|)
+decl|const
+block|{}
+name|virtual
+name|void
+name|addPltSymbols
+argument_list|(
+name|InputSectionBase
+operator|*
+name|IS
+argument_list|,
+name|uint64_t
+name|Off
+argument_list|)
+decl|const
+block|{}
 comment|// Returns true if a relocation only uses the low bits of a value such that
 comment|// all those bits are in in the same page. For example, if the relocation
 comment|// only uses the low 12 bits in a system with 4k pages. If this is true, the
@@ -243,14 +241,10 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|// Decide whether a Thunk is needed for the relocation from File
-comment|// targeting S. Returns one of:
-comment|// Expr if there is no Thunk required
-comment|// R_THUNK_ABS if thunk is required and expression is absolute
-comment|// R_THUNK_PC if thunk is required and expression is pc rel
-comment|// R_THUNK_PLT_PC if thunk is required to PLT entry and expression is pc rel
+comment|// targeting S.
 name|virtual
-name|RelExpr
-name|getThunkExpr
+name|bool
+name|needsThunk
 argument_list|(
 name|RelExpr
 name|Expr
@@ -260,13 +254,29 @@ name|RelocType
 argument_list|,
 specifier|const
 name|InputFile
-operator|&
+operator|*
 name|File
 argument_list|,
 specifier|const
 name|SymbolBody
 operator|&
 name|S
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// Return true if we can reach Dst from Src with Relocation RelocType
+name|virtual
+name|bool
+name|inBranchRange
+argument_list|(
+name|uint32_t
+name|RelocType
+argument_list|,
+name|uint64_t
+name|Src
+argument_list|,
+name|uint64_t
+name|Dst
 argument_list|)
 decl|const
 decl_stmt|;
@@ -281,6 +291,11 @@ specifier|const
 name|SymbolBody
 operator|&
 name|S
+argument_list|,
+specifier|const
+name|uint8_t
+operator|*
+name|Loc
 argument_list|)
 decl|const
 init|=
@@ -332,6 +347,13 @@ name|uint64_t
 name|DefaultImageBase
 init|=
 literal|0x10000
+decl_stmt|;
+comment|// Offset of _GLOBAL_OFFSET_TABLE_ from base of .got section. Use -1 for
+comment|// end of .got
+name|uint64_t
+name|GotBaseSymOff
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 name|CopyRel
@@ -393,6 +415,13 @@ name|bool
 name|NeedsThunks
 init|=
 name|false
+decl_stmt|;
+comment|// A 4-byte field corresponding to one or more trap instructions, used to pad
+comment|// executable OutputSections.
+name|uint32_t
+name|TrapInstr
+init|=
+literal|0
 decl_stmt|;
 name|virtual
 name|RelExpr
@@ -490,6 +519,77 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
+name|TargetInfo
+modifier|*
+name|getAArch64TargetInfo
+parameter_list|()
+function_decl|;
+name|TargetInfo
+modifier|*
+name|getAMDGPUTargetInfo
+parameter_list|()
+function_decl|;
+name|TargetInfo
+modifier|*
+name|getARMTargetInfo
+parameter_list|()
+function_decl|;
+name|TargetInfo
+modifier|*
+name|getAVRTargetInfo
+parameter_list|()
+function_decl|;
+name|TargetInfo
+modifier|*
+name|getPPC64TargetInfo
+parameter_list|()
+function_decl|;
+name|TargetInfo
+modifier|*
+name|getPPCTargetInfo
+parameter_list|()
+function_decl|;
+name|TargetInfo
+modifier|*
+name|getSPARCV9TargetInfo
+parameter_list|()
+function_decl|;
+name|TargetInfo
+modifier|*
+name|getX32TargetInfo
+parameter_list|()
+function_decl|;
+name|TargetInfo
+modifier|*
+name|getX86TargetInfo
+parameter_list|()
+function_decl|;
+name|TargetInfo
+modifier|*
+name|getX86_64TargetInfo
+parameter_list|()
+function_decl|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|TargetInfo
+operator|*
+name|getMipsTargetInfo
+argument_list|()
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|getErrorLocation
+argument_list|(
+specifier|const
+name|uint8_t
+operator|*
+name|Loc
+argument_list|)
+expr_stmt|;
 name|uint64_t
 name|getPPC64TocBase
 parameter_list|()
@@ -508,20 +608,223 @@ name|Target
 decl_stmt|;
 name|TargetInfo
 modifier|*
-name|createTarget
+name|getTarget
 parameter_list|()
 function_decl|;
-block|}
-name|std
+name|template
+operator|<
+name|unsigned
+name|N
+operator|>
+specifier|static
+name|void
+name|checkInt
+argument_list|(
+argument|uint8_t *Loc
+argument_list|,
+argument|int64_t V
+argument_list|,
+argument|uint32_t Type
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|llvm
 operator|::
-name|string
+name|isInt
+operator|<
+name|N
+operator|>
+operator|(
+name|V
+operator|)
+condition|)
+name|error
+argument_list|(
+name|getErrorLocation
+argument_list|(
+name|Loc
+argument_list|)
+operator|+
+literal|"relocation "
+operator|+
+name|lld
+operator|::
 name|toString
 argument_list|(
-argument|uint32_t RelType
+name|Type
+argument_list|)
+operator|+
+literal|" out of range"
 argument_list|)
 expr_stmt|;
 block|}
+name|template
+operator|<
+name|unsigned
+name|N
+operator|>
+specifier|static
+name|void
+name|checkUInt
+argument_list|(
+argument|uint8_t *Loc
+argument_list|,
+argument|uint64_t V
+argument_list|,
+argument|uint32_t Type
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|llvm
+operator|::
+name|isUInt
+operator|<
+name|N
+operator|>
+operator|(
+name|V
+operator|)
+condition|)
+name|error
+argument_list|(
+name|getErrorLocation
+argument_list|(
+name|Loc
+argument_list|)
+operator|+
+literal|"relocation "
+operator|+
+name|lld
+operator|::
+name|toString
+argument_list|(
+name|Type
+argument_list|)
+operator|+
+literal|" out of range"
+argument_list|)
+expr_stmt|;
+block|}
+name|template
+operator|<
+name|unsigned
+name|N
+operator|>
+specifier|static
+name|void
+name|checkIntUInt
+argument_list|(
+argument|uint8_t *Loc
+argument_list|,
+argument|uint64_t V
+argument_list|,
+argument|uint32_t Type
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|llvm
+operator|::
+name|isInt
+operator|<
+name|N
+operator|>
+operator|(
+name|V
+operator|)
+operator|&&
+operator|!
+name|llvm
+operator|::
+name|isUInt
+operator|<
+name|N
+operator|>
+operator|(
+name|V
+operator|)
+condition|)
+name|error
+argument_list|(
+name|getErrorLocation
+argument_list|(
+name|Loc
+argument_list|)
+operator|+
+literal|"relocation "
+operator|+
+name|lld
+operator|::
+name|toString
+argument_list|(
+name|Type
+argument_list|)
+operator|+
+literal|" out of range"
+argument_list|)
+expr_stmt|;
+block|}
+name|template
+operator|<
+name|unsigned
+name|N
+operator|>
+specifier|static
+name|void
+name|checkAlignment
+argument_list|(
+argument|uint8_t *Loc
+argument_list|,
+argument|uint64_t V
+argument_list|,
+argument|uint32_t Type
+argument_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|V
+operator|&
+operator|(
+name|N
+operator|-
+literal|1
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|error
+argument_list|(
+name|getErrorLocation
+argument_list|(
+name|Loc
+argument_list|)
+operator|+
+literal|"improper alignment for relocation "
+operator|+
+name|lld
+operator|::
+name|toString
+argument_list|(
+name|Type
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|// namespace elf
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lld
+end_comment
 
 begin_endif
 endif|#

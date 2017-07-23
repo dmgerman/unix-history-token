@@ -241,5 +241,12 @@ name|storage
 value|34
 end_define
 
+begin_define
+define|#
+directive|define
+name|funcname
+value|35
+end_define
+
 end_unit
 

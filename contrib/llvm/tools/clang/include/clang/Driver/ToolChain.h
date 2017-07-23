@@ -167,6 +167,9 @@ decl_stmt|;
 name|class
 name|Tool
 decl_stmt|;
+name|class
+name|XRayArgs
+decl_stmt|;
 comment|/// ToolChain - Access to tools for a single platform.
 name|class
 name|ToolChain
@@ -334,6 +337,15 @@ name|SanitizerArgs
 operator|>
 name|SanitizerArguments
 expr_stmt|;
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|XRayArgs
+operator|>
+name|XRayArguments
+expr_stmt|;
 comment|/// The effective clang triple for the current Job.
 name|mutable
 name|llvm
@@ -354,7 +366,12 @@ decl|const
 block|{
 name|EffectiveTriple
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|ET
+argument_list|)
 expr_stmt|;
 block|}
 name|friend
@@ -746,6 +763,13 @@ name|getSanitizerArgs
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|const
+name|XRayArgs
+operator|&
+name|getXRayArgs
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Returns the Arg * that explicitly turned on/off rtti, or nullptr.
 specifier|const
 name|llvm
@@ -1087,6 +1111,15 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
+comment|// Returns<ResourceDir>/lib/<OSName>/<arch>.  This is used by runtimes (such
+comment|// as OpenMP) to find arch-specific libraries.
+name|std
+operator|::
+name|string
+name|getArchSpecificLibPath
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// needsProfileRT - returns true if instrumentation profile is on.
 specifier|static
 name|bool
@@ -1386,6 +1419,11 @@ operator|::
 name|ArgStringList
 operator|&
 name|CC1Args
+argument_list|,
+name|Action
+operator|::
+name|OffloadKind
+name|DeviceOffloadKind
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1705,7 +1743,12 @@ name|TC
 operator|.
 name|setEffectiveTriple
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|T
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<opt_aic79xx.h>
+file|"opt_aic79xx.h"
 end_include
 
 begin_comment

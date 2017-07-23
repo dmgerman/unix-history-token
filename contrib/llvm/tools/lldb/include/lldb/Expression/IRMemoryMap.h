@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataBufferHeap.h"
+file|"lldb/Utility/DataBufferHeap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UserID.h"
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_include
@@ -140,7 +140,7 @@ argument|AllocationPolicy policy
 argument_list|,
 argument|bool zero_memory
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 name|void
@@ -151,7 +151,7 @@ operator|::
 name|addr_t
 name|process_address
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -164,7 +164,7 @@ operator|::
 name|addr_t
 name|process_address
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -185,7 +185,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -205,7 +205,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -223,7 +223,7 @@ operator|::
 name|addr_t
 name|address
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -243,7 +243,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -263,7 +263,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -282,7 +282,7 @@ operator|::
 name|addr_t
 name|process_address
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -315,7 +315,7 @@ argument_list|,
 name|size_t
 name|size
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

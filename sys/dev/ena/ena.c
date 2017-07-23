@@ -1184,6 +1184,25 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|ena_check_and_collapse_mbuf
+parameter_list|(
+name|struct
+name|ena_ring
+modifier|*
+name|tx_ring
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|mbuf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|ena_xmit_mbuf
 parameter_list|(
 name|struct
@@ -1669,36 +1688,36 @@ literal|8
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, bounds */
+comment|/* alignment, bounds 		*/
 name|dma_space_addr
 argument_list|,
-comment|/* lowaddr */
-name|dma_space_addr
+comment|/* lowaddr of exclusion window	*/
+name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr */
+comment|/* highaddr of exclusion window	*/
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* filter, filterarg */
+comment|/* filter, filterarg 		*/
 name|maxsize
 argument_list|,
-comment|/* maxsize */
+comment|/* maxsize 			*/
 literal|1
 argument_list|,
-comment|/* nsegments */
+comment|/* nsegments 			*/
 name|maxsize
 argument_list|,
-comment|/* maxsegsize */
+comment|/* maxsegsize 			*/
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|/* flags */
+comment|/* flags 				*/
 name|NULL
 argument_list|,
-comment|/* lockfunc */
+comment|/* lockfunc 			*/
 name|NULL
 argument_list|,
-comment|/* lockarg */
+comment|/* lockarg 			*/
 operator|&
 name|dma
 operator|->
@@ -2849,22 +2868,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|rxr
-operator|->
-name|ring_mtx
-argument_list|,
-name|rxr
-operator|->
-name|mtx_name
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|que
 operator|=
 operator|&
@@ -3024,14 +3027,6 @@ operator|->
 name|ring_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|rxr
-operator|->
-name|ring_mtx
-argument_list|)
-expr_stmt|;
 name|drbr_free
 argument_list|(
 name|txr
@@ -3113,7 +3108,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, bounds 	*/
+comment|/* alignment, bounds 	     */
 name|ENA_DMA_BIT_MASK
 argument_list|(
 name|adapter
@@ -3121,40 +3116,37 @@ operator|->
 name|dma_width
 argument_list|)
 argument_list|,
-comment|/* lowaddr 		*/
-name|ENA_DMA_BIT_MASK
-argument_list|(
-name|adapter
-operator|->
-name|dma_width
-argument_list|)
+comment|/* lowaddr of excl window  */
+name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr 		*/
+comment|/* highaddr of excl window */
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* filter, filterarg 	*/
+comment|/* filter, filterarg 	     */
 name|ENA_TSO_MAXSIZE
 argument_list|,
-comment|/* maxsize 		*/
+comment|/* maxsize 		     */
 name|adapter
 operator|->
 name|max_tx_sgl_size
+operator|-
+literal|1
 argument_list|,
-comment|/* nsegments 		*/
+comment|/* nsegments 		     */
 name|ENA_TSO_MAXSIZE
 argument_list|,
-comment|/* maxsegsize 	*/
+comment|/* maxsegsize 	     */
 literal|0
 argument_list|,
-comment|/* flags 		*/
+comment|/* flags 		     */
 name|NULL
 argument_list|,
-comment|/* lockfunc 		*/
+comment|/* lockfunc 		     */
 name|NULL
 argument_list|,
-comment|/* lockfuncarg 	*/
+comment|/* lockfuncarg 	     */
 operator|&
 name|adapter
 operator|->
@@ -3253,12 +3245,12 @@ operator|->
 name|pdev
 argument_list|)
 argument_list|,
-comment|/* parent */
+comment|/* parent   */
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, bounds 	*/
+comment|/* alignment, bounds 	     */
 name|ENA_DMA_BIT_MASK
 argument_list|(
 name|adapter
@@ -3266,38 +3258,33 @@ operator|->
 name|dma_width
 argument_list|)
 argument_list|,
-comment|/* lowaddr 		*/
-name|ENA_DMA_BIT_MASK
-argument_list|(
-name|adapter
-operator|->
-name|dma_width
-argument_list|)
+comment|/* lowaddr of excl window  */
+name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr 		*/
+comment|/* highaddr of excl window */
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* filter, filterarg 	*/
+comment|/* filter, filterarg 	     */
 name|MJUM16BYTES
 argument_list|,
-comment|/* maxsize 		*/
+comment|/* maxsize 		     */
 literal|1
 argument_list|,
-comment|/* nsegments 		*/
+comment|/* nsegments 		     */
 name|MJUM16BYTES
 argument_list|,
-comment|/* maxsegsize 	*/
+comment|/* maxsegsize 	     */
 literal|0
 argument_list|,
-comment|/* flags 		*/
+comment|/* flags 		     */
 name|NULL
 argument_list|,
-comment|/* lockfunc 		*/
+comment|/* lockfunc 		     */
 name|NULL
 argument_list|,
-comment|/* lockarg 		*/
+comment|/* lockarg 		     */
 operator|&
 name|adapter
 operator|->
@@ -3556,6 +3543,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Make sure that drbr is empty */
+name|ENA_RING_MTX_LOCK
+argument_list|(
+name|tx_ring
+argument_list|)
+expr_stmt|;
 name|drbr_flush
 argument_list|(
 name|adapter
@@ -3565,6 +3557,11 @@ argument_list|,
 name|tx_ring
 operator|->
 name|br
+argument_list|)
+expr_stmt|;
+name|ENA_RING_MTX_UNLOCK
+argument_list|(
+name|tx_ring
 argument_list|)
 expr_stmt|;
 comment|/* ... and create the buffer DMA maps */
@@ -3896,6 +3893,11 @@ operator|->
 name|enqueue_tq
 argument_list|)
 expr_stmt|;
+name|ENA_RING_MTX_LOCK
+argument_list|(
+name|tx_ring
+argument_list|)
+expr_stmt|;
 comment|/* Flush buffer ring, */
 name|drbr_flush
 argument_list|(
@@ -3909,11 +3911,6 @@ name|br
 argument_list|)
 expr_stmt|;
 comment|/* Free buffer DMA maps, */
-name|ENA_RING_MTX_LOCK
-argument_list|(
-name|tx_ring
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|int
@@ -4840,11 +4837,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|ENA_RING_MTX_LOCK
-argument_list|(
-name|rx_ring
-argument_list|)
-expr_stmt|;
 comment|/* Get mbuf using UMA allocator */
 name|rx_info
 operator|->
@@ -4859,11 +4851,6 @@ argument_list|,
 name|M_PKTHDR
 argument_list|,
 name|MJUM16BYTES
-argument_list|)
-expr_stmt|;
-name|ENA_RING_MTX_UNLOCK
-argument_list|(
-name|rx_ring
 argument_list|)
 expr_stmt|;
 if|if
@@ -5259,7 +5246,7 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
-operator|<
+operator|!=
 literal|0
 condition|)
 block|{
@@ -10067,11 +10054,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|ena_unmask_all_io_irqs
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10358,6 +10340,11 @@ operator|->
 name|up
 operator|=
 name|true
+expr_stmt|;
+name|ena_unmask_all_io_irqs
+argument_list|(
+name|adapter
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -10806,11 +10793,29 @@ name|up
 operator|==
 name|false
 condition|)
+block|{
+name|sx_xlock
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|ioctl_sx
+argument_list|)
+expr_stmt|;
 name|ena_up
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|sx_unlock
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|ioctl_sx
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -11635,18 +11640,28 @@ operator|->
 name|if_hw_tsomax
 operator|=
 name|ENA_TSO_MAXSIZE
+operator|-
+operator|(
+name|ETHER_HDR_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
+operator|)
 expr_stmt|;
 name|ifp
 operator|->
 name|if_hw_tsomaxsegcount
 operator|=
-name|ENA_TSO_NSEGS
+name|adapter
+operator|->
+name|max_tx_sgl_size
+operator|-
+literal|1
 expr_stmt|;
 name|ifp
 operator|->
 name|if_hw_tsomaxsegsize
 operator|=
-name|MCLBYTES
+name|ENA_TSO_MAXSIZE
 expr_stmt|;
 name|if_setifheaderlen
 argument_list|(
@@ -12309,7 +12324,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ena_check_and_defragment_mbuf
+name|ena_check_and_collapse_mbuf
 parameter_list|(
 name|struct
 name|ena_ring
@@ -12331,7 +12346,7 @@ decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
-name|defrag_mbuf
+name|collapsed_mbuf
 decl_stmt|;
 name|int
 name|num_frags
@@ -12370,24 +12385,30 @@ name|tx_ring
 operator|->
 name|tx_stats
 operator|.
-name|defragment
+name|collapse
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|defrag_mbuf
+name|collapsed_mbuf
 operator|=
-name|m_defrag
+name|m_collapse
 argument_list|(
 operator|*
 name|mbuf
 argument_list|,
 name|M_NOWAIT
+argument_list|,
+name|adapter
+operator|->
+name|max_tx_sgl_size
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|defrag_mbuf
+name|collapsed_mbuf
 operator|==
 name|NULL
 condition|)
@@ -12398,7 +12419,7 @@ name|tx_ring
 operator|->
 name|tx_stats
 operator|.
-name|defragment_err
+name|collapse_err
 argument_list|,
 literal|1
 argument_list|)
@@ -12409,11 +12430,11 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* If mbuf was defragmented succesfully, original mbuf is released. */
+comment|/* If mbuf was collapsed succesfully, original mbuf is released. */
 operator|*
 name|mbuf
 operator|=
-name|defrag_mbuf
+name|collapsed_mbuf
 expr_stmt|;
 return|return
 operator|(
@@ -12553,7 +12574,7 @@ argument_list|)
 expr_stmt|;
 name|rc
 operator|=
-name|ena_check_and_defragment_mbuf
+name|ena_check_and_collapse_mbuf
 argument_list|(
 name|tx_ring
 argument_list|,
@@ -12569,7 +12590,7 @@ name|ena_trace
 argument_list|(
 name|ENA_WARNING
 argument_list|,
-literal|"Failed to defragment mbuf! err: %d"
+literal|"Failed to collapse mbuf! err: %d"
 argument_list|,
 name|rc
 argument_list|)
@@ -13255,6 +13276,17 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+name|drbr_advance
+argument_list|(
+name|adapter
+operator|->
+name|ifp
+argument_list|,
+name|tx_ring
+operator|->
+name|br
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -13270,17 +13302,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|drbr_advance
-argument_list|(
-name|adapter
-operator|->
-name|ifp
-argument_list|,
-name|tx_ring
-operator|->
-name|br
-argument_list|)
-expr_stmt|;
 name|acum_pkts
 operator|++
 expr_stmt|;

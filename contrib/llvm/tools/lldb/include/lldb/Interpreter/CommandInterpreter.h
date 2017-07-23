@@ -92,18 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StringList.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Interpreter/Args.h"
 end_include
 
@@ -129,6 +117,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/ScriptInterpreter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StringList.h"
 end_include
 
 begin_include
@@ -1775,7 +1775,7 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
-name|Error
+name|Status
 name|PreprocessCommand
 argument_list|(
 name|std
@@ -1883,7 +1883,7 @@ name|m_script_interpreter_sp
 expr_stmt|;
 name|std
 operator|::
-name|mutex
+name|recursive_mutex
 name|m_script_interpreter_mutex
 expr_stmt|;
 name|lldb

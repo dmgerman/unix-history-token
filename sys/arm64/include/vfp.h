@@ -128,6 +128,13 @@ name|FPU_KERN_KTHR
 value|0x0002
 end_define
 
+begin_define
+define|#
+directive|define
+name|FPU_KERN_NOCTX
+value|0x0004
+end_define
+
 begin_function_decl
 name|struct
 name|fpu_kern_ctx

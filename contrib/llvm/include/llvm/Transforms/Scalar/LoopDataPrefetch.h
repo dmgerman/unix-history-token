@@ -89,7 +89,9 @@ name|public
 operator|:
 name|LoopDataPrefetchPass
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// \brief Run the pass over the function.
 name|PreservedAnalyses
 name|run
@@ -107,10 +109,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_SCALAR_LOOPDATAPREFETCH_H
+end_comment
 
 end_unit
 

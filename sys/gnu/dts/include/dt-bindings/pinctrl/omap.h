@@ -235,14 +235,14 @@ begin_define
 define|#
 directive|define
 name|PIN_OFF_INPUT_PULLUP
-value|(OFF_EN | OFF_PULL_EN | OFF_PULL_UP)
+value|(OFF_EN | OFFOUT_EN | OFF_PULL_EN | OFF_PULL_UP)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PIN_OFF_INPUT_PULLDOWN
-value|(OFF_EN | OFF_PULL_EN)
+value|(OFF_EN | OFFOUT_EN | OFF_PULL_EN)
 end_define
 
 begin_define

@@ -130,6 +130,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -137,30 +143,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerIntPair.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/DebugLoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
@@ -178,65 +160,51 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MachineLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Pass.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|//===----------------------------------------------------------------------===//
-comment|// Forward declarations.
 name|class
-name|BlockAddress
+name|BasicBlock
 decl_stmt|;
 name|class
 name|CallInst
 decl_stmt|;
 name|class
-name|Constant
-decl_stmt|;
-name|class
-name|GlobalVariable
-decl_stmt|;
-name|class
-name|LandingPadInst
-decl_stmt|;
-name|class
-name|MDNode
-decl_stmt|;
-name|class
-name|MMIAddrLabelMap
-decl_stmt|;
-name|class
-name|MachineBasicBlock
+name|Function
 decl_stmt|;
 name|class
 name|MachineFunction
 decl_stmt|;
 name|class
-name|MachineFunctionInitializer
+name|MMIAddrLabelMap
 decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
 name|class
-name|PointerType
-decl_stmt|;
-name|class
-name|StructType
+name|TargetMachine
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// This class can be derived from and used by targets to hold private
@@ -249,24 +217,20 @@ name|MachineModuleInfoImpl
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|StubValueTy
+init|=
 name|PointerIntPair
 operator|<
 name|MCSymbol
 operator|*
-operator|,
-literal|1
-operator|,
+decl_stmt|, 1,
 name|bool
-operator|>
-name|StubValueTy
-expr_stmt|;
-name|virtual
-operator|~
-name|MachineModuleInfoImpl
-argument_list|()
-expr_stmt|;
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|SymbolListTy
+init|=
 name|std
 operator|::
 name|vector
@@ -277,11 +241,14 @@ name|pair
 operator|<
 name|MCSymbol
 operator|*
-operator|,
+decl_stmt|,
 name|StubValueTy
-operator|>
-expr|>
-name|SymbolListTy
+decl|>>
+decl_stmt|;
+name|virtual
+operator|~
+name|MachineModuleInfoImpl
+argument_list|()
 expr_stmt|;
 name|protected
 label|:
@@ -363,7 +330,7 @@ name|AddrLabelSymbols
 block|;
 comment|// TODO: Ideally, what we'd like is to have a switch that allows emitting
 comment|// synchronous (precise at call-sites only) CFA into .eh_frame. However,
-comment|// even under this switch, we'd like .debug_frame to be precise when using.
+comment|// even under this switch, we'd like .debug_frame to be precise when using
 comment|// -g. At this moment, there's no way to specify that some CFI directives
 comment|// go into .eh_frame only, while others go into .debug_frame only.
 comment|/// True if debugging information is available in this module.
@@ -382,10 +349,6 @@ comment|/// a definition of a symbol, __morestack_addr, containing the address. 
 comment|/// comments in lib/Target/X86/X86FrameLowering.cpp for more details.
 name|bool
 name|UsesMorestackAddr
-block|;
-name|MachineFunctionInitializer
-operator|*
-name|MFInitializer
 block|;
 comment|/// Maps IR Functions to their corresponding MachineFunctions.
 name|DenseMap
@@ -502,28 +465,27 @@ return|return
 name|TheModule
 return|;
 block|}
-name|void
-name|setMachineFunctionInitializer
-argument_list|(
-argument|MachineFunctionInitializer *MFInit
-argument_list|)
-block|{
-name|MFInitializer
-operator|=
-name|MFInit
-block|;   }
 comment|/// Returns the MachineFunction constructed for the IR function \p F.
-comment|/// Creates a new MachineFunction and runs the MachineFunctionInitializer
-comment|/// if none exists yet.
+comment|/// Creates a new MachineFunction if none exists yet.
 name|MachineFunction
 operator|&
-name|getMachineFunction
+name|getOrCreateMachineFunction
 argument_list|(
 specifier|const
 name|Function
 operator|&
 name|F
 argument_list|)
+block|;
+comment|/// \bried Returns the MachineFunction associated to IR function \p F if there
+comment|/// is one, otherwise nullptr.
+name|MachineFunction
+operator|*
+name|getMachineFunction
+argument_list|(
+argument|const Function&F
+argument_list|)
+specifier|const
 block|;
 comment|/// Delete the MachineFunction \p MF and reset the link in the IR Function to
 comment|/// Machine Function map.
@@ -834,13 +796,17 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEMODULEINFO_H
+end_comment
 
 end_unit
 

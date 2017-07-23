@@ -104,13 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/ti/omap4/omap4_smc.h>
+file|<arm/ti/omap4/omap4_machdep.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/ti/omap4/omap4_mp.h>
+file|<arm/ti/omap4/omap4_smc.h>
 end_include
 
 begin_function

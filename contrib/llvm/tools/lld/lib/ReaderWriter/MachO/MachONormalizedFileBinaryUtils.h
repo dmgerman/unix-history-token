@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/MachO.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
@@ -95,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/LEB128.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/MachO.h"
 end_include
 
 begin_include

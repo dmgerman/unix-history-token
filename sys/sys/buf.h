@@ -1836,6 +1836,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|maxbcachebuf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Max buffer cache block size */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|long
 name|runningbufspace
 decl_stmt|;

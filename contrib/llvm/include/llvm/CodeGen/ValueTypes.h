@@ -76,7 +76,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -95,9 +113,9 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
-comment|/// EVT - Extended Value Type.  Capable of holding value types which are not
-comment|/// native for any processor (such as the i12345 type), as well as the types
-comment|/// a MVT can represent.
+comment|/// Extended Value Type. Capable of holding value types which are not native
+comment|/// for any processor (such as the i12345 type), as well as the types an MVT
+comment|/// can represent.
 struct|struct
 name|EVT
 block|{
@@ -105,43 +123,37 @@ name|private
 label|:
 name|MVT
 name|V
+init|=
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
 decl_stmt|;
 name|Type
 modifier|*
 name|LLVMTy
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|constexpr
 name|EVT
-argument_list|()
-operator|:
-name|V
-argument_list|(
-name|MVT
-operator|::
-name|INVALID_SIMPLE_VALUE_TYPE
-argument_list|)
-operator|,
-name|LLVMTy
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+parameter_list|()
+init|=
+init|default
+function_decl|;
 name|constexpr
 name|EVT
 argument_list|(
-argument|MVT::SimpleValueType SVT
-argument_list|)
-operator|:
-name|V
-argument_list|(
+name|MVT
+operator|::
+name|SimpleValueType
 name|SVT
 argument_list|)
-operator|,
-name|LLVMTy
+range|:
+name|V
 argument_list|(
-argument|nullptr
+argument|SVT
 argument_list|)
 block|{}
 name|constexpr
@@ -152,12 +164,7 @@ argument_list|)
 operator|:
 name|V
 argument_list|(
-name|S
-argument_list|)
-operator|,
-name|LLVMTy
-argument_list|(
-argument|nullptr
+argument|S
 argument_list|)
 block|{}
 name|bool
@@ -208,8 +215,10 @@ condition|(
 name|V
 operator|.
 name|SimpleTy
-operator|<
-literal|0
+operator|==
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
 condition|)
 return|return
 name|LLVMTy
@@ -222,9 +231,9 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getFloatingPointVT - Returns the EVT that represents a floating point
-comment|/// type with the given number of bits.  There are two floating point types
-comment|/// with 128 bits - this returns f128 rather than ppcf128.
+comment|/// Returns the EVT that represents a floating-point type with the given
+comment|/// number of bits. There are two floating-point types with 128 bits - this
+comment|/// returns f128 rather than ppcf128.
 decl|static
 name|EVT
 name|getFloatingPointVT
@@ -242,8 +251,8 @@ name|BitWidth
 argument_list|)
 return|;
 block|}
-comment|/// getIntegerVT - Returns the EVT that represents an integer with the given
-comment|/// number of bits.
+comment|/// Returns the EVT that represents an integer with the given number of
+comment|/// bits.
 decl|static
 name|EVT
 name|getIntegerVT
@@ -271,8 +280,10 @@ condition|(
 name|M
 operator|.
 name|SimpleTy
-operator|>=
-literal|0
+operator|!=
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
 condition|)
 return|return
 name|M
@@ -286,8 +297,8 @@ name|BitWidth
 argument_list|)
 return|;
 block|}
-comment|/// getVectorVT - Returns the EVT that represents a vector NumElements in
-comment|/// length, where each element is of type VT.
+comment|/// Returns the EVT that represents a vector NumElements in length, where
+comment|/// each element is of type VT.
 decl|static
 name|EVT
 name|getVectorVT
@@ -301,6 +312,11 @@ name|VT
 argument_list|,
 name|unsigned
 name|NumElements
+argument_list|,
+name|bool
+name|IsScalable
+operator|=
+name|false
 argument_list|)
 block|{
 name|MVT
@@ -315,6 +331,8 @@ operator|.
 name|V
 argument_list|,
 name|NumElements
+argument_list|,
+name|IsScalable
 argument_list|)
 decl_stmt|;
 if|if
@@ -322,12 +340,22 @@ condition|(
 name|M
 operator|.
 name|SimpleTy
-operator|>=
-literal|0
+operator|!=
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
 condition|)
 return|return
 name|M
 return|;
+name|assert
+argument_list|(
+operator|!
+name|IsScalable
+operator|&&
+literal|"We don't support extended scalable types yet"
+argument_list|)
+expr_stmt|;
 return|return
 name|getExtendedVectorVT
 argument_list|(
@@ -339,9 +367,78 @@ name|NumElements
 argument_list|)
 return|;
 block|}
-comment|/// changeVectorElementTypeToInteger - Return a vector with the same number
-comment|/// of elements as this vector, but with the element type converted to an
-comment|/// integer type with the same bitwidth.
+comment|/// Returns the EVT that represents a vector EC.Min elements in length,
+comment|/// where each element is of type VT.
+decl|static
+name|EVT
+name|getVectorVT
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|MVT
+operator|::
+name|ElementCount
+name|EC
+argument_list|)
+block|{
+name|MVT
+name|M
+init|=
+name|MVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|VT
+operator|.
+name|V
+argument_list|,
+name|EC
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|M
+operator|.
+name|SimpleTy
+operator|!=
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
+condition|)
+return|return
+name|M
+return|;
+name|assert
+argument_list|(
+operator|!
+name|EC
+operator|.
+name|Scalable
+operator|&&
+literal|"We don't support extended scalable types yet"
+argument_list|)
+expr_stmt|;
+return|return
+name|getExtendedVectorVT
+argument_list|(
+name|Context
+argument_list|,
+name|VT
+argument_list|,
+name|EC
+operator|.
+name|Min
+argument_list|)
+return|;
+block|}
+comment|/// Return a vector with the same number of elements as this vector, but
+comment|/// with the element type converted to an integer type with the same
+comment|/// bitwidth.
 name|EVT
 name|changeVectorElementTypeToInteger
 argument_list|()
@@ -353,10 +450,21 @@ operator|!
 name|isSimple
 argument_list|()
 condition|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isScalableVector
+argument_list|()
+operator|&&
+literal|"We don't support extended scalable types yet"
+argument_list|)
+expr_stmt|;
 return|return
 name|changeExtendedVectorElementTypeToInteger
 argument_list|()
 return|;
+block|}
 name|MVT
 name|EltTy
 init|=
@@ -395,6 +503,9 @@ name|IntTy
 argument_list|,
 name|getVectorNumElements
 argument_list|()
+argument_list|,
+name|isScalableVector
+argument_list|()
 argument_list|)
 decl_stmt|;
 name|assert
@@ -402,8 +513,10 @@ argument_list|(
 name|VecTy
 operator|.
 name|SimpleTy
-operator|>=
-literal|0
+operator|!=
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
 operator|&&
 literal|"Simple vector VT not representable by simple integer vector VT!"
 argument_list|)
@@ -447,8 +560,7 @@ name|changeExtendedTypeToInteger
 argument_list|()
 return|;
 block|}
-comment|/// isSimple - Test if the given EVT is simple (as opposed to being
-comment|/// extended).
+comment|/// Test if the given EVT is simple (as opposed to being extended).
 name|bool
 name|isSimple
 argument_list|()
@@ -458,12 +570,13 @@ return|return
 name|V
 operator|.
 name|SimpleTy
-operator|>=
-literal|0
+operator|!=
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
 return|;
 block|}
-comment|/// isExtended - Test if the given EVT is extended (as opposed to
-comment|/// being simple).
+comment|/// Test if the given EVT is extended (as opposed to being simple).
 name|bool
 name|isExtended
 argument_list|()
@@ -475,7 +588,7 @@ name|isSimple
 argument_list|()
 return|;
 block|}
-comment|/// isFloatingPoint - Return true if this is a FP, or a vector FP type.
+comment|/// Return true if this is a FP or a vector FP type.
 name|bool
 name|isFloatingPoint
 argument_list|()
@@ -494,7 +607,7 @@ name|isExtendedFloatingPoint
 argument_list|()
 return|;
 block|}
-comment|/// isInteger - Return true if this is an integer, or a vector integer type.
+comment|/// Return true if this is an integer or a vector integer type.
 name|bool
 name|isInteger
 argument_list|()
@@ -513,7 +626,7 @@ name|isExtendedInteger
 argument_list|()
 return|;
 block|}
-comment|/// isScalarInteger - Return true if this is an integer, but not a vector.
+comment|/// Return true if this is an integer, but not a vector.
 name|bool
 name|isScalarInteger
 argument_list|()
@@ -532,7 +645,7 @@ name|isExtendedScalarInteger
 argument_list|()
 return|;
 block|}
-comment|/// isVector - Return true if this is a vector value type.
+comment|/// Return true if this is a vector value type.
 name|bool
 name|isVector
 argument_list|()
@@ -551,7 +664,33 @@ name|isExtendedVector
 argument_list|()
 return|;
 block|}
-comment|/// is16BitVector - Return true if this is a 16-bit vector type.
+comment|/// Return true if this is a vector type where the runtime
+comment|/// length is machine dependent
+name|bool
+name|isScalableVector
+argument_list|()
+decl|const
+block|{
+comment|// FIXME: We don't support extended scalable types yet, because the
+comment|// matching IR type doesn't exist. Once it has been added, this can
+comment|// be changed to call isExtendedScalableVector.
+if|if
+condition|(
+operator|!
+name|isSimple
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|V
+operator|.
+name|isScalableVector
+argument_list|()
+return|;
+block|}
+comment|/// Return true if this is a 16-bit vector type.
 name|bool
 name|is16BitVector
 argument_list|()
@@ -570,7 +709,7 @@ name|isExtended16BitVector
 argument_list|()
 return|;
 block|}
-comment|/// is32BitVector - Return true if this is a 32-bit vector type.
+comment|/// Return true if this is a 32-bit vector type.
 name|bool
 name|is32BitVector
 argument_list|()
@@ -589,7 +728,7 @@ name|isExtended32BitVector
 argument_list|()
 return|;
 block|}
-comment|/// is64BitVector - Return true if this is a 64-bit vector type.
+comment|/// Return true if this is a 64-bit vector type.
 name|bool
 name|is64BitVector
 argument_list|()
@@ -608,7 +747,7 @@ name|isExtended64BitVector
 argument_list|()
 return|;
 block|}
-comment|/// is128BitVector - Return true if this is a 128-bit vector type.
+comment|/// Return true if this is a 128-bit vector type.
 name|bool
 name|is128BitVector
 argument_list|()
@@ -627,7 +766,7 @@ name|isExtended128BitVector
 argument_list|()
 return|;
 block|}
-comment|/// is256BitVector - Return true if this is a 256-bit vector type.
+comment|/// Return true if this is a 256-bit vector type.
 name|bool
 name|is256BitVector
 argument_list|()
@@ -646,7 +785,7 @@ name|isExtended256BitVector
 argument_list|()
 return|;
 block|}
-comment|/// is512BitVector - Return true if this is a 512-bit vector type.
+comment|/// Return true if this is a 512-bit vector type.
 name|bool
 name|is512BitVector
 argument_list|()
@@ -665,7 +804,7 @@ name|isExtended512BitVector
 argument_list|()
 return|;
 block|}
-comment|/// is1024BitVector - Return true if this is a 1024-bit vector type.
+comment|/// Return true if this is a 1024-bit vector type.
 name|bool
 name|is1024BitVector
 argument_list|()
@@ -684,7 +823,7 @@ name|isExtended1024BitVector
 argument_list|()
 return|;
 block|}
-comment|/// is2048BitVector - Return true if this is a 2048-bit vector type.
+comment|/// Return true if this is a 2048-bit vector type.
 name|bool
 name|is2048BitVector
 argument_list|()
@@ -703,7 +842,7 @@ name|isExtended2048BitVector
 argument_list|()
 return|;
 block|}
-comment|/// isOverloaded - Return true if this is an overloaded type for TableGen.
+comment|/// Return true if this is an overloaded type for TableGen.
 name|bool
 name|isOverloaded
 argument_list|()
@@ -737,7 +876,7 @@ name|iPTRAny
 operator|)
 return|;
 block|}
-comment|/// isByteSized - Return true if the bit size is a multiple of 8.
+comment|/// Return true if the bit size is a multiple of 8.
 name|bool
 name|isByteSized
 argument_list|()
@@ -754,7 +893,7 @@ operator|==
 literal|0
 return|;
 block|}
-comment|/// isRound - Return true if the size is a power-of-two number of bytes.
+comment|/// Return true if the size is a power-of-two number of bytes.
 name|bool
 name|isRound
 argument_list|()
@@ -783,7 +922,7 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// bitsEq - Return true if this has the same number of bits as VT.
+comment|/// Return true if this has the same number of bits as VT.
 name|bool
 name|bitsEq
 argument_list|(
@@ -815,7 +954,7 @@ name|getSizeInBits
 argument_list|()
 return|;
 block|}
-comment|/// bitsGT - Return true if this has more bits than VT.
+comment|/// Return true if this has more bits than VT.
 name|bool
 name|bitsGT
 argument_list|(
@@ -847,7 +986,7 @@ name|getSizeInBits
 argument_list|()
 return|;
 block|}
-comment|/// bitsGE - Return true if this has no less bits than VT.
+comment|/// Return true if this has no less bits than VT.
 name|bool
 name|bitsGE
 argument_list|(
@@ -879,7 +1018,7 @@ name|getSizeInBits
 argument_list|()
 return|;
 block|}
-comment|/// bitsLT - Return true if this has less bits than VT.
+comment|/// Return true if this has less bits than VT.
 name|bool
 name|bitsLT
 argument_list|(
@@ -911,7 +1050,7 @@ name|getSizeInBits
 argument_list|()
 return|;
 block|}
-comment|/// bitsLE - Return true if this has no more bits than VT.
+comment|/// Return true if this has no more bits than VT.
 name|bool
 name|bitsLE
 argument_list|(
@@ -943,8 +1082,7 @@ name|getSizeInBits
 argument_list|()
 return|;
 block|}
-comment|/// getSimpleVT - Return the SimpleValueType held in the specified
-comment|/// simple EVT.
+comment|/// Return the SimpleValueType held in the specified simple EVT.
 name|MVT
 name|getSimpleVT
 argument_list|()
@@ -962,8 +1100,8 @@ return|return
 name|V
 return|;
 block|}
-comment|/// getScalarType - If this is a vector type, return the element type,
-comment|/// otherwise return this.
+comment|/// If this is a vector type, return the element type, otherwise return
+comment|/// this.
 name|EVT
 name|getScalarType
 argument_list|()
@@ -980,8 +1118,7 @@ operator|*
 name|this
 return|;
 block|}
-comment|/// getVectorElementType - Given a vector type, return the type of
-comment|/// each element.
+comment|/// Given a vector type, return the type of each element.
 name|EVT
 name|getVectorElementType
 argument_list|()
@@ -1011,8 +1148,7 @@ name|getExtendedVectorElementType
 argument_list|()
 return|;
 block|}
-comment|/// getVectorNumElements - Given a vector type, return the number of
-comment|/// elements it contains.
+comment|/// Given a vector type, return the number of elements it contains.
 name|unsigned
 name|getVectorNumElements
 argument_list|()
@@ -1042,7 +1178,54 @@ name|getExtendedVectorNumElements
 argument_list|()
 return|;
 block|}
-comment|/// getSizeInBits - Return the size of the specified value type in bits.
+comment|// Given a (possibly scalable) vector type, return the ElementCount
+name|MVT
+decl|::
+name|ElementCount
+name|getVectorElementCount
+argument_list|()
+decl|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|isVector
+argument_list|()
+operator|)
+operator|&&
+literal|"Invalid vector type!"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isSimple
+argument_list|()
+condition|)
+return|return
+name|V
+operator|.
+name|getVectorElementCount
+argument_list|()
+return|;
+name|assert
+argument_list|(
+operator|!
+name|isScalableVector
+argument_list|()
+operator|&&
+literal|"We don't support extended scalable types yet"
+argument_list|)
+expr_stmt|;
+return|return
+block|{
+name|getExtendedVectorNumElements
+argument_list|()
+block|,
+name|false
+block|}
+return|;
+block|}
+comment|/// Return the size of the specified value type in bits.
 name|unsigned
 name|getSizeInBits
 argument_list|()
@@ -1077,8 +1260,8 @@ name|getSizeInBits
 argument_list|()
 return|;
 block|}
-comment|/// getStoreSize - Return the number of bytes overwritten by a store
-comment|/// of the specified value type.
+comment|/// Return the number of bytes overwritten by a store of the specified value
+comment|/// type.
 name|unsigned
 name|getStoreSize
 argument_list|()
@@ -1095,8 +1278,8 @@ operator|/
 literal|8
 return|;
 block|}
-comment|/// getStoreSizeInBits - Return the number of bits overwritten by a store
-comment|/// of the specified value type.
+comment|/// Return the number of bits overwritten by a store of the specified value
+comment|/// type.
 name|unsigned
 name|getStoreSizeInBits
 argument_list|()
@@ -1109,9 +1292,9 @@ operator|*
 literal|8
 return|;
 block|}
-comment|/// getRoundIntegerType - Rounds the bit-width of the given integer EVT up
-comment|/// to the nearest power of two (and at least to eight), and returns the
-comment|/// integer EVT with that number of bits.
+comment|/// Rounds the bit-width of the given integer EVT up to the nearest power of
+comment|/// two (and at least to eight), and returns the integer EVT with that
+comment|/// number of bits.
 name|EVT
 name|getRoundIntegerType
 argument_list|(
@@ -1167,10 +1350,9 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// getHalfSizedIntegerVT - Finds the smallest simple value type that is
-comment|/// greater than or equal to half the width of this EVT. If no simple
-comment|/// value type can be found, an extended integer value type of half the
-comment|/// size (rounded up) is returned.
+comment|/// Finds the smallest simple value type that is greater than or equal to
+comment|/// half the width of this EVT. If no simple value type can be found, an
+comment|/// extended integer value type of half the size (rounded up) is returned.
 name|EVT
 name|getHalfSizedIntegerVT
 argument_list|(
@@ -1260,7 +1442,7 @@ literal|2
 argument_list|)
 return|;
 block|}
-comment|/// \brief Return a VT for an integer vector type with the size of the
+comment|/// Return a VT for an integer vector type with the size of the
 comment|/// elements doubled. The typed returned may be an extended type.
 name|EVT
 name|widenIntegerVectorElementType
@@ -1302,12 +1484,65 @@ name|Context
 argument_list|,
 name|EltVT
 argument_list|,
-name|getVectorNumElements
+name|getVectorElementCount
 argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// isPow2VectorType - Returns true if the given vector is a power of 2.
+comment|// Return a VT for a vector type with the same element type but
+comment|// half the number of elements. The type returned may be an
+comment|// extended type.
+name|EVT
+name|getHalfNumVectorElementsVT
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+block|{
+name|EVT
+name|EltVT
+init|=
+name|getVectorElementType
+argument_list|()
+decl_stmt|;
+name|auto
+name|EltCnt
+init|=
+name|getVectorElementCount
+argument_list|()
+decl_stmt|;
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|EltCnt
+operator|.
+name|Min
+operator|&
+literal|1
+operator|)
+operator|&&
+literal|"Splitting vector, but not in half!"
+argument_list|)
+expr_stmt|;
+return|return
+name|EVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|Context
+argument_list|,
+name|EltVT
+argument_list|,
+name|EltCnt
+operator|/
+literal|2
+argument_list|)
+return|;
+block|}
+comment|/// Returns true if the given vector is a power of 2.
 name|bool
 name|isPow2VectorType
 argument_list|()
@@ -1332,8 +1567,8 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// getPow2VectorType - Widens the length of the given vector EVT up to
-comment|/// the nearest power of 2 and returns that type.
+comment|/// Widens the length of the given vector EVT up to the nearest power of 2
+comment|/// and returns that type.
 name|EVT
 name|getPow2VectorType
 argument_list|(
@@ -1377,6 +1612,9 @@ name|getVectorElementType
 argument_list|()
 argument_list|,
 name|Pow2NElts
+argument_list|,
+name|isScalableVector
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -1388,8 +1626,7 @@ name|this
 return|;
 block|}
 block|}
-comment|/// getEVTString - This function returns value type as a string,
-comment|/// e.g. "i32".
+comment|/// This function returns value type as a string, e.g. "i32".
 name|std
 decl|::
 name|string
@@ -1397,9 +1634,9 @@ name|getEVTString
 argument_list|()
 decl|const
 struct|;
-comment|/// getTypeForEVT - This method returns an LLVM type corresponding to the
-comment|/// specified EVT.  For integer types, this returns an unsigned type.  Note
-comment|/// that this will abort for types that cannot be represented.
+comment|/// This method returns an LLVM type corresponding to the specified EVT.
+comment|/// For integer types, this returns an unsigned type. Note that this will
+comment|/// abort for types that cannot be represented.
 name|Type
 modifier|*
 name|getTypeForEVT
@@ -1410,7 +1647,7 @@ name|Context
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getEVT - Return the value type corresponding to the specified type.
+comment|/// Return the value type corresponding to the specified type.
 comment|/// This returns all pointers as iPTR.  If HandleUnknown is true, unknown
 comment|/// types are returned as Other, otherwise they are invalid.
 specifier|static
@@ -1452,8 +1689,8 @@ name|LLVMTy
 argument_list|)
 return|;
 block|}
-comment|/// compareRawBits - A meaningless but well-behaved order, useful for
-comment|/// constructing containers.
+comment|/// A meaningless but well-behaved order, useful for constructing
+comment|/// containers.
 struct|struct
 name|compareRawBits
 block|{
@@ -1649,13 +1886,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_VALUETYPES_H
+end_comment
 
 end_unit
 

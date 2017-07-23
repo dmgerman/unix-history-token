@@ -68,13 +68,36 @@ name|ENABLE_CRASH_OVERRIDES
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000052
+end_if
+
 begin_comment
 comment|/* Define to 1 if you have the `backtrace' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_BACKTRACE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_BACKTRACE
+value|TRUE
+end_define
+
+begin_define
+define|#
+directive|define
+name|BACKTRACE_HEADER
+value|<execinfo.h>
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<CrashReporterClient.h> header file. */
@@ -184,6 +207,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if dladdr() is available on this platform. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLADDR
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<errno.h> header file. */
 end_comment
 
@@ -193,30 +227,6 @@ directive|define
 name|HAVE_ERRNO_H
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the<execinfo.h> header file. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1000052
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_EXECINFO_H
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
@@ -1175,83 +1185,6 @@ comment|/* #undef LLVM_HOST_TRIPLE */
 end_comment
 
 begin_comment
-comment|/* LLVM architecture name for the native architecture, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_ARCH
-value|X86
-end_define
-
-begin_comment
-comment|/* LLVM name for the native AsmParser init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_ASMPARSER
-value|LLVMInitializeX86AsmParser
-end_define
-
-begin_comment
-comment|/* LLVM name for the native AsmPrinter init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_ASMPRINTER
-value|LLVMInitializeX86AsmPrinter
-end_define
-
-begin_comment
-comment|/* LLVM name for the native Disassembler init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_DISASSEMBLER
-value|LLVMInitializeX86Disassembler
-end_define
-
-begin_comment
-comment|/* LLVM name for the native Target init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_TARGET
-value|LLVMInitializeX86Target
-end_define
-
-begin_comment
-comment|/* LLVM name for the native TargetInfo init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_TARGETINFO
-value|LLVMInitializeX86TargetInfo
-end_define
-
-begin_comment
-comment|/* LLVM name for the native target MC init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_TARGETMC
-value|LLVMInitializeX86TargetMC
-end_define
-
-begin_comment
 comment|/* Define if this is Unixish platform */
 end_comment
 
@@ -1271,15 +1204,12 @@ comment|/* #undef LLVM_ON_WIN32 */
 end_comment
 
 begin_comment
-comment|/* Installation prefix directory */
+comment|/* Define if overriding target triple is enabled */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LLVM_PREFIX
-value|"/usr"
-end_define
+begin_comment
+comment|/* #undef LLVM_TARGET_TRIPLE_ENV */
+end_comment
 
 begin_comment
 comment|/* Define if we have the Intel JIT API runtime support library */
@@ -1312,6 +1242,17 @@ comment|/* #undef LLVM_VERSION_INFO */
 end_comment
 
 begin_comment
+comment|/* Whether tools show host and target info when invoked with --version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_VERSION_PRINTER_SHOW_HOST_TARGET_INFO
+value|1
+end_define
+
+begin_comment
 comment|/* Major version of the LLVM API */
 end_comment
 
@@ -1319,7 +1260,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MAJOR
-value|4
+value|5
 end_define
 
 begin_comment
@@ -1352,7 +1293,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"4.0.0"
+value|"5.0.0svn"
 end_define
 
 begin_comment
@@ -1396,7 +1337,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 4.0.0"
+value|"LLVM 5.0.0svn"
 end_define
 
 begin_comment
@@ -1417,7 +1358,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.0.0"
+value|"5.0.0svn"
 end_define
 
 begin_comment

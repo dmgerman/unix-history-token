@@ -72,18 +72,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UserID.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/Process.h"
 end_include
 
@@ -115,6 +103,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/ThreadPlanTracer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_include

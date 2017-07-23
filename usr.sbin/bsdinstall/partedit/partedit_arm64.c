@@ -22,14 +22,14 @@ file|"partedit.h"
 end_include
 
 begin_comment
-comment|/* EFI partition size in KB */
+comment|/* EFI partition size in bytes */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|EFI_BOOTPART_SIZE
-value|(50 * 1024)
+value|(200 * 1024 * 1024)
 end_define
 
 begin_define
@@ -158,11 +158,7 @@ operator|)
 return|;
 return|return
 operator|(
-operator|(
 name|EFI_BOOTPART_SIZE
-operator|)
-operator|*
-literal|1024
 operator|)
 return|;
 block|}

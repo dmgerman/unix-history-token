@@ -437,6 +437,14 @@ literal|"Intel BayTrail USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x19d08086
+case|:
+return|return
+operator|(
+literal|"Intel Denverton USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0x9c318086
 case|:
 case|case

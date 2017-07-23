@@ -161,6 +161,13 @@ operator|&
 name|M
 argument_list|)
 block|;
+name|void
+name|adjustPassManager
+argument_list|(
+argument|PassManagerBuilder&PMB
+argument_list|)
+name|override
+block|;
 name|TargetPassConfig
 operator|*
 name|createPassConfig

@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/MapVector.h"
 end_include
 
@@ -75,6 +81,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/SMLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_decl_stmt
@@ -155,19 +173,19 @@ comment|// implement the ldr-pseudo.
 name|class
 name|ConstantPool
 block|{
-typedef|typedef
+name|using
+name|EntryVecTy
+init|=
 name|SmallVector
 operator|<
 name|ConstantPoolEntry
-operator|,
-literal|4
-operator|>
-name|EntryVecTy
-expr_stmt|;
+decl_stmt|, 4>;
 name|EntryVecTy
 name|Entries
 decl_stmt|;
-name|DenseMap
+name|std
+operator|::
+name|map
 operator|<
 name|int64_t
 operator|,
@@ -182,7 +200,9 @@ label|:
 comment|// Initialize a new empty constant pool
 name|ConstantPool
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|// Add a new entry to the constant pool in the next slot.
 comment|// \param Value is the new entry to put in the constant pool.
 comment|// \param Size is the size in bytes of the entry
@@ -246,16 +266,17 @@ comment|// the sections at the end of the parse. We need to iterate over the
 comment|// sections in a stable order to ensure that we have print the
 comment|// constant pools in a deterministic order when printing an assembly
 comment|// file.
-typedef|typedef
+name|using
+name|ConstantPoolMapTy
+init|=
 name|MapVector
 operator|<
 name|MCSection
 operator|*
-operator|,
+decl_stmt|,
 name|ConstantPool
-operator|>
-name|ConstantPoolMapTy
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|ConstantPoolMapTy
 name|ConstantPools
 decl_stmt|;
@@ -339,6 +360,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_CONSTANTPOOLS_H
+end_comment
 
 end_unit
 

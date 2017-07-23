@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineConstantPool.h"
 end_include
 
@@ -74,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstddef>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -151,6 +157,7 @@ comment|/// Static Base Relative (RWPI)
 block|}
 enum|;
 block|}
+comment|// end namespace ARMCP
 comment|/// ARMConstantPoolValue - ARM specific constantpool value. This is used to
 comment|/// represent PC-relative displacement between the address of the load
 comment|/// instruction and the constant being loaded, i.e. (&GV-(LPIC+8)).
@@ -1136,13 +1143,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_ARM_ARMCONSTANTPOOLVALUE_H
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- Allocator.h - Simple memory allocation abstraction -----*- C++ -*-===//
+comment|//===- Allocator.h - Simple memory allocation abstraction -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -607,25 +607,9 @@ argument_list|)
 block|;
 name|BumpPtrAllocatorImpl
 argument_list|()
-operator|:
-name|CurPtr
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|End
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|BytesAllocated
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Allocator
-argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|template
 operator|<
 name|typename
@@ -638,21 +622,6 @@ operator|&&
 name|Allocator
 argument_list|)
 operator|:
-name|CurPtr
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|End
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|BytesAllocated
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|Allocator
 argument_list|(
 argument|std::forward<T&&>(Allocator)
@@ -710,6 +679,13 @@ argument_list|(
 name|Old
 operator|.
 name|BytesAllocated
+argument_list|)
+block|,
+name|RedZoneSize
+argument_list|(
+name|Old
+operator|.
+name|RedZoneSize
 argument_list|)
 block|,
 name|Allocator
@@ -810,6 +786,12 @@ operator|=
 name|RHS
 operator|.
 name|BytesAllocated
+block|;
+name|RedZoneSize
+operator|=
+name|RHS
+operator|.
+name|RedZoneSize
 block|;
 name|Slabs
 operator|=
@@ -1023,12 +1005,27 @@ operator|&&
 literal|"Adjustment + Size must not overflow"
 argument_list|)
 block|;
+name|size_t
+name|SizeToAllocate
+operator|=
+name|Size
+block|;
+if|#
+directive|if
+name|LLVM_ADDRESS_SANITIZER_BUILD
+comment|// Add trailing bytes as a "red zone" under ASan.
+name|SizeToAllocate
+operator|+=
+name|RedZoneSize
+block|;
+endif|#
+directive|endif
 comment|// Check if we have enough space.
 if|if
 condition|(
 name|Adjustment
 operator|+
-name|Size
+name|SizeToAllocate
 operator|<=
 name|size_t
 argument_list|(
@@ -1050,7 +1047,7 @@ name|CurPtr
 operator|=
 name|AlignedPtr
 operator|+
-name|Size
+name|SizeToAllocate
 expr_stmt|;
 comment|// Update the allocation point of this memory block in MemorySanitizer.
 comment|// Without this, MemorySanitizer messages for values originated from here
@@ -1078,7 +1075,7 @@ comment|// If Size is really big, allocate a separate slab for it.
 name|size_t
 name|PaddedSize
 init|=
-name|Size
+name|SizeToAllocate
 operator|+
 name|Alignment
 operator|-
@@ -1197,7 +1194,7 @@ name|assert
 argument_list|(
 name|AlignedAddr
 operator|+
-name|Size
+name|SizeToAllocate
 operator|<=
 operator|(
 name|uintptr_t
@@ -1221,7 +1218,7 @@ name|CurPtr
 operator|=
 name|AlignedPtr
 operator|+
-name|Size
+name|SizeToAllocate
 expr_stmt|;
 name|__msan_allocated_memory
 argument_list|(
@@ -1408,6 +1405,21 @@ return|;
 block|}
 end_expr_stmt
 
+begin_function
+name|void
+name|setRedZoneSize
+parameter_list|(
+name|size_t
+name|NewSize
+parameter_list|)
+block|{
+name|RedZoneSize
+operator|=
+name|NewSize
+expr_stmt|;
+block|}
+end_function
+
 begin_expr_stmt
 name|void
 name|PrintStats
@@ -1437,6 +1449,8 @@ comment|/// This points to the next free byte in the slab.
 name|char
 operator|*
 name|CurPtr
+operator|=
+name|nullptr
 expr_stmt|;
 end_expr_stmt
 
@@ -1448,6 +1462,8 @@ begin_decl_stmt
 name|char
 modifier|*
 name|End
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -1505,6 +1521,24 @@ end_comment
 begin_decl_stmt
 name|size_t
 name|BytesAllocated
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief The number of bytes to put between allocations when running under
+end_comment
+
+begin_comment
+comment|/// a sanitizer.
+end_comment
+
+begin_decl_stmt
+name|size_t
+name|RedZoneSize
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1770,7 +1804,7 @@ comment|/// \brief The standard BumpPtrAllocator which just uses the default tem
 end_comment
 
 begin_comment
-comment|/// paramaters.
+comment|/// parameters.
 end_comment
 
 begin_typedef
@@ -1818,9 +1852,16 @@ name|public
 operator|:
 name|SpecificBumpPtrAllocator
 argument_list|()
-operator|=
-expr|default
-block|;
+block|{
+comment|// Because SpecificBumpPtrAllocator walks the memory to call destructors,
+comment|// it can't have red zones between allocations.
+name|Allocator
+operator|.
+name|setRedZoneSize
+argument_list|(
+literal|0
+argument_list|)
+block|;   }
 name|SpecificBumpPtrAllocator
 argument_list|(
 name|SpecificBumpPtrAllocator

@@ -146,13 +146,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unordered_map>
+file|<system_error>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<system_error>
+file|<unordered_map>
 end_include
 
 begin_decl_stmt
@@ -1748,7 +1748,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/// \brief Resolve relocations to external symbols.
-name|void
+name|Error
 name|resolveExternalSymbols
 parameter_list|()
 function_decl|;
@@ -1787,6 +1787,16 @@ modifier|&
 name|RWDataAlign
 parameter_list|)
 function_decl|;
+comment|// \brief Compute GOT size
+name|unsigned
+name|computeGOTSize
+parameter_list|(
+specifier|const
+name|ObjectFile
+modifier|&
+name|Obj
+parameter_list|)
+function_decl|;
 comment|// \brief Compute the stub buffer size required for a section
 name|unsigned
 name|computeSectionStubBufSize
@@ -1817,6 +1827,32 @@ operator|&
 name|Obj
 argument_list|)
 expr_stmt|;
+comment|// \brief Return size of Global Offset Table (GOT) entry
+name|virtual
+name|size_t
+name|getGOTEntrySize
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|// \brief Return true if the relocation R may require allocating a GOT entry.
+name|virtual
+name|bool
+name|relocationNeedsGot
+argument_list|(
+specifier|const
+name|RelocationRef
+operator|&
+name|R
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|// \brief Return true if the relocation R may require allocating a stub.
 name|virtual
 name|bool
@@ -2162,7 +2198,6 @@ name|void
 name|registerEHFrames
 parameter_list|()
 function_decl|;
-name|virtual
 name|void
 name|deregisterEHFrames
 parameter_list|()

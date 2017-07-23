@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Expression/DiagnosticManager.h"
 end_include
 
@@ -71,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Expression/ExpressionParser.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -209,7 +209,7 @@ comment|/// @return
 comment|///     An error code indicating the success or failure of the operation.
 comment|///     Test with Success().
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|PrepareForExecution
 argument_list|(
 argument|lldb::addr_t&func_addr
@@ -238,7 +238,7 @@ comment|///
 comment|/// @return
 comment|///     The error code indicating the
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|RunStaticInitializers
 argument_list|(
 name|lldb

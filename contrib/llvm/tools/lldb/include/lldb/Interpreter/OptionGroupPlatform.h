@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Interpreter/Options.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/Options.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_decl_stmt
@@ -139,7 +139,7 @@ name|GetDefinitions
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
@@ -150,7 +150,7 @@ argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetOptionValue
 argument_list|(
 name|uint32_t
@@ -183,7 +183,7 @@ argument|const ArchSpec&arch
 argument_list|,
 argument|bool make_selected
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|,
 argument|ArchSpec&platform_arch
 argument_list|)

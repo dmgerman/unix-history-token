@@ -128,6 +128,12 @@ comment|///< A loop of single logical shift left instructions.
 name|LSRLOOP
 block|,
 comment|///< A loop of single logical shift right instructions.
+name|ROLLOOP
+block|,
+comment|///< A loop of single left bit rotate instructions.
+name|RORLOOP
+block|,
+comment|///< A loop of single right bit rotate instructions.
 name|ASRLOOP
 block|,
 comment|///< A loop of single arithmetic shift right instructions.

@@ -303,7 +303,7 @@ name|EOF
 operator|)
 return|;
 block|}
-name|FLOCKFILE
+name|FLOCKFILE_CANCELSAFE
 argument_list|(
 name|fp
 argument_list|)
@@ -400,10 +400,8 @@ name|false
 argument_list|)
 expr_stmt|;
 block|}
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
+name|FUNLOCKFILE_CANCELSAFE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -445,7 +443,7 @@ name|EOF
 operator|)
 return|;
 block|}
-name|FLOCKFILE
+name|FLOCKFILE_CANCELSAFE
 argument_list|(
 name|fp
 argument_list|)
@@ -459,10 +457,8 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
+name|FUNLOCKFILE_CANCELSAFE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

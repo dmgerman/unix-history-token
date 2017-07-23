@@ -365,15 +365,6 @@ begin_comment
 comment|/* designated BSP */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pcpu
-name|__pcpu
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* AP uses this during bootstrap.  Do not staticize.  */
 end_comment

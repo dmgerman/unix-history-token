@@ -341,7 +341,7 @@ begin_define
 define|#
 directive|define
 name|ENA_TSO_MAXSIZE
-value|PAGE_SIZE
+value|65536
 end_define
 
 begin_define
@@ -751,10 +751,10 @@ name|counter_u64_t
 name|bad_req_id
 decl_stmt|;
 name|counter_u64_t
-name|defragment
+name|collapse
 decl_stmt|;
 name|counter_u64_t
-name|defragment_err
+name|collapse_err
 decl_stmt|;
 block|}
 struct|;

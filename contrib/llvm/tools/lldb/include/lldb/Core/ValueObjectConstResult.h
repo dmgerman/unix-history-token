@@ -43,20 +43,14 @@ directive|define
 name|liblldb_ValueObjectConstResult_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Value.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
+comment|// for Value
 end_comment
 
 begin_include
@@ -70,6 +64,136 @@ include|#
 directive|include
 file|"lldb/Core/ValueObjectConstResultImpl.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_comment
+comment|// for CompilerType
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_comment
+comment|// for ConstString
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
+end_include
+
+begin_comment
+comment|// for Status
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_comment
+comment|// for LLDB_INVALID_ADDRESS
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_comment
+comment|// for ByteOrder, Dynamic...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_comment
+comment|// for ValueObjectSP, Dat...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-enumerations.h"
+end_include
+
+begin_comment
+comment|// for AddressType, Addre...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
+begin_comment
+comment|// for addr_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t, uint64_t
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|DataExtractor
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ExecutionContextScope
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Module
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -201,7 +325,7 @@ operator|*
 name|exe_scope
 argument_list|,
 specifier|const
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -252,7 +376,7 @@ operator|::
 name|ValueObjectSP
 name|Dereference
 argument_list|(
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -288,7 +412,7 @@ operator|::
 name|ValueObjectSP
 name|AddressOf
 argument_list|(
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -486,7 +610,7 @@ operator|*
 name|exe_scope
 argument_list|,
 specifier|const
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

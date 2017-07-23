@@ -1100,9 +1100,9 @@ comment|/* 361 = getresgid */
 literal|"kqueue"
 block|,
 comment|/* 362 = kqueue */
-literal|"kevent"
+literal|"compat11.kevent"
 block|,
-comment|/* 363 = kevent */
+comment|/* 363 = freebsd11 kevent */
 literal|"#364"
 block|,
 comment|/* 364 = __cap_get_proc */
@@ -1691,6 +1691,9 @@ comment|/* 558 = fhstatfs */
 literal|"mknodat"
 block|,
 comment|/* 559 = mknodat */
+literal|"kevent"
+block|,
+comment|/* 560 = kevent */
 block|}
 decl_stmt|;
 end_decl_stmt

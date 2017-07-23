@@ -136,18 +136,18 @@ name|EndLocation
 decl_stmt|;
 comment|/// \brief The list of arguments for a function-like macro.
 comment|///
-comment|/// ArgumentList points to the first of NumArguments pointers.
+comment|/// ParameterList points to the first of NumParameters pointers.
 comment|///
 comment|/// This can be empty, for, e.g. "#define X()".  In a C99-style variadic
 comment|/// macro, this includes the \c __VA_ARGS__ identifier on the list.
 name|IdentifierInfo
 modifier|*
 modifier|*
-name|ArgumentList
+name|ParameterList
 decl_stmt|;
-comment|/// \see ArgumentList
+comment|/// \see ParameterList
 name|unsigned
-name|NumArguments
+name|NumParameters
 decl_stmt|;
 comment|/// \brief This is the list of tokens that the macro is defined to.
 name|SmallVector
@@ -242,12 +242,6 @@ name|IsWarnIfUnused
 range|:
 literal|1
 decl_stmt|;
-comment|/// \brief Whether this macro info was loaded from an AST file.
-name|bool
-name|FromASTFile
-range|:
-literal|1
-decl_stmt|;
 comment|/// \brief Whether this macro was used as header guard.
 name|bool
 name|UsedForHeaderGuard
@@ -305,6 +299,7 @@ comment|/// \brief Get length in characters of the macro definition.
 name|unsigned
 name|getDefinitionLength
 argument_list|(
+specifier|const
 name|SourceManager
 operator|&
 name|SM
@@ -403,10 +398,10 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-comment|/// \brief Set the specified list of identifiers as the argument list for
+comment|/// \brief Set the specified list of identifiers as the parameter list for
 comment|/// this macro.
 name|void
-name|setArgumentList
+name|setParameterList
 argument_list|(
 name|ArrayRef
 operator|<
@@ -424,15 +419,15 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-name|ArgumentList
+name|ParameterList
 operator|==
 name|nullptr
 operator|&&
-name|NumArguments
+name|NumParameters
 operator|==
 literal|0
 operator|&&
-literal|"Argument list already set!"
+literal|"Parameter list already set!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -443,14 +438,14 @@ name|empty
 argument_list|()
 condition|)
 return|return;
-name|NumArguments
+name|NumParameters
 operator|=
 name|List
 operator|.
 name|size
 argument_list|()
 expr_stmt|;
-name|ArgumentList
+name|ParameterList
 operator|=
 name|PPAllocator
 operator|.
@@ -480,57 +475,57 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
-name|ArgumentList
+name|ParameterList
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Arguments - The list of arguments for a function-like macro.  This can be
-comment|/// empty, for, e.g. "#define X()".
+comment|/// Parameters - The list of parameters for a function-like macro.  This can
+comment|/// be empty, for, e.g. "#define X()".
 typedef|typedef
 name|IdentifierInfo
 modifier|*
 specifier|const
 modifier|*
-name|arg_iterator
+name|param_iterator
 typedef|;
 name|bool
-name|arg_empty
+name|param_empty
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumArguments
+name|NumParameters
 operator|==
 literal|0
 return|;
 block|}
-name|arg_iterator
-name|arg_begin
+name|param_iterator
+name|param_begin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ArgumentList
+name|ParameterList
 return|;
 block|}
-name|arg_iterator
-name|arg_end
+name|param_iterator
+name|param_end
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ArgumentList
+name|ParameterList
 operator|+
-name|NumArguments
+name|NumParameters
 return|;
 block|}
 name|unsigned
-name|getNumArgs
+name|getNumParams
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumArguments
+name|NumParameters
 return|;
 block|}
 name|ArrayRef
@@ -539,7 +534,7 @@ specifier|const
 name|IdentifierInfo
 operator|*
 operator|>
-name|args
+name|params
 argument_list|()
 specifier|const
 block|{
@@ -551,16 +546,16 @@ name|IdentifierInfo
 operator|*
 operator|>
 operator|(
-name|ArgumentList
+name|ParameterList
 operator|,
-name|NumArguments
+name|NumParameters
 operator|)
 return|;
 block|}
-comment|/// \brief Return the argument number of the specified identifier,
-comment|/// or -1 if the identifier is not a formal argument identifier.
+comment|/// \brief Return the parameter number of the specified identifier,
+comment|/// or -1 if the identifier is not a formal parameter identifier.
 name|int
-name|getArgumentNum
+name|getParameterNum
 argument_list|(
 specifier|const
 name|IdentifierInfo
@@ -571,15 +566,15 @@ decl|const
 block|{
 for|for
 control|(
-name|arg_iterator
+name|param_iterator
 name|I
 init|=
-name|arg_begin
+name|param_begin
 argument_list|()
 init|,
 name|E
 init|=
-name|arg_end
+name|param_end
 argument_list|()
 init|;
 name|I
@@ -599,7 +594,7 @@ condition|)
 return|return
 name|I
 operator|-
-name|arg_begin
+name|param_begin
 argument_list|()
 return|;
 return|return
@@ -921,17 +916,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-comment|/// \brief Determine whether this macro info came from an AST file (such as
-comment|/// a precompiled header or module) rather than having been parsed.
-name|bool
-name|isFromASTFile
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FromASTFile
-return|;
-block|}
 comment|/// \brief Determine whether this macro was used for a header guard.
 name|bool
 name|isUsedForHeaderGuard
@@ -954,35 +938,6 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-comment|/// \brief Retrieve the global ID of the module that owns this particular
-comment|/// macro info.
-name|unsigned
-name|getOwningModuleID
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|isFromASTFile
-argument_list|()
-condition|)
-return|return
-operator|*
-operator|(
-specifier|const
-name|unsigned
-operator|*
-operator|)
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-return|return
-literal|0
-return|;
-block|}
 name|void
 name|dump
 argument_list|()
@@ -993,85 +948,29 @@ label|:
 name|unsigned
 name|getDefinitionLengthSlow
 argument_list|(
+specifier|const
 name|SourceManager
 operator|&
 name|SM
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|setOwningModuleID
-parameter_list|(
-name|unsigned
-name|ID
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|isFromASTFile
-argument_list|()
-argument_list|)
-expr_stmt|;
-operator|*
-operator|(
-name|unsigned
-operator|*
-operator|)
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-operator|=
-name|ID
-expr_stmt|;
-block|}
 name|friend
 name|class
 name|Preprocessor
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|class
 name|DefMacroDirective
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Encapsulates changes to the "macros namespace" (the location where
-end_comment
-
-begin_comment
 comment|/// the macro name became active, the location where it was undefined, etc.).
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// MacroDirectives, associated with an identifier, are used to model the macro
-end_comment
-
-begin_comment
 comment|/// history. Usually a macro definition (MacroInfo) is where a macro name
-end_comment
-
-begin_comment
 comment|/// becomes active (MacroDirective) but #pragma push_macro / pop_macro can
-end_comment
-
-begin_comment
 comment|/// create additional DefMacroDirectives for the same MacroInfo.
-end_comment
-
-begin_decl_stmt
 name|class
 name|MacroDirective
 block|{
@@ -1474,9 +1373,6 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 specifier|const
 name|MacroInfo
 operator|*
@@ -1492,9 +1388,6 @@ name|getMacroInfo
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|MacroInfo
 modifier|*
 name|getMacroInfo
@@ -1508,17 +1401,8 @@ name|getMacroInfo
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Find macro definition active in the specified source location. If
-end_comment
-
-begin_comment
 comment|/// this macro was not defined there, return NULL.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|DefInfo
 name|findDirectiveAtLoc
@@ -1532,17 +1416,11 @@ name|SM
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -1556,10 +1434,14 @@ return|return
 name|true
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief A directive for a defined macro or a macro imported from a module.
 end_comment
 

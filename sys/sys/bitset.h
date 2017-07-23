@@ -450,6 +450,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|BIT_FLS
+parameter_list|(
+name|_s
+parameter_list|,
+name|p
+parameter_list|)
+value|__extension__ ({					\ 	__size_t __i;							\ 	int __bit;							\ 									\ 	__bit = 0;							\ 	for (__i = __bitset_words((_s)); __i> 0; __i--) {		\ 		if ((p)->__bits[__i - 1] != 0) {			\ 			__bit = flsl((p)->__bits[__i - 1]);		\ 			__bit += (__i - 1) * _BITSET_BITS;		\ 			break;						\ 		}							\ 	}								\ 	__bit;								\ })
+end_define
+
+begin_define
+define|#
+directive|define
 name|BIT_COUNT
 parameter_list|(
 name|_s

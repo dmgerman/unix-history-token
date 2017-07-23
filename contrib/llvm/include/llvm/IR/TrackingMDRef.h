@@ -65,6 +65,18 @@ directive|include
 file|"llvm/IR/Metadata.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -78,17 +90,16 @@ block|{
 name|Metadata
 modifier|*
 name|MD
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|TrackingMDRef
 argument_list|()
-operator|:
-name|MD
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|TrackingMDRef
 argument_list|(
@@ -531,7 +542,9 @@ name|public
 operator|:
 name|TypedTrackingMDRef
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|explicit
 name|TypedTrackingMDRef
 argument_list|(
@@ -793,26 +806,28 @@ return|;
 block|}
 end_expr_stmt
 
-begin_typedef
+begin_decl_stmt
 unit|};
-typedef|typedef
+name|using
+name|TrackingMDNodeRef
+init|=
 name|TypedTrackingMDRef
 operator|<
 name|MDNode
 operator|>
-name|TrackingMDNodeRef
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|TrackingValueAsMetadataRef
+init|=
 name|TypedTrackingMDRef
 operator|<
 name|ValueAsMetadata
 operator|>
-name|TrackingValueAsMetadataRef
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// Expose the underlying metadata to casting.
@@ -828,11 +843,12 @@ operator|<
 name|TrackingMDRef
 operator|>
 block|{
-typedef|typedef
-name|Metadata
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|Metadata
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -847,14 +863,10 @@ name|get
 argument_list|()
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -865,11 +877,12 @@ specifier|const
 name|TrackingMDRef
 operator|>
 block|{
-typedef|typedef
-name|Metadata
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|Metadata
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -884,14 +897,10 @@ name|get
 argument_list|()
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -905,11 +914,12 @@ operator|<
 name|T
 operator|>>
 block|{
-typedef|typedef
-name|T
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|T
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -924,14 +934,10 @@ name|get
 argument_list|()
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -946,11 +952,12 @@ operator|<
 name|T
 operator|>>
 block|{
-typedef|typedef
-name|T
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|T
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -965,15 +972,10 @@ name|get
 argument_list|()
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace llvm
 end_comment
 
@@ -981,6 +983,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_TRACKINGMDREF_H
+end_comment
 
 end_unit
 

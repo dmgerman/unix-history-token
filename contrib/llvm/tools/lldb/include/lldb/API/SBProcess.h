@@ -849,6 +849,47 @@ operator|&
 name|description
 argument_list|)
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Start Tracing with the given SBTraceOptions.
+comment|///
+comment|/// @param[in] options
+comment|///     Class containing trace options like trace buffer size, meta
+comment|///     data buffer size, TraceType and any custom parameters
+comment|///     {formatted as a JSON Dictionary}. In case of errors in
+comment|///     formatting, an error would be reported.
+comment|///     It must be noted that tracing options such as buffer sizes
+comment|///     or other custom parameters passed maybe invalid for some
+comment|///     trace technologies. In such cases the trace implementations
+comment|///     could choose to either throw an error or could round off to
+comment|///     the nearest valid options to start tracing if the passed
+comment|///     value is not supported. To obtain the actual used trace
+comment|///     options please use the GetTraceConfig API. For the custom
+comment|///     parameters, only the parameters recognized by the target
+comment|///     would be used and others would be ignored.
+comment|///
+comment|/// @param[out] error
+comment|///     An error explaining what went wrong.
+comment|///
+comment|/// @return
+comment|///     A SBTrace instance, which should be used
+comment|///     to get the trace data or other trace related operations.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBTrace
+name|StartTrace
+argument_list|(
+name|SBTraceOptions
+operator|&
+name|options
+argument_list|,
+name|lldb
+operator|::
+name|SBError
+operator|&
+name|error
+argument_list|)
+expr_stmt|;
 name|uint32_t
 name|GetNumSupportedHardwareWatchpoints
 argument_list|(

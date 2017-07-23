@@ -167,6 +167,9 @@ name|class
 name|LabelDecl
 decl_stmt|;
 name|class
+name|ODRHash
+decl_stmt|;
+name|class
 name|ParmVarDecl
 decl_stmt|;
 name|class
@@ -481,7 +484,7 @@ decl_stmt|;
 name|unsigned
 name|ObjectKind
 range|:
-literal|2
+literal|3
 decl_stmt|;
 name|unsigned
 name|TypeDependent
@@ -509,7 +512,7 @@ enum|enum
 block|{
 name|NumExprBits
 init|=
-literal|16
+literal|17
 block|}
 enum|;
 name|class
@@ -833,6 +836,24 @@ name|NumExprBits
 decl_stmt|;
 block|}
 empty_stmt|;
+name|class
+name|CoawaitExprBitfields
+block|{
+name|friend
+name|class
+name|CoawaitExpr
+decl_stmt|;
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+name|unsigned
+name|IsImplicit
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
 union|union
 block|{
 name|StmtBitfields
@@ -879,6 +900,9 @@ name|InitListExprBits
 decl_stmt|;
 name|TypeTraitExprBitfields
 name|TypeTraitExprBits
+decl_stmt|;
+name|CoawaitExprBitfields
+name|CoawaitBits
 decl_stmt|;
 block|}
 union|;
@@ -1241,6 +1265,23 @@ argument_list|(
 argument|StmtClass SC
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|this
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+argument_list|,
+literal|"changing bitfields changed sizeof(Stmt)"
+argument_list|)
+expr_stmt|;
 name|static_assert
 argument_list|(
 sizeof|sizeof
@@ -1649,6 +1690,28 @@ name|Context
 argument_list|,
 name|bool
 name|Canonical
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Calculate a unique representation for a statement that is
+comment|/// stable across compiler invocations.
+comment|///
+comment|/// \param ID profile information will be stored in ID.
+comment|///
+comment|/// \param Hash an ODRHash object which will be called where pointers would
+comment|/// have been used in the Profile function.
+name|void
+name|ProcessODRHash
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+name|ODRHash
+operator|&
+name|Hash
 argument_list|)
 decl|const
 decl_stmt|;

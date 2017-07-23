@@ -218,6 +218,9 @@ name|class
 name|HeaderSearch
 decl_stmt|;
 name|class
+name|MemoryBufferCache
+decl_stmt|;
+name|class
 name|PragmaNamespace
 decl_stmt|;
 name|class
@@ -447,6 +450,10 @@ decl_stmt|;
 name|SourceManager
 modifier|&
 name|SourceMgr
+decl_stmt|;
+name|MemoryBufferCache
+modifier|&
+name|PCMCache
 decl_stmt|;
 name|std
 operator|::
@@ -855,6 +862,170 @@ name|bool
 operator|>
 name|SkipMainFilePreamble
 expr_stmt|;
+name|class
+name|PreambleConditionalStackStore
+block|{
+enum|enum
+name|State
+block|{
+name|Off
+init|=
+literal|0
+block|,
+name|Recording
+init|=
+literal|1
+block|,
+name|Replaying
+init|=
+literal|2
+block|,     }
+enum|;
+name|public
+label|:
+name|PreambleConditionalStackStore
+argument_list|()
+operator|:
+name|ConditionalStackState
+argument_list|(
+argument|Off
+argument_list|)
+block|{}
+name|void
+name|startRecording
+argument_list|()
+block|{
+name|ConditionalStackState
+operator|=
+name|Recording
+block|; }
+name|void
+name|startReplaying
+argument_list|()
+block|{
+name|ConditionalStackState
+operator|=
+name|Replaying
+block|; }
+name|bool
+name|isRecording
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ConditionalStackState
+operator|==
+name|Recording
+return|;
+block|}
+name|bool
+name|isReplaying
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ConditionalStackState
+operator|==
+name|Replaying
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|PPConditionalInfo
+operator|>
+name|getStack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ConditionalStack
+return|;
+block|}
+name|void
+name|doneReplaying
+parameter_list|()
+block|{
+name|ConditionalStack
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|ConditionalStackState
+operator|=
+name|Off
+expr_stmt|;
+block|}
+name|void
+name|setStack
+argument_list|(
+name|ArrayRef
+operator|<
+name|PPConditionalInfo
+operator|>
+name|s
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|isRecording
+argument_list|()
+operator|&&
+operator|!
+name|isReplaying
+argument_list|()
+condition|)
+return|return;
+name|ConditionalStack
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|ConditionalStack
+operator|.
+name|append
+argument_list|(
+name|s
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|s
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+name|bool
+name|hasRecordedPreamble
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|ConditionalStack
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+name|private
+label|:
+name|SmallVector
+operator|<
+name|PPConditionalInfo
+operator|,
+literal|4
+operator|>
+name|ConditionalStack
+expr_stmt|;
+name|State
+name|ConditionalStackState
+decl_stmt|;
+block|}
+name|PreambleConditionalStack
+expr_stmt|;
 comment|/// \brief The current top of the stack that we're lexing from if
 comment|/// not expanding a macro and we are lexing directly from source code.
 comment|///
@@ -928,7 +1099,7 @@ comment|/// \brief If the current lexer is for a submodule that is being built, 
 comment|/// is that submodule.
 name|Module
 modifier|*
-name|CurSubmodule
+name|CurLexerSubmodule
 decl_stmt|;
 comment|/// \brief Keeps track of the stack of files currently
 comment|/// \#included, and macros currently being expanded from, not counting
@@ -1928,6 +2099,8 @@ argument|Module *M
 argument_list|,
 argument|SourceLocation ImportLoc
 argument_list|,
+argument|bool IsPragma
+argument_list|,
 argument|SubmoduleState *OuterSubmoduleState
 argument_list|,
 argument|unsigned OuterPendingModuleMacroNames
@@ -1941,6 +2114,11 @@ operator|,
 name|ImportLoc
 argument_list|(
 name|ImportLoc
+argument_list|)
+operator|,
+name|IsPragma
+argument_list|(
+name|IsPragma
 argument_list|)
 operator|,
 name|OuterSubmoduleState
@@ -1961,6 +2139,10 @@ expr_stmt|;
 comment|/// The location at which the module was included.
 name|SourceLocation
 name|ImportLoc
+decl_stmt|;
+comment|/// Whether we entered this submodule via a pragma.
+name|bool
+name|IsPragma
 decl_stmt|;
 comment|/// The previous SubmoduleState.
 name|SubmoduleState
@@ -2541,33 +2723,6 @@ name|MIChainHead
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|DeserializedMacroInfoChain
-block|{
-name|MacroInfo
-name|MI
-decl_stmt|;
-name|unsigned
-name|OwningModuleID
-decl_stmt|;
-comment|// MUST be immediately after the MacroInfo object
-comment|// so it can be accessed by MacroInfo::getOwningModuleID().
-name|DeserializedMacroInfoChain
-modifier|*
-name|Next
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|DeserializedMacroInfoChain
-modifier|*
-name|DeserialMIChainHead
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|void
 name|updateOutOfDateIdentifier
@@ -2595,6 +2750,8 @@ argument_list|,
 argument|LangOptions&opts
 argument_list|,
 argument|SourceManager&SM
+argument_list|,
+argument|MemoryBufferCache&PCMCache
 argument_list|,
 argument|HeaderSearch&Headers
 argument_list|,
@@ -2822,6 +2979,19 @@ specifier|const
 block|{
 return|return
 name|SourceMgr
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|MemoryBufferCache
+operator|&
+name|getPCMCache
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PCMCache
 return|;
 block|}
 end_expr_stmt
@@ -3225,18 +3395,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Return the submodule owning the file being lexed.
+comment|/// \brief Return the submodule owning the file being lexed. This may not be
+end_comment
+
+begin_comment
+comment|/// the current module if we have changed modules since entering the file.
 end_comment
 
 begin_expr_stmt
 name|Module
 operator|*
-name|getCurrentSubmodule
+name|getCurrentLexerSubmodule
 argument_list|()
 specifier|const
 block|{
 return|return
-name|CurSubmodule
+name|CurLexerSubmodule
 return|;
 block|}
 end_expr_stmt
@@ -4644,6 +4818,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief After parser warm-up, initialize the conditional stack from
+end_comment
+
+begin_comment
+comment|/// the preamble.
+end_comment
+
+begin_function_decl
+name|void
+name|replayPreambleConditionalStack
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Inform the preprocessor callbacks that processing is complete.
 end_comment
 
@@ -4970,6 +5159,81 @@ begin_function_decl
 name|void
 name|CommitBacktrackedTokens
 parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|CachedTokensRange
+block|{
+name|CachedTokensTy
+operator|::
+name|size_type
+name|Begin
+operator|,
+name|End
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_comment
+comment|/// \brief A range of cached tokens that should be erased after lexing
+end_comment
+
+begin_comment
+comment|/// when backtracking requires the erasure of such cached tokens.
+end_comment
+
+begin_expr_stmt
+name|Optional
+operator|<
+name|CachedTokensRange
+operator|>
+name|CachedTokenRangeToErase
+expr_stmt|;
+end_expr_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_comment
+comment|/// \brief Returns the range of cached tokens that were lexed since
+end_comment
+
+begin_comment
+comment|/// EnableBacktrackAtThisPos() was previously called.
+end_comment
+
+begin_function_decl
+name|CachedTokensRange
+name|LastCachedTokenRange
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Erase the range of cached tokens that were lexed since
+end_comment
+
+begin_comment
+comment|/// EnableBacktrackAtThisPos() was previously called.
+end_comment
+
+begin_function_decl
+name|void
+name|EraseCachedTokens
+parameter_list|(
+name|CachedTokensRange
+name|TokenRange
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -5773,6 +6037,29 @@ name|Tok
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// Enter an annotation token into the token stream.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EnterAnnotationToken
+argument_list|(
+name|SourceRange
+name|Range
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|Kind
+argument_list|,
+name|void
+operator|*
+name|AnnotationVal
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Update the current token to represent the provided
@@ -7404,6 +7691,18 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|diagnoseMissingHeaderInUmbrellaDir
+parameter_list|(
+specifier|const
+name|Module
+modifier|&
+name|Mod
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|public
 label|:
@@ -7689,24 +7988,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Allocate a new MacroInfo object loaded from an AST file.
-end_comment
-
-begin_function_decl
-name|MacroInfo
-modifier|*
-name|AllocateDeserializedMacroInfo
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|,
-name|unsigned
-name|SubModuleID
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Turn the specified lexer token into a fully checked and spelled
 end_comment
 
@@ -7822,6 +8103,10 @@ operator|::
 name|KnownHeader
 operator|*
 name|SuggestedModule
+argument_list|,
+name|bool
+operator|*
+name|IsMapped
 argument_list|,
 name|bool
 name|SkipCache
@@ -7987,6 +8272,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|EnterSubmodule
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|,
+name|SourceLocation
+name|ImportLoc
+parameter_list|,
+name|bool
+name|ForPragma
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Module
+modifier|*
+name|LeaveSubmodule
+parameter_list|(
+name|bool
+name|ForPragma
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|private
 label|:
@@ -8012,7 +8325,7 @@ name|emplace_back
 argument_list|(
 name|CurLexerKind
 argument_list|,
-name|CurSubmodule
+name|CurLexerSubmodule
 argument_list|,
 name|std
 operator|::
@@ -8112,7 +8425,7 @@ argument_list|()
 operator|.
 name|TheDirLookup
 expr_stmt|;
-name|CurSubmodule
+name|CurLexerSubmodule
 operator|=
 name|IncludeMacroStack
 operator|.
@@ -8149,27 +8462,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|EnterSubmodule
-parameter_list|(
-name|Module
-modifier|*
-name|M
-parameter_list|,
-name|SourceLocation
-name|ImportLoc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|LeaveSubmodule
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/// Determine whether we need to create module macros for #defines in the
 end_comment
@@ -8178,13 +8470,19 @@ begin_comment
 comment|/// current context.
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|bool
+end_macro
+
+begin_macro
 name|needModuleMacros
 argument_list|()
+end_macro
+
+begin_decl_stmt
 specifier|const
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Update the set of active module macros and ambiguity flag for a module
@@ -8207,18 +8505,6 @@ name|ModuleMacroInfo
 modifier|&
 name|Info
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Allocate a new MacroInfo object.
-end_comment
-
-begin_function_decl
-name|MacroInfo
-modifier|*
-name|AllocateMacroInfo
-parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -8325,11 +8611,63 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// ReadOptionalMacroParameterListAndBody - This consumes all (i.e. the
+end_comment
+
+begin_comment
+comment|/// entire line) of the macro's tokens and adds them to MacroInfo, and while
+end_comment
+
+begin_comment
+comment|/// doing so performs certain validity checks including (but not limited to):
+end_comment
+
+begin_comment
+comment|///   - # (stringization) is followed by a macro parameter
+end_comment
+
+begin_comment
+comment|/// \param MacroNameTok - Token that represents the macro name
+end_comment
+
+begin_comment
+comment|/// \param ImmediatelyAfterHeaderGuard - Macro follows an #ifdef header guard
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///  Either returns a pointer to a MacroInfo object OR emits a diagnostic and
+end_comment
+
+begin_comment
+comment|///  returns a nullptr if an invalid sequence of tokens is encountered.
+end_comment
+
+begin_function_decl
+name|MacroInfo
+modifier|*
+name|ReadOptionalMacroParameterListAndBody
+parameter_list|(
+specifier|const
+name|Token
+modifier|&
+name|MacroNameTok
+parameter_list|,
+name|bool
+name|ImmediatelyAfterHeaderGuard
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// The ( starting an argument list of a macro definition has just been read.
 end_comment
 
 begin_comment
-comment|/// Lex the rest of the arguments and the closing ), updating \p MI with
+comment|/// Lex the rest of the parameters and the closing ), updating \p MI with
 end_comment
 
 begin_comment
@@ -8342,7 +8680,7 @@ end_comment
 
 begin_function_decl
 name|bool
-name|ReadMacroDefinitionArgList
+name|ReadMacroParameterList
 parameter_list|(
 name|MacroInfo
 modifier|*
@@ -8421,11 +8759,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Information about the result for evaluating an expression for a
+end_comment
+
+begin_comment
+comment|/// preprocessor directive.
+end_comment
+
+begin_struct
+struct|struct
+name|DirectiveEvalResult
+block|{
+comment|/// Whether the expression was evaluated as true or not.
+name|bool
+name|Conditional
+decl_stmt|;
+comment|/// True if the expression contained identifiers that were undefined.
+name|bool
+name|IncludedUndefinedIds
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/// \brief Evaluate an integer constant expression that may occur after a
 end_comment
 
 begin_comment
-comment|/// \#if or \#elif directive and return it as a bool.
+comment|/// \#if or \#elif directive and return a \p DirectiveEvalResult object.
 end_comment
 
 begin_comment
@@ -8437,7 +8799,7 @@ comment|/// If the expression is equivalent to "!defined(X)" return X in IfNDefM
 end_comment
 
 begin_function_decl
-name|bool
+name|DirectiveEvalResult
 name|EvaluateDirectiveExpression
 parameter_list|(
 name|IdentifierInfo
@@ -8587,7 +8949,7 @@ end_comment
 begin_function_decl
 name|MacroArgs
 modifier|*
-name|ReadFunctionLikeMacroArgs
+name|ReadMacroCallArgumentList
 parameter_list|(
 name|Token
 modifier|&
@@ -9097,6 +9459,44 @@ label|:
 end_label
 
 begin_comment
+comment|/// Check that the given module is available, producing a diagnostic if not.
+end_comment
+
+begin_comment
+comment|/// \return \c true if the check failed (because the module is not available).
+end_comment
+
+begin_comment
+comment|///         \c false if the module appears to be usable.
+end_comment
+
+begin_function_decl
+specifier|static
+name|bool
+name|checkModuleIsAvailable
+parameter_list|(
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
+parameter_list|,
+specifier|const
+name|TargetInfo
+modifier|&
+name|TargetInfo
+parameter_list|,
+name|DiagnosticsEngine
+modifier|&
+name|Diags
+parameter_list|,
+name|Module
+modifier|*
+name|M
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Module inclusion testing.
 end_comment
 
@@ -9124,25 +9524,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Find the module that contains the specified location, either
-end_comment
-
-begin_comment
-comment|/// directly or indirectly.
-end_comment
-
-begin_function_decl
-name|Module
-modifier|*
-name|getModuleContainingLocation
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief We want to produce a diagnostic at location IncLoc concerning a
 end_comment
 
@@ -9156,6 +9537,10 @@ end_comment
 
 begin_comment
 comment|/// \param IncLoc The location at which the missing import was detected.
+end_comment
+
+begin_comment
+comment|/// \param M The desired module.
 end_comment
 
 begin_comment
@@ -9191,11 +9576,110 @@ parameter_list|(
 name|SourceLocation
 name|IncLoc
 parameter_list|,
+name|Module
+modifier|*
+name|M
+parameter_list|,
 name|SourceLocation
 name|MLoc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|bool
+name|isRecordingPreamble
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreambleConditionalStack
+operator|.
+name|isRecording
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|hasRecordedPreamble
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreambleConditionalStack
+operator|.
+name|hasRecordedPreamble
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|ArrayRef
+operator|<
+name|PPConditionalInfo
+operator|>
+name|getPreambleConditionalStack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreambleConditionalStack
+operator|.
+name|getStack
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|setRecordedPreambleConditionalStack
+argument_list|(
+name|ArrayRef
+operator|<
+name|PPConditionalInfo
+operator|>
+name|s
+argument_list|)
+block|{
+name|PreambleConditionalStack
+operator|.
+name|setStack
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|setReplayablePreambleConditionalStack
+argument_list|(
+name|ArrayRef
+operator|<
+name|PPConditionalInfo
+operator|>
+name|s
+argument_list|)
+block|{
+name|PreambleConditionalStack
+operator|.
+name|startReplaying
+argument_list|()
+expr_stmt|;
+name|PreambleConditionalStack
+operator|.
+name|setStack
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_label
 name|private
@@ -9389,6 +9873,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|HandlePragmaIncludeAlias
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|HandlePragmaModuleBuild
 parameter_list|(
 name|Token
 modifier|&

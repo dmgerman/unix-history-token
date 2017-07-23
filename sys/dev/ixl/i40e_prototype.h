@@ -4354,25 +4354,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|enum
-name|i40e_status_code
-name|i40e_blink_phy_link_led
-parameter_list|(
-name|struct
-name|i40e_hw
-modifier|*
-name|hw
-parameter_list|,
-name|u32
-name|time
-parameter_list|,
-name|u32
-name|interval
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

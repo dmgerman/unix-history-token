@@ -74,12 +74,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Expression/IRMemoryMap.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/StackFrame.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -150,7 +150,7 @@ block|; }
 name|void
 name|Dematerialize
 argument_list|(
-argument|Error&err
+argument|Status&err
 argument_list|,
 argument|lldb::addr_t frame_top
 argument_list|,
@@ -291,7 +291,7 @@ operator|::
 name|addr_t
 name|process_address
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|err
 argument_list|)
@@ -341,7 +341,7 @@ name|PersistentVariableDelegate
 operator|*
 name|delegate
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|err
 argument_list|)
@@ -355,7 +355,7 @@ name|VariableSP
 operator|&
 name|variable_sp
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|err
 argument_list|)
@@ -378,7 +378,7 @@ name|PersistentVariableDelegate
 modifier|*
 name|delegate
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|err
 parameter_list|)
@@ -391,7 +391,7 @@ name|Symbol
 modifier|&
 name|symbol_sp
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|err
 parameter_list|)
@@ -404,7 +404,7 @@ name|RegisterInfo
 modifier|&
 name|register_info
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|err
 parameter_list|)
@@ -474,7 +474,7 @@ operator|::
 name|addr_t
 name|process_address
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|err
 argument_list|)
@@ -510,7 +510,7 @@ operator|::
 name|addr_t
 name|frame_bottom
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|err
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=-- InstrProfWriter.h - Instrumented profiling writer -----------*- C++ -*-=//
+comment|//===- InstrProfWriter.h - Instrumented profiling writer --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -72,13 +72,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ProfileData/InstrProf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
@@ -90,7 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -99,27 +117,29 @@ name|llvm
 block|{
 comment|/// Writer for instrumentation based profile data.
 name|class
+name|InstrProfRecordWriterTrait
+decl_stmt|;
+name|class
 name|ProfOStream
 decl_stmt|;
 name|class
-name|InstrProfRecordWriterTrait
+name|raw_fd_ostream
 decl_stmt|;
 name|class
 name|InstrProfWriter
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|ProfilingData
+init|=
 name|SmallDenseMap
 operator|<
 name|uint64_t
-operator|,
+decl_stmt|,
 name|InstrProfRecord
-operator|,
-literal|1
-operator|>
-name|ProfilingData
-expr_stmt|;
+decl|>
+decl_stmt|;
 enum|enum
 name|ProfKind
 block|{
@@ -145,6 +165,8 @@ name|FunctionData
 expr_stmt|;
 name|ProfKind
 name|ProfileKind
+init|=
+name|PF_Unknown
 decl_stmt|;
 comment|// Use raw pointer here for the incomplete type object.
 name|InstrProfRecordWriterTrait
@@ -165,26 +187,74 @@ expr_stmt|;
 comment|/// Add function counts for the given function. If there are already counts
 comment|/// for this function and the hash and number of counts match, each counter is
 comment|/// summed. Optionally scale counts by \p Weight.
-name|Error
+name|void
 name|addRecord
 argument_list|(
-name|InstrProfRecord
+name|NamedInstrProfRecord
 operator|&&
 name|I
 argument_list|,
 name|uint64_t
 name|Weight
-operator|=
-literal|1
+argument_list|,
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|Error
+argument_list|)
+operator|>
+name|Warn
 argument_list|)
 decl_stmt|;
-comment|/// Merge existing function counts from the given writer.
+name|void
+name|addRecord
+argument_list|(
+name|NamedInstrProfRecord
+operator|&&
+name|I
+argument_list|,
+name|function_ref
+operator|<
+name|void
+argument_list|(
 name|Error
+argument_list|)
+operator|>
+name|Warn
+argument_list|)
+block|{
+name|addRecord
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|I
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|Warn
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Merge existing function counts from the given writer.
+name|void
 name|mergeRecordsFromWriter
 argument_list|(
 name|InstrProfWriter
 operator|&&
 name|IPW
+argument_list|,
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|Error
+argument_list|)
+operator|>
+name|Warn
 argument_list|)
 decl_stmt|;
 comment|/// Write the profile to \c OS
@@ -197,7 +267,7 @@ name|OS
 parameter_list|)
 function_decl|;
 comment|/// Write the profile in text format to \c OS
-name|void
+name|Error
 name|writeText
 parameter_list|(
 name|raw_fd_ostream
@@ -210,10 +280,16 @@ specifier|static
 name|void
 name|writeRecordInText
 parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|uint64_t
+name|Hash
+parameter_list|,
 specifier|const
 name|InstrProfRecord
 modifier|&
-name|Record
+name|Counters
 parameter_list|,
 name|InstrProfSymtab
 modifier|&
@@ -310,6 +386,32 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
+name|void
+name|addRecord
+argument_list|(
+name|StringRef
+name|Name
+argument_list|,
+name|uint64_t
+name|Hash
+argument_list|,
+name|InstrProfRecord
+operator|&&
+name|I
+argument_list|,
+name|uint64_t
+name|Weight
+argument_list|,
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|Error
+argument_list|)
+operator|>
+name|Warn
+argument_list|)
+decl_stmt|;
 name|bool
 name|shouldEncodeData
 parameter_list|(
@@ -340,6 +442,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_PROFILEDATA_INSTRPROFWRITER_H
+end_comment
 
 end_unit
 

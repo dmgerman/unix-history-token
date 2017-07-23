@@ -4207,11 +4207,16 @@ block|}
 name|PFS_TRACE
 argument_list|(
 operator|(
-literal|"%d bytes"
+literal|"%ju bytes"
 operator|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|i
 operator|*
 name|PFS_DELEN
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

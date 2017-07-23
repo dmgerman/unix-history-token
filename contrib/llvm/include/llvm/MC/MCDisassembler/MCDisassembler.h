@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCDisassembler.h - Disassembler interface -------*- C++ -*-===//
+comment|//===- llvm/MC/MCDisassembler.h - Disassembler interface --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,19 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Disassembler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCDisassembler/MCSymbolizer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -74,6 +74,9 @@ name|class
 name|ArrayRef
 expr_stmt|;
 name|class
+name|MCContext
+decl_stmt|;
+name|class
 name|MCInst
 decl_stmt|;
 name|class
@@ -81,9 +84,6 @@ name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|raw_ostream
-decl_stmt|;
-name|class
-name|MCContext
 decl_stmt|;
 comment|/// Superclass for all disassemblers. Consumes a memory region and provides an
 comment|/// array of assembly instructions.
@@ -149,15 +149,7 @@ argument_list|)
 operator|,
 name|STI
 argument_list|(
-name|STI
-argument_list|)
-operator|,
-name|Symbolizer
-argument_list|()
-operator|,
-name|CommentStream
-argument_list|(
-argument|nullptr
+argument|STI
 argument_list|)
 block|{}
 name|virtual
@@ -174,6 +166,7 @@ comment|///                   the number of bytes consumed while attempting to d
 comment|///                   an invalid instruction.
 comment|/// \param Address  - The address, in the memory space of region, of the first
 comment|///                   byte of the instruction.
+comment|/// \param Bytes    - A reference to the actual bytes of the instruction.
 comment|/// \param VStream  - The stream to print warnings and diagnostic messages on.
 comment|/// \param CStream  - The stream to print comments and annotations on.
 comment|/// \return         - MCDisassembler::Success if the instruction is valid,
@@ -314,6 +307,8 @@ name|mutable
 name|raw_ostream
 modifier|*
 name|CommentStream
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -321,13 +316,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCDISASSEMBLER_MCDISASSEMBLER_H
+end_comment
 
 end_unit
 

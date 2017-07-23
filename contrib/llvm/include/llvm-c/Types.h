@@ -82,12 +82,26 @@ name|LLVMOpaqueBasicBlock
 modifier|*
 name|LLVMBasicBlockRef
 typedef|;
+comment|/**  * Represents an LLVM Metadata.  *  * This models llvm::Metadata.  */
+typedef|typedef
+name|struct
+name|LLVMOpaqueMetadata
+modifier|*
+name|LLVMMetadataRef
+typedef|;
 comment|/**  * Represents an LLVM basic block builder.  *  * This models llvm::IRBuilder.  */
 typedef|typedef
 name|struct
 name|LLVMOpaqueBuilder
 modifier|*
 name|LLVMBuilderRef
+typedef|;
+comment|/**  * Represents an LLVM debug info builder.  *  * This models llvm::DIBuilder.  */
+typedef|typedef
+name|struct
+name|LLVMOpaqueDIBuilder
+modifier|*
+name|LLVMDIBuilderRef
 typedef|;
 comment|/**  * Interface used to provide a module to JIT or interpreter.  * This is now just a synonym for llvm::Module, but we have to keep using the  * different type to keep binary compatibility.  */
 typedef|typedef

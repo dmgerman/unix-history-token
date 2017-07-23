@@ -125,7 +125,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elfdump.c 3497 2016-10-17 20:57:22Z emaste $"
+literal|"$Id: elfdump.c 3521 2017-06-04 20:07:09Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12726,14 +12726,14 @@ decl_stmt|,
 modifier|*
 name|c
 decl_stmt|,
+name|j
+decl_stmt|,
 name|maxl
 decl_stmt|,
 name|total
 decl_stmt|;
-name|uint64_t
+name|size_t
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|int
 name|elferr

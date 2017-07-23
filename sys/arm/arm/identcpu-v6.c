@@ -301,7 +301,7 @@ name|CPU_IMPLEMENTER_MRVL
 block|,
 name|CPU_ARCH_SHEEVA_581
 block|,
-literal|"Marwell"
+literal|"Marvell"
 block|,
 literal|"PJ4 v7"
 block|,
@@ -313,7 +313,7 @@ name|CPU_IMPLEMENTER_MRVL
 block|,
 name|CPU_ARCH_SHEEVA_584
 block|,
-literal|"Marwell"
+literal|"Marvell"
 block|,
 literal|"PJ4MP v7"
 block|,

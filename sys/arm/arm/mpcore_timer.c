@@ -99,12 +99,6 @@ directive|include
 file|<machine/intr.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTIDELAY
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -114,11 +108,6 @@ end_include
 begin_comment
 comment|/* For arm_set_delay */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1611,7 +1600,14 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|MULTIDELAY
+name|PLATFORM
+comment|/* 	 * We can register as the DELAY() implementation only if we successfully 	 * set up the global timer. 	 */
+if|if
+condition|(
+name|tc_err
+operator|==
+literal|0
+condition|)
 name|arm_set_delay
 argument_list|(
 name|arm_tmr_delay
@@ -1895,7 +1891,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MULTIDELAY
+name|PLATFORM
 end_ifndef
 
 begin_comment

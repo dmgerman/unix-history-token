@@ -1072,11 +1072,84 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Notes how many arguments were added to the beginning (Prefix) and ending
+comment|/// (Suffix) of an arg list.
+comment|///
+comment|/// Note that Prefix actually refers to the number of args *after* the first
+comment|/// one: `this` arguments always come first.
+struct|struct
+name|AddedStructorArgs
+block|{
+name|unsigned
+name|Prefix
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
+name|Suffix
+init|=
+literal|0
+decl_stmt|;
+name|AddedStructorArgs
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|AddedStructorArgs
+argument_list|(
+argument|unsigned P
+argument_list|,
+argument|unsigned S
+argument_list|)
+block|:
+name|Prefix
+argument_list|(
+name|P
+argument_list|)
+operator|,
+name|Suffix
+argument_list|(
+argument|S
+argument_list|)
+block|{}
+specifier|static
+name|AddedStructorArgs
+name|prefix
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+return|return
+block|{
+name|N
+block|,
+literal|0
+block|}
+return|;
+block|}
+specifier|static
+name|AddedStructorArgs
+name|suffix
+parameter_list|(
+name|unsigned
+name|N
+parameter_list|)
+block|{
+return|return
+block|{
+literal|0
+block|,
+name|N
+block|}
+return|;
+block|}
+block|}
+struct|;
 comment|/// Build the signature of the given constructor or destructor variant by
 comment|/// adding any required parameters.  For convenience, ArgTys has been
 comment|/// initialized with the type of 'this'.
 name|virtual
-name|void
+name|AddedStructorArgs
 name|buildStructorSignature
 argument_list|(
 specifier|const
@@ -1267,10 +1340,10 @@ literal|0
 function_decl|;
 comment|/// Add any ABI-specific implicit arguments needed to call a constructor.
 comment|///
-comment|/// \return The number of args added to the call, which is typically zero or
-comment|/// one.
+comment|/// \return The number of arguments added at the beginning and end of the
+comment|/// call, which is typically zero or one.
 name|virtual
-name|unsigned
+name|AddedStructorArgs
 name|addImplicitConstructorArgs
 parameter_list|(
 name|CodeGenFunction
@@ -1361,7 +1434,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-comment|/// Checks if ABI requires to initilize vptrs for given dynamic class.
+comment|/// Checks if ABI requires to initialize vptrs for given dynamic class.
 name|virtual
 name|bool
 name|doStructorsInitializeVPtrs

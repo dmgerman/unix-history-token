@@ -43,26 +43,10 @@ directive|define
 name|liblldb_PlatformFreeBSD_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Platform.h"
+file|"Plugins/Platform/POSIX/PlatformPOSIX.h"
 end_include
 
 begin_decl_stmt
@@ -76,7 +60,7 @@ name|class
 name|PlatformFreeBSD
 range|:
 name|public
-name|Platform
+name|PlatformPOSIX
 block|{
 name|public
 operator|:
@@ -90,8 +74,18 @@ name|PlatformFreeBSD
 argument_list|()
 name|override
 block|;
+specifier|static
+name|void
+name|Initialize
+argument_list|()
+block|;
+specifier|static
+name|void
+name|Terminate
+argument_list|()
+block|;
 comment|//------------------------------------------------------------
-comment|// Class functions
+comment|// lldb_private::PluginInterface functions
 comment|//------------------------------------------------------------
 specifier|static
 name|lldb
@@ -105,16 +99,6 @@ argument|const ArchSpec *arch
 argument_list|)
 block|;
 specifier|static
-name|void
-name|Initialize
-argument_list|()
-block|;
-specifier|static
-name|void
-name|Terminate
-argument_list|()
-block|;
-specifier|static
 name|ConstString
 name|GetPluginNameStatic
 argument_list|(
@@ -125,27 +109,16 @@ specifier|static
 specifier|const
 name|char
 operator|*
-name|GetDescriptionStatic
+name|GetPluginDescriptionStatic
 argument_list|(
 argument|bool is_host
 argument_list|)
 block|;
-comment|//------------------------------------------------------------
-comment|// lldb_private::PluginInterface functions
-comment|//------------------------------------------------------------
 name|ConstString
 name|GetPluginName
 argument_list|()
 name|override
-block|{
-return|return
-name|GetPluginNameStatic
-argument_list|(
-name|IsHost
-argument_list|()
-argument_list|)
-return|;
-block|}
+block|;
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
@@ -155,6 +128,9 @@ return|return
 literal|1
 return|;
 block|}
+comment|//------------------------------------------------------------
+comment|// lldb_private::Platform functions
+comment|//------------------------------------------------------------
 specifier|const
 name|char
 operator|*
@@ -163,53 +139,32 @@ argument_list|()
 name|override
 block|{
 return|return
-name|GetDescriptionStatic
+name|GetPluginDescriptionStatic
 argument_list|(
 name|IsHost
 argument_list|()
 argument_list|)
 return|;
 block|}
-comment|//------------------------------------------------------------
-comment|// lldb_private::Platform functions
-comment|//------------------------------------------------------------
+name|void
+name|GetStatus
+argument_list|(
+argument|Stream&strm
+argument_list|)
+name|override
+block|;
 name|bool
-name|GetModuleSpec
+name|GetSupportedArchitectureAtIndex
 argument_list|(
-argument|const FileSpec&module_file_spec
+argument|uint32_t idx
 argument_list|,
-argument|const ArchSpec&arch
-argument_list|,
-argument|ModuleSpec&module_spec
+argument|ArchSpec&arch
 argument_list|)
 name|override
 block|;
-name|Error
-name|RunShellCommand
-argument_list|(
-argument|const char *command
-argument_list|,
-argument|const FileSpec&working_dir
-argument_list|,
-argument|int *status_ptr
-argument_list|,
-argument|int *signo_ptr
-argument_list|,
-argument|std::string *command_output
-argument_list|,
-argument|uint32_t timeout_sec
-argument_list|)
-name|override
-block|;
-name|Error
-name|ResolveExecutable
-argument_list|(
-argument|const ModuleSpec&module_spec
-argument_list|,
-argument|lldb::ModuleSP&module_sp
-argument_list|,
-argument|const FileSpecList *module_search_paths_ptr
-argument_list|)
+name|bool
+name|CanDebugProcess
+argument_list|()
 name|override
 block|;
 name|size_t
@@ -221,93 +176,7 @@ argument|BreakpointSite *bp_site
 argument_list|)
 name|override
 block|;
-name|bool
-name|GetRemoteOSVersion
-argument_list|()
-name|override
-block|;
-name|bool
-name|GetRemoteOSBuildString
-argument_list|(
-argument|std::string&s
-argument_list|)
-name|override
-block|;
-name|bool
-name|GetRemoteOSKernelDescription
-argument_list|(
-argument|std::string&s
-argument_list|)
-name|override
-block|;
-comment|// Remote Platform subclasses need to override this function
-name|ArchSpec
-name|GetRemoteSystemArchitecture
-argument_list|()
-name|override
-block|;
-name|bool
-name|IsConnected
-argument_list|()
-specifier|const
-name|override
-block|;
-name|Error
-name|ConnectRemote
-argument_list|(
-argument|Args&args
-argument_list|)
-name|override
-block|;
-name|Error
-name|DisconnectRemote
-argument_list|()
-name|override
-block|;
-specifier|const
-name|char
-operator|*
-name|GetHostname
-argument_list|()
-name|override
-block|;
-specifier|const
-name|char
-operator|*
-name|GetUserName
-argument_list|(
-argument|uint32_t uid
-argument_list|)
-name|override
-block|;
-specifier|const
-name|char
-operator|*
-name|GetGroupName
-argument_list|(
-argument|uint32_t gid
-argument_list|)
-name|override
-block|;
-name|bool
-name|GetProcessInfo
-argument_list|(
-argument|lldb::pid_t pid
-argument_list|,
-argument|ProcessInstanceInfo&proc_info
-argument_list|)
-name|override
-block|;
-name|uint32_t
-name|FindProcesses
-argument_list|(
-argument|const ProcessInstanceInfoMatch&match_info
-argument_list|,
-argument|ProcessInstanceInfoList&process_infos
-argument_list|)
-name|override
-block|;
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|(
 argument|ProcessLaunchInfo&launch_info
@@ -325,62 +194,7 @@ argument|Debugger&debugger
 argument_list|,
 argument|Target *target
 argument_list|,
-argument|Error&error
-argument_list|)
-name|override
-block|;
-comment|// FreeBSD processes can not be launched by spawning and attaching.
-name|bool
-name|CanDebugProcess
-argument_list|()
-name|override
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|// Only on PlatformMacOSX:
-name|Error
-name|GetFileWithUUID
-argument_list|(
-argument|const FileSpec&platform_file
-argument_list|,
-argument|const UUID *uuid
-argument_list|,
-argument|FileSpec&local_file
-argument_list|)
-name|override
-block|;
-name|Error
-name|GetSharedModule
-argument_list|(
-argument|const ModuleSpec&module_spec
-argument_list|,
-argument|Process *process
-argument_list|,
-argument|lldb::ModuleSP&module_sp
-argument_list|,
-argument|const FileSpecList *module_search_paths_ptr
-argument_list|,
-argument|lldb::ModuleSP *old_module_sp_ptr
-argument_list|,
-argument|bool *did_create_ptr
-argument_list|)
-name|override
-block|;
-name|bool
-name|GetSupportedArchitectureAtIndex
-argument_list|(
-argument|uint32_t idx
-argument_list|,
-argument|ArchSpec&arch
-argument_list|)
-name|override
-block|;
-name|void
-name|GetStatus
-argument_list|(
-argument|Stream&strm
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -389,15 +203,15 @@ name|CalculateTrapHandlerSymbolNames
 argument_list|()
 name|override
 block|;
-name|protected
-operator|:
-name|lldb
-operator|::
-name|PlatformSP
-name|m_remote_platform_sp
+name|uint64_t
+name|ConvertMmapFlagsToPlatform
+argument_list|(
+argument|const ArchSpec&arch
+argument_list|,
+argument|unsigned flags
+argument_list|)
+name|override
 block|;
-comment|// Allow multiple ways to connect to a
-comment|// remote freebsd OS
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN

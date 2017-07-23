@@ -60,20 +60,6 @@ name|INSTR_PROF_RAW_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|COMPILER_RT_WEAK
-name|char
-name|INSTR_PROF_PROFILE_NAME_VAR
-index|[
-literal|1
-index|]
-init|=
-block|{
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|COMPILER_RT_VISIBILITY
 name|uint64_t

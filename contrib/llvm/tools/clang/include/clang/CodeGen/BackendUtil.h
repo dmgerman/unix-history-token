@@ -66,6 +66,17 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|BitcodeModule
+decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|Expected
+expr_stmt|;
+name|class
 name|Module
 decl_stmt|;
 name|class
@@ -186,6 +197,19 @@ name|MemoryBufferRef
 name|Buf
 argument_list|)
 decl_stmt|;
+name|llvm
+operator|::
+name|Expected
+operator|<
+name|llvm
+operator|::
+name|BitcodeModule
+operator|>
+name|FindThinLTOModule
+argument_list|(
+argument|llvm::MemoryBufferRef MBRef
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

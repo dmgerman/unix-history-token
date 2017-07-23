@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/None.h"
 end_include
 
@@ -85,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ilist_node.h"
 end_include
 
 begin_include
@@ -157,6 +157,26 @@ decl_stmt|;
 struct_decl|struct
 name|AAMDNodes
 struct_decl|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|ilist_alloc_traits
+operator|<
+name|Instruction
+operator|>
+block|{
+specifier|static
+specifier|inline
+name|void
+name|deleteNode
+argument_list|(
+name|Instruction
+operator|*
+name|V
+argument_list|)
+block|; }
+expr_stmt|;
 name|class
 name|Instruction
 range|:
@@ -190,6 +210,13 @@ operator|<<
 literal|15
 block|}
 enum|;
+name|protected
+label|:
+operator|~
+name|Instruction
+argument_list|()
+expr_stmt|;
+comment|// Use deleteValue() to delete a generic Instruction.
 name|public
 label|:
 name|Instruction
@@ -213,12 +240,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-comment|// Out of line virtual method, so the vtable, etc has a home.
-operator|~
-name|Instruction
-argument_list|()
-name|override
-expr_stmt|;
 comment|/// Specialize the methods defined in Value, as we know that an instruction
 comment|/// can only be used by other instructions.
 name|Instruction
@@ -295,7 +316,29 @@ name|Module
 modifier|*
 name|getModule
 parameter_list|()
-function_decl|;
+block|{
+return|return
+name|const_cast
+operator|<
+name|Module
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Instruction
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getModule
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// Return the function this instruction belongs to.
 comment|///
 comment|/// Note: it is undefined behavior to call this on an instruction not
@@ -311,7 +354,29 @@ name|Function
 modifier|*
 name|getFunction
 parameter_list|()
-function_decl|;
+block|{
+return|return
+name|const_cast
+operator|<
+name|Function
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Instruction
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFunction
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// This method unlinks 'this' from the containing basic block, but does not
 comment|/// delete it.
 name|void
@@ -575,6 +640,30 @@ operator|==
 name|AShr
 return|;
 block|}
+comment|/// Determine if the Opcode is and/or/xor.
+specifier|static
+specifier|inline
+name|bool
+name|isBitwiseLogicOp
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|)
+block|{
+return|return
+name|Opcode
+operator|==
+name|And
+operator|||
+name|Opcode
+operator|==
+name|Or
+operator|||
+name|Opcode
+operator|==
+name|Xor
+return|;
+block|}
 comment|/// Return true if this is and/or/xor.
 specifier|inline
 name|bool
@@ -583,20 +672,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|isBitwiseLogicOp
+argument_list|(
 name|getOpcode
 argument_list|()
-operator|==
-name|And
-operator|||
-name|getOpcode
-argument_list|()
-operator|==
-name|Or
-operator|||
-name|getOpcode
-argument_list|()
-operator|==
-name|Xor
+argument_list|)
 return|;
 block|}
 comment|/// Determine if the OpCode is one of the CastInst instructions.
@@ -967,6 +1047,25 @@ name|TotalVal
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Updates branch_weights metadata by scaling it by \p S / \p T.
+name|void
+name|updateProfWeight
+parameter_list|(
+name|uint64_t
+name|S
+parameter_list|,
+name|uint64_t
+name|T
+parameter_list|)
+function_decl|;
+comment|/// Sets the branch_weights metadata to \p W for CallInst.
+name|void
+name|setProfWeight
+parameter_list|(
+name|uint64_t
+name|W
+parameter_list|)
+function_decl|;
 comment|/// Set the debug location information for this instruction.
 name|void
 name|setDebugLoc
@@ -1042,6 +1141,12 @@ name|hasNoSignedWrap
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Drops flags that may cause this instruction to evaluate to poison despite
+comment|/// having non-poison inputs.
+name|void
+name|dropPoisonGeneratingFlags
+parameter_list|()
+function_decl|;
 comment|/// Determine whether the exact flag is set.
 name|bool
 name|isExact
@@ -1148,6 +1253,12 @@ name|hasAllowReciprocal
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Determine whether the allow-contract flag is set.
+name|bool
+name|hasAllowContract
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Convenience function for getting all the fast-math flags, which must be an
 comment|/// operator which supports these flags. See LangRef.html for the meaning of
 comment|/// these flags.
@@ -1166,8 +1277,8 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
-comment|/// Convenience method to copy supported wrapping, exact, and fast-math flags
-comment|/// from V to this instruction.
+comment|/// Convenience method to copy supported exact, fast-math, and (optionally)
+comment|/// wrapping flags from V to this instruction.
 name|void
 name|copyIRFlags
 parameter_list|(
@@ -1175,6 +1286,11 @@ specifier|const
 name|Value
 modifier|*
 name|V
+parameter_list|,
+name|bool
+name|IncludeWrapFlags
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// Logical 'and' of any supported wrapping, exact, and fast-math flags of
@@ -1282,20 +1398,43 @@ name|bool
 name|isAssociative
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 specifier|static
 name|bool
 name|isAssociative
 parameter_list|(
 name|unsigned
-name|op
+name|Opcode
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|Opcode
+operator|==
+name|And
+operator|||
+name|Opcode
+operator|==
+name|Or
+operator|||
+name|Opcode
+operator|==
+name|Xor
+operator|||
+name|Opcode
+operator|==
+name|Add
+operator|||
+name|Opcode
+operator|==
+name|Mul
+return|;
+block|}
 comment|/// Return true if the instruction is commutative:
 comment|///
 comment|///   Commutative operators satisfy: (x op y) === (y op x)
 comment|///
-comment|/// In LLVM, these are the associative operators, plus SetEQ and SetNE, when
+comment|/// In LLVM, these are the commutative operators, plus SetEQ and SetNE, when
 comment|/// applied to any type.
 comment|///
 name|bool
@@ -1316,9 +1455,44 @@ name|bool
 name|isCommutative
 parameter_list|(
 name|unsigned
-name|op
+name|Opcode
 parameter_list|)
-function_decl|;
+block|{
+switch|switch
+condition|(
+name|Opcode
+condition|)
+block|{
+case|case
+name|Add
+case|:
+case|case
+name|FAdd
+case|:
+case|case
+name|Mul
+case|:
+case|case
+name|FMul
+case|:
+case|case
+name|And
+case|:
+case|case
+name|Or
+case|:
+case|case
+name|Xor
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
 comment|/// Return true if the instruction is idempotent:
 comment|///
 comment|///   Idempotent operators satisfy:  x op x === x
@@ -1343,9 +1517,19 @@ name|bool
 name|isIdempotent
 parameter_list|(
 name|unsigned
-name|op
+name|Opcode
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|Opcode
+operator|==
+name|And
+operator|||
+name|Opcode
+operator|==
+name|Or
+return|;
+block|}
 comment|/// Return true if the instruction is nilpotent:
 comment|///
 comment|///   Nilpotent operators satisfy:  x op x === Id,
@@ -1373,9 +1557,15 @@ name|bool
 name|isNilpotent
 parameter_list|(
 name|unsigned
-name|op
+name|Opcode
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|Opcode
+operator|==
+name|Xor
+return|;
+block|}
 comment|/// Return true if this instruction may modify memory.
 name|bool
 name|mayWriteToMemory
@@ -1406,6 +1596,18 @@ comment|/// Return true if this instruction has an AtomicOrdering of unordered o
 comment|/// higher.
 name|bool
 name|isAtomic
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Return true if this atomic instruction loads from memory.
+name|bool
+name|hasAtomicLoad
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Return true if this atomic instruction stores to memory.
+name|bool
+name|hasAtomicStore
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1620,7 +1822,6 @@ decl|const
 decl_stmt|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -2007,6 +2208,23 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
+specifier|inline
+name|void
+name|ilist_alloc_traits
+operator|<
+name|Instruction
+operator|>
+operator|::
+name|deleteNode
+argument_list|(
+argument|Instruction *V
+argument_list|)
+block|{
+name|V
+operator|->
+name|deleteValue
+argument_list|()
+block|; }
 block|}
 end_decl_stmt
 

@@ -686,6 +686,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|boolean_t
+name|platform_io_coherent
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|decode_win
 name|cpu_win_tbl
@@ -1753,6 +1762,8 @@ decl_stmt|,
 name|size
 decl_stmt|,
 name|mode
+decl_stmt|,
+name|freq
 decl_stmt|;
 specifier|const
 name|char
@@ -2081,7 +2092,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", TClock %dMHz\n"
+literal|", TClock %dMHz"
 argument_list|,
 name|get_tclk
 argument_list|()
@@ -2089,6 +2100,33 @@ operator|/
 literal|1000
 operator|/
 literal|1000
+argument_list|)
+expr_stmt|;
+name|freq
+operator|=
+name|get_cpu_freq
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|freq
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|", Frequency %dMHz"
+argument_list|,
+name|freq
+operator|/
+literal|1000
+operator|/
+literal|1000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|mode
@@ -5025,6 +5063,8 @@ name|uint32_t
 name|dev
 decl_stmt|,
 name|rev
+decl_stmt|,
+name|attr
 decl_stmt|;
 name|soc_id
 argument_list|(
@@ -5066,7 +5106,8 @@ operator|(
 literal|0
 operator|)
 return|;
-return|return
+name|attr
+operator|=
 operator|(
 name|i
 operator|==
@@ -5099,6 +5140,19 @@ literal|0xff
 operator|)
 operator|)
 operator|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|platform_io_coherent
+condition|)
+name|attr
+operator||=
+literal|0x10
+expr_stmt|;
+return|return
+operator|(
+name|attr
 operator|)
 return|;
 block|}
@@ -11577,6 +11631,20 @@ name|panic
 argument_list|(
 literal|"fdt_win_setup: no root node"
 argument_list|)
+expr_stmt|;
+comment|/* Allow for coherent transactions on the A38x MBUS */
+if|if
+condition|(
+name|ofw_bus_node_is_compatible
+argument_list|(
+name|node
+argument_list|,
+literal|"marvell,armada380"
+argument_list|)
+condition|)
+name|platform_io_coherent
+operator|=
+name|true
 expr_stmt|;
 comment|/* 	 * Traverse through all children of root and simple-bus nodes. 	 * For each found device retrieve decode windows data (if applicable). 	 */
 name|child

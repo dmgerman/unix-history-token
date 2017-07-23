@@ -821,6 +821,10 @@ begin_function_decl
 name|int
 name|nfsrv_nfsuserdport
 parameter_list|(
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
 name|u_short
 parameter_list|,
 name|NFSPROC_T
@@ -3513,7 +3517,7 @@ name|nfsrv_atroot
 parameter_list|(
 name|vnode_t
 parameter_list|,
-name|long
+name|uint64_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -5223,6 +5227,8 @@ name|int
 modifier|*
 parameter_list|,
 name|uint32_t
+parameter_list|,
+name|int
 parameter_list|,
 name|struct
 name|ucred

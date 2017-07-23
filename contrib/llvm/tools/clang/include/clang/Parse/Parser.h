@@ -413,6 +413,17 @@ name|IdentifierInfo
 operator|*
 name|Ident_replacement
 block|;
+comment|/// Identifiers used by the 'external_source_symbol' attribute.
+name|IdentifierInfo
+operator|*
+name|Ident_language
+block|,
+operator|*
+name|Ident_defined_in
+block|,
+operator|*
+name|Ident_generated_declaration
+block|;
 comment|/// C++0x contextual keywords.
 name|mutable
 name|IdentifierInfo
@@ -531,6 +542,14 @@ operator|<
 name|PragmaHandler
 operator|>
 name|OpenMPHandler
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|PCSectionHandler
 block|;
 name|std
 operator|::
@@ -667,6 +686,22 @@ operator|<
 name|PragmaHandler
 operator|>
 name|NoUnrollHintHandler
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|FPHandler
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|AttributePragmaHandler
 block|;
 name|std
 operator|::
@@ -1020,8 +1055,9 @@ argument_list|)
 return|;
 block|}
 comment|/// ConsumeToken - Consume the current 'peek token' and lex the next one.
-comment|/// This does not work with special tokens: string literals, code completion
-comment|/// and balanced tokens must be handled using the specific consume methods.
+comment|/// This does not work with special tokens: string literals, code completion,
+comment|/// annotation tokens and balanced tokens must be handled using the specific
+comment|/// consume methods.
 comment|/// Returns the location of the consumed token.
 name|SourceLocation
 name|ConsumeToken
@@ -1294,6 +1330,11 @@ name|tok
 operator|::
 name|code_completion
 argument_list|)
+operator|||
+name|Tok
+operator|.
+name|isAnnotation
+argument_list|()
 return|;
 block|}
 comment|/// \brief Returns true if the current token is '=' or is a type of '='.
@@ -1407,9 +1448,60 @@ else|:
 name|handleUnexpectedCodeCompletionToken
 argument_list|()
 return|;
+if|if
+condition|(
+name|Tok
+operator|.
+name|isAnnotation
+argument_list|()
+condition|)
+return|return
+name|ConsumeAnnotationToken
+argument_list|()
+return|;
 return|return
 name|ConsumeToken
 argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|ConsumeAnnotationToken
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|Tok
+operator|.
+name|isAnnotation
+argument_list|()
+operator|&&
+literal|"wrong consume method"
+argument_list|)
+expr_stmt|;
+name|SourceLocation
+name|Loc
+init|=
+name|Tok
+operator|.
+name|getLocation
+argument_list|()
+decl_stmt|;
+name|PrevTokLocation
+operator|=
+name|Tok
+operator|.
+name|getAnnotationEndLoc
+argument_list|()
+expr_stmt|;
+name|PP
+operator|.
+name|Lex
+argument_list|(
+name|Tok
+argument_list|)
+expr_stmt|;
+return|return
+name|Loc
 return|;
 block|}
 comment|/// ConsumeParen - This consume method keeps the paren count up-to-date.
@@ -1848,6 +1940,12 @@ name|HandlePragmaFPContract
 parameter_list|()
 function_decl|;
 comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma clang fp ...
+name|void
+name|HandlePragmaFP
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
 comment|/// #pragma OPENCL EXTENSION...
 name|void
 name|HandlePragmaOpenCLExtension
@@ -1868,6 +1966,28 @@ name|LoopHint
 modifier|&
 name|Hint
 parameter_list|)
+function_decl|;
+name|bool
+name|ParsePragmaAttributeSubjectMatchRuleSet
+argument_list|(
+name|attr
+operator|::
+name|ParsedSubjectMatchRuleSet
+operator|&
+name|SubjectMatchRules
+argument_list|,
+name|SourceLocation
+operator|&
+name|AnyLoc
+argument_list|,
+name|SourceLocation
+operator|&
+name|LastMatchRuleEndLoc
+argument_list|)
+decl_stmt|;
+name|void
+name|HandlePragmaAttribute
+parameter_list|()
 function_decl|;
 comment|/// GetLookAheadToken - This peeks ahead N tokens and returns that token
 comment|/// without consuming any tokens.  LookAhead(0) returns 'Tok', LookAhead(1)
@@ -1938,6 +2058,7 @@ specifier|static
 name|ParsedType
 name|getTypeAnnotation
 parameter_list|(
+specifier|const
 name|Token
 modifier|&
 name|Tok
@@ -1986,6 +2107,7 @@ specifier|static
 name|ExprResult
 name|getExprAnnotation
 parameter_list|(
+specifier|const
 name|Token
 modifier|&
 name|Tok
@@ -2740,6 +2862,16 @@ name|TST
 init|=
 name|TST_unspecified
 parameter_list|)
+function_decl|;
+comment|/// Return false if the next token is an identifier. An 'expected identifier'
+comment|/// error is emitted otherwise.
+comment|///
+comment|/// The parser tries to recover from the error by checking if the next token
+comment|/// is a C++ keyword when parsing Objective-C++. Return false if the recovery
+comment|/// was successful.
+name|bool
+name|expectIdentifier
+parameter_list|()
 function_decl|;
 name|public
 label|:
@@ -5088,6 +5220,15 @@ name|NotTypeCast
 parameter_list|)
 function_decl|;
 name|ExprResult
+name|ParseConstantExpressionInExprEvalContext
+parameter_list|(
+name|TypeCastState
+name|isTypeCast
+init|=
+name|NotTypeCast
+parameter_list|)
+function_decl|;
+name|ExprResult
 name|ParseConstantExpression
 parameter_list|(
 name|TypeCastState
@@ -5177,6 +5318,11 @@ name|NotCastExpr
 parameter_list|,
 name|TypeCastState
 name|isTypeCast
+parameter_list|,
+name|bool
+name|isVectorLiteral
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|ExprResult
@@ -5194,6 +5340,11 @@ name|TypeCastState
 name|isTypeCast
 init|=
 name|NotTypeCast
+parameter_list|,
+name|bool
+name|isVectorLiteral
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// Returns true if the next token cannot start an expression.
@@ -5257,6 +5408,16 @@ name|minusminus
 operator|)
 return|;
 block|}
+name|bool
+name|diagnoseUnknownTemplateId
+parameter_list|(
+name|ExprResult
+name|TemplateName
+parameter_list|,
+name|SourceLocation
+name|Less
+parameter_list|)
+function_decl|;
 name|ExprResult
 name|ParsePostfixExpressionSuffix
 parameter_list|(
@@ -5556,6 +5717,11 @@ modifier|*
 name|LastII
 init|=
 name|nullptr
+parameter_list|,
+name|bool
+name|OnlyNamespace
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -6063,7 +6229,7 @@ name|false
 parameter_list|)
 function_decl|;
 enum|enum
-name|AllowedContsructsKind
+name|AllowedConstructsKind
 block|{
 comment|/// \brief Allow any declarations, statements, OpenMP directives.
 name|ACK_Any
@@ -6082,7 +6248,7 @@ name|StmtVector
 modifier|&
 name|Stmts
 parameter_list|,
-name|AllowedContsructsKind
+name|AllowedConstructsKind
 name|Allowed
 parameter_list|,
 name|SourceLocation
@@ -6099,7 +6265,7 @@ name|StmtVector
 modifier|&
 name|Stmts
 parameter_list|,
-name|AllowedContsructsKind
+name|AllowedConstructsKind
 name|Allowed
 parameter_list|,
 name|SourceLocation
@@ -6270,7 +6436,7 @@ name|StmtVector
 modifier|&
 name|Stmts
 parameter_list|,
-name|AllowedContsructsKind
+name|AllowedConstructsKind
 name|Allowed
 parameter_list|,
 name|SourceLocation
@@ -6514,6 +6680,9 @@ comment|// C++11 type-specifier-seq in an alias-declaration
 name|DSC_top_level
 block|,
 comment|// top-level/namespace declaration context
+name|DSC_template_param
+block|,
+comment|// template parameter context
 name|DSC_template_type_arg
 block|,
 comment|// template type argument context
@@ -6541,6 +6710,9 @@ condition|)
 block|{
 case|case
 name|DSC_normal
+case|:
+case|case
+name|DSC_template_param
 case|:
 case|case
 name|DSC_class
@@ -6571,6 +6743,64 @@ name|DSC_alias_declaration
 case|:
 return|return
 name|true
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Missing DeclSpecContext case"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Is this a context in which we can perform class template argument
+comment|/// deduction?
+specifier|static
+name|bool
+name|isClassTemplateDeductionContext
+parameter_list|(
+name|DeclSpecContext
+name|DSC
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|DSC
+condition|)
+block|{
+case|case
+name|DSC_normal
+case|:
+case|case
+name|DSC_template_param
+case|:
+case|case
+name|DSC_class
+case|:
+case|case
+name|DSC_top_level
+case|:
+case|case
+name|DSC_condition
+case|:
+case|case
+name|DSC_type_specifier
+case|:
+return|return
+name|true
+return|;
+case|case
+name|DSC_objc_method_result
+case|:
+case|case
+name|DSC_template_type_arg
+case|:
+case|case
+name|DSC_trailing
+case|:
+case|case
+name|DSC_alias_declaration
+case|:
+return|return
+name|false
 return|;
 block|}
 name|llvm_unreachable
@@ -7067,6 +7297,11 @@ name|isConstructorDeclarator
 parameter_list|(
 name|bool
 name|Unqualified
+parameter_list|,
+name|bool
+name|DeductionGuide
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Specifies the context in which type-id/expression
@@ -7854,6 +8089,37 @@ modifier|*
 name|ParseIdentifierLoc
 parameter_list|()
 function_decl|;
+name|unsigned
+name|ParseClangAttributeArgs
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|AttrName
+argument_list|,
+name|SourceLocation
+name|AttrNameLoc
+argument_list|,
+name|ParsedAttributes
+operator|&
+name|Attrs
+argument_list|,
+name|SourceLocation
+operator|*
+name|EndLoc
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|ScopeName
+argument_list|,
+name|SourceLocation
+name|ScopeLoc
+argument_list|,
+name|AttributeList
+operator|::
+name|Syntax
+name|Syntax
+argument_list|)
+decl_stmt|;
 name|void
 name|MaybeParseCXX11Attributes
 parameter_list|(
@@ -8336,6 +8602,37 @@ name|StartLoc
 parameter_list|)
 function_decl|;
 name|void
+name|ParseExternalSourceSymbolAttribute
+argument_list|(
+name|IdentifierInfo
+operator|&
+name|ExternalSourceSymbol
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+name|ParsedAttributes
+operator|&
+name|Attrs
+argument_list|,
+name|SourceLocation
+operator|*
+name|EndLoc
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|ScopeName
+argument_list|,
+name|SourceLocation
+name|ScopeLoc
+argument_list|,
+name|AttributeList
+operator|::
+name|Syntax
+name|Syntax
+argument_list|)
+decl_stmt|;
+name|void
 name|ParseObjCBridgeRelatedAttribute
 argument_list|(
 name|IdentifierInfo
@@ -8780,27 +9077,40 @@ block|}
 enum|;
 name|void
 name|ParseTypeQualifierListOpt
-parameter_list|(
+argument_list|(
 name|DeclSpec
-modifier|&
+operator|&
 name|DS
-parameter_list|,
+argument_list|,
 name|unsigned
 name|AttrReqs
-init|=
+operator|=
 name|AR_AllAttributesParsed
-parameter_list|,
+argument_list|,
 name|bool
 name|AtomicAllowed
-init|=
+operator|=
 name|true
-parameter_list|,
+argument_list|,
 name|bool
 name|IdentifierRequired
-init|=
+operator|=
 name|false
-parameter_list|)
-function_decl|;
+argument_list|,
+name|Optional
+operator|<
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|()
+operator|>>
+name|CodeCompletionHandler
+operator|=
+name|None
+argument_list|)
+decl_stmt|;
 name|void
 name|ParseDirectDeclarator
 parameter_list|(
@@ -9607,7 +9917,7 @@ comment|///
 name|StmtResult
 name|ParseOpenMPDeclarativeOrExecutableDirective
 parameter_list|(
-name|AllowedContsructsKind
+name|AllowedConstructsKind
 name|Allowed
 parameter_list|)
 function_decl|;
@@ -9799,6 +10109,9 @@ name|AllowDestructorName
 parameter_list|,
 name|bool
 name|AllowConstructorName
+parameter_list|,
+name|bool
+name|AllowDeductionGuide
 parameter_list|,
 name|ParsedType
 name|ObjectType
@@ -10031,17 +10344,6 @@ function_decl|;
 name|bool
 name|ParseTemplateIdAfterTemplateName
 parameter_list|(
-name|TemplateTy
-name|Template
-parameter_list|,
-name|SourceLocation
-name|TemplateNameLoc
-parameter_list|,
-specifier|const
-name|CXXScopeSpec
-modifier|&
-name|SS
-parameter_list|,
 name|bool
 name|ConsumeLastToken
 parameter_list|,
@@ -10086,7 +10388,12 @@ parameter_list|)
 function_decl|;
 name|void
 name|AnnotateTemplateIdTokenAsType
-parameter_list|()
+parameter_list|(
+name|bool
+name|IsClassName
+init|=
+name|false
+parameter_list|)
 function_decl|;
 name|bool
 name|IsTemplateArgumentList

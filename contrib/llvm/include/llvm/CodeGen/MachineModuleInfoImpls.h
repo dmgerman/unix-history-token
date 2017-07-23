@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Wasm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineModuleInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
 begin_decl_stmt

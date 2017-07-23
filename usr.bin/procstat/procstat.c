@@ -133,12 +133,22 @@ parameter_list|)
 block|{
 name|xo_error
 argument_list|(
-literal|"usage: procstat [--libxo] [-CHhn] [-M core] "
+literal|"usage: procstat [--libxo] [-Hhn] [-M core] "
 literal|"[-N system] [-w interval]\n"
-literal|"                [-b | -c | -e | -f | -i | -j | -k | "
-literal|"-l | -L | -r | -s | \n"
-literal|"                 -S | -t | -v | -x]\n"
-literal|"                [-a | pid | core ...]\n"
+literal|"                [-S | -b | -c | -e | -i | -j | -k | -kk | "
+literal|"-l | -r | -s | \n"
+literal|"                 -t | -v | -x]\n"
+literal|"                [-a | pid ... | core ...]\n"
+literal|"       procstat [--libxo] -Cf [-hn] [-M core] "
+literal|"[-N system] [-a | pid ... | core ...]\n"
+literal|"                [-S | -b | -c | -e | -i | -j | -k | -kk | "
+literal|"-l | -r | -s | \n"
+literal|"       procstat [--libxo] -L [-hn] [-M core] "
+literal|"[-N system] [-w interval]\n"
+literal|"                [-S | -b | -c | -e | -i | -j | -k | -kk | "
+literal|"-l | -r | -s | \n"
+literal|"                 -t | -v | -x]\n"
+literal|"                [core ...]\n"
 argument_list|)
 expr_stmt|;
 name|xo_finish

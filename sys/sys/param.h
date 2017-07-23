@@ -47,7 +47,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * __FreeBSD_version numbers are documented in the Porter's Handbook.  * If you bump the version for any reason, you should update the documentation  * there.  * Currently this lives here in the doc/ repository:  *  *	head/en_US.ISO8859-1/books/porters-handbook/versions/chapter.xml  *  * scheme is:<major><two digit minor>Rxx  *		'R' is in the range 0 to 4 if this is a release branch or  *		x.0-CURRENT before RELENG_*_0 is created, otherwise 'R' is  *		in the range 5 to 9.  */
+comment|/*  * __FreeBSD_version numbers are documented in the Porter's Handbook.  * If you bump the version for any reason, you should update the documentation  * there.  * Currently this lives here in the doc/ repository:  *  *	head/en_US.ISO8859-1/books/porters-handbook/versions/chapter.xml  *  * scheme is:<major><two digit minor>Rxx  *		'R' is in the range 0 to 4 if this is a release branch or  *		X.0-CURRENT before releng/X.0 is created, otherwise 'R' is  *		in the range 5 to 9.  */
 end_comment
 
 begin_undef
@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1200032
+value|1200039
 end_define
 
 begin_comment
@@ -83,11 +83,19 @@ directive|define
 name|__FreeBSD_kernel__
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IN_RTLD
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -122,6 +130,13 @@ define|#
 directive|define
 name|P_OSREL_SHUTDOWN_ENOTCONN
 value|1100077
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_OSREL_MAP_GUARD
+value|1200035
 end_define
 
 begin_define
@@ -844,7 +859,7 @@ comment|/* non-existent device */
 end_comment
 
 begin_comment
-comment|/*  * File system parameters and macros.  *  * MAXBSIZE -	Filesystems are made out of blocks of at most MAXBSIZE bytes  *		per block.  MAXBSIZE may be made larger without effecting  *		any existing filesystems as long as it does not exceed MAXPHYS,  *		and may be made smaller at the risk of not being able to use  *		filesystems which require a block size exceeding MAXBSIZE.  *  * MAXBCACHEBUF - Maximum size of a buffer in the buffer cache.  This must  *		be>= MAXBSIZE and can be set differently for different  *		architectures by defining it in<machine/param.h>.  *		Making this larger allows NFS to do larger reads/writes.  *  * BKVASIZE -	Nominal buffer space per buffer, in bytes.  BKVASIZE is the  *		minimum KVM memory reservation the kernel is willing to make.  *		Filesystems can of course request smaller chunks.  Actual  *		backing memory uses a chunk size of a page (PAGE_SIZE).  *		The default value here can be overridden on a per-architecture  *		basis by defining it in<machine/param.h>.  This should  *		probably be done to increase its value, when MAXBCACHEBUF is  *		defined as a larger value in<machine/param.h>.  *  *		If you make BKVASIZE too small you risk seriously fragmenting  *		the buffer KVM map which may slow things down a bit.  If you  *		make it too big the kernel will not be able to optimally use  *		the KVM memory reserved for the buffer cache and will wind  *		up with too-few buffers.  *  *		The default is 16384, roughly 2x the block size used by a  *		normal UFS filesystem.  */
+comment|/*  * File system parameters and macros.  *  * MAXBSIZE -	Filesystems are made out of blocks of at most MAXBSIZE bytes  *		per block.  MAXBSIZE may be made larger without effecting  *		any existing filesystems as long as it does not exceed MAXPHYS,  *		and may be made smaller at the risk of not being able to use  *		filesystems which require a block size exceeding MAXBSIZE.  *  * MAXBCACHEBUF - Maximum size of a buffer in the buffer cache.  This must  *		be>= MAXBSIZE and can be set differently for different  *		architectures by defining it in<machine/param.h>.  *		Making this larger allows NFS to do larger reads/writes.  *  * BKVASIZE -	Nominal buffer space per buffer, in bytes.  BKVASIZE is the  *		minimum KVM memory reservation the kernel is willing to make.  *		Filesystems can of course request smaller chunks.  Actual  *		backing memory uses a chunk size of a page (PAGE_SIZE).  *		The default value here can be overridden on a per-architecture  *		basis by defining it in<machine/param.h>.  *  *		If you make BKVASIZE too small you risk seriously fragmenting  *		the buffer KVM map which may slow things down a bit.  If you  *		make it too big the kernel will not be able to optimally use  *		the KVM memory reserved for the buffer cache and will wind  *		up with too-few buffers.  *  *		The default is 16384, roughly 2x the block size used by a  *		normal UFS filesystem.  */
 end_comment
 
 begin_define

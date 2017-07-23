@@ -115,6 +115,12 @@ directive|include
 file|<sys/callb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/abd.h>
+end_include
+
 begin_decl_stmt
 name|uint_t
 name|zfs_dbuf_evict_key
@@ -17393,6 +17399,21 @@ argument_list|,
 name|db
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|zio
+operator|->
+name|io_abd
+operator|!=
+name|NULL
+condition|)
+name|abd_put
+argument_list|(
+name|zio
+operator|->
+name|io_abd
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -17813,7 +17834,7 @@ name|DR_OVERRIDDEN
 condition|)
 block|{
 comment|/* 		 * The BP for this block has been provided by open context 		 * (by dmu_sync() or dmu_buf_write_embedded()). 		 */
-name|void
+name|abd_t
 modifier|*
 name|contents
 init|=
@@ -17823,9 +17844,17 @@ operator|!=
 name|NULL
 operator|)
 condition|?
+name|abd_get_from_buf
+argument_list|(
 name|data
 operator|->
 name|b_data
+argument_list|,
+name|arc_buf_size
+argument_list|(
+name|data
+argument_list|)
+argument_list|)
 else|:
 name|NULL
 decl_stmt|;

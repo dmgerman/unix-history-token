@@ -1009,6 +1009,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|arena_prefork7
+parameter_list|(
+name|tsdn_t
+modifier|*
+name|tsdn
+parameter_list|,
+name|arena_t
+modifier|*
+name|arena
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|arena_postfork_parent
 parameter_list|(
 name|tsdn_t

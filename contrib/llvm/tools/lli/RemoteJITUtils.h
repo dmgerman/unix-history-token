@@ -450,7 +450,7 @@ block|;   }
 name|void
 name|setResolver
 argument_list|(
-argument|std::unique_ptr<JITSymbolResolver> Resolver
+argument|std::shared_ptr<JITSymbolResolver> Resolver
 argument_list|)
 block|{
 name|this
@@ -596,25 +596,13 @@ argument_list|)
 block|;   }
 name|void
 name|deregisterEHFrames
-argument_list|(
-argument|uint8_t *Addr
-argument_list|,
-argument|uint64_t LoadAddr
-argument_list|,
-argument|size_t Size
-argument_list|)
+argument_list|()
 name|override
 block|{
 name|MemMgr
 operator|->
 name|deregisterEHFrames
-argument_list|(
-name|Addr
-argument_list|,
-name|LoadAddr
-argument_list|,
-name|Size
-argument_list|)
+argument_list|()
 block|;   }
 name|bool
 name|finalizeMemory
@@ -702,7 +690,7 @@ name|MemMgr
 block|;
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|JITSymbolResolver
 operator|>

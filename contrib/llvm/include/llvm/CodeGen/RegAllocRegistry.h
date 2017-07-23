@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/RegAllocRegistry.h -------------------------*- C++ -*-===//
+comment|//===- llvm/CodeGen/RegAllocRegistry.h --------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -73,6 +73,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|FunctionPass
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// RegisterRegAlloc class - Track the registration of register allocators.
@@ -86,19 +89,20 @@ name|MachinePassRegistryNode
 block|{
 name|public
 operator|:
-typedef|typedef
-name|FunctionPass
-modifier|*
-function_decl|(
-modifier|*
+name|using
 name|FunctionPassCtor
-function_decl|)
-parameter_list|()
-function_decl|;
+operator|=
+name|FunctionPass
+operator|*
+call|(
+modifier|*
+call|)
+argument_list|()
+block|;
 specifier|static
 name|MachinePassRegistry
 name|Registry
-decl_stmt|;
+block|;
 name|RegisterRegAlloc
 argument_list|(
 argument|const char *N
@@ -107,7 +111,7 @@ argument|const char *D
 argument_list|,
 argument|FunctionPassCtor C
 argument_list|)
-block|:
+operator|:
 name|MachinePassRegistryNode
 argument_list|(
 argument|N
@@ -123,8 +127,7 @@ name|Add
 argument_list|(
 name|this
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 operator|~
 name|RegisterRegAlloc
 argument_list|()
@@ -137,7 +140,6 @@ name|this
 argument_list|)
 block|; }
 comment|// Accessors.
-comment|//
 name|RegisterRegAlloc
 operator|*
 name|getNext
@@ -157,9 +159,9 @@ return|;
 block|}
 specifier|static
 name|RegisterRegAlloc
-modifier|*
+operator|*
 name|getList
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|(
@@ -175,7 +177,7 @@ block|}
 specifier|static
 name|FunctionPassCtor
 name|getDefault
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|(
@@ -190,10 +192,9 @@ block|}
 specifier|static
 name|void
 name|setDefault
-parameter_list|(
-name|FunctionPassCtor
-name|C
-parameter_list|)
+argument_list|(
+argument|FunctionPassCtor C
+argument_list|)
 block|{
 name|Registry
 operator|.
@@ -204,16 +205,13 @@ name|MachinePassCtor
 operator|)
 name|C
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 specifier|static
 name|void
 name|setListener
-parameter_list|(
-name|MachinePassRegistryListener
-modifier|*
-name|L
-parameter_list|)
+argument_list|(
+argument|MachinePassRegistryListener *L
+argument_list|)
 block|{
 name|Registry
 operator|.
@@ -221,17 +219,12 @@ name|setListener
 argument_list|(
 name|L
 argument_list|)
-expr_stmt|;
-block|}
-block|}
+block|;   }
+expr|}
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 
@@ -239,6 +232,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_REGALLOCREGISTRY_H
+end_comment
 
 end_unit
 

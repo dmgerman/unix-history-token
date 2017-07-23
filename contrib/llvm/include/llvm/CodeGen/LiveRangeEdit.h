@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===---- LiveRangeEdit.h - Basic tools for split and spill -----*- C++ -*-===//
+comment|//===- LiveRangeEdit.h - Basic tools for split and spill --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SetVector.h"
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -108,19 +120,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineRegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/CodeGen/SlotIndexes.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -134,7 +164,19 @@ name|class
 name|MachineBlockFrequencyInfo
 decl_stmt|;
 name|class
+name|MachineInstr
+decl_stmt|;
+name|class
 name|MachineLoopInfo
+decl_stmt|;
+name|class
+name|MachineOperand
+decl_stmt|;
+name|class
+name|TargetInstrInfo
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
 decl_stmt|;
 name|class
 name|VirtRegMap
@@ -160,6 +202,13 @@ argument_list|()
 block|;
 name|public
 operator|:
+name|virtual
+operator|~
+name|Delegate
+argument_list|()
+operator|=
+expr|default
+block|;
 comment|/// Called immediately before erasing a dead machine instruction.
 name|virtual
 name|void
@@ -199,11 +248,6 @@ argument|unsigned New
 argument_list|,
 argument|unsigned Old
 argument_list|)
-block|{}
-name|virtual
-operator|~
-name|Delegate
-argument_list|()
 block|{}
 expr|}
 block|;
@@ -250,6 +294,8 @@ block|;
 comment|/// ScannedRemattable - true when remattable values have been identified.
 name|bool
 name|ScannedRemattable
+operator|=
+name|false
 block|;
 comment|/// DeadRemats - The saved instructions which have already been dead after
 comment|/// rematerialization but not deleted yet -- to be done in postOptimization.
@@ -327,30 +373,30 @@ operator|&
 name|Dead
 argument_list|)
 block|;
-typedef|typedef
+name|using
+name|ToShrinkSet
+operator|=
 name|SetVector
 operator|<
 name|LiveInterval
 operator|*
-operator|,
+block|,
 name|SmallVector
 operator|<
 name|LiveInterval
 operator|*
-operator|,
+block|,
 literal|8
 operator|>
-operator|,
+block|,
 name|SmallPtrSet
 operator|<
 name|LiveInterval
 operator|*
-operator|,
+block|,
 literal|8
-operator|>
-expr|>
-name|ToShrinkSet
-expr_stmt|;
+operator|>>
+block|;
 comment|/// Helper for eliminateDeadDefs.
 name|void
 name|eliminateDeadDef
@@ -498,11 +544,6 @@ name|size
 argument_list|()
 argument_list|)
 block|,
-name|ScannedRemattable
-argument_list|(
-name|false
-argument_list|)
-block|,
 name|DeadRemats
 argument_list|(
 argument|deadRemats
@@ -558,15 +599,16 @@ name|reg
 return|;
 block|}
 comment|/// Iterator for accessing the new registers added by this edit.
-typedef|typedef
+name|using
+name|iterator
+operator|=
 name|SmallVectorImpl
 operator|<
 name|unsigned
 operator|>
 operator|::
 name|const_iterator
-name|iterator
-expr_stmt|;
+block|;
 name|iterator
 name|begin
 argument_list|()
@@ -674,27 +716,25 @@ return|;
 block|}
 comment|/// createEmptyIntervalFrom - Create a new empty interval based on OldReg.
 name|LiveInterval
-modifier|&
+operator|&
 name|createEmptyIntervalFrom
-parameter_list|(
-name|unsigned
-name|OldReg
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned OldReg
+argument_list|)
+block|;
 comment|/// createFrom - Create a new virtual register based on OldReg.
 name|unsigned
 name|createFrom
-parameter_list|(
-name|unsigned
-name|OldReg
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned OldReg
+argument_list|)
+block|;
 comment|/// create - Create a new register with the same class and original slot as
 comment|/// parent.
 name|LiveInterval
-modifier|&
+operator|&
 name|createEmptyInterval
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|createEmptyIntervalFrom
@@ -706,7 +746,7 @@ return|;
 block|}
 name|unsigned
 name|create
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|createFrom
@@ -721,44 +761,46 @@ comment|/// rematerializable.
 comment|/// This function must be called before any rematerialization is attempted.
 name|bool
 name|anyRematerializable
-parameter_list|(
+argument_list|(
 name|AliasAnalysis
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|)
+block|;
 comment|/// checkRematerializable - Manually add VNI to the list of rematerializable
 comment|/// values if DefMI may be rematerializable.
 name|bool
 name|checkRematerializable
-parameter_list|(
+argument_list|(
 name|VNInfo
-modifier|*
+operator|*
 name|VNI
-parameter_list|,
+argument_list|,
 specifier|const
 name|MachineInstr
-modifier|*
+operator|*
 name|DefMI
-parameter_list|,
+argument_list|,
 name|AliasAnalysis
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|)
+block|;
 comment|/// Remat - Information needed to rematerialize at a specific location.
-struct|struct
+block|struct
 name|Remat
 block|{
 name|VNInfo
-modifier|*
+operator|*
 name|ParentVNI
-decl_stmt|;
+block|;
 comment|// parent_'s value at the remat location.
 name|MachineInstr
-modifier|*
+operator|*
 name|OrigMI
-decl_stmt|;
-comment|// Instruction defining OrigVNI. It contains the
-comment|// real expr for remat.
+operator|=
+name|nullptr
+block|;
+comment|// Instruction defining OrigVNI. It contains
+comment|// the real expr for remat.
 name|explicit
 name|Remat
 argument_list|(
@@ -769,37 +811,26 @@ argument_list|)
 operator|:
 name|ParentVNI
 argument_list|(
-name|ParentVNI
-argument_list|)
-operator|,
-name|OrigMI
-argument_list|(
-argument|nullptr
+argument|ParentVNI
 argument_list|)
 block|{}
 block|}
-struct|;
+block|;
 comment|/// canRematerializeAt - Determine if ParentVNI can be rematerialized at
 comment|/// UseIdx. It is assumed that parent_.getVNINfoAt(UseIdx) == ParentVNI.
 comment|/// When cheapAsAMove is set, only cheap remats are allowed.
 name|bool
 name|canRematerializeAt
-parameter_list|(
-name|Remat
-modifier|&
-name|RM
-parameter_list|,
-name|VNInfo
-modifier|*
-name|OrigVNI
-parameter_list|,
-name|SlotIndex
-name|UseIdx
-parameter_list|,
-name|bool
-name|cheapAsAMove
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|Remat&RM
+argument_list|,
+argument|VNInfo *OrigVNI
+argument_list|,
+argument|SlotIndex UseIdx
+argument_list|,
+argument|bool cheapAsAMove
+argument_list|)
+block|;
 comment|/// rematerializeAt - Rematerialize RM.ParentVNI into DestReg by inserting an
 comment|/// instruction into MBB before MI. The new instruction is mapped, but
 comment|/// liveness is not updated.
@@ -807,43 +838,26 @@ comment|/// Return the SlotIndex of the new instruction.
 name|SlotIndex
 name|rematerializeAt
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
+argument|MachineBasicBlock::iterator MI
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-specifier|const
-name|Remat
-operator|&
-name|RM
+argument|const Remat&RM
 argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|&
+argument|const TargetRegisterInfo&
 argument_list|,
-name|bool
-name|Late
-operator|=
-name|false
+argument|bool Late = false
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// markRematerialized - explicitly mark a value as rematerialized after doing
 comment|/// it manually.
 name|void
 name|markRematerialized
-parameter_list|(
-specifier|const
-name|VNInfo
-modifier|*
-name|ParentVNI
-parameter_list|)
+argument_list|(
+argument|const VNInfo *ParentVNI
+argument_list|)
 block|{
 name|Rematted
 operator|.
@@ -851,18 +865,14 @@ name|insert
 argument_list|(
 name|ParentVNI
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// didRematerialize - Return true if ParentVNI was rematerialized anywhere.
 name|bool
 name|didRematerialize
 argument_list|(
-specifier|const
-name|VNInfo
-operator|*
-name|ParentVNI
+argument|const VNInfo *ParentVNI
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|Rematted
@@ -875,11 +885,9 @@ return|;
 block|}
 name|void
 name|markDeadRemat
-parameter_list|(
-name|MachineInstr
-modifier|*
-name|inst
-parameter_list|)
+argument_list|(
+argument|MachineInstr *inst
+argument_list|)
 block|{
 comment|// DeadRemats is an optional field.
 if|if
@@ -898,11 +906,10 @@ comment|/// eraseVirtReg - Notify the delegate that Reg is no longer in use, and
 comment|/// to erase it from LIS.
 name|void
 name|eraseVirtReg
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|;
 comment|/// eliminateDeadDefs - Try to delete machine instructions that are now dead
 comment|/// (allDefsAreDead returns true). This may cause live intervals to be trimmed
 comment|/// and further dead efs to be eliminated.
@@ -934,36 +941,39 @@ name|AA
 operator|=
 name|nullptr
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// calculateRegClassAndHint - Recompute register class and hint for each new
 comment|/// register.
 name|void
 name|calculateRegClassAndHint
-parameter_list|(
+argument_list|(
 name|MachineFunction
-modifier|&
-parameter_list|,
+operator|&
+argument_list|,
 specifier|const
 name|MachineLoopInfo
-modifier|&
-parameter_list|,
+operator|&
+argument_list|,
 specifier|const
 name|MachineBlockFrequencyInfo
-modifier|&
-parameter_list|)
-function_decl|;
-block|}
+operator|&
+argument_list|)
+block|; }
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_LIVERANGEEDIT_H
+end_comment
 
 end_unit
 

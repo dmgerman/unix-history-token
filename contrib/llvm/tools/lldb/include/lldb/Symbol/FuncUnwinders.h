@@ -254,6 +254,28 @@ expr_stmt|;
 name|lldb
 operator|::
 name|UnwindPlanSP
+name|GetDebugFrameUnwindPlan
+argument_list|(
+argument|Target&target
+argument_list|,
+argument|int current_offset
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|UnwindPlanSP
+name|GetDebugFrameAugmentedUnwindPlan
+argument_list|(
+argument|Target&target
+argument_list|,
+argument|Thread&thread
+argument_list|,
+argument|int current_offset
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|UnwindPlanSP
 name|GetCompactUnwindUnwindPlan
 argument_list|(
 argument|Target&target
@@ -357,12 +379,19 @@ expr_stmt|;
 name|lldb
 operator|::
 name|UnwindPlanSP
+name|m_unwind_plan_debug_frame_sp
+expr_stmt|;
+comment|// augmented by assembly inspection so it's valid everywhere
+name|lldb
+operator|::
+name|UnwindPlanSP
 name|m_unwind_plan_eh_frame_augmented_sp
 expr_stmt|;
-comment|// augmented by
-comment|// assembly inspection
-comment|// so it's valid
-comment|// everywhere
+name|lldb
+operator|::
+name|UnwindPlanSP
+name|m_unwind_plan_debug_frame_augmented_sp
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -404,7 +433,15 @@ name|m_tried_unwind_plan_eh_frame
 range|:
 literal|1
 decl_stmt|,
+name|m_tried_unwind_plan_debug_frame
+range|:
+literal|1
+decl_stmt|,
 name|m_tried_unwind_plan_eh_frame_augmented
+range|:
+literal|1
+decl_stmt|,
+name|m_tried_unwind_plan_debug_frame_augmented
 range|:
 literal|1
 decl_stmt|,

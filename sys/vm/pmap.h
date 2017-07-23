@@ -82,21 +82,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Flags for pmap_enter().  The bits in the low-order byte are reserved  * for the protection code (vm_prot_t) that describes the fault type.  */
+comment|/*  * Flags for pmap_enter().  The bits in the low-order byte are reserved  * for the protection code (vm_prot_t) that describes the fault type.  * Bits 24 through 31 are reserved for the pmap's internal use.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PMAP_ENTER_NOSLEEP
-value|0x0100
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMAP_ENTER_WIRED
-value|0x0200
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMAP_ENTER_RESERVED
+value|0xFF000000
 end_define
 
 begin_comment

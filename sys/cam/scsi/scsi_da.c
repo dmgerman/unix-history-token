@@ -3536,6 +3536,24 @@ name|DA_Q_4K
 block|}
 block|,
 block|{
+comment|/* 		 * Samsung 750 Series SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"ATA"
+block|,
+literal|"Samsung SSD 750*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
 comment|/* 		 * Samsung 830 Series SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
 block|{
 name|T_DIRECT
@@ -3563,6 +3581,24 @@ block|,
 literal|"ATA"
 block|,
 literal|"Samsung SSD 840*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Samsung 845 SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"ATA"
+block|,
+literal|"Samsung SSD 845*"
 block|,
 literal|"*"
 block|}
@@ -23283,6 +23319,15 @@ operator|->
 name|service_action
 operator|=
 name|service_action
+expr_stmt|;
+name|scsi_ulto4b
+argument_list|(
+name|dxfer_len
+argument_list|,
+name|scsi_cmd
+operator|->
+name|length
+argument_list|)
 expr_stmt|;
 name|scsi_u64to8b
 argument_list|(

@@ -74,31 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Flags.h"
+file|"lldb/Utility/Flags.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Core/Scalar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StreamString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UserID.h"
 end_include
 
 begin_include
@@ -123,6 +105,24 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/StackID.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StreamString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_decl_stmt
@@ -439,7 +439,7 @@ name|Scalar
 modifier|&
 name|value
 parameter_list|,
-name|Error
+name|Status
 modifier|*
 name|error_ptr
 parameter_list|)
@@ -460,7 +460,7 @@ name|DWARFExpression
 modifier|*
 name|GetFrameBaseExpression
 parameter_list|(
-name|Error
+name|Status
 modifier|*
 name|error_ptr
 parameter_list|)
@@ -602,7 +602,7 @@ argument|uint32_t options
 argument_list|,
 argument|lldb::VariableSP&var_sp
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -636,6 +636,9 @@ comment|///
 comment|/// @param [in] strm
 comment|///   The Stream to print the description to.
 comment|///
+comment|/// @param [in] show_unique
+comment|///   Whether to print the function arguments or not for backtrace unique.
+comment|///
 comment|/// @param [in] frame_marker
 comment|///   Optional string that will be prepended to the frame output description.
 comment|//------------------------------------------------------------------
@@ -645,6 +648,11 @@ parameter_list|(
 name|Stream
 modifier|*
 name|strm
+parameter_list|,
+name|bool
+name|show_unique
+init|=
+name|false
 parameter_list|,
 specifier|const
 name|char
@@ -693,6 +701,10 @@ comment|///
 comment|/// @param[in] show_source
 comment|///   If true, print source or disassembly as per the user's settings.
 comment|///
+comment|/// @param[in] show_unique
+comment|///   If true, print using backtrace unique style, without function
+comment|///            arguments as per the user's settings.
+comment|///
 comment|/// @param[in] frame_marker
 comment|///   Passed to DumpUsingSettingsFormat() for the frame info printing.
 comment|///
@@ -711,6 +723,11 @@ name|show_frame_info
 parameter_list|,
 name|bool
 name|show_source
+parameter_list|,
+name|bool
+name|show_unique
+init|=
+name|false
 parameter_list|,
 specifier|const
 name|char
@@ -992,7 +1009,7 @@ decl_stmt|;
 name|Scalar
 name|m_frame_base
 decl_stmt|;
-name|Error
+name|Status
 name|m_frame_base_error
 decl_stmt|;
 name|bool

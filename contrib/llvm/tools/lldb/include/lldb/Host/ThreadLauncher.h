@@ -50,13 +50,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Host/HostThread.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/HostThread.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -99,7 +99,7 @@ operator|::
 name|thread_arg_t
 name|thread_arg
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|,

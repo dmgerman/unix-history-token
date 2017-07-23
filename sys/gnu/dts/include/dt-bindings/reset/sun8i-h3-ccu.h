@@ -389,8 +389,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|RST_BUS_SCR
+name|RST_BUS_SCR0
 value|53
+end_define
+
+begin_comment
+comment|/* New resets imported in H5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RST_BUS_SCR1
+value|54
 end_define
 
 begin_endif

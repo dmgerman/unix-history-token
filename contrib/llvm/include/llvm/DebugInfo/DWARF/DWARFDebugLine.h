@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugLine.h ----------------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugLine.h -----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,19 +34,37 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGLINE_H
+name|LLVM_DEBUGINFO_DWARFDEBUGLINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGLINE_H
+name|LLVM_DEBUGINFO_DWARFDEBUGLINE_H
 end_define
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/DIContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DWARF/DWARFDataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DWARF/DWARFFormValue.h"
 end_include
 
 begin_include
@@ -58,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataExtractor.h"
+file|<cstdint>
 end_include
 
 begin_include
@@ -91,104 +109,84 @@ name|DWARFDebugLine
 block|{
 name|public
 label|:
-name|DWARFDebugLine
-argument_list|(
-specifier|const
-name|RelocAddrMap
-operator|*
-name|LineInfoRelocMap
-argument_list|)
-operator|:
-name|RelocMap
-argument_list|(
-argument|LineInfoRelocMap
-argument_list|)
-block|{}
-expr|struct
+struct|struct
 name|FileNameEntry
 block|{
 name|FileNameEntry
 argument_list|()
-operator|:
-name|Name
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|DirIdx
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ModTime
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Length
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-specifier|const
-name|char
-operator|*
-name|Name
-block|;
-name|uint64_t
-name|DirIdx
-block|;
-name|uint64_t
-name|ModTime
-block|;
-name|uint64_t
-name|Length
-block|;   }
+operator|=
+expr|default
 expr_stmt|;
+name|StringRef
+name|Name
+decl_stmt|;
+name|uint64_t
+name|DirIdx
+init|=
+literal|0
+decl_stmt|;
+name|uint64_t
+name|ModTime
+init|=
+literal|0
+decl_stmt|;
+name|uint64_t
+name|Length
+init|=
+literal|0
+decl_stmt|;
+block|}
+struct|;
 struct|struct
 name|Prologue
 block|{
 name|Prologue
 argument_list|()
 expr_stmt|;
-comment|// The size in bytes of the statement information for this compilation unit
-comment|// (not including the total_length field itself).
+comment|/// The size in bytes of the statement information for this compilation unit
+comment|/// (not including the total_length field itself).
 name|uint64_t
 name|TotalLength
 decl_stmt|;
-comment|// Version identifier for the statement information format.
-name|uint16_t
-name|Version
+comment|/// Version, address size (starting in v5), and DWARF32/64 format; these
+comment|/// parameters affect interpretation of forms (used in the directory and
+comment|/// file tables starting with v5).
+name|DWARFFormParams
+name|FormParams
 decl_stmt|;
-comment|// The number of bytes following the prologue_length field to the beginning
-comment|// of the first byte of the statement program itself.
+comment|/// In v5, size in bytes of a segment selector.
+name|uint8_t
+name|SegSelectorSize
+decl_stmt|;
+comment|/// The number of bytes following the prologue_length field to the beginning
+comment|/// of the first byte of the statement program itself.
 name|uint64_t
 name|PrologueLength
 decl_stmt|;
-comment|// The size in bytes of the smallest target machine instruction. Statement
-comment|// program opcodes that alter the address register first multiply their
-comment|// operands by this value.
+comment|/// The size in bytes of the smallest target machine instruction. Statement
+comment|/// program opcodes that alter the address register first multiply their
+comment|/// operands by this value.
 name|uint8_t
 name|MinInstLength
 decl_stmt|;
-comment|// The maximum number of individual operations that may be encoded in an
-comment|// instruction.
+comment|/// The maximum number of individual operations that may be encoded in an
+comment|/// instruction.
 name|uint8_t
 name|MaxOpsPerInst
 decl_stmt|;
-comment|// The initial value of theis_stmtregister.
+comment|/// The initial value of theis_stmtregister.
 name|uint8_t
 name|DefaultIsStmt
 decl_stmt|;
-comment|// This parameter affects the meaning of the special opcodes. See below.
+comment|/// This parameter affects the meaning of the special opcodes. See below.
 name|int8_t
 name|LineBase
 decl_stmt|;
-comment|// This parameter affects the meaning of the special opcodes. See below.
+comment|/// This parameter affects the meaning of the special opcodes. See below.
 name|uint8_t
 name|LineRange
 decl_stmt|;
-comment|// The number assigned to the first special opcode.
+comment|/// The number assigned to the first special opcode.
 name|uint8_t
 name|OpcodeBase
 decl_stmt|;
@@ -204,9 +202,7 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|char
-operator|*
+name|StringRef
 operator|>
 name|IncludeDirectories
 expr_stmt|;
@@ -218,16 +214,61 @@ name|FileNameEntry
 operator|>
 name|FileNames
 expr_stmt|;
+specifier|const
+name|DWARFFormParams
+name|getFormParams
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FormParams
+return|;
+block|}
+name|uint16_t
+name|getVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FormParams
+operator|.
+name|Version
+return|;
+block|}
+name|uint8_t
+name|getAddressSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FormParams
+operator|.
+name|AddrSize
+return|;
+block|}
 name|bool
-name|IsDWARF64
-decl_stmt|;
+name|isDWARF64
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FormParams
+operator|.
+name|Format
+operator|==
+name|dwarf
+operator|::
+name|DWARF64
+return|;
+block|}
 name|uint32_t
 name|sizeofTotalLength
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsDWARF64
+name|isDWARF64
+argument_list|()
 operator|?
 literal|12
 operator|:
@@ -240,14 +281,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IsDWARF64
+name|isDWARF64
+argument_list|()
 operator|?
 literal|8
 operator|:
 literal|4
 return|;
 block|}
-comment|// Length of the prologue in bytes.
+comment|/// Length of the prologue in bytes.
 name|uint32_t
 name|getLength
 argument_list|()
@@ -261,14 +303,15 @@ argument_list|()
 operator|+
 sizeof|sizeof
 argument_list|(
-name|Version
+name|getVersion
+argument_list|()
 argument_list|)
 operator|+
 name|sizeofPrologueLength
 argument_list|()
 return|;
 block|}
-comment|// Length of the line table data in bytes (not including the prologue).
+comment|/// Length of the line table data in bytes (not including the prologue).
 name|uint32_t
 name|getStatementTableLength
 argument_list|()
@@ -316,17 +359,19 @@ decl_stmt|;
 name|bool
 name|parse
 parameter_list|(
-name|DataExtractor
-name|debug_line_data
+specifier|const
+name|DWARFDataExtractor
+modifier|&
+name|DebugLineData
 parameter_list|,
 name|uint32_t
 modifier|*
-name|offset_ptr
+name|OffsetPtr
 parameter_list|)
 function_decl|;
 block|}
 struct|;
-comment|// Standard .debug_line state machine structure.
+comment|/// Standard .debug_line state machine structure.
 struct|struct
 name|Row
 block|{
@@ -334,7 +379,7 @@ name|explicit
 name|Row
 parameter_list|(
 name|bool
-name|default_is_stmt
+name|DefaultIsStmt
 init|=
 name|false
 parameter_list|)
@@ -348,7 +393,7 @@ name|void
 name|reset
 parameter_list|(
 name|bool
-name|default_is_stmt
+name|DefaultIsStmt
 parameter_list|)
 function_decl|;
 name|void
@@ -360,6 +405,15 @@ name|OS
 argument_list|)
 decl|const
 decl_stmt|;
+specifier|static
+name|void
+name|dumpTableHeader
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 specifier|static
 name|bool
 name|orderByAddress
@@ -385,82 +439,85 @@ operator|.
 name|Address
 return|;
 block|}
-comment|// The program-counter value corresponding to a machine instruction
-comment|// generated by the compiler.
+comment|/// The program-counter value corresponding to a machine instruction
+comment|/// generated by the compiler.
 name|uint64_t
 name|Address
 decl_stmt|;
-comment|// An unsigned integer indicating a source line number. Lines are numbered
-comment|// beginning at 1. The compiler may emit the value 0 in cases where an
-comment|// instruction cannot be attributed to any source line.
+comment|/// An unsigned integer indicating a source line number. Lines are numbered
+comment|/// beginning at 1. The compiler may emit the value 0 in cases where an
+comment|/// instruction cannot be attributed to any source line.
 name|uint32_t
 name|Line
 decl_stmt|;
-comment|// An unsigned integer indicating a column number within a source line.
-comment|// Columns are numbered beginning at 1. The value 0 is reserved to indicate
-comment|// that a statement begins at the 'left edge' of the line.
+comment|/// An unsigned integer indicating a column number within a source line.
+comment|/// Columns are numbered beginning at 1. The value 0 is reserved to indicate
+comment|/// that a statement begins at the 'left edge' of the line.
 name|uint16_t
 name|Column
 decl_stmt|;
-comment|// An unsigned integer indicating the identity of the source file
-comment|// corresponding to a machine instruction.
+comment|/// An unsigned integer indicating the identity of the source file
+comment|/// corresponding to a machine instruction.
 name|uint16_t
 name|File
 decl_stmt|;
-comment|// An unsigned integer representing the DWARF path discriminator value
-comment|// for this location.
+comment|/// An unsigned integer representing the DWARF path discriminator value
+comment|/// for this location.
 name|uint32_t
 name|Discriminator
 decl_stmt|;
-comment|// An unsigned integer whose value encodes the applicable instruction set
-comment|// architecture for the current instruction.
+comment|/// An unsigned integer whose value encodes the applicable instruction set
+comment|/// architecture for the current instruction.
 name|uint8_t
 name|Isa
 decl_stmt|;
-comment|// A boolean indicating that the current instruction is the beginning of a
-comment|// statement.
+comment|/// A boolean indicating that the current instruction is the beginning of a
+comment|/// statement.
 name|uint8_t
 name|IsStmt
 range|:
 literal|1
 decl_stmt|,
-comment|// A boolean indicating that the current instruction is the
-comment|// beginning of a basic block.
+comment|/// A boolean indicating that the current instruction is the
+comment|/// beginning of a basic block.
 name|BasicBlock
 range|:
 literal|1
 decl_stmt|,
-comment|// A boolean indicating that the current address is that of the
-comment|// first byte after the end of a sequence of target machine
-comment|// instructions.
+comment|/// A boolean indicating that the current address is that of the
+comment|/// first byte after the end of a sequence of target machine
+comment|/// instructions.
 name|EndSequence
 range|:
 literal|1
 decl_stmt|,
-comment|// A boolean indicating that the current address is one (of possibly
-comment|// many) where execution should be suspended for an entry breakpoint
-comment|// of a function.
+comment|/// A boolean indicating that the current address is one (of possibly
+comment|/// many) where execution should be suspended for an entry breakpoint
+comment|/// of a function.
 name|PrologueEnd
 range|:
 literal|1
 decl_stmt|,
-comment|// A boolean indicating that the current address is one (of possibly
-comment|// many) where execution should be suspended for an exit breakpoint
-comment|// of a function.
+comment|/// A boolean indicating that the current address is one (of possibly
+comment|/// many) where execution should be suspended for an exit breakpoint
+comment|/// of a function.
 name|EpilogueBegin
 range|:
 literal|1
 decl_stmt|;
 block|}
 struct|;
-comment|// Represents a series of contiguous machine instructions. Line table for each
-comment|// compilation unit may consist of multiple sequences, which are not
-comment|// guaranteed to be in the order of ascending instruction address.
+comment|/// Represents a series of contiguous machine instructions. Line table for
+comment|/// each compilation unit may consist of multiple sequences, which are not
+comment|/// guaranteed to be in the order of ascending instruction address.
 struct|struct
 name|Sequence
 block|{
-comment|// Sequence describes instructions at address range [LowPC, HighPC)
-comment|// and is described by line table rows [FirstRowIndex, LastRowIndex).
+name|Sequence
+argument_list|()
+expr_stmt|;
+comment|/// Sequence describes instructions at address range [LowPC, HighPC)
+comment|/// and is described by line table rows [FirstRowIndex, LastRowIndex).
 name|uint64_t
 name|LowPC
 decl_stmt|;
@@ -476,9 +533,6 @@ decl_stmt|;
 name|bool
 name|Empty
 decl_stmt|;
-name|Sequence
-argument_list|()
-expr_stmt|;
 name|void
 name|reset
 parameter_list|()
@@ -534,7 +588,7 @@ name|bool
 name|containsPC
 argument_list|(
 name|uint64_t
-name|pc
+name|PC
 argument_list|)
 decl|const
 block|{
@@ -542,9 +596,9 @@ return|return
 operator|(
 name|LowPC
 operator|<=
-name|pc
+name|PC
 operator|&&
-name|pc
+name|PC
 operator|<
 name|HighPC
 operator|)
@@ -558,7 +612,7 @@ block|{
 name|LineTable
 argument_list|()
 expr_stmt|;
-comment|// Represents an invalid row
+comment|/// Represents an invalid row
 specifier|const
 name|uint32_t
 name|UnknownRowIndex
@@ -603,13 +657,13 @@ name|S
 argument_list|)
 expr_stmt|;
 block|}
-comment|// Returns the index of the row with file/line info for a given address,
-comment|// or UnknownRowIndex if there is no such row.
+comment|/// Returns the index of the row with file/line info for a given address,
+comment|/// or UnknownRowIndex if there is no such row.
 name|uint32_t
 name|lookupAddress
 argument_list|(
 name|uint64_t
-name|address
+name|Address
 argument_list|)
 decl|const
 decl_stmt|;
@@ -617,10 +671,10 @@ name|bool
 name|lookupAddressRange
 argument_list|(
 name|uint64_t
-name|address
+name|Address
 argument_list|,
 name|uint64_t
-name|size
+name|Size
 argument_list|,
 name|std
 operator|::
@@ -629,7 +683,7 @@ operator|<
 name|uint32_t
 operator|>
 operator|&
-name|result
+name|Result
 argument_list|)
 decl|const
 decl_stmt|;
@@ -641,8 +695,8 @@ name|FileIndex
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Extracts filename by its index in filename table in prologue.
-comment|// Returns true on success.
+comment|/// Extracts filename by its index in filename table in prologue.
+comment|/// Returns true on success.
 name|bool
 name|getFileNameByIndex
 argument_list|(
@@ -667,8 +721,8 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Fills the Result argument with the file and line information
-comment|// corresponding to Address. Returns true on success.
+comment|/// Fills the Result argument with the file and line information
+comment|/// corresponding to Address. Returns true on success.
 name|bool
 name|getFileLineInfoForAddress
 argument_list|(
@@ -708,53 +762,54 @@ comment|/// Parse prologue and all rows.
 name|bool
 name|parse
 parameter_list|(
-name|DataExtractor
-name|debug_line_data
-parameter_list|,
 specifier|const
-name|RelocAddrMap
-modifier|*
-name|RMap
+name|DWARFDataExtractor
+modifier|&
+name|DebugLineData
 parameter_list|,
 name|uint32_t
 modifier|*
-name|offset_ptr
+name|OffsetPtr
 parameter_list|)
 function_decl|;
-name|struct
-name|Prologue
-name|Prologue
-decl_stmt|;
-typedef|typedef
+name|using
+name|RowVector
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|Row
 operator|>
-name|RowVector
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|RowIter
+init|=
 name|RowVector
 operator|::
 name|const_iterator
-name|RowIter
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|SequenceVector
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|Sequence
 operator|>
-name|SequenceVector
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|SequenceIter
+init|=
 name|SequenceVector
 operator|::
 name|const_iterator
-name|SequenceIter
-expr_stmt|;
+decl_stmt|;
+name|struct
+name|Prologue
+name|Prologue
+decl_stmt|;
 name|RowVector
 name|Rows
 decl_stmt|;
@@ -771,10 +826,10 @@ name|DWARFDebugLine
 operator|::
 name|Sequence
 operator|&
-name|seq
+name|Seq
 argument_list|,
 name|uint64_t
-name|address
+name|Address
 argument_list|)
 decl|const
 decl_stmt|;
@@ -786,7 +841,7 @@ modifier|*
 name|getLineTable
 argument_list|(
 name|uint32_t
-name|offset
+name|Offset
 argument_list|)
 decl|const
 decl_stmt|;
@@ -795,11 +850,13 @@ name|LineTable
 modifier|*
 name|getOrParseLineTable
 parameter_list|(
-name|DataExtractor
-name|debug_line_data
+specifier|const
+name|DWARFDataExtractor
+modifier|&
+name|DebugLineData
 parameter_list|,
 name|uint32_t
-name|offset
+name|Offset
 parameter_list|)
 function_decl|;
 name|private
@@ -823,19 +880,21 @@ name|void
 name|appendRowToMatrix
 parameter_list|(
 name|uint32_t
-name|offset
+name|Offset
 parameter_list|)
 function_decl|;
-comment|// Line table we're currently parsing.
+comment|/// Line table we're currently parsing.
 name|struct
 name|LineTable
 modifier|*
 name|LineTable
 decl_stmt|;
-comment|// The row number that starts at zero for the prologue, and increases for
-comment|// each row added to the matrix.
+comment|/// The row number that starts at zero for the prologue, and increases for
+comment|/// each row added to the matrix.
 name|unsigned
 name|RowNumber
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|Row
@@ -847,33 +906,31 @@ name|Sequence
 decl_stmt|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|LineTableMapTy
+init|=
 name|std
 operator|::
 name|map
 operator|<
 name|uint32_t
-operator|,
+decl_stmt|,
 name|LineTable
-operator|>
-name|LineTableMapTy
-expr_stmt|;
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|LineTableIter
+init|=
 name|LineTableMapTy
 operator|::
 name|iterator
-name|LineTableIter
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|LineTableConstIter
+init|=
 name|LineTableMapTy
 operator|::
 name|const_iterator
-name|LineTableConstIter
-expr_stmt|;
-specifier|const
-name|RelocAddrMap
-modifier|*
-name|RelocMap
 decl_stmt|;
 name|LineTableMapTy
 name|LineTableMap
@@ -883,10 +940,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARFDEBUGLINE_H
+end_comment
 
 end_unit
 

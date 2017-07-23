@@ -3703,6 +3703,11 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+name|int
+name|perror
+init|=
+literal|1
+decl_stmt|;
 name|rc
 operator|->
 name|cfd
@@ -4188,6 +4193,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|perror
+operator|=
 name|pthread_create
 argument_list|(
 operator|&
@@ -4200,6 +4207,12 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|perror
+operator|==
+literal|0
+condition|)
 name|pthread_set_name_np
 argument_list|(
 name|tid
@@ -4346,6 +4359,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|perror
+operator|==
+literal|0
+condition|)
 name|pthread_join
 argument_list|(
 name|tid

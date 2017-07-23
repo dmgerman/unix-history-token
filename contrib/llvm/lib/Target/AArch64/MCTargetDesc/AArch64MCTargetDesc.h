@@ -243,6 +243,15 @@ name|uint32_t
 name|CPUSubtype
 parameter_list|)
 function_decl|;
+name|MCObjectWriter
+modifier|*
+name|createAArch64WinCOFFObjectWriter
+parameter_list|(
+name|raw_pwrite_stream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 name|MCTargetStreamer
 modifier|*
 name|createAArch64AsmTargetStreamer

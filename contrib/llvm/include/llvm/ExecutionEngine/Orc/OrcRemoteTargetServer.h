@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===---- OrcRemoteTargetServer.h - Orc Remote-target Server ----*- C++ -*-===//
+comment|//===- OrcRemoteTargetServer.h - Orc Remote-target Server -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"OrcRemoteTargetRPCAPI.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
@@ -84,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
+file|"llvm/ExecutionEngine/Orc/OrcRemoteTargetRPCAPI.h"
 end_include
 
 begin_include
@@ -234,7 +228,9 @@ name|OrcRemoteTargetRPCAPI
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|SymbolLookupFtor
+operator|=
 name|std
 operator|::
 name|function
@@ -249,9 +245,10 @@ operator|&
 name|Name
 argument_list|)
 operator|>
-name|SymbolLookupFtor
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|EHFrameRegistrationFtor
+operator|=
 name|std
 operator|::
 name|function
@@ -263,8 +260,7 @@ argument_list|,
 argument|uint32_t Size
 argument_list|)
 operator|>
-name|EHFrameRegistrationFtor
-expr_stmt|;
+block|;
 name|OrcRemoteTargetServer
 argument_list|(
 argument|ChannelT&Channel
@@ -275,12 +271,12 @@ argument|EHFrameRegistrationFtor EHFramesRegister
 argument_list|,
 argument|EHFrameRegistrationFtor EHFramesDeregister
 argument_list|)
-block|:
+operator|:
 name|OrcRemoteTargetRPCAPI
 argument_list|(
 name|Channel
 argument_list|)
-operator|,
+block|,
 name|SymbolLookup
 argument_list|(
 name|std
@@ -290,7 +286,7 @@ argument_list|(
 name|SymbolLookup
 argument_list|)
 argument_list|)
-operator|,
+block|,
 name|EHFramesRegister
 argument_list|(
 name|std
@@ -300,20 +296,10 @@ argument_list|(
 name|EHFramesRegister
 argument_list|)
 argument_list|)
-operator|,
+block|,
 name|EHFramesDeregister
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|EHFramesDeregister
-argument_list|)
-argument_list|)
-operator|,
-name|TerminateFlag
-argument_list|(
-argument|false
+argument|std::move(EHFramesDeregister)
 argument_list|)
 block|{
 name|using
@@ -622,11 +608,11 @@ operator|&
 argument_list|)
 operator|=
 name|delete
-expr_stmt|;
+block|;
 name|OrcRemoteTargetServer
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|OrcRemoteTargetServer
@@ -634,7 +620,7 @@ operator|&
 operator|)
 operator|=
 name|delete
-decl_stmt|;
+block|;
 name|OrcRemoteTargetServer
 argument_list|(
 name|OrcRemoteTargetServer
@@ -643,18 +629,18 @@ name|Other
 argument_list|)
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|OrcRemoteTargetServer
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 name|OrcRemoteTargetServer
 operator|&&
 operator|)
 operator|=
 name|delete
-decl_stmt|;
+block|;
 name|Expected
 operator|<
 name|JITTargetAddress
@@ -684,15 +670,15 @@ name|TerminateFlag
 return|;
 block|}
 name|private
-label|:
-struct|struct
+operator|:
+expr|struct
 name|Allocator
 block|{
 name|Allocator
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|Allocator
 argument_list|(
 name|Allocator
@@ -757,24 +743,19 @@ expr_stmt|;
 block|}
 name|Error
 name|allocate
-parameter_list|(
-name|void
-modifier|*
-modifier|&
-name|Addr
-parameter_list|,
-name|size_t
-name|Size
-parameter_list|,
-name|uint32_t
-name|Align
-parameter_list|)
+argument_list|(
+argument|void *&Addr
+argument_list|,
+argument|size_t Size
+argument_list|,
+argument|uint32_t Align
+argument_list|)
 block|{
 name|std
 operator|::
 name|error_code
 name|EC
-expr_stmt|;
+block|;
 name|sys
 operator|::
 name|MemoryBlock
@@ -804,7 +785,7 @@ name|MF_WRITE
 argument_list|,
 name|EC
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|EC
@@ -821,7 +802,7 @@ name|MB
 operator|.
 name|base
 argument_list|()
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|Allocs
@@ -841,7 +822,7 @@ argument_list|()
 operator|&&
 literal|"Duplicate alloc"
 argument_list|)
-expr_stmt|;
+block|;
 name|Allocs
 index|[
 name|MB
@@ -856,7 +837,7 @@ name|move
 argument_list|(
 name|MB
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Error
 operator|::
@@ -866,25 +847,22 @@ return|;
 block|}
 name|Error
 name|setProtections
-parameter_list|(
-name|void
-modifier|*
-name|block
-parameter_list|,
-name|unsigned
-name|Flags
-parameter_list|)
+argument_list|(
+argument|void *block
+argument_list|,
+argument|unsigned Flags
+argument_list|)
 block|{
 name|auto
 name|I
-init|=
+operator|=
 name|Allocs
 operator|.
 name|find
 argument_list|(
 name|block
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|I
@@ -895,11 +873,14 @@ name|end
 argument_list|()
 condition|)
 return|return
+name|errorCodeToError
+argument_list|(
 name|orcError
 argument_list|(
 name|OrcErrorCode
 operator|::
 name|RemoteMProtectAddrUnrecognized
+argument_list|)
 argument_list|)
 return|;
 return|return
@@ -936,7 +917,7 @@ operator|>
 name|Allocs
 expr_stmt|;
 block|}
-struct|;
+empty_stmt|;
 specifier|static
 name|Error
 name|doNothing
@@ -1018,14 +999,15 @@ argument_list|(
 argument|JITTargetAddress Addr
 argument_list|)
 block|{
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
+name|using
 name|IntVoidFnTy
-function_decl|)
-parameter_list|()
-function_decl|;
+operator|=
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+block|;
 name|IntVoidFnTy
 name|Fn
 operator|=
@@ -1042,7 +1024,7 @@ operator|(
 name|Addr
 operator|)
 operator|)
-expr_stmt|;
+block|;
 name|DEBUG
 argument_list|(
 name|dbgs
@@ -1059,13 +1041,13 @@ argument_list|)
 operator|<<
 literal|"\n"
 argument_list|)
-expr_stmt|;
+block|;
 name|int
 name|Result
-init|=
+operator|=
 name|Fn
 argument_list|()
-decl_stmt|;
+block|;
 name|DEBUG
 argument_list|(
 name|dbgs
@@ -1077,7 +1059,7 @@ name|Result
 operator|<<
 literal|"\n"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Result
 return|;
@@ -1093,21 +1075,22 @@ argument_list|,
 argument|std::vector<std::string> Args
 argument_list|)
 block|{
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
+name|using
 name|MainFnTy
-function_decl|)
-parameter_list|(
+operator|=
 name|int
-parameter_list|,
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|int
+argument_list|,
 specifier|const
 name|char
-modifier|*
-type|[]
-parameter_list|)
-function_decl|;
+operator|*
+index|[]
+argument_list|)
+block|;
 name|MainFnTy
 name|Fn
 operator|=
@@ -1124,22 +1107,22 @@ operator|(
 name|Addr
 operator|)
 operator|)
-expr_stmt|;
+block|;
 name|int
 name|ArgC
-init|=
+operator|=
 name|Args
 operator|.
 name|size
 argument_list|()
 operator|+
 literal|1
-decl_stmt|;
+block|;
 name|int
 name|Idx
-init|=
+operator|=
 literal|1
-decl_stmt|;
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -1161,14 +1144,14 @@ operator|+
 literal|1
 index|]
 argument_list|)
-expr_stmt|;
+block|;
 name|ArgV
 index|[
 literal|0
 index|]
 operator|=
 literal|"<jit process>"
-expr_stmt|;
+block|;
 for|for
 control|(
 name|auto
@@ -1188,6 +1171,26 @@ operator|.
 name|c_str
 argument_list|()
 expr_stmt|;
+name|ArgV
+index|[
+name|ArgC
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|DEBUG
+argument_list|(
+argument|for (int Idx =
+literal|0
+argument|; Idx< ArgC; ++Idx) {         llvm::dbgs()<<
+literal|"Arg "
+argument|<< Idx<<
+literal|": "
+argument|<< ArgV[Idx]<<
+literal|"\n"
+argument|;       }
+argument_list|)
+empty_stmt|;
 name|DEBUG
 argument_list|(
 name|dbgs
@@ -1241,14 +1244,15 @@ name|JITTargetAddress
 name|Addr
 parameter_list|)
 block|{
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|VoidVoidFnTy
-function_decl|)
-parameter_list|()
-function_decl|;
+init|=
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+decl_stmt|;
 name|VoidVoidFnTy
 name|Fn
 init|=
@@ -1330,11 +1334,14 @@ name|end
 argument_list|()
 condition|)
 return|return
+name|errorCodeToError
+argument_list|(
 name|orcError
 argument_list|(
 name|OrcErrorCode
 operator|::
 name|RemoteAllocatorIdAlreadyInUse
+argument_list|)
 argument_list|)
 return|;
 name|DEBUG
@@ -1393,11 +1400,14 @@ name|end
 argument_list|()
 condition|)
 return|return
+name|errorCodeToError
+argument_list|(
 name|orcError
 argument_list|(
 name|OrcErrorCode
 operator|::
 name|RemoteIndirectStubsOwnerIdAlreadyInUse
+argument_list|)
 argument_list|)
 return|;
 name|DEBUG
@@ -1520,11 +1530,14 @@ name|end
 argument_list|()
 condition|)
 return|return
+name|errorCodeToError
+argument_list|(
 name|orcError
 argument_list|(
 name|OrcErrorCode
 operator|::
 name|RemoteAllocatorDoesNotExist
+argument_list|)
 argument_list|)
 return|;
 name|Allocators
@@ -1582,11 +1595,14 @@ name|end
 argument_list|()
 condition|)
 return|return
+name|errorCodeToError
+argument_list|(
 name|orcError
 argument_list|(
 name|OrcErrorCode
 operator|::
 name|RemoteIndirectStubsOwnerDoesNotExist
+argument_list|)
 argument_list|)
 return|;
 name|IndirectStubsOwners
@@ -1658,11 +1674,14 @@ name|end
 argument_list|()
 condition|)
 return|return
+name|errorCodeToError
+argument_list|(
 name|orcError
 argument_list|(
 name|OrcErrorCode
 operator|::
 name|RemoteIndirectStubsOwnerDoesNotExist
+argument_list|)
 argument_list|)
 return|;
 name|typename
@@ -2463,11 +2482,14 @@ name|end
 argument_list|()
 condition|)
 return|return
+name|errorCodeToError
+argument_list|(
 name|orcError
 argument_list|(
 name|OrcErrorCode
 operator|::
 name|RemoteAllocatorDoesNotExist
+argument_list|)
 argument_list|)
 return|;
 name|auto
@@ -2603,11 +2625,14 @@ name|end
 argument_list|()
 condition|)
 return|return
+name|errorCodeToError
+argument_list|(
 name|orcError
 argument_list|(
 name|OrcErrorCode
 operator|::
 name|RemoteAllocatorDoesNotExist
+argument_list|)
 argument_list|)
 return|;
 name|auto
@@ -2877,8 +2902,10 @@ name|Allocators
 expr_stmt|;
 end_expr_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|ISBlockOwnerList
+init|=
 name|std
 operator|::
 name|vector
@@ -2888,9 +2915,8 @@ name|TargetT
 operator|::
 name|IndirectStubsInfo
 operator|>
-name|ISBlockOwnerList
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|std
@@ -2931,6 +2957,8 @@ end_expr_stmt
 begin_decl_stmt
 name|bool
 name|TerminateFlag
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -2959,6 +2987,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_EXECUTIONENGINE_ORC_ORCREMOTETARGETSERVER_H
+end_comment
 
 end_unit
 

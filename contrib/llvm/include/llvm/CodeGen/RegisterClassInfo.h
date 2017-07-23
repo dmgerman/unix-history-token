@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterClassInfo.h - Dynamic Register Class Info -*- C++ -*-------===//
+comment|//===- RegisterClassInfo.h - Dynamic Register Class Info --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,7 +86,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -101,18 +131,28 @@ name|RCInfo
 block|{
 name|unsigned
 name|Tag
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|NumRegs
+init|=
+literal|0
 decl_stmt|;
 name|bool
 name|ProperSubClass
+init|=
+name|false
 decl_stmt|;
 name|uint8_t
 name|MinCost
+init|=
+literal|0
 decl_stmt|;
 name|uint16_t
 name|LastCostChange
+init|=
+literal|0
 decl_stmt|;
 name|std
 operator|::
@@ -125,32 +165,9 @@ name|Order
 expr_stmt|;
 name|RCInfo
 argument_list|()
-operator|:
-name|Tag
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumRegs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ProperSubClass
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|MinCost
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastCostChange
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|operator
 name|ArrayRef
 operator|<
@@ -188,32 +205,41 @@ comment|// Tag changes whenever cached information needs to be recomputed. An RC
 comment|// entry is valid when its tag matches.
 name|unsigned
 name|Tag
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|MachineFunction
 modifier|*
 name|MF
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|TRI
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Callee saved registers of last MF. Assumed to be valid until the next
 comment|// runOnFunction() call.
+comment|// Used only to determine if an update was made to CalleeSavedAliases.
 specifier|const
 name|MCPhysReg
 modifier|*
-name|CalleeSaved
+name|CalleeSavedRegs
+init|=
+name|nullptr
 decl_stmt|;
-comment|// Map register number to CalleeSaved index + 1;
+comment|// Map register alias to the callee saved Register.
 name|SmallVector
 operator|<
-name|uint8_t
+name|MCPhysReg
 operator|,
 literal|4
 operator|>
-name|CSRNum
+name|CalleeSavedAliases
 expr_stmt|;
 comment|// Reserved registers in the current MF.
 name|BitVector
@@ -365,7 +391,7 @@ name|ProperSubClass
 return|;
 block|}
 comment|/// getLastCalleeSavedAlias - Returns the last callee saved register that
-comment|/// overlaps PhysReg, or 0 if Reg doesn't overlap a CSR.
+comment|/// overlaps PhysReg, or 0 if Reg doesn't overlap a CalleeSavedAliases.
 name|unsigned
 name|getLastCalleeSavedAlias
 argument_list|(
@@ -386,20 +412,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unsigned
-name|N
-init|=
-name|CSRNum
-index|[
 name|PhysReg
-index|]
+operator|<
+name|CalleeSavedAliases
+operator|.
+name|size
+argument_list|()
 condition|)
 return|return
-name|CalleeSaved
+name|CalleeSavedAliases
 index|[
-name|N
-operator|-
-literal|1
+name|PhysReg
 index|]
 return|;
 return|return
@@ -508,6 +531,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_REGISTERCLASSINFO_H
+end_comment
 
 end_unit
 

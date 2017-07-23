@@ -372,6 +372,16 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<net/if_gre.h>
+end_include
+
+begin_comment
+comment|/* for struct grehdr */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<netpfil/ipfw/ip_fw_private.h>
 end_include
 
@@ -4994,6 +5004,22 @@ name|ulp
 argument_list|,
 expr|struct
 name|pim
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IPPROTO_GRE
+case|:
+comment|/* RFC 1701 */
+comment|/* XXX GRE header check? */
+name|PULLUP_TO
+argument_list|(
+name|hlen
+argument_list|,
+name|ulp
+argument_list|,
+expr|struct
+name|grehdr
 argument_list|)
 expr_stmt|;
 break|break;

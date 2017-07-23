@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rdma/iw_cm.h>
 end_include
 

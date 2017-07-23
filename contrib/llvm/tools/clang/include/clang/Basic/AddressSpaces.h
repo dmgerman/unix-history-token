@@ -74,20 +74,23 @@ block|{
 name|namespace
 name|LangAS
 block|{
-comment|/// \brief Defines the set of possible language-specific address spaces.
+comment|/// \brief Defines the address space values used by the address space qualifier
+comment|/// of QualType.
 comment|///
-comment|/// This uses a high starting offset so as not to conflict with any address
-comment|/// space used by a target.
 enum|enum
 name|ID
 block|{
-name|Offset
+comment|// The default value 0 is the value used in QualType for the the situation
+comment|// where there is no address space qualifier. For most languages, this also
+comment|// corresponds to the situation where there is no address space qualifier in
+comment|// the source code, except for OpenCL, where the address space value 0 in
+comment|// QualType represents private address space in OpenCL source code.
+name|Default
 init|=
-literal|0x7FFF00
+literal|0
 block|,
+comment|// OpenCL specific address spaces.
 name|opencl_global
-init|=
-name|Offset
 block|,
 name|opencl_local
 block|,
@@ -95,19 +98,17 @@ name|opencl_constant
 block|,
 name|opencl_generic
 block|,
+comment|// CUDA specific address spaces.
 name|cuda_device
 block|,
 name|cuda_constant
 block|,
 name|cuda_shared
 block|,
-name|Last
-block|,
-name|Count
-init|=
-name|Last
-operator|-
-name|Offset
+comment|// This denotes the count of language-specific address spaces and also
+comment|// the offset added to the target-specific address spaces, which are usually
+comment|// specified by address space attributes __attribute__(address_space(n))).
+name|FirstTargetAddressSpace
 block|}
 enum|;
 comment|/// The type of a lookup table which maps from language-specific address spaces
@@ -116,7 +117,7 @@ typedef|typedef
 name|unsigned
 name|Map
 index|[
-name|Count
+name|FirstTargetAddressSpace
 index|]
 typedef|;
 block|}

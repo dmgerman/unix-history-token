@@ -123,6 +123,9 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
+name|ImmutableCallSite
+decl_stmt|;
+name|class
 name|TargetLibraryInfo
 decl_stmt|;
 name|class
@@ -372,6 +375,26 @@ modifier|*
 name|Idx
 parameter_list|)
 function_decl|;
+comment|/// \brief Attempt to constant fold a shufflevector instruction with the
+comment|/// specified operands and indices.  The constant result is returned if
+comment|/// successful; if not, null is returned.
+name|Constant
+modifier|*
+name|ConstantFoldShuffleVectorInstruction
+parameter_list|(
+name|Constant
+modifier|*
+name|V1
+parameter_list|,
+name|Constant
+modifier|*
+name|V2
+parameter_list|,
+name|Constant
+modifier|*
+name|Mask
+parameter_list|)
+function_decl|;
 comment|/// ConstantFoldLoadFromConstPtr - Return the value that a load from C would
 comment|/// produce if it is constant and determinable.  If this is not determinable,
 comment|/// return null.
@@ -434,6 +457,9 @@ comment|/// the specified function.
 name|bool
 name|canConstantFoldCallTo
 parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
 specifier|const
 name|Function
 modifier|*
@@ -446,6 +472,9 @@ name|Constant
 modifier|*
 name|ConstantFoldCall
 argument_list|(
+name|ImmutableCallSite
+name|CS
+argument_list|,
 name|Function
 operator|*
 name|F

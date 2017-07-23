@@ -1780,7 +1780,7 @@ name|SCTP_SB_LIMIT_RCV
 parameter_list|(
 name|so
 parameter_list|)
-value|so->so_rcv.sb_hiwat
+value|(SOLISTENING(so) ? so->sol_sbrcv_hiwat : so->so_rcv.sb_hiwat)
 end_define
 
 begin_define
@@ -1790,7 +1790,7 @@ name|SCTP_SB_LIMIT_SND
 parameter_list|(
 name|so
 parameter_list|)
-value|so->so_snd.sb_hiwat
+value|(SOLISTENING(so) ? so->sol_sbsnd_hiwat : so->so_snd.sb_hiwat)
 end_define
 
 begin_comment

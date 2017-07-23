@@ -2098,6 +2098,9 @@ name|mp
 decl_stmt|;
 name|int
 name|ret
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|int
 name|lro_enable

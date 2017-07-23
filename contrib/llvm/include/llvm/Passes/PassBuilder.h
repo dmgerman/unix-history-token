@@ -110,6 +110,38 @@ decl_stmt|;
 name|class
 name|TargetMachine
 decl_stmt|;
+comment|/// A struct capturing PGO tunables.
+struct|struct
+name|PGOOptions
+block|{
+name|std
+operator|::
+name|string
+name|ProfileGenFile
+operator|=
+literal|""
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|ProfileUseFile
+operator|=
+literal|""
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|SampleProfileFile
+operator|=
+literal|""
+expr_stmt|;
+name|bool
+name|RunProfileGen
+init|=
+name|false
+decl_stmt|;
+block|}
+struct|;
 comment|/// \brief This class provides access to building LLVM's passes.
 comment|///
 comment|/// It's members provide the baseline state available to passes during their
@@ -123,8 +155,38 @@ name|TargetMachine
 modifier|*
 name|TM
 decl_stmt|;
+name|Optional
+operator|<
+name|PGOOptions
+operator|>
+name|PGOOpt
+expr_stmt|;
 name|public
 label|:
+comment|/// \brief A struct to capture parsed pass pipeline names.
+comment|///
+comment|/// A pipeline is defined as a series of names, each of which may in itself
+comment|/// recursively contain a nested pipeline. A name is either the name of a pass
+comment|/// (e.g. "instcombine") or the name of a pipeline type (e.g. "cgscc"). If the
+comment|/// name is the name of a pass, the InnerPipeline is empty, since passes
+comment|/// cannot contain inner pipelines. See parsePassPipeline() for a more
+comment|/// detailed description of the textual pipeline format.
+struct|struct
+name|PipelineElement
+block|{
+name|StringRef
+name|Name
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|PipelineElement
+operator|>
+name|InnerPipeline
+expr_stmt|;
+block|}
+struct|;
 comment|/// \brief LLVM-provided high-level optimization levels.
 comment|///
 comment|/// This enumerates the LLVM-provided high-level optimization levels. Each
@@ -221,11 +283,24 @@ operator|*
 name|TM
 operator|=
 name|nullptr
+argument_list|,
+name|Optional
+operator|<
+name|PGOOptions
+operator|>
+name|PGOOpt
+operator|=
+name|None
 argument_list|)
-operator|:
+range|:
 name|TM
 argument_list|(
-argument|TM
+name|TM
+argument_list|)
+decl_stmt|,
+name|PGOOpt
+argument_list|(
+name|PGOOpt
 argument_list|)
 block|{}
 comment|/// \brief Cross register the analysis managers through their proxies.
@@ -234,24 +309,24 @@ comment|/// This is an interface that can be used to cross register each
 comment|// AnalysisManager with all the others analysis managers.
 name|void
 name|crossRegisterProxies
-argument_list|(
+parameter_list|(
 name|LoopAnalysisManager
-operator|&
+modifier|&
 name|LAM
-argument_list|,
+parameter_list|,
 name|FunctionAnalysisManager
-operator|&
+modifier|&
 name|FAM
-argument_list|,
+parameter_list|,
 name|CGSCCAnalysisManager
-operator|&
+modifier|&
 name|CGAM
-argument_list|,
+parameter_list|,
 name|ModuleAnalysisManager
-operator|&
+modifier|&
 name|MAM
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Registers all available module analysis passes.
 comment|///
 comment|/// This is an interface that can be used to populate a \c
@@ -319,8 +394,76 @@ comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
 comment|/// only intended for use when attempting to optimize code. If frontends
 comment|/// require some transformations for semantic reasons, they should explicitly
 comment|/// build them.
+comment|///
+comment|/// \p PrepareForThinLTO indicates whether this is invoked in
+comment|/// PrepareForThinLTO phase. Special handling is needed for sample PGO to
+comment|/// ensure profile accurate in the backend profile annotation phase.
 name|FunctionPassManager
 name|buildFunctionSimplificationPipeline
+parameter_list|(
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|,
+name|bool
+name|PrepareForThinLTO
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Construct the core LLVM module canonicalization and simplification
+comment|/// pipeline.
+comment|///
+comment|/// This pipeline focuses on canonicalizing and simplifying the entire module
+comment|/// of IR. Much like the function simplification pipeline above, it is
+comment|/// suitable to run repeatedly over the IR and is not expected to destroy
+comment|/// important information. It does, however, perform inlining and other
+comment|/// heuristic based simplifications that are not strictly reversible.
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
+comment|///
+comment|/// \p PrepareForThinLTO indicates whether this is invoked in
+comment|/// PrepareForThinLTO phase. Special handling is needed for sample PGO to
+comment|/// ensure profile accurate in the backend profile annotation phase.
+name|ModulePassManager
+name|buildModuleSimplificationPipeline
+parameter_list|(
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|,
+name|bool
+name|PrepareForThinLTO
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Construct the core LLVM module optimization pipeline.
+comment|///
+comment|/// This pipeline focuses on optimizing the execution speed of the IR. It
+comment|/// uses cost modeling and thresholds to balance code growth against runtime
+comment|/// improvements. It includes vectorization and other information destroying
+comment|/// transformations. It also cannot generally be run repeatedly on a module
+comment|/// without potentially seriously regressing either runtime performance of
+comment|/// the code or serious code size growth.
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
+name|ModulePassManager
+name|buildModuleOptimizationPipeline
 parameter_list|(
 name|OptimizationLevel
 name|Level
@@ -344,6 +487,53 @@ comment|/// require some transformations for semantic reasons, they should expli
 comment|/// build them.
 name|ModulePassManager
 name|buildPerModuleDefaultPipeline
+parameter_list|(
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Build a pre-link, ThinLTO-targeting default optimization pipeline to
+comment|/// a pass manager.
+comment|///
+comment|/// This adds the pre-link optimizations tuned to prepare a module for
+comment|/// a ThinLTO run. It works to minimize the IR which needs to be analyzed
+comment|/// without making irreversible decisions which could be made better during
+comment|/// the LTO run.
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
+name|ModulePassManager
+name|buildThinLTOPreLinkDefaultPipeline
+parameter_list|(
+name|OptimizationLevel
+name|Level
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// Build an ThinLTO default optimization pipeline to a pass manager.
+comment|///
+comment|/// This provides a good default optimization pipeline for link-time
+comment|/// optimization and code generation. It is particularly tuned to fit well
+comment|/// when IR coming into the LTO phase was first run through \c
+comment|/// addPreLinkLTODefaultPipeline, and the two coordinate closely.
+comment|///
+comment|/// Note that \p Level cannot be `O0` here. The pipelines produced are
+comment|/// only intended for use when attempting to optimize code. If frontends
+comment|/// require some transformations for semantic reasons, they should explicitly
+comment|/// build them.
+name|ModulePassManager
+name|buildThinLTODefaultPipeline
 parameter_list|(
 name|OptimizationLevel
 name|Level
@@ -407,7 +597,8 @@ name|AAManager
 name|buildDefaultAAPipeline
 parameter_list|()
 function_decl|;
-comment|/// \brief Parse a textual pass pipeline description into a \c ModulePassManager.
+comment|/// \brief Parse a textual pass pipeline description into a \c
+comment|/// ModulePassManager.
 comment|///
 comment|/// The format of the textual pass pipeline description looks something like:
 comment|///
@@ -417,8 +608,8 @@ comment|/// Pass managers have ()s describing the nest structure of passes. All 
 comment|/// are comma separated. As a special shortcut, if the very first pass is not
 comment|/// a module pass (as a module pass manager is), this will automatically form
 comment|/// the shortest stack of pass managers that allow inserting that first pass.
-comment|/// So, assuming function passes 'fpassN', CGSCC passes 'cgpassN', and loop passes
-comment|/// 'lpassN', all of these are valid:
+comment|/// So, assuming function passes 'fpassN', CGSCC passes 'cgpassN', and loop
+comment|/// passes 'lpassN', all of these are valid:
 comment|///
 comment|///   fpass1,fpass2,fpass3
 comment|///   cgpass1,cgpass2,cgpass3
@@ -431,10 +622,10 @@ comment|///   module(cgscc(cgpass1,cgpass2,cgpass3))
 comment|///   module(function(loop(lpass1,lpass2,lpass3)))
 comment|///
 comment|/// This shortcut is especially useful for debugging and testing small pass
-comment|/// combinations. Note that these shortcuts don't introduce any other magic. If
-comment|/// the sequence of passes aren't all the exact same kind of pass, it will be
-comment|/// an error. You cannot mix different levels implicitly, you must explicitly
-comment|/// form a pass manager in which to nest passes.
+comment|/// combinations. Note that these shortcuts don't introduce any other magic.
+comment|/// If the sequence of passes aren't all the exact same kind of pass, it will
+comment|/// be an error. You cannot mix different levels implicitly, you must
+comment|/// explicitly form a pass manager in which to nest passes.
 name|bool
 name|parsePassPipeline
 parameter_list|(
@@ -456,6 +647,77 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// {{@ Parse a textual pass pipeline description into a specific PassManager
+comment|///
+comment|/// Automatic deduction of an appropriate pass manager stack is not supported.
+comment|/// For example, to insert a loop pass 'lpass' into a FunctinoPassManager,
+comment|/// this is the valid pipeline text:
+comment|///
+comment|///   function(lpass)
+name|bool
+name|parsePassPipeline
+parameter_list|(
+name|CGSCCPassManager
+modifier|&
+name|CGPM
+parameter_list|,
+name|StringRef
+name|PipelineText
+parameter_list|,
+name|bool
+name|VerifyEachPass
+init|=
+name|true
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+name|bool
+name|parsePassPipeline
+parameter_list|(
+name|FunctionPassManager
+modifier|&
+name|FPM
+parameter_list|,
+name|StringRef
+name|PipelineText
+parameter_list|,
+name|bool
+name|VerifyEachPass
+init|=
+name|true
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+name|bool
+name|parsePassPipeline
+parameter_list|(
+name|LoopPassManager
+modifier|&
+name|LPM
+parameter_list|,
+name|StringRef
+name|PipelineText
+parameter_list|,
+name|bool
+name|VerifyEachPass
+init|=
+name|true
+parameter_list|,
+name|bool
+name|DebugLogging
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// @}}
 comment|/// Parse a textual alias analysis pipeline into the provided AA manager.
 comment|///
 comment|/// The format of the textual AA pipeline is a comma separated list of AA
@@ -482,25 +744,507 @@ name|StringRef
 name|PipelineText
 parameter_list|)
 function_decl|;
-name|private
-label|:
-comment|/// A struct to capture parsed pass pipeline names.
-struct|struct
-name|PipelineElement
-block|{
-name|StringRef
-name|Name
-decl_stmt|;
+comment|/// \brief Register a callback for a default optimizer pipeline extension
+comment|/// point
+comment|///
+comment|/// This extension point allows adding passes that perform peephole
+comment|/// optimizations similar to the instruction combiner. These passes will be
+comment|/// inserted after each instance of the instruction combiner pass.
+name|void
+name|registerPeepholeEPCallback
+argument_list|(
+specifier|const
 name|std
 operator|::
-name|vector
+name|function
 operator|<
-name|PipelineElement
+name|void
+argument_list|(
+name|FunctionPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
 operator|>
-name|InnerPipeline
+operator|&
+name|C
+argument_list|)
+block|{
+name|PeepholeEPCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
 expr_stmt|;
 block|}
-struct|;
+comment|/// \brief Register a callback for a default optimizer pipeline extension
+comment|/// point
+comment|///
+comment|/// This extension point allows adding late loop canonicalization and
+comment|/// simplification passes. This is the last point in the loop optimization
+comment|/// pipeline before loop deletion. Each pass added
+comment|/// here must be an instance of LoopPass.
+comment|/// This is the place to add passes that can remove loops, such as target-
+comment|/// specific loop idiom recognition.
+name|void
+name|registerLateLoopOptimizationsEPCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|LoopPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|LateLoopOptimizationsEPCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Register a callback for a default optimizer pipeline extension
+comment|/// point
+comment|///
+comment|/// This extension point allows adding loop passes to the end of the loop
+comment|/// optimizer.
+name|void
+name|registerLoopOptimizerEndEPCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|LoopPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|LoopOptimizerEndEPCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Register a callback for a default optimizer pipeline extension
+comment|/// point
+comment|///
+comment|/// This extension point allows adding optimization passes after most of the
+comment|/// main optimizations, but before the last cleanup-ish optimizations.
+name|void
+name|registerScalarOptimizerLateEPCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|FunctionPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|ScalarOptimizerLateEPCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Register a callback for a default optimizer pipeline extension
+comment|/// point
+comment|///
+comment|/// This extension point allows adding CallGraphSCC passes at the end of the
+comment|/// main CallGraphSCC passes and before any function simplification passes run
+comment|/// by CGPassManager.
+name|void
+name|registerCGSCCOptimizerLateEPCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|CGSCCPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|CGSCCOptimizerLateEPCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Register a callback for a default optimizer pipeline extension
+comment|/// point
+comment|///
+comment|/// This extension point allows adding optimization passes before the
+comment|/// vectorizer and other highly target specific optimization passes are
+comment|/// executed.
+name|void
+name|registerVectorizerStartEPCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|FunctionPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|VectorizerStartEPCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Register a callback for parsing an AliasAnalysis Name to populate
+comment|/// the given AAManager \p AA
+name|void
+name|registerParseAACallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|AAManager&AA
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|AAParsingCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// {{@ Register callbacks for analysis registration with this PassBuilder
+comment|/// instance.
+comment|/// Callees register their analyses with the given AnalysisManager objects.
+name|void
+name|registerAnalysisRegistrationCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|CGSCCAnalysisManager
+operator|&
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|CGSCCAnalysisRegistrationCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|registerAnalysisRegistrationCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|FunctionAnalysisManager
+operator|&
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|FunctionAnalysisRegistrationCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|registerAnalysisRegistrationCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|LoopAnalysisManager
+operator|&
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|LoopAnalysisRegistrationCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|registerAnalysisRegistrationCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|ModuleAnalysisManager
+operator|&
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|ModuleAnalysisRegistrationCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// @}}
+comment|/// {{@ Register pipeline parsing callbacks with this pass builder instance.
+comment|/// Using these callbacks, callers can parse both a single pass name, as well
+comment|/// as entire sub-pipelines, and populate the PassManager instance
+comment|/// accordingly.
+name|void
+name|registerPipelineParsingCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|CGSCCPassManager&
+argument_list|,
+argument|ArrayRef<PipelineElement>
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|CGSCCPipelineParsingCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|registerPipelineParsingCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|FunctionPassManager&
+argument_list|,
+argument|ArrayRef<PipelineElement>
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|FunctionPipelineParsingCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|registerPipelineParsingCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|LoopPassManager&
+argument_list|,
+argument|ArrayRef<PipelineElement>
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|LoopPipelineParsingCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|registerPipelineParsingCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|ModulePassManager&
+argument_list|,
+argument|ArrayRef<PipelineElement>
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|ModulePipelineParsingCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// @}}
+comment|/// \brief Register a callback for a top-level pipeline entry.
+comment|///
+comment|/// If the PassManager type is not given at the top level of the pipeline
+comment|/// text, this Callback should be used to determine the appropriate stack of
+comment|/// PassManagers and populate the passed ModulePassManager.
+name|void
+name|registerParseTopLevelPipelineCallback
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+argument|ModulePassManager&
+argument_list|,
+argument|ArrayRef<PipelineElement>
+argument_list|,
+argument|bool VerifyEachPass
+argument_list|,
+argument|bool DebugLogging
+argument_list|)
+operator|>
+operator|&
+name|C
+argument_list|)
+block|{
+name|TopLevelPipelineParsingCallbacks
+operator|.
+name|push_back
+argument_list|(
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+name|private
+label|:
 specifier|static
 name|Optional
 operator|<
@@ -682,12 +1426,543 @@ name|bool
 name|DebugLogging
 argument_list|)
 decl_stmt|;
+name|void
+name|addPGOInstrPasses
+argument_list|(
+name|ModulePassManager
+operator|&
+name|MPM
+argument_list|,
+name|bool
+name|DebugLogging
+argument_list|,
+name|OptimizationLevel
+name|Level
+argument_list|,
+name|bool
+name|RunProfileGen
+argument_list|,
+name|std
+operator|::
+name|string
+name|ProfileGenFile
+argument_list|,
+name|std
+operator|::
+name|string
+name|ProfileUseFile
+argument_list|)
+decl_stmt|;
+name|void
+name|invokePeepholeEPCallbacks
+parameter_list|(
+name|FunctionPassManager
+modifier|&
+parameter_list|,
+name|OptimizationLevel
+parameter_list|)
+function_decl|;
+comment|// Extension Point callbacks
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|FunctionPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|PeepholeEPCallbacks
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|LoopPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|LateLoopOptimizationsEPCallbacks
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|LoopPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|LoopOptimizerEndEPCallbacks
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|FunctionPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|ScalarOptimizerLateEPCallbacks
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|CGSCCPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|CGSCCOptimizerLateEPCallbacks
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|FunctionPassManager
+operator|&
+argument_list|,
+name|OptimizationLevel
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|VectorizerStartEPCallbacks
+expr_stmt|;
+comment|// Module callbacks
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|ModuleAnalysisManager
+operator|&
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|ModuleAnalysisRegistrationCallbacks
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+name|StringRef
+argument_list|,
+name|ModulePassManager
+operator|&
+argument_list|,
+name|ArrayRef
+operator|<
+name|PipelineElement
+operator|>
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|ModulePipelineParsingCallbacks
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+argument|ModulePassManager&
+argument_list|,
+argument|ArrayRef<PipelineElement>
+argument_list|,
+argument|bool VerifyEachPass
+argument_list|,
+argument|bool DebugLogging
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|TopLevelPipelineParsingCallbacks
+expr_stmt|;
+comment|// CGSCC callbacks
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|CGSCCAnalysisManager
+operator|&
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|CGSCCAnalysisRegistrationCallbacks
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+name|StringRef
+argument_list|,
+name|CGSCCPassManager
+operator|&
+argument_list|,
+name|ArrayRef
+operator|<
+name|PipelineElement
+operator|>
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|CGSCCPipelineParsingCallbacks
+expr_stmt|;
+comment|// Function callbacks
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|FunctionAnalysisManager
+operator|&
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|FunctionAnalysisRegistrationCallbacks
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+name|StringRef
+argument_list|,
+name|FunctionPassManager
+operator|&
+argument_list|,
+name|ArrayRef
+operator|<
+name|PipelineElement
+operator|>
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|FunctionPipelineParsingCallbacks
+expr_stmt|;
+comment|// Loop callbacks
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|LoopAnalysisManager
+operator|&
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|LoopAnalysisRegistrationCallbacks
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+name|StringRef
+argument_list|,
+name|LoopPassManager
+operator|&
+argument_list|,
+name|ArrayRef
+operator|<
+name|PipelineElement
+operator|>
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|LoopPipelineParsingCallbacks
+expr_stmt|;
+comment|// AA callbacks
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|AAManager&AA
+argument_list|)
+operator|>
+operator|,
+literal|2
+operator|>
+name|AAParsingCallbacks
+expr_stmt|;
 block|}
 empty_stmt|;
+comment|/// This utility template takes care of adding require<> and invalidate<>
+comment|/// passes for an analysis to a given \c PassManager. It is intended to be used
+comment|/// during parsing of a pass pipeline when parsing a single PipelineName.
+comment|/// When registering a new function analysis FancyAnalysis with the pass
+comment|/// pipeline name "fancy-analysis", a matching ParsePipelineCallback could look
+comment|/// like this:
+comment|///
+comment|/// static bool parseFunctionPipeline(StringRef Name, FunctionPassManager&FPM,
+comment|///                                   ArrayRef<PipelineElement> P) {
+comment|///   if (parseAnalysisUtilityPasses<FancyAnalysis>("fancy-analysis", Name,
+comment|///                                                 FPM))
+comment|///     return true;
+comment|///   return false;
+comment|/// }
+name|template
+operator|<
+name|typename
+name|AnalysisT
+operator|,
+name|typename
+name|IRUnitT
+operator|,
+name|typename
+name|AnalysisManagerT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
+operator|>
+name|bool
+name|parseAnalysisUtilityPasses
+argument_list|(
+argument|StringRef AnalysisName
+argument_list|,
+argument|StringRef PipelineName
+argument_list|,
+argument|PassManager<IRUnitT
+argument_list|,
+argument|AnalysisManagerT
+argument_list|,
+argument|ExtraArgTs...>&PM
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|PipelineName
+operator|.
+name|endswith
+argument_list|(
+literal|">"
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+comment|// See if this is an invalidate<> pass name
+if|if
+condition|(
+name|PipelineName
+operator|.
+name|startswith
+argument_list|(
+literal|"invalidate<"
+argument_list|)
+condition|)
+block|{
+name|PipelineName
+operator|=
+name|PipelineName
+operator|.
+name|substr
+argument_list|(
+literal|11
+argument_list|,
+name|PipelineName
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|12
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|PipelineName
+operator|!=
+name|AnalysisName
+condition|)
+return|return
+name|false
+return|;
+name|PM
+operator|.
+name|addPass
+argument_list|(
+name|InvalidateAnalysisPass
+operator|<
+name|AnalysisT
+operator|>
+operator|(
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+comment|// See if this is a require<> pass name
+if|if
+condition|(
+name|PipelineName
+operator|.
+name|startswith
+argument_list|(
+literal|"require<"
+argument_list|)
+condition|)
+block|{
+name|PipelineName
+operator|=
+name|PipelineName
+operator|.
+name|substr
+argument_list|(
+literal|8
+argument_list|,
+name|PipelineName
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|9
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|PipelineName
+operator|!=
+name|AnalysisName
+condition|)
+return|return
+name|false
+return|;
+name|PM
+operator|.
+name|addPass
+argument_list|(
+name|RequireAnalysisPass
+operator|<
+name|AnalysisT
+argument_list|,
+name|IRUnitT
+argument_list|,
+name|AnalysisManagerT
+argument_list|,
+name|ExtraArgTs
+operator|...
+operator|>
+operator|(
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
 block|}
 end_decl_stmt
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

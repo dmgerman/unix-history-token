@@ -1410,6 +1410,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Predicates supported by vm_page_ps_test():  *  *	PS_ALL_DIRTY is true only if the entire (super)page is dirty.  *	However, it can be spuriously false when the (super)page has become  *	dirty in the pmap but that information has not been propagated to the  *	machine-independent layer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_ALL_DIRTY
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PS_ALL_VALID
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PS_NONE_BUSY
+value|0x4
+end_define
+
 begin_function_decl
 name|void
 name|vm_page_busy_downgrade
@@ -1749,11 +1774,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|boolean_t
-name|vm_page_ps_is_valid
+name|bool
+name|vm_page_ps_test
 parameter_list|(
 name|vm_page_t
 name|m
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|vm_page_t
+name|skip_m
 parameter_list|)
 function_decl|;
 end_function_decl

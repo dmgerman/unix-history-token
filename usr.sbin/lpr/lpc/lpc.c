@@ -868,6 +868,12 @@ name|el
 argument_list|,
 name|margc
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
 name|margv
 argument_list|)
 operator|!=

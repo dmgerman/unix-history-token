@@ -357,37 +357,25 @@ comment|/// Whether we're compiling for diagnostic purposes.
 name|bool
 name|ForDiagnostics
 decl_stmt|;
+comment|/// Whether an error during the parsing of the input args.
+name|bool
+name|ContainsError
+decl_stmt|;
 name|public
 label|:
 name|Compilation
 argument_list|(
-specifier|const
-name|Driver
-operator|&
-name|D
+argument|const Driver&D
 argument_list|,
-specifier|const
-name|ToolChain
-operator|&
-name|DefaultToolChain
+argument|const ToolChain&DefaultToolChain
 argument_list|,
-name|llvm
-operator|::
-name|opt
-operator|::
-name|InputArgList
-operator|*
-name|Args
+argument|llvm::opt::InputArgList *Args
 argument_list|,
-name|llvm
-operator|::
-name|opt
-operator|::
-name|DerivedArgList
-operator|*
-name|TranslatedArgs
+argument|llvm::opt::DerivedArgList *TranslatedArgs
+argument_list|,
+argument|bool ContainsError
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|Compilation
 argument_list|()
@@ -1074,6 +1062,16 @@ specifier|const
 block|{
 return|return
 name|ForDiagnostics
+return|;
+block|}
+comment|/// Return whether an error during the parsing of the input args.
+name|bool
+name|containsError
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ContainsError
 return|;
 block|}
 comment|/// Redirect - Redirect output of this compilation. Can only be done once.

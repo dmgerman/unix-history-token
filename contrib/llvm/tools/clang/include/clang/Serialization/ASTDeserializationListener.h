@@ -98,6 +98,9 @@ name|class
 name|Module
 decl_stmt|;
 name|class
+name|SourceLocation
+decl_stmt|;
+name|class
 name|ASTDeserializationListener
 block|{
 name|public
@@ -220,6 +223,20 @@ argument_list|,
 name|Module
 operator|*
 name|Mod
+argument_list|)
+block|{}
+comment|/// \brief A module import was read from the AST file.
+name|virtual
+name|void
+name|ModuleImportRead
+argument_list|(
+name|serialization
+operator|::
+name|SubmoduleID
+name|ID
+argument_list|,
+name|SourceLocation
+name|ImportLoc
 argument_list|)
 block|{}
 block|}

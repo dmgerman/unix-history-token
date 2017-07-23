@@ -43,20 +43,14 @@ directive|define
 name|liblldb_ValueObjectDynamicValue_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Address.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
+comment|// for Address
 end_comment
 
 begin_include
@@ -68,8 +62,138 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_comment
+comment|// for CompilerType
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"lldb/Symbol/Type.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_comment
+comment|// for ConstString
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/SharingPtr.h"
+end_include
+
+begin_comment
+comment|// for operator==
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_comment
+comment|// for DISALLOW_COPY_AND_ASSIGN
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_comment
+comment|// for DynamicValueType, Langua...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_comment
+comment|// for ValueObjectSP, VariableSP
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-enumerations.h"
+end_include
+
+begin_comment
+comment|// for LazyBool, LazyBool::eLaz...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_comment
+comment|// for assert
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint64_t, uint32_t
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|DataExtractor
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Declaration
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Status
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -272,7 +396,7 @@ name|char
 operator|*
 name|value_str
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -285,7 +409,7 @@ name|DataExtractor
 operator|&
 name|data
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

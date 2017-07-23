@@ -100,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/ValueHandle.h"
+file|"llvm/IR/PassManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/PassManager.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
@@ -128,11 +128,10 @@ block|{
 comment|/// \brief A cache of @llvm.assume calls within a function.
 comment|///
 comment|/// This cache provides fast lookup of assumptions within a function by caching
-comment|/// them and amortizing the cost of scanning for them across all queries. The
-comment|/// cache is also conservatively self-updating so that it will never return
-comment|/// incorrect results about a function even as the function is being mutated.
-comment|/// However, flushing the cache and rebuilding it (or explicitly updating it)
-comment|/// may allow it to discover new assumptions.
+comment|/// them and amortizing the cost of scanning for them across all queries. Passes
+comment|/// that create new assumptions are required to call registerAssumption() to
+comment|/// register any new @llvm.assume calls that they create. Deletions of
+comment|/// @llvm.assume calls do not require special handling.
 name|class
 name|AssumptionCache
 block|{
@@ -147,7 +146,7 @@ comment|/// \brief Vector of weak value handles to calls of the @llvm.assume
 comment|/// intrinsic.
 name|SmallVector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 literal|4
 operator|>
@@ -226,7 +225,7 @@ name|AffectedValueCallbackVH
 decl_stmt|,
 name|SmallVector
 decl|<
-name|WeakVH
+name|WeakTrackingVH
 decl_stmt|, 1>,
 name|AffectedValueCallbackVH
 decl|::
@@ -239,7 +238,7 @@ decl_stmt|;
 comment|/// Get the vector of assumptions which affect a value from the cache.
 name|SmallVector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 literal|1
 operator|>
@@ -297,18 +296,34 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
+comment|/// This cache is designed to be self-updating and so it should never be
+comment|/// invalidated.
+name|bool
+name|invalidate
+argument_list|(
+argument|Function&
+argument_list|,
+argument|const PreservedAnalyses&
+argument_list|,
+argument|FunctionAnalysisManager::Invalidator&
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Add an @llvm.assume intrinsic to this function's cache.
 comment|///
 comment|/// The call passed in must be an instruction within this function and must
 comment|/// not already be in the cache.
 name|void
 name|registerAssumption
-argument_list|(
+parameter_list|(
 name|CallInst
-operator|*
+modifier|*
 name|CI
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Update the cache of values being affected by this assumption (i.e.
 comment|/// the values about which this assumption provides information).
 name|void
@@ -351,7 +366,7 @@ comment|/// when we can write that to filter out the null values. Then caller co
 comment|/// will become simpler.
 name|MutableArrayRef
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|assumptions
 argument_list|()
@@ -371,7 +386,7 @@ block|}
 comment|/// \brief Access the list of assumptions which affect this value.
 name|MutableArrayRef
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|assumptionsFor
 argument_list|(
@@ -415,7 +430,7 @@ condition|)
 return|return
 name|MutableArrayRef
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 operator|(
 operator|)
@@ -721,6 +736,9 @@ name|releaseMemory
 parameter_list|()
 function|override
 block|{
+name|verifyAnalysis
+argument_list|()
+expr_stmt|;
 name|AssumptionCaches
 operator|.
 name|shrink_and_clear

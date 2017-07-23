@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDie.h --------------------------------------------------------===//
+comment|//===- DWARFDie.h -----------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,14 +34,26 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDIE_H
+name|LLVM_DEBUGINFO_DWARFDIE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDIE_H
+name|LLVM_DEBUGINFO_DWARFDIE_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
 
 begin_include
 include|#
@@ -58,7 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
+file|"llvm/BinaryFormat/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DIContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DWARF/DWARFAttribute.h"
 end_include
 
 begin_include
@@ -67,15 +91,36 @@ directive|include
 file|"llvm/DebugInfo/DWARF/DWARFDebugInfoEntry.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DWARF/DWARFDebugRangeList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|DWARFUnit
-decl_stmt|;
-name|class
-name|DWARFDebugInfoEntry
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -98,27 +143,23 @@ block|{
 name|DWARFUnit
 modifier|*
 name|U
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|DWARFDebugInfoEntry
 modifier|*
 name|Die
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|DWARFDie
 argument_list|()
-operator|:
-name|U
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Die
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|DWARFDie
 argument_list|(
 name|DWARFUnit
@@ -399,6 +440,12 @@ name|unsigned
 name|indent
 operator|=
 literal|0
+argument_list|,
+name|DIDumpOptions
+name|DumpOpts
+operator|=
+name|DIDumpOptions
+argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
@@ -445,7 +492,7 @@ name|Optional
 operator|<
 name|DWARFFormValue
 operator|>
-name|getAttributeValue
+name|find
 argument_list|(
 argument|dwarf::Attribute Attr
 argument_list|)
@@ -454,7 +501,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Extract the specified attribute from this DIE as a C string.
+comment|/// Extract the first value of any attribute in Attrs from this DIE.
 end_comment
 
 begin_comment
@@ -462,67 +509,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Extract an attribute value from this DIE only. This call doesn't look
+comment|/// Extract the first attribute that matches from this DIE only. This call
 end_comment
 
 begin_comment
-comment|/// for the attribute value in any DW_AT_specification or
+comment|/// doesn't look for the attribute value in any DW_AT_specification or
 end_comment
 
 begin_comment
-comment|/// DW_AT_abstract_origin referenced DIEs.
+comment|/// DW_AT_abstract_origin referenced DIEs. The attributes will be searched
 end_comment
 
 begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param Attr the attribute to extract.
-end_comment
-
-begin_comment
-comment|/// \param FailValue the value to return if this DIE doesn't have this
-end_comment
-
-begin_comment
-comment|/// attribute.
-end_comment
-
-begin_comment
-comment|/// \returns the NULL terminated C string value owned by the DWARF section
-end_comment
-
-begin_comment
-comment|/// that contains the string or FailValue if the attribute doesn't exist or
-end_comment
-
-begin_comment
-comment|/// if the attribute's form isn't a form that describes an string.
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|getAttributeValueAsString
-argument_list|(
-name|dwarf
-operator|::
-name|Attribute
-name|Attr
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|FailValue
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Extract the specified attribute from this DIE as an address.
+comment|/// linearly in the order they are specified within Attrs.
 end_comment
 
 begin_comment
@@ -530,44 +529,44 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Extract an attribute value from this DIE only. This call doesn't look
+comment|/// \param Attrs an array of DWARF attribute to look for.
 end_comment
 
 begin_comment
-comment|/// for the attribute value in any DW_AT_specification or
+comment|/// \returns an optional that has a valid DWARFFormValue for the first
 end_comment
 
 begin_comment
-comment|/// DW_AT_abstract_origin referenced DIEs.
+comment|/// matching attribute in Attrs, or None if none of the attributes in Attrs
 end_comment
 
 begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param Attr the attribute to extract.
-end_comment
-
-begin_comment
-comment|/// \returns an optional value for the attribute.
+comment|/// exist in this DIE.
 end_comment
 
 begin_expr_stmt
 name|Optional
 operator|<
-name|uint64_t
+name|DWARFFormValue
 operator|>
-name|getAttributeValueAsAddress
+name|find
 argument_list|(
-argument|dwarf::Attribute Attr
+argument|ArrayRef<dwarf::Attribute> Attrs
 argument_list|)
 specifier|const
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Extract the specified attribute from this DIE as a signed integer.
+comment|/// Extract the first value of any attribute in Attrs from this DIE and
+end_comment
+
+begin_comment
+comment|/// recurse into any DW_AT_specification or DW_AT_abstract_origin referenced
+end_comment
+
+begin_comment
+comment|/// DIEs.
 end_comment
 
 begin_comment
@@ -575,172 +574,33 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Extract an attribute value from this DIE only. This call doesn't look
+comment|/// \param Attrs an array of DWARF attribute to look for.
 end_comment
 
 begin_comment
-comment|/// for the attribute value in any DW_AT_specification or
+comment|/// \returns an optional that has a valid DWARFFormValue for the first
 end_comment
 
 begin_comment
-comment|/// DW_AT_abstract_origin referenced DIEs.
+comment|/// matching attribute in Attrs, or None if none of the attributes in Attrs
 end_comment
 
 begin_comment
-comment|///
+comment|/// exist in this DIE or in any DW_AT_specification or DW_AT_abstract_origin
 end_comment
 
 begin_comment
-comment|/// \param Attr the attribute to extract.
-end_comment
-
-begin_comment
-comment|/// \returns an optional value for the attribute.
+comment|/// DIEs.
 end_comment
 
 begin_expr_stmt
 name|Optional
 operator|<
-name|int64_t
+name|DWARFFormValue
 operator|>
-name|getAttributeValueAsSignedConstant
+name|findRecursively
 argument_list|(
-argument|dwarf::Attribute Attr
-argument_list|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// Extract the specified attribute from this DIE as an unsigned integer.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Extract an attribute value from this DIE only. This call doesn't look
-end_comment
-
-begin_comment
-comment|/// for the attribute value in any DW_AT_specification or
-end_comment
-
-begin_comment
-comment|/// DW_AT_abstract_origin referenced DIEs.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param Attr the attribute to extract.
-end_comment
-
-begin_comment
-comment|/// \returns an optional value for the attribute.
-end_comment
-
-begin_expr_stmt
-name|Optional
-operator|<
-name|uint64_t
-operator|>
-name|getAttributeValueAsUnsignedConstant
-argument_list|(
-argument|dwarf::Attribute Attr
-argument_list|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// Extract the specified attribute from this DIE as absolute DIE Offset.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Extract an attribute value from this DIE only. This call doesn't look
-end_comment
-
-begin_comment
-comment|/// for the attribute value in any DW_AT_specification or
-end_comment
-
-begin_comment
-comment|/// DW_AT_abstract_origin referenced DIEs.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param Attr the attribute to extract.
-end_comment
-
-begin_comment
-comment|/// \returns an optional value for the attribute.
-end_comment
-
-begin_expr_stmt
-name|Optional
-operator|<
-name|uint64_t
-operator|>
-name|getAttributeValueAsReference
-argument_list|(
-argument|dwarf::Attribute Attr
-argument_list|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// Extract the specified attribute from this DIE as absolute section offset.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Extract an attribute value from this DIE only. This call doesn't look
-end_comment
-
-begin_comment
-comment|/// for the attribute value in any DW_AT_specification or
-end_comment
-
-begin_comment
-comment|/// DW_AT_abstract_origin referenced DIEs.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param Attr the attribute to extract.
-end_comment
-
-begin_comment
-comment|/// \returns an optional value for the attribute.
-end_comment
-
-begin_expr_stmt
-name|Optional
-operator|<
-name|uint64_t
-operator|>
-name|getAttributeValueAsSectionOffset
-argument_list|(
-argument|dwarf::Attribute Attr
+argument|ArrayRef<dwarf::Attribute> Attrs
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -918,6 +778,10 @@ argument_list|,
 name|uint64_t
 operator|&
 name|HighPC
+argument_list|,
+name|uint64_t
+operator|&
+name|SectionIndex
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1078,6 +942,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Returns the declaration line (start line) for a DIE, assuming it specifies
+end_comment
+
+begin_comment
+comment|/// a subprogram. This may be fetched from specification or abstract origin
+end_comment
+
+begin_comment
+comment|/// for this subprogram by resolving DW_AT_sepcification or
+end_comment
+
+begin_comment
+comment|/// DW_AT_abstract_origin references if necessary.
+end_comment
+
+begin_expr_stmt
+name|uint64_t
+name|getDeclLine
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Retrieves values of DW_AT_call_file, DW_AT_call_line and DW_AT_call_column
 end_comment
 
@@ -1117,6 +1005,14 @@ begin_comment
 comment|/// no DW_AT_call_column attribute in this DIE.
 end_comment
 
+begin_comment
+comment|/// \param CallDiscriminator filled in with non-zero if successful, zero if
+end_comment
+
+begin_comment
+comment|/// there is no DW_AT_GNU_discriminator attribute in this DIE.
+end_comment
+
 begin_decl_stmt
 name|void
 name|getCallerFrame
@@ -1132,41 +1028,43 @@ argument_list|,
 name|uint32_t
 operator|&
 name|CallColumn
+argument_list|,
+name|uint32_t
+operator|&
+name|CallDiscriminator
 argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/// Get inlined chain for a given address, rooted at the current DIE.
-end_comment
-
-begin_comment
-comment|/// Returns empty chain if address is not contained in address range
-end_comment
-
-begin_comment
-comment|/// of current DIE.
-end_comment
 
 begin_decl_stmt
-name|void
-name|getInlinedChainForAddress
-argument_list|(
-specifier|const
-name|uint64_t
-name|Address
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|DWARFDie
-operator|>
-operator|&
-name|InlinedChain
-argument_list|)
-decl|const
+name|class
+name|attribute_iterator
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Get an iterator range to all attributes in the current DIE only.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns an iterator range for the attributes of the current DIE.
+end_comment
+
+begin_expr_stmt
+name|iterator_range
+operator|<
+name|attribute_iterator
+operator|>
+name|attributes
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|class
@@ -1199,6 +1097,123 @@ name|children
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
+name|class
+name|DWARFDie
+operator|::
+name|attribute_iterator
+operator|:
+name|public
+name|iterator_facade_base
+operator|<
+name|attribute_iterator
+operator|,
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
+specifier|const
+name|DWARFAttribute
+operator|>
+block|{
+comment|/// The DWARF DIE we are extracting attributes from.
+name|DWARFDie
+name|Die
+block|;
+comment|/// The value vended to clients via the operator*() or operator->().
+name|DWARFAttribute
+name|AttrValue
+block|;
+comment|/// The attribute index within the abbreviation declaration in Die.
+name|uint32_t
+name|Index
+block|;
+comment|/// Update the attribute index and attempt to read the attribute value. If the
+comment|/// attribute is able to be read, update AttrValue and the Index member
+comment|/// variable. If the attribute value is not able to be read, an appropriate
+comment|/// error will be set if the Err member variable is non-NULL and the iterator
+comment|/// will be set to the end value so iteration stops.
+name|void
+name|updateForIndex
+argument_list|(
+argument|const DWARFAbbreviationDeclaration&AbbrDecl
+argument_list|,
+argument|uint32_t I
+argument_list|)
+block|;
+name|public
+operator|:
+name|attribute_iterator
+argument_list|()
+operator|=
+name|delete
+block|;
+name|explicit
+name|attribute_iterator
+argument_list|(
+argument|DWARFDie D
+argument_list|,
+argument|bool End
+argument_list|)
+block|;
+name|attribute_iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|;
+name|explicit
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AttrValue
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+specifier|const
+name|DWARFAttribute
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|AttrValue
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|attribute_iterator
+operator|&
+name|X
+operator|)
+specifier|const
+block|{
+return|return
+name|Index
+operator|==
+name|X
+operator|.
+name|Index
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
@@ -1515,7 +1530,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_LIB_DEBUGINFO_DWARFDIE_H
+comment|// LLVM_DEBUGINFO_DWARFDIE_H
 end_comment
 
 end_unit

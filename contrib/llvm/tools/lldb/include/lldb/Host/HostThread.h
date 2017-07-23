@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Host/HostNativeThreadForward.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/HostNativeThreadForward.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -96,7 +96,7 @@ argument_list|(
 argument|lldb::thread_t thread
 argument_list|)
 empty_stmt|;
-name|Error
+name|Status
 name|Join
 argument_list|(
 name|lldb
@@ -106,7 +106,7 @@ operator|*
 name|result
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|Cancel
 parameter_list|()
 function_decl|;

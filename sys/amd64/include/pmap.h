@@ -1817,6 +1817,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|pmap_ps_enabled
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pmap_unmapdev
 parameter_list|(

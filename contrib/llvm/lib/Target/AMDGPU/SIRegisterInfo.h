@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/AMDGPUMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"SIDefines.h"
 end_include
 
@@ -86,10 +92,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|SISubtarget
+name|MachineRegisterInfo
 decl_stmt|;
 name|class
-name|MachineRegisterInfo
+name|SISubtarget
 decl_stmt|;
 name|class
 name|SIMachineFunctionInfo
@@ -115,6 +121,12 @@ block|;
 name|BitVector
 name|VGPRPressureSets
 block|;
+name|bool
+name|SpillSGPRToVGPR
+block|;
+name|bool
+name|SpillSGPRToSMEM
+block|;
 name|void
 name|reserveRegisterTuples
 argument_list|(
@@ -138,8 +150,31 @@ block|;
 name|public
 operator|:
 name|SIRegisterInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|SISubtarget
+operator|&
+name|ST
+argument_list|)
 block|;
+name|bool
+name|spillSGPRToVGPR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SpillSGPRToVGPR
+return|;
+block|}
+name|bool
+name|spillSGPRToSMEM
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SpillSGPRToSMEM
+return|;
+block|}
 comment|/// Return the end register initially reserved for the scratch buffer in case
 comment|/// spilling is needed.
 name|unsigned
@@ -158,8 +193,57 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|unsigned
+name|reservedStackPtrOffsetReg
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 name|BitVector
 name|getReservedRegs
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|MCPhysReg
+operator|*
+name|getCalleeSavedRegs
+argument_list|(
+argument|const MachineFunction *MF
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getCallPreservedMask
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|CallingConv::ID
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|// Stack access is very expensive. CSRs are also the high registers, and we
+comment|// want to minimize the number of used registers.
+name|unsigned
+name|getCSRFirstUseCost
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|100
+return|;
+block|}
+name|unsigned
+name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -284,7 +368,8 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|void
+comment|/// If \p OnlyToVGPR is true, this will only succeed if this
+name|bool
 name|spillSGPR
 argument_list|(
 argument|MachineBasicBlock::iterator MI
@@ -292,10 +377,12 @@ argument_list|,
 argument|int FI
 argument_list|,
 argument|RegScavenger *RS
+argument_list|,
+argument|bool OnlyToVGPR = false
 argument_list|)
 specifier|const
 block|;
-name|void
+name|bool
 name|restoreSGPR
 argument_list|(
 argument|MachineBasicBlock::iterator MI
@@ -303,6 +390,8 @@ argument_list|,
 argument|int FI
 argument_list|,
 argument|RegScavenger *RS
+argument_list|,
+argument|bool OnlyToVGPR = false
 argument_list|)
 specifier|const
 block|;
@@ -316,6 +405,25 @@ argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
 argument|RegScavenger *RS
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|eliminateSGPRToVGPRSpillFrameIndex
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|int FI
+argument_list|,
+argument|RegScavenger *RS
+argument_list|)
+specifier|const
+block|;
+name|StringRef
+name|getRegAsmName
+argument_list|(
+argument|unsigned Reg
 argument_list|)
 specifier|const
 name|override
@@ -599,10 +707,14 @@ name|PRIVATE_SEGMENT_WAVE_BYTE_OFFSET
 init|=
 literal|14
 block|,
+name|IMPLICIT_BUFFER_PTR
+init|=
+literal|15
+block|,
 comment|// VGPRS:
 name|FIRST_VGPR_VALUE
 init|=
-literal|15
+literal|16
 block|,
 name|WORKITEM_ID_X
 init|=
@@ -610,11 +722,11 @@ name|FIRST_VGPR_VALUE
 block|,
 name|WORKITEM_ID_Y
 init|=
-literal|16
+literal|17
 block|,
 name|WORKITEM_ID_Z
 init|=
-literal|17
+literal|18
 block|}
 enum|;
 comment|/// \brief Returns the physical register that \p Value is stored in.
@@ -750,175 +862,6 @@ name|SetID
 argument_list|)
 return|;
 block|}
-comment|/// \returns SGPR allocation granularity supported by the subtarget.
-name|unsigned
-name|getSGPRAllocGranule
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|8
-return|;
-block|}
-comment|/// \returns Total number of SGPRs supported by the subtarget.
-name|unsigned
-name|getTotalNumSGPRs
-argument_list|(
-specifier|const
-name|SISubtarget
-operator|&
-name|ST
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \returns Number of addressable SGPRs supported by the subtarget.
-name|unsigned
-name|getNumAddressableSGPRs
-argument_list|(
-specifier|const
-name|SISubtarget
-operator|&
-name|ST
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \returns Number of reserved SGPRs supported by the subtarget.
-name|unsigned
-name|getNumReservedSGPRs
-argument_list|(
-specifier|const
-name|SISubtarget
-operator|&
-name|ST
-argument_list|,
-specifier|const
-name|SIMachineFunctionInfo
-operator|&
-name|MFI
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \returns Minimum number of SGPRs that meets given number of waves per
-comment|/// execution unit requirement for given subtarget.
-name|unsigned
-name|getMinNumSGPRs
-argument_list|(
-specifier|const
-name|SISubtarget
-operator|&
-name|ST
-argument_list|,
-name|unsigned
-name|WavesPerEU
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \returns Maximum number of SGPRs that meets given number of waves per
-comment|/// execution unit requirement for given subtarget.
-name|unsigned
-name|getMaxNumSGPRs
-argument_list|(
-specifier|const
-name|SISubtarget
-operator|&
-name|ST
-argument_list|,
-name|unsigned
-name|WavesPerEU
-argument_list|,
-name|bool
-name|Addressable
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \returns Maximum number of SGPRs that meets number of waves per execution
-comment|/// unit requirement for function \p MF, or number of SGPRs explicitly
-comment|/// requested using "amdgpu-num-sgpr" attribute attached to function \p MF.
-comment|///
-comment|/// \returns Value that meets number of waves per execution unit requirement
-comment|/// if explicitly requested value cannot be converted to integer, violates
-comment|/// subtarget's specifications, or does not meet number of waves per execution
-comment|/// unit requirement.
-name|unsigned
-name|getMaxNumSGPRs
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \returns VGPR allocation granularity supported by the subtarget.
-name|unsigned
-name|getVGPRAllocGranule
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|4
-return|;
-block|}
-comment|/// \returns Total number of VGPRs supported by the subtarget.
-name|unsigned
-name|getTotalNumVGPRs
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|256
-return|;
-block|}
-comment|/// \returns Number of reserved VGPRs for debugger use supported by the
-comment|/// subtarget.
-name|unsigned
-name|getNumDebuggerReservedVGPRs
-argument_list|(
-specifier|const
-name|SISubtarget
-operator|&
-name|ST
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \returns Minimum number of SGPRs that meets given number of waves per
-comment|/// execution unit requirement.
-name|unsigned
-name|getMinNumVGPRs
-argument_list|(
-name|unsigned
-name|WavesPerEU
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \returns Maximum number of VGPRs that meets given number of waves per
-comment|/// execution unit requirement.
-name|unsigned
-name|getMaxNumVGPRs
-argument_list|(
-name|unsigned
-name|WavesPerEU
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \returns Maximum number of VGPRs that meets number of waves per execution
-comment|/// unit requirement for function \p MF, or number of VGPRs explicitly
-comment|/// requested using "amdgpu-num-vgpr" attribute attached to function \p MF.
-comment|///
-comment|/// \returns Value that meets number of waves per execution unit requirement
-comment|/// if explicitly requested value cannot be converted to integer, violates
-comment|/// subtarget's specifications, or does not meet number of waves per execution
-comment|/// unit requirement.
-name|unsigned
-name|getMaxNumVGPRs
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-decl_stmt|;
 name|ArrayRef
 operator|<
 name|int16_t
@@ -931,6 +874,94 @@ argument|unsigned EltSize
 argument_list|)
 specifier|const
 expr_stmt|;
+name|bool
+name|shouldCoalesce
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|SrcRC
+argument_list|,
+name|unsigned
+name|SubReg
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|DstRC
+argument_list|,
+name|unsigned
+name|DstSubReg
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|NewRC
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|unsigned
+name|getRegPressureSetLimit
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|unsigned
+name|Idx
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+specifier|const
+name|int
+modifier|*
+name|getRegUnitPressureSets
+argument_list|(
+name|unsigned
+name|RegUnit
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|unsigned
+name|getReturnAddressReg
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+comment|// Not a callee saved register.
+return|return
+name|AMDGPU
+operator|::
+name|SGPR30_SGPR31
+return|;
+block|}
 name|private
 label|:
 name|void

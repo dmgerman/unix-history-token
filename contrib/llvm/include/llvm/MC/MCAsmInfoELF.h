@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCAsmInfoELF.h - ELF Asm info -------------------*- C++ -*-===//
+comment|//===- llvm/MC/MCAsmInfoELF.h - ELF Asm info --------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -79,6 +79,8 @@ comment|/// Targets which have non-executable stacks by default can set this to 
 comment|/// to disable the special section which requests a non-executable stack.
 name|bool
 name|UsesNonexecutableStackSection
+operator|=
+name|true
 block|;
 name|MCAsmInfoELF
 argument_list|()
@@ -87,10 +89,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCASMINFOELF_H
+end_comment
 
 end_unit
 

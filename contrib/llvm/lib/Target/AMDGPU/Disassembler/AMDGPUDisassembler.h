@@ -94,13 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdint>
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<algorithm>
+file|<cstdint>
 end_include
 
 begin_include
@@ -145,6 +145,14 @@ operator|<
 name|uint8_t
 operator|>
 name|Bytes
+block|;
+name|mutable
+name|uint32_t
+name|Literal
+block|;
+name|mutable
+name|bool
+name|HasLiteral
 block|;
 name|public
 operator|:
@@ -248,6 +256,13 @@ argument|uint64_t Address
 argument_list|)
 specifier|const
 block|;
+name|DecodeStatus
+name|convertSDWAInst
+argument_list|(
+argument|MCInst&MI
+argument_list|)
+specifier|const
+block|;
 name|MCOperand
 name|decodeOperand_VGPR_32
 argument_list|(
@@ -270,7 +285,21 @@ argument_list|)
 specifier|const
 block|;
 name|MCOperand
+name|decodeOperand_VS_128
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
 name|decodeOperand_VSrc16
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
+name|decodeOperand_VSrcV216
 argument_list|(
 argument|unsigned Val
 argument_list|)
@@ -356,6 +385,8 @@ name|OPW128
 block|,
 name|OPW16
 block|,
+name|OPWV216
+block|,
 name|OPW_LAST_
 block|,
 name|OPW_FIRST_
@@ -423,6 +454,36 @@ specifier|const
 block|;
 name|MCOperand
 name|decodeSpecialReg64
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
+name|decodeSDWASrc
+argument_list|(
+argument|const OpWidthTy Width
+argument_list|,
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
+name|decodeSDWASrc16
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
+name|decodeSDWASrc32
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
+name|decodeSDWAVopcDst
 argument_list|(
 argument|unsigned Val
 argument_list|)

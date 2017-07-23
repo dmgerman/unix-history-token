@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|3003001
+value|3003002
 end_define
 
 begin_include
@@ -695,7 +695,7 @@ comment|/*  * Textual name/version of the library, useful for version displays. 
 define|#
 directive|define
 name|ARCHIVE_VERSION_ONLY_STRING
-value|"3.3.1"
+value|"3.3.2"
 define|#
 directive|define
 name|ARCHIVE_VERSION_STRING

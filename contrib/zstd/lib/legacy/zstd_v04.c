@@ -2420,6 +2420,7 @@ operator|-
 literal|16
 operator|)
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|6
 case|:
@@ -2459,6 +2460,7 @@ operator|-
 literal|24
 operator|)
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|5
 case|:
@@ -2498,6 +2500,7 @@ operator|-
 literal|32
 operator|)
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|4
 case|:
@@ -2528,6 +2531,7 @@ argument_list|)
 operator|<<
 literal|24
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|3
 case|:
@@ -2558,6 +2562,7 @@ argument_list|)
 operator|<<
 literal|16
 expr_stmt|;
+comment|/* fall-through */
 case|case
 literal|2
 case|:
@@ -2588,8 +2593,9 @@ argument_list|)
 operator|<<
 literal|8
 expr_stmt|;
+comment|/* fall-through */
 default|default:
-empty_stmt|;
+break|break;
 block|}
 name|contain32
 operator|=
@@ -16493,6 +16499,7 @@ name|stage
 operator|=
 name|ZBUFFds_read
 expr_stmt|;
+comment|/* fall-through */
 case|case
 name|ZBUFFds_read
 case|:
@@ -16632,6 +16639,7 @@ operator|=
 name|ZBUFFds_load
 expr_stmt|;
 block|}
+comment|/* fall-through */
 case|case
 name|ZBUFFds_load
 case|:
@@ -16804,9 +16812,10 @@ name|stage
 operator|=
 name|ZBUFFds_flush
 expr_stmt|;
-comment|// break; /* ZBUFFds_flush follows */
+comment|/* ZBUFFds_flush follows */
 block|}
 block|}
+comment|/* fall-through */
 case|case
 name|ZBUFFds_flush
 case|:

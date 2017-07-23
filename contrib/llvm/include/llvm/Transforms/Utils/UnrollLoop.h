@@ -256,6 +256,10 @@ operator|::
 name|UnrollingPreferences
 operator|&
 name|UP
+argument_list|,
+name|unsigned
+operator|&
+name|TripCount
 argument_list|)
 decl_stmt|;
 name|bool
@@ -279,6 +283,10 @@ parameter_list|,
 name|DominatorTree
 modifier|*
 name|DT
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
 parameter_list|,
 name|bool
 name|PreserveLCSSA

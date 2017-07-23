@@ -1243,7 +1243,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Compares lower 64-bits double-precision values of both operands, and
+comment|/// \brief Compares lower 64-bit double-precision values of both operands, and
 end_comment
 
 begin_comment
@@ -1954,11 +1954,15 @@ comment|///    128-bit vectors of [2 x double] to determine if the values in the
 end_comment
 
 begin_comment
-comment|///    operand are less than or equal to those in the second operand. Each
+comment|///    operand are less than or equal to those in the second operand.
 end_comment
 
 begin_comment
-comment|///    comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -2044,11 +2048,15 @@ comment|///    128-bit vectors of [2 x double] to determine if the values in the
 end_comment
 
 begin_comment
-comment|///    operand are greater than those in the second operand. Each comparison
+comment|///    operand are greater than those in the second operand.
 end_comment
 
 begin_comment
-comment|///    yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -2134,11 +2142,15 @@ comment|///    128-bit vectors of [2 x double] to determine if the values in the
 end_comment
 
 begin_comment
-comment|///    operand are greater than or equal to those in the second operand. Each
+comment|///    operand are greater than or equal to those in the second operand.
 end_comment
 
 begin_comment
-comment|///    comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -2224,15 +2236,19 @@ comment|///    128-bit vectors of [2 x double] to determine if the values in the
 end_comment
 
 begin_comment
-comment|///    operand are ordered with respect to those in the second operand. A pair
+comment|///    operand are ordered with respect to those in the second operand.
 end_comment
 
 begin_comment
-comment|///    of double-precision values are "ordered" with respect to each other if
+comment|///
 end_comment
 
 begin_comment
-comment|///    neither value is a NaN. Each comparison yields 0h for false,
+comment|///    A pair of double-precision values are "ordered" with respect to each
+end_comment
+
+begin_comment
+comment|///    other if neither value is a NaN. Each comparison yields 0h for false,
 end_comment
 
 begin_comment
@@ -2322,15 +2338,19 @@ comment|///    128-bit vectors of [2 x double] to determine if the values in the
 end_comment
 
 begin_comment
-comment|///    operand are unordered with respect to those in the second operand. A pair
+comment|///    operand are unordered with respect to those in the second operand.
 end_comment
 
 begin_comment
-comment|///    of double-precision values are "unordered" with respect to each other if
+comment|///
 end_comment
 
 begin_comment
-comment|///    one or both values are NaN. Each comparison yields 0h for false,
+comment|///    A pair of double-precision values are "unordered" with respect to each
+end_comment
+
+begin_comment
+comment|///    other if one or both values are NaN. Each comparison yields 0h for false,
 end_comment
 
 begin_comment
@@ -2424,11 +2444,15 @@ comment|///    128-bit vectors of [2 x double] to determine if the values in the
 end_comment
 
 begin_comment
-comment|///    operand are unequal to those in the second operand. Each comparison
+comment|///    operand are unequal to those in the second operand.
 end_comment
 
 begin_comment
-comment|///    yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -2514,11 +2538,15 @@ comment|///    128-bit vectors of [2 x double] to determine if the values in the
 end_comment
 
 begin_comment
-comment|///    operand are not less than those in the second operand. Each comparison
+comment|///    operand are not less than those in the second operand.
 end_comment
 
 begin_comment
-comment|///    yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -2604,11 +2632,15 @@ comment|///    128-bit vectors of [2 x double] to determine if the values in the
 end_comment
 
 begin_comment
-comment|///    operand are not less than or equal to those in the second operand. Each
+comment|///    operand are not less than or equal to those in the second operand.
 end_comment
 
 begin_comment
-comment|///    comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -2694,11 +2726,15 @@ comment|///    128-bit vectors of [2 x double] to determine if the values in the
 end_comment
 
 begin_comment
-comment|///    operand are not greater than those in the second operand. Each
+comment|///    operand are not greater than those in the second operand.
 end_comment
 
 begin_comment
-comment|///    comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -2788,6 +2824,10 @@ comment|///    operand are not greater than or equal to those in the second oper
 end_comment
 
 begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|///    Each comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
@@ -2870,11 +2910,15 @@ comment|/// \brief Compares the lower double-precision floating-point values in 
 end_comment
 
 begin_comment
-comment|///    the two 128-bit floating-point vectors of [2 x double] for equality. The
+comment|///    the two 128-bit floating-point vectors of [2 x double] for equality.
 end_comment
 
 begin_comment
-comment|///    comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -2976,11 +3020,15 @@ comment|///    the value in the first parameter is less than the corresponding v
 end_comment
 
 begin_comment
-comment|///    the second parameter. The comparison yields 0h for false,
+comment|///    the second parameter.
 end_comment
 
 begin_comment
-comment|///    FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -3082,11 +3130,15 @@ comment|///    the value in the first parameter is less than or equal to the
 end_comment
 
 begin_comment
-comment|///    corresponding value in the second parameter. The comparison yields 0h for
+comment|///    corresponding value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -3188,11 +3240,15 @@ comment|///    the value in the first parameter is greater than the correspondin
 end_comment
 
 begin_comment
-comment|///    in the second parameter. The comparison yields 0h for false,
+comment|///    in the second parameter.
 end_comment
 
 begin_comment
-comment|///    FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -3309,11 +3365,15 @@ comment|///    the value in the first parameter is greater than or equal to the
 end_comment
 
 begin_comment
-comment|///    corresponding value in the second parameter. The comparison yields 0h for
+comment|///    corresponding value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -3430,15 +3490,23 @@ comment|///    the value in the first parameter is "ordered" with respect to the
 end_comment
 
 begin_comment
-comment|///    corresponding value in the second parameter. The comparison yields 0h for
+comment|///    corresponding value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    false, FFFFFFFFFFFFFFFFh for true. A pair of double-precision values are
+comment|///
 end_comment
 
 begin_comment
-comment|///    "ordered" with respect to each other if neither value is a NaN.
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true. A pair of
+end_comment
+
+begin_comment
+comment|///    double-precision values are "ordered" with respect to each other if
+end_comment
+
+begin_comment
+comment|///    neither value is a NaN.
 end_comment
 
 begin_comment
@@ -3540,15 +3608,23 @@ comment|///    the value in the first parameter is "unordered" with respect to t
 end_comment
 
 begin_comment
-comment|///    corresponding value in the second parameter. The comparison yields 0h
+comment|///    corresponding value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    for false, FFFFFFFFFFFFFFFFh for true. A pair of double-precision values
+comment|///
 end_comment
 
 begin_comment
-comment|///    are "unordered" with respect to each other if one or both values are NaN.
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true. A pair of
+end_comment
+
+begin_comment
+comment|///    double-precision values are "unordered" with respect to each other if one
+end_comment
+
+begin_comment
+comment|///    or both values are NaN.
 end_comment
 
 begin_comment
@@ -3654,11 +3730,15 @@ comment|///    the value in the first parameter is unequal to the corresponding 
 end_comment
 
 begin_comment
-comment|///    the second parameter. The comparison yields 0h for false,
+comment|///    the second parameter.
 end_comment
 
 begin_comment
-comment|///    FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -3760,11 +3840,15 @@ comment|///    the value in the first parameter is not less than the correspondi
 end_comment
 
 begin_comment
-comment|///    value in the second parameter. The comparison yields 0h for false,
+comment|///    value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -3866,11 +3950,15 @@ comment|///    the value in the first parameter is not less than or equal to the
 end_comment
 
 begin_comment
-comment|///    corresponding value in the second parameter. The comparison yields 0h
+comment|///    corresponding value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    for false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -3972,11 +4060,15 @@ comment|///    the value in the first parameter is not greater than the correspo
 end_comment
 
 begin_comment
-comment|///    value in the second parameter. The comparison yields 0h for false,
+comment|///    value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -4093,11 +4185,15 @@ comment|///    the value in the first parameter is not greater than or equal to 
 end_comment
 
 begin_comment
-comment|///    corresponding value in the second parameter. The comparison yields 0h
+comment|///    corresponding value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    for false, FFFFFFFFFFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -4305,7 +4401,15 @@ comment|///    the value in the first parameter is less than the corresponding v
 end_comment
 
 begin_comment
-comment|///    the second parameter. The comparison yields 0 for false, 1 for true.
+comment|///    the second parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 1 for true.
 end_comment
 
 begin_comment
@@ -4400,11 +4504,15 @@ comment|///    the value in the first parameter is less than or equal to the
 end_comment
 
 begin_comment
-comment|///    corresponding value in the second parameter. The comparison yields 0 for
+comment|///    corresponding value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    false, 1 for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 1 for true.
 end_comment
 
 begin_comment
@@ -4499,7 +4607,15 @@ comment|///    the value in the first parameter is greater than the correspondin
 end_comment
 
 begin_comment
-comment|///    in the second parameter. The comparison yields 0 for false, 1 for true.
+comment|///    in the second parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 1 for true.
 end_comment
 
 begin_comment
@@ -4594,11 +4710,15 @@ comment|///    the value in the first parameter is greater than or equal to the
 end_comment
 
 begin_comment
-comment|///    corresponding value in the second parameter. The comparison yields 0 for
+comment|///    corresponding value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    false, 1 for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 1 for true.
 end_comment
 
 begin_comment
@@ -4693,7 +4813,15 @@ comment|///    the value in the first parameter is unequal to the corresponding 
 end_comment
 
 begin_comment
-comment|///    the second parameter. The comparison yields 0 for false, 1 for true.
+comment|///    the second parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 1 for true.
 end_comment
 
 begin_comment
@@ -4784,11 +4912,15 @@ comment|///    the two 128-bit floating-point vectors of [2 x double] for equali
 end_comment
 
 begin_comment
-comment|///    comparison yields 0 for false, 1 for true. If either of the two lower
+comment|///    comparison yields 0 for false, 1 for true.
 end_comment
 
 begin_comment
-comment|///    double-precision values is NaN, 1 is returned.
+comment|///
+end_comment
+
+begin_comment
+comment|///    If either of the two lower double-precision values is NaN, 1 is returned.
 end_comment
 
 begin_comment
@@ -4887,11 +5019,19 @@ comment|///    the value in the first parameter is less than the corresponding v
 end_comment
 
 begin_comment
-comment|///    the second parameter. The comparison yields 0 for false, 1 for true. If
+comment|///    the second parameter.
 end_comment
 
 begin_comment
-comment|///    either of the two lower double-precision values is NaN, 1 is returned.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 1 for true. If either of the two lower
+end_comment
+
+begin_comment
+comment|///    double-precision values is NaN, 1 is returned.
 end_comment
 
 begin_comment
@@ -4990,15 +5130,19 @@ comment|///    the value in the first parameter is less than or equal to the
 end_comment
 
 begin_comment
-comment|///    corresponding value in the second parameter. The comparison yields 0 for
+comment|///    corresponding value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    false, 1 for true. If either of the two lower double-precision values is
+comment|///
 end_comment
 
 begin_comment
-comment|///    NaN, 1 is returned.
+comment|///    The comparison yields 0 for false, 1 for true. If either of the two lower
+end_comment
+
+begin_comment
+comment|///    double-precision values is NaN, 1 is returned.
 end_comment
 
 begin_comment
@@ -5097,11 +5241,19 @@ comment|///    the value in the first parameter is greater than the correspondin
 end_comment
 
 begin_comment
-comment|///    in the second parameter. The comparison yields 0 for false, 1 for true.
+comment|///    in the second parameter.
 end_comment
 
 begin_comment
-comment|///    If either of the two lower double-precision values is NaN, 0 is returned.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 1 for true. If either of the two lower
+end_comment
+
+begin_comment
+comment|///    double-precision values is NaN, 0 is returned.
 end_comment
 
 begin_comment
@@ -5200,15 +5352,19 @@ comment|///    the value in the first parameter is greater than or equal to the
 end_comment
 
 begin_comment
-comment|///    corresponding value in the second parameter. The comparison yields 0 for
+comment|///    corresponding value in the second parameter.
 end_comment
 
 begin_comment
-comment|///    false, 1 for true.  If either of the two lower double-precision values
+comment|///
 end_comment
 
 begin_comment
-comment|///    is NaN, 0 is returned.
+comment|///    The comparison yields 0 for false, 1 for true.  If either of the two
+end_comment
+
+begin_comment
+comment|///    lower double-precision values is NaN, 0 is returned.
 end_comment
 
 begin_comment
@@ -5307,11 +5463,19 @@ comment|///    the value in the first parameter is unequal to the corresponding 
 end_comment
 
 begin_comment
-comment|///    the second parameter. The comparison yields 0 for false, 1 for true. If
+comment|///    the second parameter.
 end_comment
 
 begin_comment
-comment|///    either of the two lower double-precision values is NaN, 0 is returned.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The comparison yields 0 for false, 1 for true. If either of the two lower
+end_comment
+
+begin_comment
+comment|///    double-precision values is NaN, 0 is returned.
 end_comment
 
 begin_comment
@@ -5577,11 +5741,15 @@ comment|///    [4 x i32] into two double-precision floating-point values, return
 end_comment
 
 begin_comment
-comment|///    128-bit vector of [2 x double]. The upper two elements of the input
+comment|///    128-bit vector of [2 x double].
 end_comment
 
 begin_comment
-comment|///    vector are unused.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The upper two elements of the input vector are unused.
 end_comment
 
 begin_comment
@@ -5613,7 +5781,15 @@ comment|///    A 128-bit integer vector of [4 x i32]. The lower two integer elem
 end_comment
 
 begin_comment
-comment|///    converted to double-precision values. The upper two elements are unused.
+comment|///    converted to double-precision values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The upper two elements are unused.
 end_comment
 
 begin_comment
@@ -6122,19 +6298,23 @@ comment|///    128-bit vector of [2 x double] into two signed 32-bit integer val
 end_comment
 
 begin_comment
-comment|///    returned in the lower 64 bits of a 128-bit vector of [4 x i32]. If the
+comment|///    returned in the lower 64 bits of a 128-bit vector of [4 x i32].
 end_comment
 
 begin_comment
-comment|///    result of either conversion is inexact, the result is truncated (rounded
+comment|///
 end_comment
 
 begin_comment
-comment|///    towards zero) regardless of the current MXCSR setting. The upper 64 bits
+comment|///    If the result of either conversion is inexact, the result is truncated
 end_comment
 
 begin_comment
-comment|///    of the result vector are set to zero.
+comment|///    (rounded towards zero) regardless of the current MXCSR setting. The upper
+end_comment
+
+begin_comment
+comment|///    64 bits of the result vector are set to zero.
 end_comment
 
 begin_comment
@@ -6353,15 +6533,19 @@ comment|///    128-bit vector of [2 x double] into two signed 32-bit integer val
 end_comment
 
 begin_comment
-comment|///    returned in a 64-bit vector of [2 x i32]. If the result of either
+comment|///    returned in a 64-bit vector of [2 x i32].
 end_comment
 
 begin_comment
-comment|///    conversion is inexact, the result is truncated (rounded towards zero)
+comment|///
 end_comment
 
 begin_comment
-comment|///    regardless of the current MXCSR setting.
+comment|///    If the result of either conversion is inexact, the result is truncated
+end_comment
+
+begin_comment
+comment|///    (rounded towards zero) regardless of the current MXCSR setting.
 end_comment
 
 begin_comment
@@ -6923,6 +7107,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Loads a 64-bit integer value to the low element of a 128-bit integer
+end_comment
+
+begin_comment
+comment|///    vector and clears the upper element.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVQ / MOVQ</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A pointer to a 64-bit memory location. The address of the memory
+end_comment
+
+begin_comment
+comment|///    location does not have to be aligned.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x i64] containing the loaded value.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -6980,6 +7208,50 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Loads a 64-bit double-precision value to the low element of a
+end_comment
+
+begin_comment
+comment|///    128-bit integer vector and clears the upper element.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVSD / MOVSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a memory location containing a double-precision value.
+end_comment
+
+begin_comment
+comment|///    The address of the memory location does not have to be aligned.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the loaded value.
+end_comment
 
 begin_function
 specifier|static
@@ -7514,6 +7786,74 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double], with each
+end_comment
+
+begin_comment
+comment|///    of the two double-precision floating-point vector elements set to the
+end_comment
+
+begin_comment
+comment|///    specified double-precision floating-point value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVDDUP / MOVLHPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __w
+end_comment
+
+begin_comment
+comment|///    A double-precision floating-point value used to initialize each vector
+end_comment
+
+begin_comment
+comment|///    element of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit floating-point vector of [2 x double].
+end_comment
+
+begin_function
+specifier|static
+name|__inline__
+name|__m128d
+name|__DEFAULT_FN_ATTRS
+name|_mm_set_pd1
+parameter_list|(
+name|double
+name|__w
+parameter_list|)
+block|{
+return|return
+name|_mm_set1_pd
+argument_list|(
+name|__w
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double]
 end_comment
 
@@ -7755,7 +8095,7 @@ comment|///    64 bits are set to the upper 64 bits of the first parameter.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
@@ -7929,6 +8269,58 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Moves packed double-precision values from a 128-bit vector of
+end_comment
+
+begin_comment
+comment|///    [2 x double] to a memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c>VMOVAPD / MOVAPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to an aligned memory location that can store two
+end_comment
+
+begin_comment
+comment|///    double-precision values.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A packed 128-bit vector of [2 x double] containing the values to be
+end_comment
+
+begin_comment
+comment|///    moved.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -7955,6 +8347,58 @@ name|__a
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Moves the lower 64 bits of a 128-bit vector of [2 x double] twice to
+end_comment
+
+begin_comment
+comment|///    the upper and lower 64 bits of a memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c>VMOVDDUP + VMOVAPD / MOVLHPS + MOVAPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a memory location that can store two double-precision
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] whose lower 64 bits are copied to each
+end_comment
+
+begin_comment
+comment|///    of the values in \a dp.
+end_comment
 
 begin_function
 specifier|static
@@ -8468,11 +8912,15 @@ comment|///    saving the lower 8 bits of each sum in the corresponding element 
 end_comment
 
 begin_comment
-comment|///    128-bit result vector of [16 x i8]. The integer elements of both
+comment|///    128-bit result vector of [16 x i8].
 end_comment
 
 begin_comment
-comment|///    parameters can be either signed or unsigned.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The integer elements of both parameters can be either signed or unsigned.
 end_comment
 
 begin_comment
@@ -8561,11 +9009,15 @@ comment|///    saving the lower 16 bits of each sum in the corresponding element
 end_comment
 
 begin_comment
-comment|///    128-bit result vector of [8 x i16]. The integer elements of both
+comment|///    128-bit result vector of [8 x i16].
 end_comment
 
 begin_comment
-comment|///    parameters can be either signed or unsigned.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The integer elements of both parameters can be either signed or unsigned.
 end_comment
 
 begin_comment
@@ -8654,11 +9106,15 @@ comment|///    saving the lower 32 bits of each sum in the corresponding element
 end_comment
 
 begin_comment
-comment|///    128-bit result vector of [4 x i32]. The integer elements of both
+comment|///    128-bit result vector of [4 x i32].
 end_comment
 
 begin_comment
-comment|///    parameters can be either signed or unsigned.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The integer elements of both parameters can be either signed or unsigned.
 end_comment
 
 begin_comment
@@ -8829,11 +9285,15 @@ comment|///    saving the lower 64 bits of each sum in the corresponding element
 end_comment
 
 begin_comment
-comment|///    128-bit result vector of [2 x i64]. The integer elements of both
+comment|///    128-bit result vector of [2 x i64].
 end_comment
 
 begin_comment
-comment|///    parameters can be either signed or unsigned.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The integer elements of both parameters can be either signed or unsigned.
 end_comment
 
 begin_comment
@@ -9486,19 +9946,27 @@ comment|///    adds the consecutive pairs of 32-bit products to form a 128-bit s
 end_comment
 
 begin_comment
-comment|///    [4 x i32] vector. For example, bits [15:0] of both parameters are
+comment|///    [4 x i32] vector.
 end_comment
 
 begin_comment
-comment|///    multiplied producing a 32-bit product, bits [31:16] of both parameters
+comment|///
 end_comment
 
 begin_comment
-comment|///    are multiplied producing a 32-bit product, and the sum of those two
+comment|///    For example, bits [15:0] of both parameters are multiplied producing a
 end_comment
 
 begin_comment
-comment|///    products becomes bits [31:0] of the result.
+comment|///    32-bit product, bits [31:16] of both parameters are multiplied producing
+end_comment
+
+begin_comment
+comment|///    a 32-bit product, and the sum of those two products becomes bits [31:0]
+end_comment
+
+begin_comment
+comment|///    of the result.
 end_comment
 
 begin_comment
@@ -10383,7 +10851,7 @@ comment|///    values in two 128-bit vectors. Sums the first 8 absolute differen
 end_comment
 
 begin_comment
-comment|///    separately sums the second 8 absolute differences. Packss these two
+comment|///    separately sums the second 8 absolute differences. Packs these two
 end_comment
 
 begin_comment
@@ -13476,11 +13944,15 @@ comment|///    128-bit integer vectors to determine if the values in the first o
 end_comment
 
 begin_comment
-comment|///    are greater than those in the second operand. Each comparison yields 0h
+comment|///    are greater than those in the second operand.
 end_comment
 
 begin_comment
-comment|///    for false, FFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFh for true.
 end_comment
 
 begin_comment
@@ -13565,11 +14037,15 @@ comment|///    128-bit integer vectors to determine if the values in the first o
 end_comment
 
 begin_comment
-comment|///    are greater than those in the second operand. Each comparison yields 0h
+comment|///    are greater than those in the second operand.
 end_comment
 
 begin_comment
-comment|///    for false, FFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -13654,11 +14130,15 @@ comment|///    integer vectors to determine if the values in the first operand a
 end_comment
 
 begin_comment
-comment|///    than those in the second operand. Each comparison yields 0h for false,
+comment|///    than those in the second operand.
 end_comment
 
 begin_comment
-comment|///    FFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFh for true.
 end_comment
 
 begin_comment
@@ -13735,11 +14215,15 @@ comment|///    128-bit integer vectors to determine if the values in the first o
 end_comment
 
 begin_comment
-comment|///    are less than those in the second operand. Each comparison yields 0h for
+comment|///    are less than those in the second operand.
 end_comment
 
 begin_comment
-comment|///    false, FFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFh for true.
 end_comment
 
 begin_comment
@@ -13816,11 +14300,15 @@ comment|///    128-bit integer vectors to determine if the values in the first o
 end_comment
 
 begin_comment
-comment|///    are less than those in the second operand. Each comparison yields 0h for
+comment|///    are less than those in the second operand.
 end_comment
 
 begin_comment
-comment|///    false, FFFFFFFFh for true.
+comment|///
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFFFFFh for true.
 end_comment
 
 begin_comment
@@ -17000,19 +17488,23 @@ comment|///    specified unaligned memory location. When a mask bit is 1, the
 end_comment
 
 begin_comment
-comment|///    corresponding byte is written, otherwise it is not written. To minimize
+comment|///    corresponding byte is written, otherwise it is not written.
 end_comment
 
 begin_comment
-comment|///    caching, the date is flagged as non-temporal (unlikely to be used again
+comment|///
 end_comment
 
 begin_comment
-comment|///    soon). Exception and trap behavior for elements not selected for storage
+comment|///    To minimize caching, the date is flagged as non-temporal (unlikely to be
 end_comment
 
 begin_comment
-comment|///    to memory are implementation dependent.
+comment|///    used again soon). Exception and trap behavior for elements not selected
+end_comment
+
+begin_comment
+comment|///    for storage to memory are implementation dependent.
 end_comment
 
 begin_comment
@@ -17215,11 +17707,19 @@ comment|/// \brief Stores a 128-bit floating point vector of [2 x double] to a 1
 end_comment
 
 begin_comment
-comment|///    aligned memory location. To minimize caching, the data is flagged as
+comment|///    aligned memory location.
 end_comment
 
 begin_comment
-comment|///    non-temporal (unlikely to be used again soon).
+comment|///
+end_comment
+
+begin_comment
+comment|///    To minimize caching, the data is flagged as non-temporal (unlikely to be
+end_comment
+
+begin_comment
+comment|///    used again soon).
 end_comment
 
 begin_comment
@@ -17292,6 +17792,10 @@ end_function
 
 begin_comment
 comment|/// \brief Stores a 128-bit integer vector to a 128-bit aligned memory location.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -17371,11 +17875,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Stores a 32-bit integer value in the specified memory location. To
+comment|/// \brief Stores a 32-bit integer value in the specified memory location.
 end_comment
 
 begin_comment
-comment|///    minimize caching, the data is flagged as non-temporal (unlikely to be
+comment|///
+end_comment
+
+begin_comment
+comment|///    To minimize caching, the data is flagged as non-temporal (unlikely to be
 end_comment
 
 begin_comment
@@ -17450,11 +17958,15 @@ name|__x86_64__
 end_ifdef
 
 begin_comment
-comment|/// \brief Stores a 64-bit integer value in the specified memory location. To
+comment|/// \brief Stores a 64-bit integer value in the specified memory location.
 end_comment
 
 begin_comment
-comment|///    minimize caching, the data is flagged as non-temporal (unlikely to be
+comment|///
+end_comment
+
+begin_comment
+comment|///    To minimize caching, the data is flagged as non-temporal (unlikely to be
 end_comment
 
 begin_comment
@@ -17560,6 +18072,7 @@ parameter_list|(
 name|void
 specifier|const
 modifier|*
+name|__p
 parameter_list|)
 function_decl|;
 comment|/// \brief Forces strong memory ordering (serialization) between load
@@ -18017,7 +18530,7 @@ comment|/// \param __imm
 end_comment
 
 begin_comment
-comment|///    An immediate value. Bits [3:0] selects values from \a __a to be assigned
+comment|///    An immediate value. Bits [2:0] selects values from \a __a to be assigned
 end_comment
 
 begin_comment
@@ -20817,6 +21330,45 @@ parameter_list|,
 name|y
 parameter_list|)
 value|(((x)<< 1) | (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MM_DENORMALS_ZERO_ON
+value|(0x0040)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MM_DENORMALS_ZERO_OFF
+value|(0x0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MM_DENORMALS_ZERO_MASK
+value|(0x0040)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MM_GET_DENORMALS_ZERO_MODE
+parameter_list|()
+value|(_mm_getcsr()& _MM_DENORMALS_ZERO_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MM_SET_DENORMALS_ZERO_MODE
+parameter_list|(
+name|x
+parameter_list|)
+value|(_mm_setcsr((_mm_getcsr()& ~_MM_DENORMALS_ZERO_MASK) | (x)))
 end_define
 
 begin_endif

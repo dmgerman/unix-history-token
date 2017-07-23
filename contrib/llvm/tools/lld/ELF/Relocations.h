@@ -49,6 +49,24 @@ directive|include
 file|"lld/Core/LLVM.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lld
@@ -60,24 +78,17 @@ name|class
 name|SymbolBody
 decl_stmt|;
 name|class
-name|InputSectionData
-decl_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|class
 name|InputSection
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
+decl_stmt|;
 name|class
 name|InputSectionBase
-expr_stmt|;
+decl_stmt|;
+name|class
+name|OutputSection
+decl_stmt|;
+struct_decl|struct
+name|OutputSectionCommand
+struct_decl|;
 comment|// List of target-independent relocation types. Relocations read
 comment|// from files are converted to these types so that the main code
 comment|// doesn't have to know about architecture-specific details.
@@ -85,6 +96,8 @@ enum|enum
 name|RelExpr
 block|{
 name|R_ABS
+block|,
+name|R_ARM_SBREL
 block|,
 name|R_GOT
 block|,
@@ -108,6 +121,10 @@ name|R_HINT
 block|,
 name|R_MIPS_GOTREL
 block|,
+name|R_MIPS_GOT_GP
+block|,
+name|R_MIPS_GOT_GP_PC
+block|,
 name|R_MIPS_GOT_LOCAL_PAGE
 block|,
 name|R_MIPS_GOT_OFF
@@ -119,6 +136,8 @@ block|,
 name|R_MIPS_TLSLD
 block|,
 name|R_NEG_TLS
+block|,
+name|R_NONE
 block|,
 name|R_PAGE_PC
 block|,
@@ -157,12 +176,6 @@ block|,
 name|R_RELAX_TLS_LD_TO_LE
 block|,
 name|R_SIZE
-block|,
-name|R_THUNK_ABS
-block|,
-name|R_THUNK_PC
-block|,
-name|R_THUNK_PLT_PC
 block|,
 name|R_TLS
 block|,
@@ -333,7 +346,7 @@ block|;
 name|uint64_t
 name|Offset
 block|;
-name|uint64_t
+name|int64_t
 name|Addend
 block|;
 name|SymbolBody
@@ -350,27 +363,221 @@ name|void
 name|scanRelocations
 argument_list|(
 name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
 operator|&
 argument_list|)
 block|;
-name|template
-operator|<
 name|class
-name|ELFT
-operator|>
-name|void
+name|ThunkSection
+block|;
+name|class
+name|Thunk
+block|;
+name|class
+name|ThunkCreator
+block|{
+name|public
+operator|:
+comment|// Return true if Thunks have been added to OutputSections
+name|bool
 name|createThunks
 argument_list|(
-name|InputSectionBase
+name|ArrayRef
 operator|<
-name|ELFT
+name|OutputSectionCommand
+operator|*
 operator|>
-operator|&
+name|OutputSections
 argument_list|)
 block|;
+comment|// The number of completed passes of createThunks this permits us
+comment|// to do one time initialization on Pass 0 and put a limit on the
+comment|// number of times it can be called to prevent infinite loops.
+name|uint32_t
+name|Pass
+operator|=
+literal|0
+block|;
+name|private
+operator|:
+name|void
+name|mergeThunks
+argument_list|()
+block|;
+name|ThunkSection
+operator|*
+name|getOSThunkSec
+argument_list|(
+name|OutputSectionCommand
+operator|*
+name|Cmd
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|InputSection
+operator|*
+operator|>
+operator|*
+name|ISR
+argument_list|)
+block|;
+name|ThunkSection
+operator|*
+name|getISThunkSec
+argument_list|(
+name|InputSection
+operator|*
+name|IS
+argument_list|,
+name|OutputSection
+operator|*
+name|OS
+argument_list|)
+block|;
+name|void
+name|forEachExecInputSection
+argument_list|(
+name|ArrayRef
+operator|<
+name|OutputSectionCommand
+operator|*
+operator|>
+name|OutputSections
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|OutputSectionCommand
+operator|*
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|InputSection
+operator|*
+operator|>
+operator|*
+argument_list|,
+name|InputSection
+operator|*
+argument_list|)
+operator|>
+name|Fn
+argument_list|)
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|Thunk
+operator|*
+block|,
+name|bool
+operator|>
+name|getThunk
+argument_list|(
+argument|SymbolBody&Body
+argument_list|,
+argument|uint32_t Type
+argument_list|)
+block|;
+name|ThunkSection
+operator|*
+name|addThunkSection
+argument_list|(
+argument|OutputSection *OS
+argument_list|,
+argument|std::vector<InputSection *> *
+argument_list|,
+argument|uint64_t Off
+argument_list|)
+block|;
+comment|// Record all the available Thunks for a Symbol
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|SymbolBody
+operator|*
+block|,
+name|std
+operator|::
+name|vector
+operator|<
+name|Thunk
+operator|*
+operator|>>
+name|ThunkedSymbols
+block|;
+comment|// Find a Thunk from the Thunks symbol definition, we can use this to find
+comment|// the Thunk from a relocation to the Thunks symbol definition.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|SymbolBody
+operator|*
+block|,
+name|Thunk
+operator|*
+operator|>
+name|Thunks
+block|;
+comment|// Track InputSections that have an inline ThunkSection placed in front
+comment|// an inline ThunkSection may have control fall through to the section below
+comment|// so we need to make sure that there is only one of them.
+comment|// The Mips LA25 Thunk is an example of an inline ThunkSection.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|InputSection
+operator|*
+block|,
+name|ThunkSection
+operator|*
+operator|>
+name|ThunkedSections
+block|;
+comment|// All the ThunkSections that we have created, organised by OutputSection
+comment|// will contain a mix of ThunkSections that have been created this pass, and
+comment|// ThunkSections that have been merged into the OutputSection on previous
+comment|// passes
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|InputSection
+operator|*
+operator|>
+operator|*
+block|,
+name|std
+operator|::
+name|vector
+operator|<
+name|ThunkSection
+operator|*
+operator|>>
+name|ThunkSections
+block|;
+comment|// The ThunkSection for this vector of InputSections
+name|ThunkSection
+operator|*
+name|CurTS
+block|; }
+block|;
+comment|// Return a int64_t to make sure we get the sign extension out of the way as
+comment|// early as possible.
 name|template
 operator|<
 name|class
@@ -378,10 +585,7 @@ name|ELFT
 operator|>
 specifier|static
 specifier|inline
-name|typename
-name|ELFT
-operator|::
-name|uint
+name|int64_t
 name|getAddend
 argument_list|(
 argument|const typename ELFT::Rel&Rel
@@ -398,10 +602,7 @@ name|ELFT
 operator|>
 specifier|static
 specifier|inline
-name|typename
-name|ELFT
-operator|::
-name|uint
+name|int64_t
 name|getAddend
 argument_list|(
 argument|const typename ELFT::Rela&Rel
@@ -413,8 +614,14 @@ operator|.
 name|r_addend
 return|;
 block|}
-expr|} }
+expr|}
+comment|// namespace elf
+expr|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lld
+end_comment
 
 begin_endif
 endif|#

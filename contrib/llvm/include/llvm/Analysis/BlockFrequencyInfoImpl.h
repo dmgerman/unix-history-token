@@ -6223,31 +6223,19 @@ index|]
 block|;
 for|for
 control|(
-name|auto
-name|I
-init|=
-name|Successor
-operator|::
-name|child_begin
-argument_list|(
+specifier|const
+specifier|auto
+name|Succ
+range|:
+name|children
+operator|<
+specifier|const
+name|BlockT
+operator|*
+operator|>
+operator|(
 name|BB
-argument_list|)
-init|,
-name|E
-init|=
-name|Successor
-operator|::
-name|child_end
-argument_list|(
-name|BB
-argument_list|)
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
+operator|)
 control|)
 name|G
 operator|.
@@ -6259,8 +6247,7 @@ name|BFI
 operator|.
 name|getNode
 argument_list|(
-operator|*
-name|I
+name|Succ
 argument_list|)
 argument_list|,
 name|OuterLoop
@@ -6495,31 +6482,19 @@ argument_list|)
 decl_stmt|;
 for|for
 control|(
-name|auto
-name|SI
-init|=
-name|Successor
-operator|::
-name|child_begin
-argument_list|(
+specifier|const
+specifier|auto
+name|Succ
+range|:
+name|children
+operator|<
+specifier|const
+name|BlockT
+operator|*
+operator|>
+operator|(
 name|BB
-argument_list|)
-init|,
-name|SE
-init|=
-name|Successor
-operator|::
-name|child_end
-argument_list|(
-name|BB
-argument_list|)
-init|;
-name|SI
-operator|!=
-name|SE
-condition|;
-operator|++
-name|SI
+operator|)
 control|)
 if|if
 condition|(
@@ -6534,8 +6509,7 @@ name|Node
 argument_list|,
 name|getNode
 argument_list|(
-operator|*
-name|SI
+name|Succ
 argument_list|)
 argument_list|,
 name|getWeightFromBranchProb
@@ -6546,7 +6520,7 @@ name|getEdgeProbability
 argument_list|(
 name|BB
 argument_list|,
-name|SI
+name|Succ
 argument_list|)
 argument_list|)
 argument_list|)
@@ -7008,6 +6982,9 @@ argument_list|,
 argument|const BlockFrequencyInfoT *Graph
 argument_list|,
 argument|GVDAGType GType
+argument_list|,
+argument|int layout_order = -
+literal|1
 argument_list|)
 block|{
 name|std
@@ -7021,18 +6998,39 @@ argument_list|(
 name|Result
 argument_list|)
 block|;
+if|if
+condition|(
+name|layout_order
+operator|!=
+operator|-
+literal|1
+condition|)
 name|OS
 operator|<<
 name|Node
 operator|->
 name|getName
 argument_list|()
-operator|.
-name|str
+operator|<<
+literal|"["
+operator|<<
+name|layout_order
+operator|<<
+literal|"] : "
+expr_stmt|;
+else|else
+name|OS
+operator|<<
+name|Node
+operator|->
+name|getName
 argument_list|()
 operator|<<
 literal|" : "
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_switch
 switch|switch
 condition|(
 name|GType
@@ -7099,28 +7097,23 @@ literal|"Unknown"
 expr_stmt|;
 break|break;
 block|}
-end_expr_stmt
-
-begin_case
 case|case
 name|GVDT_None
 case|:
-end_case
-
-begin_expr_stmt
 name|llvm_unreachable
 argument_list|(
 literal|"If we are not supposed to render a graph we should "
 literal|"never reach this point."
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_switch
 
-begin_expr_stmt
-unit|}     return
+begin_return
+return|return
 name|Result
-expr_stmt|;
-end_expr_stmt
+return|;
+end_return
 
 begin_expr_stmt
 unit|}    std
@@ -7304,6 +7297,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ANALYSIS_BLOCKFREQUENCYINFOIMPL_H
+end_comment
 
 end_unit
 

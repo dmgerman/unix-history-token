@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Target/TargetInstrInfo.h - Instruction Info --------*- C++ -*-===//
+comment|//===- llvm/Target/TargetInstrInfo.h - Instruction Info ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,13 +62,37 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallSet.h"
+file|"llvm/ADT/DenseMapInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/LiveIntervalAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
 begin_include
@@ -86,7 +110,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineInstr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineLoopInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineOperand.h"
 end_include
 
 begin_include
@@ -104,13 +140,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/LiveIntervalAnalysis.h"
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -118,13 +178,13 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|DFAPacketizer
+decl_stmt|;
+name|class
 name|InstrItineraryData
 decl_stmt|;
 name|class
 name|LiveVariables
-decl_stmt|;
-name|class
-name|MCAsmInfo
 decl_stmt|;
 name|class
 name|MachineMemOperand
@@ -133,7 +193,7 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
-name|MDNode
+name|MCAsmInfo
 decl_stmt|;
 name|class
 name|MCInst
@@ -142,19 +202,22 @@ struct_decl|struct
 name|MCSchedModel
 struct_decl|;
 name|class
-name|MCSymbolRefExpr
+name|Module
 decl_stmt|;
 name|class
-name|SDNode
+name|ScheduleDAG
 decl_stmt|;
 name|class
 name|ScheduleHazardRecognizer
 decl_stmt|;
 name|class
+name|SDNode
+decl_stmt|;
+name|class
 name|SelectionDAG
 decl_stmt|;
 name|class
-name|ScheduleDAG
+name|RegScavenger
 decl_stmt|;
 name|class
 name|TargetRegisterClass
@@ -163,13 +226,10 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
-name|TargetSubtargetInfo
-decl_stmt|;
-name|class
 name|TargetSchedModel
 decl_stmt|;
 name|class
-name|DFAPacketizer
+name|TargetSubtargetInfo
 decl_stmt|;
 name|template
 operator|<
@@ -189,26 +249,6 @@ range|:
 name|public
 name|MCInstrInfo
 block|{
-name|TargetInstrInfo
-argument_list|(
-specifier|const
-name|TargetInstrInfo
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|TargetInstrInfo
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
 name|TargetInstrInfo
@@ -246,6 +286,27 @@ argument_list|(
 argument|ReturnOpcode
 argument_list|)
 block|{}
+name|TargetInstrInfo
+argument_list|(
+specifier|const
+name|TargetInstrInfo
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|TargetInstrInfo
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|TargetInstrInfo
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 name|virtual
 operator|~
 name|TargetInstrInfo
@@ -448,6 +509,161 @@ specifier|const
 block|{
 return|return
 name|CallFrameDestroyOpcode
+return|;
+block|}
+comment|/// Returns true if the argument is a frame pseudo instruction.
+name|bool
+name|isFrameInstr
+argument_list|(
+argument|const MachineInstr&I
+argument_list|)
+specifier|const
+block|{
+return|return
+name|I
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|getCallFrameSetupOpcode
+argument_list|()
+operator|||
+name|I
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|getCallFrameDestroyOpcode
+argument_list|()
+return|;
+block|}
+comment|/// Returns true if the argument is a frame setup pseudo instruction.
+name|bool
+name|isFrameSetup
+argument_list|(
+argument|const MachineInstr&I
+argument_list|)
+specifier|const
+block|{
+return|return
+name|I
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|getCallFrameSetupOpcode
+argument_list|()
+return|;
+block|}
+comment|/// Returns size of the frame associated with the given frame instruction.
+comment|/// For frame setup instruction this is frame that is set up space set up
+comment|/// after the instruction. For frame destroy instruction this is the frame
+comment|/// freed by the caller.
+comment|/// Note, in some cases a call frame (or a part of it) may be prepared prior
+comment|/// to the frame setup instruction. It occurs in the calls that involve
+comment|/// inalloca arguments. This function reports only the size of the frame part
+comment|/// that is set up between the frame setup and destroy pseudo instructions.
+name|int64_t
+name|getFrameSize
+argument_list|(
+argument|const MachineInstr&I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isFrameInstr
+argument_list|(
+name|I
+argument_list|)
+operator|&&
+literal|"Not a frame instruction"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+operator|>=
+literal|0
+argument_list|)
+block|;
+return|return
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+return|;
+block|}
+comment|/// Returns the total frame size, which is made up of the space set up inside
+comment|/// the pair of frame start-stop instructions and the space that is set up
+comment|/// prior to the pair.
+name|int64_t
+name|getFrameTotalSize
+argument_list|(
+argument|const MachineInstr&I
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|isFrameSetup
+argument_list|(
+name|I
+argument_list|)
+condition|)
+block|{
+name|assert
+argument_list|(
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+operator|>=
+literal|0
+operator|&&
+literal|"Frame size must not be negative"
+argument_list|)
+expr_stmt|;
+return|return
+name|getFrameSize
+argument_list|(
+name|I
+argument_list|)
+operator|+
+name|I
+operator|.
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+return|;
+block|}
+return|return
+name|getFrameSize
+argument_list|(
+name|I
+argument_list|)
 return|;
 block|}
 name|unsigned
@@ -1142,81 +1358,61 @@ block|}
 block|;
 name|ComparePredicate
 name|Predicate
+operator|=
+name|PRED_INVALID
 block|;
 name|MachineOperand
 name|LHS
+operator|=
+name|MachineOperand
+operator|::
+name|CreateImm
+argument_list|(
+literal|0
+argument_list|)
 block|;
 name|MachineOperand
 name|RHS
+operator|=
+name|MachineOperand
+operator|::
+name|CreateImm
+argument_list|(
+literal|0
+argument_list|)
 block|;
 name|MachineBasicBlock
 operator|*
 name|TrueDest
+operator|=
+name|nullptr
 block|;
 name|MachineBasicBlock
 operator|*
 name|FalseDest
+operator|=
+name|nullptr
 block|;
 name|MachineInstr
 operator|*
 name|ConditionDef
+operator|=
+name|nullptr
 block|;
 comment|/// SingleUseCondition is true if ConditionDef is dead except for the
 comment|/// branch(es) at the end of the basic block.
 comment|///
 name|bool
 name|SingleUseCondition
+operator|=
+name|false
 block|;
 name|explicit
 name|MachineBranchPredicate
 argument_list|()
-operator|:
-name|Predicate
-argument_list|(
-name|PRED_INVALID
-argument_list|)
-block|,
-name|LHS
-argument_list|(
-name|MachineOperand
-operator|::
-name|CreateImm
-argument_list|(
-literal|0
-argument_list|)
-argument_list|)
-block|,
-name|RHS
-argument_list|(
-name|MachineOperand
-operator|::
-name|CreateImm
-argument_list|(
-literal|0
-argument_list|)
-argument_list|)
-block|,
-name|TrueDest
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|FalseDest
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|ConditionDef
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|SingleUseCondition
-argument_list|(
-argument|false
-argument_list|)
-block|{     }
-block|}
+operator|=
+expr|default
+block|;   }
 block|;
 comment|/// Analyze the branching code at the end of MBB and parse it into the
 comment|/// MachineBranchPredicate structure if possible.  Returns false on success
@@ -2317,25 +2513,6 @@ argument_list|(
 literal|"target did not implement shouldClusterMemOps()"
 argument_list|)
 block|;   }
-comment|/// Can this target fuse the given instructions if they are scheduled
-comment|/// adjacent. Note that you have to add:
-comment|///   DAG.addMutation(createMacroFusionDAGMutation());
-comment|/// to TargetPassConfig::createMachineScheduler() to have an effect.
-name|virtual
-name|bool
-name|shouldScheduleAdjacent
-argument_list|(
-argument|const MachineInstr&First
-argument_list|,
-argument|const MachineInstr&Second
-argument_list|)
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"target did not implement shouldScheduleAdjacent()"
-argument_list|)
-block|;   }
 comment|/// Reverses the branch condition of the specified condition list,
 comment|/// returning false on success and true if it cannot be reversed.
 name|virtual
@@ -2364,7 +2541,7 @@ block|;
 comment|/// Return the noop instruction to use for a noop.
 name|virtual
 name|void
-name|getNoopForMachoTarget
+name|getNoop
 argument_list|(
 argument|MCInst&NopInst
 argument_list|)
@@ -2406,6 +2583,52 @@ argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
+comment|/// Returns true if MI is an unconditional tail call.
+name|virtual
+name|bool
+name|isUnconditionalTailCall
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Returns true if the tail call can be made conditional on BranchCond.
+name|virtual
+name|bool
+name|canMakeTailCallConditional
+argument_list|(
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|const MachineInstr&TailCall
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Replace the conditional branch in MBB with a conditional tail call.
+name|virtual
+name|void
+name|replaceBranchWithTailCall
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|const MachineInstr&TailCall
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement replaceBranchWithTailCall!"
+argument_list|)
+block|;   }
 comment|/// Convert the instruction into a predicated instruction.
 comment|/// It returns true if the operation was successful.
 name|virtual
@@ -2458,7 +2681,7 @@ name|virtual
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr&MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|{
@@ -3067,10 +3290,17 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|// Sometimes, it is possible for the target
-comment|// to tell, even without aliasing information, that two MIs access different
-comment|// memory addresses. This function returns true if two MIs access different
-comment|// memory addresses and false otherwise.
+comment|/// Sometimes, it is possible for the target
+comment|/// to tell, even without aliasing information, that two MIs access different
+comment|/// memory addresses. This function returns true if two MIs access different
+comment|/// memory addresses and false otherwise.
+comment|///
+comment|/// Assumes any physical registers used to compute addresses have the same
+comment|/// value for both instructions. (This is the most useful assumption for
+comment|/// post-RA scheduling.)
+comment|///
+comment|/// See also MachineInstr::mayAlias, which is implemented on top of this
+comment|/// function.
 name|virtual
 name|bool
 name|areMemAccessesTriviallyDisjoint
@@ -3242,7 +3472,37 @@ return|return
 name|None
 return|;
 block|}
-comment|/// Determines whether |Inst| is a tail call instruction.
+comment|/// Return an array that contains the MMO target flag values and their
+comment|/// names.
+comment|///
+comment|/// MIR Serialization is able to serialize only the MMO target flags that are
+comment|/// defined by this method.
+name|virtual
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MachineMemOperand
+operator|::
+name|Flags
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableMachineMemOperandTargetFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|None
+return|;
+block|}
+comment|/// Determines whether \p Inst is a tail call instruction. Override this
+comment|/// method on targets that do not properly set MCID::Return and MCID::Call on
+comment|/// tail call instructions."
 name|virtual
 name|bool
 name|isTailCall
@@ -3252,9 +3512,162 @@ argument_list|)
 specifier|const
 block|{
 return|return
+name|Inst
+operator|.
+name|isReturn
+argument_list|()
+operator|&&
+name|Inst
+operator|.
+name|isCall
+argument_list|()
+return|;
+block|}
+comment|/// True if the instruction is bound to the top of its basic block and no
+comment|/// other instructions shall be inserted before it. This can be implemented
+comment|/// to prevent register allocator to insert spills before such instructions.
+name|virtual
+name|bool
+name|isBasicBlockPrologue
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+return|return
 name|false
 return|;
 block|}
+comment|/// \brief Return how many instructions would be saved by outlining a
+comment|/// sequence containing \p SequenceSize instructions that appears
+comment|/// \p Occurrences times in a module.
+name|virtual
+name|unsigned
+name|getOutliningBenefit
+argument_list|(
+argument|size_t SequenceSize
+argument_list|,
+argument|size_t Occurrences
+argument_list|,
+argument|bool CanBeTailCall
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::getOutliningBenefit!"
+argument_list|)
+block|;   }
+comment|/// Represents how an instruction should be mapped by the outliner.
+comment|/// \p Legal instructions are those which are safe to outline.
+comment|/// \p Illegal instructions are those which cannot be outlined.
+comment|/// \p Invisible instructions are instructions which can be outlined, but
+comment|/// shouldn't actually impact the outlining result.
+expr|enum
+name|MachineOutlinerInstrType
+block|{
+name|Legal
+block|,
+name|Illegal
+block|,
+name|Invisible
+block|}
+block|;
+comment|/// Returns how or if \p MI should be outlined.
+name|virtual
+name|MachineOutlinerInstrType
+name|getOutliningType
+argument_list|(
+argument|MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::getOutliningType!"
+argument_list|)
+block|;   }
+comment|/// Insert a custom epilogue for outlined functions.
+comment|/// This may be empty, in which case no epilogue or return statement will be
+comment|/// emitted.
+name|virtual
+name|void
+name|insertOutlinerEpilogue
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool IsTailCall
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::insertOutlinerEpilogue!"
+argument_list|)
+block|;   }
+comment|/// Insert a call to an outlined function into the program.
+comment|/// Returns an iterator to the spot where we inserted the call. This must be
+comment|/// implemented by the target.
+name|virtual
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|insertOutlinedCall
+argument_list|(
+argument|Module&M
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator&It
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool IsTailCall
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::insertOutlinedCall!"
+argument_list|)
+block|;   }
+comment|/// Insert a custom prologue for outlined functions.
+comment|/// This may be empty, in which case no prologue will be emitted.
+name|virtual
+name|void
+name|insertOutlinerPrologue
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool IsTailCall
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement TargetInstrInfo::insertOutlinerPrologue!"
+argument_list|)
+block|;   }
+comment|/// Return true if the function can safely be outlined from.
+comment|/// By default, this means that the function has no red zone.
+name|virtual
+name|bool
+name|isFunctionSafeToOutlineFrom
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target didn't implement "
+literal|"TargetInstrInfo::isFunctionSafeToOutlineFrom!"
+argument_list|)
+block|;   }
 name|private
 operator|:
 name|unsigned
@@ -3281,13 +3694,14 @@ operator|::
 name|RegSubRegPair
 operator|>
 block|{
-typedef|typedef
+name|using
+name|RegInfo
+operator|=
 name|DenseMapInfo
 operator|<
 name|unsigned
 operator|>
-name|RegInfo
-expr_stmt|;
+block|;
 specifier|static
 specifier|inline
 name|TargetInstrInfo
@@ -3425,9 +3839,8 @@ name|SubReg
 argument_list|)
 return|;
 block|}
-block|}
-empty_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

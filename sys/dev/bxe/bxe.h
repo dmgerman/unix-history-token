@@ -807,6 +807,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|QLOGIC_VENDORID
+value|0x1077
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_ANY_ID
 value|(uint16_t)(~0U)
 end_define

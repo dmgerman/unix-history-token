@@ -217,7 +217,7 @@ argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|;
-comment|/// Takes the compliment of a number (~0 - val).
+comment|/// Takes the complement of a number (~0 - val).
 name|unsigned
 name|encodeComplement
 argument_list|(
@@ -232,12 +232,16 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Encodes an immediate value with a given fixup.
+comment|/// \tparam Offset The offset into the instruction for the fixup.
 name|template
 operator|<
 name|AVR
 operator|::
 name|Fixups
 name|Fixup
+block|,
+name|unsigned
+name|Offset
 operator|>
 name|unsigned
 name|encodeImm

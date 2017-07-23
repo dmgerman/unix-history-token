@@ -64,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeSerializer.h"
+file|"llvm/DebugInfo/CodeView/TypeRecord.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeRecord.h"
+file|"llvm/DebugInfo/CodeView/TypeSerializer.h"
 end_include
 
 begin_include
@@ -163,11 +163,11 @@ label|:
 name|explicit
 name|TypeTableBuilder
 argument_list|(
-name|BumpPtrAllocator
-operator|&
-name|Allocator
+argument|BumpPtrAllocator&Allocator
+argument_list|,
+argument|bool WriteUnique = true
 argument_list|)
-operator|:
+block|:
 name|Allocator
 argument_list|(
 name|Allocator
@@ -176,6 +176,8 @@ operator|,
 name|Serializer
 argument_list|(
 argument|Allocator
+argument_list|,
+argument|WriteUnique
 argument_list|)
 block|{}
 name|TypeTableBuilder
@@ -350,7 +352,7 @@ block|}
 name|TypeIndex
 name|writeSerializedRecord
 argument_list|(
-name|MutableArrayRef
+name|ArrayRef
 operator|<
 name|uint8_t
 operator|>
@@ -361,6 +363,24 @@ return|return
 name|Serializer
 operator|.
 name|insertRecordBytes
+argument_list|(
+name|Record
+argument_list|)
+return|;
+block|}
+name|TypeIndex
+name|writeSerializedRecord
+parameter_list|(
+specifier|const
+name|RemappedType
+modifier|&
+name|Record
+parameter_list|)
+block|{
+return|return
+name|Serializer
+operator|.
+name|insertRecord
 argument_list|(
 name|Record
 argument_list|)
@@ -412,7 +432,7 @@ block|}
 block|}
 name|ArrayRef
 operator|<
-name|MutableArrayRef
+name|ArrayRef
 operator|<
 name|uint8_t
 operator|>>
@@ -435,6 +455,9 @@ block|{
 name|TypeTableBuilder
 modifier|&
 name|TypeTable
+decl_stmt|;
+name|BumpPtrAllocator
+name|Allocator
 decl_stmt|;
 name|TypeSerializer
 name|TempSerializer
@@ -459,7 +482,9 @@ argument_list|)
 operator|,
 name|TempSerializer
 argument_list|(
-argument|TypeTable.getAllocator()
+argument|Allocator
+argument_list|,
+argument|false
 argument_list|)
 block|{
 name|Type
@@ -474,6 +499,11 @@ name|void
 name|begin
 argument_list|()
 block|{
+name|TempSerializer
+operator|.
+name|reset
+argument_list|()
+block|;
 if|if
 condition|(
 name|auto
@@ -597,8 +627,14 @@ expr_stmt|;
 block|}
 name|TypeIndex
 name|end
-parameter_list|()
+parameter_list|(
+name|bool
+name|Write
+parameter_list|)
 block|{
+name|TypeIndex
+name|Index
+decl_stmt|;
 if|if
 condition|(
 name|auto
@@ -627,9 +663,11 @@ name|TypeIndex
 argument_list|()
 return|;
 block|}
-name|TypeIndex
-name|Index
-decl_stmt|;
+if|if
+condition|(
+name|Write
+condition|)
+block|{
 for|for
 control|(
 name|auto
@@ -640,7 +678,6 @@ operator|.
 name|records
 argument_list|()
 control|)
-block|{
 name|Index
 operator|=
 name|TypeTable

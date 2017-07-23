@@ -176,7 +176,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|AF_INET6
+name|USE_INET6
 if|if
 condition|(
 name|np
@@ -324,12 +324,7 @@ operator|.
 name|adf_family
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AF_INET6
 block|}
-endif|#
-directive|endif
 name|printmask
 argument_list|(
 name|np

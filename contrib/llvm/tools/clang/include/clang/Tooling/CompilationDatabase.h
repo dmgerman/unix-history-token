@@ -242,33 +242,6 @@ operator|::
 name|string
 name|Output
 expr_stmt|;
-comment|/// \brief An optional mapping from each file's path to its content for all
-comment|/// files needed for the compilation that are not available via the file
-comment|/// system.
-comment|///
-comment|/// Note that a tool implementation is required to fall back to the file
-comment|/// system if a source file is not provided in the mapped sources, as
-comment|/// compilation databases will usually not provide all files in mapped sources
-comment|/// for performance reasons.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|std
-operator|::
-name|string
-operator|>
-expr|>
-name|MappedSources
-expr_stmt|;
 block|}
 struct|;
 comment|/// \brief Interface for compilation databases.
@@ -487,15 +460,22 @@ comment|/// \param Argc The number of command line arguments - will be changed t
 comment|/// the number of arguments before "--", if "--" was found in the argument
 comment|/// list.
 comment|/// \param Argv Points to the command line arguments.
+comment|/// \param ErrorMsg Contains error text if the function returns null pointer.
 comment|/// \param Directory The base directory used in the FixedCompilationDatabase.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FixedCompilationDatabase
-operator|*
+operator|>
 name|loadFromCommandLine
 argument_list|(
 argument|int&Argc
 argument_list|,
 argument|const char *const *Argv
+argument_list|,
+argument|std::string&ErrorMsg
 argument_list|,
 argument|Twine Directory =
 literal|"."

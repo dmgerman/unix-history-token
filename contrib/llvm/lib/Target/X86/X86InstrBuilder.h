@@ -855,7 +855,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|.
-name|addOperand
+name|add
 argument_list|(
 name|Offset
 argument_list|)

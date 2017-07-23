@@ -1508,14 +1508,6 @@ operator|.
 name|total_out_lo32
 expr_stmt|;
 break|break;
-case|case
-name|SEEK_END
-case|:
-name|target
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 default|default:
 name|errno
 operator|=

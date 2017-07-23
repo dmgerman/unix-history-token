@@ -142,11 +142,11 @@ operator|~
 name|HostProcess
 argument_list|()
 expr_stmt|;
-name|Error
+name|Status
 name|Terminate
 parameter_list|()
 function_decl|;
-name|Error
+name|Status
 name|GetMainModule
 argument_list|(
 name|FileSpec

@@ -297,6 +297,35 @@ end_function
 begin_function
 specifier|static
 name|void
+name|crash
+parameter_list|(
+name|int
+name|errorCode
+parameter_list|)
+block|{
+comment|/* abort if AFL/libfuzzer, exit otherwise */
+ifdef|#
+directive|ifdef
+name|FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+comment|/* could also use __AFL_COMPILER */
+name|abort
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|exit
+argument_list|(
+name|errorCode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|roundTripCheck
 parameter_list|(
 specifier|const
@@ -335,11 +364,6 @@ argument_list|(
 name|cBuffSize
 argument_list|)
 decl_stmt|;
-define|#
-directive|define
-name|CRASH
-value|{ free(cBuff); free(cBuff); }
-comment|/* double free, to crash program */
 if|if
 condition|(
 operator|!
@@ -402,7 +426,10 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|CRASH
+name|crash
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -429,7 +456,10 @@ operator|)
 name|srcBuffSize
 argument_list|)
 expr_stmt|;
-name|CRASH
+name|crash
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -453,7 +483,10 @@ argument_list|,
 literal|"Silent decoding corruption !!!"
 argument_list|)
 expr_stmt|;
-name|CRASH
+name|crash
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 block|}

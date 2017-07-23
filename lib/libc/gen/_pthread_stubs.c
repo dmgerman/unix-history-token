@@ -1697,20 +1697,23 @@ argument|__pthread_cleanup_pop_imp
 argument_list|,
 argument|PJT_CLEANUP_POP_IMP
 argument_list|,
-argument|int
+argument|void
 argument_list|,
 argument|int
 argument_list|)
 end_macro
 
 begin_expr_stmt
-name|STUB_FUNC2
+name|STUB_FUNC3
 argument_list|(
 name|__pthread_cleanup_push_imp
 argument_list|,
 name|PJT_CLEANUP_PUSH_IMP
 argument_list|,
 name|void
+argument_list|,
+name|void
+operator|*
 argument_list|,
 name|void
 operator|*
@@ -1728,7 +1731,7 @@ argument|_pthread_cancel_enter
 argument_list|,
 argument|PJT_CANCEL_ENTER
 argument_list|,
-argument|int
+argument|void
 argument_list|,
 argument|int
 argument_list|)
@@ -1741,7 +1744,7 @@ argument|_pthread_cancel_leave
 argument_list|,
 argument|PJT_CANCEL_LEAVE
 argument_list|,
-argument|int
+argument|void
 argument_list|,
 argument|int
 argument_list|)

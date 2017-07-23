@@ -63,6 +63,12 @@ directive|define
 name|LLVM_CODEGEN_GLOBALISEL_UTILS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -72,6 +78,12 @@ name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineInstr
+decl_stmt|;
+name|class
+name|MachineOptimizationRemarkEmitter
+decl_stmt|;
+name|class
+name|MachineOptimizationRemarkMissed
 decl_stmt|;
 name|class
 name|MachineRegisterInfo
@@ -86,12 +98,60 @@ name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
+name|TargetPassConfig
+decl_stmt|;
+name|class
 name|TargetRegisterInfo
 decl_stmt|;
+name|class
+name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|Twine
+decl_stmt|;
+name|class
+name|ConstantFP
+decl_stmt|;
+comment|/// Try to constrain Reg to the specified register class. If this fails,
+comment|/// create a new virtual register in the correct class and insert a COPY before
+comment|/// \p InsertPt. The debug location of \p InsertPt is used for the new copy.
+comment|///
+comment|/// \return The virtual register constrained to the right register class.
+name|unsigned
+name|constrainRegToClass
+parameter_list|(
+name|MachineRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
+specifier|const
+name|TargetInstrInfo
+modifier|&
+name|TII
+parameter_list|,
+specifier|const
+name|RegisterBankInfo
+modifier|&
+name|RBI
+parameter_list|,
+name|MachineInstr
+modifier|&
+name|InsertPt
+parameter_list|,
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|&
+name|RegClass
+parameter_list|)
+function_decl|;
 comment|/// Try to constrain Reg so that it is usable by argument OpIdx of the
 comment|/// provided MCInstrDesc \p II. If this fails, create a new virtual
 comment|/// register in the correct class and insert a COPY before \p InsertPt.
-comment|/// The debug location of \p InsertPt is used for the new copy.
+comment|/// This is equivalent to constrainRegToClass() with RegClass obtained from the
+comment|/// MCInstrDesc. The debug location of \p InsertPt is used for the new copy.
 comment|///
 comment|/// \return The virtual register constrained to the right register class.
 name|unsigned
@@ -135,6 +195,100 @@ name|Reg
 parameter_list|,
 name|unsigned
 name|OpIdx
+parameter_list|)
+function_decl|;
+comment|/// Check whether an instruction \p MI is dead: it only defines dead virtual
+comment|/// registers, and doesn't have other side effects.
+name|bool
+name|isTriviallyDead
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+specifier|const
+name|MachineRegisterInfo
+modifier|&
+name|MRI
+parameter_list|)
+function_decl|;
+comment|/// Report an ISel error as a missed optimization remark to the LLVMContext's
+comment|/// diagnostic stream.  Set the FailedISel MachineFunction property.
+name|void
+name|reportGISelFailure
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
+specifier|const
+name|TargetPassConfig
+modifier|&
+name|TPC
+parameter_list|,
+name|MachineOptimizationRemarkEmitter
+modifier|&
+name|MORE
+parameter_list|,
+name|MachineOptimizationRemarkMissed
+modifier|&
+name|R
+parameter_list|)
+function_decl|;
+name|void
+name|reportGISelFailure
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
+specifier|const
+name|TargetPassConfig
+modifier|&
+name|TPC
+parameter_list|,
+name|MachineOptimizationRemarkEmitter
+modifier|&
+name|MORE
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+name|StringRef
+name|Msg
+parameter_list|,
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
+function_decl|;
+name|Optional
+operator|<
+name|int64_t
+operator|>
+name|getConstantVRegVal
+argument_list|(
+argument|unsigned VReg
+argument_list|,
+argument|const MachineRegisterInfo&MRI
+argument_list|)
+expr_stmt|;
+specifier|const
+name|ConstantFP
+modifier|*
+name|getConstantFPVRegVal
+parameter_list|(
+name|unsigned
+name|VReg
+parameter_list|,
+specifier|const
+name|MachineRegisterInfo
+modifier|&
+name|MRI
 parameter_list|)
 function_decl|;
 block|}

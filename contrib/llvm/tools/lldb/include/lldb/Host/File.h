@@ -43,13 +43,29 @@ directive|define
 name|liblldb_File_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Host/PosixApi.h"
+end_include
 
-begin_comment
-comment|// C++ Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/IOObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
 
 begin_include
 include|#
@@ -67,32 +83,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/IOObject.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/PosixApi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -488,7 +478,7 @@ comment|///
 comment|/// @return
 comment|///     A reference to the file specification object.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|GetFileSpec
 argument_list|(
 argument|FileSpec&file_spec
@@ -510,7 +500,7 @@ comment|///
 comment|/// @param[in] permissions
 comment|///     Options to use when opening (see File::Permissions)
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Open
 argument_list|(
 argument|const char *path
@@ -520,7 +510,7 @@ argument_list|,
 argument|uint32_t permissions = lldb::eFilePermissionsFileDefault
 argument_list|)
 block|;
-name|Error
+name|Status
 name|Close
 argument_list|()
 name|override
@@ -578,7 +568,7 @@ comment|/// @return
 comment|///     An error object that indicates success or the reason for
 comment|///     failure.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Read
 argument_list|(
 argument|void *buf
@@ -606,7 +596,7 @@ comment|/// @return
 comment|///     An error object that indicates success or the reason for
 comment|///     failure.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Write
 argument_list|(
 argument|const void *buf
@@ -629,7 +619,7 @@ comment|///     The offset to seek to within the file relative to the
 comment|///     beginning of the file.
 comment|///
 comment|/// @param[in] error_ptr
-comment|///     A pointer to a lldb_private::Error object that will be
+comment|///     A pointer to a lldb_private::Status object that will be
 comment|///     filled in if non-nullptr.
 comment|///
 comment|/// @return
@@ -640,7 +630,7 @@ name|SeekFromStart
 argument_list|(
 argument|off_t offset
 argument_list|,
-argument|Error *error_ptr = nullptr
+argument|Status *error_ptr = nullptr
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -657,7 +647,7 @@ comment|///     The offset to seek to within the file relative to the
 comment|///     current file position.
 comment|///
 comment|/// @param[in] error_ptr
-comment|///     A pointer to a lldb_private::Error object that will be
+comment|///     A pointer to a lldb_private::Status object that will be
 comment|///     filled in if non-nullptr.
 comment|///
 comment|/// @return
@@ -668,7 +658,7 @@ name|SeekFromCurrent
 argument_list|(
 argument|off_t offset
 argument_list|,
-argument|Error *error_ptr = nullptr
+argument|Status *error_ptr = nullptr
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -686,7 +676,7 @@ comment|///     end of the file which gets filled in with the resulting
 comment|///     absolute file offset.
 comment|///
 comment|/// @param[in] error_ptr
-comment|///     A pointer to a lldb_private::Error object that will be
+comment|///     A pointer to a lldb_private::Status object that will be
 comment|///     filled in if non-nullptr.
 comment|///
 comment|/// @return
@@ -697,7 +687,7 @@ name|SeekFromEnd
 argument_list|(
 argument|off_t offset
 argument_list|,
-argument|Error *error_ptr = nullptr
+argument|Status *error_ptr = nullptr
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -723,7 +713,7 @@ comment|/// @return
 comment|///     An error object that indicates success or the reason for
 comment|///     failure.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Read
 argument_list|(
 name|void
@@ -768,7 +758,7 @@ comment|/// @return
 comment|///     An error object that indicates success or the reason for
 comment|///     failure.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Read
 argument_list|(
 argument|size_t&num_bytes
@@ -805,7 +795,7 @@ comment|/// @return
 comment|///     An error object that indicates success or the reason for
 comment|///     failure.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Write
 argument_list|(
 specifier|const
@@ -829,7 +819,7 @@ comment|/// @return
 comment|///     An error object that indicates success or the reason for
 comment|///     failure.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Flush
 argument_list|()
 block|;
@@ -840,7 +830,7 @@ comment|/// @return
 comment|///     An error object that indicates success or the reason for
 comment|///     failure.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|Sync
 argument_list|()
 block|;
@@ -854,7 +844,7 @@ comment|//------------------------------------------------------------------
 name|uint32_t
 name|GetPermissions
 argument_list|(
-argument|Error&error
+argument|Status&error
 argument_list|)
 specifier|const
 block|;
@@ -867,7 +857,7 @@ name|FileSpec
 operator|&
 name|file_spec
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

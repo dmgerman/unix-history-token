@@ -121,6 +121,25 @@ name|getSmallDataSize
 argument_list|()
 specifier|const
 block|;
+name|bool
+name|shouldPutJumpTableInFunctionSection
+argument_list|(
+argument|bool UsesLabelDifference
+argument_list|,
+argument|const Function&F
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|Function
+operator|*
+name|getLutUsedFunction
+argument_list|(
+argument|const GlobalObject *GO
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 name|MCSectionELF
@@ -151,6 +170,18 @@ argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+block|;
+name|MCSection
+operator|*
+name|selectSectionForLookupTable
+argument_list|(
+argument|const GlobalObject *GO
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|,
+argument|const Function *Fn
 argument_list|)
 specifier|const
 block|;   }

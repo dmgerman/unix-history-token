@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/RegularExpression.h"
+file|"lldb/Core/dwarf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/dwarf.h"
+file|"lldb/Utility/RegularExpression.h"
 end_include
 
 begin_include

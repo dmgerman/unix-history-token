@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/FrontendOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -73,20 +79,12 @@ operator|<<
 literal|0
 operator|)
 block|,
-name|C89
-init|=
-operator|(
-literal|1
-operator|<<
-literal|1
-operator|)
-block|,
 name|C99
 init|=
 operator|(
 literal|1
 operator|<<
-literal|2
+literal|1
 operator|)
 block|,
 name|C11
@@ -94,7 +92,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|3
+literal|2
 operator|)
 block|,
 name|CPlusPlus
@@ -102,7 +100,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|4
+literal|3
 operator|)
 block|,
 name|CPlusPlus11
@@ -110,7 +108,7 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|5
+literal|4
 operator|)
 block|,
 name|CPlusPlus14
@@ -118,10 +116,18 @@ init|=
 operator|(
 literal|1
 operator|<<
-literal|6
+literal|5
 operator|)
 block|,
 name|CPlusPlus1z
+init|=
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+block|,
+name|CPlusPlus2a
 init|=
 operator|(
 literal|1
@@ -160,6 +166,14 @@ literal|1
 operator|<<
 literal|11
 operator|)
+block|,
+name|OpenCL
+init|=
+operator|(
+literal|1
+operator|<<
+literal|12
+operator|)
 block|}
 enum|;
 block|}
@@ -178,6 +192,8 @@ parameter_list|(
 name|id
 parameter_list|,
 name|name
+parameter_list|,
+name|lang
 parameter_list|,
 name|desc
 parameter_list|,
@@ -204,6 +220,11 @@ decl_stmt|;
 name|unsigned
 name|Flags
 decl_stmt|;
+name|InputKind
+operator|::
+name|Language
+name|Language
+expr_stmt|;
 name|public
 label|:
 comment|/// getName - Get the name of this standard.
@@ -230,6 +251,18 @@ return|return
 name|Description
 return|;
 block|}
+comment|/// Get the language that this standard describes.
+name|InputKind
+operator|::
+name|Language
+name|getLanguage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Language
+return|;
+block|}
 comment|/// Language supports '//' comments.
 name|bool
 name|hasLineComments
@@ -242,20 +275,6 @@ operator|&
 name|frontend
 operator|::
 name|LineComment
-return|;
-block|}
-comment|/// isC89 - Language is a superset of C89.
-name|bool
-name|isC89
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Flags
-operator|&
-name|frontend
-operator|::
-name|C89
 return|;
 block|}
 comment|/// isC99 - Language is a superset of C99.
@@ -342,6 +361,20 @@ operator|::
 name|CPlusPlus1z
 return|;
 block|}
+comment|/// isCPlusPlus2a - Language is a post-C++17 variant (or later).
+name|bool
+name|isCPlusPlus2a
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|frontend
+operator|::
+name|CPlusPlus2a
+return|;
+block|}
 comment|/// hasDigraphs - Language supports digraphs.
 name|bool
 name|hasDigraphs
@@ -396,6 +429,20 @@ operator|&
 name|frontend
 operator|::
 name|ImplicitInt
+return|;
+block|}
+comment|/// isOpenCL - Language is a OpenCL variant.
+name|bool
+name|isOpenCL
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|frontend
+operator|::
+name|OpenCL
 return|;
 block|}
 specifier|static

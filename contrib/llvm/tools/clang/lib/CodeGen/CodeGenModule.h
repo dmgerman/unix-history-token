@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/XRayLists.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -1174,68 +1180,25 @@ name|DeferredDecls
 expr_stmt|;
 comment|/// This is a list of deferred decls which we have seen that *are* actually
 comment|/// referenced. These get code generated when the module is done.
-struct|struct
-name|DeferredGlobal
-block|{
-name|DeferredGlobal
-argument_list|(
-argument|llvm::GlobalValue *GV
-argument_list|,
-argument|GlobalDecl GD
-argument_list|)
-block|:
-name|GV
-argument_list|(
-name|GV
-argument_list|)
-operator|,
-name|GD
-argument_list|(
-argument|GD
-argument_list|)
-block|{}
-name|llvm
-operator|::
-name|TrackingVH
-operator|<
-name|llvm
-operator|::
-name|GlobalValue
-operator|>
-name|GV
-expr_stmt|;
-name|GlobalDecl
-name|GD
-decl_stmt|;
-block|}
-struct|;
 name|std
 operator|::
 name|vector
 operator|<
-name|DeferredGlobal
+name|GlobalDecl
 operator|>
 name|DeferredDeclsToEmit
 expr_stmt|;
 name|void
 name|addDeferredDeclToEmit
-argument_list|(
-name|llvm
-operator|::
-name|GlobalValue
-operator|*
-name|GV
-argument_list|,
+parameter_list|(
 name|GlobalDecl
 name|GD
-argument_list|)
+parameter_list|)
 block|{
 name|DeferredDeclsToEmit
 operator|.
 name|emplace_back
 argument_list|(
-name|GV
-argument_list|,
 name|GD
 argument_list|)
 expr_stmt|;
@@ -1317,6 +1280,17 @@ operator|*
 operator|>
 name|DeferredVTables
 expr_stmt|;
+comment|/// A queue of (optional) vtables that may be emitted opportunistically.
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|>
+name|OpportunisticVTables
+expr_stmt|;
 comment|/// List of global values which are required to be present in the object file;
 comment|/// bitcast to i8*. This is used for forcing visibility of symbols which may
 comment|/// otherwise be optimized out.
@@ -1326,7 +1300,7 @@ name|vector
 operator|<
 name|llvm
 operator|::
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|LLVMUsed
 expr_stmt|;
@@ -1336,7 +1310,7 @@ name|vector
 operator|<
 name|llvm
 operator|::
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|LLVMCompilerUsed
 expr_stmt|;
@@ -1662,14 +1636,13 @@ name|pair
 operator|<
 name|llvm
 operator|::
-name|WeakVH
+name|WeakTrackingVH
 operator|,
 name|llvm
 operator|::
 name|Constant
 operator|*
-operator|>
-expr|>
+operator|>>
 name|CXXGlobalDtors
 expr_stmt|;
 comment|/// \brief The complete set of modules that has been imported.
@@ -1704,7 +1677,7 @@ name|SmallVector
 operator|<
 name|llvm
 operator|::
-name|Metadata
+name|MDNode
 operator|*
 operator|,
 literal|16
@@ -1717,7 +1690,7 @@ comment|/// Cached reference to the class for constant strings. This value has t
 comment|/// int * but is actually an Obj-C class pointer.
 name|llvm
 operator|::
-name|WeakVH
+name|WeakTrackingVH
 name|CFConstantStringClassRef
 expr_stmt|;
 comment|/// \brief The type used to describe the state of a fast enumeration in
@@ -1758,6 +1731,10 @@ parameter_list|(
 name|GlobalDecl
 name|GD
 parameter_list|)
+function_decl|;
+name|bool
+name|shouldOpportunisticallyEmitVTables
+parameter_list|()
 function_decl|;
 comment|/// Map used to be sure we don't emit the same CompoundLiteral twice.
 name|llvm
@@ -2071,6 +2048,16 @@ operator|*
 name|ObjCData
 return|;
 block|}
+comment|// Version checking function, used to implement ObjC's @available:
+comment|// i32 @__isOSVersionAtLeast(i32, i32, i32)
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|IsOSVersionAtLeastFn
+operator|=
+name|nullptr
+expr_stmt|;
 name|InstrProfStats
 modifier|&
 name|getPGOStats
@@ -3007,7 +2994,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Return the address space of the underlying global variable for D, as
+comment|/// Return the AST address space of the underlying global variable for D, as
 end_comment
 
 begin_comment
@@ -3019,7 +3006,23 @@ comment|/// space of D's type, but in CUDA, address spaces are associated with
 end_comment
 
 begin_comment
-comment|/// declarations, not types.
+comment|/// declarations, not types. If D is nullptr, return the default address
+end_comment
+
+begin_comment
+comment|/// space for global variable.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// For languages without explicit address spaces, if D has default address
+end_comment
+
+begin_comment
+comment|/// space, target-specific global or constant address space may be returned.
 end_comment
 
 begin_function_decl
@@ -3030,9 +3033,6 @@ specifier|const
 name|VarDecl
 modifier|*
 name|D
-parameter_list|,
-name|unsigned
-name|AddrSpace
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3953,7 +3953,7 @@ argument|llvm::FunctionType *Ty
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|llvm::AttributeSet ExtraAttrs = llvm::AttributeSet()
+argument|llvm::AttributeList ExtraAttrs = llvm::AttributeList()
 argument_list|,
 argument|bool Local = false
 argument_list|)
@@ -3975,7 +3975,7 @@ argument|llvm::FunctionType *Ty
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|llvm::AttributeSet ExtraAttrs =                                           llvm::AttributeSet()
+argument|llvm::AttributeList ExtraAttrs = llvm::AttributeList()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4519,41 +4519,124 @@ comment|/// contribute to the function attributes and calling convention.
 end_comment
 
 begin_comment
-comment|/// \param PAL [out] - On return, the attribute list to use.
+comment|/// \param Attrs [out] - On return, the attribute list to use.
 end_comment
 
 begin_comment
 comment|/// \param CallingConv [out] - On return, the LLVM calling convention to use.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|ConstructAttributeList
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 specifier|const
 name|CGFunctionInfo
-modifier|&
+operator|&
 name|Info
-parameter_list|,
+argument_list|,
 name|CGCalleeInfo
 name|CalleeInfo
-parameter_list|,
-name|AttributeListType
-modifier|&
-name|PAL
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|AttributeList
+operator|&
+name|Attrs
+argument_list|,
 name|unsigned
-modifier|&
+operator|&
 name|CallingConv
-parameter_list|,
+argument_list|,
 name|bool
 name|AttrOnCallSite
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Adds attributes to F according to our CodeGenOptions and LangOptions, as
+end_comment
+
+begin_comment
+comment|/// though we had emitted it ourselves.  We remove any attributes on F that
+end_comment
+
+begin_comment
+comment|/// conflict with the attributes we add here.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is useful for adding attrs to bitcode modules that you want to link
+end_comment
+
+begin_comment
+comment|/// with but don't control, such as CUDA's libdevice.  When linking with such
+end_comment
+
+begin_comment
+comment|/// a bitcode library, you might want to set e.g. its functions'
+end_comment
+
+begin_comment
+comment|/// "unsafe-fp-math" attribute to match the attr of the functions you're
+end_comment
+
+begin_comment
+comment|/// codegen'ing.  Otherwise, LLVM will interpret the bitcode module's lack of
+end_comment
+
+begin_comment
+comment|/// unsafe-fp-math attrs as tantamount to unsafe-fp-math=false, and then LLVM
+end_comment
+
+begin_comment
+comment|/// will propagate unsafe-fp-math=false up to every transitive caller of a
+end_comment
+
+begin_comment
+comment|/// function in the bitcode library!
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// With the exception of fast-math attrs, this will only make the attributes
+end_comment
+
+begin_comment
+comment|/// on the function more conservative.  But it's unsafe to call this on a
+end_comment
+
+begin_comment
+comment|/// function which relies on particular fast-math attributes for correctness.
+end_comment
+
+begin_comment
+comment|/// It's up to you to ensure that this is safe.
+end_comment
+
+begin_decl_stmt
+name|void
+name|AddDefaultFnAttrs
+argument_list|(
+name|llvm
+operator|::
+name|Function
+operator|&
+name|F
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// Fills in the supplied string map with the set of target features for the
@@ -4645,7 +4728,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Appends Opts to the "Linker Options" metadata value.
+comment|/// \brief Appends Opts to the "llvm.linker.options" metadata value.
 end_comment
 
 begin_function_decl
@@ -4676,7 +4759,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Appends a dependent lib to the "Linker Options" metadata value.
+comment|/// \brief Appends a dependent lib to the "llvm.linker.options" metadata
+end_comment
+
+begin_comment
+comment|/// value.
 end_comment
 
 begin_function_decl
@@ -4992,6 +5079,41 @@ name|Loc
 argument_list|,
 name|QualType
 name|Ty
+argument_list|,
+name|StringRef
+name|Category
+operator|=
+name|StringRef
+argument_list|()
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Imbue XRay attributes to a function, applying the always/never attribute
+end_comment
+
+begin_comment
+comment|/// lists in the process. Returns true if we did imbue attributes this way,
+end_comment
+
+begin_comment
+comment|/// false otherwise.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|imbueXRayAttrs
+argument_list|(
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|,
+name|SourceLocation
+name|Loc
 argument_list|,
 name|StringRef
 name|Category
@@ -5413,7 +5535,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \breif Get the declaration of std::terminate for the platform.
+comment|/// \brief Get the declaration of std::terminate for the platform.
 end_comment
 
 begin_expr_stmt
@@ -5505,7 +5627,7 @@ argument|bool DontDefer = false
 argument_list|,
 argument|bool IsThunk = false
 argument_list|,
-argument|llvm::AttributeSet ExtraAttrs = llvm::AttributeSet()
+argument|llvm::AttributeList ExtraAttrs = llvm::AttributeList()
 argument_list|,
 argument|ForDefinition_t IsForDefinition = NotForDefinition
 argument_list|)
@@ -5696,18 +5818,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|CompleteDIClassType
-parameter_list|(
-specifier|const
-name|CXXMethodDecl
-modifier|*
-name|D
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/// \brief Emit the function that initializes C++ thread_local variables.
 end_comment
@@ -5886,6 +5996,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Try to emit external vtables as available_externally if they have emitted
+end_comment
+
+begin_comment
+comment|/// all inlined virtual functions.  It runs after EmitDeferred() and therefore
+end_comment
+
+begin_comment
+comment|/// is not allowed to create new references to things that need to be emitted
+end_comment
+
+begin_comment
+comment|/// lazily.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitVTablesOpportunistically
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Call replaceAllUsesWith on all pairs in Replacements.
 end_comment
 
@@ -5921,6 +6054,21 @@ end_comment
 begin_function_decl
 name|void
 name|EmitDeferredVTables
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Emit a dummy function that reference a CoreFoundation symbol when
+end_comment
+
+begin_comment
+comment|/// @available is used on Darwin.
+end_comment
+
+begin_function_decl
+name|void
+name|emitAtAvailableLinkGuard
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -5987,6 +6135,17 @@ end_comment
 begin_function_decl
 name|void
 name|EmitTargetMetadata
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Emits OpenCL specific Metadata e.g. OpenCL version.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitOpenCLMetadata
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -6084,6 +6243,36 @@ name|SimplifyPersonality
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Helper function for ConstructAttributeList and AddDefaultFnAttrs.
+end_comment
+
+begin_comment
+comment|/// Constructs an AttrList for a function with the given properties.
+end_comment
+
+begin_decl_stmt
+name|void
+name|ConstructDefaultFnAttrList
+argument_list|(
+name|StringRef
+name|Name
+argument_list|,
+name|bool
+name|HasOptnone
+argument_list|,
+name|bool
+name|AttrOnCallSite
+argument_list|,
+name|llvm
+operator|::
+name|AttrBuilder
+operator|&
+name|FuncAttrs
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|}; }

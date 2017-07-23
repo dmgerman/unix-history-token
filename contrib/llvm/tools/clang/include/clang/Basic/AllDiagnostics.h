@@ -132,9 +132,8 @@ operator|>
 name|class
 name|StringSizerHelper
 block|{
-name|char
-name|FIELD_TOO_SMALL
-index|[
+name|static_assert
+argument_list|(
 name|SizeOfStr
 operator|<=
 name|FieldType
@@ -142,12 +141,9 @@ argument_list|(
 operator|~
 literal|0U
 argument_list|)
-operator|?
-literal|1
-operator|:
-operator|-
-literal|1
-index|]
+argument_list|,
+literal|"Field too small!"
+argument_list|)
 block|;
 name|public
 operator|:

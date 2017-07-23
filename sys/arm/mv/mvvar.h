@@ -462,6 +462,15 @@ end_function_decl
 
 begin_function_decl
 name|uint32_t
+name|get_cpu_freq
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
 name|get_l2clk
 parameter_list|(
 name|void

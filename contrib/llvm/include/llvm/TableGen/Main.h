@@ -64,26 +64,27 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|RecordKeeper
+name|raw_ostream
 decl_stmt|;
 name|class
-name|raw_ostream
-decl_stmt|;
-comment|/// \brief Perform the action using Records, and write output to OS.
-comment|/// \returns true on error, false otherwise
-typedef|typedef
-name|bool
-name|TableGenMainFn
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
 name|RecordKeeper
-modifier|&
+decl_stmt|;
+comment|/// Perform the action using Records, and write output to OS.
+comment|/// Returns true on error, false otherwise.
+name|using
+name|TableGenMainFn
+init|=
+name|bool
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|RecordKeeper
+operator|&
 name|Records
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|int
 name|TableGenMain
 parameter_list|(
@@ -99,10 +100,18 @@ function_decl|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TABLEGEN_MAIN_H
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2017, Intel Corporation   All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions are met:     1. Redistributions of source code must retain the above copyright notice,       this list of conditions and the following disclaimer.     2. Redistributions in binary form must reproduce the above copyright       notice, this list of conditions and the following disclaimer in the       documentation and/or other materials provided with the distribution.     3. Neither the name of the Intel Corporation nor the names of its       contributors may be used to endorse or promote products derived from       this software without specific prior written permission.    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -92,6 +92,24 @@ block|{
 name|IXGBE_MVALS_INIT
 argument_list|(
 argument|_X550EM_x
+argument_list|)
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u32
+name|ixgbe_mvals_X550EM_a
+index|[
+name|IXGBE_MVALS_IDX_LIMIT
+index|]
+init|=
+block|{
+name|IXGBE_MVALS_INIT
+argument_list|(
+argument|_X550EM_a
 argument_list|)
 block|}
 decl_stmt|;
@@ -227,27 +245,18 @@ name|ixgbe_mac_X550EM_x
 case|:
 name|status
 operator|=
-name|ixgbe_init_ops_X550EM
+name|ixgbe_init_ops_X550EM_x
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ixgbe_mac_82599_vf
-case|:
-case|case
-name|ixgbe_mac_X540_vf
-case|:
-case|case
-name|ixgbe_mac_X550_vf
-case|:
-case|case
-name|ixgbe_mac_X550EM_x_vf
+name|ixgbe_mac_X550EM_a
 case|:
 name|status
 operator|=
-name|ixgbe_init_ops_vf
+name|ixgbe_init_ops_X550EM_a
 argument_list|(
 name|hw
 argument_list|)
@@ -438,42 +447,6 @@ name|ixgbe_mac_82599EB
 expr_stmt|;
 break|break;
 case|case
-name|IXGBE_DEV_ID_82599_VF
-case|:
-case|case
-name|IXGBE_DEV_ID_82599_VF_HV
-case|:
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|=
-name|ixgbe_mac_82599_vf
-expr_stmt|;
-break|break;
-case|case
-name|IXGBE_DEV_ID_X540_VF
-case|:
-case|case
-name|IXGBE_DEV_ID_X540_VF_HV
-case|:
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|=
-name|ixgbe_mac_X540_vf
-expr_stmt|;
-name|hw
-operator|->
-name|mvals
-operator|=
-name|ixgbe_mvals_X540
-expr_stmt|;
-break|break;
-case|case
 name|IXGBE_DEV_ID_X540T
 case|:
 case|case
@@ -533,6 +506,9 @@ case|:
 case|case
 name|IXGBE_DEV_ID_X550EM_X_SFP
 case|:
+case|case
+name|IXGBE_DEV_ID_X550EM_X_XFI
+case|:
 name|hw
 operator|->
 name|mac
@@ -549,10 +525,37 @@ name|ixgbe_mvals_X550EM_x
 expr_stmt|;
 break|break;
 case|case
-name|IXGBE_DEV_ID_X550_VF
+name|IXGBE_DEV_ID_X550EM_A_KR
 case|:
 case|case
-name|IXGBE_DEV_ID_X550_VF_HV
+name|IXGBE_DEV_ID_X550EM_A_KR_L
+case|:
+case|case
+name|IXGBE_DEV_ID_X550EM_A_SFP_N
+case|:
+case|case
+name|IXGBE_DEV_ID_X550EM_A_SGMII
+case|:
+case|case
+name|IXGBE_DEV_ID_X550EM_A_SGMII_L
+case|:
+case|case
+name|IXGBE_DEV_ID_X550EM_A_1G_T
+case|:
+case|case
+name|IXGBE_DEV_ID_X550EM_A_1G_T_L
+case|:
+case|case
+name|IXGBE_DEV_ID_X550EM_A_10G_T
+case|:
+case|case
+name|IXGBE_DEV_ID_X550EM_A_QSFP
+case|:
+case|case
+name|IXGBE_DEV_ID_X550EM_A_QSFP_N
+case|:
+case|case
+name|IXGBE_DEV_ID_X550EM_A_SFP
 case|:
 name|hw
 operator|->
@@ -560,34 +563,13 @@ name|mac
 operator|.
 name|type
 operator|=
-name|ixgbe_mac_X550_vf
+name|ixgbe_mac_X550EM_a
 expr_stmt|;
 name|hw
 operator|->
 name|mvals
 operator|=
-name|ixgbe_mvals_X550
-expr_stmt|;
-break|break;
-case|case
-name|IXGBE_DEV_ID_X550EM_X_VF
-case|:
-case|case
-name|IXGBE_DEV_ID_X550EM_X_VF_HV
-case|:
-name|hw
-operator|->
-name|mac
-operator|.
-name|type
-operator|=
-name|ixgbe_mac_X550EM_x_vf
-expr_stmt|;
-name|hw
-operator|->
-name|mvals
-operator|=
-name|ixgbe_mvals_X550EM_x
+name|ixgbe_mvals_X550EM_a
 expr_stmt|;
 break|break;
 default|default:
@@ -3201,7 +3183,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_set_vfta - Set VLAN filter table  *  @hw: pointer to hardware structure  *  @vlan: VLAN id to write to VLAN filter  *  @vind: VMDq output index that maps queue to VLAN id in VFTA  *  @vlan_on: boolean flag to turn on/off VLAN in VFTA  *  *  Turn on/off specified VLAN in the VLAN filter table.  **/
+comment|/**  *  ixgbe_set_vfta - Set VLAN filter table  *  @hw: pointer to hardware structure  *  @vlan: VLAN id to write to VLAN filter  *  @vind: VMDq output index that maps queue to VLAN id in VLVFB  *  @vlan_on: boolean flag to turn on/off VLAN  *  @vlvf_bypass: boolean flag indicating updating the default pool is okay  *  *  Turn on/off specified VLAN in the VLAN filter table.  **/
 end_comment
 
 begin_function
@@ -3221,6 +3203,9 @@ name|vind
 parameter_list|,
 name|bool
 name|vlan_on
+parameter_list|,
+name|bool
+name|vlvf_bypass
 parameter_list|)
 block|{
 return|return
@@ -3244,6 +3229,8 @@ operator|,
 name|vind
 operator|,
 name|vlan_on
+operator|,
+name|vlvf_bypass
 operator|)
 argument_list|,
 name|IXGBE_NOT_IMPLEMENTED
@@ -3253,7 +3240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_set_vlvf - Set VLAN Pool Filter  *  @hw: pointer to hardware structure  *  @vlan: VLAN id to write to VLAN filter  *  @vind: VMDq output index that maps queue to VLAN id in VFVFB  *  @vlan_on: boolean flag to turn on/off VLAN in VFVF  *  @vfta_changed: pointer to boolean flag which indicates whether VFTA  *                 should be changed  *  *  Turn on/off specified bit in VLVF table.  **/
+comment|/**  *  ixgbe_set_vlvf - Set VLAN Pool Filter  *  @hw: pointer to hardware structure  *  @vlan: VLAN id to write to VLAN filter  *  @vind: VMDq output index that maps queue to VLAN id in VLVFB  *  @vlan_on: boolean flag to turn on/off VLAN in VLVF  *  @vfta_delta: pointer to the difference between the current value of VFTA  *		 and the desired value  *  @vfta: the desired value of the VFTA  *  @vlvf_bypass: boolean flag indicating updating the default pool is okay  *  *  Turn on/off specified bit in VLVF table.  **/
 end_comment
 
 begin_function
@@ -3274,9 +3261,15 @@ parameter_list|,
 name|bool
 name|vlan_on
 parameter_list|,
-name|bool
+name|u32
 modifier|*
-name|vfta_changed
+name|vfta_delta
+parameter_list|,
+name|u32
+name|vfta
+parameter_list|,
+name|bool
+name|vlvf_bypass
 parameter_list|)
 block|{
 return|return
@@ -3301,7 +3294,11 @@ name|vind
 operator|,
 name|vlan_on
 operator|,
-name|vfta_changed
+name|vfta_delta
+operator|,
+name|vfta
+operator|,
+name|vlvf_bypass
 operator|)
 argument_list|,
 name|IXGBE_NOT_IMPLEMENTED
@@ -3385,7 +3382,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ixgbe_set_fw_drv_ver - Try to send the driver version number FW  * @hw: pointer to hardware structure  * @maj: driver major number to be sent to firmware  * @min: driver minor number to be sent to firmware  * @build: driver build number to be sent to firmware  * @ver: driver version number to be sent to firmware  **/
+comment|/**  * ixgbe_set_fw_drv_ver - Try to send the driver version number FW  * @hw: pointer to hardware structure  * @maj: driver major number to be sent to firmware  * @min: driver minor number to be sent to firmware  * @build: driver build number to be sent to firmware  * @ver: driver version number to be sent to firmware  * @len: length of driver_ver string  * @driver_ver: driver string  **/
 end_comment
 
 begin_function
@@ -3408,6 +3405,13 @@ name|build
 parameter_list|,
 name|u8
 name|ver
+parameter_list|,
+name|u16
+name|len
+parameter_list|,
+name|char
+modifier|*
+name|driver_ver
 parameter_list|)
 block|{
 return|return
@@ -3433,6 +3437,10 @@ operator|,
 name|build
 operator|,
 name|ver
+operator|,
+name|len
+operator|,
+name|driver_ver
 operator|)
 argument_list|,
 name|IXGBE_NOT_IMPLEMENTED
@@ -4034,6 +4042,199 @@ block|}
 end_function
 
 begin_comment
+comment|/**  *  ixgbe_bypass_rw - Bit bang data into by_pass FW  *  @hw: pointer to hardware structure  *  @cmd: Command we send to the FW  *  @status: The reply from the FW  *  *  Bit-bangs the cmd to the by_pass FW status points to what is returned.  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_bypass_rw
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|cmd
+parameter_list|,
+name|u32
+modifier|*
+name|status
+parameter_list|)
+block|{
+return|return
+name|ixgbe_call_func
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|bypass_rw
+argument_list|,
+operator|(
+name|hw
+operator|,
+name|cmd
+operator|,
+name|status
+operator|)
+argument_list|,
+name|IXGBE_NOT_IMPLEMENTED
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * ixgbe_bypass_valid_rd - Verify valid return from bit-bang.  *  * If we send a write we can't be sure it took until we can read back  * that same register.  It can be a problem as some of the feilds may  * for valid reasons change inbetween the time wrote the register and  * we read it again to verify.  So this function check everything we  * can check and then assumes it worked.  *  * @u32 in_reg - The register cmd for the bit-bang read.  * @u32 out_reg - The register returned from a bit-bang read.  **/
+end_comment
+
+begin_function
+name|bool
+name|ixgbe_bypass_valid_rd
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|in_reg
+parameter_list|,
+name|u32
+name|out_reg
+parameter_list|)
+block|{
+return|return
+name|ixgbe_call_func
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|bypass_valid_rd
+argument_list|,
+operator|(
+name|in_reg
+operator|,
+name|out_reg
+operator|)
+argument_list|,
+name|IXGBE_NOT_IMPLEMENTED
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_bypass_set - Set a bypass field in the FW CTRL Regiter.  *  @hw: pointer to hardware structure  *  @cmd: The control word we are setting.  *  @event: The event we are setting in the FW.  This also happens to  *          be the mask for the event we are setting (handy)  *  @action: The action we set the event to in the FW. This is in a  *           bit field that happens to be what we want to put in  *           the event spot (also handy)  *  *  Writes to the cmd control the bits in actions.  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_bypass_set
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|cmd
+parameter_list|,
+name|u32
+name|event
+parameter_list|,
+name|u32
+name|action
+parameter_list|)
+block|{
+return|return
+name|ixgbe_call_func
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|bypass_set
+argument_list|,
+operator|(
+name|hw
+operator|,
+name|cmd
+operator|,
+name|event
+operator|,
+name|action
+operator|)
+argument_list|,
+name|IXGBE_NOT_IMPLEMENTED
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_bypass_rd_eep - Read the bypass FW eeprom address  *  @hw: pointer to hardware structure  *  @addr: The bypass eeprom address to read.  *  @value: The 8b of data at the address above.  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_bypass_rd_eep
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|addr
+parameter_list|,
+name|u8
+modifier|*
+name|value
+parameter_list|)
+block|{
+return|return
+name|ixgbe_call_func
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|bypass_rd_eep
+argument_list|,
+operator|(
+name|hw
+operator|,
+name|addr
+operator|,
+name|value
+operator|)
+argument_list|,
+name|IXGBE_NOT_IMPLEMENTED
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  *  ixgbe_read_analog_reg8 - Reads 8 bit analog register  *  @hw: pointer to hardware structure  *  @reg: analog register to read  *  @val: read value  *  *  Performs write operation to analog register specified.  **/
 end_comment
 
@@ -4272,12 +4473,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ixgbe_read_i2c_combined - Perform I2C read combined operation  * @hw: pointer to the hardware structure  * @addr: I2C bus address to read from  * @reg: I2C device register to read from  * @val: pointer to location to receive read value  *  * Returns an error code on error.  */
+comment|/**  * ixgbe_read_link - Perform read operation on link device  * @hw: pointer to the hardware structure  * @addr: bus address to read from  * @reg: device register to read from  * @val: pointer to location to receive read value  *  * Returns an error code on error.  */
 end_comment
 
 begin_function
 name|s32
-name|ixgbe_read_i2c_combined
+name|ixgbe_read_link
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -4302,11 +4503,11 @@ name|hw
 argument_list|,
 name|hw
 operator|->
-name|phy
+name|link
 operator|.
 name|ops
 operator|.
-name|read_i2c_combined
+name|read_link
 argument_list|,
 operator|(
 name|hw
@@ -4325,12 +4526,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ixgbe_read_i2c_combined_unlocked - Perform I2C read combined operation  * @hw: pointer to the hardware structure  * @addr: I2C bus address to read from  * @reg: I2C device register to read from  * @val: pointer to location to receive read value  *  * Returns an error code on error.  **/
+comment|/**  * ixgbe_read_link_unlocked - Perform read operation on link device  * @hw: pointer to the hardware structure  * @addr: bus address to read from  * @reg: device register to read from  * @val: pointer to location to receive read value  *  * Returns an error code on error.  **/
 end_comment
 
 begin_function
 name|s32
-name|ixgbe_read_i2c_combined_unlocked
+name|ixgbe_read_link_unlocked
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -4355,11 +4556,11 @@ name|hw
 argument_list|,
 name|hw
 operator|->
-name|phy
+name|link
 operator|.
 name|ops
 operator|.
-name|read_i2c_combined_unlocked
+name|read_link_unlocked
 argument_list|,
 operator|(
 name|hw
@@ -4482,12 +4683,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ixgbe_write_i2c_combined - Perform I2C write combined operation  * @hw: pointer to the hardware structure  * @addr: I2C bus address to write to  * @reg: I2C device register to write to  * @val: value to write  *  * Returns an error code on error.  */
+comment|/**  * ixgbe_write_link - Perform write operation on link device  * @hw: pointer to the hardware structure  * @addr: bus address to write to  * @reg: device register to write to  * @val: value to write  *  * Returns an error code on error.  */
 end_comment
 
 begin_function
 name|s32
-name|ixgbe_write_i2c_combined
+name|ixgbe_write_link
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -4511,11 +4712,11 @@ name|hw
 argument_list|,
 name|hw
 operator|->
-name|phy
+name|link
 operator|.
 name|ops
 operator|.
-name|write_i2c_combined
+name|write_link
 argument_list|,
 operator|(
 name|hw
@@ -4534,12 +4735,12 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * ixgbe_write_i2c_combined_unlocked - Perform I2C write combined operation  * @hw: pointer to the hardware structure  * @addr: I2C bus address to write to  * @reg: I2C device register to write to  * @val: value to write  *  * Returns an error code on error.  **/
+comment|/**  * ixgbe_write_link_unlocked - Perform write operation on link device  * @hw: pointer to the hardware structure  * @addr: bus address to write to  * @reg: device register to write to  * @val: value to write  *  * Returns an error code on error.  **/
 end_comment
 
 begin_function
 name|s32
-name|ixgbe_write_i2c_combined_unlocked
+name|ixgbe_write_link_unlocked
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -4563,11 +4764,11 @@ name|hw
 argument_list|,
 name|hw
 operator|->
-name|phy
+name|link
 operator|.
 name|ops
 operator|.
-name|write_i2c_combined_unlocked
+name|write_link_unlocked
 argument_list|,
 operator|(
 name|hw
@@ -4685,7 +4886,7 @@ comment|/**  *  ixgbe_get_supported_physical_layer - Returns physical layer type
 end_comment
 
 begin_function
-name|u32
+name|u64
 name|ixgbe_get_supported_physical_layer
 parameter_list|(
 name|struct
@@ -4913,6 +5114,44 @@ argument_list|(
 name|hw
 argument_list|,
 name|mask
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_init_swfw_semaphore - Clean up SWFW semaphore  *  @hw: pointer to hardware structure  *  *  Attempts to acquire the SWFW semaphore through SW_FW_SYNC register.  *  Regardless of whether is succeeds or not it then release the semaphore.  *  This is function is called to recover from catastrophic failures that  *  may have left the semaphore locked.  **/
+end_comment
+
+begin_function
+name|void
+name|ixgbe_init_swfw_semaphore
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|init_swfw_sync
+condition|)
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|init_swfw_sync
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 block|}

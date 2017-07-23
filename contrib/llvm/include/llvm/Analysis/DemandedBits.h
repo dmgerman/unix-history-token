@@ -94,12 +94,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/APInt.h"
 end_include
 
@@ -121,6 +115,12 @@ directive|include
 file|"llvm/IR/PassManager.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Pass.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -140,6 +140,9 @@ decl_stmt|;
 name|class
 name|AssumptionCache
 decl_stmt|;
+struct_decl|struct
+name|KnownBits
+struct_decl|;
 name|class
 name|DemandedBits
 block|{
@@ -249,21 +252,13 @@ name|APInt
 modifier|&
 name|AB
 parameter_list|,
-name|APInt
+name|KnownBits
 modifier|&
-name|KnownZero
+name|Known
 parameter_list|,
-name|APInt
+name|KnownBits
 modifier|&
-name|KnownOne
-parameter_list|,
-name|APInt
-modifier|&
-name|KnownZero2
-parameter_list|,
-name|APInt
-modifier|&
-name|KnownOne2
+name|Known2
 parameter_list|)
 function_decl|;
 name|bool

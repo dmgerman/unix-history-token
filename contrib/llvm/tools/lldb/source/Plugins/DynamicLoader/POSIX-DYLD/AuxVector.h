@@ -146,168 +146,169 @@ block|}
 struct|;
 comment|/// Constants describing the type of entry.
 comment|/// On Linux, running "LD_SHOW_AUXV=1 ./executable" will spew AUX information.
+comment|/// Added AUXV prefix to avoid potential conflicts with system-defined macros
 enum|enum
 name|EntryType
 block|{
-name|AT_NULL
+name|AUXV_AT_NULL
 init|=
 literal|0
 block|,
 comment|///< End of auxv.
-name|AT_IGNORE
+name|AUXV_AT_IGNORE
 init|=
 literal|1
 block|,
 comment|///< Ignore entry.
-name|AT_EXECFD
+name|AUXV_AT_EXECFD
 init|=
 literal|2
 block|,
 comment|///< File descriptor of program.
-name|AT_PHDR
+name|AUXV_AT_PHDR
 init|=
 literal|3
 block|,
 comment|///< Program headers.
-name|AT_PHENT
+name|AUXV_AT_PHENT
 init|=
 literal|4
 block|,
 comment|///< Size of program header.
-name|AT_PHNUM
+name|AUXV_AT_PHNUM
 init|=
 literal|5
 block|,
 comment|///< Number of program headers.
-name|AT_PAGESZ
+name|AUXV_AT_PAGESZ
 init|=
 literal|6
 block|,
 comment|///< Page size.
-name|AT_BASE
+name|AUXV_AT_BASE
 init|=
 literal|7
 block|,
 comment|///< Interpreter base address.
-name|AT_FLAGS
+name|AUXV_AT_FLAGS
 init|=
 literal|8
 block|,
 comment|///< Flags.
-name|AT_ENTRY
+name|AUXV_AT_ENTRY
 init|=
 literal|9
 block|,
 comment|///< Program entry point.
-name|AT_NOTELF
+name|AUXV_AT_NOTELF
 init|=
 literal|10
 block|,
 comment|///< Set if program is not an ELF.
-name|AT_UID
+name|AUXV_AT_UID
 init|=
 literal|11
 block|,
 comment|///< UID.
-name|AT_EUID
+name|AUXV_AT_EUID
 init|=
 literal|12
 block|,
 comment|///< Effective UID.
-name|AT_GID
+name|AUXV_AT_GID
 init|=
 literal|13
 block|,
 comment|///< GID.
-name|AT_EGID
+name|AUXV_AT_EGID
 init|=
 literal|14
 block|,
 comment|///< Effective GID.
-name|AT_CLKTCK
+name|AUXV_AT_CLKTCK
 init|=
 literal|17
 block|,
 comment|///< Clock frequency (e.g. times(2)).
-name|AT_PLATFORM
+name|AUXV_AT_PLATFORM
 init|=
 literal|15
 block|,
 comment|///< String identifying platform.
-name|AT_HWCAP
+name|AUXV_AT_HWCAP
 init|=
 literal|16
 block|,
 comment|///< Machine dependent hints about processor capabilities.
-name|AT_FPUCW
+name|AUXV_AT_FPUCW
 init|=
 literal|18
 block|,
 comment|///< Used FPU control word.
-name|AT_DCACHEBSIZE
+name|AUXV_AT_DCACHEBSIZE
 init|=
 literal|19
 block|,
 comment|///< Data cache block size.
-name|AT_ICACHEBSIZE
+name|AUXV_AT_ICACHEBSIZE
 init|=
 literal|20
 block|,
 comment|///< Instruction cache block size.
-name|AT_UCACHEBSIZE
+name|AUXV_AT_UCACHEBSIZE
 init|=
 literal|21
 block|,
 comment|///< Unified cache block size.
-name|AT_IGNOREPPC
+name|AUXV_AT_IGNOREPPC
 init|=
 literal|22
 block|,
 comment|///< Entry should be ignored.
-name|AT_SECURE
+name|AUXV_AT_SECURE
 init|=
 literal|23
 block|,
 comment|///< Boolean, was exec setuid-like?
-name|AT_BASE_PLATFORM
+name|AUXV_AT_BASE_PLATFORM
 init|=
 literal|24
 block|,
 comment|///< String identifying real platforms.
-name|AT_RANDOM
+name|AUXV_AT_RANDOM
 init|=
 literal|25
 block|,
 comment|///< Address of 16 random bytes.
-name|AT_EXECFN
+name|AUXV_AT_EXECFN
 init|=
 literal|31
 block|,
 comment|///< Filename of executable.
-name|AT_SYSINFO
+name|AUXV_AT_SYSINFO
 init|=
 literal|32
 block|,
 comment|///< Pointer to the global system page used for system
 comment|///calls and other nice things.
-name|AT_SYSINFO_EHDR
+name|AUXV_AT_SYSINFO_EHDR
 init|=
 literal|33
 block|,
-name|AT_L1I_CACHESHAPE
+name|AUXV_AT_L1I_CACHESHAPE
 init|=
 literal|34
 block|,
 comment|///< Shapes of the caches.
-name|AT_L1D_CACHESHAPE
+name|AUXV_AT_L1D_CACHESHAPE
 init|=
 literal|35
 block|,
-name|AT_L2_CACHESHAPE
+name|AUXV_AT_L2_CACHESHAPE
 init|=
 literal|36
 block|,
-name|AT_L3_CACHESHAPE
+name|AUXV_AT_L3_CACHESHAPE
 init|=
 literal|37
 block|,   }

@@ -154,9 +154,9 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__STDC_VERSION__
+name|__ISO_C_VISIBLE
 operator|>=
-literal|201112L
+literal|2011
 operator|||
 name|__cplusplus
 operator|>=

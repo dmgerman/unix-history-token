@@ -232,6 +232,9 @@ parameter_list|,
 name|arena_t
 modifier|*
 name|arena
+parameter_list|,
+name|bool
+name|is_background_thread
 parameter_list|)
 block|{
 if|if
@@ -239,6 +242,8 @@ condition|(
 operator|!
 name|background_thread_enabled
 argument_list|()
+operator|||
+name|is_background_thread
 condition|)
 block|{
 return|return;

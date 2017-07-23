@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2009, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -61,6 +61,9 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+struct_decl|struct
+name|abd
+struct_decl|;
 comment|/*  * On-disk DDT formats, in the desired search order (newest version first).  */
 enum|enum
 name|ddt_type
@@ -232,9 +235,10 @@ index|[
 name|DDT_PHYS_TYPES
 index|]
 decl_stmt|;
-name|void
+name|struct
+name|abd
 modifier|*
-name|dde_repair_data
+name|dde_repair_abd
 decl_stmt|;
 name|enum
 name|ddt_type

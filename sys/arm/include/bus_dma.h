@@ -29,6 +29,12 @@ directive|include
 file|<sys/bus_dma.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/bus_dma_internal.h>
+end_include
+
 begin_comment
 comment|/* Bus Space DMA macros */
 end_comment

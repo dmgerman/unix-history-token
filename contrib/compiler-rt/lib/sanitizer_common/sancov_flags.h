@@ -122,6 +122,14 @@ name|void
 name|InitializeSancovFlags
 parameter_list|()
 function_decl|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace __sancov
+end_comment
+
+begin_extern
 extern|extern
 literal|"C"
 name|SANITIZER_INTERFACE_ATTRIBUTE
@@ -132,12 +140,7 @@ modifier|*
 name|__sancov_default_options
 parameter_list|()
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// namespace __sancov
-end_comment
+end_extern
 
 begin_endif
 endif|#

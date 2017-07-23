@@ -91,31 +91,13 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
-name|DataLayout
-decl_stmt|;
-name|class
-name|TargetRegisterClass
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
-name|class
 name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
-name|TargetFrameLowering
-decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
-name|class
 name|BitVector
-decl_stmt|;
-name|class
-name|Value
 decl_stmt|;
 name|class
 name|AllocaInst
@@ -499,7 +481,8 @@ comment|/// It is only valid during and after prolog/epilog code insertion.
 name|unsigned
 name|MaxCallFrameSize
 init|=
-literal|0
+operator|~
+literal|0u
 decl_stmt|;
 comment|/// The prolog/epilog code inserter fills in this vector with each
 comment|/// callee saved register saved in the frame.  Beyond its use by the prolog/
@@ -1755,6 +1738,21 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+comment|/// Computes the maximum size of a callframe and the AdjustsStack property.
+comment|/// This only works for targets defining
+comment|/// TargetInstrInfo::getCallFrameSetupOpcode(), getCallFrameDestroyOpcode(),
+comment|/// and getFrameSize().
+comment|/// This is usually computed by the prologue epilogue inserter but some
+comment|/// targets may call this to compute it earlier.
+name|void
+name|computeMaxCallFrameSize
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|)
+function_decl|;
 comment|/// Return the maximum size of a call frame that must be
 comment|/// allocated for an outgoing function call.  This is only available if
 comment|/// CallFrameSetup/Destroy pseudo instructions are used by the target, and
@@ -1765,8 +1763,31 @@ name|getMaxCallFrameSize
 argument_list|()
 specifier|const
 block|{
+comment|// TODO: Enable this assert when targets are fixed.
+comment|//assert(isMaxCallFrameSizeComputed()&& "MaxCallFrameSize not computed yet");
+if|if
+condition|(
+operator|!
+name|isMaxCallFrameSizeComputed
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
 return|return
 name|MaxCallFrameSize
+return|;
+block|}
+name|bool
+name|isMaxCallFrameSizeComputed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxCallFrameSize
+operator|!=
+operator|~
+literal|0u
 return|;
 block|}
 name|void
@@ -1883,8 +1904,7 @@ operator|.
 name|isAliased
 return|;
 block|}
-comment|/// isImmutableObjectIndex - Returns true if the specified index corresponds
-comment|/// to an immutable object.
+comment|/// Returns true if the specified index corresponds to an immutable object.
 name|bool
 name|isImmutableObjectIndex
 argument_list|(
@@ -1928,6 +1948,46 @@ index|]
 operator|.
 name|isImmutable
 return|;
+block|}
+comment|/// Marks the immutability of an object.
+name|void
+name|setIsImmutableObjectIndex
+parameter_list|(
+name|int
+name|ObjectIdx
+parameter_list|,
+name|bool
+name|Immutable
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isImmutable
+operator|=
+name|Immutable
+expr_stmt|;
 block|}
 comment|/// Returns true if the specified index corresponds to a spill slot.
 name|bool
@@ -2351,11 +2411,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

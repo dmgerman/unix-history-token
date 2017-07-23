@@ -82,6 +82,9 @@ name|VariantKind
 block|{
 name|VK_NVPTX_None
 block|,
+name|VK_NVPTX_HALF_PREC_FLOAT
+block|,
+comment|// FP constant in half-precision
 name|VK_NVPTX_SINGLE_PREC_FLOAT
 block|,
 comment|// FP constant in single-precision
@@ -134,6 +137,28 @@ argument_list|,
 argument|MCContext&Ctx
 argument_list|)
 block|;
+specifier|static
+specifier|const
+name|NVPTXFloatMCExpr
+operator|*
+name|createConstantFPHalf
+argument_list|(
+argument|const APFloat&Flt
+argument_list|,
+argument|MCContext&Ctx
+argument_list|)
+block|{
+return|return
+name|create
+argument_list|(
+name|VK_NVPTX_HALF_PREC_FLOAT
+argument_list|,
+name|Flt
+argument_list|,
+name|Ctx
+argument_list|)
+return|;
+block|}
 specifier|static
 specifier|const
 name|NVPTXFloatMCExpr

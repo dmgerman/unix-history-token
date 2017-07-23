@@ -1189,18 +1189,6 @@ name|IsCPPOperatorKeyword
 operator|=
 name|Val
 expr_stmt|;
-if|if
-condition|(
-name|Val
-condition|)
-name|NeedsHandleIdentifier
-operator|=
-name|true
-expr_stmt|;
-else|else
-name|RecomputeNeedsHandleIdentifier
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -1220,17 +1208,39 @@ begin_comment
 comment|/// \brief Return true if this token is a keyword in the specified language.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|bool
 name|isKeyword
-parameter_list|(
+argument_list|(
 specifier|const
 name|LangOptions
-modifier|&
+operator|&
 name|LangOpts
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Return true if this token is a C++ keyword in the specified
+end_comment
+
+begin_comment
+comment|/// language.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isCPlusPlusKeyword
+argument_list|(
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// getFETokenInfo/setFETokenInfo - The language front-end is allowed to
@@ -1528,6 +1538,68 @@ block|}
 end_function
 
 begin_comment
+comment|/// Return true if this identifier is an editor placeholder.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Editor placeholders are produced by the code-completion engine and are
+end_comment
+
+begin_comment
+comment|/// represented as characters between '<#' and '#>' in the source code. An
+end_comment
+
+begin_comment
+comment|/// example of auto-completed call with a placeholder parameter is shown
+end_comment
+
+begin_comment
+comment|/// below:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|///   function(<#int x#>);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isEditorPlaceholder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getName
+argument_list|()
+operator|.
+name|startswith
+argument_list|(
+literal|"<#"
+argument_list|)
+operator|&&
+name|getName
+argument_list|()
+operator|.
+name|endswith
+argument_list|(
+literal|"#>"
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Provide less than operator for lexicographical sorting.
 end_comment
 
@@ -1591,19 +1663,15 @@ parameter_list|()
 block|{
 name|NeedsHandleIdentifier
 operator|=
-operator|(
 name|isPoisoned
 argument_list|()
-operator||
+operator|||
 name|hasMacroDefinition
 argument_list|()
-operator||
-name|isCPlusPlusOperatorKeyword
-argument_list|()
-operator||
+operator|||
 name|isExtensionToken
 argument_list|()
-operator||
+operator|||
 name|isFutureCompatKeyword
 argument_list|()
 operator|||
@@ -1612,7 +1680,6 @@ argument_list|()
 operator|||
 name|isModulesImport
 argument_list|()
-operator|)
 expr_stmt|;
 block|}
 end_function
@@ -3325,6 +3392,8 @@ value|CXXOperator##Name,
 include|#
 directive|include
 file|"clang/Basic/OperatorKinds.def"
+name|CXXDeductionGuide
+block|,
 name|CXXLiteralOperator
 block|,
 name|CXXUsingDirective

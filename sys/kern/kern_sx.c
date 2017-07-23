@@ -1364,6 +1364,9 @@ name|kdb_active
 operator|!=
 literal|0
 operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
+operator|||
 operator|!
 name|TD_IS_IDLETHREAD
 argument_list|(
@@ -1604,7 +1607,7 @@ operator|||
 operator|!
 name|TD_IS_IDLETHREAD
 argument_list|(
-name|curthread
+name|td
 argument_list|)
 argument_list|,
 operator|(
@@ -4863,6 +4866,9 @@ argument_list|(
 name|kdb_active
 operator|!=
 literal|0
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 operator|||
 operator|!
 name|TD_IS_IDLETHREAD

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/SelectionDAG.h - InstSelection DAG ---------*- C++ -*-===//
+comment|//===- llvm/CodeGen/SelectionDAG.h - InstSelection DAG ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,13 +66,49 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/APFloat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/APInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -90,6 +126,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/AliasAnalysis.h"
 end_include
 
@@ -102,7 +150,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/ISDOpcodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineMemOperand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
@@ -114,7 +180,61 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/ValueTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ArrayRecycler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/AtomicOrdering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -126,13 +246,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
 end_include
 
 begin_include
@@ -150,6 +282,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<tuple>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -158,22 +302,64 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|BlockAddress
+decl_stmt|;
+name|class
+name|Constant
+decl_stmt|;
+name|class
+name|ConstantFP
+decl_stmt|;
+name|class
+name|ConstantInt
+decl_stmt|;
+name|class
+name|DataLayout
+decl_stmt|;
+struct_decl|struct
+name|fltSemantics
+struct_decl|;
+name|class
+name|GlobalValue
+decl_stmt|;
+struct_decl|struct
+name|KnownBits
+struct_decl|;
+name|class
+name|LLVMContext
+decl_stmt|;
+name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
 name|MachineConstantPoolValue
 decl_stmt|;
 name|class
-name|MachineFunction
+name|MCSymbol
 decl_stmt|;
 name|class
-name|MDNode
+name|OptimizationRemarkEmitter
 decl_stmt|;
 name|class
 name|SDDbgValue
 decl_stmt|;
 name|class
-name|TargetLowering
+name|SelectionDAG
 decl_stmt|;
 name|class
 name|SelectionDAGTargetInfo
+decl_stmt|;
+name|class
+name|TargetLowering
+decl_stmt|;
+name|class
+name|TargetMachine
+decl_stmt|;
+name|class
+name|TargetSubtargetInfo
+decl_stmt|;
+name|class
+name|Value
 decl_stmt|;
 name|class
 name|SDVTListNode
@@ -400,36 +586,32 @@ literal|32
 operator|>
 name|ByvalParmDbgValues
 block|;
-typedef|typedef
+name|using
+name|DbgValMapType
+operator|=
 name|DenseMap
 operator|<
 specifier|const
 name|SDNode
 operator|*
-operator|,
+block|,
 name|SmallVector
 operator|<
 name|SDDbgValue
 operator|*
-operator|,
+block|,
 literal|2
-operator|>
-expr|>
-name|DbgValMapType
-expr_stmt|;
+operator|>>
+block|;
 name|DbgValMapType
 name|DbgValMap
 block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
+name|public
+operator|:
 name|SDDbgInfo
-operator|&
-operator|)
+argument_list|()
 operator|=
-name|delete
+expr|default
 block|;
 name|SDDbgInfo
 argument_list|(
@@ -440,11 +622,18 @@ argument_list|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 name|SDDbgInfo
-argument_list|()
-block|{}
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|SDDbgInfo
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 name|void
 name|add
 argument_list|(
@@ -495,42 +684,41 @@ comment|/// \brief Invalidate all DbgValues attached to the node and remove
 comment|/// it from the Node-to-DbgValues map.
 name|void
 name|erase
-parameter_list|(
+argument_list|(
 specifier|const
 name|SDNode
-modifier|*
+operator|*
 name|Node
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|clear
-parameter_list|()
+argument_list|()
 block|{
 name|DbgValMap
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
+block|;
 name|DbgValues
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
+block|;
 name|ByvalParmDbgValues
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
+block|;
 name|Alloc
 operator|.
 name|Reset
 argument_list|()
-expr_stmt|;
-block|}
+block|;   }
 name|BumpPtrAllocator
-modifier|&
+operator|&
 name|getAlloc
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Alloc
@@ -599,10 +787,9 @@ operator|(
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
+name|using
+name|DbgIterator
+init|=
 name|SmallVectorImpl
 operator|<
 name|SDDbgValue
@@ -610,11 +797,7 @@ operator|*
 operator|>
 operator|::
 name|iterator
-name|DbgIterator
-expr_stmt|;
-end_typedef
-
-begin_function
+decl_stmt|;
 name|DbgIterator
 name|DbgBegin
 parameter_list|()
@@ -626,9 +809,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|DbgIterator
 name|DbgEnd
 parameter_list|()
@@ -640,9 +820,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|DbgIterator
 name|ByvalParmDbgBegin
 parameter_list|()
@@ -654,9 +831,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|DbgIterator
 name|ByvalParmDbgEnd
 parameter_list|()
@@ -668,14 +842,12 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_decl_stmt
-unit|};
-name|class
-name|SelectionDAG
-decl_stmt|;
+block|}
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -751,11 +923,15 @@ specifier|const
 name|SelectionDAGTargetInfo
 modifier|*
 name|TSI
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|TargetLowering
 modifier|*
 name|TLI
+init|=
+name|nullptr
 decl_stmt|;
 name|MachineFunction
 modifier|*
@@ -770,6 +946,12 @@ operator|::
 name|Level
 name|OptLevel
 expr_stmt|;
+comment|/// The function-level optimization remark emitter.  Used to emit remarks
+comment|/// whenever manipulating the DAG.
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
+decl_stmt|;
 comment|/// The starting token.
 name|SDNode
 name|EntryNode
@@ -787,25 +969,25 @@ name|AllNodes
 expr_stmt|;
 comment|/// The AllocatorType for allocating SDNodes. We use
 comment|/// pool allocation with recycling.
-typedef|typedef
+name|using
+name|NodeAllocatorType
+init|=
 name|RecyclingAllocator
 operator|<
 name|BumpPtrAllocator
-operator|,
+decl_stmt|,
 name|SDNode
-operator|,
-sizeof|sizeof
+decl_stmt|,                                                sizeof
 argument_list|(
 name|LargestSDNode
 argument_list|)
-operator|,
+decl_stmt|,
 name|alignof
 argument_list|(
 name|MostAlignedSDNode
 argument_list|)
-operator|>
-name|NodeAllocatorType
-expr_stmt|;
+decl|>
+decl_stmt|;
 comment|/// Pool allocation for nodes.
 name|NodeAllocatorType
 name|NodeAllocator
@@ -987,7 +1169,7 @@ argument_list|)
 block|,
 name|Callback
 argument_list|(
-argument|Callback
+argument|std::move(Callback)
 argument_list|)
 block|{}
 name|void
@@ -1015,6 +1197,8 @@ comment|/// any illegally typed nodes generated after this point will not experi
 comment|/// type legalization.
 name|bool
 name|NewNodesMustHaveLegalTypes
+init|=
+name|false
 decl_stmt|;
 name|private
 label|:
@@ -1028,6 +1212,8 @@ comment|/// This stack is maintained by DAGUpdateListener RAII.
 name|DAGUpdateListener
 modifier|*
 name|UpdateListeners
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// Implementation of setSubgraphColor.
 comment|/// Return whether we had to truncate the search.
@@ -1311,26 +1497,6 @@ operator|=
 name|nullptr
 expr_stmt|;
 block|}
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|SelectionDAG
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-name|SelectionDAG
-argument_list|(
-specifier|const
-name|SelectionDAG
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
 name|public
 label|:
 name|explicit
@@ -1341,12 +1507,31 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
-name|llvm
-operator|::
 name|CodeGenOpt
 operator|::
 name|Level
 argument_list|)
+decl_stmt|;
+name|SelectionDAG
+argument_list|(
+specifier|const
+name|SelectionDAG
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|SelectionDAG
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|SelectionDAG
+operator|&
+operator|)
+operator|=
+name|delete
 decl_stmt|;
 operator|~
 name|SelectionDAG
@@ -1358,7 +1543,11 @@ name|init
 parameter_list|(
 name|MachineFunction
 modifier|&
-name|mf
+name|NewMF
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|&
+name|NewORE
 parameter_list|)
 function_decl|;
 comment|/// Clear state and free memory necessary to make this
@@ -1449,6 +1638,17 @@ specifier|const
 block|{
 return|return
 name|Context
+return|;
+block|}
+name|OptimizationRemarkEmitter
+operator|&
+name|getORE
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|ORE
 return|;
 block|}
 comment|/// Pop up a GraphViz/gv window with the DAG rendered using 'dot'.
@@ -1548,15 +1748,16 @@ modifier|*
 name|Color
 parameter_list|)
 function_decl|;
-typedef|typedef
+name|using
+name|allnodes_const_iterator
+init|=
 name|ilist
 operator|<
 name|SDNode
 operator|>
 operator|::
 name|const_iterator
-name|allnodes_const_iterator
-expr_stmt|;
+decl_stmt|;
 name|allnodes_const_iterator
 name|allnodes_begin
 argument_list|()
@@ -1581,15 +1782,16 @@ name|end
 argument_list|()
 return|;
 block|}
-typedef|typedef
+name|using
+name|allnodes_iterator
+init|=
 name|ilist
 operator|<
 name|SDNode
 operator|>
 operator|::
 name|iterator
-name|allnodes_iterator
-expr_stmt|;
+decl_stmt|;
 name|allnodes_iterator
 name|allnodes_begin
 parameter_list|()
@@ -1782,7 +1984,7 @@ name|CombineLevel
 name|Level
 argument_list|,
 name|AliasAnalysis
-operator|&
+operator|*
 name|AA
 argument_list|,
 name|CodeGenOpt
@@ -1937,7 +2139,6 @@ argument_list|)
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Node creation methods.
-comment|//
 comment|/// \brief Create a ConstantSDNode wrapping a constant value.
 comment|/// If VT is a vector type, the constant is splatted into a BUILD_VECTOR.
 comment|///
@@ -1996,6 +2197,51 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+name|SDValue
+name|getAllOnesConstant
+parameter_list|(
+specifier|const
+name|SDLoc
+modifier|&
+name|DL
+parameter_list|,
+name|EVT
+name|VT
+parameter_list|,
+name|bool
+name|IsTarget
+init|=
+name|false
+parameter_list|,
+name|bool
+name|IsOpaque
+init|=
+name|false
+parameter_list|)
+block|{
+return|return
+name|getConstant
+argument_list|(
+name|APInt
+operator|::
+name|getAllOnesValue
+argument_list|(
+name|VT
+operator|.
+name|getScalarSizeInBits
+argument_list|()
+argument_list|)
+argument_list|,
+name|DL
+argument_list|,
+name|VT
+argument_list|,
+name|IsTarget
+argument_list|,
+name|IsOpaque
+argument_list|)
+return|;
+block|}
 name|SDValue
 name|getConstant
 parameter_list|(
@@ -3265,6 +3511,44 @@ name|Ops
 argument_list|)
 return|;
 block|}
+comment|/// Return an ISD::BUILD_VECTOR node. The number of elements in VT,
+comment|/// which must be a vector type, must match the number of operands in Ops.
+comment|/// The operands must have the same type as (or, for integers, a type wider
+comment|/// than) VT's element type.
+name|SDValue
+name|getBuildVector
+argument_list|(
+name|EVT
+name|VT
+argument_list|,
+specifier|const
+name|SDLoc
+operator|&
+name|DL
+argument_list|,
+name|ArrayRef
+operator|<
+name|SDUse
+operator|>
+name|Ops
+argument_list|)
+block|{
+comment|// VerifySDNode (via InsertNode) checks BUILD_VECTOR later.
+return|return
+name|getNode
+argument_list|(
+name|ISD
+operator|::
+name|BUILD_VECTOR
+argument_list|,
+name|DL
+argument_list|,
+name|VT
+argument_list|,
+name|Ops
+argument_list|)
+return|;
+block|}
 comment|/// Return a splat ISD::BUILD_VECTOR node, consisting of Op splatted to all
 comment|/// elements. VT must be a vector type. Op's type must be the same as (or,
 comment|/// for integers, a type wider than) VT's element type.
@@ -3390,6 +3674,23 @@ specifier|const
 name|ShuffleVectorSDNode
 modifier|&
 name|SV
+parameter_list|)
+function_decl|;
+comment|/// Convert Op, which must be of float type, to the
+comment|/// float type VT, by either extending or rounding (by truncation).
+name|SDValue
+name|getFPExtendOrRound
+parameter_list|(
+name|SDValue
+name|Op
+parameter_list|,
+specifier|const
+name|SDLoc
+modifier|&
+name|DL
+parameter_list|,
+name|EVT
+name|VT
 parameter_list|)
 function_decl|;
 comment|/// Convert Op, which must be of integer type, to the
@@ -3570,16 +3871,20 @@ name|EVT
 name|VT
 parameter_list|)
 function_decl|;
-comment|/// Return a new CALLSEQ_START node, which always must have a glue result
-comment|/// (to ensure it's not CSE'd).  CALLSEQ_START does not have a useful SDLoc.
+comment|/// Return a new CALLSEQ_START node, that starts new call frame, in which
+comment|/// InSize bytes are set up inside CALLSEQ_START..CALLSEQ_END sequence and
+comment|/// OutSize specifies part of the frame set up prior to the sequence.
 name|SDValue
 name|getCALLSEQ_START
 parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
-name|SDValue
-name|Op
+name|uint64_t
+name|InSize
+parameter_list|,
+name|uint64_t
+name|OutSize
 parameter_list|,
 specifier|const
 name|SDLoc
@@ -3608,7 +3913,23 @@ init|=
 block|{
 name|Chain
 block|,
-name|Op
+name|getIntPtrConstant
+argument_list|(
+name|InSize
+argument_list|,
+name|DL
+argument_list|,
+name|true
+argument_list|)
+block|,
+name|getIntPtrConstant
+argument_list|(
+argument|OutSize
+argument_list|,
+argument|DL
+argument_list|,
+argument|true
+argument_list|)
 block|}
 decl_stmt|;
 return|return
@@ -3722,6 +4043,20 @@ name|Ops
 argument_list|)
 return|;
 block|}
+comment|/// Return true if the result of this operation is always undefined.
+name|bool
+name|isUndef
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|ArrayRef
+operator|<
+name|SDValue
+operator|>
+name|Ops
+argument_list|)
+decl_stmt|;
 comment|/// Return an UNDEF node. UNDEF does not have a useful SDLoc.
 name|SDValue
 name|getUNDEF
@@ -3811,10 +4146,10 @@ name|Ops
 argument_list|,
 specifier|const
 name|SDNodeFlags
-operator|*
 name|Flags
 operator|=
-name|nullptr
+name|SDNodeFlags
+argument_list|()
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -3894,6 +4229,13 @@ name|VT
 parameter_list|,
 name|SDValue
 name|N
+parameter_list|,
+specifier|const
+name|SDNodeFlags
+name|Flags
+init|=
+name|SDNodeFlags
+argument_list|()
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -3918,10 +4260,10 @@ name|N2
 parameter_list|,
 specifier|const
 name|SDNodeFlags
-modifier|*
 name|Flags
 init|=
-name|nullptr
+name|SDNodeFlags
+argument_list|()
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -4535,49 +4877,51 @@ comment|/// chain result. ISD::ATOMIC_CMP_SWAP_WITH_SUCCESS produces the value l
 comment|/// a success flag (initially i1), and a chain.
 name|SDValue
 name|getAtomicCmpSwap
-parameter_list|(
+argument_list|(
 name|unsigned
 name|Opcode
-parameter_list|,
+argument_list|,
 specifier|const
 name|SDLoc
-modifier|&
+operator|&
 name|dl
-parameter_list|,
+argument_list|,
 name|EVT
 name|MemVT
-parameter_list|,
+argument_list|,
 name|SDVTList
 name|VTs
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Chain
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Ptr
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Cmp
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Swp
-parameter_list|,
+argument_list|,
 name|MachinePointerInfo
 name|PtrInfo
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Alignment
-parameter_list|,
+argument_list|,
 name|AtomicOrdering
 name|SuccessOrdering
-parameter_list|,
+argument_list|,
 name|AtomicOrdering
 name|FailureOrdering
-parameter_list|,
-name|SynchronizationScope
-name|SynchScope
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+argument_list|)
+decl_stmt|;
 name|SDValue
 name|getAtomicCmpSwap
 parameter_list|(
@@ -4616,42 +4960,44 @@ comment|/// Gets a node for an atomic op, produces result (if relevant)
 comment|/// and chain and takes 2 operands.
 name|SDValue
 name|getAtomic
-parameter_list|(
+argument_list|(
 name|unsigned
 name|Opcode
-parameter_list|,
+argument_list|,
 specifier|const
 name|SDLoc
-modifier|&
+operator|&
 name|dl
-parameter_list|,
+argument_list|,
 name|EVT
 name|MemVT
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Chain
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Ptr
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Val
-parameter_list|,
+argument_list|,
 specifier|const
 name|Value
-modifier|*
+operator|*
 name|PtrVal
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Alignment
-parameter_list|,
+argument_list|,
 name|AtomicOrdering
 name|Ordering
-parameter_list|,
-name|SynchronizationScope
-name|SynchScope
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+argument_list|)
+decl_stmt|;
 name|SDValue
 name|getAtomic
 parameter_list|(
@@ -5909,6 +6255,18 @@ operator|>
 name|Ops
 argument_list|)
 decl_stmt|;
+comment|/// Mutate the specified strict FP node to its non-strict equivalent,
+comment|/// unlinking the node from its chain and dropping the metadata arguments.
+comment|/// The node must be a strict FP node.
+name|SDNode
+modifier|*
+name|mutateStrictFPToFP
+parameter_list|(
+name|SDNode
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
 comment|/// These are used for target selectors to create a new node
 comment|/// with specified return type(s), MachineInstr opcode, and operands.
 comment|///
@@ -6291,10 +6649,10 @@ name|Ops
 argument_list|,
 specifier|const
 name|SDNodeFlags
-operator|*
 name|Flags
 operator|=
-name|nullptr
+name|SDNodeFlags
+argument_list|()
 argument_list|)
 decl_stmt|;
 comment|/// Creates a SDDbgValue node.
@@ -6497,6 +6855,21 @@ name|unsigned
 name|Num
 parameter_list|)
 function_decl|;
+comment|/// If an existing load has uses of its chain, create a token factor node with
+comment|/// that chain and the new memory node's chain and update users of the old
+comment|/// chain to the token factor. This ensures that the new memory node will have
+comment|/// the same relative memory dependency position as the old load.
+name|void
+name|makeEquivalentMemoryOrdering
+parameter_list|(
+name|LoadSDNode
+modifier|*
+name|Old
+parameter_list|,
+name|SDValue
+name|New
+parameter_list|)
+function_decl|;
 comment|/// Topological-sort the AllNodes list and a
 comment|/// assign a unique node id for each node in the DAG based on their
 comment|/// topological order. Returns the number of nodes.
@@ -6532,146 +6905,6 @@ name|N
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-comment|/// Returns true if the opcode is a commutative binary operation.
-specifier|static
-name|bool
-name|isCommutativeBinOp
-parameter_list|(
-name|unsigned
-name|Opcode
-parameter_list|)
-block|{
-comment|// FIXME: This should get its info from the td file, so that we can include
-comment|// target info.
-switch|switch
-condition|(
-name|Opcode
-condition|)
-block|{
-case|case
-name|ISD
-operator|::
-name|ADD
-case|:
-case|case
-name|ISD
-operator|::
-name|SMIN
-case|:
-case|case
-name|ISD
-operator|::
-name|SMAX
-case|:
-case|case
-name|ISD
-operator|::
-name|UMIN
-case|:
-case|case
-name|ISD
-operator|::
-name|UMAX
-case|:
-case|case
-name|ISD
-operator|::
-name|MUL
-case|:
-case|case
-name|ISD
-operator|::
-name|MULHU
-case|:
-case|case
-name|ISD
-operator|::
-name|MULHS
-case|:
-case|case
-name|ISD
-operator|::
-name|SMUL_LOHI
-case|:
-case|case
-name|ISD
-operator|::
-name|UMUL_LOHI
-case|:
-case|case
-name|ISD
-operator|::
-name|FADD
-case|:
-case|case
-name|ISD
-operator|::
-name|FMUL
-case|:
-case|case
-name|ISD
-operator|::
-name|AND
-case|:
-case|case
-name|ISD
-operator|::
-name|OR
-case|:
-case|case
-name|ISD
-operator|::
-name|XOR
-case|:
-case|case
-name|ISD
-operator|::
-name|SADDO
-case|:
-case|case
-name|ISD
-operator|::
-name|UADDO
-case|:
-case|case
-name|ISD
-operator|::
-name|ADDC
-case|:
-case|case
-name|ISD
-operator|::
-name|ADDE
-case|:
-case|case
-name|ISD
-operator|::
-name|FMINNUM
-case|:
-case|case
-name|ISD
-operator|::
-name|FMAXNUM
-case|:
-case|case
-name|ISD
-operator|::
-name|FMINNAN
-case|:
-case|case
-name|ISD
-operator|::
-name|FMAXNAN
-case|:
-return|return
-name|true
-return|;
-default|default:
-return|return
-name|false
-return|;
-block|}
 block|}
 comment|/// Returns an APFloat semantics tag appropriate for the given type. If VT is
 comment|/// a vector type, the element semantics are returned.
@@ -7012,10 +7245,10 @@ name|Ops
 argument_list|,
 specifier|const
 name|SDNodeFlags
-operator|*
 name|Flags
 operator|=
-name|nullptr
+name|SDNodeFlags
+argument_list|()
 argument_list|)
 decl_stmt|;
 comment|/// Constant fold a setcc to true or false.
@@ -7079,8 +7312,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Determine which bits of Op are known to be either zero or one and return
-comment|/// them in the KnownZero/KnownOne bitsets. For vectors, the known bits are
-comment|/// those that are shared by every vector element.
+comment|/// them in Known. For vectors, the known bits are those that are shared by
+comment|/// every vector element.
 comment|/// Targets can implement the computeKnownBitsForTargetNode method in the
 comment|/// TargetLowering class to allow target nodes to be understood.
 name|void
@@ -7089,13 +7322,9 @@ argument_list|(
 name|SDValue
 name|Op
 argument_list|,
-name|APInt
+name|KnownBits
 operator|&
-name|KnownZero
-argument_list|,
-name|APInt
-operator|&
-name|KnownOne
+name|Known
 argument_list|,
 name|unsigned
 name|Depth
@@ -7105,9 +7334,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Determine which bits of Op are known to be either zero or one and return
-comment|/// them in the KnownZero/KnownOne bitsets. The DemandedElts argument allows
-comment|/// us to only collect the known bits that are shared by the requested vector
-comment|/// elements.
+comment|/// them in Known. The DemandedElts argument allows us to only collect the
+comment|/// known bits that are shared by the requested vector elements.
 comment|/// Targets can implement the computeKnownBitsForTargetNode method in the
 comment|/// TargetLowering class to allow target nodes to be understood.
 name|void
@@ -7116,13 +7344,9 @@ argument_list|(
 name|SDValue
 name|Op
 argument_list|,
-name|APInt
+name|KnownBits
 operator|&
-name|KnownZero
-argument_list|,
-name|APInt
-operator|&
-name|KnownOne
+name|Known
 argument_list|,
 specifier|const
 name|APInt
@@ -7133,6 +7357,32 @@ name|unsigned
 name|Depth
 operator|=
 literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Used to represent the possible overflow behavior of an operation.
+comment|/// Never: the operation cannot overflow.
+comment|/// Always: the operation will always overflow.
+comment|/// Sometime: the operation may or may not overflow.
+enum|enum
+name|OverflowKind
+block|{
+name|OFK_Never
+block|,
+name|OFK_Sometime
+block|,
+name|OFK_Always
+block|,   }
+enum|;
+comment|/// Determine if the result of the addition of 2 node can overflow.
+name|OverflowKind
+name|computeOverflowKind
+argument_list|(
+name|SDValue
+name|N0
+argument_list|,
+name|SDValue
+name|N1
 argument_list|)
 decl|const
 decl_stmt|;
@@ -7159,6 +7409,32 @@ name|ComputeNumSignBits
 argument_list|(
 name|SDValue
 name|Op
+argument_list|,
+name|unsigned
+name|Depth
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return the number of times the sign bit of the register is replicated into
+comment|/// the other bits. We know that at least 1 bit is always equal to the sign
+comment|/// bit (itself), but other cases can give us information. For example,
+comment|/// immediately after an "SRA X, 2", we know that the top 3 bits are all equal
+comment|/// to each other, so we return 3. The DemandedElts argument allows
+comment|/// us to only collect the minimum sign bits of the requested vector elements.
+comment|/// Targets can implement the ComputeNumSignBitsForTarget method in the
+comment|/// TargetLowering class to allow target nodes to be understood.
+name|unsigned
+name|ComputeNumSignBits
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|DemandedElts
 argument_list|,
 name|unsigned
 name|Depth
@@ -7604,35 +7880,6 @@ name|void
 name|allnodes_clear
 parameter_list|()
 function_decl|;
-name|SDNode
-modifier|*
-name|GetBinarySDNode
-parameter_list|(
-name|unsigned
-name|Opcode
-parameter_list|,
-specifier|const
-name|SDLoc
-modifier|&
-name|DL
-parameter_list|,
-name|SDVTList
-name|VTs
-parameter_list|,
-name|SDValue
-name|N1
-parameter_list|,
-name|SDValue
-name|N2
-parameter_list|,
-specifier|const
-name|SDNodeFlags
-modifier|*
-name|Flags
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
 comment|/// Look up the node specified by ID in CSEMap.  If it exists, return it.  If
 comment|/// not, return the insertion token that will make insertion faster.  This
 comment|/// overload is for nodes other than Constant or ConstantFP, use the other one
@@ -7779,15 +8026,16 @@ name|SDNode
 operator|*
 operator|>
 block|{
-typedef|typedef
+name|using
+name|nodes_iterator
+operator|=
 name|pointer_iterator
 operator|<
 name|SelectionDAG
 operator|::
 name|allnodes_iterator
 operator|>
-name|nodes_iterator
-expr_stmt|;
+block|;
 specifier|static
 name|nodes_iterator
 name|nodes_begin
@@ -7822,14 +8070,10 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -8110,6 +8354,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_SELECTIONDAG_H
+end_comment
 
 end_unit
 

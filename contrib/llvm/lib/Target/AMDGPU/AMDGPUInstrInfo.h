@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
+file|"AMDGPU.h"
 end_include
 
 begin_include
@@ -79,16 +79,16 @@ directive|include
 file|"Utils/AMDGPUBaseInfo.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|GET_INSTRINFO_HEADER
-end_define
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetInstrInfo.h"
+end_include
 
 begin_define
 define|#
 directive|define
-name|GET_INSTRINFO_ENUM
+name|GET_INSTRINFO_HEADER
 end_define
 
 begin_include
@@ -130,6 +130,11 @@ name|virtual
 name|void
 name|anchor
 argument_list|()
+block|;
+name|protected
+operator|:
+name|AMDGPUAS
+name|AMDGPUASI
 block|;
 name|public
 operator|:

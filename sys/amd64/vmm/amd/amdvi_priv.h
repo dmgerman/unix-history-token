@@ -240,7 +240,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Page translation valid. */
-name|uint8_t
+name|uint16_t
 label|:
 literal|7
 expr_stmt|;

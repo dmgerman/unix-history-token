@@ -389,6 +389,13 @@ name|R8A7793_CLK_IRQC
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|R8A7793_CLK_INTC_SYS
+value|8
+end_define
+
 begin_comment
 comment|/* MSTP5 */
 end_comment

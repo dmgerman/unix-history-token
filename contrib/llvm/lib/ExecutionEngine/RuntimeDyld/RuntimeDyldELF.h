@@ -170,6 +170,18 @@ argument|const RelocationValueRef&Value
 argument_list|)
 block|;
 name|void
+name|resolveAArch64Branch
+argument_list|(
+argument|unsigned SectionID
+argument_list|,
+argument|const RelocationValueRef&Value
+argument_list|,
+argument|relocation_iterator RelI
+argument_list|,
+argument|StubMap&Stubs
+argument_list|)
+block|;
+name|void
 name|resolveARMRelocation
 argument_list|(
 argument|const SectionEntry&Section
@@ -213,6 +225,20 @@ argument_list|)
 block|;
 name|void
 name|resolveSystemZRelocation
+argument_list|(
+argument|const SectionEntry&Section
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|uint64_t Value
+argument_list|,
+argument|uint32_t Type
+argument_list|,
+argument|int64_t Addend
+argument_list|)
+block|;
+name|void
+name|resolveBPFRelocation
 argument_list|(
 argument|const SectionEntry&Section
 argument_list|,
@@ -391,8 +417,9 @@ name|protected
 label|:
 name|size_t
 name|getGOTEntrySize
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 name|private
 label|:
 name|SectionEntry
@@ -415,10 +442,20 @@ name|uint64_t
 name|allocateGOTEntries
 parameter_list|(
 name|unsigned
-name|SectionID
+name|no
+parameter_list|)
+function_decl|;
+comment|// Find GOT entry corresponding to relocation or create new one.
+name|uint64_t
+name|findOrAllocGOTEntry
+parameter_list|(
+specifier|const
+name|RelocationValueRef
+modifier|&
+name|Value
 parameter_list|,
 name|unsigned
-name|no
+name|GOTRelType
 parameter_list|)
 function_decl|;
 comment|// Resolve the relvative address of GOTOffset in Section ID and place
@@ -434,6 +471,9 @@ name|Offset
 parameter_list|,
 name|uint64_t
 name|GOTOffset
+parameter_list|,
+name|uint32_t
+name|Type
 parameter_list|)
 function_decl|;
 comment|// For a GOT entry referenced from SectionID, compute a relocation entry
@@ -441,9 +481,6 @@ comment|// that will place the final resolved value in the GOT slot
 name|RelocationEntry
 name|computeGOTOffsetRE
 parameter_list|(
-name|unsigned
-name|SectionID
-parameter_list|,
 name|uint64_t
 name|GOTOffset
 parameter_list|,
@@ -558,14 +595,28 @@ literal|2
 operator|>
 name|UnregisteredEHFrameSections
 expr_stmt|;
-name|SmallVector
+comment|// Map between GOT relocation value and corresponding GOT offset
+name|std
+operator|::
+name|map
 operator|<
-name|SID
+name|RelocationValueRef
 operator|,
-literal|2
+name|uint64_t
 operator|>
-name|RegisteredEHFrameSections
+name|GOTOffsetMap
 expr_stmt|;
+name|bool
+name|relocationNeedsGot
+argument_list|(
+specifier|const
+name|RelocationRef
+operator|&
+name|R
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|bool
 name|relocationNeedsStub
 argument_list|(
@@ -673,11 +724,6 @@ name|override
 decl_stmt|;
 name|void
 name|registerEHFrames
-argument_list|()
-name|override
-expr_stmt|;
-name|void
-name|deregisterEHFrames
 argument_list|()
 name|override
 expr_stmt|;

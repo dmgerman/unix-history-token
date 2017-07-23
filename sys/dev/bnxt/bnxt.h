@@ -32,19 +32,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus_dma.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -63,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
 end_include
 
 begin_include
@@ -1396,6 +1390,11 @@ comment|/* Logical ID */
 name|uint16_t
 name|phys_id
 decl_stmt|;
+name|struct
+name|bnxt_full_tpa_start
+modifier|*
+name|tpa_start
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1827,11 +1826,6 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|hw_stats_oid
-decl_stmt|;
-name|struct
-name|bnxt_full_tpa_start
-modifier|*
-name|tpa_start
 decl_stmt|;
 name|struct
 name|bnxt_ver_info

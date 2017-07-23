@@ -79,7 +79,7 @@ name|lvl
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {					\         if (g_virstor_debug>= (lvl)) {					\                 printf("GEOM_" G_VIRSTOR_CLASS_NAME);			\                 if (lvl> 0)						\                         printf("[%u]", lvl);				\                 printf(": ");						\                 printf(__VA_ARGS__);					\                 printf("\n");						\         }								\ } while (0)
+value|do {					\         if (g_virstor_debug>= (lvl)) {					\                 printf("GEOM_" G_VIRSTOR_CLASS_NAME);			\                 if ((lvl)> 0)						\                         printf("[%u]", (lvl));				\                 printf(": ");						\                 printf(__VA_ARGS__);					\                 printf("\n");						\         }								\ } while (0)
 end_define
 
 begin_define
@@ -100,7 +100,7 @@ name|bp
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {					\         if (g_virstor_debug>= (lvl)) {					\                 printf("GEOM_" G_VIRSTOR_CLASS_NAME);			\                 if (lvl> 0)						\                         printf("[%u]", lvl);				\                 printf(": ");						\                 printf(__VA_ARGS__);					\                 printf(" ");						\                 g_print_bio(bp);					\                 printf("\n");						\         }								\ } while (0)
+value|do {					\         if (g_virstor_debug>= (lvl)) {					\                 printf("GEOM_" G_VIRSTOR_CLASS_NAME);			\                 if ((lvl)> 0)						\                         printf("[%u]", (lvl));				\                 printf(": ");						\                 printf(__VA_ARGS__);					\                 printf(" ");						\                 g_print_bio(bp);					\                 printf("\n");						\         }								\ } while (0)
 end_define
 
 begin_define

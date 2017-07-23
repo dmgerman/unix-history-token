@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==- MachineScheduler.h - MachineInstr Scheduling Pass ----------*- C++ -*-==//
+comment|//===- MachineScheduler.h - MachineInstr Scheduling Pass --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -136,7 +136,7 @@ comment|// createMachineScheduler(MachineSchedContext *C) {
 end_comment
 
 begin_comment
-comment|//   return new ScheduleDAGMI(C, CustomStrategy(C));
+comment|//   return new ScheduleDAGMILive(C, CustomStrategy(C));
 end_comment
 
 begin_comment
@@ -442,6 +442,12 @@ name|class
 name|MachineDominatorTree
 decl_stmt|;
 name|class
+name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineInstr
+decl_stmt|;
+name|class
 name|MachineLoopInfo
 decl_stmt|;
 name|class
@@ -453,6 +459,15 @@ decl_stmt|;
 name|class
 name|ScheduleHazardRecognizer
 decl_stmt|;
+name|class
+name|TargetInstrInfo
+decl_stmt|;
+name|class
+name|TargetPassConfig
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
 comment|/// MachineSchedContext provides enough context from the MachineScheduler pass
 comment|/// for the target to instantiate a scheduler.
 struct|struct
@@ -461,29 +476,41 @@ block|{
 name|MachineFunction
 modifier|*
 name|MF
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|MachineLoopInfo
 modifier|*
 name|MLI
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|MachineDominatorTree
 modifier|*
 name|MDT
+init|=
+name|nullptr
 decl_stmt|;
 specifier|const
 name|TargetPassConfig
 modifier|*
 name|PassConfig
+init|=
+name|nullptr
 decl_stmt|;
 name|AliasAnalysis
 modifier|*
 name|AA
+init|=
+name|nullptr
 decl_stmt|;
 name|LiveIntervals
 modifier|*
 name|LIS
+init|=
+name|nullptr
 decl_stmt|;
 name|RegisterClassInfo
 modifier|*
@@ -509,27 +536,29 @@ name|MachinePassRegistryNode
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|ScheduleDAGCtor
+operator|=
 name|ScheduleDAGInstrs
+operator|*
+call|(
 modifier|*
-function_decl|(
-modifier|*
-name|ScheduleDAGCtor
-function_decl|)
-parameter_list|(
+call|)
+argument_list|(
 name|MachineSchedContext
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|)
+block|;
 comment|// RegisterPassParser requires a (misnamed) FunctionPassCtor type.
-typedef|typedef
-name|ScheduleDAGCtor
+name|using
 name|FunctionPassCtor
-typedef|;
+operator|=
+name|ScheduleDAGCtor
+block|;
 specifier|static
 name|MachinePassRegistry
 name|Registry
-decl_stmt|;
+block|;
 name|MachineSchedRegistry
 argument_list|(
 argument|const char *N
@@ -538,7 +567,7 @@ argument|const char *D
 argument_list|,
 argument|ScheduleDAGCtor C
 argument_list|)
-block|:
+operator|:
 name|MachinePassRegistryNode
 argument_list|(
 argument|N
@@ -554,8 +583,7 @@ name|Add
 argument_list|(
 name|this
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 operator|~
 name|MachineSchedRegistry
 argument_list|()
@@ -588,9 +616,9 @@ return|;
 block|}
 specifier|static
 name|MachineSchedRegistry
-modifier|*
+operator|*
 name|getList
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|(
@@ -606,11 +634,9 @@ block|}
 specifier|static
 name|void
 name|setListener
-parameter_list|(
-name|MachinePassRegistryListener
-modifier|*
-name|L
-parameter_list|)
+argument_list|(
+argument|MachinePassRegistryListener *L
+argument_list|)
 block|{
 name|Registry
 operator|.
@@ -618,152 +644,95 @@ name|setListener
 argument_list|(
 name|L
 argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
+block|;   }
+expr|}
+block|;
 name|class
 name|ScheduleDAGMI
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Define a generic scheduling policy for targets that don't provide their own
-end_comment
-
-begin_comment
 comment|/// MachineSchedStrategy. This can be overriden for each scheduling region
-end_comment
-
-begin_comment
 comment|/// before building the DAG.
-end_comment
-
-begin_struct
-struct|struct
+block|struct
 name|MachineSchedPolicy
 block|{
 comment|// Allow the scheduler to disable register pressure tracking.
 name|bool
 name|ShouldTrackPressure
-decl_stmt|;
+operator|=
+name|false
+block|;
 comment|/// Track LaneMasks to allow reordering of independent subregister writes
 comment|/// of the same vreg. \sa MachineSchedStrategy::shouldTrackLaneMasks()
 name|bool
 name|ShouldTrackLaneMasks
-decl_stmt|;
+operator|=
+name|false
+block|;
 comment|// Allow the scheduler to force top-down or bottom-up scheduling. If neither
 comment|// is true, the scheduler runs in both directions and converges.
 name|bool
 name|OnlyTopDown
-decl_stmt|;
+operator|=
+name|false
+block|;
 name|bool
 name|OnlyBottomUp
-decl_stmt|;
+operator|=
+name|false
+block|;
 comment|// Disable heuristic that tries to fetch nodes from long dependency chains
 comment|// first.
 name|bool
 name|DisableLatencyHeuristic
-decl_stmt|;
+operator|=
+name|false
+block|;
 name|MachineSchedPolicy
 argument_list|()
-operator|:
-name|ShouldTrackPressure
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ShouldTrackLaneMasks
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|OnlyTopDown
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|OnlyBottomUp
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|DisableLatencyHeuristic
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-block|}
-struct|;
-end_struct
-
-begin_comment
+operator|=
+expr|default
+block|; }
+block|;
 comment|/// MachineSchedStrategy - Interface to the scheduling algorithm used by
-end_comment
-
-begin_comment
 comment|/// ScheduleDAGMI.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Initialization sequence:
-end_comment
-
-begin_comment
 comment|///   initPolicy -> shouldTrackPressure -> initialize(DAG) -> registerRoots
-end_comment
-
-begin_decl_stmt
 name|class
 name|MachineSchedStrategy
 block|{
 name|virtual
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|public
-label|:
+operator|:
 name|virtual
 operator|~
 name|MachineSchedStrategy
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 comment|/// Optionally override the per-region scheduling policy.
 name|virtual
 name|void
 name|initPolicy
 argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|Begin
+argument|MachineBasicBlock::iterator Begin
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|End
+argument|MachineBasicBlock::iterator End
 argument_list|,
-name|unsigned
-name|NumRegionInstrs
+argument|unsigned NumRegionInstrs
 argument_list|)
 block|{}
 name|virtual
 name|void
 name|dumpPolicy
-parameter_list|()
+argument_list|()
+specifier|const
 block|{}
 comment|/// Check if pressure tracking is needed before building the DAG and
 comment|/// initializing this strategy. Called after initPolicy.
@@ -794,114 +763,91 @@ comment|/// Initialize the strategy after building the DAG for a new region.
 name|virtual
 name|void
 name|initialize
-parameter_list|(
+argument_list|(
 name|ScheduleDAGMI
-modifier|*
+operator|*
 name|DAG
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// Notify this strategy that all roots have been released (including those
 comment|/// that depend on EntrySU or ExitSU).
 name|virtual
 name|void
 name|registerRoots
-parameter_list|()
+argument_list|()
 block|{}
 comment|/// Pick the next node to schedule, or return NULL. Set IsTopNode to true to
 comment|/// schedule the node at the top of the unscheduled region. Otherwise it will
 comment|/// be scheduled at the bottom.
 name|virtual
 name|SUnit
-modifier|*
+operator|*
 name|pickNode
-parameter_list|(
+argument_list|(
 name|bool
-modifier|&
+operator|&
 name|IsTopNode
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// \brief Scheduler callback to notify that a new subtree is scheduled.
 name|virtual
 name|void
 name|scheduleTree
-parameter_list|(
-name|unsigned
-name|SubtreeID
-parameter_list|)
+argument_list|(
+argument|unsigned SubtreeID
+argument_list|)
 block|{}
 comment|/// Notify MachineSchedStrategy that ScheduleDAGMI has scheduled an
 comment|/// instruction and updated scheduled/remaining flags in the DAG nodes.
 name|virtual
 name|void
 name|schedNode
-parameter_list|(
-name|SUnit
-modifier|*
-name|SU
-parameter_list|,
-name|bool
-name|IsTopNode
-parameter_list|)
-init|=
+argument_list|(
+argument|SUnit *SU
+argument_list|,
+argument|bool IsTopNode
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// When all predecessor dependencies have been resolved, free this node for
 comment|/// top-down scheduling.
 name|virtual
 name|void
 name|releaseTopNode
-parameter_list|(
+argument_list|(
 name|SUnit
-modifier|*
+operator|*
 name|SU
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// When all successor dependencies have been resolved, free this node for
 comment|/// bottom-up scheduling.
 name|virtual
 name|void
 name|releaseBottomNode
-parameter_list|(
+argument_list|(
 name|SUnit
-modifier|*
+operator|*
 name|SU
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+block|; }
+block|;
 comment|/// ScheduleDAGMI is an implementation of ScheduleDAGInstrs that simply
-end_comment
-
-begin_comment
 comment|/// schedules machine instructions according to the given MachineSchedStrategy
-end_comment
-
-begin_comment
 comment|/// without much extra book-keeping. This is the common functionality between
-end_comment
-
-begin_comment
 comment|/// PreRA and PostRA MachineScheduler.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ScheduleDAGMI
-range|:
+operator|:
 name|public
 name|ScheduleDAGInstrs
 block|{
@@ -958,11 +904,15 @@ specifier|const
 name|SUnit
 operator|*
 name|NextClusterPred
+operator|=
+name|nullptr
 block|;
 specifier|const
 name|SUnit
 operator|*
 name|NextClusterSucc
+operator|=
+name|nullptr
 block|;
 ifndef|#
 directive|ifndef
@@ -971,6 +921,8 @@ comment|/// The number of instructions scheduled so far. Used to cut off the
 comment|/// scheduler at the point determined by misched-cutoff.
 name|unsigned
 name|NumInstrsScheduled
+operator|=
+literal|0
 block|;
 endif|#
 directive|endif
@@ -1025,32 +977,11 @@ argument_list|)
 block|,
 name|Topo
 argument_list|(
-name|SUnits
+argument|SUnits
 argument_list|,
-operator|&
-name|ExitSU
+argument|&ExitSU
 argument_list|)
-block|,
-name|NextClusterPred
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|NextClusterSucc
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|NumInstrsScheduled
-operator|=
-literal|0
-block|;
-endif|#
-directive|endif
-block|}
+block|{}
 comment|// Provide a vtable anchor
 operator|~
 name|ScheduleDAGMI
@@ -1343,21 +1274,12 @@ operator|*
 name|SU
 argument_list|)
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// ScheduleDAGMILive is an implementation of ScheduleDAGInstrs that schedules
-end_comment
-
-begin_comment
 comment|/// machine instructions while updating LiveIntervals and tracking regpressure.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ScheduleDAGMILive
-range|:
+operator|:
 name|public
 name|ScheduleDAGMI
 block|{
@@ -1372,6 +1294,8 @@ comment|/// will be empty.
 name|SchedDFSResult
 operator|*
 name|DFSResult
+operator|=
+name|nullptr
 block|;
 name|BitVector
 name|ScheduledTrees
@@ -1394,9 +1318,13 @@ block|;
 comment|/// Register pressure in this region computed by initRegPressure.
 name|bool
 name|ShouldTrackPressure
+operator|=
+name|false
 block|;
 name|bool
 name|ShouldTrackLaneMasks
+operator|=
+name|false
 block|;
 name|IntervalPressure
 name|RegPressure
@@ -1433,6 +1361,8 @@ comment|/// True if disconnected subregister components are already renamed.
 comment|/// The renaming is only done on demand if lane masks are tracked.
 name|bool
 name|DisconnectedComponentsRenamed
+operator|=
+name|false
 block|;
 name|public
 operator|:
@@ -1473,21 +1403,6 @@ operator|->
 name|RegClassInfo
 argument_list|)
 block|,
-name|DFSResult
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|ShouldTrackPressure
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|ShouldTrackLaneMasks
-argument_list|(
-name|false
-argument_list|)
-block|,
 name|RPTracker
 argument_list|(
 name|RegPressure
@@ -1500,12 +1415,7 @@ argument_list|)
 block|,
 name|BotRPTracker
 argument_list|(
-name|BotPressure
-argument_list|)
-block|,
-name|DisconnectedComponentsRenamed
-argument_list|(
-argument|false
+argument|BotPressure
 argument_list|)
 block|{}
 operator|~
@@ -1761,69 +1671,30 @@ operator|&
 name|SU
 argument_list|)
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Helpers for implementing custom MachineSchedStrategy classes. These take
-end_comment
-
-begin_comment
 comment|/// care of the book-keeping associated with list scheduling heuristics.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// ReadyQueue encapsulates vector of "ready" SUnits with basic convenience
-end_comment
-
-begin_comment
 comment|/// methods for pushing and removing nodes. ReadyQueue's are uniquely identified
-end_comment
-
-begin_comment
 comment|/// by an ID. SUnit::NodeQueueId is a mask of the ReadyQueues the SUnit is in.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is a convenience class that may be used by implementations of
-end_comment
-
-begin_comment
 comment|/// MachineSchedStrategy.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ReadyQueue
 block|{
 name|unsigned
 name|ID
-decl_stmt|;
+block|;
 name|std
 operator|::
 name|string
 name|Name
-expr_stmt|;
+block|;
 name|std
 operator|::
 name|vector
@@ -1832,21 +1703,21 @@ name|SUnit
 operator|*
 operator|>
 name|Queue
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|ReadyQueue
 argument_list|(
 argument|unsigned id
 argument_list|,
 argument|const Twine&name
 argument_list|)
-block|:
+operator|:
 name|ID
 argument_list|(
 name|id
 argument_list|)
-operator|,
+block|,
 name|Name
 argument_list|(
 argument|name.str()
@@ -1874,11 +1745,9 @@ comment|// SU is in this queue if it's NodeQueueID is a superset of this ID.
 name|bool
 name|isInQueue
 argument_list|(
-name|SUnit
-operator|*
-name|SU
+argument|SUnit *SU
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 operator|(
@@ -1904,14 +1773,13 @@ return|;
 block|}
 name|void
 name|clear
-parameter_list|()
+argument_list|()
 block|{
 name|Queue
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
-block|}
+block|; }
 name|unsigned
 name|size
 argument_list|()
@@ -1924,7 +1792,9 @@ name|size
 argument_list|()
 return|;
 block|}
-typedef|typedef
+name|using
+name|iterator
+operator|=
 name|std
 operator|::
 name|vector
@@ -1934,11 +1804,10 @@ operator|*
 operator|>
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
+block|;
 name|iterator
 name|begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Queue
@@ -1949,7 +1818,7 @@ return|;
 block|}
 name|iterator
 name|end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Queue
@@ -1972,11 +1841,9 @@ return|;
 block|}
 name|iterator
 name|find
-parameter_list|(
-name|SUnit
-modifier|*
-name|SU
-parameter_list|)
+argument_list|(
+argument|SUnit *SU
+argument_list|)
 block|{
 return|return
 name|llvm
@@ -1991,11 +1858,9 @@ return|;
 block|}
 name|void
 name|push
-parameter_list|(
-name|SUnit
-modifier|*
-name|SU
-parameter_list|)
+argument_list|(
+argument|SUnit *SU
+argument_list|)
 block|{
 name|Queue
 operator|.
@@ -2003,20 +1868,18 @@ name|push_back
 argument_list|(
 name|SU
 argument_list|)
-expr_stmt|;
+block|;
 name|SU
 operator|->
 name|NodeQueueId
 operator||=
 name|ID
-expr_stmt|;
-block|}
+block|;   }
 name|iterator
 name|remove
-parameter_list|(
-name|iterator
-name|I
-parameter_list|)
+argument_list|(
+argument|iterator I
+argument_list|)
 block|{
 operator|(
 operator|*
@@ -2027,7 +1890,7 @@ name|NodeQueueId
 operator|&=
 operator|~
 name|ID
-expr_stmt|;
+block|;
 operator|*
 name|I
 operator|=
@@ -2035,22 +1898,22 @@ name|Queue
 operator|.
 name|back
 argument_list|()
-expr_stmt|;
+block|;
 name|unsigned
 name|idx
-init|=
+operator|=
 name|I
 operator|-
 name|Queue
 operator|.
 name|begin
 argument_list|()
-decl_stmt|;
+block|;
 name|Queue
 operator|.
 name|pop_back
 argument_list|()
-expr_stmt|;
+block|;
 return|return
 name|Queue
 operator|.
@@ -2062,189 +1925,173 @@ return|;
 block|}
 name|void
 name|dump
-parameter_list|()
-function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+argument_list|()
+specifier|const
+block|; }
+block|;
 comment|/// Summarize the unscheduled region.
-end_comment
-
-begin_struct
-struct|struct
+block|struct
 name|SchedRemainder
 block|{
 comment|// Critical path through the DAG in expected latency.
 name|unsigned
 name|CriticalPath
-decl_stmt|;
+block|;
 name|unsigned
 name|CyclicCritPath
-decl_stmt|;
+block|;
 comment|// Scaled count of micro-ops left to schedule.
 name|unsigned
 name|RemIssueCount
-decl_stmt|;
+block|;
 name|bool
 name|IsAcyclicLatencyLimited
-decl_stmt|;
+block|;
 comment|// Unscheduled resources
 name|SmallVector
 operator|<
 name|unsigned
-operator|,
+block|,
 literal|16
 operator|>
 name|RemainingCounts
-expr_stmt|;
+block|;
+name|SchedRemainder
+argument_list|()
+block|{
+name|reset
+argument_list|()
+block|; }
 name|void
 name|reset
-parameter_list|()
+argument_list|()
 block|{
 name|CriticalPath
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|CyclicCritPath
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|RemIssueCount
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|IsAcyclicLatencyLimited
 operator|=
 name|false
-expr_stmt|;
+block|;
 name|RemainingCounts
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
-block|}
-name|SchedRemainder
-argument_list|()
-block|{
-name|reset
-argument_list|()
-expr_stmt|;
-block|}
+block|;   }
 name|void
 name|init
-parameter_list|(
+argument_list|(
 name|ScheduleDAGMI
-modifier|*
+operator|*
 name|DAG
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetSchedModel
-modifier|*
+operator|*
 name|SchedModel
-parameter_list|)
-function_decl|;
-block|}
-struct|;
-end_struct
-
-begin_comment
+argument_list|)
+block|; }
+block|;
 comment|/// Each Scheduling boundary is associated with ready queues. It tracks the
-end_comment
-
-begin_comment
 comment|/// current cycle in the direction of movement, and maintains the state
-end_comment
-
-begin_comment
 comment|/// of "hazards" and other interlocks at the current cycle.
-end_comment
-
-begin_decl_stmt
 name|class
 name|SchedBoundary
 block|{
 name|public
-label|:
+operator|:
 comment|/// SUnit::NodeQueueId: 0 (none), 1 (top), 2 (bot), 3 (both)
-enum|enum
+expr|enum
 block|{
 name|TopQID
-init|=
+operator|=
 literal|1
 block|,
 name|BotQID
-init|=
+operator|=
 literal|2
 block|,
 name|LogMaxQID
-init|=
+operator|=
 literal|2
 block|}
-enum|;
+block|;
 name|ScheduleDAGMI
-modifier|*
+operator|*
 name|DAG
-decl_stmt|;
+operator|=
+name|nullptr
+block|;
 specifier|const
 name|TargetSchedModel
-modifier|*
+operator|*
 name|SchedModel
-decl_stmt|;
+operator|=
+name|nullptr
+block|;
 name|SchedRemainder
-modifier|*
+operator|*
 name|Rem
-decl_stmt|;
+operator|=
+name|nullptr
+block|;
 name|ReadyQueue
 name|Available
-decl_stmt|;
+block|;
 name|ReadyQueue
 name|Pending
-decl_stmt|;
+block|;
 name|ScheduleHazardRecognizer
-modifier|*
+operator|*
 name|HazardRec
-decl_stmt|;
+operator|=
+name|nullptr
+block|;
 name|private
-label|:
+operator|:
 comment|/// True if the pending Q should be checked/updated before scheduling another
 comment|/// instruction.
 name|bool
 name|CheckPending
-decl_stmt|;
+block|;
 comment|/// Number of cycles it takes to issue the instructions scheduled in this
 comment|/// zone. It is defined as: scheduled-micro-ops / issue-width + stalls.
 comment|/// See getStalls().
 name|unsigned
 name|CurrCycle
-decl_stmt|;
+block|;
 comment|/// Micro-ops issued in the current cycle
 name|unsigned
 name|CurrMOps
-decl_stmt|;
+block|;
 comment|/// MinReadyCycle - Cycle of the soonest available instruction.
 name|unsigned
 name|MinReadyCycle
-decl_stmt|;
+block|;
 comment|// The expected latency of the critical path in this scheduled zone.
 name|unsigned
 name|ExpectedLatency
-decl_stmt|;
+block|;
 comment|// The latency of dependence chains leading into this zone.
 comment|// For each node scheduled bottom-up: DLat = max DLat, N.Depth.
 comment|// For each cycle scheduled: DLat -= 1.
 name|unsigned
 name|DependentLatency
-decl_stmt|;
+block|;
 comment|/// Count the scheduled (issued) micro-ops that can be retired by
 comment|/// time=CurrCycle assuming the first scheduled instr is retired at time=0.
 name|unsigned
 name|RetiredMOps
-decl_stmt|;
+block|;
 comment|// Count scheduled resources that have been executed. Resources are
 comment|// considered executed if they become ready in the time that it takes to
 comment|// saturate any resource including the one in question. Counts are scaled
@@ -2253,33 +2100,33 @@ comment|// MOps * getMicroOpFactor and Latency * getLatencyFactor.
 name|SmallVector
 operator|<
 name|unsigned
-operator|,
+block|,
 literal|16
 operator|>
 name|ExecutedResCounts
-expr_stmt|;
+block|;
 comment|/// Cache the max count for a single resource.
 name|unsigned
 name|MaxExecutedResCount
-decl_stmt|;
+block|;
 comment|// Cache the critical resources ID in this scheduled zone.
 name|unsigned
 name|ZoneCritResIdx
-decl_stmt|;
+block|;
 comment|// Is the scheduled region resource limited vs. latency limited.
 name|bool
 name|IsResourceLimited
-decl_stmt|;
+block|;
 comment|// Record the highest cycle at which each resource has been reserved by a
 comment|// scheduled instruction.
 name|SmallVector
 operator|<
 name|unsigned
-operator|,
+block|,
 literal|16
 operator|>
 name|ReservedCycles
-expr_stmt|;
+block|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -2287,11 +2134,11 @@ comment|// Remember the greatest possible stall as an upper bound on the number 
 comment|// times we should retry the pending queue because of a hazard.
 name|unsigned
 name|MaxObservedStall
-decl_stmt|;
+block|;
 endif|#
 directive|endif
 name|public
-label|:
+operator|:
 comment|/// Pending queues extend the ready queues with the same ID and the
 comment|/// PendingFlag set.
 name|SchedBoundary
@@ -2300,22 +2147,7 @@ argument|unsigned ID
 argument_list|,
 argument|const Twine&Name
 argument_list|)
-block|:
-name|DAG
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|SchedModel
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Rem
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
+operator|:
 name|Available
 argument_list|(
 name|ID
@@ -2324,21 +2156,13 @@ name|Name
 operator|+
 literal|".A"
 argument_list|)
-operator|,
+block|,
 name|Pending
 argument_list|(
-name|ID
-operator|<<
-name|LogMaxQID
+argument|ID<< LogMaxQID
 argument_list|,
-name|Name
-operator|+
+argument|Name+
 literal|".P"
-argument_list|)
-operator|,
-name|HazardRec
-argument_list|(
-argument|nullptr
 argument_list|)
 block|{
 name|reset
@@ -2347,28 +2171,28 @@ block|;   }
 operator|~
 name|SchedBoundary
 argument_list|()
-expr_stmt|;
+block|;
 name|void
 name|reset
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|init
-parameter_list|(
+argument_list|(
 name|ScheduleDAGMI
-modifier|*
+operator|*
 name|dag
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetSchedModel
-modifier|*
+operator|*
 name|smodel
-parameter_list|,
+argument_list|,
 name|SchedRemainder
-modifier|*
+operator|*
 name|rem
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|bool
 name|isTop
 argument_list|()
@@ -2435,21 +2259,19 @@ block|}
 name|unsigned
 name|getUnscheduledLatency
 argument_list|(
-name|SUnit
-operator|*
-name|SU
+argument|SUnit *SU
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|isTop
 argument_list|()
-condition|?
+operator|?
 name|SU
 operator|->
 name|getHeight
 argument_list|()
-else|:
+operator|:
 name|SU
 operator|->
 name|getDepth
@@ -2459,10 +2281,9 @@ block|}
 name|unsigned
 name|getResourceCount
 argument_list|(
-name|unsigned
-name|ResIdx
+argument|unsigned ResIdx
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|ExecutedResCounts
@@ -2498,21 +2319,9 @@ name|ZoneCritResIdx
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Get a scaled count for the minimum execution time of the scheduled
-end_comment
-
-begin_comment
 comment|/// micro-ops that are ready to execute by getExecutedCount. Notice the
-end_comment
-
-begin_comment
 comment|/// feedback loop.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getExecutedCount
 argument_list|()
@@ -2534,9 +2343,6 @@ name|MaxExecutedResCount
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|getZoneCritResIdx
 argument_list|()
@@ -2546,13 +2352,7 @@ return|return
 name|ZoneCritResIdx
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Is the scheduled region resource limited vs. latency limited.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isResourceLimited
 argument_list|()
@@ -2562,52 +2362,32 @@ return|return
 name|IsResourceLimited
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Get the difference between the given SUnit's ready time and the current
-end_comment
-
-begin_comment
 comment|/// cycle.
-end_comment
-
-begin_function_decl
 name|unsigned
 name|getLatencyStallCycles
-parameter_list|(
+argument_list|(
 name|SUnit
-modifier|*
+operator|*
 name|SU
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+block|;
 name|unsigned
 name|getNextResourceCycle
-parameter_list|(
-name|unsigned
-name|PIdx
-parameter_list|,
-name|unsigned
-name|Cycles
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|(
+argument|unsigned PIdx
+argument_list|,
+argument|unsigned Cycles
+argument_list|)
+block|;
 name|bool
 name|checkHazard
-parameter_list|(
+argument_list|(
 name|SUnit
-modifier|*
+operator|*
 name|SU
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+argument_list|)
+block|;
 name|unsigned
 name|findMaxLatency
 argument_list|(
@@ -2618,154 +2398,90 @@ operator|*
 operator|>
 name|ReadySUs
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+block|;
 name|unsigned
 name|getOtherResourceCount
-parameter_list|(
+argument_list|(
 name|unsigned
-modifier|&
+operator|&
 name|OtherCritIdx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+block|;
 name|void
 name|releaseNode
-parameter_list|(
-name|SUnit
-modifier|*
-name|SU
-parameter_list|,
-name|unsigned
-name|ReadyCycle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|(
+argument|SUnit *SU
+argument_list|,
+argument|unsigned ReadyCycle
+argument_list|)
+block|;
 name|void
 name|bumpCycle
-parameter_list|(
-name|unsigned
-name|NextCycle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|(
+argument|unsigned NextCycle
+argument_list|)
+block|;
 name|void
 name|incExecutedResources
-parameter_list|(
-name|unsigned
-name|PIdx
-parameter_list|,
-name|unsigned
-name|Count
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|(
+argument|unsigned PIdx
+argument_list|,
+argument|unsigned Count
+argument_list|)
+block|;
 name|unsigned
 name|countResource
-parameter_list|(
-name|unsigned
-name|PIdx
-parameter_list|,
-name|unsigned
-name|Cycles
-parameter_list|,
-name|unsigned
-name|ReadyCycle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|(
+argument|unsigned PIdx
+argument_list|,
+argument|unsigned Cycles
+argument_list|,
+argument|unsigned ReadyCycle
+argument_list|)
+block|;
 name|void
 name|bumpNode
-parameter_list|(
+argument_list|(
 name|SUnit
-modifier|*
+operator|*
 name|SU
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+block|;
 name|void
 name|releasePending
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|()
+block|;
 name|void
 name|removeReady
-parameter_list|(
+argument_list|(
 name|SUnit
-modifier|*
+operator|*
 name|SU
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|)
+block|;
 comment|/// Call this before applying any other heuristics to the Available queue.
-end_comment
-
-begin_comment
 comment|/// Updates the Available/Pending Q's if necessary and returns the single
-end_comment
-
-begin_comment
 comment|/// available instruction, or NULL if there are multiple candidates.
-end_comment
-
-begin_function_decl
 name|SUnit
-modifier|*
+operator|*
 name|pickOnlyChoice
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_ifndef
+argument_list|()
+block|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
-end_ifndef
-
-begin_function_decl
 name|void
 name|dumpScheduledState
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
+argument_list|()
+specifier|const
+block|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-unit|};
+block|}
+decl_stmt|;
 comment|/// Base class for GenericScheduler. This class maintains information about
-end_comment
-
-begin_comment
 comment|/// scheduling candidates based on TargetSchedModel making it easy to implement
-end_comment
-
-begin_comment
 comment|/// heuristics for either preRA or postRA scheduling.
-end_comment
-
-begin_decl_stmt
 name|class
 name|GenericSchedulerBase
 range|:
@@ -2836,31 +2552,24 @@ name|CandPolicy
 block|{
 name|bool
 name|ReduceLatency
+operator|=
+name|false
 block|;
 name|unsigned
 name|ReduceResIdx
+operator|=
+literal|0
 block|;
 name|unsigned
 name|DemandResIdx
+operator|=
+literal|0
 block|;
 name|CandPolicy
 argument_list|()
-operator|:
-name|ReduceLatency
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|ReduceResIdx
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DemandResIdx
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|bool
 name|operator
 operator|==
@@ -2922,24 +2631,20 @@ block|{
 comment|// Count critical resources in the scheduled region required by SU.
 name|unsigned
 name|CritResources
+operator|=
+literal|0
 block|;
 comment|// Count critical resources from another region consumed by SU.
 name|unsigned
 name|DemandedResources
+operator|=
+literal|0
 block|;
 name|SchedResourceDelta
 argument_list|()
-operator|:
-name|CritResources
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|DemandedResources
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|bool
 name|operator
 operator|==
@@ -3150,11 +2855,15 @@ specifier|const
 name|TargetSchedModel
 operator|*
 name|SchedModel
+operator|=
+name|nullptr
 block|;
 specifier|const
 name|TargetRegisterInfo
 operator|*
 name|TRI
+operator|=
+name|nullptr
 block|;
 name|SchedRemainder
 name|Rem
@@ -3169,17 +2878,7 @@ argument_list|)
 operator|:
 name|Context
 argument_list|(
-name|C
-argument_list|)
-block|,
-name|SchedModel
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|TRI
-argument_list|(
-argument|nullptr
+argument|C
 argument_list|)
 block|{}
 name|void
@@ -3233,11 +2932,6 @@ argument_list|(
 name|C
 argument_list|)
 block|,
-name|DAG
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
 name|Top
 argument_list|(
 name|SchedBoundary
@@ -3268,6 +2962,7 @@ block|;
 name|void
 name|dumpPolicy
 argument_list|()
+specifier|const
 name|override
 block|;
 name|bool
@@ -3390,6 +3085,8 @@ operator|:
 name|ScheduleDAGMILive
 operator|*
 name|DAG
+operator|=
+name|nullptr
 block|;
 name|MachineSchedPolicy
 name|RegionPolicy
@@ -3483,29 +3180,11 @@ argument|bool isTop
 argument_list|)
 block|; }
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// PostGenericScheduler - Interface to the scheduling algorithm used by
-end_comment
-
-begin_comment
 comment|/// ScheduleDAGMI.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Callbacks from ScheduleDAGMI:
-end_comment
-
-begin_comment
 comment|///   initPolicy -> initialize(DAG) -> registerRoots -> pickNode ...
-end_comment
-
-begin_decl_stmt
 name|class
 name|PostGenericScheduler
 range|:
@@ -3676,9 +3355,6 @@ operator|&
 name|TryCand
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|void
 name|pickNodeFromQueue
 parameter_list|(
@@ -3687,10 +3363,14 @@ modifier|&
 name|Cand
 parameter_list|)
 function_decl|;
-end_function_decl
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// Create the standard converging machine scheduler. This will be used as the
 end_comment
 
@@ -3770,23 +3450,6 @@ specifier|const
 name|TargetRegisterInfo
 operator|*
 name|TRI
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|ScheduleDAGMutation
-operator|>
-name|createMacroFusionDAGMutation
-argument_list|(
-specifier|const
-name|TargetInstrInfo
-operator|*
-name|TII
 argument_list|)
 expr_stmt|;
 end_expr_stmt

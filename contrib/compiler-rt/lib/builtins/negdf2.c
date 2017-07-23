@@ -59,15 +59,6 @@ directive|include
 file|"fp_lib.h"
 end_include
 
-begin_macro
-name|ARM_EABI_FNALIAS
-argument_list|(
-argument|dneg
-argument_list|,
-argument|negdf2
-argument_list|)
-end_macro
-
 begin_function
 name|COMPILER_RT_ABI
 name|fp_t
@@ -90,6 +81,38 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
+begin_function
+name|AEABI_RTABI
+name|fp_t
+name|__aeabi_dneg
+parameter_list|(
+name|fp_t
+name|a
+parameter_list|)
+block|{
+return|return
+name|__negdf2
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

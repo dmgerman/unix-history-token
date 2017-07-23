@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/DIE.h"
 end_include
 
@@ -99,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Debug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_include

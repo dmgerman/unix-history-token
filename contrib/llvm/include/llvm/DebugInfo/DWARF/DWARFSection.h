@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFSection.h ------------------------------------------*- C++ -*-===//
+comment|//===- DWARFSection.h -------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,25 +34,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFSECTION_H
+name|LLVM_DEBUGINFO_DWARF_DWARFSECTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFSECTION_H
+name|LLVM_DEBUGINFO_DWARF_DWARFSECTION_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
 end_include
 
 begin_decl_stmt
@@ -73,10 +73,18 @@ struct|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARF_DWARFSECTION_H
+end_comment
 
 end_unit
 

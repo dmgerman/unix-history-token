@@ -1689,6 +1689,30 @@ argument_list|(
 argument|StringRef Label
 argument_list|,
 argument|ArrayRef<uint8_t> Value
+argument_list|,
+argument|uint32_t StartOffset
+argument_list|)
+block|{
+name|printBinaryImpl
+argument_list|(
+name|Label
+argument_list|,
+name|StringRef
+argument_list|()
+argument_list|,
+name|Value
+argument_list|,
+name|true
+argument_list|,
+name|StartOffset
+argument_list|)
+block|;   }
+name|void
+name|printBinaryBlock
+argument_list|(
+argument|StringRef Label
+argument_list|,
+argument|ArrayRef<uint8_t> Value
 argument_list|)
 block|{
 name|printBinaryImpl
@@ -1888,6 +1912,11 @@ name|Value
 argument_list|,
 name|bool
 name|Block
+argument_list|,
+name|uint32_t
+name|StartOffset
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 name|raw_ostream

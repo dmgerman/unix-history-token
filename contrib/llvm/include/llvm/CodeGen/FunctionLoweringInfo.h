@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- FunctionLoweringInfo.h - Lower functions from LLVM IR to CodeGen --===//
+comment|//===- FunctionLoweringInfo.h - Lower functions from LLVM IR to CodeGen ---===//
 end_comment
 
 begin_comment
@@ -114,19 +114,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/InlineAsm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/KnownBits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -140,7 +164,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|AllocaInst
+name|Argument
 decl_stmt|;
 name|class
 name|BasicBlock
@@ -152,37 +176,25 @@ name|class
 name|Function
 decl_stmt|;
 name|class
-name|GlobalVariable
-decl_stmt|;
-name|class
 name|Instruction
-decl_stmt|;
-name|class
-name|MachineInstr
-decl_stmt|;
-name|class
-name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|MachineFunction
 decl_stmt|;
 name|class
-name|MachineModuleInfo
+name|MachineInstr
 decl_stmt|;
 name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
-name|SelectionDAG
-decl_stmt|;
-name|class
 name|MVT
 decl_stmt|;
 name|class
-name|TargetLowering
+name|SelectionDAG
 decl_stmt|;
 name|class
-name|Value
+name|TargetLowering
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// FunctionLoweringInfo - This contains information that is global to a
@@ -243,8 +255,6 @@ name|MBBMap
 expr_stmt|;
 comment|/// A map from swifterror value in a basic block to the virtual register it is
 comment|/// currently represented by.
-name|llvm
-operator|::
 name|DenseMap
 operator|<
 name|std
@@ -267,8 +277,6 @@ expr_stmt|;
 comment|/// A list of upward exposed vreg uses that need to be satisfied by either a
 comment|/// copy def or a phi node at the beginning of the basic block representing
 comment|/// the predecessor(s) swifterror value.
-name|llvm
-operator|::
 name|DenseMap
 operator|<
 name|std
@@ -288,23 +296,42 @@ name|unsigned
 operator|>
 name|SwiftErrorVRegUpwardsUse
 expr_stmt|;
+comment|/// A map from instructions that define/use a swifterror value to the virtual
+comment|/// register that represents that def/use.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|PointerIntPair
+operator|<
+specifier|const
+name|Instruction
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+operator|,
+name|unsigned
+operator|>
+name|SwiftErrorVRegDefUses
+expr_stmt|;
 comment|/// The swifterror argument of the current function.
 specifier|const
 name|Value
 modifier|*
 name|SwiftErrorArg
 decl_stmt|;
-typedef|typedef
+name|using
+name|SwiftErrorValues
+init|=
 name|SmallVector
 operator|<
 specifier|const
 name|Value
 operator|*
-operator|,
-literal|1
-operator|>
-name|SwiftErrorValues
-expr_stmt|;
+decl_stmt|, 1>;
 comment|/// A function can only have a single swifterror argument. And if it does
 comment|/// have a swifterror argument, it must be the first entry in
 comment|/// SwiftErrorVals.
@@ -342,6 +369,46 @@ parameter_list|,
 name|unsigned
 parameter_list|)
 function_decl|;
+comment|/// Get or create the swifterror value virtual register for a def of a
+comment|/// swifterror by an instruction.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|bool
+operator|>
+name|getOrCreateSwiftErrorVRegDefAt
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|bool
+operator|>
+name|getOrCreateSwiftErrorVRegUseAt
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+argument_list|,
+specifier|const
+name|Value
+operator|*
+argument_list|)
+expr_stmt|;
 comment|/// ValueMap - Since we emit code for the function a basic block at a time,
 comment|/// we must remember which virtual registers hold the values for
 comment|/// cross-basic-block values.
@@ -374,19 +441,20 @@ comment|/// slot), and we track that here.
 struct|struct
 name|StatepointSpillMap
 block|{
-typedef|typedef
+name|using
+name|SlotMapTy
+init|=
 name|DenseMap
 operator|<
 specifier|const
 name|Value
 operator|*
-operator|,
+decl_stmt|,
 name|Optional
-operator|<
+decl|<
 name|int
-operator|>>
-name|SlotMapTy
-expr_stmt|;
+decl|>>
+decl_stmt|;
 comment|/// Maps uniqued llvm IR values to the slots they were spilled in.  If a
 comment|/// value is mapped to None it means we visited the value but didn't spill
 comment|/// it (because it was a constant, for instance).
@@ -557,10 +625,10 @@ name|IsValid
 range|:
 literal|1
 decl_stmt|;
-name|APInt
-name|KnownOne
-decl_stmt|,
-name|KnownZero
+name|KnownBits
+name|Known
+init|=
+literal|1
 decl_stmt|;
 name|LiveOutInfo
 argument_list|()
@@ -572,21 +640,7 @@ argument_list|)
 operator|,
 name|IsValid
 argument_list|(
-name|true
-argument_list|)
-operator|,
-name|KnownOne
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-operator|,
-name|KnownZero
-argument_list|(
-literal|1
-argument_list|,
-literal|0
+argument|true
 argument_list|)
 block|{}
 block|}
@@ -840,14 +894,9 @@ name|unsigned
 name|NumSignBits
 parameter_list|,
 specifier|const
-name|APInt
+name|KnownBits
 modifier|&
-name|KnownZero
-parameter_list|,
-specifier|const
-name|APInt
-modifier|&
-name|KnownOne
+name|Known
 parameter_list|)
 block|{
 comment|// Only install this information if it tells us something.
@@ -857,13 +906,10 @@ name|NumSignBits
 operator|==
 literal|1
 operator|&&
-name|KnownZero
-operator|==
-literal|0
-operator|&&
-name|KnownOne
-operator|==
-literal|0
+name|Known
+operator|.
+name|isUnknown
+argument_list|()
 condition|)
 return|return;
 name|LiveOutRegInfo
@@ -890,15 +936,23 @@ name|NumSignBits
 expr_stmt|;
 name|LOI
 operator|.
-name|KnownOne
+name|Known
+operator|.
+name|One
 operator|=
-name|KnownOne
+name|Known
+operator|.
+name|One
 expr_stmt|;
 name|LOI
 operator|.
-name|KnownZero
+name|Known
+operator|.
+name|Zero
 operator|=
-name|KnownZero
+name|Known
+operator|.
+name|Zero
 expr_stmt|;
 block|}
 comment|/// ComputePHILiveOutRegInfo - Compute LiveOutInfo for a PHI's destination
@@ -1060,6 +1114,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_FUNCTIONLOWERINGINFO_H
+end_comment
 
 end_unit
 

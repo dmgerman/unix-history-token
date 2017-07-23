@@ -139,7 +139,27 @@ argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 name|override
+block|;
+name|void
+name|getNameWithPrefix
+argument_list|(
+argument|SmallVectorImpl<char>&OutName
+argument_list|,
+argument|const GlobalValue *GV
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
 block|; }
+decl_stmt|;
+comment|/// This implementation is used for AArch64 COFF targets.
+name|class
+name|AArch64_COFFTargetObjectFile
+range|:
+name|public
+name|TargetLoweringObjectFileCOFF
+block|{}
 decl_stmt|;
 block|}
 end_decl_stmt

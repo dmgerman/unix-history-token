@@ -543,6 +543,24 @@ name|TypeAliasDecl
 operator|>
 name|typeAliasDecl
 expr_stmt|;
+comment|/// \brief Matches type alias template declarations.
+comment|///
+comment|/// typeAliasTemplateDecl() matches
+comment|/// \code
+comment|///   template<typename T>
+comment|///   using Y = X<T>;
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|TypeAliasTemplateDecl
+operator|>
+name|typeAliasTemplateDecl
+expr_stmt|;
 comment|/// \brief Matches AST nodes that were expanded within the main-file.
 comment|///
 comment|/// Example matches X but not Y
@@ -2472,6 +2490,104 @@ name|ObjCInterfaceDecl
 operator|>
 name|objcInterfaceDecl
 expr_stmt|;
+comment|/// \brief Matches Objective-C protocol declarations.
+comment|///
+comment|/// Example matches FooDelegate
+comment|/// \code
+comment|///   @protocol FooDelegate
+comment|///   @end
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|ObjCProtocolDecl
+operator|>
+name|objcProtocolDecl
+expr_stmt|;
+comment|/// \brief Matches Objective-C category declarations.
+comment|///
+comment|/// Example matches Foo (Additions)
+comment|/// \code
+comment|///   @interface Foo (Additions)
+comment|///   @end
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|ObjCCategoryDecl
+operator|>
+name|objcCategoryDecl
+expr_stmt|;
+comment|/// \brief Matches Objective-C method declarations.
+comment|///
+comment|/// Example matches both declaration and definition of -[Foo method]
+comment|/// \code
+comment|///   @interface Foo
+comment|///   - (void)method;
+comment|///   @end
+comment|///
+comment|///   @implementation Foo
+comment|///   - (void)method {}
+comment|///   @end
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|ObjCMethodDecl
+operator|>
+name|objcMethodDecl
+expr_stmt|;
+comment|/// \brief Matches Objective-C instance variable declarations.
+comment|///
+comment|/// Example matches _enabled
+comment|/// \code
+comment|///   @implementation Foo {
+comment|///     BOOL _enabled;
+comment|///   }
+comment|///   @end
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|ObjCIvarDecl
+operator|>
+name|objcIvarDecl
+expr_stmt|;
+comment|/// \brief Matches Objective-C property declarations.
+comment|///
+comment|/// Example matches enabled
+comment|/// \code
+comment|///   @interface Foo
+comment|///   @property BOOL enabled;
+comment|///   @end
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|ObjCPropertyDecl
+operator|>
+name|objcPropertyDecl
+expr_stmt|;
 comment|/// \brief Matches expressions that introduce cleanups to be run at the end
 comment|/// of the sub-expression's evaluation.
 comment|///
@@ -2554,6 +2670,28 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/// \brief Matches C++ initializer list expressions.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   std::vector<int> a({ 1, 2, 3 });
+comment|///   std::vector<int> b = { 4, 5 };
+comment|///   int c[] = { 6, 7 };
+comment|///   std::pair<int, int> d = { 8, 9 };
+comment|/// \endcode
+comment|/// cxxStdInitializerListExpr()
+comment|///   matches "{ 1, 2, 3 }" and "{ 4, 5 }"
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Stmt
+operator|,
+name|CXXStdInitializerListExpr
+operator|>
+name|cxxStdInitializerListExpr
+expr_stmt|;
 comment|/// \brief Matches implicit initializers of init list expressions.
 comment|///
 comment|/// Given
@@ -2835,7 +2973,7 @@ comment|/// \brief Matches nodes where temporaries are materialized.
 comment|///
 comment|/// Example: Given
 comment|/// \code
-comment|///   struct T {void func()};
+comment|///   struct T {void func();};
 comment|///   T f();
 comment|///   void g(T);
 comment|/// \endcode
@@ -5369,7 +5507,7 @@ block|}
 comment|/// \brief Matches on the receiver of an ObjectiveC Message expression.
 comment|///
 comment|/// Example
-comment|/// matcher = objCMessageExpr(hasRecieverType(asString("UIWebView *")));
+comment|/// matcher = objCMessageExpr(hasReceiverType(asString("UIWebView *")));
 comment|/// matches the [webView ...] message invocation.
 comment|/// \code
 comment|///   NSString *webViewJavaScript = ...
@@ -8457,14 +8595,30 @@ operator|==
 name|N
 return|;
 block|}
-comment|/// \brief Matches literals that are equal to the given value.
+comment|/// \brief Matches literals that are equal to the given value of type ValueT.
 comment|///
-comment|/// Example matches true (matcher = cxxBoolLiteral(equals(true)))
+comment|/// Given
 comment|/// \code
-comment|///   true
+comment|///   f('\0', false, 3.14, 42);
 comment|/// \endcode
+comment|/// characterLiteral(equals(0))
+comment|///   matches '\0'
+comment|/// cxxBoolLiteral(equals(false)) and cxxBoolLiteral(equals(0))
+comment|///   match false
+comment|/// floatLiteral(equals(3.14)) and floatLiteral(equals(314e-2))
+comment|///   match 3.14
+comment|/// integerLiteral(equals(42))
+comment|///   matches 42
 comment|///
-comment|/// Usable as: Matcher<CharacterLiteral>, Matcher<CXXBoolLiteral>,
+comment|/// Note that you cannot directly match a negative numeric literal because the
+comment|/// minus sign is not part of the literal: It is a unary operator whose operand
+comment|/// is the positive numeric literal. Instead, you must use a unaryOperator()
+comment|/// matcher to match the minus sign:
+comment|///
+comment|/// unaryOperator(hasOperatorName("-"),
+comment|///               hasUnaryOperand(integerLiteral(equals(13))))
+comment|///
+comment|/// Usable as: Matcher<CharacterLiteral>, Matcher<CXXBoolLiteralExpr>,
 comment|///            Matcher<FloatingLiteral>, Matcher<IntegerLiteral>
 name|template
 operator|<
@@ -8500,6 +8654,102 @@ operator|>
 operator|(
 name|Value
 operator|)
+return|;
+block|}
+name|AST_POLYMORPHIC_MATCHER_P_OVERLOAD
+argument_list|(
+argument|equals
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(CharacterLiteral,                                                           CXXBoolLiteralExpr,                                                           IntegerLiteral)
+argument_list|,
+argument|bool
+argument_list|,
+argument|Value
+argument_list|,
+literal|0
+argument_list|)
+block|{
+return|return
+name|internal
+operator|::
+name|ValueEqualsMatcher
+operator|<
+name|NodeType
+operator|,
+name|ParamT
+operator|>
+operator|(
+name|Value
+operator|)
+operator|.
+name|matchesNode
+argument_list|(
+name|Node
+argument_list|)
+return|;
+block|}
+name|AST_POLYMORPHIC_MATCHER_P_OVERLOAD
+argument_list|(
+argument|equals
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(CharacterLiteral,                                                           CXXBoolLiteralExpr,                                                           IntegerLiteral)
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|Value
+argument_list|,
+literal|1
+argument_list|)
+block|{
+return|return
+name|internal
+operator|::
+name|ValueEqualsMatcher
+operator|<
+name|NodeType
+operator|,
+name|ParamT
+operator|>
+operator|(
+name|Value
+operator|)
+operator|.
+name|matchesNode
+argument_list|(
+name|Node
+argument_list|)
+return|;
+block|}
+name|AST_POLYMORPHIC_MATCHER_P_OVERLOAD
+argument_list|(
+argument|equals
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(CharacterLiteral,                                                           CXXBoolLiteralExpr,                                                           FloatingLiteral,                                                           IntegerLiteral)
+argument_list|,
+argument|double
+argument_list|,
+argument|Value
+argument_list|,
+literal|2
+argument_list|)
+block|{
+return|return
+name|internal
+operator|::
+name|ValueEqualsMatcher
+operator|<
+name|NodeType
+operator|,
+name|ParamT
+operator|>
+operator|(
+name|Value
+operator|)
+operator|.
+name|matchesNode
+argument_list|(
+name|Node
+argument_list|)
 return|;
 block|}
 comment|/// \brief Matches the operator Name of operator expressions (binary or
@@ -12171,7 +12421,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// \brief Matches declaration of the function the statemenet belongs to
+comment|/// \brief Matches declaration of the function the statement belongs to
 comment|///
 comment|/// Given:
 comment|/// \code

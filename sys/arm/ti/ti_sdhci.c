@@ -86,6 +86,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -171,6 +183,12 @@ begin_include
 include|#
 directive|include
 file|"gpio_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_mmccam.h"
 end_include
 
 begin_struct
@@ -409,6 +427,22 @@ directive|define
 name|MMCHS_SD_CAPA_VS33
 value|(1<< 24)
 end_define
+
+begin_comment
+comment|/* Forward declarations, CAM-relataed */
+end_comment
+
+begin_comment
+comment|// static void ti_sdhci_cam_poll(struct cam_sim *);
+end_comment
+
+begin_comment
+comment|// static void ti_sdhci_cam_action(struct cam_sim *, union ccb *);
+end_comment
+
+begin_comment
+comment|// static int ti_sdhci_cam_settran_settings(struct ti_sdhci_softc *sc, union ccb *);
+end_comment
 
 begin_function
 specifier|static
@@ -946,6 +980,84 @@ decl_stmt|;
 name|uint32_t
 name|val32
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MMCCAM
+name|uint32_t
+name|newval32
+decl_stmt|;
+if|if
+condition|(
+name|off
+operator|==
+name|SDHCI_HOST_CONTROL
+condition|)
+block|{
+name|val32
+operator|=
+name|ti_mmchs_read_4
+argument_list|(
+name|sc
+argument_list|,
+name|MMCHS_CON
+argument_list|)
+expr_stmt|;
+name|newval32
+operator|=
+name|val32
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|&
+name|SDHCI_CTRL_8BITBUS
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Custom-enabling 8-bit bus\n"
+argument_list|)
+expr_stmt|;
+name|newval32
+operator||=
+name|MMCHS_CON_DW8
+expr_stmt|;
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Custom-disabling 8-bit bus\n"
+argument_list|)
+expr_stmt|;
+name|newval32
+operator|&=
+operator|~
+name|MMCHS_CON_DW8
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|newval32
+operator|!=
+name|val32
+condition|)
+name|ti_mmchs_write_4
+argument_list|(
+name|sc
+argument_list|,
+name|MMCHS_CON
+argument_list|,
+name|newval32
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|val32
 operator|=
 name|RD4
@@ -2468,6 +2580,19 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MMCCAM
+name|sdhci_cam_start_slot
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|slot
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sdhci_start_slot
 argument_list|(
 operator|&
@@ -2476,6 +2601,8 @@ operator|->
 name|slot
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -2814,6 +2941,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MMCCAM
+end_ifndef
+
 begin_expr_stmt
 name|MMC_DECLARE_BRIDGE
 argument_list|(
@@ -2821,6 +2954,11 @@ name|sdhci_ti
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

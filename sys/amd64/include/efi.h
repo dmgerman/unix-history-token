@@ -16,8 +16,37 @@ name|__AMD64_INCLUDE_EFI_H_
 end_define
 
 begin_comment
-comment|/*  * XXX: from gcc 6.2 manual:  * Note, the ms_abi attribute for Microsoft Windows 64-bit targets  * currently requires the -maccumulate-outgoing-args option.  */
+comment|/*  * XXX: from gcc 6.2 manual:  * Note, the ms_abi attribute for Microsoft Windows 64-bit targets  * currently requires the -maccumulate-outgoing-args option.  *  * Avoid EFIABI_ATTR declarations for compilers that don't support it.  * GCC support began in version 4.4.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+expr|\
+operator|(
+name|__GNUC__
+operator|>
+literal|4
+operator|||
+name|__GNUC__
+operator|==
+literal|4
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|4
+operator|)
+end_if
 
 begin_define
 define|#
@@ -25,6 +54,11 @@ directive|define
 name|EFIABI_ATTR
 value|__attribute__((ms_abi))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

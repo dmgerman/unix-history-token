@@ -120,11 +120,17 @@ decl_stmt|;
 name|class
 name|Instruction
 decl_stmt|;
+struct_decl|struct
+name|KnownBits
+struct_decl|;
 name|class
 name|Loop
 decl_stmt|;
 name|class
 name|LoopInfo
+decl_stmt|;
+name|class
+name|OptimizationRemarkEmitter
 decl_stmt|;
 name|class
 name|MDNode
@@ -163,13 +169,9 @@ name|Value
 modifier|*
 name|V
 parameter_list|,
-name|APInt
+name|KnownBits
 modifier|&
-name|KnownZero
-parameter_list|,
-name|APInt
-modifier|&
-name|KnownOne
+name|Known
 parameter_list|,
 specifier|const
 name|DataLayout
@@ -200,6 +202,58 @@ modifier|*
 name|DT
 init|=
 name|nullptr
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Returns the known bits rather than passing by reference.
+name|KnownBits
+name|computeKnownBits
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|unsigned
+name|Depth
+init|=
+literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Compute known bits from the range metadata.
@@ -213,13 +267,9 @@ name|MDNode
 modifier|&
 name|Ranges
 parameter_list|,
-name|APInt
+name|KnownBits
 modifier|&
-name|KnownZero
-parameter_list|,
-name|APInt
-modifier|&
-name|KnownOne
+name|Known
 parameter_list|)
 function_decl|;
 comment|/// Return true if LHS and RHS have no common bits set.
@@ -240,55 +290,6 @@ specifier|const
 name|DataLayout
 modifier|&
 name|DL
-parameter_list|,
-name|AssumptionCache
-modifier|*
-name|AC
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|Instruction
-modifier|*
-name|CxtI
-init|=
-name|nullptr
-parameter_list|,
-specifier|const
-name|DominatorTree
-modifier|*
-name|DT
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
-comment|/// Determine whether the sign bit is known to be zero or one. Convenience
-comment|/// wrapper around computeKnownBits.
-name|void
-name|ComputeSignBit
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|,
-name|bool
-modifier|&
-name|KnownZero
-parameter_list|,
-name|bool
-modifier|&
-name|KnownOne
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|&
-name|DL
-parameter_list|,
-name|unsigned
-name|Depth
-init|=
-literal|0
 parameter_list|,
 name|AssumptionCache
 modifier|*
@@ -360,10 +361,21 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+name|bool
+name|isOnlyUsedInZeroEqualityComparison
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+parameter_list|)
+function_decl|;
 comment|/// Return true if the given value is known to be non-zero when defined. For
 comment|/// vectors, return true if every element is known to be non-zero when
-comment|/// defined. Supports values with integer or pointer type and vectors of
-comment|/// integers.
+comment|/// defined. For pointers, if the context instruction and dominator tree are
+comment|/// specified, perform context-sensitive analysis and return true if the
+comment|/// pointer couldn't possibly be null at the specified instruction.
+comment|/// Supports values with integer or pointer type and vectors of integers.
 name|bool
 name|isKnownNonZero
 parameter_list|(
@@ -729,9 +741,15 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// Return true if we can prove that the specified FP value is either a NaN or
-comment|/// never less than 0.0.
-comment|/// If \p IncludeNeg0 is false, -0.0 is considered less than 0.0.
+comment|/// Return true if we can prove that the specified FP value is either NaN or
+comment|/// never less than -0.0.
+comment|///
+comment|///      NaN --> true
+comment|///       +0 --> true
+comment|///       -0 --> true
+comment|///   x> +0 --> true
+comment|///   x< -0 --> false
+comment|///
 name|bool
 name|CannotBeOrderedLessThanZero
 parameter_list|(
@@ -746,8 +764,14 @@ modifier|*
 name|TLI
 parameter_list|)
 function_decl|;
-comment|/// \returns true if we can prove that the specified FP value has a 0 sign
-comment|/// bit.
+comment|/// Return true if we can prove that the specified FP value's sign bit is 0.
+comment|///
+comment|///      NaN --> true/false (depending on the NaN's sign bit)
+comment|///       +0 --> true
+comment|///       -0 --> false
+comment|///   x> +0 --> true
+comment|///   x< -0 --> false
+comment|///
 name|bool
 name|SignBitMustBeZero
 parameter_list|(
@@ -863,8 +887,8 @@ name|DL
 argument_list|)
 return|;
 block|}
-comment|/// Returns true if the GEP is based on a pointer to a string (array of i8),
-comment|/// and is indexing into this string.
+comment|/// Returns true if the GEP is based on a pointer to a string (array of
+comment|// \p CharSize integers) and is indexing into this string.
 name|bool
 name|isGEPBasedOnPointerToString
 parameter_list|(
@@ -872,6 +896,107 @@ specifier|const
 name|GEPOperator
 modifier|*
 name|GEP
+parameter_list|,
+name|unsigned
+name|CharSize
+init|=
+literal|8
+parameter_list|)
+function_decl|;
+comment|/// Represents offset+length into a ConstantDataArray.
+struct|struct
+name|ConstantDataArraySlice
+block|{
+comment|/// ConstantDataArray pointer. nullptr indicates a zeroinitializer (a valid
+comment|/// initializer, it just doesn't fit the ConstantDataArray interface).
+specifier|const
+name|ConstantDataArray
+modifier|*
+name|Array
+decl_stmt|;
+comment|/// Slice starts at this Offset.
+name|uint64_t
+name|Offset
+decl_stmt|;
+comment|/// Length of the slice.
+name|uint64_t
+name|Length
+decl_stmt|;
+comment|/// Moves the Offset and adjusts Length accordingly.
+name|void
+name|move
+parameter_list|(
+name|uint64_t
+name|Delta
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Delta
+operator|<
+name|Length
+argument_list|)
+expr_stmt|;
+name|Offset
+operator|+=
+name|Delta
+expr_stmt|;
+name|Length
+operator|-=
+name|Delta
+expr_stmt|;
+block|}
+comment|/// Convenience accessor for elements in the slice.
+name|uint64_t
+name|operator
+index|[]
+argument_list|(
+name|unsigned
+name|I
+argument_list|)
+decl|const
+block|{
+return|return
+name|Array
+operator|==
+name|nullptr
+condition|?
+literal|0
+else|:
+name|Array
+operator|->
+name|getElementAsInteger
+argument_list|(
+name|I
+operator|+
+name|Offset
+argument_list|)
+return|;
+block|}
+block|}
+struct|;
+comment|/// Returns true if the value \p V is a pointer into a ContantDataArray.
+comment|/// If successful \p Index will point to a ConstantDataArray info object
+comment|/// with an appropriate offset.
+name|bool
+name|getConstantDataArrayInfo
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|ConstantDataArraySlice
+modifier|&
+name|Slice
+parameter_list|,
+name|unsigned
+name|ElementSize
+parameter_list|,
+name|uint64_t
+name|Offset
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// This function computes the length of a null-terminated C string pointed to
@@ -912,6 +1037,11 @@ specifier|const
 name|Value
 modifier|*
 name|V
+parameter_list|,
+name|unsigned
+name|CharSize
+init|=
+literal|8
 parameter_list|)
 function_decl|;
 comment|/// This method strips off any GEP address adjustments and pointer casts from
@@ -1422,7 +1552,7 @@ comment|///
 comment|/// Note that this currently only considers the basic block that is
 comment|/// the parent of I.
 name|bool
-name|isKnownNotFullPoison
+name|programUndefinedIfFullPoison
 parameter_list|(
 specifier|const
 name|Instruction
@@ -1681,7 +1811,7 @@ argument|const Value *RHS
 argument_list|,
 argument|const DataLayout&DL
 argument_list|,
-argument|bool InvertAPred = false
+argument|bool LHSIsFalse = false
 argument_list|,
 argument|unsigned Depth =
 literal|0

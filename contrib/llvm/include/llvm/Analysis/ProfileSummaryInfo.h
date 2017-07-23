@@ -134,6 +134,9 @@ name|class
 name|BlockFrequencyInfo
 decl_stmt|;
 name|class
+name|CallSite
+decl_stmt|;
+name|class
 name|ProfileSummary
 decl_stmt|;
 comment|/// \brief Analysis providing profile information.
@@ -162,7 +165,7 @@ name|ProfileSummary
 operator|>
 name|Summary
 expr_stmt|;
-name|void
+name|bool
 name|computeSummary
 parameter_list|()
 function_decl|;
@@ -212,19 +215,130 @@ argument_list|(
 argument|std::move(Arg.Summary)
 argument_list|)
 block|{}
+comment|/// \brief Returns true if profile summary is available.
+name|bool
+name|hasProfileSummary
+argument_list|()
+block|{
+return|return
+name|computeSummary
+argument_list|()
+return|;
+block|}
+comment|/// \brief Returns true if module \c M has sample profile.
+name|bool
+name|hasSampleProfile
+parameter_list|()
+block|{
+return|return
+name|hasProfileSummary
+argument_list|()
+operator|&&
+name|Summary
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|ProfileSummary
+operator|::
+name|PSK_Sample
+return|;
+block|}
+comment|/// \brief Returns true if module \c M has instrumentation profile.
+name|bool
+name|hasInstrumentationProfile
+parameter_list|()
+block|{
+return|return
+name|hasProfileSummary
+argument_list|()
+operator|&&
+name|Summary
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|ProfileSummary
+operator|::
+name|PSK_Instr
+return|;
+block|}
+comment|/// Handle the invalidation of this information.
+comment|///
+comment|/// When used as a result of \c ProfileSummaryAnalysis this method will be
+comment|/// called when the module this was computed for changes. Since profile
+comment|/// summary is immutable after it is annotated on the module, we return false
+comment|/// here.
+name|bool
+name|invalidate
+argument_list|(
+name|Module
+operator|&
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+argument_list|,
+name|ModuleAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Returns the profile count for \p CallInst.
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getProfileCount
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|CallInst
+argument_list|,
+name|BlockFrequencyInfo
+operator|*
+name|BFI
+argument_list|)
+expr_stmt|;
 comment|/// \brief Returns true if \p F has hot function entry.
 name|bool
 name|isFunctionEntryHot
-argument_list|(
+parameter_list|(
 specifier|const
 name|Function
-operator|*
+modifier|*
 name|F
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
+comment|/// Returns true if \p F has hot function entry or hot call edge.
+name|bool
+name|isFunctionHotInCallGraph
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
 comment|/// \brief Returns true if \p F has cold function entry.
 name|bool
 name|isFunctionEntryCold
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
+comment|/// Returns true if \p F has cold function entry or cold call edge.
+name|bool
+name|isFunctionColdInCallGraph
 parameter_list|(
 specifier|const
 name|Function
@@ -256,6 +370,48 @@ specifier|const
 name|BasicBlock
 modifier|*
 name|B
+parameter_list|,
+name|BlockFrequencyInfo
+modifier|*
+name|BFI
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns true if BasicBlock \p B is considered cold.
+name|bool
+name|isColdBB
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|B
+parameter_list|,
+name|BlockFrequencyInfo
+modifier|*
+name|BFI
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns true if CallSite \p CS is considered hot.
+name|bool
+name|isHotCallSite
+parameter_list|(
+specifier|const
+name|CallSite
+modifier|&
+name|CS
+parameter_list|,
+name|BlockFrequencyInfo
+modifier|*
+name|BFI
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns true if Callsite \p CS is considered cold.
+name|bool
+name|isColdCallSite
+parameter_list|(
+specifier|const
+name|CallSite
+modifier|&
+name|CS
 parameter_list|,
 name|BlockFrequencyInfo
 modifier|*

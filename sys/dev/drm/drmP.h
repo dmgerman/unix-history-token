@@ -431,7 +431,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<opt_drm.h>
+file|"opt_drm.h"
 end_include
 
 begin_ifdef
@@ -1148,7 +1148,7 @@ name|DRM_SUSER
 parameter_list|(
 name|p
 parameter_list|)
-value|(priv_check(p, PRIV_DRIVER) == 0)
+value|(priv_check(p, PRIV_KMEM_WRITE) == 0)
 end_define
 
 begin_define

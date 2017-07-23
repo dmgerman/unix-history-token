@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -287,6 +287,8 @@ name|QuotedIRValue
 block|,
 comment|// `<constant value>`
 name|SubRegisterIndex
+block|,
+name|StringConstant
 block|}
 enum|;
 name|private
@@ -486,6 +488,10 @@ operator|||
 name|Kind
 operator|==
 name|kw_invariant
+operator|||
+name|Kind
+operator|==
+name|StringConstant
 return|;
 block|}
 name|bool

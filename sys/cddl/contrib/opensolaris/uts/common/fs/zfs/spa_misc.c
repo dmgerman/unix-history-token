@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vdev_file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/metaslab.h>
 end_include
 
@@ -7466,6 +7472,9 @@ expr_stmt|;
 name|vdev_cache_stat_init
 argument_list|()
 expr_stmt|;
+name|vdev_file_init
+argument_list|()
+expr_stmt|;
 name|zfs_prop_init
 argument_list|()
 expr_stmt|;
@@ -7509,6 +7518,9 @@ name|l2arc_stop
 argument_list|()
 expr_stmt|;
 name|spa_evict_all
+argument_list|()
+expr_stmt|;
+name|vdev_file_fini
 argument_list|()
 expr_stmt|;
 name|vdev_cache_stat_fini

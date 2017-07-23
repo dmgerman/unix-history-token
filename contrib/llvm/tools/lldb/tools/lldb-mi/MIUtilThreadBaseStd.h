@@ -41,27 +41,6 @@ begin_comment
 comment|// Third party headers:
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<eh.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// _MSC_VER
-end_comment
-
 begin_include
 include|#
 directive|include

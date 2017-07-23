@@ -629,7 +629,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MULTIDELAY
+name|PLATFORM
 end_ifdef
 
 begin_decl_stmt
@@ -1284,7 +1284,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MULTIDELAY
+name|PLATFORM
 end_ifdef
 
 begin_function

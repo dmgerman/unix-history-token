@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- NameAnonGlobals.h - Anonymous Global Naming Pass ----*- C++ -*-=======//
+comment|//===-- NameAnonGlobals.h - Anonymous Global Naming Pass --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -93,7 +93,9 @@ name|public
 operator|:
 name|NameAnonGlobalPass
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|PreservedAnalyses
 name|run
 argument_list|(
@@ -109,6 +111,10 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

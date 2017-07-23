@@ -166,9 +166,6 @@ name|class
 name|ExtractElementInst
 decl_stmt|;
 name|class
-name|ExtractValueInst
-decl_stmt|;
-name|class
 name|FCmpInst
 decl_stmt|;
 name|class
@@ -209,9 +206,6 @@ name|InvokeInst
 decl_stmt|;
 name|class
 name|InsertElementInst
-decl_stmt|;
-name|class
-name|InsertValueInst
 decl_stmt|;
 name|class
 name|Instruction
@@ -1240,15 +1234,27 @@ name|DefaultProb
 decl_stmt|;
 block|}
 struct|;
-comment|/// Check whether a range of clusters is dense enough for a jump table.
-name|bool
-name|isDense
+comment|/// Return the range of value in [First..Last].
+name|uint64_t
+name|getJumpTableRange
 argument_list|(
 specifier|const
 name|CaseClusterVector
 operator|&
 name|Clusters
 argument_list|,
+name|unsigned
+name|First
+argument_list|,
+name|unsigned
+name|Last
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return the number of cases in [First..Last].
+name|uint64_t
+name|getJumpTableNumCases
+argument_list|(
 specifier|const
 name|SmallVectorImpl
 operator|<
@@ -1262,9 +1268,6 @@ name|First
 argument_list|,
 name|unsigned
 name|Last
-argument_list|,
-name|unsigned
-name|MinDensity
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1314,43 +1317,6 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|DefaultMBB
-parameter_list|)
-function_decl|;
-comment|/// Check whether the range [Low,High] fits in a machine word.
-name|bool
-name|rangeFitsInWord
-parameter_list|(
-specifier|const
-name|APInt
-modifier|&
-name|Low
-parameter_list|,
-specifier|const
-name|APInt
-modifier|&
-name|High
-parameter_list|)
-function_decl|;
-comment|/// Check whether these clusters are suitable for lowering with bit tests based
-comment|/// on the number of destinations, comparison metric, and range.
-name|bool
-name|isSuitableForBitTests
-parameter_list|(
-name|unsigned
-name|NumDests
-parameter_list|,
-name|unsigned
-name|NumCmps
-parameter_list|,
-specifier|const
-name|APInt
-modifier|&
-name|Low
-parameter_list|,
-specifier|const
-name|APInt
-modifier|&
-name|High
 parameter_list|)
 function_decl|;
 comment|/// Build a bit test cluster from Clusters[First..Last]. Returns false if it
@@ -1993,6 +1959,16 @@ argument_list|(
 name|dag
 argument_list|)
 operator|,
+name|DL
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|AA
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
 name|FuncInfo
 argument_list|(
 name|funcinfo
@@ -2011,8 +1987,8 @@ operator|*
 name|gfi
 argument_list|,
 name|AliasAnalysis
-operator|&
-name|aa
+operator|*
+name|AA
 argument_list|,
 specifier|const
 name|TargetLibraryInfo
@@ -2020,39 +1996,33 @@ operator|*
 name|li
 argument_list|)
 expr_stmt|;
-comment|/// clear - Clear out the current SelectionDAG and the associated
-comment|/// state and prepare this SelectionDAGBuilder object to be used
-comment|/// for a new block. This doesn't clear out information about
-comment|/// additional blocks that are needed to complete switch lowering
-comment|/// or PHI node updating; that information is cleared out as it is
-comment|/// consumed.
+comment|/// Clear out the current SelectionDAG and the associated state and prepare
+comment|/// this SelectionDAGBuilder object to be used for a new block. This doesn't
+comment|/// clear out information about additional blocks that are needed to complete
+comment|/// switch lowering or PHI node updating; that information is cleared out as
+comment|/// it is consumed.
 name|void
 name|clear
 parameter_list|()
 function_decl|;
-comment|/// clearDanglingDebugInfo - Clear the dangling debug information
-comment|/// map. This function is separated from the clear so that debug
-comment|/// information that is dangling in a basic block can be properly
-comment|/// resolved in a different basic block. This allows the
-comment|/// SelectionDAG to resolve dangling debug information attached
-comment|/// to PHI nodes.
+comment|/// Clear the dangling debug information map. This function is separated from
+comment|/// the clear so that debug information that is dangling in a basic block can
+comment|/// be properly resolved in a different basic block. This allows the
+comment|/// SelectionDAG to resolve dangling debug information attached to PHI nodes.
 name|void
 name|clearDanglingDebugInfo
 parameter_list|()
 function_decl|;
-comment|/// getRoot - Return the current virtual root of the Selection DAG,
-comment|/// flushing any PendingLoad items. This must be done before emitting
-comment|/// a store or any other node that may need to be ordered after any
-comment|/// prior load instructions.
-comment|///
+comment|/// Return the current virtual root of the Selection DAG, flushing any
+comment|/// PendingLoad items. This must be done before emitting a store or any other
+comment|/// node that may need to be ordered after any prior load instructions.
 name|SDValue
 name|getRoot
 parameter_list|()
 function_decl|;
-comment|/// getControlRoot - Similar to getRoot, but instead of flushing all the
-comment|/// PendingLoad items, flush all the PendingExports items. It is necessary
-comment|/// to do this before emitting a terminator instruction.
-comment|///
+comment|/// Similar to getRoot, but instead of flushing all the PendingLoad items,
+comment|/// flush all the PendingExports items. It is necessary to do this before
+comment|/// emitting a terminator instruction.
 name|SDValue
 name|getControlRoot
 parameter_list|()
@@ -2295,6 +2265,9 @@ name|TW
 argument_list|,
 name|BranchProbability
 name|FW
+argument_list|,
+name|bool
+name|InvertCond
 argument_list|)
 decl_stmt|;
 name|void
@@ -2326,6 +2299,9 @@ name|TW
 parameter_list|,
 name|BranchProbability
 name|FW
+parameter_list|,
+name|bool
+name|InvertCond
 parameter_list|)
 function_decl|;
 name|bool
@@ -2676,6 +2652,26 @@ name|bool
 name|ForceVoidReturnTy
 parameter_list|)
 function_decl|;
+comment|/// Returns the type of FrameIndex and TargetFrameIndex nodes.
+name|MVT
+name|getFrameIndexTy
+parameter_list|()
+block|{
+return|return
+name|DAG
+operator|.
+name|getTargetLoweringInfo
+argument_list|()
+operator|.
+name|getFrameIndexTy
+argument_list|(
+name|DAG
+operator|.
+name|getDataLayout
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|private
 label|:
 comment|// Terminator instructions.
@@ -3434,7 +3430,7 @@ name|void
 name|visitExtractValue
 parameter_list|(
 specifier|const
-name|ExtractValueInst
+name|User
 modifier|&
 name|I
 parameter_list|)
@@ -3443,7 +3439,7 @@ name|void
 name|visitInsertValue
 parameter_list|(
 specifier|const
-name|InsertValueInst
+name|User
 modifier|&
 name|I
 parameter_list|)
@@ -3753,6 +3749,15 @@ name|Intrinsic
 parameter_list|)
 function_decl|;
 name|void
+name|visitConstrainedFPIntrinsic
+parameter_list|(
+specifier|const
+name|ConstrainedFPIntrinsic
+modifier|&
+name|FPI
+parameter_list|)
+function_decl|;
+name|void
 name|visitVAStart
 parameter_list|(
 specifier|const
@@ -3828,6 +3833,18 @@ specifier|const
 name|GCResultInst
 modifier|&
 name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitVectorReduce
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|,
+name|unsigned
+name|Intrinsic
 parameter_list|)
 function_decl|;
 name|void
@@ -3923,7 +3940,7 @@ name|int64_t
 name|Offset
 parameter_list|,
 name|bool
-name|IsIndirect
+name|IsDbgDeclare
 parameter_list|,
 specifier|const
 name|SDValue
@@ -3969,7 +3986,9 @@ parameter_list|,
 name|int64_t
 name|Offset
 parameter_list|,
+specifier|const
 name|DebugLoc
+modifier|&
 name|dl
 parameter_list|,
 name|unsigned
@@ -3990,9 +4009,8 @@ comment|///
 struct|struct
 name|RegsForValue
 block|{
-comment|/// ValueVTs - The value types of the values, which may not be legal, and
+comment|/// The value types of the values, which may not be legal, and
 comment|/// may need be promoted or synthesized from one or more registers.
-comment|///
 name|SmallVector
 operator|<
 name|EVT
@@ -4001,15 +4019,14 @@ literal|4
 operator|>
 name|ValueVTs
 expr_stmt|;
-comment|/// RegVTs - The value types of the registers. This is the same size as
-comment|/// ValueVTs and it records, for each value, what the type of the assigned
-comment|/// register or registers are. (Individual values are never synthesized
-comment|/// from more than one type of register.)
+comment|/// The value types of the registers. This is the same size as ValueVTs and it
+comment|/// records, for each value, what the type of the assigned register or
+comment|/// registers are. (Individual values are never synthesized from more than one
+comment|/// type of register.)
 comment|///
 comment|/// With virtual registers, the contents of RegVTs is redundant with TLI's
 comment|/// getRegisterType member function, however when with physical registers
 comment|/// it is necessary to have a separate record of the types.
-comment|///
 name|SmallVector
 operator|<
 name|MVT
@@ -4018,10 +4035,9 @@ literal|4
 operator|>
 name|RegVTs
 expr_stmt|;
-comment|/// Regs - This list holds the registers assigned to the values.
+comment|/// This list holds the registers assigned to the values.
 comment|/// Each legal or promoted value requires one register, and each
 comment|/// expanded value requires multiple registers.
-comment|///
 name|SmallVector
 operator|<
 name|unsigned
@@ -4030,6 +4046,20 @@ literal|4
 operator|>
 name|Regs
 expr_stmt|;
+comment|/// This list holds the number of registers for each value.
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|4
+operator|>
+name|RegCount
+expr_stmt|;
+comment|/// Records if this value needs to be treated in an ABI dependant manner,
+comment|/// different to normal type legalization.
+name|bool
+name|IsABIMangled
+decl_stmt|;
 name|RegsForValue
 argument_list|()
 expr_stmt|;
@@ -4043,6 +4073,8 @@ argument_list|,
 argument|MVT regvt
 argument_list|,
 argument|EVT valuevt
+argument_list|,
+argument|bool IsABIMangledValue = false
 argument_list|)
 empty_stmt|;
 name|RegsForValue
@@ -4056,9 +4088,11 @@ argument_list|,
 argument|unsigned Reg
 argument_list|,
 argument|Type *Ty
+argument_list|,
+argument|bool IsABIMangledValue = false
 argument_list|)
 empty_stmt|;
-comment|/// append - Add the specified values to this one.
+comment|/// Add the specified values to this one.
 name|void
 name|append
 parameter_list|(
@@ -4125,11 +4159,23 @@ name|end
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|RegCount
+operator|.
+name|push_back
+argument_list|(
+name|RHS
+operator|.
+name|Regs
+operator|.
+name|size
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
-comment|/// getCopyFromRegs - Emit a series of CopyFromReg nodes that copies from
-comment|/// this value and returns the result as a ValueVTs value.  This uses
-comment|/// Chain/Flag as the input and updates them for the output Chain/Flag.
-comment|/// If the Flag pointer is NULL, no flag is used.
+comment|/// Emit a series of CopyFromReg nodes that copies from this value and returns
+comment|/// the result as a ValueVTs value. This uses Chain/Flag as the input and
+comment|/// updates them for the output Chain/Flag. If the Flag pointer is NULL, no
+comment|/// flag is used.
 name|SDValue
 name|getCopyFromRegs
 argument_list|(
@@ -4163,11 +4209,11 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getCopyToRegs - Emit a series of CopyToReg nodes that copies the specified
-comment|/// value into the registers specified by this object.  This uses Chain/Flag
-comment|/// as the input and updates them for the output Chain/Flag.  If the Flag
-comment|/// pointer is nullptr, no flag is used.  If V is not nullptr, then it is used
-comment|/// in printing better diagnostic messages on error.
+comment|/// Emit a series of CopyToReg nodes that copies the specified value into the
+comment|/// registers specified by this object. This uses Chain/Flag as the input and
+comment|/// updates them for the output Chain/Flag. If the Flag pointer is nullptr, no
+comment|/// flag is used. If V is not nullptr, then it is used in printing better
+comment|/// diagnostic messages on error.
 name|void
 name|getCopyToRegs
 argument_list|(
@@ -4209,9 +4255,9 @@ name|ANY_EXTEND
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// AddInlineAsmOperands - Add this value to the specified inlineasm node
-comment|/// operand list.  This adds the code marker, matching input operand index
-comment|/// (if applicable), and includes the number of values added into it.
+comment|/// Add this value to the specified inlineasm node operand list. This adds the
+comment|/// code marker, matching input operand index (if applicable), and includes
+comment|/// the number of values added into it.
 name|void
 name|AddInlineAsmOperands
 argument_list|(

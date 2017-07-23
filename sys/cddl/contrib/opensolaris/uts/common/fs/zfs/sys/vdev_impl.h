@@ -96,6 +96,9 @@ name|struct
 name|vdev_cache_entry
 name|vdev_cache_entry_t
 typedef|;
+struct_decl|struct
+name|abd
+struct_decl|;
 specifier|extern
 name|int
 name|zfs_vdev_queue_depth_pct
@@ -252,9 +255,10 @@ comment|/*  * Virtual device properties  */
 struct|struct
 name|vdev_cache_entry
 block|{
-name|char
+name|struct
+name|abd
 modifier|*
-name|ve_data
+name|ve_abd
 decl_stmt|;
 name|uint64_t
 name|ve_offset

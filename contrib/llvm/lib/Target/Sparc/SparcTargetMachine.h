@@ -185,6 +185,16 @@ name|get
 argument_list|()
 return|;
 block|}
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
 expr|}
 block|;
 comment|/// Sparc 32-bit target machine

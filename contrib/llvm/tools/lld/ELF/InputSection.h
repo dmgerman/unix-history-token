@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Threading.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mutex>
 end_include
 
@@ -113,14 +119,23 @@ decl_stmt|;
 struct_decl|struct
 name|SectionPiece
 struct_decl|;
+name|class
+name|DefinedRegular
+decl_stmt|;
+name|class
+name|SyntheticSection
+decl_stmt|;
 name|template
 operator|<
 name|class
 name|ELFT
 operator|>
 name|class
-name|DefinedRegular
+name|EhFrameSection
 expr_stmt|;
+name|class
+name|MergeSyntheticSection
+decl_stmt|;
 name|template
 operator|<
 name|class
@@ -129,25 +144,15 @@ operator|>
 name|class
 name|ObjectFile
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|OutputSection
-expr_stmt|;
-name|class
-name|OutputSectionBase
 decl_stmt|;
-comment|// We need non-template input section class to store symbol layout
-comment|// in linker script parser structures, where we do not have ELFT
-comment|// template parameter. For each scripted output section symbol we
-comment|// store pointer to preceding InputSectionData object or nullptr,
-comment|// if symbol should be placed at the very beginning of the output
-comment|// section
+comment|// This is the base class of all sections that lld handles. Some are sections in
+comment|// input files, some are sections in the produced output file and some exist
+comment|// just as a convenience for implementing special ways of combining some
+comment|// sections.
 name|class
-name|InputSectionData
+name|SectionBase
 block|{
 name|public
 label|:
@@ -161,55 +166,10 @@ block|,
 name|Merge
 block|,
 name|Synthetic
-block|, }
+block|,
+name|Output
+block|}
 enum|;
-comment|// The garbage collector sets sections' Live bits.
-comment|// If GC is disabled, all sections are considered live by default.
-name|InputSectionData
-argument_list|(
-argument|Kind SectionKind
-argument_list|,
-argument|StringRef Name
-argument_list|,
-argument|ArrayRef<uint8_t> Data
-argument_list|,
-argument|bool Live
-argument_list|)
-block|:
-name|SectionKind
-argument_list|(
-name|SectionKind
-argument_list|)
-operator|,
-name|Live
-argument_list|(
-name|Live
-argument_list|)
-operator|,
-name|Assigned
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-operator|,
-name|Data
-argument_list|(
-argument|Data
-argument_list|)
-block|{}
-name|private
-operator|:
-name|unsigned
-name|SectionKind
-operator|:
-literal|3
-expr_stmt|;
-name|public
-label|:
 name|Kind
 name|kind
 argument_list|()
@@ -222,6 +182,18 @@ operator|)
 name|SectionKind
 return|;
 block|}
+name|StringRef
+name|Name
+decl_stmt|;
+name|unsigned
+name|SectionKind
+range|:
+literal|3
+decl_stmt|;
+comment|// The next two bit fields are only used by InputSectionBase, but we
+comment|// put them here so the struct packs better.
+comment|// The garbage collector sets sections' Live bits.
+comment|// If GC is disabled, all sections are considered live by default.
 name|unsigned
 name|Live
 range|:
@@ -237,15 +209,531 @@ comment|// for linker script
 name|uint32_t
 name|Alignment
 decl_stmt|;
-name|StringRef
-name|Name
+comment|// These corresponds to the fields in Elf_Shdr.
+name|uint64_t
+name|Flags
 decl_stmt|;
+name|uint64_t
+name|Entsize
+decl_stmt|;
+name|uint32_t
+name|Type
+decl_stmt|;
+name|uint32_t
+name|Link
+decl_stmt|;
+name|uint32_t
+name|Info
+decl_stmt|;
+name|OutputSection
+modifier|*
+name|getOutputSection
+parameter_list|()
+function_decl|;
+specifier|const
+name|OutputSection
+operator|*
+name|getOutputSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|SectionBase
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getOutputSection
+argument_list|()
+return|;
+block|}
+comment|// Translate an offset in the input section to an offset in the output
+comment|// section.
+name|uint64_t
+name|getOffset
+argument_list|(
+name|uint64_t
+name|Offset
+argument_list|)
+decl|const
+decl_stmt|;
+name|uint64_t
+name|getOffset
+argument_list|(
+specifier|const
+name|DefinedRegular
+operator|&
+name|Sym
+argument_list|)
+decl|const
+decl_stmt|;
+name|protected
+label|:
+name|SectionBase
+argument_list|(
+argument|Kind SectionKind
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|uint64_t Flags
+argument_list|,
+argument|uint64_t Entsize
+argument_list|,
+argument|uint64_t Alignment
+argument_list|,
+argument|uint32_t Type
+argument_list|,
+argument|uint32_t Info
+argument_list|,
+argument|uint32_t Link
+argument_list|)
+block|:
+name|Name
+argument_list|(
+name|Name
+argument_list|)
+operator|,
+name|SectionKind
+argument_list|(
+name|SectionKind
+argument_list|)
+operator|,
+name|Alignment
+argument_list|(
+name|Alignment
+argument_list|)
+operator|,
+name|Flags
+argument_list|(
+name|Flags
+argument_list|)
+operator|,
+name|Entsize
+argument_list|(
+name|Entsize
+argument_list|)
+operator|,
+name|Type
+argument_list|(
+name|Type
+argument_list|)
+operator|,
+name|Link
+argument_list|(
+name|Link
+argument_list|)
+operator|,
+name|Info
+argument_list|(
+argument|Info
+argument_list|)
+block|{
+name|Live
+operator|=
+name|false
+block|;
+name|Assigned
+operator|=
+name|false
+block|;   }
+block|}
+empty_stmt|;
+comment|// This corresponds to a section of an input file.
+name|class
+name|InputSectionBase
+range|:
+name|public
+name|SectionBase
+block|{
+name|public
+operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+specifier|const
+name|SectionBase
+operator|*
+name|S
+argument_list|)
+block|;
+comment|// The file this section is from.
+name|InputFile
+operator|*
+name|File
+block|;
 name|ArrayRef
 operator|<
 name|uint8_t
 operator|>
 name|Data
-expr_stmt|;
+block|;
+name|uint64_t
+name|getOffsetInFile
+argument_list|()
+specifier|const
+block|;
+specifier|static
+name|InputSectionBase
+name|Discarded
+block|;
+name|InputSectionBase
+argument_list|()
+operator|:
+name|SectionBase
+argument_list|(
+name|Regular
+argument_list|,
+literal|""
+argument_list|,
+comment|/*Flags*/
+literal|0
+argument_list|,
+comment|/*Entsize*/
+literal|0
+argument_list|,
+comment|/*Alignment*/
+literal|0
+argument_list|,
+comment|/*Type*/
+literal|0
+argument_list|,
+comment|/*Info*/
+literal|0
+argument_list|,
+comment|/*Link*/
+literal|0
+argument_list|)
+block|,
+name|Repl
+argument_list|(
+argument|this
+argument_list|)
+block|{
+name|Live
+operator|=
+name|false
+block|;
+name|Assigned
+operator|=
+name|false
+block|;
+name|NumRelocations
+operator|=
+literal|0
+block|;
+name|AreRelocsRela
+operator|=
+name|false
+block|;   }
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|InputSectionBase
+argument_list|(
+argument|ObjectFile<ELFT> *File
+argument_list|,
+argument|const typename ELFT::Shdr *Header
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|Kind SectionKind
+argument_list|)
+block|;
+name|InputSectionBase
+argument_list|(
+argument|InputFile *File
+argument_list|,
+argument|uint64_t Flags
+argument_list|,
+argument|uint32_t Type
+argument_list|,
+argument|uint64_t Entsize
+argument_list|,
+argument|uint32_t Link
+argument_list|,
+argument|uint32_t Info
+argument_list|,
+argument|uint32_t Alignment
+argument_list|,
+argument|ArrayRef<uint8_t> Data
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|Kind SectionKind
+argument_list|)
+block|;
+comment|// Input sections are part of an output section. Special sections
+comment|// like .eh_frame and merge sections are first combined into a
+comment|// synthetic section that is then added to an output section. In all
+comment|// cases this points one level up.
+name|SectionBase
+operator|*
+name|Parent
+operator|=
+name|nullptr
+block|;
+comment|// Relocations that refer to this section.
+specifier|const
+name|void
+operator|*
+name|FirstRelocation
+operator|=
+name|nullptr
+block|;
+name|unsigned
+name|NumRelocations
+operator|:
+literal|31
+block|;
+name|unsigned
+name|AreRelocsRela
+operator|:
+literal|1
+block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|ArrayRef
+operator|<
+name|typename
+name|ELFT
+operator|::
+name|Rel
+operator|>
+name|rels
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|AreRelocsRela
+argument_list|)
+block|;
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+argument|static_cast<const typename ELFT::Rel *>(FirstRelocation)
+argument_list|,
+argument|NumRelocations
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|ArrayRef
+operator|<
+name|typename
+name|ELFT
+operator|::
+name|Rela
+operator|>
+name|relas
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|AreRelocsRela
+argument_list|)
+block|;
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+argument|static_cast<const typename ELFT::Rela *>(FirstRelocation)
+argument_list|,
+argument|NumRelocations
+argument_list|)
+return|;
+block|}
+comment|// This pointer points to the "real" instance of this instance.
+comment|// Usually Repl == this. However, if ICF merges two sections,
+comment|// Repl pointer of one section points to another section. So,
+comment|// if you need to get a pointer to this instance, do not use
+comment|// this but instead this->Repl.
+name|InputSectionBase
+operator|*
+name|Repl
+block|;
+comment|// InputSections that are dependent on us (reverse dependency for GC)
+name|llvm
+operator|::
+name|TinyPtrVector
+operator|<
+name|InputSectionBase
+operator|*
+operator|>
+name|DependentSections
+block|;
+comment|// Returns the size of this section (even if this is a common or BSS.)
+name|size_t
+name|getSize
+argument_list|()
+specifier|const
+block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|ObjectFile
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|getFile
+argument_list|()
+specifier|const
+block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|llvm
+operator|::
+name|object
+operator|::
+name|ELFFile
+operator|<
+name|ELFT
+operator|>
+name|getObj
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFile
+operator|<
+name|ELFT
+operator|>
+operator|(
+operator|)
+operator|->
+name|getObj
+argument_list|()
+return|;
+block|}
+name|InputSection
+operator|*
+name|getLinkOrderDep
+argument_list|()
+specifier|const
+block|;
+name|void
+name|uncompress
+argument_list|()
+block|;
+comment|// Returns a source location string. Used to construct an error message.
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|std
+operator|::
+name|string
+name|getLocation
+argument_list|(
+argument|uint64_t Offset
+argument_list|)
+block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|std
+operator|::
+name|string
+name|getSrcMsg
+argument_list|(
+argument|uint64_t Offset
+argument_list|)
+block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|std
+operator|::
+name|string
+name|getObjMsg
+argument_list|(
+argument|uint64_t Offset
+argument_list|)
+block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|void
+name|relocate
+argument_list|(
+name|uint8_t
+operator|*
+name|Buf
+argument_list|,
+name|uint8_t
+operator|*
+name|BufEnd
+argument_list|)
+block|;
+name|void
+name|relocateAlloc
+argument_list|(
+name|uint8_t
+operator|*
+name|Buf
+argument_list|,
+name|uint8_t
+operator|*
+name|BufEnd
+argument_list|)
+block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|void
+name|relocateNonAlloc
+argument_list|(
+name|uint8_t
+operator|*
+name|Buf
+argument_list|,
+name|uint8_t
+operator|*
+name|BufEnd
+argument_list|)
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|Relocation
+operator|>
+name|Relocations
+block|;
 name|template
 operator|<
 name|typename
@@ -298,7 +786,7 @@ name|Data
 operator|.
 name|data
 argument_list|()
-operator|,
+expr|,
 name|S
 operator|/
 sizeof|sizeof
@@ -308,361 +796,13 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|std
-operator|::
-name|vector
-operator|<
-name|Relocation
-operator|>
-name|Relocations
-expr_stmt|;
-block|}
-empty_stmt|;
-comment|// This corresponds to a section of an input file.
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|class
-name|InputSectionBase
-operator|:
-name|public
-name|InputSectionData
-block|{
-name|protected
-operator|:
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Chdr
-name|Elf_Chdr
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Rel
-name|Elf_Rel
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Rela
-name|Elf_Rela
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Shdr
-name|Elf_Shdr
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Sym
-name|Elf_Sym
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|uintX_t
-expr_stmt|;
-comment|// The file this section is from.
-name|ObjectFile
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|File
-expr_stmt|;
-name|public
-label|:
-comment|// These corresponds to the fields in Elf_Shdr.
-name|uintX_t
-name|Flags
-decl_stmt|;
-name|uintX_t
-name|Offset
-init|=
-literal|0
-decl_stmt|;
-name|uintX_t
-name|Entsize
-decl_stmt|;
-name|uint32_t
-name|Type
-decl_stmt|;
-name|uint32_t
-name|Link
-decl_stmt|;
-name|uint32_t
-name|Info
-decl_stmt|;
-name|InputSectionBase
-argument_list|()
-operator|:
-name|InputSectionData
-argument_list|(
-name|Regular
-argument_list|,
-literal|""
-argument_list|,
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-operator|(
-operator|)
-argument_list|,
-name|false
-argument_list|)
-operator|,
-name|Repl
-argument_list|(
-argument|this
-argument_list|)
-block|{
-name|NumRelocations
-operator|=
-literal|0
+expr|}
 block|;
-name|AreRelocsRela
-operator|=
-name|false
-block|;   }
-name|InputSectionBase
-argument_list|(
-argument|ObjectFile<ELFT> *File
-argument_list|,
-argument|const Elf_Shdr *Header
-argument_list|,
-argument|StringRef Name
-argument_list|,
-argument|Kind SectionKind
-argument_list|)
-expr_stmt|;
-name|InputSectionBase
-argument_list|(
-argument|ObjectFile<ELFT> *File
-argument_list|,
-argument|uintX_t Flags
-argument_list|,
-argument|uint32_t Type
-argument_list|,
-argument|uintX_t Entsize
-argument_list|,
-argument|uint32_t Link
-argument_list|,
-argument|uint32_t Info
-argument_list|,
-argument|uintX_t Addralign
-argument_list|,
-argument|ArrayRef<uint8_t> Data
-argument_list|,
-argument|StringRef Name
-argument_list|,
-argument|Kind SectionKind
-argument_list|)
-empty_stmt|;
-name|OutputSectionBase
-modifier|*
-name|OutSec
-init|=
-name|nullptr
-decl_stmt|;
-comment|// Relocations that refer to this section.
-specifier|const
-name|Elf_Rel
-modifier|*
-name|FirstRelocation
-init|=
-name|nullptr
-decl_stmt|;
-name|unsigned
-name|NumRelocations
-range|:
-literal|31
-decl_stmt|;
-name|unsigned
-name|AreRelocsRela
-range|:
-literal|1
-decl_stmt|;
-name|ArrayRef
-operator|<
-name|Elf_Rel
-operator|>
-name|rels
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-name|AreRelocsRela
-argument_list|)
-block|;
-return|return
-name|llvm
-operator|::
-name|makeArrayRef
-argument_list|(
-name|FirstRelocation
-argument_list|,
-name|NumRelocations
-argument_list|)
-return|;
-block|}
-name|ArrayRef
-operator|<
-name|Elf_Rela
-operator|>
-name|relas
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|AreRelocsRela
-argument_list|)
-block|;
-return|return
-name|llvm
-operator|::
-name|makeArrayRef
-argument_list|(
-name|static_cast
-operator|<
-specifier|const
-name|Elf_Rela
-operator|*
-operator|>
-operator|(
-name|FirstRelocation
-operator|)
-argument_list|,
-name|NumRelocations
-argument_list|)
-return|;
-block|}
-comment|// This pointer points to the "real" instance of this instance.
-comment|// Usually Repl == this. However, if ICF merges two sections,
-comment|// Repl pointer of one section points to another section. So,
-comment|// if you need to get a pointer to this instance, do not use
-comment|// this but instead this->Repl.
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|Repl
-expr_stmt|;
-comment|// Returns the size of this section (even if this is a common or BSS.)
-name|size_t
-name|getSize
-argument_list|()
-specifier|const
-expr_stmt|;
-name|ObjectFile
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|getFile
-argument_list|()
-specifier|const
-block|{
-return|return
-name|File
-return|;
-block|}
-name|llvm
-operator|::
-name|object
-operator|::
-name|ELFFile
-operator|<
-name|ELFT
-operator|>
-name|getObj
-argument_list|()
-specifier|const
-block|{
-return|return
-name|File
-operator|->
-name|getObj
-argument_list|()
-return|;
-block|}
-name|uintX_t
-name|getOffset
-argument_list|(
-specifier|const
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|&
-name|Sym
-argument_list|)
-decl|const
-decl_stmt|;
-name|InputSectionBase
-operator|*
-name|getLinkOrderDep
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Translate an offset in the input section to an offset in the output
-comment|// section.
-name|uintX_t
-name|getOffset
-argument_list|(
-name|uintX_t
-name|Offset
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|uncompress
-parameter_list|()
-function_decl|;
-comment|// Returns a source location string. Used to construct an error message.
-name|std
-operator|::
-name|string
-name|getLocation
-argument_list|(
-argument|uintX_t Offset
-argument_list|)
-expr_stmt|;
-name|void
-name|relocate
-parameter_list|(
-name|uint8_t
-modifier|*
-name|Buf
-parameter_list|,
-name|uint8_t
-modifier|*
-name|BufEnd
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
 comment|// SectionPiece represents a piece of splittable section contents.
 comment|// We allocate a lot of these and binary search on them. This means that they
 comment|// have to be as compact as possible, which is why we don't store the size (can
 comment|// be found by looking at the next one) and put the hash in a side table.
-struct|struct
+block|struct
 name|SectionPiece
 block|{
 name|SectionPiece
@@ -671,18 +811,18 @@ argument|size_t Off
 argument_list|,
 argument|bool Live = false
 argument_list|)
-block|:
+operator|:
 name|InputOff
 argument_list|(
 name|Off
 argument_list|)
-operator|,
+block|,
 name|OutputOff
 argument_list|(
 operator|-
 literal|1
 argument_list|)
-operator|,
+block|,
 name|Live
 argument_list|(
 argument|Live || !Config->GcSections
@@ -690,10 +830,10 @@ argument_list|)
 block|{}
 name|size_t
 name|InputOff
-expr_stmt|;
+block|;
 name|ssize_t
 name|OutputOff
-range|:
+operator|:
 literal|8
 operator|*
 sizeof|sizeof
@@ -702,14 +842,13 @@ name|ssize_t
 argument_list|)
 operator|-
 literal|1
-decl_stmt|;
+block|;
 name|size_t
 name|Live
-range|:
+operator|:
 literal|1
-decl_stmt|;
-block|}
-struct|;
+block|; }
+block|;
 name|static_assert
 argument_list|(
 sizeof|sizeof
@@ -726,75 +865,50 @@ argument_list|)
 argument_list|,
 literal|"SectionPiece is too big"
 argument_list|)
-expr_stmt|;
+block|;
 comment|// This corresponds to a SHF_MERGE section of an input file.
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|MergeInputSection
 operator|:
 name|public
 name|InputSectionBase
+block|{
+name|public
+operator|:
+name|template
 operator|<
+name|class
 name|ELFT
 operator|>
-block|{
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|uintX_t
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Sym
-name|Elf_Sym
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Shdr
-name|Elf_Shdr
-expr_stmt|;
-name|public
-label|:
 name|MergeInputSection
 argument_list|(
 argument|ObjectFile<ELFT> *F
 argument_list|,
-argument|const Elf_Shdr *Header
+argument|const typename ELFT::Shdr *Header
 argument_list|,
 argument|StringRef Name
 argument_list|)
-empty_stmt|;
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
+argument_list|(
 specifier|const
-name|InputSectionData
-modifier|*
+name|SectionBase
+operator|*
 name|S
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|splitIntoPieces
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|// Mark the piece at a given offset live. Used by GC.
 name|void
 name|markLiveAt
-parameter_list|(
-name|uintX_t
-name|Offset
-parameter_list|)
+argument_list|(
+argument|uint64_t Offset
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -808,25 +922,23 @@ name|ELF
 operator|::
 name|SHF_ALLOC
 argument_list|)
-expr_stmt|;
+block|;
 name|LiveOffsets
 operator|.
 name|insert
 argument_list|(
 name|Offset
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|// Translate an offset in the input section to an offset
 comment|// in the output section.
-name|uintX_t
+name|uint64_t
 name|getOffset
 argument_list|(
-name|uintX_t
-name|Offset
+argument|uint64_t Offset
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|// Splittable sections are handled as a sequence of data
 comment|// rather than a single large blob of data.
 name|std
@@ -836,7 +948,7 @@ operator|<
 name|SectionPiece
 operator|>
 name|Pieces
-expr_stmt|;
+block|;
 comment|// Returns I'th piece's data. This function is very hot when
 comment|// string merging is enabled, so we want to inline.
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
@@ -918,7 +1030,7 @@ name|End
 operator|-
 name|Begin
 block|}
-expr_stmt|;
+block|;
 return|return
 block|{
 name|S
@@ -930,74 +1042,47 @@ index|]
 block|}
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// Returns the SectionPiece at a given input section offset.
-end_comment
-
-begin_function_decl
 name|SectionPiece
-modifier|*
-name|getSectionPiece
-parameter_list|(
-name|uintX_t
-name|Offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|const
-name|SectionPiece
-modifier|*
+operator|*
 name|getSectionPiece
 argument_list|(
-name|uintX_t
-name|Offset
+argument|uint64_t Offset
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+block|;
+specifier|const
+name|SectionPiece
+operator|*
+name|getSectionPiece
+argument_list|(
+argument|uint64_t Offset
+argument_list|)
+specifier|const
+block|;
+name|SyntheticSection
+operator|*
+name|getParent
+argument_list|()
+specifier|const
+block|;
 name|private
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 name|void
 name|splitStrings
 argument_list|(
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-name|A
+argument|ArrayRef<uint8_t> A
 argument_list|,
-name|size_t
-name|Size
+argument|size_t Size
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|void
 name|splitNonStrings
 argument_list|(
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-name|A
+argument|ArrayRef<uint8_t> A
 argument_list|,
-name|size_t
-name|Size
+argument|size_t Size
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+block|;
 name|std
 operator|::
 name|vector
@@ -1005,45 +1090,33 @@ operator|<
 name|uint32_t
 operator|>
 name|Hashes
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|mutable
 name|llvm
 operator|::
 name|DenseMap
 operator|<
-name|uintX_t
-operator|,
-name|uintX_t
+name|uint64_t
+block|,
+name|uint64_t
 operator|>
 name|OffsetMap
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|mutable
-name|std
+name|llvm
 operator|::
 name|once_flag
 name|InitOffsetMap
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|llvm
 operator|::
 name|DenseSet
 operator|<
-name|uintX_t
+name|uint64_t
 operator|>
 name|LiveOffsets
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-unit|};
+block|; }
+decl_stmt|;
 name|struct
 name|EhSectionPiece
 range|:
@@ -1054,7 +1127,7 @@ name|EhSectionPiece
 argument_list|(
 argument|size_t Off
 argument_list|,
-argument|InputSectionData *ID
+argument|InputSectionBase *ID
 argument_list|,
 argument|uint32_t Size
 argument_list|,
@@ -1083,7 +1156,7 @@ argument_list|(
 argument|FirstRelocation
 argument_list|)
 block|{}
-name|InputSectionData
+name|InputSectionBase
 operator|*
 name|ID
 block|;
@@ -1127,86 +1200,53 @@ name|unsigned
 name|FirstRelocation
 block|; }
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// This corresponds to a .eh_frame section of an input file.
-end_comment
-
-begin_expr_stmt
+name|class
+name|EhInputSection
+range|:
+name|public
+name|InputSectionBase
+block|{
+name|public
+operator|:
 name|template
 operator|<
 name|class
 name|ELFT
 operator|>
-name|class
-name|EhInputSection
-operator|:
-name|public
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-block|{
-name|public
-operator|:
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Shdr
-name|Elf_Shdr
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|uintX_t
-expr_stmt|;
-end_typedef
-
-begin_macro
 name|EhInputSection
 argument_list|(
 argument|ObjectFile<ELFT> *F
 argument_list|,
-argument|const Elf_Shdr *Header
+argument|const typename ELFT::Shdr *Header
 argument_list|,
 argument|StringRef Name
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
+argument_list|(
 specifier|const
-name|InputSectionData
-modifier|*
+name|SectionBase
+operator|*
 name|S
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|split
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
+argument_list|)
+block|;
 name|template
 operator|<
+name|class
+name|ELFT
+operator|>
+name|void
+name|split
+argument_list|()
+block|;
+name|template
+operator|<
+name|class
+name|ELFT
+block|,
 name|class
 name|RelTy
 operator|>
@@ -1219,18 +1259,9 @@ name|RelTy
 operator|>
 name|Rels
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// Splittable sections are handled as a sequence of data
-end_comment
-
-begin_comment
 comment|// rather than a single large blob of data.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -1238,283 +1269,103 @@ operator|<
 name|EhSectionPiece
 operator|>
 name|Pieces
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|};
-comment|// This corresponds to a non SHF_MERGE section of an input file.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|class
-name|InputSection
-operator|:
-name|public
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-block|{
-typedef|typedef
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-name|Base
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Shdr
-name|Elf_Shdr
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Rela
-name|Elf_Rela
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Rel
-name|Elf_Rel
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Sym
-name|Elf_Sym
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|uintX_t
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|InputSectionData
-operator|::
-name|Kind
-name|Kind
-expr_stmt|;
-end_typedef
-
-begin_label
-name|public
-label|:
-end_label
-
-begin_expr_stmt
-name|InputSection
+block|;
+name|SyntheticSection
+operator|*
+name|getParent
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
+specifier|const
+block|; }
+decl_stmt|;
+comment|// This is a section that is added directly to an output section
+comment|// instead of needing special combination via a synthetic section. This
+comment|// includes all input sections with the exceptions of SHF_MERGE and
+comment|// .eh_frame. It also includes the synthetic sections themselves.
+name|class
+name|InputSection
+range|:
+name|public
+name|InputSectionBase
+block|{
+name|public
+operator|:
 name|InputSection
 argument_list|(
-argument|uintX_t Flags
+argument|uint64_t Flags
 argument_list|,
 argument|uint32_t Type
 argument_list|,
-argument|uintX_t Addralign
+argument|uint32_t Alignment
 argument_list|,
 argument|ArrayRef<uint8_t> Data
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|Kind K = InputSectionData::Regular
+argument|Kind K = Regular
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
+block|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
 name|InputSection
 argument_list|(
 argument|ObjectFile<ELFT> *F
 argument_list|,
-argument|const Elf_Shdr *Header
+argument|const typename ELFT::Shdr *Header
 argument_list|,
 argument|StringRef Name
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-specifier|static
-name|InputSection
+block|;
+comment|// Write this section to a mmap'ed file, assuming Buf is pointing to
+comment|// beginning of the output section.
+name|template
 operator|<
+name|class
 name|ELFT
 operator|>
-name|Discarded
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Write this section to a mmap'ed file, assuming Buf is pointing to
-end_comment
-
-begin_comment
-comment|// beginning of the output section.
-end_comment
-
-begin_function_decl
 name|void
 name|writeTo
-parameter_list|(
+argument_list|(
 name|uint8_t
-modifier|*
+operator|*
 name|Buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|)
+block|;
+name|OutputSection
+operator|*
+name|getParent
+argument_list|()
+specifier|const
+block|;
 comment|// The offset from beginning of the output sections this section was assigned
-end_comment
-
-begin_comment
 comment|// to. The writer sets a value.
-end_comment
-
-begin_decl_stmt
 name|uint64_t
 name|OutSecOff
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// InputSection that is dependent on us (reverse dependency for GC)
-end_comment
-
-begin_expr_stmt
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|DependentSection
 operator|=
-name|nullptr
-expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
+literal|0
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
+argument_list|(
 specifier|const
-name|InputSectionData
-modifier|*
+name|SectionBase
+operator|*
 name|S
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
+argument_list|)
+block|;
 name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
 operator|*
 name|getRelocatedSection
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Register thunk related to the symbol. When the section is written
-end_comment
-
-begin_comment
-comment|// to a mmap'ed file, target is requested to write an actual thunk code.
-end_comment
-
-begin_comment
-comment|// Now thunks is supported for MIPS and ARM target only.
-end_comment
-
-begin_decl_stmt
-name|void
-name|addThunk
-argument_list|(
-specifier|const
-name|Thunk
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|T
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// The offset of synthetic thunk code from beginning of this section.
-end_comment
-
-begin_expr_stmt
-name|uint64_t
-name|getThunkOff
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// Size of chunk with thunks code.
-end_comment
-
-begin_expr_stmt
-name|uint64_t
-name|getThunksSize
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
+name|class
+name|ELFT
+block|,
 name|class
 name|RelTy
 operator|>
@@ -1533,54 +1384,36 @@ name|RelTy
 operator|>
 name|Rels
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// Used by ICF.
-end_comment
-
-begin_decl_stmt
 name|uint32_t
 name|Class
 index|[
 literal|2
 index|]
-init|=
+operator|=
 block|{
 literal|0
 block|,
 literal|0
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// Called by ICF to merge two input sections.
-end_comment
-
-begin_decl_stmt
 name|void
 name|replace
 argument_list|(
 name|InputSection
-operator|<
-name|ELFT
-operator|>
 operator|*
 name|Other
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+block|;
 name|private
-label|:
-end_label
-
-begin_expr_stmt
+operator|:
 name|template
 operator|<
+name|class
+name|ELFT
+block|,
 name|class
 name|RelTy
 operator|>
@@ -1599,56 +1432,25 @@ name|RelTy
 operator|>
 name|Rels
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|TinyPtrVector
-operator|<
-specifier|const
-name|Thunk
-operator|<
-name|ELFT
-operator|>
-operator|*
-operator|>
-name|Thunks
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
+block|;
 name|template
 operator|<
 name|class
 name|ELFT
 operator|>
-name|InputSection
-operator|<
-name|ELFT
-operator|>
-name|InputSection
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|Discarded
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
+name|void
+name|copyShtGroup
+argument_list|(
+name|uint8_t
+operator|*
+name|Buf
+argument_list|)
+block|; }
+decl_stmt|;
+comment|// The list of all input sections.
+extern|extern std::vector<InputSectionBase *> InputSections;
+block|}
 comment|// namespace elf
-end_comment
-
-begin_expr_stmt
-unit|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|std
 operator|::
 name|string
@@ -1658,16 +1460,13 @@ specifier|const
 name|elf
 operator|::
 name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
 operator|*
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// namespace lld
 end_comment
 

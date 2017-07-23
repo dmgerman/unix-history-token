@@ -44,77 +44,55 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|openlog
-argument_list|(
-argument|name
-argument_list|,
-argument|logopt
-argument_list|,
-argument|facility
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|logopt
+parameter_list|,
+name|facility
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|logopt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|facility
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* void */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* vsyslog - format one record */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|vsyslog
-argument_list|(
-argument|severity
-argument_list|,
-argument|fmt
-argument_list|,
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|severity
+parameter_list|,
+name|fmt
+parameter_list|,
+name|ap
+parameter_list|)
 name|int
 name|severity
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|va_list
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|buf
@@ -145,7 +123,7 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* syslog - format one record */
@@ -155,18 +133,16 @@ begin_comment
 comment|/* VARARGS */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|VARARGS
-argument_list|(
-argument|syslog
-argument_list|,
-argument|int
-argument_list|,
-argument|severity
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|syslog
+parameter_list|,
+name|int
+parameter_list|,
+name|severity
+parameter_list|)
 block|{
 name|va_list
 name|ap
@@ -209,22 +185,20 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* closelog - dummy */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|closelog
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* void */
 block|}
-end_block
+end_function
 
 end_unit
 

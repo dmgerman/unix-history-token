@@ -80,25 +80,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/PluginInterface.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/PseudoTerminal.h"
+file|"lldb/Utility/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/PseudoTerminal.h"
 end_include
 
 begin_decl_stmt
@@ -364,7 +364,7 @@ return|return
 name|true
 return|;
 block|}
-function|virtual Error ExecuteMultipleLines
+function|virtual Status ExecuteMultipleLines
 parameter_list|(
 specifier|const
 name|char
@@ -380,7 +380,7 @@ name|ExecuteScriptOptions
 argument_list|()
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 block|;
 name|error
@@ -394,14 +394,14 @@ return|return
 name|error
 return|;
 block|}
-function|virtual Error   ExportFunctionDefinitionToInterpreter
+function|virtual Status   ExportFunctionDefinitionToInterpreter
 parameter_list|(
 name|StringList
 modifier|&
 name|function_def
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 block|;
 name|error
@@ -416,14 +416,14 @@ name|error
 return|;
 block|}
 name|virtual
-name|Error
+name|Status
 name|GenerateBreakpointCommandCallbackData
 function|(StringList&input
 operator|,
 function|std::string&output
 block|)
 block|{
-name|Error
+name|Status
 name|error
 block|;
 name|error
@@ -869,7 +869,7 @@ name|file_spec
 operator|,
 name|lldb_private
 typedef|::
-name|Error
+name|Status
 typedef|&
 name|error
 typedef|)
@@ -903,7 +903,7 @@ name|setting_name
 operator|,
 name|lldb_private
 typedef|::
-name|Error
+name|Status
 typedef|&
 name|error
 typedef|)
@@ -916,7 +916,7 @@ argument_list|()
 return|;
 block|}
 name|virtual
-name|Error
+name|Status
 name|GenerateFunction
 typedef|(const
 name|char
@@ -929,7 +929,7 @@ typedef|&
 name|input
 typedef|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -973,7 +973,7 @@ name|result
 argument_list|)
 decl_stmt|;
 comment|/// Set the specified text as the callback for the breakpoint.
-name|Error
+name|Status
 name|SetBreakpointCommandCallback
 argument_list|(
 name|std
@@ -993,7 +993,7 @@ name|callback_text
 argument_list|)
 decl_stmt|;
 name|virtual
-name|Error
+name|Status
 name|SetBreakpointCommandCallback
 parameter_list|(
 name|BreakpointOptions
@@ -1006,7 +1006,7 @@ modifier|*
 name|callback_text
 parameter_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -1022,7 +1022,7 @@ return|;
 block|}
 comment|/// This one is for deserialization:
 name|virtual
-name|Error
+name|Status
 name|SetBreakpointCommandCallback
 argument_list|(
 name|BreakpointOptions
@@ -1041,7 +1041,7 @@ operator|&
 name|data_up
 argument_list|)
 block|{
-name|Error
+name|Status
 name|error
 decl_stmt|;
 name|error
@@ -1290,7 +1290,7 @@ name|CommandReturnObject
 operator|&
 name|cmd_retobj
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -1329,7 +1329,7 @@ name|CommandReturnObject
 operator|&
 name|cmd_retobj
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -1364,7 +1364,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1399,7 +1399,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1434,7 +1434,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1469,7 +1469,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1504,7 +1504,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1640,7 +1640,7 @@ name|init_session
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,

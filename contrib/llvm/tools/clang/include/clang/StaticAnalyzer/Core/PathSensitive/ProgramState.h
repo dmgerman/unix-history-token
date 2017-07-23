@@ -192,6 +192,19 @@ name|ProgramStateManager
 operator|&
 argument_list|)
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|ImmutableMap
+operator|<
+specifier|const
+name|SubRegion
+operator|*
+operator|,
+name|TaintTagType
+operator|>
+name|TaintedSubRegions
+expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// ProgramStateTrait - Traits used by the Generic Data Map of a ProgramState.
 comment|//===----------------------------------------------------------------------===//
@@ -745,6 +758,11 @@ argument_list|,
 name|SVal
 name|V
 argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
 name|bool
 name|notifyChanges
 operator|=
@@ -760,6 +778,11 @@ name|location
 argument_list|,
 name|SVal
 name|V
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
 argument_list|)
 decl|const
 decl_stmt|;
@@ -771,6 +794,11 @@ name|loc
 argument_list|,
 name|SVal
 name|V
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1209,6 +1237,20 @@ name|TaintTagGeneric
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Create a new state in which the value is marked as tainted.
+name|ProgramStateRef
+name|addTaint
+argument_list|(
+name|SVal
+name|V
+argument_list|,
+name|TaintTagType
+name|Kind
+operator|=
+name|TaintTagGeneric
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Create a new state in which the symbol is marked as tainted.
 name|ProgramStateRef
 name|addTaint
@@ -1231,6 +1273,28 @@ specifier|const
 name|MemRegion
 operator|*
 name|R
+argument_list|,
+name|TaintTagType
+name|Kind
+operator|=
+name|TaintTagGeneric
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Create a new state in a which a sub-region of a given symbol is tainted.
+comment|/// This might be necessary when referring to regions that can not have an
+comment|/// individual symbol, e.g. if they are represented by the default binding of
+comment|/// a LazyCompoundVal.
+name|ProgramStateRef
+name|addPartialTaint
+argument_list|(
+name|SymbolRef
+name|ParentSym
+argument_list|,
+specifier|const
+name|SubRegion
+operator|*
+name|SubRegion
 argument_list|,
 name|TaintTagType
 name|Kind
@@ -1752,6 +1816,11 @@ name|GenericDataMap
 operator|::
 name|Factory
 name|GDMFactory
+expr_stmt|;
+name|TaintedSubRegions
+operator|::
+name|Factory
+name|TSRFactory
 expr_stmt|;
 typedef|typedef
 name|llvm
@@ -2844,6 +2913,8 @@ argument_list|(
 argument|SVal LV
 argument_list|,
 argument|SVal V
+argument_list|,
+argument|const LocationContext *LCtx
 argument_list|)
 specifier|const
 block|{
@@ -2871,6 +2942,8 @@ operator|*
 name|L
 argument_list|,
 name|V
+argument_list|,
+name|LCtx
 argument_list|)
 return|;
 end_expr_stmt

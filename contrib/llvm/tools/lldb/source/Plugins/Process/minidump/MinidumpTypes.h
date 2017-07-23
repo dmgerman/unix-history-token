@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -664,7 +664,7 @@ operator|<
 name|typename
 name|T
 operator|>
-name|Error
+name|Status
 name|consumeObject
 argument_list|(
 argument|llvm::ArrayRef<uint8_t>&Buffer
@@ -672,7 +672,7 @@ argument_list|,
 argument|const T *&Object
 argument_list|)
 block|{
-name|Error
+name|Status
 name|error
 block|;
 if|if

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  *  Copyright (c) 1997-2009 by Matthew Jacob  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *   *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *   *  THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *  SUCH DAMAGE.  *   */
+comment|/*-  *  Copyright (c) 2009-2017 Alexander Motin<mav@FreeBSD.org>  *  Copyright (c) 1997-2009 by Matthew Jacob  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *   *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *   *  THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *  SUCH DAMAGE.  *   */
 end_comment
 
 begin_comment
@@ -7545,6 +7545,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SNS_GFT_ID
+value|0x117
+end_define
+
+begin_define
+define|#
+directive|define
 name|SNS_GFF_ID
 value|0x11F
 end_define
@@ -7554,6 +7561,13 @@ define|#
 directive|define
 name|SNS_GID_FT
 value|0x171
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNS_GID_PT
+value|0x1A1
 end_define
 
 begin_define
@@ -7676,6 +7690,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+comment|/* Used for GFT_ID, GFF_ID, etc. */
 name|uint16_t
 name|snscb_rblen
 decl_stmt|;
@@ -7701,7 +7716,7 @@ name|uint16_t
 name|snscb_cmd
 decl_stmt|;
 name|uint16_t
-name|snscb_reserved2
+name|snscb_mword_div_2
 decl_stmt|;
 name|uint32_t
 name|snscb_reserved3
@@ -7710,15 +7725,15 @@ name|uint32_t
 name|snscb_portid
 decl_stmt|;
 block|}
-name|sns_gxn_id_req_t
+name|sns_gxx_id_req_t
 typedef|;
 end_typedef
 
 begin_define
 define|#
 directive|define
-name|SNS_GXN_ID_REQ_SIZE
-value|(sizeof (sns_gxn_id_req_t))
+name|SNS_GXX_ID_REQ_SIZE
+value|(sizeof (sns_gxx_id_req_t))
 end_define
 
 begin_typedef
@@ -7768,6 +7783,64 @@ define|#
 directive|define
 name|SNS_GID_FT_REQ_SIZE
 value|(sizeof (sns_gid_ft_req_t))
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint16_t
+name|snscb_rblen
+decl_stmt|;
+comment|/* response buffer length (words) */
+name|uint16_t
+name|snscb_reserved0
+decl_stmt|;
+name|uint16_t
+name|snscb_addr
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* response buffer address */
+name|uint16_t
+name|snscb_sblen
+decl_stmt|;
+comment|/* subcommand buffer length (words) */
+name|uint16_t
+name|snscb_reserved1
+decl_stmt|;
+name|uint16_t
+name|snscb_cmd
+decl_stmt|;
+name|uint16_t
+name|snscb_mword_div_2
+decl_stmt|;
+name|uint32_t
+name|snscb_reserved3
+decl_stmt|;
+name|uint8_t
+name|snscb_port_type
+decl_stmt|;
+name|uint8_t
+name|snscb_domain
+decl_stmt|;
+name|uint8_t
+name|snscb_area
+decl_stmt|;
+name|uint8_t
+name|snscb_flags
+decl_stmt|;
+block|}
+name|sns_gid_pt_req_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNS_GID_PT_REQ_SIZE
+value|(sizeof (sns_gid_pt_req_t))
 end_define
 
 begin_typedef
@@ -7999,6 +8072,31 @@ name|ct_hdr_t
 name|snscb_cthdr
 decl_stmt|;
 name|uint32_t
+name|snscb_fc4_types
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+name|sns_gft_id_rsp_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNS_GFT_ID_RESP_SIZE
+value|(sizeof (sns_gft_id_rsp_t))
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|ct_hdr_t
+name|snscb_cthdr
+decl_stmt|;
+name|uint32_t
 name|snscb_fc4_features
 index|[
 literal|32
@@ -8020,6 +8118,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+comment|/* Used for GID_FT, GID_PT, etc. */
 name|ct_hdr_t
 name|snscb_cthdr
 decl_stmt|;
@@ -8041,25 +8140,18 @@ literal|1
 index|]
 struct|;
 block|}
-name|sns_gid_ft_rsp_t
+name|sns_gid_xx_rsp_t
 typedef|;
 end_typedef
 
 begin_define
 define|#
 directive|define
-name|SNS_GID_FT_RESP_SIZE
+name|SNS_GID_XX_RESP_SIZE
 parameter_list|(
 name|x
 parameter_list|)
-value|((sizeof (sns_gid_ft_rsp_t)) + ((x - 1)<< 2))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNS_RFT_ID_RESP_SIZE
-value|(sizeof (ct_hdr_t))
+value|((sizeof (sns_gid_xx_rsp_t)) + ((x - 1)<< 2))
 end_define
 
 begin_comment

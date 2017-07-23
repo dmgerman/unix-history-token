@@ -1060,13 +1060,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/PassSupport.h"
+file|"llvm/PassAnalysisSupport.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/PassAnalysisSupport.h"
+file|"llvm/PassSupport.h"
 end_include
 
 begin_endif

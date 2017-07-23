@@ -181,7 +181,7 @@ name|OID_AUTO
 argument_list|,
 name|clocktime
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ct_debug
@@ -303,6 +303,30 @@ literal|30
 block|,
 literal|31
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Optimization: using a precomputed count of days between POSIX_BASE_YEAR and  * some recent year avoids lots of unnecessary loop iterations in conversion.  * recent_base_days is the number of days before the start of recent_base_year.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|recent_base_year
+init|=
+literal|2017
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|recent_base_days
+init|=
+literal|17167
 decl_stmt|;
 end_decl_stmt
 
@@ -553,15 +577,35 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Compute days since start of time 	 * First from years, then from months. 	 */
+if|if
+condition|(
+name|year
+operator|>=
+name|recent_base_year
+condition|)
+block|{
+name|i
+operator|=
+name|recent_base_year
+expr_stmt|;
+name|days
+operator|=
+name|recent_base_days
+expr_stmt|;
+block|}
+else|else
+block|{
+name|i
+operator|=
+name|POSIX_BASE_YEAR
+expr_stmt|;
 name|days
 operator|=
 literal|0
 expr_stmt|;
+block|}
 for|for
 control|(
-name|i
-operator|=
-name|POSIX_BASE_YEAR
 init|;
 name|i
 operator|<
@@ -657,18 +701,15 @@ name|ct_debug
 condition|)
 name|printf
 argument_list|(
-literal|" = %ld.%09ld\n"
+literal|" = %jd.%09ld\n"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ts
 operator|->
 name|tv_sec
 argument_list|,
-operator|(
-name|long
-operator|)
 name|ts
 operator|->
 name|tv_nsec
@@ -738,12 +779,32 @@ argument_list|(
 name|days
 argument_list|)
 expr_stmt|;
-comment|/* Subtract out whole years, counting them in i. */
-for|for
-control|(
+comment|/* Subtract out whole years. */
+if|if
+condition|(
+name|days
+operator|>=
+name|recent_base_days
+condition|)
+block|{
+name|year
+operator|=
+name|recent_base_year
+expr_stmt|;
+name|days
+operator|-=
+name|recent_base_days
+expr_stmt|;
+block|}
+else|else
+block|{
 name|year
 operator|=
 name|POSIX_BASE_YEAR
+expr_stmt|;
+block|}
+for|for
+control|(
 init|;
 name|days
 operator|>=
@@ -861,18 +922,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ts_to_ct(%ld.%09ld) = "
+literal|"ts_to_ct(%jd.%09ld) = "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ts
 operator|->
 name|tv_sec
 argument_list|,
-operator|(
-name|long
-operator|)
 name|ts
 operator|->
 name|tv_nsec

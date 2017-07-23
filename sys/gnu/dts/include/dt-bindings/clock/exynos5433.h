@@ -5083,8 +5083,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|DISP_NR_CLK
+name|CLK_PHYCLK_MIPIDPHY0_BITCLKDIV8_PHY
 value|114
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PHYCLK_MIPIDPHY0_RXCLKESC0_PHY
+value|115
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISP_NR_CLK
+value|116
 end_define
 
 begin_comment

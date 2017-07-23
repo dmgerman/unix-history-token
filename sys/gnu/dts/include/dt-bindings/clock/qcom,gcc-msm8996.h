@@ -2283,6 +2283,13 @@ name|GCC_USB3PHY_PHY_BCR
 value|104
 end_define
 
+begin_define
+define|#
+directive|define
+name|GCC_MSS_RESTART
+value|105
+end_define
+
 begin_comment
 comment|/* Indexes for GDSCs */
 end_comment

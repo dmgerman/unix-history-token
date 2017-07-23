@@ -4348,6 +4348,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|KEY_ONSCREEN_KEYBOARD
+value|0x278
+end_define
+
+begin_define
+define|#
+directive|define
 name|BTN_TRIGGER_HAPPY
 value|0x2c0
 end_define

@@ -1790,6 +1790,26 @@ name|LLVMTypeRef
 name|Ty
 parameter_list|)
 function_decl|;
+comment|/**  * Returns type's subtypes  *  * @see llvm::Type::subtypes()  */
+name|void
+name|LLVMGetSubtypes
+parameter_list|(
+name|LLVMTypeRef
+name|Tp
+parameter_list|,
+name|LLVMTypeRef
+modifier|*
+name|Arr
+parameter_list|)
+function_decl|;
+comment|/**  *  Return the number of types in the derived type.  *  * @see llvm::Type::getNumContainedTypes()  */
+name|unsigned
+name|LLVMGetNumContainedTypes
+parameter_list|(
+name|LLVMTypeRef
+name|Tp
+parameter_list|)
+function_decl|;
 comment|/**  * Create a fixed size array type that refers to a specific type.  *  * The created type will exist in the context that its element type  * exists in.  *  * @see llvm::ArrayType::get()  */
 name|LLVMTypeRef
 name|LLVMArrayType
@@ -3758,6 +3778,25 @@ name|Vals
 parameter_list|,
 name|unsigned
 name|Count
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain a Metadata as a Value.  */
+name|LLVMValueRef
+name|LLVMMetadataAsValue
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
+name|LLVMMetadataRef
+name|MD
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain a Value as a Metadata.  */
+name|LLVMMetadataRef
+name|LLVMValueAsMetadata
+parameter_list|(
+name|LLVMValueRef
+name|Val
 parameter_list|)
 function_decl|;
 comment|/**  * Obtain the underlying string from a MDString value.  *  * @param V Instance to obtain string from.  * @param Length Memory address which will hold length of returned string.  * @return String data in MDString.  */

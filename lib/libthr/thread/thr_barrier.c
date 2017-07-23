@@ -383,8 +383,12 @@ operator|==
 name|NULL
 operator|||
 name|count
-operator|<=
+operator|==
 literal|0
+operator|||
+name|count
+operator|>
+name|INT_MAX
 condition|)
 return|return
 operator|(

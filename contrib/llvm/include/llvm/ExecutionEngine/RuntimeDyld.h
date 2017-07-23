@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RuntimeDyld.h - Run-time dynamic linker for MC-JIT ------*- C++ -*-===//
+comment|//===- RuntimeDyld.h - Run-time dynamic linker for MC-JIT -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -225,10 +225,10 @@ name|ErrMsg
 block|; }
 decl_stmt|;
 name|class
-name|RuntimeDyldImpl
+name|RuntimeDyldCheckerImpl
 decl_stmt|;
 name|class
-name|RuntimeDyldCheckerImpl
+name|RuntimeDyldImpl
 decl_stmt|;
 name|class
 name|RuntimeDyld
@@ -268,7 +268,9 @@ name|RuntimeDyldImpl
 block|;
 name|public
 operator|:
-typedef|typedef
+name|using
+name|ObjSectionToIDMap
+operator|=
 name|std
 operator|::
 name|map
@@ -276,11 +278,10 @@ operator|<
 name|object
 operator|::
 name|SectionRef
-operator|,
+block|,
 name|unsigned
 operator|>
-name|ObjSectionToIDMap
-expr_stmt|;
+block|;
 name|LoadedObjectInfo
 argument_list|(
 argument|RuntimeDyldImpl&RTDyld
@@ -314,114 +315,30 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-decl_stmt|;
+block|;
 name|uint64_t
 name|getSectionLoadAddress
 argument_list|(
-specifier|const
-name|object
-operator|::
-name|SectionRef
-operator|&
-name|Sec
+argument|const object::SectionRef&Sec
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|protected
-label|:
+operator|:
 name|virtual
 name|void
 name|anchor
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|RuntimeDyldImpl
-modifier|&
+operator|&
 name|RTDyld
-decl_stmt|;
+block|;
 name|ObjSectionToIDMap
 name|ObjSecToIDMap
+block|;   }
 decl_stmt|;
-block|}
-empty_stmt|;
-name|template
-operator|<
-name|typename
-name|Derived
-operator|>
-expr|struct
-name|LoadedObjectInfoHelper
-operator|:
-name|LoadedObjectInfo
-block|{
-name|protected
-operator|:
-name|LoadedObjectInfoHelper
-argument_list|(
-specifier|const
-name|LoadedObjectInfoHelper
-operator|&
-argument_list|)
-operator|=
-expr|default
-block|;
-name|LoadedObjectInfoHelper
-argument_list|()
-operator|=
-expr|default
-block|;
-name|public
-operator|:
-name|LoadedObjectInfoHelper
-argument_list|(
-argument|RuntimeDyldImpl&RTDyld
-argument_list|,
-argument|LoadedObjectInfo::ObjSectionToIDMap ObjSecToIDMap
-argument_list|)
-operator|:
-name|LoadedObjectInfo
-argument_list|(
-argument|RTDyld
-argument_list|,
-argument|std::move(ObjSecToIDMap)
-argument_list|)
-block|{}
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|llvm
-operator|::
-name|LoadedObjectInfo
-operator|>
-name|clone
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|llvm
-operator|::
-name|make_unique
-operator|<
-name|Derived
-operator|>
-operator|(
-name|static_cast
-operator|<
-specifier|const
-name|Derived
-operator|&
-operator|>
-operator|(
-operator|*
-name|this
-operator|)
-operator|)
-return|;
-block|}
-expr|}
-block|;
 comment|/// \brief Memory Management.
 name|class
 name|MemoryManager
@@ -429,62 +346,71 @@ block|{
 name|friend
 name|class
 name|RuntimeDyld
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|MemoryManager
 argument_list|()
 operator|=
 expr|default
-block|;
+expr_stmt|;
 name|virtual
 operator|~
 name|MemoryManager
 argument_list|()
 operator|=
 expr|default
-block|;
+expr_stmt|;
 comment|/// Allocate a memory block of (at least) the given size suitable for
 comment|/// executable code. The SectionID is a unique identifier assigned by the
 comment|/// RuntimeDyld instance, and optionally recorded by the memory manager to
 comment|/// access a loaded section.
 name|virtual
 name|uint8_t
-operator|*
+modifier|*
 name|allocateCodeSection
-argument_list|(
-argument|uintptr_t Size
-argument_list|,
-argument|unsigned Alignment
-argument_list|,
-argument|unsigned SectionID
-argument_list|,
-argument|StringRef SectionName
-argument_list|)
-operator|=
+parameter_list|(
+name|uintptr_t
+name|Size
+parameter_list|,
+name|unsigned
+name|Alignment
+parameter_list|,
+name|unsigned
+name|SectionID
+parameter_list|,
+name|StringRef
+name|SectionName
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 comment|/// Allocate a memory block of (at least) the given size suitable for data.
 comment|/// The SectionID is a unique identifier assigned by the JIT engine, and
 comment|/// optionally recorded by the memory manager to access a loaded section.
 name|virtual
 name|uint8_t
-operator|*
+modifier|*
 name|allocateDataSection
-argument_list|(
-argument|uintptr_t Size
-argument_list|,
-argument|unsigned Alignment
-argument_list|,
-argument|unsigned SectionID
-argument_list|,
-argument|StringRef SectionName
-argument_list|,
-argument|bool IsReadOnly
-argument_list|)
-operator|=
+parameter_list|(
+name|uintptr_t
+name|Size
+parameter_list|,
+name|unsigned
+name|Alignment
+parameter_list|,
+name|unsigned
+name|SectionID
+parameter_list|,
+name|StringRef
+name|SectionName
+parameter_list|,
+name|bool
+name|IsReadOnly
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 comment|/// Inform the memory manager about the total amount of memory required to
 comment|/// allocate all sections to be loaded:
 comment|/// \p CodeSize - the total size of all code sections
@@ -496,25 +422,31 @@ comment|/// redefine the method needsToReserveAllocationSpace to return true.
 name|virtual
 name|void
 name|reserveAllocationSpace
-argument_list|(
-argument|uintptr_t CodeSize
-argument_list|,
-argument|uint32_t CodeAlign
-argument_list|,
-argument|uintptr_t RODataSize
-argument_list|,
-argument|uint32_t RODataAlign
-argument_list|,
-argument|uintptr_t RWDataSize
-argument_list|,
-argument|uint32_t RWDataAlign
-argument_list|)
+parameter_list|(
+name|uintptr_t
+name|CodeSize
+parameter_list|,
+name|uint32_t
+name|CodeAlign
+parameter_list|,
+name|uintptr_t
+name|RODataSize
+parameter_list|,
+name|uint32_t
+name|RODataAlign
+parameter_list|,
+name|uintptr_t
+name|RWDataSize
+parameter_list|,
+name|uint32_t
+name|RWDataAlign
+parameter_list|)
 block|{}
 comment|/// Override to return true to enable the reserveAllocationSpace callback.
 name|virtual
 name|bool
 name|needsToReserveAllocationSpace
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|false
@@ -529,29 +461,27 @@ comment|/// be the case for local execution) these two values will be the same.
 name|virtual
 name|void
 name|registerEHFrames
-argument_list|(
-argument|uint8_t *Addr
-argument_list|,
-argument|uint64_t LoadAddr
-argument_list|,
-argument|size_t Size
-argument_list|)
-operator|=
+parameter_list|(
+name|uint8_t
+modifier|*
+name|Addr
+parameter_list|,
+name|uint64_t
+name|LoadAddr
+parameter_list|,
+name|size_t
+name|Size
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 name|virtual
 name|void
 name|deregisterEHFrames
-argument_list|(
-argument|uint8_t *addr
-argument_list|,
-argument|uint64_t LoadAddr
-argument_list|,
-argument|size_t Size
-argument_list|)
-operator|=
+parameter_list|()
+init|=
 literal|0
-block|;
+function_decl|;
 comment|/// This method is called when object loading is complete and section page
 comment|/// permissions can be applied.  It is up to the memory manager implementation
 comment|/// to decide whether or not to act on this method.  The memory manager will
@@ -573,9 +503,9 @@ name|ErrMsg
 operator|=
 name|nullptr
 argument_list|)
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 comment|/// This method is called after an object has been loaded into memory but
 comment|/// before relocations are applied to the loaded sections.
 comment|///
@@ -591,24 +521,32 @@ name|virtual
 name|void
 name|notifyObjectLoaded
 argument_list|(
-argument|RuntimeDyld&RTDyld
+name|RuntimeDyld
+operator|&
+name|RTDyld
 argument_list|,
-argument|const object::ObjectFile&Obj
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|&
+name|Obj
 argument_list|)
 block|{}
 name|private
-operator|:
+label|:
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|bool
 name|FinalizationLocked
-operator|=
+init|=
 name|false
-block|;   }
-block|;
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|/// \brief Construct a RuntimeDyld instance.
 name|RuntimeDyld
 argument_list|(
@@ -620,7 +558,7 @@ name|JITSymbolResolver
 operator|&
 name|Resolver
 argument_list|)
-block|;
+expr_stmt|;
 name|RuntimeDyld
 argument_list|(
 specifier|const
@@ -629,10 +567,11 @@ operator|&
 argument_list|)
 operator|=
 name|delete
-block|;
-name|void
+expr_stmt|;
+name|RuntimeDyld
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|RuntimeDyld
@@ -640,11 +579,11 @@ operator|&
 operator|)
 operator|=
 name|delete
-block|;
+decl_stmt|;
 operator|~
 name|RuntimeDyld
 argument_list|()
-block|;
+expr_stmt|;
 comment|/// Add the referenced object file to the list of objects to be loaded and
 comment|/// relocated.
 name|std
@@ -662,44 +601,50 @@ name|ObjectFile
 operator|&
 name|O
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// Get the address of our local copy of the symbol. This may or may not
 comment|/// be the address used for relocation (clients can copy the data around
 comment|/// and resolve relocatons based on where they put it).
 name|void
-operator|*
+modifier|*
 name|getSymbolLocalAddress
 argument_list|(
-argument|StringRef Name
+name|StringRef
+name|Name
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Get the target address and flags for the named symbol.
 comment|/// This address is the one used for relocation.
 name|JITEvaluatedSymbol
 name|getSymbol
 argument_list|(
-argument|StringRef Name
+name|StringRef
+name|Name
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Resolve the relocations for all symbols we currently know about.
 name|void
 name|resolveRelocations
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// Map a section to its target address space value.
 comment|/// Map the address of a JIT section as returned from the memory manager
 comment|/// to the address in the target process as the running code will see it.
 comment|/// This is the address which will be used for relocation resolution.
 name|void
 name|mapSectionAddress
-argument_list|(
-argument|const void *LocalAddress
-argument_list|,
-argument|uint64_t TargetAddress
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|LocalAddress
+parameter_list|,
+name|uint64_t
+name|TargetAddress
+parameter_list|)
+function_decl|;
 comment|/// Register any EH frame sections that have been loaded but not previously
 comment|/// registered with the memory manager.  Note, RuntimeDyld is responsible
 comment|/// for identifying the EH frame and calling the memory manager with the
@@ -707,20 +652,20 @@ comment|/// EH frame section data.  However, the memory manager itself will hand
 comment|/// the actual target-specific EH frame registration.
 name|void
 name|registerEHFrames
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|void
 name|deregisterEHFrames
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|bool
 name|hasError
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|StringRef
 name|getErrorString
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// By default, only sections that are "required for execution" are passed to
 comment|/// the RTDyldMemoryManager, and other sections are discarded. Passing 'true'
 comment|/// to this method will cause RuntimeDyld to pass all sections to its
@@ -731,9 +676,10 @@ comment|///
 comment|/// Must be called before the first object file is loaded.
 name|void
 name|setProcessAllSections
-argument_list|(
-argument|bool ProcessAllSections
-argument_list|)
+parameter_list|(
+name|bool
+name|ProcessAllSections
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -742,13 +688,14 @@ name|Dyld
 operator|&&
 literal|"setProcessAllSections must be called before loadObject."
 argument_list|)
-block|;
+expr_stmt|;
 name|this
 operator|->
 name|ProcessAllSections
 operator|=
 name|ProcessAllSections
-block|;   }
+expr_stmt|;
+block|}
 comment|/// Perform all actions needed to make the code owned by this RuntimeDyld
 comment|/// instance executable:
 comment|///
@@ -768,10 +715,10 @@ comment|///   relocations.
 comment|///
 name|void
 name|finalizeWithMemoryManagerLocking
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|private
-operator|:
+label|:
 comment|// RuntimeDyldImpl is the actual class. RuntimeDyld is just the public
 comment|// interface.
 name|std
@@ -781,23 +728,24 @@ operator|<
 name|RuntimeDyldImpl
 operator|>
 name|Dyld
-block|;
+expr_stmt|;
 name|MemoryManager
-operator|&
+modifier|&
 name|MemMgr
-block|;
+decl_stmt|;
 name|JITSymbolResolver
-operator|&
+modifier|&
 name|Resolver
-block|;
+decl_stmt|;
 name|bool
 name|ProcessAllSections
-block|;
+decl_stmt|;
 name|RuntimeDyldCheckerImpl
-operator|*
+modifier|*
 name|Checker
-block|; }
-expr_stmt|;
+decl_stmt|;
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

@@ -15,6 +15,12 @@ directive|define
 name|__SDHCI_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"opt_mmccam.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1884,6 +1890,35 @@ name|mtx
 name|mtx
 decl_stmt|;
 comment|/* Slot mutex */
+ifdef|#
+directive|ifdef
+name|MMCCAM
+comment|/* CAM stuff */
+name|union
+name|ccb
+modifier|*
+name|ccb
+decl_stmt|;
+name|struct
+name|cam_devq
+modifier|*
+name|devq
+decl_stmt|;
+name|struct
+name|cam_sim
+modifier|*
+name|sim
+decl_stmt|;
+name|struct
+name|mtx
+name|sim_mtx
+decl_stmt|;
+name|u_char
+name|card_present
+decl_stmt|;
+comment|/* XXX Maybe derive this from elsewhere? */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -2163,6 +2198,33 @@ name|is_present
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MMCCAM
+end_ifdef
+
+begin_comment
+comment|/* CAM-related */
+end_comment
+
+begin_function_decl
+name|void
+name|sdhci_cam_start_slot
+parameter_list|(
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

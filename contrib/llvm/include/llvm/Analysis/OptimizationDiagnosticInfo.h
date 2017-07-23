@@ -125,7 +125,7 @@ comment|/// The optimization diagnostic interface.
 comment|///
 comment|/// It allows reporting when optimizations are performed and when they are not
 comment|/// along with the reasons for it.  Hotness information of the corresponding
-comment|/// code region can be included in the remark if DiagnosticHotnessRequested is
+comment|/// code region can be included in the remark if DiagnosticsHotnessRequested is
 comment|/// enabled in the LLVM context.
 name|class
 name|OptimizationRemarkEmitter
@@ -134,6 +134,7 @@ name|public
 label|:
 name|OptimizationRemarkEmitter
 argument_list|(
+specifier|const
 name|Function
 operator|*
 name|F
@@ -157,15 +158,16 @@ comment|/// \brief This variant can be used to generate ORE on demand (without t
 comment|/// analysis pass).
 comment|///
 comment|/// Note that this ctor has a very different cost depending on whether
-comment|/// F->getContext().getDiagnosticHotnessRequested() is on or not.  If it's off
+comment|/// F->getContext().getDiagnosticsHotnessRequested() is on or not.  If it's off
 comment|/// the operation is free.
 comment|///
-comment|/// Whereas if DiagnosticHotnessRequested is on, it is fairly expensive
+comment|/// Whereas if DiagnosticsHotnessRequested is on, it is fairly expensive
 comment|/// operation since BFI and all its required analyses are computed.  This is
 comment|/// for example useful for CGSCC passes that can't use function analyses
 comment|/// passes in the old PM.
 name|OptimizationRemarkEmitter
 argument_list|(
+specifier|const
 name|Function
 operator|*
 name|F
@@ -217,468 +219,37 @@ operator|*
 name|this
 return|;
 block|}
-comment|/// The new interface to emit remarks.
+comment|/// Handle invalidation events in the new pass manager.
+name|bool
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+name|Inv
+argument_list|)
+decl_stmt|;
+comment|/// \brief Output the remark via the diagnostic handler and to the
+comment|/// optimization record file.
+comment|///
+comment|/// This is the new interface that should be now used rather than the legacy
+comment|/// emit* APIs.
 name|void
 name|emit
 parameter_list|(
 name|DiagnosticInfoOptimizationBase
 modifier|&
 name|OptDiag
-parameter_list|)
-function_decl|;
-comment|/// Emit an optimization-applied message.
-comment|///
-comment|/// \p PassName is the name of the pass emitting the message. If -Rpass= is
-comment|/// given and \p PassName matches the regular expression in -Rpass, then the
-comment|/// remark will be emitted. \p Fn is the function triggering the remark, \p
-comment|/// DLoc is the debug location where the diagnostic is generated. \p V is the
-comment|/// IR Value that identifies the code region. \p Msg is the message string to
-comment|/// use.
-name|void
-name|emitOptimizationRemark
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-specifier|const
-name|DebugLoc
-modifier|&
-name|DLoc
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|)
-function_decl|;
-comment|/// \brief Same as above but derives the IR Value for the code region and the
-comment|/// debug location from the Loop parameter \p L.
-name|void
-name|emitOptimizationRemark
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-name|Loop
-modifier|*
-name|L
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|)
-function_decl|;
-comment|/// \brief Same as above but derives the debug location and the code region
-comment|/// from the debug location and the basic block of \p Inst, respectively.
-name|void
-name|emitOptimizationRemark
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-name|Instruction
-modifier|*
-name|Inst
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|)
-block|{
-name|emitOptimizationRemark
-argument_list|(
-name|PassName
-argument_list|,
-name|Inst
-operator|->
-name|getDebugLoc
-argument_list|()
-argument_list|,
-name|Inst
-operator|->
-name|getParent
-argument_list|()
-argument_list|,
-name|Msg
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// Emit an optimization-missed message.
-comment|///
-comment|/// \p PassName is the name of the pass emitting the message. If
-comment|/// -Rpass-missed= is given and the name matches the regular expression in
-comment|/// -Rpass, then the remark will be emitted.  \p DLoc is the debug location
-comment|/// where the diagnostic is generated. \p V is the IR Value that identifies
-comment|/// the code region. \p Msg is the message string to use.  If \p IsVerbose is
-comment|/// true, the message is considered verbose and will only be emitted when
-comment|/// verbose output is turned on.
-name|void
-name|emitOptimizationRemarkMissed
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-specifier|const
-name|DebugLoc
-modifier|&
-name|DLoc
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|,
-name|bool
-name|IsVerbose
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// \brief Same as above but derives the IR Value for the code region and the
-comment|/// debug location from the Loop parameter \p L.
-name|void
-name|emitOptimizationRemarkMissed
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-name|Loop
-modifier|*
-name|L
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|,
-name|bool
-name|IsVerbose
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// \brief Same as above but derives the debug location and the code region
-comment|/// from the debug location and the basic block of \p Inst, respectively.
-name|void
-name|emitOptimizationRemarkMissed
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-name|Instruction
-modifier|*
-name|Inst
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|,
-name|bool
-name|IsVerbose
-init|=
-name|false
-parameter_list|)
-block|{
-name|emitOptimizationRemarkMissed
-argument_list|(
-name|PassName
-argument_list|,
-name|Inst
-operator|->
-name|getDebugLoc
-argument_list|()
-argument_list|,
-name|Inst
-operator|->
-name|getParent
-argument_list|()
-argument_list|,
-name|Msg
-argument_list|,
-name|IsVerbose
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// Emit an optimization analysis remark message.
-comment|///
-comment|/// \p PassName is the name of the pass emitting the message. If
-comment|/// -Rpass-analysis= is given and \p PassName matches the regular expression
-comment|/// in -Rpass, then the remark will be emitted. \p DLoc is the debug location
-comment|/// where the diagnostic is generated. \p V is the IR Value that identifies
-comment|/// the code region. \p Msg is the message string to use. If \p IsVerbose is
-comment|/// true, the message is considered verbose and will only be emitted when
-comment|/// verbose output is turned on.
-name|void
-name|emitOptimizationRemarkAnalysis
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-specifier|const
-name|DebugLoc
-modifier|&
-name|DLoc
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|,
-name|bool
-name|IsVerbose
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// \brief Same as above but derives the IR Value for the code region and the
-comment|/// debug location from the Loop parameter \p L.
-name|void
-name|emitOptimizationRemarkAnalysis
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-name|Loop
-modifier|*
-name|L
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|,
-name|bool
-name|IsVerbose
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// \brief Same as above but derives the debug location and the code region
-comment|/// from the debug location and the basic block of \p Inst, respectively.
-name|void
-name|emitOptimizationRemarkAnalysis
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-name|Instruction
-modifier|*
-name|Inst
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|,
-name|bool
-name|IsVerbose
-init|=
-name|false
-parameter_list|)
-block|{
-name|emitOptimizationRemarkAnalysis
-argument_list|(
-name|PassName
-argument_list|,
-name|Inst
-operator|->
-name|getDebugLoc
-argument_list|()
-argument_list|,
-name|Inst
-operator|->
-name|getParent
-argument_list|()
-argument_list|,
-name|Msg
-argument_list|,
-name|IsVerbose
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// \brief This variant allows specifying what should be emitted for missed
-comment|/// and analysis remarks in one call.
-comment|///
-comment|/// \p PassName is the name of the pass emitting the message. If
-comment|/// -Rpass-missed= is given and \p PassName matches the regular expression, \p
-comment|/// MsgForMissedRemark is emitted.
-comment|///
-comment|/// If -Rpass-analysis= is given and \p PassName matches the regular
-comment|/// expression, \p MsgForAnalysisRemark is emitted.
-comment|///
-comment|/// The debug location and the code region is derived from \p Inst. If \p
-comment|/// IsVerbose is true, the message is considered verbose and will only be
-comment|/// emitted when verbose output is turned on.
-name|void
-name|emitOptimizationRemarkMissedAndAnalysis
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-name|Instruction
-modifier|*
-name|Inst
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|MsgForMissedRemark
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|MsgForAnalysisRemark
-parameter_list|,
-name|bool
-name|IsVerbose
-init|=
-name|false
-parameter_list|)
-block|{
-name|emitOptimizationRemarkAnalysis
-argument_list|(
-name|PassName
-argument_list|,
-name|Inst
-argument_list|,
-name|MsgForAnalysisRemark
-argument_list|,
-name|IsVerbose
-argument_list|)
-expr_stmt|;
-name|emitOptimizationRemarkMissed
-argument_list|(
-name|PassName
-argument_list|,
-name|Inst
-argument_list|,
-name|MsgForMissedRemark
-argument_list|,
-name|IsVerbose
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// \brief Emit an optimization analysis remark related to floating-point
-comment|/// non-commutativity.
-comment|///
-comment|/// \p PassName is the name of the pass emitting the message. If
-comment|/// -Rpass-analysis= is given and \p PassName matches the regular expression
-comment|/// in -Rpass, then the remark will be emitted. \p Fn is the function
-comment|/// triggering the remark, \p DLoc is the debug location where the diagnostic
-comment|/// is generated.\p V is the IR Value that identifies the code region.  \p Msg
-comment|/// is the message string to use.
-name|void
-name|emitOptimizationRemarkAnalysisFPCommute
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-specifier|const
-name|DebugLoc
-modifier|&
-name|DLoc
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|)
-function_decl|;
-comment|/// \brief Emit an optimization analysis remark related to pointer aliasing.
-comment|///
-comment|/// \p PassName is the name of the pass emitting the message. If
-comment|/// -Rpass-analysis= is given and \p PassName matches the regular expression
-comment|/// in -Rpass, then the remark will be emitted. \p Fn is the function
-comment|/// triggering the remark, \p DLoc is the debug location where the diagnostic
-comment|/// is generated.\p V is the IR Value that identifies the code region.  \p Msg
-comment|/// is the message string to use.
-name|void
-name|emitOptimizationRemarkAnalysisAliasing
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-specifier|const
-name|DebugLoc
-modifier|&
-name|DLoc
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
-parameter_list|)
-function_decl|;
-comment|/// \brief Same as above but derives the IR Value for the code region and the
-comment|/// debug location from the Loop parameter \p L.
-name|void
-name|emitOptimizationRemarkAnalysisAliasing
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|PassName
-parameter_list|,
-name|Loop
-modifier|*
-name|L
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Msg
 parameter_list|)
 function_decl|;
 comment|/// \brief Whether we allow for extra compile-time budget to perform more
@@ -707,6 +278,7 @@ return|;
 block|}
 name|private
 label|:
+specifier|const
 name|Function
 modifier|*
 name|F
@@ -742,7 +314,7 @@ comment|/// Similar but use value from \p OptDiag and update hotness there.
 name|void
 name|computeHotness
 parameter_list|(
-name|DiagnosticInfoOptimizationBase
+name|DiagnosticInfoIROptimization
 modifier|&
 name|OptDiag
 parameter_list|)
@@ -915,6 +487,38 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_decl_stmt
+name|namespace
+name|yaml
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|MappingTraits
+operator|<
+name|DiagnosticInfoOptimizationBase
+operator|*
+operator|>
+block|{
+specifier|static
+name|void
+name|mapping
+argument_list|(
+name|IO
+operator|&
+name|io
+argument_list|,
+name|DiagnosticInfoOptimizationBase
+operator|*
+operator|&
+name|OptDiag
+argument_list|)
+block|; }
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_endif
 unit|}

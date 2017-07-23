@@ -2466,16 +2466,23 @@ operator|!=
 literal|'['
 operator|&&
 operator|(
+operator|(
 name|ps
 operator|.
 name|last_token
 operator|!=
 name|ident
+operator|&&
+name|ps
+operator|.
+name|last_token
+operator|!=
+name|funcname
+operator|)
 operator|||
 name|proc_calls_space
 operator|||
 comment|/* offsetof (1) is never allowed a space; sizeof (2) gets 		     * one iff -bs; all other keywords (>2) always get a space 		     * before lparen */
-operator|(
 name|ps
 operator|.
 name|keyword
@@ -2483,7 +2490,6 @@ operator|+
 name|Bill_Shannon
 operator|>
 literal|2
-operator|)
 operator|)
 condition|)
 operator|*
@@ -2692,9 +2698,6 @@ case|case
 name|rparen
 case|:
 comment|/* got a ')' or ']' */
-name|rparen_count
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|ps
@@ -3430,10 +3433,6 @@ operator|.
 name|last_token
 operator|==
 name|rparen
-operator|&&
-name|rparen_count
-operator|==
-literal|0
 condition|)
 name|ps
 operator|.
@@ -3854,6 +3853,12 @@ operator|.
 name|in_parameter_declaration
 operator|=
 literal|0
+expr_stmt|;
+name|ps
+operator|.
+name|in_decl
+operator|=
+name|false
 expr_stmt|;
 block|}
 name|dec_ind
@@ -4333,12 +4338,6 @@ operator|<=
 literal|1
 condition|)
 block|{
-name|ps
-operator|.
-name|in_parameter_declaration
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|s_code
@@ -4523,6 +4522,9 @@ goto|goto
 name|copy_id
 goto|;
 case|case
+name|funcname
+case|:
+case|case
 name|ident
 case|:
 comment|/* got an identifier or constant */
@@ -4536,9 +4538,9 @@ block|{
 comment|/* if we are in a declaration, we must indent 				 * identifier */
 if|if
 condition|(
-name|is_procname
-operator|==
-literal|0
+name|type_code
+operator|!=
+name|funcname
 operator|||
 operator|!
 name|procnames_start_line
@@ -4622,6 +4624,15 @@ condition|(
 name|ps
 operator|.
 name|want_blank
+operator|&&
+operator|!
+operator|(
+name|procnames_start_line
+operator|&&
+name|type_code
+operator|==
+name|funcname
+operator|)
 condition|)
 operator|*
 name|e_code
@@ -4810,6 +4821,12 @@ operator|*
 name|t_ptr
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|type_code
+operator|!=
+name|funcname
+condition|)
 name|ps
 operator|.
 name|want_blank

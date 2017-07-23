@@ -62,19 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"X86InstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"X86Subtarget.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/TargetTransformInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_include
@@ -83,12 +95,24 @@ directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|StringRef
+decl_stmt|;
+name|class
+name|X86Subtarget
+decl_stmt|;
+name|class
+name|X86RegisterBankInfo
 decl_stmt|;
 name|class
 name|X86TargetMachine
@@ -152,6 +176,17 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|// The no argument getSubtargetImpl, while it exists on some targets, is
+comment|// deprecated and should not be used.
+specifier|const
+name|X86Subtarget
+operator|*
+name|getSubtargetImpl
+argument_list|()
+specifier|const
+operator|=
+name|delete
+block|;
 name|TargetIRAnalysis
 name|getTargetIRAnalysis
 argument_list|()
@@ -180,18 +215,32 @@ name|get
 argument_list|()
 return|;
 block|}
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
 expr|}
 block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_X86_X86TARGETMACHINE_H
+end_comment
 
 end_unit
 

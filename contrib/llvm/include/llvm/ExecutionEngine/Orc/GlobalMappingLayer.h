@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===---- GlobalMappingLayer.h - Run all IR through a functor ---*- C++ -*-===//
+comment|//===- GlobalMappingLayer.h - Run all IR through a functor ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -75,10 +75,28 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|JITSymbolResolver
+decl_stmt|;
 name|namespace
 name|orc
 block|{
@@ -99,14 +117,15 @@ name|GlobalMappingLayer
 block|{
 name|public
 operator|:
-comment|/// @brief Handle to a set of added modules.
-typedef|typedef
+comment|/// @brief Handle to an added module.
+name|using
+name|ModuleHandleT
+operator|=
 name|typename
 name|BaseLayerT
 operator|::
-name|ModuleSetHandleT
-name|ModuleSetHandleT
-expr_stmt|;
+name|ModuleHandleT
+block|;
 comment|/// @brief Construct an GlobalMappingLayer with the given BaseLayer
 name|GlobalMappingLayer
 argument_list|(
@@ -120,46 +139,26 @@ argument_list|(
 argument|BaseLayer
 argument_list|)
 block|{}
-comment|/// @brief Add the given module set to the JIT.
+comment|/// @brief Add the given module to the JIT.
 comment|/// @return A handle for the added modules.
-name|template
-operator|<
-name|typename
-name|ModuleSetT
-operator|,
-name|typename
-name|MemoryManagerPtrT
-operator|,
-name|typename
-name|SymbolResolverPtrT
-operator|>
-name|ModuleSetHandleT
-name|addModuleSet
+name|ModuleHandleT
+name|addModule
 argument_list|(
-argument|ModuleSetT Ms
+argument|std::shared_ptr<Module> M
 argument_list|,
-argument|MemoryManagerPtrT MemMgr
-argument_list|,
-argument|SymbolResolverPtrT Resolver
+argument|std::shared_ptr<JITSymbolResolver> Resolver
 argument_list|)
 block|{
 return|return
 name|BaseLayer
 operator|.
-name|addModuleSet
+name|addModule
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
-name|Ms
-argument_list|)
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|MemMgr
+name|M
 argument_list|)
 argument_list|,
 name|std
@@ -173,33 +172,25 @@ return|;
 block|}
 comment|/// @brief Remove the module set associated with the handle H.
 name|void
-name|removeModuleSet
-parameter_list|(
-name|ModuleSetHandleT
-name|H
-parameter_list|)
+name|removeModule
+argument_list|(
+argument|ModuleHandleT H
+argument_list|)
 block|{
 name|BaseLayer
 operator|.
-name|removeModuleSet
+name|removeModule
 argument_list|(
 name|H
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// @brief Manually set the address to return for the given symbol.
 name|void
 name|setGlobalMapping
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|JITTargetAddress
-name|Addr
+argument|JITTargetAddress Addr
 argument_list|)
 block|{
 name|SymbolTable
@@ -208,18 +199,12 @@ name|Name
 index|]
 operator|=
 name|Addr
-expr_stmt|;
-block|}
+block|;   }
 comment|/// @brief Remove the given symbol from the global mapping.
 name|void
 name|eraseGlobalMapping
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|)
 block|{
 name|SymbolTable
@@ -228,8 +213,7 @@ name|erase
 argument_list|(
 name|Name
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// @brief Search for the given named symbol.
 comment|///
 comment|///          This method will first search the local symbol table, returning
@@ -242,27 +226,21 @@ comment|/// @return A handle for the given named symbol, if it exists.
 name|JITSymbol
 name|findSymbol
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|bool
-name|ExportedSymbolsOnly
+argument|bool ExportedSymbolsOnly
 argument_list|)
 block|{
 name|auto
 name|I
-init|=
+operator|=
 name|SymbolTable
 operator|.
 name|find
 argument_list|(
 name|Name
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|I
@@ -295,18 +273,18 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-comment|/// @brief Get the address of the given symbol in the context of the set of
-comment|///        modules represented by the handle H. This call is forwarded to the
+comment|/// @brief Get the address of the given symbol in the context of the of the
+comment|///        module represented by the handle H. This call is forwarded to the
 comment|///        base layer's implementation.
-comment|/// @param H The handle for the module set to search in.
+comment|/// @param H The handle for the module to search in.
 comment|/// @param Name The name of the symbol to search for.
 comment|/// @param ExportedSymbolsOnly If true, search only for exported symbols.
 comment|/// @return A handle for the given named symbol, if it is found in the
-comment|///         given module set.
+comment|///         given module.
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
-name|ModuleSetHandleT
+name|ModuleHandleT
 name|H
 argument_list|,
 specifier|const
@@ -339,7 +317,7 @@ comment|/// @param H Handle for module set to emit/finalize.
 name|void
 name|emitAndFinalize
 parameter_list|(
-name|ModuleSetHandleT
+name|ModuleHandleT
 name|H
 parameter_list|)
 block|{
@@ -375,12 +353,12 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace orc.
+comment|// end namespace orc
 end_comment
 
 begin_comment
 unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif

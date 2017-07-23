@@ -6020,27 +6020,31 @@ comment|///    returning the two dot products in the lower and upper halves of t
 end_comment
 
 begin_comment
-comment|///    [8 x float] result. The immediate integer operand controls which input
+comment|///    [8 x float] result.
 end_comment
 
 begin_comment
-comment|///    elements will contribute to the dot product, and where the final results
+comment|///
 end_comment
 
 begin_comment
-comment|///    are returned. In general, for each dot product, the four corresponding
+comment|///    The immediate integer operand controls which input elements will
 end_comment
 
 begin_comment
-comment|///    elements of the input vectors are multiplied; the first two and second
+comment|///    contribute to the dot product, and where the final results are returned.
 end_comment
 
 begin_comment
-comment|///    two products are summed, then the two sums are added to form the final
+comment|///    In general, for each dot product, the four corresponding elements of the
 end_comment
 
 begin_comment
-comment|///    result.
+comment|///    input vectors are multiplied; the first two and second two products are
+end_comment
+
+begin_comment
+comment|///    summed, then the two sums are added to form the final result.
 end_comment
 
 begin_comment
@@ -6174,39 +6178,43 @@ comment|/// \brief Selects 8 float values from the 256-bit operands of [8 x floa
 end_comment
 
 begin_comment
-comment|///    specified by the immediate value operand. The four selected elements in
+comment|///    specified by the immediate value operand.
 end_comment
 
 begin_comment
-comment|///    each operand are copied to the destination according to the bits
+comment|///
 end_comment
 
 begin_comment
-comment|///    specified in the immediate operand. The selected elements from the first
+comment|///    The four selected elements in each operand are copied to the destination
 end_comment
 
 begin_comment
-comment|///    256-bit operand are copied to bits [63:0] and bits [191:128] of the
+comment|///    according to the bits specified in the immediate operand. The selected
 end_comment
 
 begin_comment
-comment|///    destination, and the selected elements from the second 256-bit operand
+comment|///    elements from the first 256-bit operand are copied to bits [63:0] and
 end_comment
 
 begin_comment
-comment|///    are copied to bits [127:64] and bits [255:192] of the destination. For
+comment|///    bits [191:128] of the destination, and the selected elements from the
 end_comment
 
 begin_comment
-comment|///    example, if bits [7:0] of the immediate operand contain a value of 0xFF,
+comment|///    second 256-bit operand are copied to bits [127:64] and bits [255:192] of
 end_comment
 
 begin_comment
-comment|///    the 256-bit destination vector would contain the following values: b[7],
+comment|///    the destination. For example, if bits [7:0] of the immediate operand
 end_comment
 
 begin_comment
-comment|///    b[7], a[7], a[7], b[3], b[3], a[3], a[3].
+comment|///    contain a value of 0xFF, the 256-bit destination vector would contain the
+end_comment
+
+begin_comment
+comment|///    following values: b[7], b[7], a[7], a[7], b[3], b[3], a[3], a[3].
 end_comment
 
 begin_comment
@@ -6380,31 +6388,35 @@ comment|/// \brief Selects four double-precision values from the 256-bit operand
 end_comment
 
 begin_comment
-comment|///    [4 x double], as specified by the immediate value operand. The selected
+comment|///    [4 x double], as specified by the immediate value operand.
 end_comment
 
 begin_comment
-comment|///    elements from the first 256-bit operand are copied to bits [63:0] and
+comment|///
 end_comment
 
 begin_comment
-comment|///    bits [191:128] in the destination, and the selected elements from the
+comment|///    The selected elements from the first 256-bit operand are copied to bits
 end_comment
 
 begin_comment
-comment|///    second 256-bit operand are copied to bits [127:64] and bits [255:192] in
+comment|///    [63:0] and bits [191:128] in the destination, and the selected elements
 end_comment
 
 begin_comment
-comment|///    the destination. For example, if bits [3:0] of the immediate operand
+comment|///    from the second 256-bit operand are copied to bits [127:64] and bits
 end_comment
 
 begin_comment
-comment|///    contain a value of 0xF, the 256-bit destination vector would contain the
+comment|///    [255:192] in the destination. For example, if bits [3:0] of the immediate
 end_comment
 
 begin_comment
-comment|///    following values: b[3], a[3], b[1], a[1].
+comment|///    operand contain a value of 0xF, the 256-bit destination vector would
+end_comment
+
+begin_comment
+comment|///    contain the following values: b[3], a[3], b[1], a[1].
 end_comment
 
 begin_comment
@@ -6642,7 +6654,7 @@ value|0x07
 end_define
 
 begin_comment
-comment|/* Ordered (nonsignaling)   */
+comment|/* Ordered (non-signaling)   */
 end_comment
 
 begin_define
@@ -6664,7 +6676,7 @@ value|0x09
 end_define
 
 begin_comment
-comment|/* Not-greater-than-or-equal (unord, signaling)  */
+comment|/* Not-greater-than-or-equal (unordered, signaling)  */
 end_comment
 
 begin_define
@@ -6807,7 +6819,7 @@ value|0x16
 end_define
 
 begin_comment
-comment|/* Not-less-than-or-equal (unord, non-signaling)  */
+comment|/* Not-less-than-or-equal (unordered, non-signaling)  */
 end_comment
 
 begin_define
@@ -6840,7 +6852,7 @@ value|0x19
 end_define
 
 begin_comment
-comment|/* Not-greater-than-or-equal (unord, non-sign)  */
+comment|/* Not-greater-than-or-equal (unordered, non-signaling)  */
 end_comment
 
 begin_define
@@ -6918,15 +6930,23 @@ comment|///    128-bit vectors of [2 x double], using the operation specified by
 end_comment
 
 begin_comment
-comment|///    immediate integer operand. Returns a [2 x double] vector consisting of
+comment|///    immediate integer operand.
 end_comment
 
 begin_comment
-comment|///    two doubles corresponding to the two comparison results: zero if the
+comment|///
 end_comment
 
 begin_comment
-comment|///    comparison is false, and all 1's if the comparison is true.
+comment|///    Returns a [2 x double] vector consisting of two doubles corresponding to
+end_comment
+
+begin_comment
+comment|///    the two comparison results: zero if the comparison is false, and all 1's
+end_comment
+
+begin_comment
+comment|///    if the comparison is true.
 end_comment
 
 begin_comment
@@ -6994,47 +7014,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -7064,15 +7168,23 @@ comment|///    [4 x float], using the operation specified by the immediate integ
 end_comment
 
 begin_comment
-comment|///    operand. Returns a [4 x float] vector consisting of four floats
+comment|///    operand.
 end_comment
 
 begin_comment
-comment|///    corresponding to the four comparison results: zero if the comparison is
+comment|///
 end_comment
 
 begin_comment
-comment|///    false, and all 1's if the comparison is true.
+comment|///    Returns a [4 x float] vector consisting of four floats corresponding to
+end_comment
+
+begin_comment
+comment|///    the four comparison results: zero if the comparison is false, and all 1's
+end_comment
+
+begin_comment
+comment|///    if the comparison is true.
 end_comment
 
 begin_comment
@@ -7140,47 +7252,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -7210,15 +7406,23 @@ comment|///    256-bit vectors of [4 x double], using the operation specified by
 end_comment
 
 begin_comment
-comment|///    immediate integer operand. Returns a [4 x double] vector consisting of
+comment|///    immediate integer operand.
 end_comment
 
 begin_comment
-comment|///    four doubles corresponding to the four comparison results: zero if the
+comment|///
 end_comment
 
 begin_comment
-comment|///    comparison is false, and all 1's if the comparison is true.
+comment|///    Returns a [4 x double] vector consisting of four doubles corresponding to
+end_comment
+
+begin_comment
+comment|///    the four comparison results: zero if the comparison is false, and all 1's
+end_comment
+
+begin_comment
+comment|///    if the comparison is true.
 end_comment
 
 begin_comment
@@ -7286,47 +7490,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -7356,15 +7644,23 @@ comment|///    [8 x float], using the operation specified by the immediate integ
 end_comment
 
 begin_comment
-comment|///    operand. Returns a [8 x float] vector consisting of eight floats
+comment|///    operand.
 end_comment
 
 begin_comment
-comment|///    corresponding to the eight comparison results: zero if the comparison is
+comment|///
 end_comment
 
 begin_comment
-comment|///    false, and all 1's if the comparison is true.
+comment|///    Returns a [8 x float] vector consisting of eight floats corresponding to
+end_comment
+
+begin_comment
+comment|///    the eight comparison results: zero if the comparison is false, and all
+end_comment
+
+begin_comment
+comment|///    1's if the comparison is true.
 end_comment
 
 begin_comment
@@ -7432,47 +7728,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -7502,11 +7882,19 @@ comment|///    two 128-bit vectors of [2 x double], using the operation specifie
 end_comment
 
 begin_comment
-comment|///    immediate integer operand. If the result is true, all 64 bits of the
+comment|///    immediate integer operand.
 end_comment
 
 begin_comment
-comment|///    destination vector are set; otherwise they are cleared.
+comment|///
+end_comment
+
+begin_comment
+comment|///    If the result is true, all 64 bits of the destination vector are set;
+end_comment
+
+begin_comment
+comment|///    otherwise they are cleared.
 end_comment
 
 begin_comment
@@ -7574,47 +7962,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -7644,11 +8116,19 @@ comment|///    vectors of [4 x float], using the operation specified by the imme
 end_comment
 
 begin_comment
-comment|///    integer operand. If the result is true, all 32 bits of the destination
+comment|///    integer operand.
 end_comment
 
 begin_comment
-comment|///    vector are set; otherwise they are cleared.
+comment|///
+end_comment
+
+begin_comment
+comment|///    If the result is true, all 32 bits of the destination vector are set;
+end_comment
+
+begin_comment
+comment|///    otherwise they are cleared.
 end_comment
 
 begin_comment
@@ -7716,47 +8196,131 @@ comment|///    operation to use: \n
 end_comment
 
 begin_comment
-comment|///    00h, 08h, 10h, 18h: Equal \n
+comment|///    0x00 : Equal (ordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    01h, 09h, 11h, 19h: Less than \n
+comment|///    0x01 : Less-than (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal
+comment|///    0x02 : Less-than-or-equal (ordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x03 : Unordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    03h, 0Bh, 13h, 1Bh: Unordered \n
+comment|///    0x04 : Not-equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///    04h, 0Ch, 14h, 1Ch: Not equal \n
+comment|///    0x05 : Not-less-than (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than
+comment|///    0x06 : Not-less-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x07 : Ordered (non-signaling)
 end_comment
 
 begin_comment
-comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+comment|///    0x08 : Equal (unordered, non-signaling)
 end_comment
 
 begin_comment
-comment|///                        (swapped operands) \n
+comment|///    0x09 : Not-greater-than-or-equal (unordered, signaling)
 end_comment
 
 begin_comment
-comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+comment|///    0x0a : Not-greater-than (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0b : False (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0c : Not-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x0d : Greater-than-or-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0e : Greater-than (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x0f : True (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x10 : Equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x11 : Less-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x12 : Less-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x13 : Unordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x14 : Not-equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x15 : Not-less-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x16 : Not-less-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x17 : Ordered (signaling)
+end_comment
+
+begin_comment
+comment|///    0x18 : Equal (unordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x19 : Not-greater-than-or-equal (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1a : Not-greater-than (unordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1b : False (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1c : Not-equal (ordered, signaling)
+end_comment
+
+begin_comment
+comment|///    0x1d : Greater-than-or-equal (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1e : Greater-than (ordered, non-signaling)
+end_comment
+
+begin_comment
+comment|///    0x1f : True (unordered, signaling)
 end_comment
 
 begin_comment
@@ -9181,6 +9745,46 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Returns the first element of the input vector of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<avxintrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 64 bit double containing the first element of the input vector.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -9200,6 +9804,46 @@ index|]
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Returns the first element of the input vector of [8 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<avxintrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x i32].
+end_comment
+
+begin_comment
+comment|/// \returns A 32 bit integer containing the first element of the input vector.
+end_comment
 
 begin_function
 specifier|static
@@ -9228,6 +9872,46 @@ index|]
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Returns the first element of the input vector of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<avxintrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 32 bit float containing the first element of the input vector.
+end_comment
 
 begin_function
 specifier|static
@@ -10110,7 +10794,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -10225,7 +10917,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -10340,7 +11040,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -10459,7 +11167,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -10574,7 +11290,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -10689,7 +11413,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -10808,7 +11540,15 @@ comment|///    first source vector and the corresponding elements in the second 
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -10923,7 +11663,15 @@ comment|///    first source vector and the corresponding elements in the second 
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11038,7 +11786,15 @@ comment|///    first source vector and the corresponding elements in the second 
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11157,7 +11913,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11272,7 +12036,15 @@ comment|///    first source vector and the corresponding element in the second s
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11387,7 +12159,15 @@ comment|///    first source vector and the corresponding elements in the second 
 end_comment
 
 begin_comment
-comment|///    vector. The EFLAGS register is updated as follows: \n
+comment|///    vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11498,7 +12278,15 @@ comment|/// \brief Given two 256-bit integer vectors, perform a bit-by-bit compa
 end_comment
 
 begin_comment
-comment|///    of the two source vectors and update the EFLAGS register as follows: \n
+comment|///    of the two source vectors.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11601,7 +12389,15 @@ comment|/// \brief Given two 256-bit integer vectors, perform a bit-by-bit compa
 end_comment
 
 begin_comment
-comment|///    of the two source vectors and update the EFLAGS register as follows: \n
+comment|///    of the two source vectors.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -11704,7 +12500,15 @@ comment|/// \brief Given two 256-bit integer vectors, perform a bit-by-bit compa
 end_comment
 
 begin_comment
-comment|///    of the two source vectors and update the EFLAGS register as follows: \n
+comment|///    of the two source vectors.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///    The EFLAGS register is updated as follows: \n
 end_comment
 
 begin_comment
@@ -14526,7 +15330,7 @@ comment|///    A pointer to a 32-byte aligned memory location that will receive 
 end_comment
 
 begin_comment
-comment|///    integer values.
+comment|///    double-precision floating-point values.
 end_comment
 
 begin_comment
@@ -18832,15 +19636,19 @@ comment|/// \brief Constructs a 256-bit floating-point vector of [4 x double] fr
 end_comment
 
 begin_comment
-comment|///    128-bit floating-point vector of [2 x double]. The lower 128 bits
+comment|///    128-bit floating-point vector of [2 x double].
 end_comment
 
 begin_comment
-comment|///    contain the value of the source vector. The contents of the upper 128
+comment|///
 end_comment
 
 begin_comment
-comment|///    bits are undefined.
+comment|///    The lower 128 bits contain the value of the source vector. The contents
+end_comment
+
+begin_comment
+comment|///    of the upper 128 bits are undefined.
 end_comment
 
 begin_comment
@@ -18926,15 +19734,19 @@ comment|/// \brief Constructs a 256-bit floating-point vector of [8 x float] fro
 end_comment
 
 begin_comment
-comment|///    128-bit floating-point vector of [4 x float]. The lower 128 bits contain
+comment|///    128-bit floating-point vector of [4 x float].
 end_comment
 
 begin_comment
-comment|///    the value of the source vector. The contents of the upper 128 bits are
+comment|///
 end_comment
 
 begin_comment
-comment|///    undefined.
+comment|///    The lower 128 bits contain the value of the source vector. The contents
+end_comment
+
+begin_comment
+comment|///    of the upper 128 bits are undefined.
 end_comment
 
 begin_comment
@@ -19030,6 +19842,10 @@ comment|/// \brief Constructs a 256-bit integer vector from a 128-bit integer ve
 end_comment
 
 begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|///    The lower 128 bits contain the value of the source vector. The contents
 end_comment
 
@@ -19112,6 +19928,273 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Constructs a 256-bit floating-point vector of [4 x double] from a
+end_comment
+
+begin_comment
+comment|///    128-bit floating-point vector of [2 x double]. The lower 128 bits
+end_comment
+
+begin_comment
+comment|///    contain the value of the source vector. The upper 128 bits are set
+end_comment
+
+begin_comment
+comment|///    to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit floating-point vector of [4 x double]. The lower 128 bits
+end_comment
+
+begin_comment
+comment|///    contain the value of the parameter. The upper 128 bits are set to zero.
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|__m256d
+name|__DEFAULT_FN_ATTRS
+name|_mm256_zextpd128_pd256
+parameter_list|(
+name|__m128d
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_shufflevector
+argument_list|(
+operator|(
+name|__v2df
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|__v2df
+operator|)
+name|_mm_setzero_pd
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Constructs a 256-bit floating-point vector of [8 x float] from a
+end_comment
+
+begin_comment
+comment|///    128-bit floating-point vector of [4 x float]. The lower 128 bits contain
+end_comment
+
+begin_comment
+comment|///    the value of the source vector. The upper 128 bits are set to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit floating-point vector of [8 x float]. The lower 128 bits
+end_comment
+
+begin_comment
+comment|///    contain the value of the parameter. The upper 128 bits are set to zero.
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|__m256
+name|__DEFAULT_FN_ATTRS
+name|_mm256_zextps128_ps256
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_shufflevector
+argument_list|(
+operator|(
+name|__v4sf
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|__v4sf
+operator|)
+name|_mm_setzero_ps
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|,
+literal|6
+argument_list|,
+literal|7
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Constructs a 256-bit integer vector from a 128-bit integer vector.
+end_comment
+
+begin_comment
+comment|///    The lower 128 bits contain the value of the source vector. The upper
+end_comment
+
+begin_comment
+comment|///    128 bits are set to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit integer vector. The lower 128 bits contain the value of
+end_comment
+
+begin_comment
+comment|///    the parameter. The upper 128 bits are set to zero.
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|__m256i
+name|__DEFAULT_FN_ATTRS
+name|_mm256_zextsi128_si256
+parameter_list|(
+name|__m128i
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__builtin_shufflevector
+argument_list|(
+operator|(
+name|__v2di
+operator|)
+name|__a
+argument_list|,
+operator|(
+name|__v2di
+operator|)
+name|_mm_setzero_si128
+argument_list|()
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*    Vector insert.    We use macros rather than inlines because we only want to accept    invocations where the immediate M is a constant expression. */
 end_comment
 
@@ -19128,11 +20211,19 @@ comment|///    replacing either the upper or the lower 128 bits with the content
 end_comment
 
 begin_comment
-comment|///    128-bit vector of [4 x float] in the second parameter. The immediate
+comment|///    128-bit vector of [4 x float] in the second parameter.
 end_comment
 
 begin_comment
-comment|///    integer parameter determines between the upper or the lower 128 bits.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The immediate integer parameter determines between the upper or the lower
+end_comment
+
+begin_comment
+comment|///    128 bits.
 end_comment
 
 begin_comment
@@ -19270,11 +20361,19 @@ comment|///    replacing either the upper or the lower 128 bits with the content
 end_comment
 
 begin_comment
-comment|///    128-bit vector of [2 x double] in the second parameter. The immediate
+comment|///    128-bit vector of [2 x double] in the second parameter.
 end_comment
 
 begin_comment
-comment|///    integer parameter determines between the upper or the lower 128 bits.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The immediate integer parameter determines between the upper or the lower
+end_comment
+
+begin_comment
+comment|///    128 bits.
 end_comment
 
 begin_comment
@@ -19412,11 +20511,19 @@ comment|///    either the upper or the lower 128 bits with the contents of a 128
 end_comment
 
 begin_comment
-comment|///    integer vector in the second parameter. The immediate integer parameter
+comment|///    integer vector in the second parameter.
 end_comment
 
 begin_comment
-comment|///    determines between the upper or the lower 128 bits.
+comment|///
+end_comment
+
+begin_comment
+comment|///    The immediate integer parameter determines between the upper or the lower
+end_comment
+
+begin_comment
+comment|///    128 bits.
 end_comment
 
 begin_comment

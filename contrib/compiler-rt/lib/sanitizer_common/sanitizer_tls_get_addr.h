@@ -199,6 +199,15 @@ name|DTLS_Destroy
 parameter_list|()
 function_decl|;
 comment|// Make sure to call this before the thread is destroyed.
+comment|// Returns true if DTLS of suspended thread is in destruction process.
+name|bool
+name|DTLSInDestruction
+parameter_list|(
+name|DTLS
+modifier|*
+name|dtls
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

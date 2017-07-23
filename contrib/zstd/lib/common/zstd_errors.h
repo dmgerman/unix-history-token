@@ -36,6 +36,9 @@ directive|include
 file|<stddef.h>
 comment|/* size_t */
 comment|/* =====   ZSTDERRORLIB_API : control library symbols visibility   ===== */
+ifndef|#
+directive|ifndef
+name|ZSTDERRORLIB_VISIBILITY
 if|#
 directive|if
 name|defined
@@ -57,6 +60,8 @@ directive|else
 define|#
 directive|define
 name|ZSTDERRORLIB_VISIBILITY
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|#
@@ -100,7 +105,7 @@ name|ZSTDERRORLIB_API
 value|ZSTDERRORLIB_VISIBILITY
 endif|#
 directive|endif
-comment|/*-**************************************** *  error codes list ******************************************/
+comment|/*-****************************************  *  error codes list  *  note : this API is still considered unstable  *         it should not be used with a dynamic library  *         only static linking is allowed  ******************************************/
 typedef|typedef
 enum|enum
 block|{
@@ -121,6 +126,8 @@ block|,
 name|ZSTD_error_frameParameter_windowTooLarge
 block|,
 name|ZSTD_error_compressionParameter_unsupported
+block|,
+name|ZSTD_error_compressionParameter_outOfBound
 block|,
 name|ZSTD_error_init_missing
 block|,
@@ -148,11 +155,15 @@ name|ZSTD_error_dictionary_wrong
 block|,
 name|ZSTD_error_dictionaryCreation_failed
 block|,
+name|ZSTD_error_frameIndex_tooLarge
+block|,
+name|ZSTD_error_seekableIO
+block|,
 name|ZSTD_error_maxCode
 block|}
 name|ZSTD_ErrorCode
 typedef|;
-comment|/*! ZSTD_getErrorCode() :     convert a `size_t` function result into a `ZSTD_ErrorCode` enum type,     which can be used to compare directly with enum list published into "error_public.h" */
+comment|/*! ZSTD_getErrorCode() :     convert a `size_t` function result into a `ZSTD_ErrorCode` enum type,     which can be used to compare with enum list published above */
 name|ZSTDERRORLIB_API
 name|ZSTD_ErrorCode
 name|ZSTD_getErrorCode

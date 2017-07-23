@@ -404,7 +404,7 @@ name|enable
 parameter_list|)
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|ReadRegisterValueFromMemory
 argument_list|(
 specifier|const
@@ -428,7 +428,7 @@ name|reg_value
 argument_list|)
 decl_stmt|;
 name|virtual
-name|Error
+name|Status
 name|WriteRegisterValueToMemory
 argument_list|(
 specifier|const

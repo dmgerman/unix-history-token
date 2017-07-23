@@ -18,13 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Types.h"
+file|"llvm-c/Target.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm-c/Target.h"
+file|"llvm-c/Types.h"
 end_include
 
 begin_ifdef

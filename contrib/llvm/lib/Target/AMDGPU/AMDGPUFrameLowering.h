@@ -112,18 +112,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|int
-name|getFrameIndexReference
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|int FI
-argument_list|,
-argument|unsigned&FrameReg
-argument_list|)
-specifier|const
-name|override
-block|;
 name|bool
 name|hasFP
 argument_list|(

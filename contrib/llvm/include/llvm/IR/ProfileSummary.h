@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ProfileSummary.h - Profile summary data structure. ------*- C++ -*-===//
+comment|//===- ProfileSummary.h - Profile summary data structure. -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -50,14 +50,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_PROFILE_SUMMARY_H
+name|LLVM_IR_PROFILESUMMARY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_PROFILE_SUMMARY_H
+name|LLVM_IR_PROFILESUMMARY_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
 
 begin_include
 include|#
@@ -68,19 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utility>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Casting.h"
 end_include
 
 begin_decl_stmt
@@ -92,12 +86,6 @@ name|LLVMContext
 decl_stmt|;
 name|class
 name|Metadata
-decl_stmt|;
-name|class
-name|MDTuple
-decl_stmt|;
-name|class
-name|MDNode
 decl_stmt|;
 comment|// The profile summary is one or more (Cutoff, MinCount, NumCounts) triplets.
 comment|// The semantics of counts depend on the type of profile. For instrumentation
@@ -146,15 +134,16 @@ argument_list|)
 block|{}
 block|}
 struct|;
-typedef|typedef
+name|using
+name|SummaryEntryVector
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|ProfileSummaryEntry
 operator|>
-name|SummaryEntryVector
-expr_stmt|;
+decl_stmt|;
 name|class
 name|ProfileSummary
 block|{
@@ -383,6 +372,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_PROFILESUMMARY_H
+end_comment
 
 end_unit
 

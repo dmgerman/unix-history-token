@@ -131,12 +131,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus_dma.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 

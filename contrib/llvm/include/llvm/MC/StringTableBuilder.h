@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- StringTableBuilder.h - String table building utility ------*- C++ -*-=//
+comment|//===- StringTableBuilder.h - String table building utility -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -58,7 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -252,13 +264,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_STRINGTABLEBUILDER_H
+end_comment
 
 end_unit
 

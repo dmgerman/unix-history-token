@@ -1148,7 +1148,7 @@ return|;
 block|}
 name|UTIL_STATIC
 name|int
-name|UTIL_isRegFile
+name|UTIL_isRegularFile
 parameter_list|(
 specifier|const
 name|char
@@ -3466,12 +3466,10 @@ argument_list|,
 literal|"r"
 argument_list|)
 decl_stmt|;
-name|size_t
-specifier|const
+define|#
+directive|define
 name|BUF_SIZE
-init|=
-literal|80
-decl_stmt|;
+value|80
 name|char
 name|buff
 index|[

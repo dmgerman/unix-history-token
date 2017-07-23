@@ -488,6 +488,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|isReallyTriviallyReMaterializable
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|AliasAnalysis *AA
+argument_list|)
+specifier|const
+name|override
+block|;
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
@@ -805,7 +815,7 @@ block|;
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr&MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -857,7 +867,7 @@ specifier|const
 name|override
 block|;
 name|void
-name|getNoopForMachoTarget
+name|getNoop
 argument_list|(
 argument|MCInst&NopInst
 argument_list|)
@@ -972,6 +982,13 @@ argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
+block|;
+specifier|static
+name|int
+name|getRecordFormOpcode
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

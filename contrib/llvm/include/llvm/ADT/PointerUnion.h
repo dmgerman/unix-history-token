@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdint>
+file|<cstddef>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstddef>
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -711,14 +711,25 @@ literal|"Can't get the address because PointerLikeTypeTraits changes the ptr"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
+name|const_cast
+operator|<
 name|PT1
 operator|*
-operator|)
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|PT1
+operator|*
+operator|>
+operator|(
 name|Val
 operator|.
 name|getAddrOfPointer
 argument_list|()
+operator|)
+operator|)
 return|;
 block|}
 end_function
@@ -904,7 +915,6 @@ operator|,
 name|typename
 name|PT2
 operator|>
-specifier|static
 name|bool
 name|operator
 operator|==
@@ -949,7 +959,6 @@ operator|,
 name|typename
 name|PT2
 operator|>
-specifier|static
 name|bool
 name|operator
 operator|!=
@@ -994,7 +1003,6 @@ operator|,
 name|typename
 name|PT2
 operator|>
-specifier|static
 name|bool
 name|operator
 operator|<

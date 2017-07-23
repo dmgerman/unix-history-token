@@ -2352,11 +2352,6 @@ name|IN6_LOCALHOST_STRING
 expr_stmt|;
 block|}
 block|}
-name|endnetconfig
-argument_list|(
-name|nc_handle
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tmpnconf
@@ -2364,6 +2359,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|endnetconfig
+argument_list|(
+name|nc_handle
+argument_list|)
+expr_stmt|;
 name|rpc_createerr
 operator|.
 name|cf_stat
@@ -2392,6 +2392,11 @@ name|nc_netid
 argument_list|)
 expr_stmt|;
 comment|/* loopnconf is never freed */
+name|endnetconfig
+argument_list|(
+name|nc_handle
+argument_list|)
+expr_stmt|;
 block|}
 name|mutex_unlock
 argument_list|(

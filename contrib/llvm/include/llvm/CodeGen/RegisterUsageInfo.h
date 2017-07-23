@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==- RegisterUsageInfo.h - Register Usage Informartion Storage -*- C++ -*-===//
+comment|//==- RegisterUsageInfo.h - Register Usage Informartion Storage --*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -88,43 +88,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Function.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Module.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Pass.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
+file|<cstdint>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|<vector>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Function
+decl_stmt|;
+name|class
+name|TargetMachine
+decl_stmt|;
 name|class
 name|PhysicalRegisterUsageInfo
 range|:
@@ -278,10 +266,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_PHYSICALREGISTERUSAGEINFO_H
+end_comment
 
 end_unit
 

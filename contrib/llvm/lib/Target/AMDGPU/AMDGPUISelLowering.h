@@ -70,6 +70,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"AMDGPU.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/CallingConvLower.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
@@ -109,12 +121,26 @@ argument|const SDLoc&DL
 argument_list|)
 specifier|const
 block|;
+name|public
+operator|:
+specifier|static
+name|bool
+name|isOrEquivalentToAdd
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue Op
+argument_list|)
+block|;
 name|protected
 operator|:
 specifier|const
 name|AMDGPUSubtarget
 operator|*
 name|Subtarget
+block|;
+name|AMDGPUAS
+name|AMDGPUASI
 block|;
 name|SDValue
 name|LowerEXTRACT_SUBVECTOR
@@ -127,15 +153,6 @@ specifier|const
 block|;
 name|SDValue
 name|LowerCONCAT_VECTORS
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerINTRINSIC_WO_CHAIN
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -191,7 +208,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFROUND32
+name|LowerFROUND32_16
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -350,6 +367,24 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|performClampCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performAssertSZExtCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|splitBinaryBitConstantOpImpl
 argument_list|(
 argument|DAGCombinerInfo&DCI
@@ -455,6 +490,15 @@ specifier|const
 block|;
 name|SDValue
 name|performFNegCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performFAbsCombine
 argument_list|(
 argument|SDNode *N
 argument_list|,
@@ -596,24 +640,6 @@ argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|)
 specifier|const
 block|;
-name|void
-name|AnalyzeFormalArguments
-argument_list|(
-argument|CCState&State
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|)
-specifier|const
-block|;
-name|void
-name|AnalyzeReturn
-argument_list|(
-argument|CCState&State
-argument_list|,
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|)
-specifier|const
-block|;
 name|public
 operator|:
 name|AMDGPUTargetLowering
@@ -643,30 +669,31 @@ argument_list|()
 operator|.
 name|Options
 operator|.
-name|UnsafeFPMath
+name|NoSignedZerosFPMath
 condition|)
-comment|// FIXME: nsz only
 return|return
 name|true
 return|;
+specifier|const
+name|auto
+name|Flags
+operator|=
+name|Op
+operator|.
+name|getNode
+argument_list|()
+operator|->
+name|getFlags
+argument_list|()
+block|;
 if|if
 condition|(
-specifier|const
-specifier|auto
-modifier|*
-name|BO
-init|=
-name|dyn_cast
-operator|<
-name|BinaryWithFlagsSDNode
-operator|>
-operator|(
-name|Op
-operator|)
+name|Flags
+operator|.
+name|isDefined
+argument_list|()
 condition|)
 return|return
-name|BO
-operator|->
 name|Flags
 operator|.
 name|hasNoSignedZeros
@@ -677,6 +704,24 @@ name|false
 return|;
 block|}
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|bool
+name|allUsesHaveSourceMods
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+name|CostThreshold
+init|=
+literal|4
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|bool
@@ -932,6 +977,40 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
+name|CCAssignFn
+modifier|*
+name|CCAssignFnForCall
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
+name|CC
+argument_list|,
+name|bool
+name|IsVarArg
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|CCAssignFn
+modifier|*
+name|CCAssignFnForReturn
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
+name|CC
+argument_list|,
+name|bool
+name|IsVarArg
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -1072,7 +1151,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|SDValue
-name|CombineFMinMaxLegacy
+name|combineFMinMaxLegacy
 argument_list|(
 specifier|const
 name|SDLoc
@@ -1232,13 +1311,14 @@ specifier|const
 name|SDValue
 name|Op
 argument_list|,
-name|APInt
+name|KnownBits
 operator|&
-name|KnownZero
+name|Known
 argument_list|,
+specifier|const
 name|APInt
 operator|&
-name|KnownOne
+name|DemandedElts
 argument_list|,
 specifier|const
 name|SelectionDAG
@@ -1261,6 +1341,11 @@ name|ComputeNumSignBitsForTargetNode
 argument_list|(
 name|SDValue
 name|Op
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|DemandedElts
 argument_list|,
 specifier|const
 name|SelectionDAG
@@ -1290,11 +1375,47 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \returns a RegisterSDNode representing Reg.
+comment|/// \returns a RegisterSDNode representing Reg if \p RawReg is true, otherwise
+end_comment
+
+begin_comment
+comment|/// a copy from the register.
 end_comment
 
 begin_decl_stmt
-name|virtual
+name|SDValue
+name|CreateLiveInRegister
+argument_list|(
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+specifier|const
+name|SDLoc
+operator|&
+name|SL
+argument_list|,
+name|bool
+name|RawReg
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|SDValue
 name|CreateLiveInRegister
 argument_list|(
@@ -1314,7 +1435,78 @@ name|EVT
 name|VT
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|CreateLiveInRegister
+argument_list|(
+name|DAG
+argument_list|,
+name|RC
+argument_list|,
+name|Reg
+argument_list|,
+name|VT
+argument_list|,
+name|SDLoc
+argument_list|(
+name|DAG
+operator|.
+name|getEntryNode
+argument_list|()
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// Returns the raw live in register rather than a copy from it.
+end_comment
+
+begin_decl_stmt
+name|SDValue
+name|CreateLiveInRegisterRaw
+argument_list|(
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|CreateLiveInRegister
+argument_list|(
+name|DAG
+argument_list|,
+name|RC
+argument_list|,
+name|Reg
+argument_list|,
+name|VT
+argument_list|,
+name|SDLoc
+argument_list|(
+name|DAG
+operator|.
+name|getEntryNode
+argument_list|()
+argument_list|)
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
 end_decl_stmt
 
 begin_enum
@@ -1357,6 +1549,38 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|AMDGPUAS
+name|getAMDGPUAS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AMDGPUASI
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|MVT
+name|getFenceOperandTy
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+name|override
+block|{
+return|return
+name|MVT
+operator|::
+name|i32
+return|;
+block|}
+end_decl_stmt
+
 begin_decl_stmt
 unit|};
 name|namespace
@@ -1374,23 +1598,39 @@ name|ISD
 operator|::
 name|BUILTIN_OP_END
 block|,
-name|CALL
-block|,
-comment|// Function call based on a single integer
 name|UMUL
 block|,
 comment|// 32bit unsigned multiplication
 name|BRANCH_COND
 block|,
 comment|// End AMDIL ISD Opcodes
+comment|// Function call.
+name|CALL
+block|,
+name|TRAP
+block|,
+comment|// Masked control flow nodes.
+name|IF
+block|,
+name|ELSE
+block|,
+name|LOOP
+block|,
+comment|// A uniform kernel return that terminates the wavefront.
 name|ENDPGM
 block|,
-name|RETURN
+comment|// Return to a shader part's epilog code.
+name|RETURN_TO_EPILOG
+block|,
+comment|// Return with values from a non-entry function.
+name|RET_FLAG
 block|,
 name|DWORDADDR
 block|,
 name|FRACT
 block|,
+comment|/// CLAMP value between 0.0 and 1.0. NaN clamped to 0, following clamp output
+comment|/// modifier behavior with dx10_enable.
 name|CLAMP
 block|,
 comment|// This is SETCC with the full mask result which is used for a compare with a
@@ -1439,6 +1679,10 @@ block|,
 name|DIV_FMAS
 block|,
 name|DIV_FIXUP
+block|,
+comment|// For emitting ISD::FMAD when f32 denormals are enabled because mac/mad is
+comment|// treated as an illegal operation.
+name|FMAD_FTZ
 block|,
 name|TRIG_PREOP
 block|,
@@ -1516,8 +1760,6 @@ name|REGISTER_LOAD
 block|,
 name|REGISTER_STORE
 block|,
-name|LOAD_INPUT
-block|,
 name|SAMPLE
 block|,
 name|SAMPLEB
@@ -1535,6 +1777,17 @@ name|CVT_F32_UBYTE2
 block|,
 name|CVT_F32_UBYTE3
 block|,
+comment|// Convert two float 32 numbers into a single register holding two packed f16
+comment|// with round to zero.
+name|CVT_PKRTZ_F16_F32
+block|,
+comment|// Same as the standard node, except the high bits of the resulting integer
+comment|// are known 0.
+name|FP_TO_FP16
+block|,
+comment|// Wrapper around fp16 results that are known to zero the high bits.
+name|FP16_ZEXT
+block|,
 comment|/// This node is for VLIW targets and it is used to represent a vector
 comment|/// that is stored in consecutive registers with the same channel.
 comment|/// For example:
@@ -1547,6 +1800,10 @@ name|BUILD_VERTICAL_VECTOR
 block|,
 comment|/// Pointer to the start of the shader's constant data.
 name|CONST_DATA_PTR
+block|,
+name|INIT_EXEC
+block|,
+name|INIT_EXEC_FROM_INPUT
 block|,
 name|SENDMSG
 block|,
@@ -1575,6 +1832,10 @@ block|,
 name|LOAD_CONSTANT
 block|,
 name|TBUFFER_STORE_FORMAT
+block|,
+name|TBUFFER_STORE_FORMAT_X3
+block|,
+name|TBUFFER_LOAD_FORMAT
 block|,
 name|ATOMIC_CMP_SWAP
 block|,

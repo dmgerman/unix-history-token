@@ -723,16 +723,16 @@ name|tx_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"defragmentations"
+literal|"mbuf_collapses"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|tx_stats
 operator|->
-name|defragment
+name|collapse
 argument_list|,
-literal|"Mbuf defragmentations"
+literal|"Mbuf collapse count"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_COUNTER_U64
@@ -743,16 +743,16 @@ name|tx_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"defragmentation_err"
+literal|"mbuf_collapse_err"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|tx_stats
 operator|->
-name|defragment_err
+name|collapse_err
 argument_list|,
-literal|"Mbuf defragmentation failures"
+literal|"Mbuf collapse failures"
 argument_list|)
 expr_stmt|;
 comment|/* RX specific stats */

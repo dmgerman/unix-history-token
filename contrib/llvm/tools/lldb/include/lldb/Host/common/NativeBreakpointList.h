@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -81,6 +81,33 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+struct|struct
+name|HardwareBreakpoint
+block|{
+name|lldb
+operator|::
+name|addr_t
+name|m_addr
+expr_stmt|;
+name|size_t
+name|m_size
+decl_stmt|;
+block|}
+struct|;
+name|using
+name|HardwareBreakpointMap
+init|=
+name|std
+operator|::
+name|map
+operator|<
+name|lldb
+operator|::
+name|addr_t
+decl_stmt|,
+name|HardwareBreakpoint
+decl|>
+decl_stmt|;
 name|class
 name|NativeBreakpointList
 block|{
@@ -91,7 +118,7 @@ name|std
 operator|::
 name|function
 operator|<
-name|Error
+name|Status
 argument_list|(
 argument|lldb::addr_t addr
 argument_list|,
@@ -107,7 +134,7 @@ expr_stmt|;
 name|NativeBreakpointList
 argument_list|()
 expr_stmt|;
-name|Error
+name|Status
 name|AddRef
 argument_list|(
 name|lldb
@@ -125,7 +152,7 @@ name|CreateBreakpointFunc
 name|create_func
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|DecRef
 argument_list|(
 name|lldb
@@ -134,7 +161,7 @@ name|addr_t
 name|addr
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|EnableBreakpoint
 argument_list|(
 name|lldb
@@ -143,7 +170,7 @@ name|addr_t
 name|addr
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|DisableBreakpoint
 argument_list|(
 name|lldb
@@ -152,7 +179,7 @@ name|addr_t
 name|addr
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|GetBreakpoint
 argument_list|(
 name|lldb
@@ -165,7 +192,7 @@ operator|&
 name|breakpoint_sp
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|RemoveTrapsFromBuffer
 argument_list|(
 name|lldb

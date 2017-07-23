@@ -168,18 +168,15 @@ block|,
 comment|// Count number of bits set in operand 0 per byte.
 name|POPCNT
 block|,
-comment|// Wrappers around the ISD opcodes of the same name.  The output and
-comment|// first input operands are GR128s.  The trailing numbers are the
-comment|// widths of the second operand in bits.
-name|UMUL_LOHI64
+comment|// Wrappers around the ISD opcodes of the same name.  The output is GR128.
+comment|// Input operands may be GR64 or GR32, depending on the instruction.
+name|SMUL_LOHI
 block|,
-name|SDIVREM32
+name|UMUL_LOHI
 block|,
-name|SDIVREM64
+name|SDIVREM
 block|,
-name|UDIVREM32
-block|,
-name|UDIVREM64
+name|UDIVREM
 block|,
 comment|// Use a series of MVCs to copy bytes from one memory location to another.
 comment|// The operands are:
@@ -230,9 +227,6 @@ name|SEARCH_STRING
 block|,
 comment|// Store the CC value in bits 29 and 28 of an integer.
 name|IPM
-block|,
-comment|// Perform a serialization operation.  (BCR 15,0 or BCR 14,0.)
-name|SERIALIZE
 block|,
 comment|// Compiler barrier only; generate a no-op.
 name|MEMBARRIER
@@ -992,6 +986,7 @@ decl_stmt|;
 name|bool
 name|mayBeEmittedAsTailCall
 argument_list|(
+specifier|const
 name|CallInst
 operator|*
 name|CI
@@ -1136,24 +1131,6 @@ decl|const
 name|override
 decl_stmt|;
 name|SDValue
-name|prepareVolatileOrAtomicLoad
-argument_list|(
-name|SDValue
-name|Chain
-argument_list|,
-specifier|const
-name|SDLoc
-operator|&
-name|DL
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|SDValue
 name|PerformDAGCombine
 argument_list|(
 name|SDNode
@@ -1199,6 +1176,60 @@ modifier|&
 name|Subtarget
 decl_stmt|;
 comment|// Implement LowerOperation for individual opcodes.
+name|SDValue
+name|getVectorCmp
+argument_list|(
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|unsigned
+name|Opcode
+argument_list|,
+specifier|const
+name|SDLoc
+operator|&
+name|DL
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|SDValue
+name|CmpOp0
+argument_list|,
+name|SDValue
+name|CmpOp1
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|lowerVectorSETCC
+argument_list|(
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+specifier|const
+name|SDLoc
+operator|&
+name|DL
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|ISD
+operator|::
+name|CondCode
+name|CC
+argument_list|,
+name|SDValue
+name|CmpOp0
+argument_list|,
+name|SDValue
+name|CmpOp1
+argument_list|)
+decl|const
+decl_stmt|;
 name|SDValue
 name|lowerSETCC
 argument_list|(
@@ -1565,18 +1596,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
-name|lowerLOAD_SEQUENCE_POINT
-argument_list|(
-name|SDValue
-name|Op
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|)
-decl|const
-decl_stmt|;
-name|SDValue
 name|lowerSTACKSAVE
 argument_list|(
 name|SDValue
@@ -1723,6 +1742,14 @@ name|DAG
 argument_list|,
 name|unsigned
 name|ByScalar
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|canTreatAsByteVector
+argument_list|(
+name|EVT
+name|VT
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1959,9 +1986,6 @@ name|MBB
 argument_list|,
 name|bool
 name|ClearEven
-argument_list|,
-name|unsigned
-name|SubReg
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2097,6 +2121,17 @@ name|unsigned
 name|Opcode
 argument_list|)
 decl|const
+decl_stmt|;
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getRepRegClassFor
+argument_list|(
+name|MVT
+name|VT
+argument_list|)
+decl|const
+name|override
 decl_stmt|;
 block|}
 end_decl_stmt

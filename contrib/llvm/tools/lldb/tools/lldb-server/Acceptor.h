@@ -46,19 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Connection.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/Socket.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Connection.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -108,14 +108,14 @@ argument_list|()
 operator|=
 expr|default
 expr_stmt|;
-name|Error
+name|Status
 name|Listen
 parameter_list|(
 name|int
 name|backlog
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|Accept
 parameter_list|(
 specifier|const
@@ -141,7 +141,7 @@ argument|llvm::StringRef name
 argument_list|,
 argument|const bool child_processes_inherit
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 name|Socket

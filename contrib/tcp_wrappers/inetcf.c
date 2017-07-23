@@ -58,6 +58,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -73,15 +79,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_include
 include|#
 directive|include
@@ -92,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"inetcf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"scaffold.h"
 end_include
 
 begin_comment

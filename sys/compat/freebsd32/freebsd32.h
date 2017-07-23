@@ -98,18 +98,18 @@ value|do { (dst).fld = PTROUT((src).fld); } while (0)
 end_define
 
 begin_comment
-comment|/*  * Being a newer port, 32-bit FreeBSD/MIPS uses 64-bit time_t.  */
+comment|/*  * i386 is the only arch with a 32-bit time_t  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips__
+name|__amd64__
 end_ifdef
 
 begin_typedef
 typedef|typedef
-name|int64_t
+name|int32_t
 name|time32_t
 typedef|;
 end_typedef
@@ -121,7 +121,7 @@ end_else
 
 begin_typedef
 typedef|typedef
-name|int32_t
+name|int64_t
 name|time32_t
 typedef|;
 end_typedef
@@ -414,7 +414,7 @@ begin_struct
 struct|struct
 name|kevent32
 block|{
-name|u_int32_t
+name|uint32_t
 name|ident
 decl_stmt|;
 comment|/* identifier for this event */
@@ -428,13 +428,37 @@ decl_stmt|;
 name|u_int
 name|fflags
 decl_stmt|;
-name|int32_t
-name|data
+ifndef|#
+directive|ifndef
+name|__amd64__
+name|uint32_t
+name|pad0
 decl_stmt|;
-name|u_int32_t
+endif|#
+directive|endif
+name|int32_t
+name|data1
+decl_stmt|,
+name|data2
+decl_stmt|;
+name|uint32_t
 name|udata
 decl_stmt|;
 comment|/* opaque user data identifier */
+ifndef|#
+directive|ifndef
+name|__amd64__
+name|uint32_t
+name|pad1
+decl_stmt|;
+endif|#
+directive|endif
+name|uint32_t
+name|ext64
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

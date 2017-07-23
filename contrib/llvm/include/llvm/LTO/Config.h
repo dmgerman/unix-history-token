@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetOptions.h"
 end_include
 
@@ -131,9 +137,12 @@ name|string
 operator|>
 name|MAttrs
 expr_stmt|;
+name|Optional
+operator|<
 name|Reloc
 operator|::
 name|Model
+operator|>
 name|RelocModel
 operator|=
 name|Reloc
@@ -158,6 +167,15 @@ name|CodeGenOpt
 operator|::
 name|Default
 expr_stmt|;
+name|TargetMachine
+operator|::
+name|CodeGenFileType
+name|CGFileType
+operator|=
+name|TargetMachine
+operator|::
+name|CGFT_ObjectFile
+expr_stmt|;
 name|unsigned
 name|OptLevel
 init|=
@@ -165,6 +183,12 @@ literal|2
 decl_stmt|;
 name|bool
 name|DisableVerify
+init|=
+name|false
+decl_stmt|;
+comment|/// Use the new pass manager
+name|bool
+name|UseNewPM
 init|=
 name|false
 decl_stmt|;
@@ -210,6 +234,20 @@ operator|::
 name|string
 name|SampleProfile
 expr_stmt|;
+comment|/// Optimization remarks file path.
+name|std
+operator|::
+name|string
+name|RemarksFilename
+operator|=
+literal|""
+expr_stmt|;
+comment|/// Whether to emit optimization remarks with hotness informations.
+name|bool
+name|RemarksWithHotness
+init|=
+name|false
+decl_stmt|;
 name|bool
 name|ShouldDiscardValueNames
 init|=

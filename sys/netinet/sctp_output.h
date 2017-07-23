@@ -587,6 +587,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|SCTP_DATA_CHUNK_OVERHEAD
+parameter_list|(
+name|stcb
+parameter_list|)
+value|((stcb)->asoc.idata_supported ? \ 					sizeof(struct sctp_idata_chunk) : \ 					sizeof(struct sctp_data_chunk))
+end_define
+
 begin_function_decl
 name|int
 name|sctp_output

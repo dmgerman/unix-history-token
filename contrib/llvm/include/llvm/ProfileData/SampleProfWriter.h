@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- SampleProfWriter.h - Write LLVM sample profile data ----------------===//
+comment|//===- SampleProfWriter.h - Write LLVM sample profile data ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,13 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ProfileData/ProfileCommon.h"
+file|"llvm/IR/ProfileSummary.h"
 end_include
 
 begin_include
@@ -92,13 +98,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/FileSystem.h"
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -132,7 +156,9 @@ name|virtual
 operator|~
 name|SampleProfileWriter
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Write sample profiles in \p S.
 comment|///
 comment|/// \returns status code of the file update operation.
@@ -158,65 +184,15 @@ operator|::
 name|error_code
 name|write
 argument_list|(
-argument|const StringMap<FunctionSamples>&ProfileMap
-argument_list|)
-block|{
-if|if
-condition|(
-name|std
-operator|::
-name|error_code
-name|EC
-operator|=
-name|writeHeader
-argument_list|(
-name|ProfileMap
-argument_list|)
-condition|)
-return|return
-name|EC
-return|;
-for|for
-control|(
 specifier|const
-specifier|auto
-modifier|&
-name|I
-range|:
-name|ProfileMap
-control|)
-block|{
-specifier|const
+name|StringMap
+operator|<
 name|FunctionSamples
-modifier|&
-name|Profile
-init|=
-name|I
-operator|.
-name|second
-decl_stmt|;
-if|if
-condition|(
-name|std
-operator|::
-name|error_code
-name|EC
-operator|=
-name|write
-argument_list|(
-name|Profile
+operator|>
+operator|&
+name|ProfileMap
 argument_list|)
-condition|)
-return|return
-name|EC
-return|;
-block|}
-return|return
-name|sampleprof_error
-operator|::
-name|success
-return|;
-block|}
+expr_stmt|;
 name|raw_ostream
 modifier|&
 name|getOutputStream
@@ -452,11 +428,8 @@ argument_list|)
 operator|:
 name|SampleProfileWriter
 argument_list|(
-name|OS
+argument|OS
 argument_list|)
-block|,
-name|NameTable
-argument_list|()
 block|{}
 name|std
 operator|::
@@ -537,15 +510,12 @@ argument_list|)
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace sampleprof
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace sampleprof
-end_comment
-
-begin_comment
-unit|}
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

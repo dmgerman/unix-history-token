@@ -219,12 +219,6 @@ directive|include
 file|<dev/rtwn/rtl8192c/pci/r92ce_reg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/rtwn/rtl8192c/pci/r92ce_rx_desc.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|device_probe_t
@@ -662,7 +656,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|r92ce_rx_stat
+name|rtwn_rx_stat_pci
 argument_list|)
 operator|*
 name|RTWN_PCI_RX_LIST_COUNT

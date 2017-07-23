@@ -7488,6 +7488,8 @@ block|}
 name|pre_reentrancy
 argument_list|(
 name|tsd
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|malloc_mutex_lock

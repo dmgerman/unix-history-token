@@ -1990,7 +1990,7 @@ comment|/// The clang::CallingConv that this was originally created with.
 name|unsigned
 name|ASTCallingConvention
 range|:
-literal|8
+literal|7
 decl_stmt|;
 comment|/// Whether this is an instance method.
 name|unsigned
@@ -2013,6 +2013,12 @@ decl_stmt|;
 comment|/// Whether this function is returns-retained.
 name|unsigned
 name|ReturnsRetained
+range|:
+literal|1
+decl_stmt|;
+comment|/// Whether this function saved caller registers.
+name|unsigned
+name|NoCallerSavedRegs
 range|:
 literal|1
 decl_stmt|;
@@ -2399,6 +2405,16 @@ return|return
 name|ReturnsRetained
 return|;
 block|}
+comment|/// Whether this function no longer saves caller registers.
+name|bool
+name|isNoCallerSavedRegs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NoCallerSavedRegs
+return|;
+block|}
 comment|/// getASTCallingConvention() - Return the AST-specified calling
 comment|/// convention.
 name|CallingConv
@@ -2490,6 +2506,9 @@ name|getASTCallingConvention
 argument_list|()
 argument_list|,
 name|isReturnsRetained
+argument_list|()
+argument_list|,
+name|isNoCallerSavedRegs
 argument_list|()
 argument_list|)
 return|;
@@ -2713,6 +2732,13 @@ name|ID
 operator|.
 name|AddBoolean
 argument_list|(
+name|NoCallerSavedRegs
+argument_list|)
+expr_stmt|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
 name|HasRegParm
 argument_list|)
 expr_stmt|;
@@ -2875,6 +2901,16 @@ argument_list|(
 name|info
 operator|.
 name|getProducesResult
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|info
+operator|.
+name|getNoCallerSavedRegs
 argument_list|()
 argument_list|)
 expr_stmt|;

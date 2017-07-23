@@ -179,7 +179,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|AF_INET6
+name|USE_INET6
 if|if
 condition|(
 name|ipe
@@ -344,7 +344,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-comment|/* AF_INET6 */
+comment|/* USE_INET6 */
 name|PRINTF
 argument_list|(
 literal|"\t%d\tAddress: %s"

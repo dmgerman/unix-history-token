@@ -331,6 +331,29 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// Attempt to load the given module from the specified source buffer. Does
+comment|/// not make any submodule visible; for that, use loadModule or
+comment|/// makeModuleVisible.
+comment|///
+comment|/// \param Loc The location at which the module was loaded.
+comment|/// \param ModuleName The name of the module to build.
+comment|/// \param Source The source of the module: a (preprocessed) module map.
+name|virtual
+name|void
+name|loadModuleFromSource
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|StringRef
+name|ModuleName
+parameter_list|,
+name|StringRef
+name|Source
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// \brief Make the given module visible.
 name|virtual
 name|void
@@ -394,7 +417,82 @@ name|HadFatalFailure
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|/// A module loader that doesn't know how to load modules.
+name|class
+name|TrivialModuleLoader
+range|:
+name|public
+name|ModuleLoader
+block|{
+name|public
+operator|:
+name|ModuleLoadResult
+name|loadModule
+argument_list|(
+argument|SourceLocation ImportLoc
+argument_list|,
+argument|ModuleIdPath Path
+argument_list|,
+argument|Module::NameVisibilityKind Visibility
+argument_list|,
+argument|bool IsInclusionDirective
+argument_list|)
+name|override
+block|{
+return|return
+name|ModuleLoadResult
+argument_list|()
+return|;
 block|}
+name|void
+name|loadModuleFromSource
+argument_list|(
+argument|SourceLocation ImportLoc
+argument_list|,
+argument|StringRef ModuleName
+argument_list|,
+argument|StringRef Source
+argument_list|)
+name|override
+block|{}
+name|void
+name|makeModuleVisible
+argument_list|(
+argument|Module *Mod
+argument_list|,
+argument|Module::NameVisibilityKind Visibility
+argument_list|,
+argument|SourceLocation ImportLoc
+argument_list|)
+name|override
+block|{}
+name|GlobalModuleIndex
+operator|*
+name|loadGlobalModuleIndex
+argument_list|(
+argument|SourceLocation TriggerLoc
+argument_list|)
+name|override
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|bool
+name|lookupMissingImports
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|SourceLocation TriggerLoc
+argument_list|)
+name|override
+block|{
+return|return
+literal|0
+return|;
+block|}
+expr|}
+block|;    }
 end_decl_stmt
 
 begin_endif

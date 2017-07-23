@@ -1380,6 +1380,95 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
+comment|/// \brief Stores the template parameter list and associated constraints for
+end_comment
+
+begin_comment
+comment|/// \c TemplateDecl objects that track associated constraints.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ConstrainedTemplateDeclInfo
+block|{
+name|friend
+name|TemplateDecl
+decl_stmt|;
+name|public
+label|:
+name|ConstrainedTemplateDeclInfo
+argument_list|()
+operator|:
+name|TemplateParams
+argument_list|()
+operator|,
+name|AssociatedConstraints
+argument_list|()
+block|{}
+name|TemplateParameterList
+operator|*
+name|getTemplateParameters
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TemplateParams
+return|;
+block|}
+name|Expr
+operator|*
+name|getAssociatedConstraints
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AssociatedConstraints
+return|;
+block|}
+name|protected
+label|:
+name|void
+name|setTemplateParameters
+parameter_list|(
+name|TemplateParameterList
+modifier|*
+name|TParams
+parameter_list|)
+block|{
+name|TemplateParams
+operator|=
+name|TParams
+expr_stmt|;
+block|}
+name|void
+name|setAssociatedConstraints
+parameter_list|(
+name|Expr
+modifier|*
+name|AC
+parameter_list|)
+block|{
+name|AssociatedConstraints
+operator|=
+name|AC
+expr_stmt|;
+block|}
+name|TemplateParameterList
+modifier|*
+name|TemplateParams
+decl_stmt|;
+name|Expr
+modifier|*
+name|AssociatedConstraints
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief The base class of all kinds of template declarations (e.g.,
 end_comment
 
@@ -1413,45 +1502,12 @@ name|override
 block|;
 name|protected
 operator|:
-comment|// This is probably never used.
-name|TemplateDecl
-argument_list|(
-argument|Kind DK
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|DeclarationName Name
-argument_list|)
-operator|:
-name|NamedDecl
-argument_list|(
-name|DK
-argument_list|,
-name|DC
-argument_list|,
-name|L
-argument_list|,
-name|Name
-argument_list|)
-block|,
-name|TemplatedDecl
-argument_list|(
-name|nullptr
-argument_list|,
-name|false
-argument_list|)
-block|,
-name|TemplateParams
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
 comment|// Construct a template decl with the given name and parameters.
-comment|// Used when there is not templated element (tt-params).
+comment|// Used when there is no templated element (e.g., for tt-params).
 name|TemplateDecl
 argument_list|(
+argument|ConstrainedTemplateDeclInfo *CTDI
+argument_list|,
 argument|Kind DK
 argument_list|,
 argument|DeclContext *DC
@@ -1483,12 +1539,49 @@ argument_list|)
 block|,
 name|TemplateParams
 argument_list|(
+argument|CTDI
+argument_list|)
+block|{
+name|this
+operator|->
+name|setTemplateParameters
+argument_list|(
+name|Params
+argument_list|)
+block|;   }
+name|TemplateDecl
+argument_list|(
+argument|Kind DK
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|DeclarationName Name
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|)
+operator|:
+name|TemplateDecl
+argument_list|(
+argument|nullptr
+argument_list|,
+argument|DK
+argument_list|,
+argument|DC
+argument_list|,
+argument|L
+argument_list|,
+argument|Name
+argument_list|,
 argument|Params
 argument_list|)
 block|{}
 comment|// Construct a template decl with name, parameters, and templated element.
 name|TemplateDecl
 argument_list|(
+argument|ConstrainedTemplateDeclInfo *CTDI
+argument_list|,
 argument|Kind DK
 argument_list|,
 argument|DeclContext *DC
@@ -1522,7 +1615,46 @@ argument_list|)
 block|,
 name|TemplateParams
 argument_list|(
+argument|CTDI
+argument_list|)
+block|{
+name|this
+operator|->
+name|setTemplateParameters
+argument_list|(
+name|Params
+argument_list|)
+block|;   }
+name|TemplateDecl
+argument_list|(
+argument|Kind DK
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|DeclarationName Name
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|,
+argument|NamedDecl *Decl
+argument_list|)
+operator|:
+name|TemplateDecl
+argument_list|(
+argument|nullptr
+argument_list|,
+argument|DK
+argument_list|,
+argument|DC
+argument_list|,
+argument|L
+argument_list|,
+argument|Name
+argument_list|,
 argument|Params
+argument_list|,
+argument|Decl
 argument_list|)
 block|{}
 name|public
@@ -1534,8 +1666,39 @@ name|getTemplateParameters
 argument_list|()
 specifier|const
 block|{
-return|return
+specifier|const
+name|auto
+operator|*
+specifier|const
+name|CTDI
+operator|=
 name|TemplateParams
+operator|.
+name|dyn_cast
+operator|<
+name|ConstrainedTemplateDeclInfo
+operator|*
+operator|>
+operator|(
+operator|)
+block|;
+return|return
+name|CTDI
+condition|?
+name|CTDI
+operator|->
+name|getTemplateParameters
+argument_list|()
+else|:
+name|TemplateParams
+operator|.
+name|get
+operator|<
+name|TemplateParameterList
+operator|*
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 comment|/// Get the constraint-expression from the associated requires-clause (if any)
@@ -1546,14 +1709,73 @@ name|getRequiresClause
 argument_list|()
 specifier|const
 block|{
+specifier|const
+name|TemplateParameterList
+operator|*
+specifier|const
+name|TP
+operator|=
+name|getTemplateParameters
+argument_list|()
+block|;
 return|return
-name|TemplateParams
-operator|?
-name|TemplateParams
+name|TP
+condition|?
+name|TP
 operator|->
 name|getRequiresClause
 argument_list|()
-operator|:
+else|:
+name|nullptr
+return|;
+block|}
+name|Expr
+operator|*
+name|getAssociatedConstraints
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|TemplateDecl
+operator|*
+specifier|const
+name|C
+operator|=
+name|cast
+operator|<
+name|TemplateDecl
+operator|>
+operator|(
+name|getCanonicalDecl
+argument_list|()
+operator|)
+block|;
+specifier|const
+name|auto
+operator|*
+specifier|const
+name|CTDI
+operator|=
+name|C
+operator|->
+name|TemplateParams
+operator|.
+name|dyn_cast
+operator|<
+name|ConstrainedTemplateDeclInfo
+operator|*
+operator|>
+operator|(
+operator|)
+block|;
+return|return
+name|CTDI
+condition|?
+name|CTDI
+operator|->
+name|getAssociatedConstraints
+argument_list|()
+else|:
 name|nullptr
 return|;
 block|}
@@ -1616,7 +1838,8 @@ block|{
 return|return
 name|SourceRange
 argument_list|(
-name|TemplateParams
+name|getTemplateParameters
+argument_list|()
 operator|->
 name|getTemplateLoc
 argument_list|()
@@ -1678,10 +1901,91 @@ name|bool
 operator|>
 name|TemplatedDecl
 block|;
+comment|/// \brief The template parameter list and optional requires-clause
+comment|/// associated with this declaration; alternatively, a
+comment|/// \c ConstrainedTemplateDeclInfo if the associated constraints of the
+comment|/// template are being tracked by this particular declaration.
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
 name|TemplateParameterList
 operator|*
+block|,
+name|ConstrainedTemplateDeclInfo
+operator|*
+operator|>
 name|TemplateParams
 block|;
+name|void
+name|setTemplateParameters
+argument_list|(
+argument|TemplateParameterList *TParams
+argument_list|)
+block|{
+if|if
+condition|(
+name|auto
+operator|*
+specifier|const
+name|CTDI
+operator|=
+name|TemplateParams
+operator|.
+name|dyn_cast
+operator|<
+name|ConstrainedTemplateDeclInfo
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+block|{
+name|CTDI
+operator|->
+name|setTemplateParameters
+argument_list|(
+name|TParams
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|TemplateParams
+operator|=
+name|TParams
+expr_stmt|;
+block|}
+block|}
+name|void
+name|setAssociatedConstraints
+argument_list|(
+argument|Expr *AC
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|isCanonicalDecl
+argument_list|()
+operator|&&
+literal|"Attaching associated constraints to non-canonical Decl"
+argument_list|)
+block|;
+name|TemplateParams
+operator|.
+name|get
+operator|<
+name|ConstrainedTemplateDeclInfo
+operator|*
+operator|>
+operator|(
+operator|)
+operator|->
+name|setAssociatedConstraints
+argument_list|(
+name|AC
+argument_list|)
+block|;   }
 name|public
 operator|:
 comment|/// \brief Initialize the underlying templated declaration and
@@ -2808,6 +3112,8 @@ block|;
 comment|// Construct a template decl with name, parameters, and templated element.
 name|RedeclarableTemplateDecl
 argument_list|(
+argument|ConstrainedTemplateDeclInfo *CTDI
+argument_list|,
 argument|Kind DK
 argument_list|,
 argument|ASTContext&C
@@ -2825,6 +3131,8 @@ argument_list|)
 operator|:
 name|TemplateDecl
 argument_list|(
+name|CTDI
+argument_list|,
 name|DK
 argument_list|,
 name|DC
@@ -2845,6 +3153,42 @@ argument_list|)
 block|,
 name|Common
 argument_list|()
+block|{}
+name|RedeclarableTemplateDecl
+argument_list|(
+argument|Kind DK
+argument_list|,
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|DeclarationName Name
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|,
+argument|NamedDecl *Decl
+argument_list|)
+operator|:
+name|RedeclarableTemplateDecl
+argument_list|(
+argument|nullptr
+argument_list|,
+argument|DK
+argument_list|,
+argument|C
+argument_list|,
+argument|DC
+argument_list|,
+argument|L
+argument_list|,
+argument|Name
+argument_list|,
+argument|Params
+argument_list|,
+argument|Decl
+argument_list|)
 block|{}
 name|public
 operator|:
@@ -3218,15 +3562,6 @@ range|:
 name|public
 name|RedeclarableTemplateDecl
 block|{
-specifier|static
-name|void
-name|DeallocateCommon
-argument_list|(
-name|void
-operator|*
-name|Ptr
-argument_list|)
-block|;
 name|protected
 operator|:
 comment|/// \brief Data that is common to all of the declarations of a given
@@ -5407,7 +5742,17 @@ expr_stmt|;
 name|using
 name|TemplateParmPosition
 operator|::
+name|setDepth
+expr_stmt|;
+name|using
+name|TemplateParmPosition
+operator|::
 name|getPosition
+expr_stmt|;
+name|using
+name|TemplateParmPosition
+operator|::
+name|setPosition
 expr_stmt|;
 name|using
 name|TemplateParmPosition
@@ -7315,15 +7660,6 @@ range|:
 name|public
 name|RedeclarableTemplateDecl
 block|{
-specifier|static
-name|void
-name|DeallocateCommon
-argument_list|(
-name|void
-operator|*
-name|Ptr
-argument_list|)
-block|;
 name|protected
 operator|:
 comment|/// \brief Data that is common to all of the declarations of a given
@@ -7399,6 +7735,8 @@ argument_list|()
 block|;
 name|ClassTemplateDecl
 argument_list|(
+argument|ConstrainedTemplateDeclInfo *CTDI
+argument_list|,
 argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
@@ -7414,7 +7752,41 @@ argument_list|)
 operator|:
 name|RedeclarableTemplateDecl
 argument_list|(
+argument|CTDI
+argument_list|,
 argument|ClassTemplate
+argument_list|,
+argument|C
+argument_list|,
+argument|DC
+argument_list|,
+argument|L
+argument_list|,
+argument|Name
+argument_list|,
+argument|Params
+argument_list|,
+argument|Decl
+argument_list|)
+block|{}
+name|ClassTemplateDecl
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|DeclarationName Name
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|,
+argument|NamedDecl *Decl
+argument_list|)
+operator|:
+name|ClassTemplateDecl
+argument_list|(
+argument|nullptr
 argument_list|,
 argument|C
 argument_list|,
@@ -7502,6 +7874,7 @@ name|isThisDeclarationADefinition
 argument_list|()
 return|;
 block|}
+comment|// FIXME: remove default argument for AssociatedConstraints
 comment|/// \brief Create a class template node.
 specifier|static
 name|ClassTemplateDecl
@@ -7519,6 +7892,8 @@ argument_list|,
 argument|TemplateParameterList *Params
 argument_list|,
 argument|NamedDecl *Decl
+argument_list|,
+argument|Expr *AssociatedConstraints = nullptr
 argument_list|)
 block|;
 comment|/// \brief Create an empty class template node.
@@ -8395,15 +8770,6 @@ range|:
 name|public
 name|RedeclarableTemplateDecl
 block|{
-specifier|static
-name|void
-name|DeallocateCommon
-argument_list|(
-name|void
-operator|*
-name|Ptr
-argument_list|)
-block|;
 name|protected
 operator|:
 typedef|typedef
@@ -10502,15 +10868,6 @@ range|:
 name|public
 name|RedeclarableTemplateDecl
 block|{
-specifier|static
-name|void
-name|DeallocateCommon
-argument_list|(
-name|void
-operator|*
-name|Ptr
-argument_list|)
-block|;
 name|protected
 operator|:
 comment|/// \brief Data that is common to all of the declarations of a given
@@ -11170,6 +11527,73 @@ operator|*
 operator|>
 operator|(
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|TemplateDecl
+modifier|*
+name|getAsTypeTemplateDecl
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+name|auto
+operator|*
+name|TD
+operator|=
+name|dyn_cast
+operator|<
+name|TemplateDecl
+operator|>
+operator|(
+name|D
+operator|)
+expr_stmt|;
+return|return
+name|TD
+operator|&&
+operator|(
+name|isa
+operator|<
+name|ClassTemplateDecl
+operator|>
+operator|(
+name|TD
+operator|)
+operator|||
+name|isa
+operator|<
+name|ClassTemplatePartialSpecializationDecl
+operator|>
+operator|(
+name|TD
+operator|)
+operator|||
+name|isa
+operator|<
+name|TypeAliasTemplateDecl
+operator|>
+operator|(
+name|TD
+operator|)
+operator|||
+name|isa
+operator|<
+name|TemplateTemplateParmDecl
+operator|>
+operator|(
+name|TD
+operator|)
+operator|)
+condition|?
+name|TD
+else|:
+name|nullptr
 return|;
 block|}
 end_function

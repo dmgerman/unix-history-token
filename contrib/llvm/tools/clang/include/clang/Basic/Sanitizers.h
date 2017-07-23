@@ -235,14 +235,22 @@ name|K
 operator|)
 expr_stmt|;
 block|}
-comment|/// \brief Disable all sanitizers.
+comment|/// Disable the sanitizers specified in \p K.
 name|void
 name|clear
-parameter_list|()
+parameter_list|(
+name|SanitizerMask
+name|K
+init|=
+name|SanitizerKind
+operator|::
+name|All
+parameter_list|)
 block|{
 name|Mask
-operator|=
-literal|0
+operator|&=
+operator|~
+name|K
 expr_stmt|;
 block|}
 comment|/// \brief Returns true if at least one sanitizer is enabled.
@@ -286,6 +294,31 @@ name|SanitizerMask
 name|Kinds
 parameter_list|)
 function_decl|;
+comment|/// Return the sanitizers which do not affect preprocessing.
+specifier|static
+specifier|inline
+name|SanitizerMask
+name|getPPTransparentSanitizers
+parameter_list|()
+block|{
+return|return
+name|SanitizerKind
+operator|::
+name|CFI
+operator||
+name|SanitizerKind
+operator|::
+name|Integer
+operator||
+name|SanitizerKind
+operator|::
+name|Nullability
+operator||
+name|SanitizerKind
+operator|::
+name|Undefined
+return|;
+block|}
 block|}
 end_decl_stmt
 

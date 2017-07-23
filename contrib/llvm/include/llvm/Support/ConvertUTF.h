@@ -26,13 +26,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|<cstddef>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstddef>
+file|<string>
 end_include
 
 begin_comment

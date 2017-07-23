@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugPubTable.h ------------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugPubTable.h -------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,20 +34,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGPUBTABLE_H
+name|LLVM_DEBUGINFO_DWARF_DWARFDEBUGPUBTABLE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGPUBTABLE_H
+name|LLVM_DEBUGINFO_DWARF_DWARFDEBUGPUBTABLE_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
 
 begin_include
 include|#
@@ -58,13 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataExtractor.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
+file|"llvm/BinaryFormat/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -94,8 +94,6 @@ name|uint32_t
 name|SecOffset
 decl_stmt|;
 comment|/// An entry of the various gnu_pub* debug sections.
-name|llvm
-operator|::
 name|dwarf
 operator|::
 name|PubIndexEntryDescriptor
@@ -201,10 +199,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARF_DWARFDEBUGPUBTABLE_H
+end_comment
 
 end_unit
 

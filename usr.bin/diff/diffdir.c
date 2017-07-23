@@ -672,6 +672,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|print_only
 argument_list|(
 name|path1
@@ -683,6 +684,11 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|dp1
 operator|++
 expr_stmt|;
@@ -712,6 +718,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|print_only
 argument_list|(
 name|path2
@@ -723,6 +730,11 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|dp2
 operator|++
 expr_stmt|;

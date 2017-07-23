@@ -319,8 +319,7 @@ name|rs
 operator|->
 name|rs_txagc
 operator|=
-operator|&
-name|r88e_txagc
+name|NULL
 expr_stmt|;
 name|rs
 operator|->

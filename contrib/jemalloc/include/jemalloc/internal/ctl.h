@@ -360,9 +360,9 @@ begin_function_decl
 name|int
 name|ctl_nametomib
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 specifier|const
 name|char

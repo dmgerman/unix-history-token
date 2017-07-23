@@ -87,17 +87,16 @@ comment|/// MaxLookAhead=0 identifies a fake recognizer, allowing the client to
 comment|/// bypass virtual calls. Currently the PostRA scheduler ignores it.
 name|unsigned
 name|MaxLookAhead
+init|=
+literal|0
 decl_stmt|;
 name|public
 label|:
 name|ScheduleHazardRecognizer
 argument_list|()
-operator|:
-name|MaxLookAhead
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 operator|~
 name|ScheduleHazardRecognizer
@@ -284,10 +283,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_SCHEDULEHAZARDRECOGNIZER_H
+end_comment
 
 end_unit
 

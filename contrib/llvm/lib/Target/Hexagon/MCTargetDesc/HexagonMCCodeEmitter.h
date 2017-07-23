@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/HexagonFixupKinds.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCCodeEmitter.h"
 end_include
 
@@ -150,6 +156,14 @@ operator|*
 operator|>
 name|CurrentBundle
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|size_t
+operator|>
+name|CurrentIndex
+block|;
 comment|// helper routine for getMachineOpValue()
 name|unsigned
 name|getExprOpValue
@@ -163,6 +177,21 @@ argument_list|,
 argument|SmallVectorImpl<MCFixup>&Fixups
 argument_list|,
 argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|Hexagon
+operator|::
+name|Fixups
+name|getFixupNoBits
+argument_list|(
+argument|MCInstrInfo const&MCII
+argument_list|,
+argument|const MCInst&MI
+argument_list|,
+argument|const MCOperand&MO
+argument_list|,
+argument|const MCSymbolRefExpr::VariantKind kind
 argument_list|)
 specifier|const
 block|;
@@ -184,8 +213,6 @@ comment|// Return parse bits for instruction `MCI' inside bundle `MCB'
 name|uint32_t
 name|parseBits
 argument_list|(
-argument|size_t Instruction
-argument_list|,
 argument|size_t Last
 argument_list|,
 argument|MCInst const&MCB
@@ -220,8 +247,6 @@ argument_list|,
 argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|uint32_t Parse
-argument_list|,
-argument|size_t Index
 argument_list|)
 specifier|const
 block|;

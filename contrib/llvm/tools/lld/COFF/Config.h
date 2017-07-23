@@ -135,6 +135,17 @@ decl_stmt|;
 specifier|static
 specifier|const
 specifier|auto
+name|ARM64
+init|=
+name|llvm
+operator|::
+name|COFF
+operator|::
+name|IMAGE_FILE_MACHINE_ARM64
+decl_stmt|;
+specifier|static
+specifier|const
+specifier|auto
 name|ARMNT
 init|=
 name|llvm
@@ -189,6 +200,11 @@ name|false
 decl_stmt|;
 name|bool
 name|Private
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|Constant
 init|=
 name|false
 decl_stmt|;
@@ -316,6 +332,10 @@ return|return
 name|Machine
 operator|==
 name|AMD64
+operator|||
+name|Machine
+operator|==
+name|ARM64
 return|;
 block|}
 name|llvm
@@ -357,6 +377,14 @@ operator|::
 name|string
 name|OutputFile
 expr_stmt|;
+name|std
+operator|::
+name|string
+name|ImportName
+expr_stmt|;
+name|bool
+name|ColorDiagnostics
+decl_stmt|;
 name|bool
 name|DoGC
 init|=
@@ -366,6 +394,11 @@ name|bool
 name|DoICF
 init|=
 name|true
+decl_stmt|;
+name|uint64_t
+name|ErrorLimit
+init|=
+literal|20
 decl_stmt|;
 name|bool
 name|Relocatable
@@ -400,9 +433,24 @@ operator|::
 name|None
 operator|)
 decl_stmt|;
-name|StringRef
+name|llvm
+operator|::
+name|SmallString
+operator|<
+literal|128
+operator|>
 name|PDBPath
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|>
+name|Argv
+expr_stmt|;
 comment|// Symbols in this set are considered as live by the garbage collector.
 name|std
 operator|::
@@ -471,6 +519,11 @@ name|DelayLoadHelper
 init|=
 name|nullptr
 decl_stmt|;
+name|bool
+name|SaveTemps
+init|=
+name|false
+decl_stmt|;
 comment|// Used for SafeSEH.
 name|Symbol
 modifier|*
@@ -493,6 +546,12 @@ decl_stmt|;
 comment|// Used for /opt:lldltojobs=N
 name|unsigned
 name|LTOJobs
+init|=
+literal|0
+decl_stmt|;
+comment|// Used for /opt:lldltopartitions=N
+name|unsigned
+name|LTOPartitions
 init|=
 literal|1
 decl_stmt|;
@@ -582,6 +641,12 @@ name|StringRef
 operator|>
 name|AlternateNames
 expr_stmt|;
+comment|// Used for /lldmap.
+name|std
+operator|::
+name|string
+name|MapFile
+expr_stmt|;
 name|uint64_t
 name|ImageBase
 init|=
@@ -638,11 +703,6 @@ init|=
 name|true
 decl_stmt|;
 name|bool
-name|AllowBind
-init|=
-name|true
-decl_stmt|;
-name|bool
 name|NxCompat
 init|=
 name|true
@@ -667,14 +727,8 @@ name|HighEntropyVA
 init|=
 name|false
 decl_stmt|;
-comment|// This is for debugging.
 name|bool
-name|DebugPdb
-init|=
-name|false
-decl_stmt|;
-name|bool
-name|DumpPdb
+name|AppContainer
 init|=
 name|false
 decl_stmt|;

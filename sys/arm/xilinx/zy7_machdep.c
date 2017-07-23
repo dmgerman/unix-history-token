@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/xilinx/zy7_mp.h>
+file|<arm/xilinx/zy7_machdep.h>
 end_include
 
 begin_include
@@ -103,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"platform_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"platform_pl310_if.h"
 end_include
 
 begin_function_decl
@@ -227,6 +233,13 @@ argument_list|)
 block|,
 endif|#
 directive|endif
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_pl310_init
+argument_list|,
+name|zynq7_pl310_init
+argument_list|)
+block|,
 name|PLATFORMMETHOD_END
 block|, }
 decl_stmt|;
@@ -243,7 +256,7 @@ literal|0
 argument_list|,
 literal|"xlnx,zynq-7000"
 argument_list|,
-literal|0
+literal|200
 argument_list|)
 expr_stmt|;
 end_expr_stmt

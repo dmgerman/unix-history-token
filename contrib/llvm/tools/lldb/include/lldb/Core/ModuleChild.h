@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_decl_stmt

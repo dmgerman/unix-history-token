@@ -574,6 +574,24 @@ name|V_pf_vnet_active
 value|VNET(pf_vnet_active)
 end_define
 
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|uint32_t
+argument_list|,
+name|pf_purge_idx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_pf_purge_idx
+value|VNET(pf_purge_idx)
+end_define
+
 begin_comment
 comment|/*  * Queue for pf_intr() sends.  */
 end_comment
@@ -7983,11 +8001,6 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|u_int
-name|idx
-init|=
-literal|0
-decl_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -8044,11 +8057,11 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 *  Process 1/interval fraction of the state 			 * table every run. 			 */
-name|idx
+name|V_pf_purge_idx
 operator|=
 name|pf_purge_expired_states
 argument_list|(
-name|idx
+name|V_pf_purge_idx
 argument_list|,
 name|pf_hashmask
 operator|/
@@ -8067,7 +8080,7 @@ expr_stmt|;
 comment|/* 			 * Purge other expired types every 			 * PFTM_INTERVAL seconds. 			 */
 if|if
 condition|(
-name|idx
+name|V_pf_purge_idx
 operator|==
 literal|0
 condition|)

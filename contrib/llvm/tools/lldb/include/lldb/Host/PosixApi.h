@@ -55,18 +55,12 @@ begin_comment
 comment|// on various posix api functionality.
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|LLVM_ON_WIN32
+name|_WIN32
 argument_list|)
 end_if
 
@@ -74,6 +68,17 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/windows/PosixApi.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_endif

@@ -246,15 +246,25 @@ name|PMT_RegionPassManager
 return|;
 block|}
 comment|//@}
-expr|}
-block|;
+name|protected
+operator|:
+comment|/// Optional passes call this function to check whether the pass should be
+comment|/// skipped. This is the case when optimization bisect is over the limit.
+name|bool
+name|skipRegion
+argument_list|(
+argument|Region&R
+argument_list|)
+specifier|const
+block|; }
+decl_stmt|;
 comment|/// @brief The pass manager to schedule RegionPasses.
 name|class
 name|RGPassManager
-operator|:
+range|:
 name|public
 name|FunctionPass
-block|,
+decl_stmt|,
 name|public
 name|PMDataManager
 block|{
@@ -266,51 +276,55 @@ name|Region
 operator|*
 operator|>
 name|RQ
-block|;
+expr_stmt|;
 name|bool
 name|skipThisRegion
-block|;
+decl_stmt|;
 name|bool
 name|redoThisRegion
-block|;
+decl_stmt|;
 name|RegionInfo
-operator|*
+modifier|*
 name|RI
-block|;
+decl_stmt|;
 name|Region
-operator|*
+modifier|*
 name|CurrentRegion
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 specifier|static
 name|char
 name|ID
-block|;
+decl_stmt|;
 name|explicit
 name|RGPassManager
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// @brief Execute all of the passes scheduled for execution.
 comment|///
 comment|/// @return True if any of the passes modifies the function.
 name|bool
 name|runOnFunction
 argument_list|(
-argument|Function&F
+name|Function
+operator|&
+name|F
 argument_list|)
 name|override
-block|;
+decl_stmt|;
 comment|/// Pass Manager itself does not invalidate any analysis info.
 comment|/// RGPassManager needs RegionInfo.
 name|void
 name|getAnalysisUsage
 argument_list|(
-argument|AnalysisUsage&Info
+name|AnalysisUsage
+operator|&
+name|Info
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|StringRef
 name|getPassName
 argument_list|()
@@ -322,20 +336,20 @@ literal|"Region Pass Manager"
 return|;
 block|}
 name|PMDataManager
-operator|*
+modifier|*
 name|getAsPMDataManager
-argument_list|()
-name|override
+parameter_list|()
+function|override
 block|{
 return|return
 name|this
 return|;
 block|}
 name|Pass
-operator|*
+modifier|*
 name|getAsPass
-argument_list|()
-name|override
+parameter_list|()
+function|override
 block|{
 return|return
 name|this
@@ -345,17 +359,19 @@ comment|/// @brief Print passes managed by this manager.
 name|void
 name|dumpPassStructure
 argument_list|(
-argument|unsigned Offset
+name|unsigned
+name|Offset
 argument_list|)
 name|override
-block|;
+decl_stmt|;
 comment|/// @brief Get passes contained by this manager.
 name|Pass
-operator|*
+modifier|*
 name|getContainedPass
-argument_list|(
-argument|unsigned N
-argument_list|)
+parameter_list|(
+name|unsigned
+name|N
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -368,11 +384,11 @@ argument_list|()
 operator|&&
 literal|"Pass number out of range!"
 argument_list|)
-block|;
+expr_stmt|;
 name|Pass
-operator|*
+modifier|*
 name|FP
-operator|=
+init|=
 name|static_cast
 operator|<
 name|Pass
@@ -384,7 +400,7 @@ index|[
 name|N
 index|]
 operator|)
-block|;
+decl_stmt|;
 return|return
 name|FP
 return|;
@@ -399,8 +415,9 @@ return|return
 name|PMT_RegionPassManager
 return|;
 block|}
-expr|}
-block|;  }
+block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

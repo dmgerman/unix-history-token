@@ -62,21 +62,20 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARM.h"
+file|"llvm/Support/MathExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ARMMachineFunctionInfo.h"
+file|<algorithm>
 end_include
 
-begin_decl_stmt
-name|using
-name|namespace
-name|llvm
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -138,6 +137,8 @@ comment|/// Because worst case padding is used, the computed offset of an aligne
 comment|/// block may not actually be aligned.
 name|unsigned
 name|Offset
+init|=
+literal|0
 decl_stmt|;
 comment|/// Size - Size of the basic block in bytes.  If the block contains
 comment|/// inline assembly, this is a worst case estimate.
@@ -146,52 +147,37 @@ comment|/// The size does not include any alignment padding whether from the
 comment|/// beginning of the block, or from an aligned jump table at the end.
 name|unsigned
 name|Size
+init|=
+literal|0
 decl_stmt|;
 comment|/// KnownBits - The number of low bits in Offset that are known to be
 comment|/// exact.  The remaining bits of Offset are an upper bound.
 name|uint8_t
 name|KnownBits
+init|=
+literal|0
 decl_stmt|;
 comment|/// Unalign - When non-zero, the block contains instructions (inline asm)
 comment|/// of unknown size.  The real size may be smaller than Size bytes by a
 comment|/// multiple of 1<< Unalign.
 name|uint8_t
 name|Unalign
+init|=
+literal|0
 decl_stmt|;
 comment|/// PostAlign - When non-zero, the block terminator contains a .align
 comment|/// directive, so the end of the block is aligned to 1<< PostAlign
 comment|/// bytes.
 name|uint8_t
 name|PostAlign
+init|=
+literal|0
 decl_stmt|;
 name|BasicBlockInfo
 argument_list|()
-operator|:
-name|Offset
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Size
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|KnownBits
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Unalign
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|PostAlign
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Compute the number of known offset bits internally to this block.
 comment|/// This number should be used to predict worst case padding when
 comment|/// splitting the block.
@@ -345,6 +331,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_ARM_ARMBASICBLOCKINFO_H
+end_comment
 
 end_unit
 

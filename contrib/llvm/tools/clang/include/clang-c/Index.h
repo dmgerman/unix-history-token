@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===-- clang-c/Index.h - Indexing Public C Interface -------------*- C -*-===*\ |*                                                                            *| |*                     The LLVM Compiler Infrastructure                       *| |*                                                                            *| |* This file is distributed under the University of Illinois Open Source      *| |* License. See LICENSE.TXT for details.                                      *| |*                                                                            *| |*===----------------------------------------------------------------------===*| |*                                                                            *| |* This header provides a public inferface to a Clang library for extracting  *| |* high-level symbol information from source files without exposing the full  *| |* Clang C++ API.                                                             *| |*                                                                            *| \*===----------------------------------------------------------------------===*/
+comment|/*===-- clang-c/Index.h - Indexing Public C Interface -------------*- C -*-===*\ |*                                                                            *| |*                     The LLVM Compiler Infrastructure                       *| |*                                                                            *| |* This file is distributed under the University of Illinois Open Source      *| |* License. See LICENSE.TXT for details.                                      *| |*                                                                            *| |*===----------------------------------------------------------------------===*| |*                                                                            *| |* This header provides a public interface to a Clang library for extracting  *| |* high-level symbol information from source files without exposing the full  *| |* Clang C++ API.                                                             *| |*                                                                            *| \*===----------------------------------------------------------------------===*/
 end_comment
 
 begin_ifndef
@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|37
+value|43
 end_define
 
 begin_define
@@ -133,6 +133,13 @@ typedef|typedef
 name|void
 modifier|*
 name|CXIndex
+typedef|;
+comment|/**  * \brief An opaque type representing target information for a given translation  * unit.  */
+typedef|typedef
+name|struct
+name|CXTargetInfoImpl
+modifier|*
+name|CXTargetInfo
 typedef|;
 comment|/**  * \brief A single translation unit, which resides in an index.  */
 typedef|typedef
@@ -207,6 +214,38 @@ decl_stmt|;
 block|}
 name|CXVersion
 typedef|;
+comment|/**  * \brief Describes the exception specification of a cursor.  *  * A negative value indicates that the cursor is not a function declaration.  */
+enum|enum
+name|CXCursor_ExceptionSpecificationKind
+block|{
+comment|/**    * \brief The cursor has no exception specification.    */
+name|CXCursor_ExceptionSpecificationKind_None
+block|,
+comment|/**    * \brief The cursor has exception specification throw()    */
+name|CXCursor_ExceptionSpecificationKind_DynamicNone
+block|,
+comment|/**    * \brief The cursor has exception specification throw(T1, T2)    */
+name|CXCursor_ExceptionSpecificationKind_Dynamic
+block|,
+comment|/**    * \brief The cursor has exception specification throw(...).    */
+name|CXCursor_ExceptionSpecificationKind_MSAny
+block|,
+comment|/**    * \brief The cursor has exception specification basic noexcept.    */
+name|CXCursor_ExceptionSpecificationKind_BasicNoexcept
+block|,
+comment|/**    * \brief The cursor has exception specification computed noexcept.    */
+name|CXCursor_ExceptionSpecificationKind_ComputedNoexcept
+block|,
+comment|/**    * \brief The exception specification has not yet been evaluated.    */
+name|CXCursor_ExceptionSpecificationKind_Unevaluated
+block|,
+comment|/**    * \brief The exception specification has not yet been instantiated.    */
+name|CXCursor_ExceptionSpecificationKind_Uninstantiated
+block|,
+comment|/**    * \brief The exception specification has not been parsed yet.    */
+name|CXCursor_ExceptionSpecificationKind_Unparsed
+block|}
+enum|;
 comment|/**  * \brief Provides a shared context for creating translation units.  *  * It provides two options:  *  * - excludeDeclarationsFromPCH: When non-zero, allows enumeration of "local"  * declarations (when loading any new translation units). A "local" declaration  * is one that belongs in the translation unit itself and not in a precompiled  * header that was used by the translation unit. If zero, all declarations  * will be enumerated.  *  * Here is an example:  *  * \code  *   // excludeDeclsFromPCH = 1, displayDiagnostics=1  *   Idx = clang_createIndex(1, 1);  *  *   // IndexTest.pch was produced with the following command:  *   // "clang -x c IndexTest.h -emit-ast -o IndexTest.pch"  *   TU = clang_createTranslationUnit(Idx, "IndexTest.pch");  *  *   // This will load all the symbols from 'IndexTest.pch'  *   clang_visitChildren(clang_getTranslationUnitCursor(TU),  *                       TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  *  *   // This will load all the symbols from 'IndexTest.c', excluding symbols  *   // from 'IndexTest.pch'.  *   char *args[] = { "-Xclang", "-include-pch=IndexTest.pch" };  *   TU = clang_createTranslationUnitFromSourceFile(Idx, "IndexTest.c", 2, args,  *                                                  0, 0);  *   clang_visitChildren(clang_getTranslationUnitCursor(TU),  *                       TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  * \endcode  *  * This process of creating the 'pch', loading it separately, and using it (via  * -include-pch) allows 'excludeDeclsFromPCH' to remove redundant callbacks  * (which gives the indexer the same performance benefit as the compiler).  */
 name|CINDEX_LINKAGE
 name|CXIndex
@@ -543,7 +582,7 @@ modifier|*
 name|offset
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the file, line, column, and offset represented by  * the given source location, as specified in a # line directive.  *  * Example: given the following source code in a file somefile.c  *  * \code  * #123 "dummy.c" 1  *  * static int func(void)  * {  *     return 0;  * }  * \endcode  *  * the location information returned by this function would be  *  * File: dummy.c Line: 124 Column: 12  *  * whereas clang_getExpansionLocation would have returned  *  * File: somefile.c Line: 3 Column: 12  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param filename [out] if non-NULL, will be set to the filename of the  * source location. Note that filenames returned will be for "virtual" files,  * which don't necessarily exist on the machine running clang - e.g. when  * parsing preprocessed output obtained from a different environment. If  * a non-NULL value is passed in, remember to dispose of the returned value  * using \c clang_disposeString() once you've finished with it. For an invalid  * source location, an empty string is returned.  *  * \param line [out] if non-NULL, will be set to the line number of the  * source location. For an invalid source location, zero is returned.  *  * \param column [out] if non-NULL, will be set to the column number of the  * source location. For an invalid source location, zero is returned.  */
+comment|/**  * \brief Retrieve the file, line and column represented by the given source  * location, as specified in a # line directive.  *  * Example: given the following source code in a file somefile.c  *  * \code  * #123 "dummy.c" 1  *  * static int func(void)  * {  *     return 0;  * }  * \endcode  *  * the location information returned by this function would be  *  * File: dummy.c Line: 124 Column: 12  *  * whereas clang_getExpansionLocation would have returned  *  * File: somefile.c Line: 3 Column: 12  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param filename [out] if non-NULL, will be set to the filename of the  * source location. Note that filenames returned will be for "virtual" files,  * which don't necessarily exist on the machine running clang - e.g. when  * parsing preprocessed output obtained from a different environment. If  * a non-NULL value is passed in, remember to dispose of the returned value  * using \c clang_disposeString() once you've finished with it. For an invalid  * source location, an empty string is returned.  *  * \param line [out] if non-NULL, will be set to the line number of the  * source location. For an invalid source location, zero is returned.  *  * \param column [out] if non-NULL, will be set to the column number of the  * source location. For an invalid source location, zero is returned.  */
 name|CINDEX_LINKAGE
 name|void
 name|clang_getPresumedLocation
@@ -1171,6 +1210,11 @@ comment|/**    * \brief Do not stop processing when fatal errors are encountered
 name|CXTranslationUnit_KeepGoing
 init|=
 literal|0x200
+block|,
+comment|/**    * \brief Sets the preprocessor in a mode for parsing a single file only.    */
+name|CXTranslationUnit_SingleFileParse
+init|=
+literal|0x400
 block|}
 enum|;
 comment|/**  * \brief Returns the set of flags that is suitable for parsing a translation  * unit that is being edited.  *  * The set of flags returned provide options for \c clang_parseTranslationUnit()  * to indicate that the translation unit is likely to be reparsed many times,  * either explicitly (via \c clang_reparseTranslationUnit()) or implicitly  * (e.g., by code completion (\c clang_codeCompletionAt())). The returned flag  * set contains an unspecified set of optimizations (e.g., the precompiled   * preamble) geared toward improving the performance of these routines. The  * set of optimizations enabled may change from one version to the next.  */
@@ -1355,6 +1399,14 @@ name|FileName
 parameter_list|,
 name|unsigned
 name|options
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Suspend a translation unit in order to free memory associated with it.  *  * A suspended translation unit uses significantly less memory but on the other  * side does not support any other calls than \c clang_reparseTranslationUnit  * to resume it or \c clang_disposeTranslationUnit to dispose it completely.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_suspendTranslationUnit
+parameter_list|(
+name|CXTranslationUnit
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Destroy the specified CXTranslationUnit object.  */
@@ -1547,6 +1599,42 @@ name|clang_disposeCXTUResourceUsage
 parameter_list|(
 name|CXTUResourceUsage
 name|usage
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Get target information for this translation unit.  *  * The CXTargetInfo object cannot outlive the CXTranslationUnit object.  */
+name|CINDEX_LINKAGE
+name|CXTargetInfo
+name|clang_getTranslationUnitTargetInfo
+parameter_list|(
+name|CXTranslationUnit
+name|CTUnit
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Destroy the CXTargetInfo object.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_TargetInfo_dispose
+parameter_list|(
+name|CXTargetInfo
+name|Info
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Get the normalized target triple as a string.  *  * Returns the empty string in case of any error.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_TargetInfo_getTriple
+parameter_list|(
+name|CXTargetInfo
+name|Info
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Get the pointer width of the target in bits.  *  * Returns -1 in case of error.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_TargetInfo_getPointerWidth
+parameter_list|(
+name|CXTargetInfo
+name|Info
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -3271,13 +3359,17 @@ name|CXType_Float128
 init|=
 literal|30
 block|,
+name|CXType_Half
+init|=
+literal|31
+block|,
 name|CXType_FirstBuiltin
 init|=
 name|CXType_Void
 block|,
 name|CXType_LastBuiltin
 init|=
-name|CXType_ObjCSel
+name|CXType_Half
 block|,
 name|CXType_Complex
 init|=
@@ -3359,6 +3451,172 @@ comment|/**    * \brief Represents a type that was referred to using an elaborat
 name|CXType_Elaborated
 init|=
 literal|119
+block|,
+comment|/* OpenCL PipeType. */
+name|CXType_Pipe
+init|=
+literal|120
+block|,
+comment|/* OpenCL builtin types. */
+name|CXType_OCLImage1dRO
+init|=
+literal|121
+block|,
+name|CXType_OCLImage1dArrayRO
+init|=
+literal|122
+block|,
+name|CXType_OCLImage1dBufferRO
+init|=
+literal|123
+block|,
+name|CXType_OCLImage2dRO
+init|=
+literal|124
+block|,
+name|CXType_OCLImage2dArrayRO
+init|=
+literal|125
+block|,
+name|CXType_OCLImage2dDepthRO
+init|=
+literal|126
+block|,
+name|CXType_OCLImage2dArrayDepthRO
+init|=
+literal|127
+block|,
+name|CXType_OCLImage2dMSAARO
+init|=
+literal|128
+block|,
+name|CXType_OCLImage2dArrayMSAARO
+init|=
+literal|129
+block|,
+name|CXType_OCLImage2dMSAADepthRO
+init|=
+literal|130
+block|,
+name|CXType_OCLImage2dArrayMSAADepthRO
+init|=
+literal|131
+block|,
+name|CXType_OCLImage3dRO
+init|=
+literal|132
+block|,
+name|CXType_OCLImage1dWO
+init|=
+literal|133
+block|,
+name|CXType_OCLImage1dArrayWO
+init|=
+literal|134
+block|,
+name|CXType_OCLImage1dBufferWO
+init|=
+literal|135
+block|,
+name|CXType_OCLImage2dWO
+init|=
+literal|136
+block|,
+name|CXType_OCLImage2dArrayWO
+init|=
+literal|137
+block|,
+name|CXType_OCLImage2dDepthWO
+init|=
+literal|138
+block|,
+name|CXType_OCLImage2dArrayDepthWO
+init|=
+literal|139
+block|,
+name|CXType_OCLImage2dMSAAWO
+init|=
+literal|140
+block|,
+name|CXType_OCLImage2dArrayMSAAWO
+init|=
+literal|141
+block|,
+name|CXType_OCLImage2dMSAADepthWO
+init|=
+literal|142
+block|,
+name|CXType_OCLImage2dArrayMSAADepthWO
+init|=
+literal|143
+block|,
+name|CXType_OCLImage3dWO
+init|=
+literal|144
+block|,
+name|CXType_OCLImage1dRW
+init|=
+literal|145
+block|,
+name|CXType_OCLImage1dArrayRW
+init|=
+literal|146
+block|,
+name|CXType_OCLImage1dBufferRW
+init|=
+literal|147
+block|,
+name|CXType_OCLImage2dRW
+init|=
+literal|148
+block|,
+name|CXType_OCLImage2dArrayRW
+init|=
+literal|149
+block|,
+name|CXType_OCLImage2dDepthRW
+init|=
+literal|150
+block|,
+name|CXType_OCLImage2dArrayDepthRW
+init|=
+literal|151
+block|,
+name|CXType_OCLImage2dMSAARW
+init|=
+literal|152
+block|,
+name|CXType_OCLImage2dArrayMSAARW
+init|=
+literal|153
+block|,
+name|CXType_OCLImage2dMSAADepthRW
+init|=
+literal|154
+block|,
+name|CXType_OCLImage2dArrayMSAADepthRW
+init|=
+literal|155
+block|,
+name|CXType_OCLImage3dRW
+init|=
+literal|156
+block|,
+name|CXType_OCLSampler
+init|=
+literal|157
+block|,
+name|CXType_OCLEvent
+init|=
+literal|158
+block|,
+name|CXType_OCLQueue
+init|=
+literal|159
+block|,
+name|CXType_OCLReserveID
+init|=
+literal|160
 block|}
 enum|;
 comment|/**  * \brief Describes the calling convention of a function type  */
@@ -3405,7 +3663,7 @@ name|CXCallingConv_IntelOclBicc
 init|=
 literal|9
 block|,
-name|CXCallingConv_X86_64Win64
+name|CXCallingConv_Win64
 init|=
 literal|10
 block|,
@@ -3705,6 +3963,24 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Returns the address space of the given type.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_getAddressSpace
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the typedef name of the given type.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_getTypedefName
+parameter_list|(
+name|CXType
+name|CT
+parameter_list|)
+function_decl|;
 comment|/**  * \brief For pointer types, returns the type of the pointee.  */
 name|CINDEX_LINKAGE
 name|CXType
@@ -3770,6 +4046,15 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Retrieve the exception specification type associated with a function type.  *  * If a non-function type is passed in, an error code of -1 is returned.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_getExceptionSpecificationType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Retrieve the number of non-variadic parameters associated with a  * function type.  *  * If a non-function type is passed in, -1 is returned.  */
 name|CINDEX_LINKAGE
 name|int
@@ -3804,6 +4089,15 @@ comment|/**  * \brief Retrieve the return type associated with a given cursor.  
 name|CINDEX_LINKAGE
 name|CXType
 name|clang_getCursorResultType
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the exception specification type associated with a given cursor.  *  * This only returns a valid result if the cursor refers to a function or method.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_getCursorExceptionSpecificationType
 parameter_list|(
 name|CXCursor
 name|C
@@ -3860,6 +4154,15 @@ comment|/**  * \brief Retrieve the type named by the qualified-id.  *  * If a no
 name|CINDEX_LINKAGE
 name|CXType
 name|clang_Type_getNamedType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine if a typedef is 'transparent' tag.  *  * A typedef is considered 'transparent' if it shares a name and spelling  * location with its underlying tag type, as is the case with the NS_ENUM macro.  *  * \returns non-zero if transparent and zero otherwise.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Type_isTransparentTagTypedef
 parameter_list|(
 name|CXType
 name|T
@@ -4372,7 +4675,7 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Given a cursor pointing to an Objective-C message, returns the CXType  * of the receiver.  */
+comment|/**  * \brief Given a cursor pointing to an Objective-C message or property  * reference, or C++ method call, returns the CXType of the receiver.  */
 name|CINDEX_LINKAGE
 name|CXType
 name|clang_Cursor_getReceiverType
@@ -4498,7 +4801,7 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Given a cursor that represents an Objective-C method or property  * declaration, return non-zero if the declaration was affected by "@optional".  * Returns zero if the cursor is not such a declaration or it is "@required".  */
+comment|/**  * \brief Given a cursor that represents an Objective-C method or property  * declaration, return non-zero if the declaration was affected by "\@optional".  * Returns zero if the cursor is not such a declaration or it is "\@required".  */
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_Cursor_isObjCOptional
@@ -4514,6 +4817,27 @@ name|clang_Cursor_isVariadic
 parameter_list|(
 name|CXCursor
 name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns non-zero if the given cursor points to a symbol marked with  * external_source_symbol attribute.  *  * \param language If non-NULL, and the attribute is present, will be set to  * the 'language' string from the attribute.  *  * \param definedIn If non-NULL, and the attribute is present, will be set to  * the 'definedIn' string from the attribute.  *  * \param isGenerated If non-NULL, and the attribute is present, will be set to  * non-zero if the 'generated_declaration' is set in the attribute.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Cursor_isExternalSymbol
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|,
+name|CXString
+modifier|*
+name|language
+parameter_list|,
+name|CXString
+modifier|*
+name|definedIn
+parameter_list|,
+name|unsigned
+modifier|*
+name|isGenerated
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Given a cursor that represents a declaration, return the associated  * comment's source range.  The range may include multiple consecutive comments  * with whitespace in between.  */
@@ -4736,6 +5060,15 @@ comment|/**  * \brief Determine if a C++ member function or member function temp
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_CXXMethod_isVirtual
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine if an enum declaration refers to a scoped enum.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_EnumDecl_isScoped
 parameter_list|(
 name|CXCursor
 name|C
@@ -5103,7 +5436,7 @@ block|,
 comment|/**    * Horizontal space (' ').    */
 name|CXCompletionChunk_HorizontalSpace
 block|,
-comment|/**    * Vertical space ('\n'), after which it is generally a good idea to    * perform indentation.    */
+comment|/**    * Vertical space ('\\n'), after which it is generally a good idea to    * perform indentation.    */
 name|CXCompletionChunk_VerticalSpace
 block|}
 enum|;
@@ -6182,6 +6515,10 @@ block|,
 name|CXIdxEntityLang_CXX
 init|=
 literal|3
+block|,
+name|CXIdxEntityLang_Swift
+init|=
+literal|4
 block|}
 name|CXIdxEntityLanguage
 typedef|;

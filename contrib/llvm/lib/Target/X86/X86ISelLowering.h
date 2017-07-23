@@ -243,8 +243,7 @@ comment|/// relative displacements.
 name|WrapperRIP
 block|,
 comment|/// Copies a 64-bit value from the low word of an XMM vector
-comment|/// to an MMX vector.  If you think this is too close to the previous
-comment|/// mnemonic, so do I; blame Intel.
+comment|/// to an MMX vector.
 name|MOVDQ2Q
 block|,
 comment|/// Copies a 32-bit value from the low word of a MMX
@@ -275,8 +274,6 @@ comment|/// Insert the lower 16-bits of a 32-bit value to a vector,
 comment|/// corresponds to X86::PINSRW.
 name|PINSRW
 block|,
-name|MMX_PINSRW
-block|,
 comment|/// Shuffle 16 8-bit values within a vector.
 name|PSHUFB
 block|,
@@ -292,9 +289,9 @@ block|,
 comment|/// Blend where the selector is an immediate.
 name|BLENDI
 block|,
-comment|/// Blend where the condition has been shrunk.
-comment|/// This is used to emphasize that the condition mask is
-comment|/// no more valid for generic VSELECT optimizations.
+comment|/// Dynamic (non-constant condition) vector blend where only the sign bits
+comment|/// of the condition elements are used. This is used to enforce that the
+comment|/// condition mask is not valid for generic VSELECT optimizations.
 name|SHRUNKBLEND
 block|,
 comment|/// Combined add and sub on an FP vector.
@@ -303,15 +300,27 @@ block|,
 comment|//  FP vector ops with rounding mode.
 name|FADD_RND
 block|,
+name|FADDS_RND
+block|,
 name|FSUB_RND
+block|,
+name|FSUBS_RND
 block|,
 name|FMUL_RND
 block|,
+name|FMULS_RND
+block|,
 name|FDIV_RND
+block|,
+name|FDIVS_RND
 block|,
 name|FMAX_RND
 block|,
+name|FMAXS_RND
+block|,
 name|FMIN_RND
+block|,
+name|FMINS_RND
 block|,
 name|FSQRT_RND
 block|,
@@ -355,9 +364,6 @@ name|FHADD
 block|,
 name|FHSUB
 block|,
-comment|// Integer absolute value
-name|ABS
-block|,
 comment|// Detect Conflicts Within a Vector
 name|CONFLICT
 block|,
@@ -370,6 +376,11 @@ comment|/// Commutative FMIN and FMAX.
 name|FMAXC
 block|,
 name|FMINC
+block|,
+comment|/// Scalar intrinsic floating point max and min.
+name|FMAXS
+block|,
+name|FMINS
 block|,
 comment|/// Floating point reciprocal-sqrt and reciprocal approximation.
 comment|/// Note that these typically require refinement
@@ -466,6 +477,11 @@ block|,
 name|VSRLI
 block|,
 name|VSRAI
+block|,
+comment|// Shifts of mask registers.
+name|KSHIFTL
+block|,
+name|KSHIFTR
 block|,
 comment|// Bit rotate by immediate
 name|VROTLI
@@ -658,9 +674,7 @@ block|,
 comment|// Broadcast subvector to vector.
 name|SUBV_BROADCAST
 block|,
-comment|// Insert/Extract vector element.
-name|VINSERT
-block|,
+comment|// Extract vector element.
 name|VEXTRACT
 block|,
 comment|/// SSE4A Extraction and Insertion.
@@ -852,6 +866,9 @@ name|CVTPS2PH
 block|,
 name|CVTPH2PS
 block|,
+comment|// LWP insert record.
+name|LWPINS
+block|,
 comment|// Compare and swap.
 name|LCMPXCHG_DAG
 init|=
@@ -930,6 +947,9 @@ comment|// Vector truncating masked store with unsigned/signed saturation
 name|VMTRUNCSTOREUS
 block|,
 name|VMTRUNCSTORES
+block|,
+comment|// X86 specific gather
+name|MGATHER
 comment|// WARNING: Do not add anything in the end unless you want the node to
 comment|// have memop! In fact, starting from FIRST_TARGET_MEMORY_OPCODE all
 comment|// opcodes will be thought as target memory ops!
@@ -1112,6 +1132,18 @@ block|;
 name|bool
 name|useSoftFloat
 argument_list|()
+specifier|const
+name|override
+block|;
+name|void
+name|markLibCallAttributes
+argument_list|(
+argument|MachineFunction *MF
+argument_list|,
+argument|unsigned CC
+argument_list|,
+argument|ArgListTy&Args
+argument_list|)
 specifier|const
 name|override
 block|;
@@ -1300,6 +1332,25 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|// Return true if it is profitable to combine a BUILD_VECTOR to a TRUNCATE
+comment|// for given operand and result types.
+comment|// Example of such a combine:
+comment|// v4i32 build_vector((extract_elt V, 0),
+comment|//                    (extract_elt V, 2),
+comment|//                    (extract_elt V, 4),
+comment|//                    (extract_elt V, 6))
+comment|//  -->
+comment|// v4i32 truncate (bitcast V to v4i64)
+name|bool
+name|isDesirableToCombineBuildVectorToTruncate
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// Return true if the target has native support for
 comment|/// the specified value type and it is 'desirable' to use the type for the
 comment|/// given node type. e.g. On x86 i16 is legal, but undesirable since i16
@@ -1324,16 +1375,6 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|EVT&PVT
-argument_list|)
-specifier|const
-name|override
-block|;
-comment|/// Return true if the MachineFunction contains a COPY which would imply
-comment|/// HasOpaqueSPAdjustment.
-name|bool
-name|hasCopyImplyingStackAdjustment
-argument_list|(
-argument|MachineFunction *MF
 argument_list|)
 specifier|const
 name|override
@@ -1458,10 +1499,47 @@ name|false
 return|;
 block|}
 name|bool
+name|isMaskAndCmp0FoldingBeneficial
+argument_list|(
+specifier|const
+name|Instruction
+operator|&
+name|AndI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
 name|hasAndNotCompare
 argument_list|(
 name|SDValue
 name|Y
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|convertSetCCLogicToBitwiseLogic
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+name|override
+block|{
+return|return
+name|VT
+operator|.
+name|isScalarInteger
+argument_list|()
+return|;
+block|}
+comment|/// Vector-sized comparisons are fast using PCMPEQ + PMOVMSK or PTEST.
+name|MVT
+name|hasFastEqualityCompare
+argument_list|(
+name|unsigned
+name|NumBits
 argument_list|)
 decl|const
 name|override
@@ -1494,13 +1572,14 @@ specifier|const
 name|SDValue
 name|Op
 argument_list|,
-name|APInt
+name|KnownBits
 operator|&
-name|KnownZero
+name|Known
 argument_list|,
+specifier|const
 name|APInt
 operator|&
-name|KnownOne
+name|DemandedElts
 argument_list|,
 specifier|const
 name|SelectionDAG
@@ -1521,6 +1600,11 @@ name|ComputeNumSignBitsForTargetNode
 argument_list|(
 name|SDValue
 name|Op
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|DemandedElts
 argument_list|,
 specifier|const
 name|SelectionDAG
@@ -2122,6 +2206,16 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|bool
+name|convertSelectOfConstantsToMath
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// Return true if EXTRACT_SUBVECTOR is cheap for this result type
 comment|/// with this index.
 name|bool
@@ -2339,7 +2433,7 @@ argument_list|(
 name|EVT
 name|VT
 argument_list|,
-name|AttributeSet
+name|AttributeList
 name|Attr
 argument_list|)
 decl|const
@@ -2351,6 +2445,16 @@ argument_list|()
 specifier|const
 name|override
 expr_stmt|;
+name|StringRef
+name|getStackProbeSymbolName
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|unsigned
 name|getMaxSupportedInterleaveFactor
 argument_list|()
@@ -2385,6 +2489,35 @@ name|Indices
 argument_list|,
 name|unsigned
 name|Factor
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+comment|/// \brief Lower interleaved store(s) into target specific
+comment|/// instructions/intrinsics.
+name|bool
+name|lowerInterleavedStore
+argument_list|(
+name|StoreInst
+operator|*
+name|SI
+argument_list|,
+name|ShuffleVectorInst
+operator|*
+name|SVI
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|void
+name|finalizeLowering
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
 argument_list|)
 decl|const
 name|override
@@ -2498,6 +2631,10 @@ name|SDValue
 operator|>
 operator|&
 name|InVals
+argument_list|,
+name|uint32_t
+operator|*
+name|RegMask
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2964,11 +3101,6 @@ argument_list|(
 name|SDValue
 name|Op
 argument_list|,
-specifier|const
-name|X86Subtarget
-operator|&
-name|Subtarget
-argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
@@ -3010,7 +3142,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
-name|LowerSETCCE
+name|LowerSETCCCARRY
 argument_list|(
 name|SDValue
 name|Op
@@ -3435,6 +3567,7 @@ decl_stmt|;
 name|bool
 name|mayBeEmittedAsTailCall
 argument_list|(
+specifier|const
 name|CallInst
 operator|*
 name|CI
@@ -4357,6 +4490,63 @@ operator|==
 name|X86ISD
 operator|::
 name|VMTRUNCSTOREUS
+return|;
+block|}
+expr|}
+block|;
+comment|// X86 specific Gather node.
+name|class
+name|X86MaskedGatherSDNode
+operator|:
+name|public
+name|MaskedGatherScatterSDNode
+block|{
+name|public
+operator|:
+name|X86MaskedGatherSDNode
+argument_list|(
+argument|unsigned Order
+argument_list|,
+argument|const DebugLoc&dl
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|MaskedGatherScatterSDNode
+argument_list|(
+argument|X86ISD::MGATHER
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|X86ISD
+operator|::
+name|MGATHER
 return|;
 block|}
 expr|}

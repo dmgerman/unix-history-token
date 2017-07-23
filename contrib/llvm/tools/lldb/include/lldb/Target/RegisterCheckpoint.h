@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UserID.h"
+file|"lldb/Target/StackID.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/StackID.h"
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_include

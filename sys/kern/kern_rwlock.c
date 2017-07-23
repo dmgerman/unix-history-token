@@ -1221,6 +1221,9 @@ name|kdb_active
 operator|!=
 literal|0
 operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
+operator|||
 operator|!
 name|TD_IS_IDLETHREAD
 argument_list|(
@@ -1454,7 +1457,7 @@ operator|||
 operator|!
 name|TD_IS_IDLETHREAD
 argument_list|(
-name|curthread
+name|td
 argument_list|)
 argument_list|,
 operator|(
@@ -1793,7 +1796,7 @@ parameter_list|,
 name|_rw
 parameter_list|)
 define|\
-value|(((td)->td_rw_rlocks&& (_rw)& RW_LOCK_READ) || ((_rw)&	\     (RW_LOCK_READ | RW_LOCK_WRITE_WAITERS | RW_LOCK_WRITE_SPINNER)) ==	\     RW_LOCK_READ)
+value|(((_rw)& (RW_LOCK_READ | RW_LOCK_WRITE_WAITERS | RW_LOCK_WRITE_SPINNER)) ==\     RW_LOCK_READ || ((td)->td_rw_rlocks&& (_rw)& RW_LOCK_READ))
 end_define
 
 begin_function
@@ -2835,6 +2838,11 @@ argument_list|(
 name|kdb_active
 operator|!=
 literal|0
+operator|||
+name|SCHEDULER_STOPPED_TD
+argument_list|(
+name|td
+argument_list|)
 operator|||
 operator|!
 name|TD_IS_IDLETHREAD

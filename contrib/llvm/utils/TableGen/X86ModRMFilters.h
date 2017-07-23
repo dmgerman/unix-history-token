@@ -52,7 +52,7 @@ comment|// Documentation for the disassembler emitter in general can be found in
 end_comment
 
 begin_comment
-comment|//  X86DisasemblerEmitter.h.
+comment|//  X86DisassemblerEmitter.h.
 end_comment
 
 begin_comment

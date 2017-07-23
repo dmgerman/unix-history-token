@@ -239,6 +239,35 @@ name|nullptr
 argument_list|)
 argument_list|)
 block|;   }
+name|virtual
+name|void
+name|beginFunctionImpl
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|endFunctionImpl
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|skippedNonDebugFunction
+argument_list|()
+block|{}
 comment|// AsmPrinterHandler overrides.
 name|public
 operator|:

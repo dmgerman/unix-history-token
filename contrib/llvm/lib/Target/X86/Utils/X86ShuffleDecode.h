@@ -613,10 +613,13 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
-comment|/// Decode a SSE4A EXTRQ instruction as a v16i8 shuffle mask.
+comment|/// Decode a SSE4A EXTRQ instruction as a shuffle mask.
 name|void
 name|DecodeEXTRQIMask
 argument_list|(
+name|MVT
+name|VT
+argument_list|,
 name|int
 name|Len
 argument_list|,
@@ -631,10 +634,13 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
-comment|/// Decode a SSE4A INSERTQ instruction as a v16i8 shuffle mask.
+comment|/// Decode a SSE4A INSERTQ instruction as a shuffle mask.
 name|void
 name|DecodeINSERTQIMask
 argument_list|(
+name|MVT
+name|VT
+argument_list|,
 name|int
 name|Len
 argument_list|,

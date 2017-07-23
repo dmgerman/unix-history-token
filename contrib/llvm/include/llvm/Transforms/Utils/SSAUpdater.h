@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -144,11 +144,15 @@ comment|//typedef DenseMap<BasicBlock*, Value*> AvailableValsTy;
 name|void
 modifier|*
 name|AV
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// ProtoType holds the type of the values being rewritten.
 name|Type
 modifier|*
 name|ProtoType
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// PHI nodes are given a name based on ProtoName.
 name|std
@@ -183,6 +187,27 @@ name|InsertedPHIs
 operator|=
 name|nullptr
 argument_list|)
+decl_stmt|;
+name|SSAUpdater
+argument_list|(
+specifier|const
+name|SSAUpdater
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|SSAUpdater
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|SSAUpdater
+operator|&
+operator|)
+operator|=
+name|delete
 decl_stmt|;
 operator|~
 name|SSAUpdater
@@ -307,26 +332,6 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|SSAUpdater
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-name|SSAUpdater
-argument_list|(
-specifier|const
-name|SSAUpdater
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Helper class for promoting a collection of loads and stores into SSA
@@ -361,7 +366,9 @@ name|virtual
 operator|~
 name|LoadAndStorePromoter
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// \brief This does the promotion.
 comment|///
 comment|/// Insts is a list of loads and stores to promote, and Name is the basename
@@ -370,10 +377,17 @@ comment|/// removed from the code.
 name|void
 name|run
 argument_list|(
-argument|const SmallVectorImpl<Instruction*>&Insts
-argument_list|)
 specifier|const
-expr_stmt|;
+name|SmallVectorImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|Insts
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return true if the specified instruction is in the Inst list.
 comment|///
 comment|/// The Insts list is the one passed into the constructor. Clients should
@@ -441,13 +455,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_UTILS_SSAUPDATER_H
+end_comment
 
 end_unit
 

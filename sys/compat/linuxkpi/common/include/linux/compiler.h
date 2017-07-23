@@ -64,7 +64,7 @@ name|__chk_user_ptr
 parameter_list|(
 name|x
 parameter_list|)
-value|0
+value|((void)0)
 end_define
 
 begin_define
@@ -74,7 +74,7 @@ name|__chk_io_ptr
 parameter_list|(
 name|x
 parameter_list|)
-value|0
+value|((void)0)
 end_define
 
 begin_define
@@ -115,7 +115,7 @@ name|__acquire
 parameter_list|(
 name|x
 parameter_list|)
-value|0
+value|do { } while (0)
 end_define
 
 begin_define
@@ -125,7 +125,7 @@ name|__release
 parameter_list|(
 name|x
 parameter_list|)
-value|0
+value|do { } while (0)
 end_define
 
 begin_define

@@ -25,7 +25,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<opt_cam.h>
+file|"opt_cam.h"
 end_include
 
 begin_endif

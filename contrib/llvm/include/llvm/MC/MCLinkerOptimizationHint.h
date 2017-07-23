@@ -95,19 +95,30 @@ directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Forward declarations.
+name|class
+name|MachObjectWriter
+decl_stmt|;
 name|class
 name|MCAsmLayout
 decl_stmt|;
 name|class
 name|MCSymbol
-decl_stmt|;
-name|class
-name|MachObjectWriter
 decl_stmt|;
 comment|/// Linker Optimization Hint Type.
 enum|enum
@@ -410,14 +421,15 @@ decl|const
 decl_stmt|;
 name|public
 label|:
-typedef|typedef
+name|using
+name|LOHArgs
+init|=
 name|SmallVectorImpl
 operator|<
 name|MCSymbol
 operator|*
 operator|>
-name|LOHArgs
-expr_stmt|;
+decl_stmt|;
 name|MCLOHDirective
 argument_list|(
 argument|MCLOHType Kind
@@ -509,6 +521,8 @@ comment|/// Keep track of the emit size of all the LOHs.
 name|mutable
 name|uint64_t
 name|EmitSize
+init|=
+literal|0
 decl_stmt|;
 comment|/// Keep track of all LOH directives.
 name|SmallVector
@@ -521,21 +535,19 @@ name|Directives
 expr_stmt|;
 name|public
 label|:
-typedef|typedef
+name|using
+name|LOHDirectives
+init|=
 name|SmallVectorImpl
 operator|<
 name|MCLOHDirective
 operator|>
-name|LOHDirectives
-expr_stmt|;
+decl_stmt|;
 name|MCLOHContainer
 argument_list|()
-operator|:
-name|EmitSize
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Const accessor to the directives.
 specifier|const
 name|LOHDirectives
@@ -676,18 +688,20 @@ block|}
 block|}
 empty_stmt|;
 comment|// Add types for specialized template using MCSymbol.
-typedef|typedef
+name|using
+name|MCLOHArgs
+init|=
 name|MCLOHDirective
 operator|::
 name|LOHArgs
-name|MCLOHArgs
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|MCLOHDirectives
+init|=
 name|MCLOHContainer
 operator|::
 name|LOHDirectives
-name|MCLOHDirectives
-expr_stmt|;
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -699,6 +713,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCLINKEROPTIMIZATIONHINT_H
+end_comment
 
 end_unit
 

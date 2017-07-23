@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MCAsmInfoCOFF.h - COFF asm properties -------------------*- C++ -*-===//
+comment|//===- MCAsmInfoCOFF.h - COFF asm properties --------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -69,7 +69,7 @@ operator|:
 name|explicit
 name|MCAsmInfoCOFF
 argument_list|()
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|MCAsmInfoMicrosoft
@@ -87,7 +87,7 @@ operator|:
 name|explicit
 name|MCAsmInfoMicrosoft
 argument_list|()
-block|;   }
+block|; }
 decl_stmt|;
 name|class
 name|MCAsmInfoGNUCOFF
@@ -105,10 +105,14 @@ operator|:
 name|explicit
 name|MCAsmInfoGNUCOFF
 argument_list|()
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

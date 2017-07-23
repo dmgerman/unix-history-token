@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsMCCodeEmitter.h - Convert Mips Code to Machine Code -----------===//
+comment|//===- MipsMCCodeEmitter.h - Convert Mips Code to Machine Code --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -47,10 +47,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -72,15 +68,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cstdint>
 end_include
-
-begin_decl_stmt
-name|using
-name|namespace
-name|llvm
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -93,13 +82,13 @@ name|class
 name|MCExpr
 decl_stmt|;
 name|class
+name|MCFixup
+decl_stmt|;
+name|class
 name|MCInst
 decl_stmt|;
 name|class
 name|MCInstrInfo
-decl_stmt|;
-name|class
-name|MCFixup
 decl_stmt|;
 name|class
 name|MCOperand
@@ -116,26 +105,6 @@ range|:
 name|public
 name|MCCodeEmitter
 block|{
-name|MipsMCCodeEmitter
-argument_list|(
-specifier|const
-name|MipsMCCodeEmitter
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|MipsMCCodeEmitter
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
 specifier|const
 name|MCInstrInfo
 operator|&
@@ -188,11 +157,34 @@ argument_list|(
 argument|IsLittle
 argument_list|)
 block|{}
+name|MipsMCCodeEmitter
+argument_list|(
+specifier|const
+name|MipsMCCodeEmitter
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|MipsMCCodeEmitter
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|MipsMCCodeEmitter
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 operator|~
 name|MipsMCCodeEmitter
 argument_list|()
 name|override
-block|{}
+operator|=
+expr|default
+block|;
 name|void
 name|EmitByte
 argument_list|(
@@ -873,18 +865,21 @@ argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
-comment|// class MipsMCCodeEmitter
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSMCCODEEMITTER_H
+end_comment
 
 end_unit
 

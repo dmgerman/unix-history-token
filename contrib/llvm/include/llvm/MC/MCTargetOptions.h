@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MCTargetOptions.h - MC Target Options -------------------*- C++ -*-===//
+comment|//===- MCTargetOptions.h - MC Target Options --------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -78,6 +78,21 @@ comment|/// ARM EHABI
 name|WinEH
 operator|,
 comment|/// Windows Exception Handling
+block|}
+empty_stmt|;
+name|enum
+name|class
+name|DebugCompressionType
+block|{
+name|None
+operator|,
+comment|/// No compression
+name|GNU
+operator|,
+comment|/// zlib-gnu style compression
+name|Z
+operator|,
+comment|/// zlib style complession
 block|}
 empty_stmt|;
 name|class
@@ -170,19 +185,18 @@ literal|1
 decl_stmt|;
 name|int
 name|DwarfVersion
+init|=
+literal|0
 decl_stmt|;
-comment|/// getABIName - If this returns a non-empty string this represents the
-comment|/// textual name of the ABI that we want the backend to use, e.g. o32, or
-comment|/// aapcs-linux.
-name|StringRef
-name|getABIName
-argument_list|()
-specifier|const
-expr_stmt|;
 name|std
 operator|::
 name|string
 name|ABIName
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|SplitDwarfFile
 expr_stmt|;
 comment|/// Additional paths to search for `.include` directives when using the
 comment|/// integrated assembler.
@@ -199,143 +213,16 @@ expr_stmt|;
 name|MCTargetOptions
 argument_list|()
 expr_stmt|;
+comment|/// getABIName - If this returns a non-empty string this represents the
+comment|/// textual name of the ABI that we want the backend to use, e.g. o32, or
+comment|/// aapcs-linux.
+name|StringRef
+name|getABIName
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
-specifier|inline
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|MCTargetOptions
-operator|&
-name|LHS
-operator|,
-specifier|const
-name|MCTargetOptions
-operator|&
-name|RHS
-operator|)
-block|{
-define|#
-directive|define
-name|ARE_EQUAL
-parameter_list|(
-name|X
-parameter_list|)
-value|LHS.X == RHS.X
-return|return
-operator|(
-name|ARE_EQUAL
-argument_list|(
-name|SanitizeAddress
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|MCRelaxAll
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|MCNoExecStack
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|MCFatalWarnings
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|MCNoWarn
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|MCNoDeprecatedWarn
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|MCSaveTempLabels
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|MCUseDwarfDirectory
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|MCIncrementalLinkerCompatible
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|MCPIECopyRelocations
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|ShowMCEncoding
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|ShowMCInst
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|AsmVerbose
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|DwarfVersion
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|ABIName
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|IASSearchPaths
-argument_list|)
-operator|)
-return|;
-undef|#
-directive|undef
-name|ARE_EQUAL
-block|}
-specifier|inline
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|MCTargetOptions
-operator|&
-name|LHS
-operator|,
-specifier|const
-name|MCTargetOptions
-operator|&
-name|RHS
-operator|)
-block|{
-return|return
-operator|!
-operator|(
-name|LHS
-operator|==
-name|RHS
-operator|)
-return|;
-block|}
 block|}
 end_decl_stmt
 
@@ -347,6 +234,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCTARGETOPTIONS_H
+end_comment
 
 end_unit
 

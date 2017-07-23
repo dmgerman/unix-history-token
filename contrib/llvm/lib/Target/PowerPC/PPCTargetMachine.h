@@ -91,6 +91,7 @@ comment|/// Common code between 32-bit and 64-bit PowerPC targets.
 comment|///
 name|class
 name|PPCTargetMachine
+name|final
 range|:
 name|public
 name|LLVMTargetMachine
@@ -119,9 +120,6 @@ name|TLOF
 block|;
 name|PPCABI
 name|TargetABI
-block|;
-name|PPCSubtarget
-name|Subtarget
 block|;
 name|mutable
 name|StringMap
@@ -169,6 +167,17 @@ argument|const Function&F
 argument_list|)
 specifier|const
 name|override
+block|;
+comment|// The no argument getSubtargetImpl, while it exists on some targets, is
+comment|// deprecated and should not be used.
+specifier|const
+name|PPCSubtarget
+operator|*
+name|getSubtargetImpl
+argument_list|()
+specifier|const
+operator|=
+name|delete
 block|;
 comment|// Pass Pipeline Configuration
 name|TargetPassConfig
@@ -244,79 +253,19 @@ name|ppc64le
 operator|)
 return|;
 block|}
-block|; }
-decl_stmt|;
-comment|/// PowerPC 32-bit target machine.
-comment|///
-name|class
-name|PPC32TargetMachine
-range|:
-name|public
-name|PPCTargetMachine
-block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
 block|;
-name|public
-operator|:
-name|PPC32TargetMachine
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|const Triple&TT
-argument_list|,
-argument|StringRef CPU
-argument_list|,
-argument|StringRef FS
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Optional<Reloc::Model> RM
-argument_list|,
-argument|CodeModel::Model CM
-argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|)
-block|; }
-decl_stmt|;
-comment|/// PowerPC 64-bit target machine.
-comment|///
-name|class
-name|PPC64TargetMachine
-range|:
-name|public
-name|PPCTargetMachine
-block|{
-name|virtual
-name|void
-name|anchor
+name|bool
+name|isMachineVerifierClean
 argument_list|()
-block|;
-name|public
-operator|:
-name|PPC64TargetMachine
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|const Triple&TT
-argument_list|,
-argument|StringRef CPU
-argument_list|,
-argument|StringRef FS
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Optional<Reloc::Model> RM
-argument_list|,
-argument|CodeModel::Model CM
-argument_list|,
-argument|CodeGenOpt::Level OL
-argument_list|)
-block|; }
-decl_stmt|;
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
 block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_comment

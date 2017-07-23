@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//== llvm/CodeGen/GlobalISel/RegBankSelect.h - Reg Bank Selector -*- C++ -*-==//
+comment|//=- llvm/CodeGen/GlobalISel/RegBankSelect.h - Reg Bank Selector --*- C++ -*-=//
 end_comment
 
 begin_comment
@@ -258,6 +258,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/GlobalISel/MachineIRBuilder.h"
 end_include
 
@@ -270,34 +276,69 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineOptimizationRemarkEmitter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Forward declarations.
 name|class
 name|BlockFrequency
-decl_stmt|;
-name|class
-name|MachineBranchProbabilityInfo
 decl_stmt|;
 name|class
 name|MachineBlockFrequencyInfo
 decl_stmt|;
 name|class
+name|MachineBranchProbabilityInfo
+decl_stmt|;
+name|class
+name|MachineOperand
+decl_stmt|;
+name|class
 name|MachineRegisterInfo
+decl_stmt|;
+name|class
+name|Pass
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 name|class
 name|TargetPassConfig
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 comment|/// This pass implements the reg bank selector pass used in the GlobalISel
 comment|/// pipeline. At the end of this pass, all register operands have been assigned
@@ -389,7 +430,9 @@ name|virtual
 operator|~
 name|InsertPoint
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// The first call to this method will cause the splitting to
 comment|/// happen if need be, then sub sequent calls just return
 comment|/// the iterator to that point. I.e., no more splitting will
@@ -1067,9 +1110,11 @@ comment|/// Mark this repairing placement as impossible.
 name|Impossible
 block|}
 enum|;
-comment|/// Convenient types for a list of insertion points.
+comment|/// \name Convenient types for a list of insertion points.
 comment|/// @{
-typedef|typedef
+name|using
+name|InsertionPoints
+init|=
 name|SmallVector
 operator|<
 name|std
@@ -1078,23 +1123,21 @@ name|unique_ptr
 operator|<
 name|InsertPoint
 operator|>
-operator|,
-literal|2
-operator|>
-name|InsertionPoints
-expr_stmt|;
-typedef|typedef
+decl_stmt|, 2>;
+name|using
+name|insertpt_iterator
+init|=
 name|InsertionPoints
 operator|::
 name|iterator
-name|insertpt_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_insertpt_iterator
+init|=
 name|InsertionPoints
 operator|::
 name|const_iterator
-name|const_insertpt_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// @}
 name|private
 label|:
@@ -1113,6 +1156,8 @@ decl_stmt|;
 comment|/// Is there any of the insert points needing splitting?
 name|bool
 name|HasSplit
+init|=
+name|false
 decl_stmt|;
 comment|/// Insertion point for the repair code.
 comment|/// The repairing code needs to happen just before these points.
@@ -1144,7 +1189,7 @@ argument_list|,
 argument|RepairingKind Kind = RepairingKind::Insert
 argument_list|)
 empty_stmt|;
-comment|/// Getters.
+comment|/// \name Getters.
 comment|/// @{
 name|RepairingKind
 name|getKind
@@ -1182,7 +1227,7 @@ name|HasSplit
 return|;
 block|}
 comment|/// @}
-comment|/// Overloaded methods to add an insertion point.
+comment|/// \name Overloaded methods to add an insertion point.
 comment|/// @{
 comment|/// Add a MBBInsertionPoint to the list of InsertPoints.
 name|void
@@ -1232,7 +1277,7 @@ name|Point
 parameter_list|)
 function_decl|;
 comment|/// @}
-comment|/// Accessors related to the insertion points.
+comment|/// \name Accessors related to the insertion points.
 comment|/// @{
 name|insertpt_iterator
 name|begin
@@ -1415,11 +1460,15 @@ comment|/// Cost of the local instructions.
 comment|/// This cost is free of basic block frequency.
 name|uint64_t
 name|LocalCost
+init|=
+literal|0
 decl_stmt|;
 comment|/// Cost of the non-local instructions.
 comment|/// This cost should include the frequency of the related blocks.
 name|uint64_t
 name|NonLocalCost
+init|=
+literal|0
 decl_stmt|;
 comment|/// Frequency of the block where the local instructions live.
 name|uint64_t
@@ -1632,6 +1681,8 @@ specifier|const
 name|RegisterBankInfo
 modifier|*
 name|RBI
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -1647,6 +1698,8 @@ begin_decl_stmt
 name|MachineRegisterInfo
 modifier|*
 name|MRI
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -1659,6 +1712,8 @@ specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|TRI
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -1674,6 +1729,8 @@ begin_decl_stmt
 name|MachineBlockFrequencyInfo
 modifier|*
 name|MBFI
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -1689,8 +1746,25 @@ begin_decl_stmt
 name|MachineBranchProbabilityInfo
 modifier|*
 name|MBPI
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Current optimization remark emitter. Used to report failures.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MachineOptimizationRemarkEmitter
+operator|>
+name|MORE
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Helper class used for every code morphing.
@@ -2010,6 +2084,7 @@ comment|/// \return a reference on the best mapping in \p PossibleMappings.
 end_comment
 
 begin_expr_stmt
+specifier|const
 name|RegisterBankInfo
 operator|::
 name|InstructionMapping
@@ -2402,13 +2477,17 @@ end_decl_stmt
 
 begin_comment
 unit|};  }
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GLOBALISEL_REGBANKSELECT_H
+end_comment
 
 end_unit
 

@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/CVRecord.h"
 end_include
 
@@ -88,13 +94,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/GUID.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/CodeView/TypeIndex.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamArray.h"
+file|"llvm/Support/BinaryStreamArray.h"
 end_include
 
 begin_include
@@ -126,14 +138,6 @@ name|namespace
 name|llvm
 block|{
 name|namespace
-name|msf
-block|{
-name|class
-name|StreamReader
-decl_stmt|;
-block|}
-comment|// end namespace msf
-name|namespace
 name|codeview
 block|{
 name|using
@@ -151,13 +155,22 @@ name|support
 operator|::
 name|ulittle32_t
 expr_stmt|;
-typedef|typedef
+name|using
+name|CVType
+init|=
 name|CVRecord
 operator|<
 name|TypeLeafKind
 operator|>
-name|CVType
-expr_stmt|;
+decl_stmt|;
+name|using
+name|RemappedType
+init|=
+name|RemappedRecord
+operator|<
+name|TypeLeafKind
+operator|>
+decl_stmt|;
 struct|struct
 name|CVMemberRecord
 block|{
@@ -172,15 +185,24 @@ name|Data
 expr_stmt|;
 block|}
 struct|;
-typedef|typedef
-name|msf
-operator|::
+name|using
+name|CVTypeArray
+init|=
 name|VarStreamArray
 operator|<
 name|CVType
 operator|>
+decl_stmt|;
+name|using
+name|CVTypeRange
+init|=
+name|iterator_range
+operator|<
 name|CVTypeArray
-expr_stmt|;
+operator|::
+name|Iterator
+operator|>
+decl_stmt|;
 comment|/// Equvalent to CV_fldattr_t in cvinfo.h.
 struct|struct
 name|MemberAttributes
@@ -425,18 +447,6 @@ argument_list|(
 argument|Representation
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-expr_stmt|;
 name|TypeIndex
 name|getContainingType
 argument_list|()
@@ -495,8 +505,6 @@ return|return
 name|Kind
 return|;
 block|}
-name|private
-label|:
 name|TypeRecordKind
 name|Kind
 decl_stmt|;
@@ -511,6 +519,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|ModifierRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|ModifierRecord
 argument_list|(
@@ -546,18 +559,6 @@ argument_list|(
 argument|Modifiers
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getModifiedType
 argument_list|()
@@ -592,6 +593,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|ProcedureRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|ProcedureRecord
 argument_list|(
@@ -648,18 +654,6 @@ argument_list|(
 argument|ArgumentList
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getReturnType
 argument_list|()
@@ -730,6 +724,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|MemberFunctionRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|MemberFunctionRecord
 argument_list|(
@@ -807,18 +806,6 @@ argument_list|(
 argument|ThisPointerAdjustment
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getReturnType
 argument_list|()
@@ -916,6 +903,52 @@ name|int32_t
 name|ThisPointerAdjustment
 block|; }
 decl_stmt|;
+comment|// LF_LABEL
+name|class
+name|LabelRecord
+range|:
+name|public
+name|TypeRecord
+block|{
+name|public
+operator|:
+name|LabelRecord
+argument_list|()
+operator|=
+expr|default
+block|;
+name|explicit
+name|LabelRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|LabelRecord
+argument_list|(
+argument|LabelType Mode
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|Label
+argument_list|)
+block|,
+name|Mode
+argument_list|(
+argument|Mode
+argument_list|)
+block|{}
+name|LabelType
+name|Mode
+block|; }
+decl_stmt|;
 comment|// LF_MFUNC_ID
 name|class
 name|MemberFuncIdRecord
@@ -925,6 +958,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|MemberFuncIdRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|MemberFuncIdRecord
 argument_list|(
@@ -967,18 +1005,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getClassType
 argument_list|()
@@ -1016,7 +1042,7 @@ name|StringRef
 name|Name
 block|; }
 decl_stmt|;
-comment|// LF_ARGLIST, LF_SUBSTR_LIST
+comment|// LF_ARGLIST
 name|class
 name|ArgListRecord
 range|:
@@ -1025,6 +1051,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|ArgListRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|ArgListRecord
 argument_list|(
@@ -1048,23 +1079,74 @@ argument_list|(
 name|Kind
 argument_list|)
 block|,
+name|ArgIndices
+argument_list|(
+argument|Indices
+argument_list|)
+block|{}
+name|ArrayRef
+operator|<
+name|TypeIndex
+operator|>
+name|getIndices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArgIndices
+return|;
+block|}
+name|std
+operator|::
+name|vector
+operator|<
+name|TypeIndex
+operator|>
+name|ArgIndices
+block|; }
+decl_stmt|;
+comment|// LF_SUBSTR_LIST
+name|class
+name|StringListRecord
+range|:
+name|public
+name|TypeRecord
+block|{
+name|public
+operator|:
+name|StringListRecord
+argument_list|()
+operator|=
+expr|default
+block|;
+name|explicit
+name|StringListRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|StringListRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|,
+argument|ArrayRef<TypeIndex> Indices
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|Kind
+argument_list|)
+block|,
 name|StringIndices
 argument_list|(
 argument|Indices
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|TypeIndex
@@ -1144,6 +1226,11 @@ name|PointerSizeMask
 operator|=
 literal|0xFF
 block|;
+name|PointerRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|PointerRecord
 argument_list|(
@@ -1221,7 +1308,7 @@ argument|PointerOptions PO
 argument_list|,
 argument|uint8_t Size
 argument_list|,
-argument|const MemberPointerInfo&Member
+argument|const MemberPointerInfo&MPI
 argument_list|)
 operator|:
 name|TypeRecord
@@ -1252,52 +1339,9 @@ argument_list|)
 block|,
 name|MemberInfo
 argument_list|(
-argument|Member
+argument|MPI
 argument_list|)
 block|{}
-name|PointerRecord
-argument_list|(
-argument|TypeIndex ReferentType
-argument_list|,
-argument|uint32_t Attrs
-argument_list|,
-argument|const MemberPointerInfo&Member
-argument_list|)
-operator|:
-name|TypeRecord
-argument_list|(
-name|TypeRecordKind
-operator|::
-name|Pointer
-argument_list|)
-block|,
-name|ReferentType
-argument_list|(
-name|ReferentType
-argument_list|)
-block|,
-name|Attrs
-argument_list|(
-name|Attrs
-argument_list|)
-block|,
-name|MemberInfo
-argument_list|(
-argument|Member
-argument_list|)
-block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getReferentType
 argument_list|()
@@ -1585,6 +1629,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|NestedTypeRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|NestedTypeRecord
 argument_list|(
@@ -1620,18 +1669,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getNestedType
 argument_list|()
@@ -1666,6 +1703,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|FieldListRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|FieldListRecord
 argument_list|(
@@ -1699,18 +1741,6 @@ argument_list|(
 argument|Data
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-argument|ArrayRef<TypeIndex> IndexMap
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
 name|ArrayRef
 operator|<
 name|uint8_t
@@ -1727,6 +1757,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|ArrayRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|ArrayRecord
 argument_list|(
@@ -1776,18 +1811,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getElementType
 argument_list|()
@@ -1845,6 +1868,11 @@ name|TypeRecord
 block|{
 name|protected
 operator|:
+name|TagRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|TagRecord
 argument_list|(
@@ -1903,18 +1931,6 @@ argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 specifier|static
 specifier|const
 name|int
@@ -2032,6 +2048,11 @@ name|TagRecord
 block|{
 name|public
 operator|:
+name|ClassRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|ClassRecord
 argument_list|(
@@ -2094,18 +2115,6 @@ argument_list|(
 argument|Size
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|HfaKind
 name|getHfa
 argument_list|()
@@ -2222,6 +2231,11 @@ operator|:
 name|public
 name|TagRecord
 block|{
+name|UnionRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|UnionRecord
 argument_list|(
@@ -2328,6 +2342,11 @@ name|TagRecord
 block|{
 name|public
 operator|:
+name|EnumRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|EnumRecord
 argument_list|(
@@ -2376,17 +2395,6 @@ argument_list|(
 argument|UnderlyingType
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getUnderlyingType
 argument_list|()
@@ -2409,6 +2417,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|BitFieldRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|BitFieldRecord
 argument_list|(
@@ -2451,18 +2464,6 @@ argument_list|(
 argument|BitOffset
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getType
 argument_list|()
@@ -2509,6 +2510,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|VFTableShapeRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|VFTableShapeRecord
 argument_list|(
@@ -2566,18 +2572,6 @@ argument_list|(
 argument|std::move(Slots)
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|VFTableSlotKind
@@ -2638,6 +2632,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|TypeServer2Record
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|TypeServer2Record
 argument_list|(
@@ -2651,7 +2650,7 @@ argument_list|)
 block|{}
 name|TypeServer2Record
 argument_list|(
-argument|StringRef Guid
+argument|StringRef GuidStr
 argument_list|,
 argument|uint32_t Age
 argument_list|,
@@ -2665,11 +2664,6 @@ operator|::
 name|TypeServer2
 argument_list|)
 block|,
-name|Guid
-argument_list|(
-name|Guid
-argument_list|)
-block|,
 name|Age
 argument_list|(
 name|Age
@@ -2679,20 +2673,37 @@ name|Name
 argument_list|(
 argument|Name
 argument_list|)
-block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
+block|{
+name|assert
 argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
+name|GuidStr
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|16
+operator|&&
+literal|"guid isn't 16 bytes"
 argument_list|)
 block|;
-name|StringRef
+operator|::
+name|memcpy
+argument_list|(
+name|Guid
+operator|.
+name|Guid
+argument_list|,
+name|GuidStr
+operator|.
+name|data
+argument_list|()
+argument_list|,
+literal|16
+argument_list|)
+block|;   }
+specifier|const
+name|GUID
+operator|&
 name|getGuid
 argument_list|()
 specifier|const
@@ -2719,7 +2730,7 @@ return|return
 name|Name
 return|;
 block|}
-name|StringRef
+name|GUID
 name|Guid
 block|;
 name|uint32_t
@@ -2738,6 +2749,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|StringIdRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|StringIdRecord
 argument_list|(
@@ -2773,18 +2789,6 @@ argument_list|(
 argument|String
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getId
 argument_list|()
@@ -2819,6 +2823,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|FuncIdRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|FuncIdRecord
 argument_list|(
@@ -2861,18 +2870,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getParentScope
 argument_list|()
@@ -2919,6 +2916,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|UdtSourceLineRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|UdtSourceLineRecord
 argument_list|(
@@ -2961,18 +2963,6 @@ argument_list|(
 argument|LineNumber
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getUDT
 argument_list|()
@@ -3019,6 +3009,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|UdtModSourceLineRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|UdtModSourceLineRecord
 argument_list|(
@@ -3068,16 +3063,6 @@ argument_list|(
 argument|Module
 argument_list|)
 block|{}
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getUDT
 argument_list|()
@@ -3136,6 +3121,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|BuildInfoRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|BuildInfoRecord
 argument_list|(
@@ -3170,18 +3160,6 @@ argument_list|,
 argument|ArgIndices.end()
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|TypeIndex
@@ -3212,6 +3190,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|VFTableRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|VFTableRecord
 argument_list|(
@@ -3285,18 +3268,6 @@ name|end
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getCompleteClass
 argument_list|()
@@ -3386,12 +3357,9 @@ name|public
 operator|:
 name|OneMethodRecord
 argument_list|()
-operator|:
-name|TypeRecord
-argument_list|(
-argument|TypeRecordKind::OneMethod
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|explicit
 name|OneMethodRecord
 argument_list|(
@@ -3487,18 +3455,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getType
 argument_list|()
@@ -3605,6 +3561,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|MethodOverloadListRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|MethodOverloadListRecord
 argument_list|(
@@ -3637,18 +3598,6 @@ argument_list|(
 argument|Methods
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|OneMethodRecord
@@ -3679,6 +3628,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|OverloadedMethodRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|OverloadedMethodRecord
 argument_list|(
@@ -3721,18 +3675,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|uint16_t
 name|getNumOverloads
 argument_list|()
@@ -3779,6 +3721,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|DataMemberRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|DataMemberRecord
 argument_list|(
@@ -3866,18 +3813,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
@@ -3939,6 +3874,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|StaticDataMemberRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|StaticDataMemberRecord
 argument_list|(
@@ -4012,18 +3952,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
@@ -4073,6 +4001,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|EnumeratorRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|EnumeratorRecord
 argument_list|(
@@ -4156,18 +4089,6 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
@@ -4217,6 +4138,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|VFPtrRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|VFPtrRecord
 argument_list|(
@@ -4245,18 +4171,6 @@ argument_list|(
 argument|Type
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|getType
 argument_list|()
@@ -4279,6 +4193,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|BaseClassRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|BaseClassRecord
 argument_list|(
@@ -4352,18 +4271,6 @@ argument_list|(
 argument|Offset
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
@@ -4413,6 +4320,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|VirtualBaseClassRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|VirtualBaseClassRecord
 argument_list|(
@@ -4514,18 +4426,6 @@ argument_list|(
 argument|Index
 argument_list|)
 block|{}
-comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
-comment|/// is not in the map.
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
@@ -4600,6 +4500,11 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|ListContinuationRecord
+argument_list|()
+operator|=
+expr|default
+block|;
 name|explicit
 name|ListContinuationRecord
 argument_list|(
@@ -4637,16 +4542,6 @@ return|return
 name|ContinuationIndex
 return|;
 block|}
-name|bool
-name|remapTypeIndices
-argument_list|(
-name|ArrayRef
-operator|<
-name|TypeIndex
-operator|>
-name|IndexMap
-argument_list|)
-block|;
 name|TypeIndex
 name|ContinuationIndex
 block|; }

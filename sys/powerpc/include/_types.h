@@ -375,31 +375,6 @@ begin_comment
 comment|/* byte count or error */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|__int64_t
-name|__time_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* time()... */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|__uint64_t
-name|__uintfptr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|__uint64_t
-name|__uintptr_t
-typedef|;
-end_typedef
-
 begin_else
 else|#
 directive|else
@@ -456,9 +431,14 @@ begin_comment
 comment|/* byte count or error */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
-name|__int32_t
+name|__int64_t
 name|__time_t
 typedef|;
 end_typedef
@@ -466,6 +446,31 @@ end_typedef
 begin_comment
 comment|/* time()... */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|__uint64_t
+name|__uintfptr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__uint64_t
+name|__uintptr_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_typedef
 typedef|typedef

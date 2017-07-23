@@ -3215,7 +3215,7 @@ operator|->
 name|nsid
 operator|=
 operator|(
-name|uint16_t
+name|uint32_t
 operator|)
 name|xpt_path_lun_id
 argument_list|(

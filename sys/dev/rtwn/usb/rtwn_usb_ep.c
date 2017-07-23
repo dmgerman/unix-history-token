@@ -264,7 +264,7 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|RTWN_TXBUFSZ
+name|RTWN_USB_TXBUFSZ
 block|,
 operator|.
 name|flags
@@ -322,7 +322,7 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|RTWN_TXBUFSZ
+name|RTWN_USB_TXBUFSZ
 block|,
 operator|.
 name|flags
@@ -380,7 +380,7 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|RTWN_TXBUFSZ
+name|RTWN_USB_TXBUFSZ
 block|,
 operator|.
 name|flags
@@ -438,7 +438,7 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|RTWN_TXBUFSZ
+name|RTWN_USB_TXBUFSZ
 block|,
 operator|.
 name|flags

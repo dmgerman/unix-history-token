@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/arm/nexusvar.h>
 end_include
 
 begin_include
@@ -118,6 +130,12 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu-v6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pte-v6.h>
 end_include
 
 begin_endif
@@ -287,6 +305,117 @@ name|func
 parameter_list|)
 value|(((func)& 0xf)<<		\     (((pin) % MPP_PINS_PER_REG) * 4))
 end_define
+
+begin_function
+specifier|static
+name|void
+name|mv_busdma_tag_init
+parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|)
+block|{
+name|phandle_t
+name|node
+decl_stmt|;
+name|bus_dma_tag_t
+name|dmat
+decl_stmt|;
+comment|/* 	 * If this platform has coherent DMA, create the parent DMA tag to pass 	 * down the coherent flag to all busses and devices on the platform, 	 * otherwise return without doing anything. By default create tag 	 * for all A38x-based platforms only. 	 */
+if|if
+condition|(
+operator|(
+name|node
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/"
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return;
+if|if
+condition|(
+name|ofw_bus_node_is_compatible
+argument_list|(
+name|node
+argument_list|,
+literal|"marvell,armada380"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
+name|bus_dma_tag_create
+argument_list|(
+name|NULL
+argument_list|,
+comment|/* No parent tag */
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+comment|/* alignment, bounds */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* lowaddr */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* highaddr */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* filter, filterarg */
+name|BUS_SPACE_MAXSIZE
+argument_list|,
+comment|/* maxsize */
+name|BUS_SPACE_UNRESTRICTED
+argument_list|,
+comment|/* nsegments */
+name|BUS_SPACE_MAXSIZE
+argument_list|,
+comment|/* maxsegsize */
+name|BUS_DMA_COHERENT
+argument_list|,
+comment|/* flags */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* lockfunc, lockarg */
+operator|&
+name|dmat
+argument_list|)
+expr_stmt|;
+name|nexus_set_dma_tag
+argument_list|(
+name|dmat
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|mv_busdma_tag
+argument_list|,
+name|SI_SUB_DRIVERS
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|mv_busdma_tag_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -991,6 +1120,14 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADA38X
 argument_list|)
+comment|/* 	 * Workaround for Marvell Armada38X family HW issue 	 * between Cortex-A9 CPUs and on-chip devices that may 	 * cause hang on heavy load. 	 * To avoid that, map all registers including PCIe IO 	 * as strongly ordered instead of device memory. 	 */
+name|pmap_remap_vm_attr
+argument_list|(
+name|PTE2_ATTR_DEVICE
+argument_list|,
+name|PTE2_ATTR_SO
+argument_list|)
+expr_stmt|;
 comment|/* Set IO Sync Barrier bit for all Mbus devices */
 if|if
 condition|(

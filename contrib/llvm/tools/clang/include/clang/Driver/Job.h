@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -200,6 +206,17 @@ name|std
 operator|::
 name|string
 name|ResponseFileFlag
+expr_stmt|;
+comment|/// See Command::setEnvironment
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|Environment
 expr_stmt|;
 comment|/// When a response file is needed, we try to put most arguments in an
 comment|/// exclusive file, while others remains as regular command line arguments.
@@ -378,6 +395,24 @@ name|List
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Sets the environment to be used by the new process.
+comment|/// \param NewEnvironment An array of environment variables.
+comment|/// \remark If the environment remains unset, then the environment
+comment|///         from the parent process will be used.
+name|void
+name|setEnvironment
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|NewEnvironment
+argument_list|)
+decl_stmt|;
 specifier|const
 name|char
 operator|*

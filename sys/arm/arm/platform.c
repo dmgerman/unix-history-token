@@ -230,12 +230,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTIDELAY
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|delay_func
@@ -243,10 +237,20 @@ name|platform_delay
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+name|platform_t
+name|platform_obj
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|plat_obj
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -449,9 +453,6 @@ name|plat_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTIDELAY
 comment|/* Set a default delay function */
 name|arm_set_delay
 argument_list|(
@@ -460,8 +461,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|PLATFORM_ATTACH
 argument_list|(
 name|plat_obj
@@ -566,12 +565,6 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTIDELAY
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -623,22 +616,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|SMP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|PLATFORM_SMP
 argument_list|)
 end_if
 

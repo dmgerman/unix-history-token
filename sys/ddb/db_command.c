@@ -1651,6 +1651,13 @@ name|command
 modifier|*
 name|cmd
 decl_stmt|;
+name|int
+name|have_subcommands
+decl_stmt|;
+name|have_subcommands
+operator|=
+literal|0
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|cmd
@@ -1660,6 +1667,17 @@ argument_list|,
 argument|next
 argument_list|)
 block|{
+if|if
+condition|(
+name|cmd
+operator|->
+name|more
+operator|!=
+name|NULL
+condition|)
+name|have_subcommands
+operator|++
+expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"%-16s"
@@ -1674,6 +1692,53 @@ argument_list|(
 literal|16
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|have_subcommands
+operator|>
+literal|0
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"\nThe following have subcommands; append \"help\" "
+literal|"to list (e.g. \"show help\"):\n"
+argument_list|)
+expr_stmt|;
+name|LIST_FOREACH
+argument_list|(
+argument|cmd
+argument_list|,
+argument|table
+argument_list|,
+argument|next
+argument_list|)
+block|{
+if|if
+condition|(
+name|cmd
+operator|->
+name|more
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|db_printf
+argument_list|(
+literal|"%-16s"
+argument_list|,
+name|cmd
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|db_end_line
+argument_list|(
+literal|16
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -1812,7 +1877,8 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"?\n"
+literal|"Unrecognized input; use \"help\" "
+literal|"to list available commands\n"
 argument_list|)
 expr_stmt|;
 name|db_flush_lex
@@ -1850,7 +1916,8 @@ name|CMD_NONE
 case|:
 name|db_printf
 argument_list|(
-literal|"No such command\n"
+literal|"No such command; use \"help\" "
+literal|"to list available commands\n"
 argument_list|)
 expr_stmt|;
 name|db_flush_lex
@@ -1872,6 +1939,32 @@ return|return;
 case|case
 name|CMD_HELP
 case|:
+if|if
+condition|(
+name|cmd_table
+operator|==
+operator|&
+name|db_cmd_table
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"This is ddb(4), the kernel debugger; "
+literal|"see http://man.freebsd.org/ddb/4 for help.\n"
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"Use \"bt\" for backtrace, \"dump\" for "
+literal|"kernel core dump, \"reset\" to reboot.\n"
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"Available commands:\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|db_cmd_list
 argument_list|(
 name|cmd_table
@@ -1909,6 +2002,12 @@ operator|!=
 name|tIDENT
 condition|)
 block|{
+name|db_printf
+argument_list|(
+literal|"Subcommand required; "
+literal|"available subcommands:\n"
+argument_list|)
+expr_stmt|;
 name|db_cmd_list
 argument_list|(
 name|cmd_table
@@ -2745,7 +2844,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"?\n"
+literal|"Mismatched parens\n"
 argument_list|)
 expr_stmt|;
 name|db_flush_lex

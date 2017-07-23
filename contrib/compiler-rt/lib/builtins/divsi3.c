@@ -13,15 +13,6 @@ begin_comment
 comment|/* Returns: a / b */
 end_comment
 
-begin_macro
-name|ARM_EABI_FNALIAS
-argument_list|(
-argument|idiv
-argument_list|,
-argument|divsi3
-argument_list|)
-end_macro
-
 begin_function
 name|COMPILER_RT_ABI
 name|si_int
@@ -116,6 +107,43 @@ return|;
 comment|/* negate if s_a == -1 */
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
+begin_function
+name|AEABI_RTABI
+name|si_int
+name|__aeabi_idiv
+parameter_list|(
+name|si_int
+name|a
+parameter_list|,
+name|si_int
+name|b
+parameter_list|)
+block|{
+return|return
+name|__divsi3
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

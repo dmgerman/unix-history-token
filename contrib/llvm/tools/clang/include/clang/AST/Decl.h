@@ -1172,43 +1172,6 @@ name|Decl
 operator|::
 name|setModulePrivate
 block|;
-comment|/// \brief Determine whether this declaration is hidden from name lookup.
-name|bool
-name|isHidden
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Hidden
-return|;
-block|}
-comment|/// \brief Set whether this declaration is hidden from name lookup.
-name|void
-name|setHidden
-argument_list|(
-argument|bool Hide
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-operator|!
-name|Hide
-operator|||
-name|isFromASTFile
-argument_list|()
-operator|||
-name|hasLocalOwningModuleStorage
-argument_list|()
-operator|)
-operator|&&
-literal|"declaration with no owning module can't be hidden"
-argument_list|)
-block|;
-name|Hidden
-operator|=
-name|Hide
-block|;   }
 comment|/// \brief Determine whether this declaration is a C++ class member.
 name|bool
 name|isCXXClassMember
@@ -3283,7 +3246,7 @@ literal|1
 block|;
 comment|/// Describes the kind of default argument for this parameter. By default
 comment|/// this is none. If this is normal, then the default argument is stored in
-comment|/// the \c VarDecl initalizer expression unless we were unble to parse
+comment|/// the \c VarDecl initializer expression unless we were unable to parse
 comment|/// (even an invalid) expression for the default argument.
 name|unsigned
 name|DefaultArgKind
@@ -3325,6 +3288,10 @@ block|{
 name|friend
 name|class
 name|VarDecl
+block|;
+name|friend
+name|class
+name|ImplicitParamDecl
 block|;
 name|friend
 name|class
@@ -3403,6 +3370,13 @@ name|unsigned
 name|PreviousDeclInSameBlockScope
 operator|:
 literal|1
+block|;
+comment|/// Defines kind of the ImplicitParamDecl: 'this', 'self', 'vtt', '_cmd' or
+comment|/// something else.
+name|unsigned
+name|ImplicitParamKind
+operator|:
+literal|3
 block|;   }
 block|;
 expr|union
@@ -3726,6 +3700,26 @@ argument_list|()
 operator|==
 name|SC_None
 condition|)
+block|{
+comment|// OpenCL v1.2 s6.5.3: The __constant or constant address space name is
+comment|// used to describe variables allocated in global memory and which are
+comment|// accessed inside a kernel(s) as read-only variables. As such, variables
+comment|// in constant address space cannot have local storage.
+if|if
+condition|(
+name|getType
+argument_list|()
+operator|.
+name|getAddressSpace
+argument_list|()
+operator|==
+name|LangAS
+operator|::
+name|opencl_constant
+condition|)
+return|return
+name|false
+return|;
 comment|// Second check is for C++11 [dcl.stc]p4.
 return|return
 operator|!
@@ -3737,6 +3731,7 @@ argument_list|()
 operator|==
 name|TSCS_unspecified
 return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -5831,6 +5826,35 @@ name|override
 block|;
 name|public
 operator|:
+comment|/// Defines the kind of the implicit parameter: is this an implicit parameter
+comment|/// with pointer to 'this', 'self', '_cmd', virtual table pointers, captured
+comment|/// context or something else.
+expr|enum
+name|ImplicitParamKind
+operator|:
+name|unsigned
+block|{
+name|ObjCSelf
+block|,
+comment|/// Parameter for Objective-C 'self' argument
+name|ObjCCmd
+block|,
+comment|/// Parameter for Objective-C '_cmd' argument
+name|CXXThis
+block|,
+comment|/// Parameter for C++ 'this' argument
+name|CXXVTT
+block|,
+comment|/// Parameter for C++ virtual table pointers
+name|CapturedContext
+block|,
+comment|/// Parameter for captured context
+name|Other
+block|,
+comment|/// Other implicit parameter
+block|}
+block|;
+comment|/// Create implicit parameter.
 specifier|static
 name|ImplicitParamDecl
 operator|*
@@ -5845,6 +5869,20 @@ argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|ImplicitParamKind ParamKind
+argument_list|)
+block|;
+specifier|static
+name|ImplicitParamDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ImplicitParamKind ParamKind
 argument_list|)
 block|;
 specifier|static
@@ -5868,6 +5906,8 @@ argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|QualType Type
+argument_list|,
+argument|ImplicitParamKind ParamKind
 argument_list|)
 operator|:
 name|VarDecl
@@ -5886,15 +5926,81 @@ argument|Id
 argument_list|,
 argument|Type
 argument_list|,
-comment|/*tinfo*/
+comment|/*TInfo=*/
 argument|nullptr
 argument_list|,
 argument|SC_None
 argument_list|)
 block|{
+name|NonParmVarDeclBits
+operator|.
+name|ImplicitParamKind
+operator|=
+name|ParamKind
+block|;
 name|setImplicit
 argument_list|()
 block|;   }
+name|ImplicitParamDecl
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|QualType Type
+argument_list|,
+argument|ImplicitParamKind ParamKind
+argument_list|)
+operator|:
+name|VarDecl
+argument_list|(
+argument|ImplicitParam
+argument_list|,
+argument|C
+argument_list|,
+comment|/*DC=*/
+argument|nullptr
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+comment|/*Id=*/
+argument|nullptr
+argument_list|,
+argument|Type
+argument_list|,
+comment|/*TInfo=*/
+argument|nullptr
+argument_list|,
+argument|SC_None
+argument_list|)
+block|{
+name|NonParmVarDeclBits
+operator|.
+name|ImplicitParamKind
+operator|=
+name|ParamKind
+block|;
+name|setImplicit
+argument_list|()
+block|;   }
+comment|/// Returns the implicit parameter kind.
+name|ImplicitParamKind
+name|getParameterKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ImplicitParamKind
+operator|>
+operator|(
+name|NonParmVarDeclBits
+operator|.
+name|ImplicitParamKind
+operator|)
+return|;
+block|}
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -6851,7 +6957,7 @@ comment|// NOTE: VC++ packs bitfields poorly if the types differ.
 name|unsigned
 name|SClass
 range|:
-literal|2
+literal|3
 decl_stmt|;
 name|unsigned
 name|IsInline
@@ -6863,6 +6969,17 @@ name|IsInlineSpecified
 range|:
 literal|1
 decl_stmt|;
+name|protected
+label|:
+comment|// This is shared by CXXConstructorDecl, CXXConversionDecl, and
+comment|// CXXDeductionGuideDecl.
+name|unsigned
+name|IsExplicitSpecified
+range|:
+literal|1
+decl_stmt|;
+name|private
+label|:
 name|unsigned
 name|IsVirtualAsWritten
 range|:
@@ -6918,6 +7035,11 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|IsConstexpr
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|InstantiationIsPending
 range|:
 literal|1
 decl_stmt|;
@@ -7153,6 +7275,11 @@ argument_list|(
 name|isInlineSpecified
 argument_list|)
 operator|,
+name|IsExplicitSpecified
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|IsVirtualAsWritten
 argument_list|(
 name|false
@@ -7206,6 +7333,11 @@ operator|,
 name|IsConstexpr
 argument_list|(
 name|isConstexprSpecified
+argument_list|)
+operator|,
+name|InstantiationIsPending
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|UsesSEHTry
@@ -7681,12 +7813,12 @@ name|Definition
 argument_list|)
 return|;
 block|}
-comment|/// isThisDeclarationADefinition - Returns whether this specific
-comment|/// declaration of the function is also a definition. This does not
-comment|/// determine whether the function has been defined (e.g., in a
-comment|/// previous definition); for that information, use isDefined. Note
-comment|/// that this returns false for a defaulted function unless that function
-comment|/// has been implicitly defined (possibly as deleted).
+comment|/// Returns whether this specific declaration of the function is also a
+comment|/// definition that does not contain uninstantiated body.
+comment|///
+comment|/// This does not determine whether the function has been defined (e.g., in a
+comment|/// previous definition); for that information, use isDefined.
+comment|///
 name|bool
 name|isThisDeclarationADefinition
 argument_list|()
@@ -7695,9 +7827,16 @@ block|{
 return|return
 name|IsDeleted
 operator|||
+name|IsDefaulted
+operator|||
 name|Body
 operator|||
 name|IsLateTemplateParsed
+operator|||
+name|WillHaveBody
+operator|||
+name|hasDefiningAttr
+argument_list|()
 return|;
 block|}
 comment|/// doesThisDeclarationHaveABody - Returns whether this specific
@@ -7976,6 +8115,33 @@ operator|=
 name|IC
 expr_stmt|;
 block|}
+comment|/// \brief Whether the instantiation of this function is pending.
+comment|/// This bit is set when the decision to instantiate this function is made
+comment|/// and unset if and when the function body is created. That leaves out
+comment|/// cases where instantiation did not happen because the template definition
+comment|/// was not seen in this TU. This bit remains set in those cases, under the
+comment|/// assumption that the instantiation will happen in some other TU.
+name|bool
+name|instantiationIsPending
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InstantiationIsPending
+return|;
+block|}
+name|void
+name|setInstantiationIsPending
+parameter_list|(
+name|bool
+name|IC
+parameter_list|)
+block|{
+name|InstantiationIsPending
+operator|=
+name|IC
+expr_stmt|;
+block|}
 comment|/// \brief Indicates the function uses __try.
 name|bool
 name|usesSEHTry
@@ -8102,11 +8268,20 @@ comment|///    void operator delete[](void *, const std::nothrow_t&) noexcept;
 comment|/// These functions have special behavior under C++1y [expr.new]:
 comment|///    An implementation is allowed to omit a call to a replaceable global
 comment|///    allocation function. [...]
+comment|///
+comment|/// If this function is an aligned allocation/deallocation function, return
+comment|/// true through IsAligned.
 name|bool
 name|isReplaceableGlobalAllocationFunction
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|bool
+operator|*
+name|IsAligned
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Compute the language linkage.
 name|LanguageLinkage
 name|getLanguageLinkage
@@ -8556,10 +8731,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Returns true if this function or its return type has the
-comment|/// warn_unused_result attribute. If the return type has the attribute and
-comment|/// this function is a method of the return type's class, then false will be
-comment|/// returned to avoid spurious warnings on member methods such as assignment
-comment|/// operators.
+comment|/// warn_unused_result attribute.
 name|bool
 name|hasUnusedResultAttr
 argument_list|()
@@ -9679,7 +9851,7 @@ name|VLAType
 parameter_list|)
 function_decl|;
 comment|/// getParent - Returns the parent of this field declaration, which
-comment|/// is the struct in which this method is defined.
+comment|/// is the struct in which this field is defined.
 specifier|const
 name|RecordDecl
 operator|*
@@ -10599,6 +10771,15 @@ operator|*
 operator|>
 name|MaybeModedTInfo
 block|;
+comment|// FIXME: This can be packed into the bitfields in Decl.
+comment|/// If 0, we have not computed IsTransparentTag.
+comment|/// Otherwise, IsTransparentTag is (CacheIsTransparentTag>> 1).
+name|mutable
+name|unsigned
+name|CacheIsTransparentTag
+operator|:
+literal|2
+block|;
 name|protected
 operator|:
 name|TypedefNameDecl
@@ -10638,7 +10819,12 @@ argument_list|)
 block|,
 name|MaybeModedTInfo
 argument_list|(
-argument|TInfo
+name|TInfo
+argument_list|)
+block|,
+name|CacheIsTransparentTag
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 typedef|typedef
@@ -10957,11 +11143,44 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Determines if this typedef shares a name and spelling location with its
+end_comment
+
+begin_comment
+comment|/// underlying tag type, as is the case with the NS_ENUM macro.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isTransparentTag
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|CacheIsTransparentTag
+condition|)
+return|return
+name|CacheIsTransparentTag
+operator|&
+literal|0x2
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|isTransparentTagSlow
+argument_list|()
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|// Implement isa/cast/dyncast/etc.
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|bool
 name|classof
 parameter_list|(
@@ -11003,6 +11222,19 @@ name|lastTypedefName
 return|;
 block|}
 end_function
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_expr_stmt
+name|bool
+name|isTransparentTagSlow
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|};
@@ -13425,6 +13657,54 @@ name|isFixed
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Returns true if this enum is either annotated with
+end_comment
+
+begin_comment
+comment|/// enum_extensibility(closed) or isn't annotated with enum_extensibility.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isClosed
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Returns true if this enum is annotated with flag_enum and isn't annotated
+end_comment
+
+begin_comment
+comment|/// with enum_extensibility(open).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isClosedFlag
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Returns true if this enum is annotated with neither flag_enum nor
+end_comment
+
+begin_comment
+comment|/// enum_extensibility(open).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isClosedNonFlag
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment

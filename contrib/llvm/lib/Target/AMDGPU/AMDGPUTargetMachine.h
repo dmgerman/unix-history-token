@@ -143,6 +143,9 @@ block|;
 name|AMDGPUIntrinsicInfo
 name|IntrinsicInfo
 block|;
+name|AMDGPUAS
+name|AS
+block|;
 name|StringRef
 name|getGPUName
 argument_list|(
@@ -234,17 +237,72 @@ name|get
 argument_list|()
 return|;
 block|}
+name|AMDGPUAS
+name|getAMDGPUAS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AS
+return|;
+block|}
 name|void
-name|addEarlyAsPossiblePasses
+name|adjustPassManager
 argument_list|(
-argument|PassManagerBase&PM
+argument|PassManagerBuilder&
 argument_list|)
 name|override
-block|; }
-decl_stmt|;
+block|;
+comment|/// Get the integer value of a null pointer in the given address space.
+name|uint64_t
+name|getNullPointerValue
+argument_list|(
+argument|unsigned AddrSpace
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|AddrSpace
+operator|==
+name|AS
+operator|.
+name|LOCAL_ADDRESS
+operator|||
+name|AddrSpace
+operator|==
+name|AS
+operator|.
+name|REGION_ADDRESS
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|0
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// R600 Target Machine (R600 -> Cayman)
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_decl_stmt
 name|class
 name|R600TargetMachine
 name|final
@@ -303,15 +361,26 @@ argument|const Function&
 argument_list|)
 specifier|const
 name|override
-block|; }
-decl_stmt|;
+block|;
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|// GCN Target Machine (SI+)
 comment|//===----------------------------------------------------------------------===//
 name|class
 name|GCNTargetMachine
 name|final
-range|:
+operator|:
 name|public
 name|AMDGPUTargetMachine
 block|{
@@ -367,8 +436,7 @@ argument_list|)
 specifier|const
 name|override
 block|; }
-decl_stmt|;
-block|}
+block|;  }
 end_decl_stmt
 
 begin_comment

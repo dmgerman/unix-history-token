@@ -109,9 +109,6 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
-name|MachineFunctionInitializer
-decl_stmt|;
-name|class
 name|Mangler
 decl_stmt|;
 name|class
@@ -134,6 +131,9 @@ name|MCSymbol
 decl_stmt|;
 name|class
 name|raw_pwrite_stream
+decl_stmt|;
+name|class
+name|PassManagerBuilder
 decl_stmt|;
 name|class
 name|Target
@@ -716,14 +716,13 @@ name|TargetIRAnalysis
 name|getTargetIRAnalysis
 parameter_list|()
 function_decl|;
-comment|/// Add target-specific function passes that should be run as early as
-comment|/// possible in the optimization pipeline.  Most TargetMachines have no such
-comment|/// passes.
+comment|/// Allow the target to modify the pass manager, e.g. by calling
+comment|/// PassManagerBuilder::addExtension.
 name|virtual
 name|void
-name|addEarlyAsPossiblePasses
+name|adjustPassManager
 parameter_list|(
-name|PassManagerBase
+name|PassManagerBuilder
 modifier|&
 parameter_list|)
 block|{}
@@ -779,12 +778,6 @@ name|nullptr
 parameter_list|,
 name|AnalysisID
 comment|/*StopAfter*/
-init|=
-name|nullptr
-parameter_list|,
-name|MachineFunctionInitializer
-modifier|*
-comment|/*MFInitializer*/
 init|=
 name|nullptr
 parameter_list|)
@@ -915,7 +908,7 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
-argument|TargetOptions Options
+argument|const TargetOptions&Options
 argument_list|,
 argument|Reloc::Model RM
 argument_list|,
@@ -971,8 +964,6 @@ argument_list|,
 argument|AnalysisID StopBefore = nullptr
 argument_list|,
 argument|AnalysisID StopAfter = nullptr
-argument_list|,
-argument|MachineFunctionInitializer *MFInitializer = nullptr
 argument_list|)
 name|override
 block|;
@@ -992,6 +983,34 @@ argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
 name|override
+block|;
+comment|/// Returns true if the target is expected to pass all machine verifier
+comment|/// checks. This is a stopgap measure to fix targets one by one. We will
+comment|/// remove this at some point and always enable the verifier when
+comment|/// EXPENSIVE_CHECKS is enabled.
+name|virtual
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// \brief Adds an AsmPrinter pass to the pipeline that prints assembly or
+comment|/// machine code from the MI representation.
+name|bool
+name|addAsmPrinter
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|,
+argument|raw_pwrite_stream&Out
+argument_list|,
+argument|CodeGenFileType FileTYpe
+argument_list|,
+argument|MCContext&Context
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

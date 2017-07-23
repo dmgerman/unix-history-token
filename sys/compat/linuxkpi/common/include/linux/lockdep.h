@@ -46,6 +46,38 @@ name|name
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|lockdep_assert_held
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|sx_assert(&(m)->sx, SA_XLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|lockdep_assert_held_once
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|sx_assert(&(m)->sx, SA_XLOCKED | SA_NOTRECURSED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|lockdep_is_held
+parameter_list|(
+name|m
+parameter_list|)
+value|(sx_xholder(&(m)->sx) == curthread)
+end_define
+
 begin_endif
 endif|#
 directive|endif

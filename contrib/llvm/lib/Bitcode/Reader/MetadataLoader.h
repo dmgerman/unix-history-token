@@ -281,6 +281,15 @@ name|unsigned
 name|N
 parameter_list|)
 function_decl|;
+comment|/// Perform bitcode upgrades on llvm.dbg.* calls.
+name|void
+name|upgradeDebugIntrinsics
+parameter_list|(
+name|Function
+modifier|&
+name|F
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

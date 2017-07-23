@@ -74,7 +74,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineInstrBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_define
@@ -94,7 +124,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|SystemZTargetMachine
+name|SystemZSubtarget
 decl_stmt|;
 name|namespace
 name|SystemZII
@@ -403,9 +433,6 @@ enum|;
 block|}
 comment|// end namespace SystemZII
 name|class
-name|SystemZSubtarget
-decl_stmt|;
-name|class
 name|SystemZInstrInfo
 range|:
 name|public
@@ -512,7 +539,7 @@ argument|MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
-name|void
+name|MachineInstrBuilder
 name|emitGRX32Move
 argument_list|(
 argument|MachineBasicBlock&MBB
@@ -530,6 +557,8 @@ argument_list|,
 argument|unsigned Size
 argument_list|,
 argument|bool KillSrc
+argument_list|,
+argument|bool UndefSrc
 argument_list|)
 specifier|const
 block|;
@@ -744,7 +773,7 @@ block|;
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr&MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -1080,6 +1109,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_SYSTEMZ_SYSTEMZINSTRINFO_H
+end_comment
 
 end_unit
 

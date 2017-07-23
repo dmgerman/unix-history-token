@@ -1198,11 +1198,9 @@ label|:
 name|unsigned
 name|EnumValue
 decl_stmt|;
-name|std
-operator|::
-name|string
+name|StringRef
 name|Namespace
-expr_stmt|;
+decl_stmt|;
 name|SmallVector
 operator|<
 name|MVT
@@ -1225,11 +1223,9 @@ decl_stmt|;
 name|bool
 name|Allocatable
 decl_stmt|;
-name|std
-operator|::
-name|string
+name|StringRef
 name|AltOrderSelect
-expr_stmt|;
+decl_stmt|;
 name|uint8_t
 name|AllocationPriority
 decl_stmt|;
@@ -1288,6 +1284,40 @@ specifier|const
 block|{
 return|return
 name|VTs
+return|;
+block|}
+name|bool
+name|hasValueType
+argument_list|(
+name|MVT
+operator|::
+name|SimpleValueType
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|std
+operator|::
+name|find
+argument_list|(
+name|VTs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|VTs
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|VT
+argument_list|)
+operator|!=
+name|VTs
+operator|.
+name|end
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -1394,6 +1424,34 @@ name|SubIdx
 argument_list|)
 return|;
 block|}
+comment|/// Find largest subclass where all registers have SubIdx subregisters in
+comment|/// SubRegClass and the largest subregister class that contains those
+comment|/// subregisters without (as far as possible) also containing additional registers.
+comment|///
+comment|/// This can be used to find a suitable pair of classes for subregister copies.
+comment|/// \return std::pair<SubClass, SubRegClass> where SubClass is a SubClass is
+comment|/// a class where every register has SubIdx and SubRegClass is a class where
+comment|/// every register is covered by the SubIdx subregister of SubClass.
+name|Optional
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|CodeGenRegisterClass
+operator|*
+operator|,
+name|CodeGenRegisterClass
+operator|*
+operator|>>
+name|getMatchingSubClassWithSubRegs
+argument_list|(
+argument|CodeGenRegBank&RegBank
+argument_list|,
+argument|const CodeGenSubRegIndex *SubIdx
+argument_list|)
+specifier|const
+expr_stmt|;
 name|void
 name|setSubClassWithSubReg
 parameter_list|(
@@ -1431,7 +1489,7 @@ name|Out
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// addSuperRegClass - Add a class containing only SudIdx super-registers.
+comment|// addSuperRegClass - Add a class containing only SubIdx super-registers.
 name|void
 name|addSuperRegClass
 parameter_list|(
@@ -2835,6 +2893,16 @@ comment|// LaneMask is contained in CoveringLanes will be completely covered by
 comment|// another sub-register with the same or larger lane mask.
 name|LaneBitmask
 name|CoveringLanes
+decl_stmt|;
+comment|// Helper function for printing debug information. Handles artificial
+comment|// (non-native) reg units.
+name|void
+name|printRegUnitName
+argument_list|(
+name|unsigned
+name|Unit
+argument_list|)
+decl|const
 decl_stmt|;
 block|}
 end_decl_stmt

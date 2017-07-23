@@ -118,6 +118,9 @@ block|{
 name|class
 name|CodeGenModule
 decl_stmt|;
+name|class
+name|CGDebugInfo
+decl_stmt|;
 block|}
 comment|/// The primary public interface to the Clang code generator.
 comment|///
@@ -169,6 +172,14 @@ operator|::
 name|Module
 operator|*
 name|ReleaseModule
+argument_list|()
+block|;
+comment|/// Return debug info code generator.
+name|CodeGen
+operator|::
+name|CGDebugInfo
+operator|*
+name|getCGDebugInfo
 argument_list|()
 block|;
 comment|/// Given a mangled name, return a declaration which mangles that way

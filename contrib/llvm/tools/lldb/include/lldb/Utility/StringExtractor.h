@@ -44,26 +44,6 @@ name|utility_StringExtractor_h_
 end_define
 
 begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
-begin_comment
 comment|// Other libraries and framework includes
 end_comment
 
@@ -81,6 +61,28 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -506,6 +508,17 @@ name|str
 argument_list|,
 name|char
 name|terminator
+argument_list|)
+decl_stmt|;
+name|bool
+name|ConsumeFront
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|StringRef
+operator|&
+name|str
 argument_list|)
 decl_stmt|;
 specifier|const

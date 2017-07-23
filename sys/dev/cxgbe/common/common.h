@@ -1366,6 +1366,27 @@ begin_struct
 struct|struct
 name|link_config
 block|{
+comment|/* OS-specific code owns all the requested_* fields */
+name|unsigned
+name|char
+name|requested_aneg
+decl_stmt|;
+comment|/* link aneg user has requested */
+name|unsigned
+name|char
+name|requested_fc
+decl_stmt|;
+comment|/* flow control user has requested */
+name|unsigned
+name|char
+name|requested_fec
+decl_stmt|;
+comment|/* FEC user has requested */
+name|unsigned
+name|int
+name|requested_speed
+decl_stmt|;
+comment|/* speed user has requested */
 name|unsigned
 name|short
 name|supported
@@ -1383,19 +1404,9 @@ decl_stmt|;
 comment|/* peer advertised capabilities */
 name|unsigned
 name|int
-name|requested_speed
-decl_stmt|;
-comment|/* speed user has requested */
-name|unsigned
-name|int
 name|speed
 decl_stmt|;
 comment|/* actual link speed */
-name|unsigned
-name|char
-name|requested_fc
-decl_stmt|;
-comment|/* flow control user has requested */
 name|unsigned
 name|char
 name|fc
@@ -1403,19 +1414,9 @@ decl_stmt|;
 comment|/* actual link flow control */
 name|unsigned
 name|char
-name|requested_fec
-decl_stmt|;
-comment|/* FEC user has requested */
-name|unsigned
-name|char
 name|fec
 decl_stmt|;
 comment|/* actual FEC */
-name|unsigned
-name|char
-name|autoneg
-decl_stmt|;
-comment|/* autonegotiating? */
 name|unsigned
 name|char
 name|link_ok
@@ -5306,6 +5307,18 @@ parameter_list|(
 name|unsigned
 name|char
 name|link_down_rc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_update_port_info
+parameter_list|(
+name|struct
+name|port_info
+modifier|*
+name|pi
 parameter_list|)
 function_decl|;
 end_function_decl

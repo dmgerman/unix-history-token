@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- llvm/Target/TargetSubtargetInfo.h - Target Information ----*- C++ -*-==//
+comment|//===- llvm/Target/TargetSubtargetInfo.h - Target Information ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SchedulerRegistry.h"
+file|"llvm/CodeGen/ScheduleDAGMutation.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ScheduleDAGMutation.h"
+file|"llvm/CodeGen/SchedulerRegistry.h"
 end_include
 
 begin_include
@@ -127,6 +127,12 @@ name|class
 name|CallLowering
 decl_stmt|;
 name|class
+name|InstrItineraryData
+decl_stmt|;
+struct_decl|struct
+name|InstrStage
+struct_decl|;
+name|class
 name|InstructionSelector
 decl_stmt|;
 name|class
@@ -135,6 +141,18 @@ decl_stmt|;
 name|class
 name|MachineInstr
 decl_stmt|;
+struct_decl|struct
+name|MachineSchedPolicy
+struct_decl|;
+struct_decl|struct
+name|MCReadAdvanceEntry
+struct_decl|;
+struct_decl|struct
+name|MCWriteLatencyEntry
+struct_decl|;
+struct_decl|struct
+name|MCWriteProcResEntry
+struct_decl|;
 name|class
 name|RegisterBankInfo
 decl_stmt|;
@@ -144,6 +162,12 @@ decl_stmt|;
 name|class
 name|SelectionDAGTargetInfo
 decl_stmt|;
+struct_decl|struct
+name|SubtargetFeatureKV
+struct_decl|;
+struct_decl|struct
+name|SubtargetInfoKV
+struct_decl|;
 name|class
 name|SUnit
 decl_stmt|;
@@ -165,9 +189,9 @@ decl_stmt|;
 name|class
 name|TargetSchedModel
 decl_stmt|;
-struct_decl|struct
-name|MachineSchedPolicy
-struct_decl|;
+name|class
+name|Triple
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetSubtargetInfo - Generic base class for all target subtargets.  All
@@ -214,43 +238,46 @@ name|public
 operator|:
 comment|// AntiDepBreakMode - Type of anti-dependence breaking that should
 comment|// be performed before post-RA scheduling.
-typedef|typedef
-enum|enum
+name|using
+name|AntiDepBreakMode
+operator|=
+expr|enum
 block|{
 name|ANTIDEP_NONE
 block|,
 name|ANTIDEP_CRITICAL
 block|,
 name|ANTIDEP_ALL
-decl|}
-name|AntiDepBreakMode
-empty_stmt|;
-typedef|typedef
+block|}
+block|;
+name|using
+name|RegClassVector
+operator|=
 name|SmallVectorImpl
 operator|<
 specifier|const
 name|TargetRegisterClass
 operator|*
 operator|>
-name|RegClassVector
-expr_stmt|;
+block|;
 name|TargetSubtargetInfo
 argument_list|()
-init|=
+operator|=
 name|delete
-empty_stmt|;
+block|;
 name|TargetSubtargetInfo
 argument_list|(
 specifier|const
 name|TargetSubtargetInfo
 operator|&
 argument_list|)
-init|=
+operator|=
 name|delete
-empty_stmt|;
-name|void
+block|;
+name|TargetSubtargetInfo
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|TargetSubtargetInfo
@@ -259,16 +286,16 @@ operator|)
 operator|=
 name|delete
 block|;
-name|virtual
-decl|~
+operator|~
 name|TargetSubtargetInfo
 argument_list|()
-empty_stmt|;
+name|override
+block|;
 name|virtual
 name|bool
 name|isXRaySupported
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -285,60 +312,60 @@ comment|//
 comment|// N.B. These objects may change during compilation. It's not safe to cache
 comment|// them between functions.
 name|virtual
-decl|const
+specifier|const
 name|TargetInstrInfo
-modifier|*
+operator|*
 name|getInstrInfo
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
 return|;
 block|}
 name|virtual
-decl|const
+specifier|const
 name|TargetFrameLowering
-modifier|*
+operator|*
 name|getFrameLowering
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
 return|;
 block|}
 name|virtual
-decl|const
+specifier|const
 name|TargetLowering
-modifier|*
+operator|*
 name|getTargetLowering
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
 return|;
 block|}
 name|virtual
-decl|const
+specifier|const
 name|SelectionDAGTargetInfo
-modifier|*
+operator|*
 name|getSelectionDAGInfo
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
 return|;
 block|}
 name|virtual
-decl|const
+specifier|const
 name|CallLowering
-modifier|*
+operator|*
 name|getCallLowering
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
@@ -349,12 +376,12 @@ comment|// us do things like a dedicated avx512 selector).  However, we might wa
 comment|// to also specialize selectors by MachineFunction, which would let us be
 comment|// aware of optsize/optnone and such.
 name|virtual
-decl|const
+specifier|const
 name|InstructionSelector
-modifier|*
+operator|*
 name|getInstructionSelector
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
@@ -363,27 +390,25 @@ block|}
 comment|/// Target can subclass this hook to select a different DAG scheduler.
 name|virtual
 name|RegisterScheduler
-decl|::
+operator|::
 name|FunctionPassCtor
 name|getDAGScheduler
 argument_list|(
-name|CodeGenOpt
-operator|::
-name|Level
+argument|CodeGenOpt::Level
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
 return|;
 block|}
 name|virtual
-decl|const
+specifier|const
 name|LegalizerInfo
-modifier|*
+operator|*
 name|getLegalizerInfo
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
@@ -391,14 +416,13 @@ return|;
 block|}
 comment|/// getRegisterInfo - If register information is available, return it.  If
 comment|/// not, return null.
-comment|///
 name|virtual
-decl|const
+specifier|const
 name|TargetRegisterInfo
-modifier|*
+operator|*
 name|getRegisterInfo
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
@@ -407,12 +431,12 @@ block|}
 comment|/// If the information for the register banks is available, return it.
 comment|/// Otherwise return nullptr.
 name|virtual
-decl|const
+specifier|const
 name|RegisterBankInfo
-modifier|*
+operator|*
 name|getRegBankInfo
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
@@ -420,14 +444,13 @@ return|;
 block|}
 comment|/// getInstrItineraryData - Returns instruction itinerary data for the target
 comment|/// or specific subtarget.
-comment|///
 name|virtual
-decl|const
+specifier|const
 name|InstrItineraryData
-modifier|*
+operator|*
 name|getInstrItineraryData
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
@@ -441,20 +464,13 @@ name|virtual
 name|unsigned
 name|resolveSchedClass
 argument_list|(
-name|unsigned
-name|SchedClass
+argument|unsigned SchedClass
 argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
+argument|const MachineInstr *MI
 argument_list|,
-specifier|const
-name|TargetSchedModel
-operator|*
-name|SchedModel
+argument|const TargetSchedModel *SchedModel
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -470,15 +486,26 @@ name|virtual
 name|bool
 name|enableMachineScheduler
 argument_list|()
-decl|const
-empty_stmt|;
+specifier|const
+block|;
+comment|/// \brief Support printing of [latency:throughput] comment in output .S file.
+name|virtual
+name|bool
+name|supportPrintSchedInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief True if the machine scheduler should disable the TLI preference
 comment|/// for preRA scheduling with the source level scheduler.
 name|virtual
 name|bool
 name|enableMachineSchedDefaultSched
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|true
@@ -492,8 +519,8 @@ name|virtual
 name|bool
 name|enableJoinGlobalCopies
 argument_list|()
-decl|const
-empty_stmt|;
+specifier|const
+block|;
 comment|/// True if the subtarget should run a scheduler after register allocation.
 comment|///
 comment|/// By default this queries the PostRAScheduling bit in the scheduling model
@@ -502,15 +529,15 @@ name|virtual
 name|bool
 name|enablePostRAScheduler
 argument_list|()
-decl|const
-empty_stmt|;
+specifier|const
+block|;
 comment|/// \brief True if the subtarget should run the atomic expansion pass.
 name|virtual
 name|bool
 name|enableAtomicExpand
 argument_list|()
-decl|const
-empty_stmt|;
+specifier|const
+block|;
 comment|/// \brief Override generic scheduling policy within a region.
 comment|///
 comment|/// This is a convenient way for targets that don't provide any custom
@@ -519,14 +546,11 @@ comment|/// changes to the generic scheduling policy.
 name|virtual
 name|void
 name|overrideSchedPolicy
-block|(
-name|MachineSchedPolicy
-block|&
-name|Policy
-block|,
-name|unsigned
-name|NumRegionInstrs
-block|)
+argument_list|(
+argument|MachineSchedPolicy&Policy
+argument_list|,
+argument|unsigned NumRegionInstrs
+argument_list|)
 specifier|const
 block|{}
 comment|// \brief Perform target specific adjustments to the latency of a schedule
@@ -620,21 +644,21 @@ argument_list|(
 argument|CodeGenOpt::Level OptLevel
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Enable use of alias analysis during code generation (during MI
 comment|/// scheduling, DAGCombine, etc.).
 name|virtual
 name|bool
 name|useAA
 argument_list|()
-decl|const
-empty_stmt|;
+specifier|const
+block|;
 comment|/// \brief Enable the use of the early if conversion pass.
 name|virtual
 name|bool
 name|enableEarlyIfConversion
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|false
@@ -645,14 +669,14 @@ comment|///
 comment|/// Override to provide custom PBQP constraints.
 name|virtual
 name|std
-decl|::
+operator|::
 name|unique_ptr
-decl|<
+operator|<
 name|PBQPRAConstraint
-decl|>
+operator|>
 name|getCustomPBQPConstraints
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
@@ -665,14 +689,34 @@ name|virtual
 name|bool
 name|enableSubRegLiveness
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|false
 return|;
 block|}
-decl|}
-empty_stmt|;
+comment|/// Returns string representation of scheduler comment
+name|std
+operator|::
+name|string
+name|getSchedInfoStr
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|string
+name|getSchedInfoStr
+argument_list|(
+argument|MCInst const&MCI
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

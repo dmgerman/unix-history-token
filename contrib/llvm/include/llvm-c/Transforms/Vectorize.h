@@ -34,7 +34,7 @@ block|{
 endif|#
 directive|endif
 comment|/**  * @defgroup LLVMCTransformsVectorize Vectorization transformations  * @ingroup LLVMCTransforms  *  * @{  */
-comment|/** See llvm::createBBVectorizePass function. */
+comment|/** DEPRECATED - Use LLVMAddSLPVectorizePass */
 name|void
 name|LLVMAddBBVectorizePass
 parameter_list|(
