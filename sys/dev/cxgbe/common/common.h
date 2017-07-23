@@ -4353,6 +4353,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|t4_fw_forceinstall
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adap
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|fw_data
+parameter_list|,
+name|unsigned
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|t4_fw_initialize
 parameter_list|(
 name|struct
