@@ -363,7 +363,7 @@ condition|(
 name|ps
 operator|.
 name|com_col
-operator|<
+operator|<=
 name|target_col
 condition|)
 name|ps
