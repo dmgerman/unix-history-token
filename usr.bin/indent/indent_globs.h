@@ -1043,12 +1043,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|rparen_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|parser_state
 name|state_stack
