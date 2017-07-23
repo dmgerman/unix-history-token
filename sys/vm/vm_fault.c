@@ -820,11 +820,12 @@ literal|0
 name|vm_page_t
 name|m_super
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
 endif|#
 directive|endif
 name|int
-name|flags
-decl_stmt|,
 name|psind
 decl_stmt|,
 name|rv
