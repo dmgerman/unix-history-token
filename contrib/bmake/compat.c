@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compat.c,v 1.106 2016/08/26 23:28:39 dholland Exp $	*/
+comment|/*	$NetBSD: compat.c,v 1.107 2017/07/20 19:29:54 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: compat.c,v 1.106 2016/08/26 23:28:39 dholland Exp $"
+literal|"$NetBSD: compat.c,v 1.107 2017/07/20 19:29:54 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compat.c,v 1.106 2016/08/26 23:28:39 dholland Exp $"
+literal|"$NetBSD: compat.c,v 1.107 2017/07/20 19:29:54 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -209,6 +209,20 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|pid_t
+name|compatChild
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|compatSigno
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * CompatDeleteTarget -- delete a failed, interrupted, or otherwise  * duffed target if not inhibited by .PRECIOUS.  */
@@ -370,6 +384,28 @@ argument_list|(
 name|signo
 argument_list|)
 expr_stmt|;
+comment|/*      * If there is a child running, pass the signal on      * we will exist after it has exited.      */
+name|compatSigno
+operator|=
+name|signo
+expr_stmt|;
+if|if
+condition|(
+name|compatChild
+operator|>
+literal|0
+condition|)
+block|{
+name|KILLPG
+argument_list|(
+name|compatChild
+argument_list|,
+name|signo
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|bmake_signal
 argument_list|(
 name|signo
@@ -384,6 +420,7 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -990,6 +1027,8 @@ block|}
 endif|#
 directive|endif
 comment|/*      * Fork and execute the single command. If the fork fails, we abort.      */
+name|compatChild
+operator|=
 name|cpid
 operator|=
 name|vFork
@@ -1489,6 +1528,30 @@ argument_list|(
 name|cmdStart
 argument_list|)
 expr_stmt|;
+name|compatChild
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|compatSigno
+condition|)
+block|{
+name|bmake_signal
+argument_list|(
+name|compatSigno
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|kill
+argument_list|(
+name|myPid
+argument_list|,
+name|compatSigno
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|status

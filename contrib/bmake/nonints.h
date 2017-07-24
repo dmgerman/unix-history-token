@@ -752,6 +752,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRLCPY
+end_ifndef
+
+begin_comment
+comment|/* strlcpy.c */
+end_comment
+
+begin_function_decl
+name|size_t
+name|strlcpy
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* suff.c */
 end_comment
