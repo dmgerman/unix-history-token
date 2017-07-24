@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|REDIR_ENTRIES
-value|24
+value|32
 end_define
 
 begin_define
