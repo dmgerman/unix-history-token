@@ -64,7 +64,7 @@ file|"uefi-dplib.h"
 end_include
 
 begin_comment
-comment|/* XXX maybe I sould include the entire DevicePathUtiltiies.c and ifdef out what we don't use */
+comment|/* XXX maybe I should include the entire DevicePathUtiltiies.c and ifdef out what we don't use */
 end_comment
 
 begin_comment
