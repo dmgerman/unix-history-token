@@ -274,6 +274,13 @@ name|VIRTIO_DEV_RANDOM
 value|0x1005
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIRTIO_DEV_CONSOLE
+value|0x1003
+end_define
+
 begin_comment
 comment|/*  * PCI config space constants.  *  * If MSI-X is enabled, the ISR register is generally not used,  * and the configuration vector and queue vector appear at offsets  * 20 and 22 with the remaining configuration registers at 24.  * If MSI-X is not enabled, those two registers disappear and  * the remaining configuration registers start at offset 20.  */
 end_comment
