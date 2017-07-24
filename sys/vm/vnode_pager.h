@@ -146,12 +146,6 @@ name|rtvals
 parameter_list|,
 name|int
 name|written
-parameter_list|,
-name|int
-name|eof
-parameter_list|,
-name|int
-name|lpos
 parameter_list|)
 function_decl|;
 end_function_decl
