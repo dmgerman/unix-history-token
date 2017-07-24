@@ -472,6 +472,7 @@ name|stat_str
 operator|=
 literal|"unknown"
 expr_stmt|;
+break|break;
 block|}
 name|xo_emit_h
 argument_list|(
@@ -1873,7 +1874,7 @@ name|he
 operator|=
 name|nr
 expr_stmt|;
-comment|/* 				 * At this point, we have a partial ordering: 				 *     nw<= hs<= he<= nr 				 * If hs> nw, buf[nw..hs] contains non-zero data. 				 * If he> hs, buf[hs..he] is all zeroes. 				 */
+comment|/* 				 * At this point, we have a partial ordering: 				 *     nw<= hs<= he<= nr 				 * If hs> nw, buf[nw..hs] contains non-zero 				 * data. If he> hs, buf[hs..he] is all zeroes. 				 */
 if|if
 condition|(
 name|hs
@@ -3372,7 +3373,7 @@ operator||
 name|S_IRWXO
 argument_list|)
 expr_stmt|;
-comment|/* Restrict access to the core file.*/
+comment|/* Restrict access to the core file. */
 name|isencrypted
 operator|=
 operator|(
