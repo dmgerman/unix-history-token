@@ -15,6 +15,12 @@ directive|define
 name|_IOAPIC_H_
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|pci_devinst
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Allocate a PCI IRQ from the I/O APIC.  */
 end_comment
@@ -35,7 +41,10 @@ begin_function_decl
 name|int
 name|ioapic_pci_alloc_irq
 parameter_list|(
-name|void
+name|struct
+name|pci_devinst
+modifier|*
+name|pi
 parameter_list|)
 function_decl|;
 end_function_decl

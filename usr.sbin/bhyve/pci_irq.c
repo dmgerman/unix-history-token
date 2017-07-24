@@ -912,11 +912,20 @@ name|int
 name|pirq_alloc_pin
 parameter_list|(
 name|struct
+name|pci_devinst
+modifier|*
+name|pi
+parameter_list|)
+block|{
+name|struct
 name|vmctx
 modifier|*
 name|ctx
-parameter_list|)
-block|{
+init|=
+name|pi
+operator|->
+name|pi_vmctx
+decl_stmt|;
 name|int
 name|best_count
 decl_stmt|,
@@ -932,7 +941,35 @@ name|pirq_cold
 operator|=
 literal|0
 expr_stmt|;
-comment|/* First, find the least-used PIRQ pin. */
+if|if
+condition|(
+name|lpc_bootrom
+argument_list|()
+condition|)
+block|{
+comment|/* For external bootrom use fixed mapping. */
+name|best_pin
+operator|=
+operator|(
+literal|4
+operator|+
+name|pi
+operator|->
+name|pi_slot
+operator|+
+name|pi
+operator|->
+name|pi_lintr
+operator|.
+name|pin
+operator|)
+operator|%
+literal|8
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Find the least-used PIRQ pin. */
 name|best_pin
 operator|=
 literal|0
@@ -988,6 +1025,7 @@ index|]
 operator|.
 name|use_count
 expr_stmt|;
+block|}
 block|}
 block|}
 name|pirqs

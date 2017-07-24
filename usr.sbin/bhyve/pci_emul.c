@@ -7001,7 +7001,9 @@ operator|->
 name|ii_ioapic_irq
 operator|=
 name|ioapic_pci_alloc_irq
-argument_list|()
+argument_list|(
+name|pi
+argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
@@ -7028,8 +7030,6 @@ operator|=
 name|pirq_alloc_pin
 argument_list|(
 name|pi
-operator|->
-name|pi_vmctx
 argument_list|)
 expr_stmt|;
 name|assert
