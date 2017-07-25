@@ -1045,7 +1045,7 @@ argument_list|(
 name|mmcbr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that in principle with an SDHCI-like re-tuning implementation, 	 * the maximum data size can change at runtime due to a device removal/ 	 * insertion that results in switches to/from a transfer mode involving 	 * re-tuning, iff there are multiple devices on a given bus.  Until now 	 * mmc(4) lacks support for rescanning already attached buses, however, 	 * and sdhci(4) has no support for embedded/shared buses in the first 	 * place either. 	 */
+comment|/* 	 * Note that in principle with an SDHCI-like re-tuning implementation, 	 * the maximum data size can change at runtime due to a device removal/ 	 * insertion that results in switches to/from a transfer mode involving 	 * re-tuning, iff there are multiple devices on a given bus.  Until now 	 * mmc(4) lacks support for rescanning already attached buses, however, 	 * and sdhci(4) to date has no support for shared buses in the first 	 * place either. 	 */
 name|sc
 operator|->
 name|max_data
