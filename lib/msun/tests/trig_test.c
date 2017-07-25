@@ -513,24 +513,6 @@ block|,
 literal|1.6061597222105160737e+4326L
 block|, 	}
 decl_stmt|;
-elif|#
-directive|elif
-name|LDBL_MANT_DIG
-operator|==
-literal|113
-specifier|static
-specifier|const
-name|long
-name|double
-name|ld_pi_odd
-index|[]
-init|=
-block|{
-comment|/* XXX */
-block|}
-decl_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -1011,8 +993,9 @@ block|}
 if|#
 directive|if
 name|LDBL_MANT_DIG
-operator|>
-literal|53
+operator|==
+literal|64
+comment|/* XXX: || LDBL_MANT_DIG == 113 */
 for|for
 control|(
 name|i
