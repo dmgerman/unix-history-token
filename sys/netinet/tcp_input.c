@@ -2242,13 +2242,11 @@ name|snd_una
 operator|)
 operator|/
 literal|2
-operator|/
-name|maxseg
 argument_list|,
 literal|2
-argument_list|)
 operator|*
 name|maxseg
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
