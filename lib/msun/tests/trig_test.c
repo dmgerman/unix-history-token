@@ -513,6 +513,8 @@ block|,
 literal|1.6061597222105160737e+4326L
 block|, 	}
 decl_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
