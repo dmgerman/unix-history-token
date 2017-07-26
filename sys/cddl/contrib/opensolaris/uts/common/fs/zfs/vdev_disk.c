@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Joyent, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2016 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Joyent, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -3021,25 +3021,6 @@ condition|)
 block|{
 comment|/* 				 * The ioctl will be done asychronously, 				 * and will call vdev_disk_ioctl_done() 				 * upon completion. 				 */
 return|return;
-block|}
-if|if
-condition|(
-name|error
-operator|==
-name|ENOTSUP
-operator|||
-name|error
-operator|==
-name|ENOTTY
-condition|)
-block|{
-comment|/* 				 * If we get ENOTSUP or ENOTTY, we know that 				 * no future attempts will ever succeed. 				 * In this case we set a persistent bit so 				 * that we don't bother with the ioctl in the 				 * future. 				 */
-name|vd
-operator|->
-name|vdev_nowritecache
-operator|=
-name|B_TRUE
-expr_stmt|;
 block|}
 name|zio
 operator|->
