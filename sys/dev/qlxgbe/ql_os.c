@@ -1434,7 +1434,7 @@ operator|->
 name|watchdog_ticks
 operator|++
 operator|%
-literal|1000
+literal|500
 expr_stmt|;
 name|callout_reset
 argument_list|(
