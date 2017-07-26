@@ -1287,13 +1287,14 @@ decl_stmt|,
 name|dbstart
 decl_stmt|,
 name|dbend
-decl_stmt|,
-name|i
 decl_stmt|;
+name|unsigned
 name|int
 name|epbs
 decl_stmt|,
 name|shift
+decl_stmt|,
+name|i
 decl_stmt|;
 comment|/* 	 * There is a small possibility that this block will not be cached: 	 *   1 - if level> 1 and there are no children with level<= 1 	 *   2 - if this block was evicted since we read it from 	 *	 dmu_tx_hold_free(). 	 */
 if|if
@@ -1350,6 +1351,15 @@ operator|->
 name|dn_indblkshift
 operator|-
 name|SPA_BLKPTRSHIFT
+expr_stmt|;
+name|ASSERT3U
+argument_list|(
+name|epbs
+argument_list|,
+operator|<
+argument_list|,
+literal|31
+argument_list|)
 expr_stmt|;
 name|shift
 operator|=
@@ -1485,15 +1495,16 @@ else|else
 block|{
 for|for
 control|(
-name|i
-operator|=
+name|uint64_t
+name|id
+init|=
 name|start
 init|;
-name|i
+name|id
 operator|<=
 name|end
 condition|;
-name|i
+name|id
 operator|++
 operator|,
 name|bp
@@ -1530,7 +1541,7 @@ name|db_level
 operator|-
 literal|1
 argument_list|,
-name|i
+name|id
 argument_list|,
 name|TRUE
 argument_list|,
@@ -1629,7 +1640,17 @@ operator|<<
 name|epbs
 condition|)
 block|{
-comment|/* didn't find any non-holes */
+comment|/* 		 * We only found holes. Grab the rwlock to prevent 		 * anybody from reading the blocks we're about to 		 * zero out. 		 */
+name|rw_enter
+argument_list|(
+operator|&
+name|dn
+operator|->
+name|dn_struct_rwlock
+argument_list|,
+name|RW_WRITER
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 name|db
@@ -1643,6 +1664,14 @@ operator|->
 name|db
 operator|.
 name|db_size
+argument_list|)
+expr_stmt|;
+name|rw_exit
+argument_list|(
+operator|&
+name|dn
+operator|->
+name|dn_struct_rwlock
 argument_list|)
 expr_stmt|;
 name|free_blocks
