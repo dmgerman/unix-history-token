@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2016 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -287,6 +287,12 @@ index|]
 decl_stmt|;
 name|uint64_t
 name|dp_dirty_total
+decl_stmt|;
+name|uint64_t
+name|dp_long_free_dirty_pertxg
+index|[
+name|TXG_SIZE
+index|]
 decl_stmt|;
 name|uint64_t
 name|dp_mos_used_delta

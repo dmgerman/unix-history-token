@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -2533,6 +2533,57 @@ name|TXG_MASK
 index|]
 argument_list|,
 name|txg
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Update the long range free counter after 	 * we're done syncing user data 	 */
+name|mutex_enter
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|dp_lock
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|spa_sync_pass
+argument_list|(
+name|dp
+operator|->
+name|dp_spa
+argument_list|)
+operator|==
+literal|1
+operator|||
+name|dp
+operator|->
+name|dp_long_free_dirty_pertxg
+index|[
+name|txg
+operator|&
+name|TXG_MASK
+index|]
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|dp_long_free_dirty_pertxg
+index|[
+name|txg
+operator|&
+name|TXG_MASK
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|dp_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * After the data blocks have been written (ensured by the zio_wait() 	 * above), update the user/group space accounting. 	 */
