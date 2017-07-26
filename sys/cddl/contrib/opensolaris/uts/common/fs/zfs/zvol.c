@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Copyright (c) 2006-2010 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Portions Copyright 2010 Robert Milkowski  *  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Copyright (c) 2006-2010 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Portions Copyright 2010 Robert Milkowski  *  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -714,6 +714,18 @@ name|B_TRUE
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * If true, unmaps requested as synchronous are executed synchronously,  * otherwise all unmaps are asynchronous.  */
+end_comment
+
+begin_decl_stmt
+name|boolean_t
+name|zvol_unmap_sync_enabled
+init|=
+name|B_FALSE
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -737,6 +749,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable UNMAP functionality"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_vol
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|unmap_sync_enabled
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zvol_unmap_sync_enabled
+argument_list|,
+literal|0
+argument_list|,
+literal|"UNMAPs requested as sync are executed synchronously"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10882,16 +10915,18 @@ argument_list|(
 name|rl
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the write-cache is disabled, 'sync' property 		 * is set to 'always', or if the caller is asking for 		 * a synchronous free, commit this operation to the zil. 		 * This will sync any previous uncommitted writes to the 		 * zvol object. 		 * Can be overridden by the zvol_unmap_sync_enabled tunable. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|==
 literal|0
-condition|)
-block|{
-comment|/* 			 * If the write-cache is disabled or 'sync' property 			 * is set to 'always' then treat this as a synchronous 			 * operation (i.e. commit to zil). 			 */
-if|if
-condition|(
+operator|)
+operator|&&
+name|zvol_unmap_sync_enabled
+operator|&&
+operator|(
 operator|!
 operator|(
 name|zv
@@ -10910,7 +10945,17 @@ name|os_sync
 operator|==
 name|ZFS_SYNC_ALWAYS
 operator|)
+operator|||
+operator|(
+name|df
+operator|.
+name|df_flags
+operator|&
+name|DF_WAIT_SYNC
+operator|)
+operator|)
 condition|)
+block|{
 name|zil_commit
 argument_list|(
 name|zv
@@ -10920,29 +10965,6 @@ argument_list|,
 name|ZVOL_OBJ
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If the caller really wants synchronous writes, and 			 * can't wait for them, don't return until the write 			 * is done. 			 */
-if|if
-condition|(
-name|df
-operator|.
-name|df_flags
-operator|&
-name|DF_WAIT_SYNC
-condition|)
-block|{
-name|txg_wait_synced
-argument_list|(
-name|dmu_objset_pool
-argument_list|(
-name|zv
-operator|->
-name|zv_objset
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
