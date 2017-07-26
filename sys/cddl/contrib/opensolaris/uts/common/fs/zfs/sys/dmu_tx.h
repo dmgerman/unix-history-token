@@ -357,12 +357,9 @@ name|dmu_tx_t
 modifier|*
 name|tx
 parameter_list|,
-name|objset_t
+name|dnode_t
 modifier|*
-name|os
-parameter_list|,
-name|uint64_t
-name|object
+name|dn
 parameter_list|)
 function_decl|;
 name|void
