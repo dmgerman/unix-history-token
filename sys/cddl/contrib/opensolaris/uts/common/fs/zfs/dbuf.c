@@ -2435,8 +2435,6 @@ argument_list|,
 name|db_cache_link
 argument_list|)
 argument_list|,
-name|zfs_arc_num_sublists_per_state
-argument_list|,
 name|dbuf_cache_multilist_index_func
 argument_list|)
 expr_stmt|;

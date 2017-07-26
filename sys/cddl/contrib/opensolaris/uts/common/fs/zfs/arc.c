@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 by Saso Kiselkov. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright (c) 2014 by Saso Kiselkov. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -260,18 +260,6 @@ name|int
 name|zfs_arc_evict_batch_limit
 init|=
 literal|10
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * The number of sublists used for each of the arc state lists. If this  * is not set to a suitable value by the user, it will be configured to  * the number of CPUs on the system in arc_init().  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|zfs_arc_num_sublists_per_state
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -24145,8 +24133,6 @@ operator|.
 name|b_arc_node
 argument_list|)
 argument_list|,
-name|zfs_arc_num_sublists_per_state
-argument_list|,
 name|arc_state_multilist_index_func
 argument_list|)
 expr_stmt|;
@@ -24174,8 +24160,6 @@ operator|.
 name|b_arc_node
 argument_list|)
 argument_list|,
-name|zfs_arc_num_sublists_per_state
-argument_list|,
 name|arc_state_multilist_index_func
 argument_list|)
 expr_stmt|;
@@ -24203,8 +24187,6 @@ operator|.
 name|b_arc_node
 argument_list|)
 argument_list|,
-name|zfs_arc_num_sublists_per_state
-argument_list|,
 name|arc_state_multilist_index_func
 argument_list|)
 expr_stmt|;
@@ -24231,8 +24213,6 @@ name|b_l1hdr
 operator|.
 name|b_arc_node
 argument_list|)
-argument_list|,
-name|zfs_arc_num_sublists_per_state
 argument_list|,
 name|arc_state_multilist_index_func
 argument_list|)
@@ -24261,8 +24241,6 @@ operator|.
 name|b_arc_node
 argument_list|)
 argument_list|,
-name|zfs_arc_num_sublists_per_state
-argument_list|,
 name|arc_state_multilist_index_func
 argument_list|)
 expr_stmt|;
@@ -24290,8 +24268,6 @@ operator|.
 name|b_arc_node
 argument_list|)
 argument_list|,
-name|zfs_arc_num_sublists_per_state
-argument_list|,
 name|arc_state_multilist_index_func
 argument_list|)
 expr_stmt|;
@@ -24318,8 +24294,6 @@ name|b_l1hdr
 operator|.
 name|b_arc_node
 argument_list|)
-argument_list|,
-name|zfs_arc_num_sublists_per_state
 argument_list|,
 name|arc_state_multilist_index_func
 argument_list|)
@@ -24348,8 +24322,6 @@ operator|.
 name|b_arc_node
 argument_list|)
 argument_list|,
-name|zfs_arc_num_sublists_per_state
-argument_list|,
 name|arc_state_multilist_index_func
 argument_list|)
 expr_stmt|;
@@ -24377,8 +24349,6 @@ operator|.
 name|b_arc_node
 argument_list|)
 argument_list|,
-name|zfs_arc_num_sublists_per_state
-argument_list|,
 name|arc_state_multilist_index_func
 argument_list|)
 expr_stmt|;
@@ -24405,8 +24375,6 @@ name|b_l1hdr
 operator|.
 name|b_arc_node
 argument_list|)
-argument_list|,
-name|zfs_arc_num_sublists_per_state
 argument_list|,
 name|arc_state_multilist_index_func
 argument_list|)
@@ -25237,21 +25205,6 @@ condition|)
 name|arc_p_min_shift
 operator|=
 name|zfs_arc_p_min_shift
-expr_stmt|;
-if|if
-condition|(
-name|zfs_arc_num_sublists_per_state
-operator|<
-literal|1
-condition|)
-name|zfs_arc_num_sublists_per_state
-operator|=
-name|MAX
-argument_list|(
-name|max_ncpus
-argument_list|,
-literal|1
-argument_list|)
 expr_stmt|;
 comment|/* if kmem_flags are set, lets try to use less memory */
 if|if
