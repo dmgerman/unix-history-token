@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1916,6 +1916,21 @@ name|tx
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|VERIFY3U
+argument_list|(
+name|dmu_tx_get_txg
+argument_list|(
+name|tx
+argument_list|)
+argument_list|,
+operator|<=
+argument_list|,
+name|spa_final_dirty_txg
+argument_list|(
+name|spa
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|dmu_object_info_from_db
 argument_list|(
 name|sm
@@ -1956,8 +1971,8 @@ condition|)
 block|{
 name|zfs_dbgmsg
 argument_list|(
-literal|"txg %llu, spa %s, reallocating: "
-literal|"old bonus %u, old blocksz %u"
+literal|"txg %llu, spa %s, sm %p, reallocating "
+literal|"object[%llu]: old bonus %u, old blocksz %u"
 argument_list|,
 name|dmu_tx_get_txg
 argument_list|(
@@ -1968,6 +1983,12 @@ name|spa_name
 argument_list|(
 name|spa
 argument_list|)
+argument_list|,
+name|sm
+argument_list|,
+name|sm
+operator|->
+name|sm_object
 argument_list|,
 name|doi
 operator|.
