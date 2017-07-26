@@ -1288,7 +1288,7 @@ name|IWM_NUM_PHY_CTX
 index|]
 decl_stmt|;
 name|struct
-name|iwm_notif_statistics
+name|iwm_notif_statistics_v10
 name|sc_stats
 decl_stmt|;
 name|int
