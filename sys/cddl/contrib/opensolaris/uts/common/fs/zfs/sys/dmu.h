@@ -1810,14 +1810,6 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
-comment|/*  * Tells if the given dbuf is freeable.  */
-name|boolean_t
-name|dmu_buf_freeable
-parameter_list|(
-name|dmu_buf_t
-modifier|*
-parameter_list|)
-function_decl|;
 comment|/*  * You must create a transaction, then hold the objects which you will  * (or might) modify as part of this transaction.  Then you must assign  * the transaction to a transaction group.  Once the transaction has  * been assigned, you can modify buffers which belong to held objects as  * part of this transaction.  You can't modify buffers before the  * transaction has been assigned; you can't modify buffers which don't  * belong to objects which this transaction holds; you can't hold  * objects once the transaction has been assigned.  You may hold an  * object which you are going to free (with dmu_object_free()), but you  * don't have to.  *  * You can abort the transaction before it has been assigned.  *  * Note that you may hold buffers (with dmu_buf_hold) at any time,  * regardless of transaction state.  */
 define|#
 directive|define
