@@ -204,46 +204,6 @@ define|#
 directive|define
 name|ZIO_DEDUPDITTO_MIN
 value|100
-enum|enum
-name|zio_compress
-block|{
-name|ZIO_COMPRESS_INHERIT
-init|=
-literal|0
-block|,
-name|ZIO_COMPRESS_ON
-block|,
-name|ZIO_COMPRESS_OFF
-block|,
-name|ZIO_COMPRESS_LZJB
-block|,
-name|ZIO_COMPRESS_EMPTY
-block|,
-name|ZIO_COMPRESS_GZIP_1
-block|,
-name|ZIO_COMPRESS_GZIP_2
-block|,
-name|ZIO_COMPRESS_GZIP_3
-block|,
-name|ZIO_COMPRESS_GZIP_4
-block|,
-name|ZIO_COMPRESS_GZIP_5
-block|,
-name|ZIO_COMPRESS_GZIP_6
-block|,
-name|ZIO_COMPRESS_GZIP_7
-block|,
-name|ZIO_COMPRESS_GZIP_8
-block|,
-name|ZIO_COMPRESS_GZIP_9
-block|,
-name|ZIO_COMPRESS_ZLE
-block|,
-name|ZIO_COMPRESS_LZ4
-block|,
-name|ZIO_COMPRESS_FUNCTIONS
-block|}
-enum|;
 comment|/*  * The number of "legacy" compression functions which can be set on individual  * objects.  */
 define|#
 directive|define
@@ -1101,6 +1061,10 @@ decl_stmt|;
 name|uint64_t
 name|io_orig_size
 decl_stmt|;
+comment|/* io_lsize != io_orig_size iff this is a raw write */
+name|uint64_t
+name|io_lsize
+decl_stmt|;
 comment|/* Stuff for the vdev stack */
 name|vdev_t
 modifier|*
@@ -1378,6 +1342,9 @@ name|data
 parameter_list|,
 name|uint64_t
 name|size
+parameter_list|,
+name|uint64_t
+name|psize
 parameter_list|,
 specifier|const
 name|zio_prop_t

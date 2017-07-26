@@ -230,6 +230,12 @@ init|=
 literal|1
 operator|<<
 literal|1
+block|,
+name|LZC_SEND_FLAG_COMPRESS
+init|=
+literal|1
+operator|<<
+literal|2
 block|}
 enum|;
 name|int
@@ -280,6 +286,9 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|enum
+name|lzc_send_flags
 parameter_list|,
 name|uint64_t
 modifier|*

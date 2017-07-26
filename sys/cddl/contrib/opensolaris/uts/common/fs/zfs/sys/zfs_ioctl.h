@@ -166,7 +166,7 @@ name|DMU_BACKUP_FEATURE_EMBED_DATA
 value|(1<< 16)
 define|#
 directive|define
-name|DMU_BACKUP_FEATURE_EMBED_DATA_LZ4
+name|DMU_BACKUP_FEATURE_LZ4
 value|(1<< 17)
 comment|/* flag #18 is reserved for a Delphix feature */
 define|#
@@ -177,11 +177,16 @@ define|#
 directive|define
 name|DMU_BACKUP_FEATURE_RESUMING
 value|(1<< 20)
+comment|/* flag #21 is reserved for a Delphix feature */
+define|#
+directive|define
+name|DMU_BACKUP_FEATURE_COMPRESSED
+value|(1<< 22)
 comment|/*  * Mask of all supported backup features  */
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_MASK
-value|(DMU_BACKUP_FEATURE_DEDUP | \     DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL | \     DMU_BACKUP_FEATURE_EMBED_DATA | DMU_BACKUP_FEATURE_EMBED_DATA_LZ4 | \     DMU_BACKUP_FEATURE_RESUMING | \     DMU_BACKUP_FEATURE_LARGE_BLOCKS)
+value|(DMU_BACKUP_FEATURE_DEDUP | \     DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL | \     DMU_BACKUP_FEATURE_EMBED_DATA | DMU_BACKUP_FEATURE_LZ4 | \     DMU_BACKUP_FEATURE_RESUMING | \     DMU_BACKUP_FEATURE_LARGE_BLOCKS | \     DMU_BACKUP_FEATURE_COMPRESSED)
 comment|/* Are all features in the given flag word currently supported? */
 define|#
 directive|define
@@ -231,7 +236,55 @@ parameter_list|(
 name|flags
 parameter_list|)
 value|((flags)& DRR_CHECKSUM_DEDUP)
-comment|/*  * zfs ioctl command structure  */
+comment|/* deal with compressed drr_write replay records */
+define|#
+directive|define
+name|DRR_WRITE_COMPRESSED
+parameter_list|(
+name|drrw
+parameter_list|)
+value|((drrw)->drr_compressiontype != 0)
+define|#
+directive|define
+name|DRR_WRITE_PAYLOAD_SIZE
+parameter_list|(
+name|drrw
+parameter_list|)
+define|\
+value|(DRR_WRITE_COMPRESSED(drrw) ? (drrw)->drr_compressed_size : \ 	(drrw)->drr_logical_size)
+typedef|typedef
+struct|struct
+name|dmu_replay_record
+block|{
+enum|enum
+block|{
+name|DRR_BEGIN
+block|,
+name|DRR_OBJECT
+block|,
+name|DRR_FREEOBJECTS
+block|,
+name|DRR_WRITE
+block|,
+name|DRR_FREE
+block|,
+name|DRR_END
+block|,
+name|DRR_WRITE_BYREF
+block|,
+name|DRR_SPILL
+block|,
+name|DRR_WRITE_EMBEDDED
+block|,
+name|DRR_NUMTYPES
+block|}
+name|drr_type
+enum|;
+name|uint32_t
+name|drr_payloadlen
+decl_stmt|;
+union|union
+block|{
 struct|struct
 name|drr_begin
 block|{
@@ -264,6 +317,7 @@ name|MAXNAMELEN
 index|]
 decl_stmt|;
 block|}
+name|drr_begin
 struct|;
 struct|struct
 name|drr_end
@@ -275,6 +329,7 @@ name|uint64_t
 name|drr_toguid
 decl_stmt|;
 block|}
+name|drr_end
 struct|;
 struct|struct
 name|drr_object
@@ -311,6 +366,7 @@ name|drr_toguid
 decl_stmt|;
 comment|/* bonus content follows */
 block|}
+name|drr_object
 struct|;
 struct|struct
 name|drr_freeobjects
@@ -325,6 +381,7 @@ name|uint64_t
 name|drr_toguid
 decl_stmt|;
 block|}
+name|drr_freeobjects
 struct|;
 struct|struct
 name|drr_write
@@ -342,7 +399,7 @@ name|uint64_t
 name|drr_offset
 decl_stmt|;
 name|uint64_t
-name|drr_length
+name|drr_logical_size
 decl_stmt|;
 name|uint64_t
 name|drr_toguid
@@ -354,17 +411,25 @@ name|uint8_t
 name|drr_checksumflags
 decl_stmt|;
 name|uint8_t
+name|drr_compressiontype
+decl_stmt|;
+name|uint8_t
 name|drr_pad2
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
+comment|/* deduplication key */
 name|ddt_key_t
 name|drr_key
 decl_stmt|;
-comment|/* deduplication key */
+comment|/* only nonzero if drr_compressiontype is not 0 */
+name|uint64_t
+name|drr_compressed_size
+decl_stmt|;
 comment|/* content follows */
 block|}
+name|drr_write
 struct|;
 struct|struct
 name|drr_free
@@ -382,6 +447,7 @@ name|uint64_t
 name|drr_toguid
 decl_stmt|;
 block|}
+name|drr_free
 struct|;
 struct|struct
 name|drr_write_byref
@@ -427,6 +493,7 @@ name|drr_key
 decl_stmt|;
 comment|/* deduplication key */
 block|}
+name|drr_write_byref
 struct|;
 struct|struct
 name|drr_spill
@@ -449,72 +516,8 @@ decl_stmt|;
 comment|/* needed for crypto */
 comment|/* spill data follows */
 block|}
+name|drr_spill
 struct|;
-typedef|typedef
-struct|struct
-name|dmu_replay_record
-block|{
-enum|enum
-block|{
-name|DRR_BEGIN
-block|,
-name|DRR_OBJECT
-block|,
-name|DRR_FREEOBJECTS
-block|,
-name|DRR_WRITE
-block|,
-name|DRR_FREE
-block|,
-name|DRR_END
-block|,
-name|DRR_WRITE_BYREF
-block|,
-name|DRR_SPILL
-block|,
-name|DRR_WRITE_EMBEDDED
-block|,
-name|DRR_NUMTYPES
-block|}
-name|drr_type
-enum|;
-name|uint32_t
-name|drr_payloadlen
-decl_stmt|;
-union|union
-block|{
-name|struct
-name|drr_begin
-name|drr_begin
-decl_stmt|;
-name|struct
-name|drr_end
-name|drr_end
-decl_stmt|;
-name|struct
-name|drr_object
-name|drr_object
-decl_stmt|;
-name|struct
-name|drr_freeobjects
-name|drr_freeobjects
-decl_stmt|;
-name|struct
-name|drr_write
-name|drr_write
-decl_stmt|;
-name|struct
-name|drr_free
-name|drr_free
-decl_stmt|;
-name|struct
-name|drr_write_byref
-name|drr_write_byref
-decl_stmt|;
-name|struct
-name|drr_spill
-name|drr_spill
-decl_stmt|;
 struct|struct
 name|drr_write_embedded
 block|{

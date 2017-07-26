@@ -294,7 +294,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 	 * Returns 0 on success (decompression function returned non-negative) 	 * and non-zero on failure (decompression function returned negative. 	 */
+comment|/* 	 * Returns 0 on success (decompression function returned non-negative) 	 * and non-zero on failure (decompression function returned negative). 	 */
 return|return
 operator|(
 name|LZ4_uncompress_unknownOutputSize
