@@ -2427,11 +2427,15 @@ parameter_list|)
 function_decl|;
 name|void
 name|xuio_stat_wbuf_copied
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 name|void
 name|xuio_stat_wbuf_nocopy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 specifier|extern
 name|boolean_t
