@@ -1563,6 +1563,7 @@ operator|||
 operator|!
 name|nfs_keep_dirty_on_error
 condition|)
+block|{
 name|vnode_pager_undirty_pages
 argument_list|(
 name|pages
@@ -1574,8 +1575,19 @@ operator|-
 name|uio
 operator|.
 name|uio_resid
+argument_list|,
+name|np
+operator|->
+name|n_size
+operator|-
+name|offset
+argument_list|,
+name|npages
+operator|*
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|rtvals
