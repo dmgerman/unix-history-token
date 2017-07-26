@@ -918,9 +918,9 @@ literal|0
 init|;
 name|j
 operator|<
-name|ic
+name|ss
 operator|->
-name|ic_nchans
+name|ss_last
 operator|&&
 name|nchan
 operator|<
@@ -936,20 +936,24 @@ control|)
 block|{
 name|c
 operator|=
-operator|&
-name|ic
+name|ss
 operator|->
-name|ic_channels
+name|ss_chans
 index|[
 name|j
 index|]
 expr_stmt|;
-comment|/* For 2GHz, only populate 11b channels */
-comment|/* For 5GHz, only populate 11a channels */
 comment|/* 		 * Catch other channels, in case we have 900MHz channels or 		 * something in the chanlist. 		 */
 if|if
 condition|(
-name|iwm_mvm_scan_skip_channel
+operator|!
+name|IEEE80211_IS_CHAN_2GHZ
+argument_list|(
+name|c
+argument_list|)
+operator|&&
+operator|!
+name|IEEE80211_IS_CHAN_5GHZ
 argument_list|(
 name|c
 argument_list|)
@@ -1130,6 +1134,15 @@ operator|->
 name|sc_ic
 decl_stmt|;
 name|struct
+name|ieee80211_scan_state
+modifier|*
+name|ss
+init|=
+name|ic
+operator|->
+name|ic_scan
+decl_stmt|;
+name|struct
 name|ieee80211_channel
 modifier|*
 name|c
@@ -1150,9 +1163,9 @@ literal|0
 init|;
 name|j
 operator|<
-name|ic
+name|ss
 operator|->
-name|ic_nchans
+name|ss_last
 operator|&&
 name|nchan
 operator|<
@@ -1168,20 +1181,24 @@ control|)
 block|{
 name|c
 operator|=
-operator|&
-name|ic
+name|ss
 operator|->
-name|ic_channels
+name|ss_chans
 index|[
 name|j
 index|]
 expr_stmt|;
-comment|/* For 2GHz, only populate 11b channels */
-comment|/* For 5GHz, only populate 11a channels */
 comment|/* 		 * Catch other channels, in case we have 900MHz channels or 		 * something in the chanlist. 		 */
 if|if
 condition|(
-name|iwm_mvm_scan_skip_channel
+operator|!
+name|IEEE80211_IS_CHAN_2GHZ
+argument_list|(
+name|c
+argument_list|)
+operator|&&
+operator|!
+name|IEEE80211_IS_CHAN_5GHZ
 argument_list|(
 name|c
 argument_list|)
@@ -3139,12 +3156,13 @@ name|flags
 operator|=
 name|iwm_mvm_scan_rxon_flags
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_ic
 operator|.
-name|ic_channels
+name|ic_scan
+operator|->
+name|ss_chans
 index|[
 literal|0
 index|]
