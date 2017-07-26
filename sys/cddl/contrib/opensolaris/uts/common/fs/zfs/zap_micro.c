@@ -2092,7 +2092,9 @@ name|zap
 operator|->
 name|zap_dbu
 argument_list|,
-name|zap_evict
+name|zap_evict_sync
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|zap
@@ -4003,7 +4005,7 @@ end_function
 
 begin_function
 name|void
-name|zap_evict
+name|zap_evict_sync
 parameter_list|(
 name|void
 modifier|*

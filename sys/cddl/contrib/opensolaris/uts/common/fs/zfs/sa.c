@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 iXsystems, Inc  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 iXsystems, Inc  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -6638,7 +6638,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|sa_evict
+name|sa_evict_sync
 parameter_list|(
 name|void
 modifier|*
@@ -7068,7 +7068,15 @@ name|handle
 operator|->
 name|sa_dbu
 operator|.
-name|dbu_evict_func
+name|dbu_evict_func_sync
+operator|=
+name|NULL
+expr_stmt|;
+name|handle
+operator|->
+name|sa_dbu
+operator|.
+name|dbu_evict_func_async
 operator|=
 name|NULL
 expr_stmt|;
@@ -7131,7 +7139,9 @@ name|handle
 operator|->
 name|sa_dbu
 argument_list|,
-name|sa_evict
+name|sa_evict_sync
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

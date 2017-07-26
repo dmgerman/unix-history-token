@@ -216,9 +216,17 @@ name|zap
 operator|->
 name|zap_dbu
 operator|.
-name|dbu_evict_func
+name|dbu_evict_func_sync
 operator|=
-name|zap_evict
+name|zap_evict_sync
+expr_stmt|;
+name|zap
+operator|->
+name|zap_dbu
+operator|.
+name|dbu_evict_func_async
+operator|=
+name|NULL
 expr_stmt|;
 name|mutex_init
 argument_list|(
@@ -2042,7 +2050,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|zap_leaf_pageout
+name|zap_leaf_evict_sync
 parameter_list|(
 name|void
 modifier|*
@@ -2202,7 +2210,9 @@ name|l
 operator|->
 name|l_dbu
 argument_list|,
-name|zap_leaf_pageout
+name|zap_leaf_evict_sync
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|l
@@ -2456,7 +2466,9 @@ name|l
 operator|->
 name|l_dbu
 argument_list|,
-name|zap_leaf_pageout
+name|zap_leaf_evict_sync
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|l
@@ -2492,7 +2504,7 @@ name|NULL
 condition|)
 block|{
 comment|/* someone else set it first */
-name|zap_leaf_pageout
+name|zap_leaf_evict_sync
 argument_list|(
 operator|&
 name|l
