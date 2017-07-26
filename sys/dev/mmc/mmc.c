@@ -11482,7 +11482,6 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|device_t
-operator|*
 argument_list|)
 operator|*
 name|sc
@@ -11682,7 +11681,6 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|device_t
-operator|*
 argument_list|)
 operator|*
 name|sc
