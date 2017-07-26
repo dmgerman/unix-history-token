@@ -398,7 +398,7 @@ begin_define
 define|#
 directive|define
 name|QLA_WATCHDOG_CALLOUT_TICKS
-value|1
+value|2
 end_define
 
 begin_typedef
