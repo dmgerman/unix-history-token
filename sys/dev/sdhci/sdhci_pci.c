@@ -382,8 +382,6 @@ literal|0xffff
 block|,
 literal|"Intel Bay Trail eMMC 4.5 Controller"
 block|,
-name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
-operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
 operator||
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
@@ -414,8 +412,6 @@ literal|0xffff
 block|,
 literal|"Intel Bay Trail eMMC 4.5 Controller"
 block|,
-name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
-operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
 operator||
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
@@ -434,8 +430,6 @@ literal|0xffff
 block|,
 literal|"Intel Braswell eMMC 4.5.1 Controller"
 block|,
-name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
-operator||
 name|SDHCI_QUIRK_DATA_TIMEOUT_1MHZ
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
@@ -486,8 +480,6 @@ block|,
 name|SDHCI_QUIRK_BROKEN_DMA
 operator||
 comment|/* APL18 erratum */
-name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
-operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
 operator||
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
