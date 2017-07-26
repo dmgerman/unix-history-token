@@ -5664,6 +5664,9 @@ name|uint32_t
 name|health_count
 decl_stmt|;
 name|uint32_t
+name|hbeat_failure
+decl_stmt|;
+name|uint32_t
 name|max_tx_segs
 decl_stmt|;
 name|uint32_t
