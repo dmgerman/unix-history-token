@@ -234,14 +234,18 @@ name|off_t
 name|freefiles
 decl_stmt|;
 comment|/* free file entries to leave */
-name|int
-name|freefilepc
-decl_stmt|;
-comment|/* free file % */
 name|off_t
 name|freeblocks
 decl_stmt|;
 comment|/* free blocks to leave */
+name|off_t
+name|roundup
+decl_stmt|;
+comment|/* round image size up to this value */
+name|int
+name|freefilepc
+decl_stmt|;
+comment|/* free file % */
 name|int
 name|freeblockpc
 decl_stmt|;
@@ -258,10 +262,6 @@ name|int
 name|sparse
 decl_stmt|;
 comment|/* sparse image, don't fill it with zeros */
-name|off_t
-name|roundup
-decl_stmt|;
-comment|/* round image size up to this value */
 name|void
 modifier|*
 name|fs_specific
