@@ -1849,6 +1849,8 @@ name|vd
 operator|->
 name|vdev_ms_list
 argument_list|,
+name|spa
+argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
@@ -1864,6 +1866,8 @@ operator|&
 name|vd
 operator|->
 name|vdev_dtl_list
+argument_list|,
+name|spa
 argument_list|,
 name|offsetof
 argument_list|(

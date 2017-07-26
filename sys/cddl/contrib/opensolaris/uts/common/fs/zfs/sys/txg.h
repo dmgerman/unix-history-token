@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -125,6 +125,10 @@ name|tl_lock
 decl_stmt|;
 name|size_t
 name|tl_offset
+decl_stmt|;
+name|spa_t
+modifier|*
+name|tl_spa
 decl_stmt|;
 name|txg_node_t
 modifier|*
@@ -306,6 +310,18 @@ modifier|*
 name|dp
 parameter_list|)
 function_decl|;
+specifier|extern
+name|void
+name|txg_verify
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|uint64_t
+name|txg
+parameter_list|)
+function_decl|;
 comment|/*  * Per-txg object lists.  */
 define|#
 directive|define
@@ -321,6 +337,10 @@ parameter_list|(
 name|txg_list_t
 modifier|*
 name|tl
+parameter_list|,
+name|spa_t
+modifier|*
+name|spa
 parameter_list|,
 name|size_t
 name|offset
