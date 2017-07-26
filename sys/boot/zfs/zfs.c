@@ -4061,6 +4061,10 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|uint64_t
+name|value
+name|__unused
 parameter_list|)
 block|{
 comment|/* Skip special datasets that start with a $ character */
