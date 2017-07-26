@@ -8236,6 +8236,11 @@ decl_stmt|;
 name|uint64_t
 name|dc_ddobj
 decl_stmt|;
+name|char
+modifier|*
+name|dc_ddname
+decl_stmt|;
+comment|/* last component of ddobj's name */
 name|int
 function_decl|(
 modifier|*
@@ -8290,10 +8295,6 @@ name|dcp
 operator|->
 name|dc_dp
 decl_stmt|;
-name|dmu_objset_find_ctx_t
-modifier|*
-name|child_dcp
-decl_stmt|;
 name|dsl_dir_t
 modifier|*
 name|dd
@@ -8330,6 +8331,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+comment|/* 	 * Note: passing the name (dc_ddname) here is optional, but it 	 * improves performance because we don't need to call 	 * zap_value_search() to determine the name. 	 */
 name|err
 operator|=
 name|dsl_dir_hold_obj
@@ -8340,7 +8342,9 @@ name|dcp
 operator|->
 name|dc_ddobj
 argument_list|,
-name|NULL
+name|dcp
+operator|->
+name|dc_ddname
 argument_list|,
 name|FTAG
 argument_list|,
@@ -8476,8 +8480,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|dmu_objset_find_ctx_t
+modifier|*
 name|child_dcp
-operator|=
+init|=
 name|kmem_alloc
 argument_list|(
 sizeof|sizeof
@@ -8488,7 +8494,7 @@ argument_list|)
 argument_list|,
 name|KM_SLEEP
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 operator|*
 name|child_dcp
 operator|=
@@ -8502,6 +8508,17 @@ operator|=
 name|attr
 operator|->
 name|za_first_integer
+expr_stmt|;
+name|child_dcp
+operator|->
+name|dc_ddname
+operator|=
+name|spa_strdup
+argument_list|(
+name|attr
+operator|->
+name|za_name
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8715,13 +8732,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|dsl_dir_rele
-argument_list|(
-name|dd
-argument_list|,
-name|FTAG
-argument_list|)
-expr_stmt|;
 name|kmem_free
 argument_list|(
 name|attr
@@ -8738,9 +8748,18 @@ name|err
 operator|!=
 literal|0
 condition|)
+block|{
+name|dsl_dir_rele
+argument_list|(
+name|dd
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* 	 * Apply to self. 	 */
 name|err
 operator|=
@@ -8754,6 +8773,14 @@ name|FTAG
 argument_list|,
 operator|&
 name|ds
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Note: we hold the dir while calling dsl_dataset_hold_obj() so 	 * that the dir will remain cached, and we won't have to re-instantiate 	 * it (which could be expensive due to finding its name via 	 * zap_value_search()). 	 */
+name|dsl_dir_rele
+argument_list|(
+name|dd
+argument_list|,
+name|FTAG
 argument_list|)
 expr_stmt|;
 if|if
@@ -8828,6 +8855,21 @@ name|dc_error_lock
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dcp
+operator|->
+name|dc_ddname
+operator|!=
+name|NULL
+condition|)
+name|spa_strfree
+argument_list|(
+name|dcp
+operator|->
+name|dc_ddname
+argument_list|)
+expr_stmt|;
 name|kmem_free
 argument_list|(
 name|dcp
@@ -8988,6 +9030,12 @@ operator|->
 name|dc_ddobj
 operator|=
 name|ddobj
+expr_stmt|;
+name|dcp
+operator|->
+name|dc_ddname
+operator|=
+name|NULL
 expr_stmt|;
 name|dcp
 operator|->
