@@ -10872,7 +10872,7 @@ argument_list|,
 name|ZFS_ROOT_OBJ
 argument_list|,
 operator|&
-name|rootnum
+name|objnum
 argument_list|)
 expr_stmt|;
 if|if
