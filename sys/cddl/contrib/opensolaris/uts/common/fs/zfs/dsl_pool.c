@@ -448,7 +448,7 @@ name|sysctl_zfs_delay_min_dirty_percent
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"The limit of outstanding dirty data before transations are delayed"
+literal|"The limit of outstanding dirty data before transactions are delayed"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
