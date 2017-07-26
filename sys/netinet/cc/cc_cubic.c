@@ -961,6 +961,7 @@ argument_list|)
 operator|>=
 literal|2
 condition|)
+block|{
 name|cubic_data
 operator|->
 name|num_cong_events
@@ -972,6 +973,7 @@ name|t_last_cong
 operator|=
 name|ticks
 expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
