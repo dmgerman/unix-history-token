@@ -243,19 +243,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|swap_pager_isswapped
-parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|struct
-name|swdevt
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|swap_pager_reserve
 parameter_list|(
 name|vm_object_t
