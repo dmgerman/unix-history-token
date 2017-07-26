@@ -3525,6 +3525,13 @@ name|SA_PARENT_OFFSET
 value|40
 end_define
 
+begin_define
+define|#
+directive|define
+name|SA_SYMLINK_OFFSET
+value|160
+end_define
+
 begin_comment
 comment|/*  * Intent log header - this on disk structure holds fields to manage  * the log.  All fields are 64 bit to easily handle cross architectures.  */
 end_comment
