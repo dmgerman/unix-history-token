@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1672,18 +1672,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
-operator|!=
-literal|0
-operator|&&
 name|zio_injection_enabled
 operator|&&
-operator|!
+name|error
+operator|==
+literal|0
+operator|&&
 name|zio
 operator|->
 name|io_error
-operator|&&
-operator|(
+operator|==
+literal|0
+condition|)
+block|{
 name|error
 operator|=
 name|zio_handle_fault_injection
@@ -1692,22 +1693,19 @@ name|zio
 argument_list|,
 name|ECKSUM
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
-block|{
 name|info
 operator|->
 name|zbc_injected
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 return|return
 operator|(
