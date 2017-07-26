@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2015 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2015, STRATO AG, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2015, STRATO AG, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_comment
@@ -7794,7 +7794,7 @@ argument_list|,
 operator|&
 name|ignored
 argument_list|,
-name|MT_FIRST
+name|MT_NORMALIZE
 argument_list|,
 name|real
 argument_list|,

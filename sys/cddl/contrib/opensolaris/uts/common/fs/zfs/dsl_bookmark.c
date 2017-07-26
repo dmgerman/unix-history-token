@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * This file and its contents are supplied un
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_include
@@ -268,6 +268,8 @@ name|ds_bookmarks
 decl_stmt|;
 name|matchtype_t
 name|mt
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|err
@@ -299,12 +301,7 @@ name|DS_FLAG_CI_DATASET
 condition|)
 name|mt
 operator|=
-name|MT_FIRST
-expr_stmt|;
-else|else
-name|mt
-operator|=
-name|MT_EXACT
+name|MT_NORMALIZE
 expr_stmt|;
 name|err
 operator|=
@@ -1668,6 +1665,8 @@ name|ds_bookmarks
 decl_stmt|;
 name|matchtype_t
 name|mt
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1682,12 +1681,7 @@ name|DS_FLAG_CI_DATASET
 condition|)
 name|mt
 operator|=
-name|MT_FIRST
-expr_stmt|;
-else|else
-name|mt
-operator|=
-name|MT_EXACT
+name|MT_NORMALIZE
 expr_stmt|;
 return|return
 operator|(

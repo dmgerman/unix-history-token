@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_ifndef
@@ -414,6 +414,9 @@ name|zn_hash
 decl_stmt|;
 name|matchtype_t
 name|zn_matchtype
+decl_stmt|;
+name|int
+name|zn_normflags
 decl_stmt|;
 name|char
 name|zn_normbuf

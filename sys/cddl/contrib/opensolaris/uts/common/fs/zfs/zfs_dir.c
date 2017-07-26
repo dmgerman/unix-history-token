@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_include
@@ -227,8 +227,8 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|boolean_t
-name|exact
+name|matchtype_t
+name|mt
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -245,15 +245,6 @@ operator|->
 name|z_norm
 condition|)
 block|{
-name|matchtype_t
-name|mt
-init|=
-name|exact
-condition|?
-name|MT_EXACT
-else|:
-name|MT_FIRST
-decl_stmt|;
 comment|/* 		 * In the non-mixed case we only expect there would ever 		 * be one match, but we need to use the normalizing lookup. 		 */
 name|error
 operator|=
@@ -360,8 +351,10 @@ name|dzp
 operator|->
 name|z_zfsvfs
 decl_stmt|;
-name|boolean_t
-name|exact
+name|matchtype_t
+name|mt
+init|=
+literal|0
 decl_stmt|;
 name|uint64_t
 name|zoid
@@ -449,15 +442,37 @@ name|EEXIST
 argument_list|)
 operator|)
 return|;
-comment|/* 	 * Case sensitivity and normalization preferences are set when 	 * the file system is created.  These are stored in the 	 * zfsvfs->z_case and zfsvfs->z_norm fields.  These choices 	 * affect how we perform zap lookups. 	 * 	 * Decide if exact matches should be requested when performing 	 * a zap lookup on file systems supporting case-insensitive 	 * access. 	 * 	 * NB: we do not need to worry about this flag for ZFS_CASE_SENSITIVE 	 * because in that case MT_EXACT and MT_FIRST should produce exactly 	 * the same result. 	 */
-name|exact
+comment|/* 	 * Case sensitivity and normalization preferences are set when 	 * the file system is created.  These are stored in the 	 * zfsvfs->z_case and zfsvfs->z_norm fields.  These choices 	 * affect how we perform zap lookups. 	 * 	 * When matching we may need to normalize& change case according to 	 * FS settings. 	 * 	 * Note that a normalized match is necessary for a case insensitive 	 * filesystem when the lookup request is not exact because normalization 	 * can fold case independent of normalizing code point sequences. 	 * 	 * See the table above zfs_dropname(). 	 */
+if|if
+condition|(
+name|zfsvfs
+operator|->
+name|z_norm
+operator|!=
+literal|0
+condition|)
+block|{
+name|mt
 operator|=
+name|MT_NORMALIZE
+expr_stmt|;
+comment|/* 		 * Determine if the match needs to honor the case specified in 		 * lookup, and if so keep track of that so that during 		 * normalization we don't fold case. 		 */
+if|if
+condition|(
 name|zfsvfs
 operator|->
 name|z_case
 operator|==
 name|ZFS_CASE_MIXED
+condition|)
+block|{
+name|mt
+operator||=
+name|MT_MATCH_CASE
 expr_stmt|;
+block|}
+block|}
+comment|/* 	 * Only look in or update the DNLC if we are looking for the 	 * name on a file system that does not require normalization 	 * or case folding.  We can also look there if we happen to be 	 * on a non-normalizing, mixed sensitivity file system IF we 	 * are looking for the exact name. 	 * 	 * NB: we do not need to worry about this flag for ZFS_CASE_SENSITIVE 	 * because in that case MT_EXACT and MT_FIRST should produce exactly 	 * the same result. 	 */
 if|if
 condition|(
 name|dzp
@@ -536,7 +551,7 @@ name|dzp
 argument_list|,
 name|name
 argument_list|,
-name|exact
+name|mt
 argument_list|,
 operator|&
 name|zoid
@@ -2537,6 +2552,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * The match type in the code for this function should conform to:  *  * ------------------------------------------------------------------------  * fs type  | z_norm      | lookup type | match type  * ---------|-------------|-------------|----------------------------------  * CS !norm | 0           |           0 | 0 (exact)  * CS  norm | formX       |           0 | MT_NORMALIZE  * CI !norm | upper       |   !ZCIEXACT | MT_NORMALIZE  * CI !norm | upper       |    ZCIEXACT | MT_NORMALIZE | MT_MATCH_CASE  * CI  norm | upper|formX |   !ZCIEXACT | MT_NORMALIZE  * CI  norm | upper|formX |    ZCIEXACT | MT_NORMALIZE | MT_MATCH_CASE  * CM !norm | upper       |    !ZCILOOK | MT_NORMALIZE | MT_MATCH_CASE  * CM !norm | upper       |     ZCILOOK | MT_NORMALIZE  * CM  norm | upper|formX |    !ZCILOOK | MT_NORMALIZE | MT_MATCH_CASE  * CM  norm | upper|formX |     ZCILOOK | MT_NORMALIZE  *  * Abbreviations:  *    CS = Case Sensitive, CI = Case Insensitive, CM = Case Mixed  *    upper = case folding set by fs type on creation (U8_TEXTPREP_TOUPPER)  *    formX = unicode normalization form set on fs creation  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2575,6 +2594,11 @@ operator|->
 name|z_norm
 condition|)
 block|{
+name|matchtype_t
+name|mt
+init|=
+name|MT_NORMALIZE
+decl_stmt|;
 if|if
 condition|(
 name|zp
@@ -2585,28 +2609,12 @@ name|z_case
 operator|==
 name|ZFS_CASE_MIXED
 condition|)
-name|error
-operator|=
-name|zap_remove_norm
-argument_list|(
-name|zp
-operator|->
-name|z_zfsvfs
-operator|->
-name|z_os
-argument_list|,
-name|dzp
-operator|->
-name|z_id
-argument_list|,
-name|name
-argument_list|,
-name|MT_EXACT
-argument_list|,
-name|tx
-argument_list|)
+block|{
+name|mt
+operator||=
+name|MT_MATCH_CASE
 expr_stmt|;
-else|else
+block|}
 name|error
 operator|=
 name|zap_remove_norm
@@ -2623,7 +2631,7 @@ name|z_id
 argument_list|,
 name|name
 argument_list|,
-name|MT_FIRST
+name|mt
 argument_list|,
 name|tx
 argument_list|)
