@@ -5762,6 +5762,7 @@ name|db_mtx
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This assert is valid because dmu_sync() expects to be called by 	 * a zilog's get_data while holding a range lock.  This call only 	 * comes from dbuf_dirty() callers who must also hold a range lock. 	 */
 name|ASSERT
 argument_list|(
 name|dr
