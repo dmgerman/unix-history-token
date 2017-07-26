@@ -50,9 +50,9 @@ comment|/* name ends with a slash */
 name|NAME_ERR_INVALCHAR
 block|,
 comment|/* invalid character found */
-name|NAME_ERR_MULTIPLE_AT
+name|NAME_ERR_MULTIPLE_DELIMITERS
 block|,
-comment|/* multiple '@' characters found */
+comment|/* multiple '@'/'#' delimiters found */
 name|NAME_ERR_NOLETTER
 block|,
 comment|/* pool doesn't begin with a letter */
@@ -77,6 +77,20 @@ name|ZFS_PERMSET_MAXLEN
 value|64
 name|int
 name|pool_namecheck
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|namecheck_err_t
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|entity_namecheck
 parameter_list|(
 specifier|const
 name|char
