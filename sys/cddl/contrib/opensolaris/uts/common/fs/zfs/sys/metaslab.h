@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -73,10 +73,8 @@ function_decl|)
 parameter_list|(
 name|metaslab_t
 modifier|*
-name|msp
 parameter_list|,
 name|uint64_t
-name|size
 parameter_list|)
 function_decl|;
 block|}
@@ -211,6 +209,9 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+name|zio_alloc_list_t
+modifier|*
+parameter_list|,
 name|zio_t
 modifier|*
 parameter_list|)
@@ -251,6 +252,32 @@ modifier|*
 parameter_list|,
 specifier|const
 name|blkptr_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|metaslab_alloc_trace_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+name|metaslab_alloc_trace_fini
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+name|metaslab_trace_init
+parameter_list|(
+name|zio_alloc_list_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|metaslab_trace_fini
+parameter_list|(
+name|zio_alloc_list_t
 modifier|*
 parameter_list|)
 function_decl|;

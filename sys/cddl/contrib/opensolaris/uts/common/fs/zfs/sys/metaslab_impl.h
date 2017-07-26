@@ -71,6 +71,166 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/*  * Metaslab allocation tracing record.  */
+typedef|typedef
+struct|struct
+name|metaslab_alloc_trace
+block|{
+name|list_node_t
+name|mat_list_node
+decl_stmt|;
+name|metaslab_group_t
+modifier|*
+name|mat_mg
+decl_stmt|;
+name|metaslab_t
+modifier|*
+name|mat_msp
+decl_stmt|;
+name|uint64_t
+name|mat_size
+decl_stmt|;
+name|uint64_t
+name|mat_weight
+decl_stmt|;
+name|uint32_t
+name|mat_dva_id
+decl_stmt|;
+name|uint64_t
+name|mat_offset
+decl_stmt|;
+block|}
+name|metaslab_alloc_trace_t
+typedef|;
+comment|/*  * Used by the metaslab allocation tracing facility to indicate  * error conditions. These errors are stored to the offset member  * of the metaslab_alloc_trace_t record and displayed by mdb.  */
+typedef|typedef
+enum|enum
+name|trace_alloc_type
+block|{
+name|TRACE_ALLOC_FAILURE
+init|=
+operator|-
+literal|1ULL
+block|,
+name|TRACE_TOO_SMALL
+init|=
+operator|-
+literal|2ULL
+block|,
+name|TRACE_FORCE_GANG
+init|=
+operator|-
+literal|3ULL
+block|,
+name|TRACE_NOT_ALLOCATABLE
+init|=
+operator|-
+literal|4ULL
+block|,
+name|TRACE_GROUP_FAILURE
+init|=
+operator|-
+literal|5ULL
+block|,
+name|TRACE_ENOSPC
+init|=
+operator|-
+literal|6ULL
+block|,
+name|TRACE_CONDENSING
+init|=
+operator|-
+literal|7ULL
+block|,
+name|TRACE_VDEV_ERROR
+init|=
+operator|-
+literal|8ULL
+block|}
+name|trace_alloc_type_t
+typedef|;
+define|#
+directive|define
+name|METASLAB_WEIGHT_PRIMARY
+value|(1ULL<< 63)
+define|#
+directive|define
+name|METASLAB_WEIGHT_SECONDARY
+value|(1ULL<< 62)
+define|#
+directive|define
+name|METASLAB_WEIGHT_TYPE
+value|(1ULL<< 61)
+define|#
+directive|define
+name|METASLAB_ACTIVE_MASK
+define|\
+value|(METASLAB_WEIGHT_PRIMARY | METASLAB_WEIGHT_SECONDARY)
+comment|/*  * The metaslab weight is used to encode the amount of free space in a  * metaslab, such that the "best" metaslab appears first when sorting the  * metaslabs by weight. The weight (and therefore the "best" metaslab) can  * be determined in two different ways: by computing a weighted sum of all  * the free space in the metaslab (a space based weight) or by counting only  * the free segments of the largest size (a segment based weight). We prefer  * the segment based weight because it reflects how the free space is  * comprised, but we cannot always use it -- legacy pools do not have the  * space map histogram information necessary to determine the largest  * contiguous regions. Pools that have the space map histogram determine  * the segment weight by looking at each bucket in the histogram and  * determining the free space whose size in bytes is in the range:  *	[2^i, 2^(i+1))  * We then encode the largest index, i, that contains regions into the  * segment-weighted value.  *  * Space-based weight:  *  *      64      56      48      40      32      24      16      8       0  *      +-------+-------+-------+-------+-------+-------+-------+-------+  *      |PS1|                   weighted-free space                     |  *      +-------+-------+-------+-------+-------+-------+-------+-------+  *  *	PS - indicates primary and secondary activation  *	space - the fragmentation-weighted space  *  * Segment-based weight:  *  *      64      56      48      40      32      24      16      8       0  *      +-------+-------+-------+-------+-------+-------+-------+-------+  *      |PS0| idx|             count of segments in region              |  *      +-------+-------+-------+-------+-------+-------+-------+-------+  *  *	PS - indicates primary and secondary activation  *	idx - index for the highest bucket in the histogram  *	count - number of segments in the specified bucket  */
+define|#
+directive|define
+name|WEIGHT_GET_ACTIVE
+parameter_list|(
+name|weight
+parameter_list|)
+value|BF64_GET((weight), 62, 2)
+define|#
+directive|define
+name|WEIGHT_SET_ACTIVE
+parameter_list|(
+name|weight
+parameter_list|,
+name|x
+parameter_list|)
+value|BF64_SET((weight), 62, 2, x)
+define|#
+directive|define
+name|WEIGHT_IS_SPACEBASED
+parameter_list|(
+name|weight
+parameter_list|)
+define|\
+value|((weight) == 0 || BF64_GET((weight), 61, 1))
+define|#
+directive|define
+name|WEIGHT_SET_SPACEBASED
+parameter_list|(
+name|weight
+parameter_list|)
+value|BF64_SET((weight), 61, 1, 1)
+comment|/*  * These macros are only applicable to segment-based weighting.  */
+define|#
+directive|define
+name|WEIGHT_GET_INDEX
+parameter_list|(
+name|weight
+parameter_list|)
+value|BF64_GET((weight), 55, 6)
+define|#
+directive|define
+name|WEIGHT_SET_INDEX
+parameter_list|(
+name|weight
+parameter_list|,
+name|x
+parameter_list|)
+value|BF64_SET((weight), 55, 6, x)
+define|#
+directive|define
+name|WEIGHT_GET_COUNT
+parameter_list|(
+name|weight
+parameter_list|)
+value|BF64_GET((weight), 0, 55)
+define|#
+directive|define
+name|WEIGHT_SET_COUNT
+parameter_list|(
+name|weight
+parameter_list|,
+name|x
+parameter_list|)
+value|BF64_SET((weight), 0, 55, x)
 comment|/*  * A metaslab class encompasses a category of allocatable top-level vdevs.  * Each top-level vdev is associated with a metaslab group which defines  * the allocatable region for that vdev. Examples of these categories include  * "normal" for data block allocations (i.e. main pool allocations) or "log"  * for allocations designated for intent log devices (i.e. slog devices).  * When a block allocation is requested from the SPA it is associated with a  * metaslab_class_t, and only top-level vdevs (i.e. metaslab groups) belonging  * to the class can be used to satisfy that request. Allocations are done  * by traversing the metaslab groups that are linked off of the mc_rotor field.  * This rotor points to the next metaslab group where allocations will be  * attempted. Allocating a block is a 3 step process -- select the metaslab  * group, select the metaslab, and then allocate the block. The metaslab  * class defines the low-level block allocator that will be used as the  * final step in allocation. These allocators are pluggable allowing each class  * to use a block allocator that best suits that class.  */
 struct|struct
 name|metaslab_class
@@ -237,10 +397,6 @@ name|space_map_t
 modifier|*
 name|ms_sm
 decl_stmt|;
-name|metaslab_ops_t
-modifier|*
-name|ms_ops
-decl_stmt|;
 name|uint64_t
 name|ms_id
 decl_stmt|;
@@ -285,6 +441,7 @@ comment|/* condensing? */
 name|boolean_t
 name|ms_condense_wanted
 decl_stmt|;
+comment|/* 	 * We must hold both ms_lock and ms_group->mg_lock in order to 	 * modify ms_loaded. 	 */
 name|boolean_t
 name|ms_loaded
 decl_stmt|;
@@ -300,8 +457,21 @@ name|ms_weight
 decl_stmt|;
 comment|/* weight vs. others in group	*/
 name|uint64_t
-name|ms_access_txg
+name|ms_activation_weight
 decl_stmt|;
+comment|/* activation weight	*/
+comment|/* 	 * Track of whenever a metaslab is selected for loading or allocation. 	 * We use this value to determine how long the metaslab should 	 * stay cached. 	 */
+name|uint64_t
+name|ms_selected_txg
+decl_stmt|;
+name|uint64_t
+name|ms_alloc_txg
+decl_stmt|;
+comment|/* last successful alloc (debug only) */
+name|uint64_t
+name|ms_max_size
+decl_stmt|;
+comment|/* maximum allocatable size	*/
 comment|/* 	 * The metaslab block allocators can optionally use a size-ordered 	 * range tree and/or an array of LBAs. Not all allocators use 	 * this functionality. The ms_size_tree should always contain the 	 * same number of segments as the ms_tree. The only difference 	 * is that the ms_size_tree is ordered by segment sizes. 	 */
 name|avl_tree_t
 name|ms_size_tree

@@ -916,6 +916,19 @@ name|ZIO_REEXECUTE_SUSPEND
 value|0x02
 typedef|typedef
 struct|struct
+name|zio_alloc_list
+block|{
+name|list_t
+name|zal_list
+decl_stmt|;
+name|uint64_t
+name|zal_size
+decl_stmt|;
+block|}
+name|zio_alloc_list_t
+typedef|;
+typedef|typedef
+struct|struct
 name|zio_link
 block|{
 name|zio_t
@@ -1122,6 +1135,9 @@ name|io_offset_node
 decl_stmt|;
 name|avl_node_t
 name|io_alloc_node
+decl_stmt|;
+name|zio_alloc_list_t
+name|io_alloc_list
 decl_stmt|;
 comment|/* Internal pipeline state */
 name|enum
