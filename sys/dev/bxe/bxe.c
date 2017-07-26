@@ -400,6 +400,18 @@ literal|"QLogic NetXtreme II BCM57840 4x10GbE"
 block|}
 block|,
 block|{
+name|QLOGIC_VENDORID
+block|,
+name|CHIP_NUM_57840_4_10
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|"QLogic NetXtreme II BCM57840 4x10GbE"
+block|}
+block|,
+block|{
 name|BRCM_VENDORID
 block|,
 name|CHIP_NUM_57840_2_20
