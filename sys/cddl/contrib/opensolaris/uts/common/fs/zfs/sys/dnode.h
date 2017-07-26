@@ -112,6 +112,7 @@ directive|define
 name|DN_MIN_INDBLKSHIFT
 value|12
 comment|/* 4k */
+comment|/*  * If we ever increase this value beyond 20, we need to revisit all logic that  * does x<< level * ebps to handle overflow.  With a 1M indirect block size,  * 4 levels of indirect blocks would not be able to guarantee addressing an  * entire object, so 5 levels will be used, but 5 * (20 - 7) = 65.  */
 define|#
 directive|define
 name|DN_MAX_INDBLKSHIFT
