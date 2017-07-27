@@ -391,6 +391,7 @@ decl_stmt|;
 block|}
 name|zil_bp_node_t
 typedef|;
+comment|/*  * Maximum amount of write data that can be put into single log block.  */
 define|#
 directive|define
 name|ZIL_MAX_LOG_DATA
@@ -400,6 +401,16 @@ directive|define
 name|ZIL_MAX_COPIED_DATA
 define|\
 value|((SPA_OLD_MAXBLOCKSIZE - sizeof (zil_chain_t)) / 2 - sizeof (lr_write_t))
+comment|/*  * Maximum amount of log space we agree to waste to reduce number of  * WR_NEED_COPY chunks to reduce zl_get_data() overhead (~12%).  */
+define|#
+directive|define
+name|ZIL_MAX_WASTE_SPACE
+value|(ZIL_MAX_LOG_DATA / 8)
+comment|/*  * Maximum amount of write data for WR_COPIED.  Fall back to WR_NEED_COPY  * as more space efficient if we can't fit at least two log records into  * maximum sized log block.  */
+define|#
+directive|define
+name|ZIL_MAX_COPIED_DATA
+value|((SPA_OLD_MAXBLOCKSIZE - \     sizeof (zil_chain_t)) / 2 - sizeof (lr_write_t))
 ifdef|#
 directive|ifdef
 name|__cplusplus
