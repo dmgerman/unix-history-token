@@ -1478,13 +1478,10 @@ expr_stmt|;
 comment|/* For forced dismounts, just return error. */
 if|if
 condition|(
-operator|(
+name|NFSCL_FORCEDISM
+argument_list|(
 name|mntp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_UNMOUNTF
-operator|)
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1599,13 +1596,10 @@ block|{
 comment|/* 		 * It is safe so long as a vflush() with 		 * FORCECLOSE has not been done. Since the Renew thread is 		 * stopped and the MNTK_UNMOUNTF flag is set before doing 		 * a vflush() with FORCECLOSE, we should be ok here. 		 */
 if|if
 condition|(
-operator|(
+name|NFSCL_FORCEDISM
+argument_list|(
 name|mntp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_UNMOUNTF
-operator|)
+argument_list|)
 condition|)
 name|error
 operator|=

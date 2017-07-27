@@ -10294,15 +10294,10 @@ name|mp
 operator|!=
 name|NULL
 operator|&&
-operator|(
+name|NFSCL_FORCEDISM
+argument_list|(
 name|mp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_UNMOUNTF
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 name|lp
@@ -10494,7 +10489,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a reference cnt.  * This function will wait for any exclusive lock to be released, but will  * not wait for threads that want the exclusive lock. If priority needs  * to be given to threads that need the exclusive lock, a call to nfsv4_lock()  * with the 2nd argument == 0 should be done before calling nfsv4_getref().  * If the mp argument is not NULL, check for MNTK_UNMOUNTF being set and  * return without getting a refcnt for that case.  */
+comment|/*  * Get a reference cnt.  * This function will wait for any exclusive lock to be released, but will  * not wait for threads that want the exclusive lock. If priority needs  * to be given to threads that need the exclusive lock, a call to nfsv4_lock()  * with the 2nd argument == 0 should be done before calling nfsv4_getref().  * If the mp argument is not NULL, check for NFSCL_FORCEDISM() being set and  * return without getting a refcnt for that case.  */
 end_comment
 
 begin_function
@@ -10546,15 +10541,10 @@ name|mp
 operator|!=
 name|NULL
 operator|&&
-operator|(
+name|NFSCL_FORCEDISM
+argument_list|(
 name|mp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_UNMOUNTF
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 return|return;
 name|lp
@@ -10600,15 +10590,10 @@ name|mp
 operator|!=
 name|NULL
 operator|&&
-operator|(
+name|NFSCL_FORCEDISM
+argument_list|(
 name|mp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_UNMOUNTF
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 return|return;
 name|lp
@@ -22437,17 +22422,12 @@ name|nmp
 operator|!=
 name|NULL
 operator|&&
-operator|(
+name|NFSCL_FORCEDISM
+argument_list|(
 name|nmp
 operator|->
 name|nm_mountp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_UNMOUNTF
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 name|mtx_unlock

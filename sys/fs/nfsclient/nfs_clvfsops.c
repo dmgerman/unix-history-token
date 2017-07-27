@@ -10215,15 +10215,10 @@ expr_stmt|;
 comment|/* 	 * If a forced dismount is in progress, return from here so that 	 * the umount(2) syscall doesn't get stuck in VFS_SYNC() before 	 * calling VFS_UNMOUNT(). 	 */
 if|if
 condition|(
-operator|(
+name|NFSCL_FORCEDISM
+argument_list|(
 name|mp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_UNMOUNTF
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 name|MNT_IUNLOCK
