@@ -4368,7 +4368,7 @@ block|,
 block|{
 literal|"dram"
 block|,
-literal|"pll_ddr"
+literal|"pll_ddr0"
 block|,
 literal|0
 block|,
