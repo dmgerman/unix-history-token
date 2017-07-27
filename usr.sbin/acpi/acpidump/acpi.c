@@ -5226,13 +5226,7 @@ name|ACPI_SRAT_TYPE_GICC_AFFINITY
 index|]
 operator|=
 literal|"GICC"
-block|,
-index|[
-name|ACPI_SRAT_TYPE_GIC_ITS_AFFINITY
-index|]
-operator|=
-literal|"GIC ITS"
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
