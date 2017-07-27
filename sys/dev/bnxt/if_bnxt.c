@@ -4426,7 +4426,7 @@ index|]
 expr_stmt|;
 name|scctx
 operator|->
-name|isc_max_rxqsets
+name|isc_nrxqsets_max
 operator|=
 name|min
 argument_list|(
@@ -4450,13 +4450,13 @@ argument_list|)
 expr_stmt|;
 name|scctx
 operator|->
-name|isc_max_rxqsets
+name|isc_nrxqsets_max
 operator|=
 name|min
 argument_list|(
 name|scctx
 operator|->
-name|isc_max_rxqsets
+name|isc_nrxqsets_max
 argument_list|,
 name|softc
 operator|->
@@ -4467,7 +4467,7 @@ argument_list|)
 expr_stmt|;
 name|scctx
 operator|->
-name|isc_max_txqsets
+name|isc_ntxqsets_max
 operator|=
 name|min
 argument_list|(
@@ -4485,7 +4485,7 @@ name|max_cp_rings
 operator|-
 name|scctx
 operator|->
-name|isc_max_rxqsets
+name|isc_nrxqsets_max
 operator|-
 literal|1
 argument_list|)
