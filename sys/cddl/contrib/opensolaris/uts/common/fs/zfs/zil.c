@@ -89,6 +89,12 @@ directive|include
 file|<sys/dsl_pool.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/abd.h>
+end_include
+
 begin_comment
 comment|/*  * The zfs intent log (ZIL) saves transaction records of system calls  * that change the file system in memory with enough information  * to be able to replay them. These are stored in memory until  * either the DMU transaction group (txg) commits them to the stable pool  * and they can be discarded, or they are flushed to the stable log  * (also in the pool) due to a fsync, O_DSYNC or other synchronous  * requirement. In the event of a panic or power fail then those log  * records (transactions) are replayed.  *  * There is one ZIL per file system. Its on-disk (pool) format consists  * of 3 parts:  *  * 	- ZIL header  * 	- ZIL blocks  * 	- ZIL records  *  * A log record holds a system call transaction. Log blocks can  * hold many log records and the blocks are chained together.  * Each ZIL block contains a block pointer (blkptr_t) to the next  * ZIL block in the chain. The ZIL header points to the first  * block in the chain. Note there is not a fixed place in the pool  * to hold blocks. They are dynamically allocated and freed as  * needed from the blocks available. Figure X shows the ZIL structure:  */
 end_comment
@@ -4153,6 +4159,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Ensure the lwb buffer pointer is cleared before releasing 	 * the txg. If we have had an allocation failure and 	 * the txg is waiting to sync then we want want zil_sync() 	 * to remove the lwb so that it's not picked up as the next new 	 * one in zil_commit_writer(). zil_sync() will only remove 	 * the lwb if lwb_buf is null. 	 */
+name|abd_put
+argument_list|(
+name|zio
+operator|->
+name|io_abd
+argument_list|)
+expr_stmt|;
 name|zio_buf_free
 argument_list|(
 name|lwb
@@ -4293,6 +4306,25 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|abd_t
+modifier|*
+name|lwb_abd
+init|=
+name|abd_get_from_buf
+argument_list|(
+name|lwb
+operator|->
+name|lwb_buf
+argument_list|,
+name|BP_GET_LSIZE
+argument_list|(
+operator|&
+name|lwb
+operator|->
+name|lwb_blk
+argument_list|)
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|zilog
@@ -4336,9 +4368,7 @@ name|lwb
 operator|->
 name|lwb_blk
 argument_list|,
-name|lwb
-operator|->
-name|lwb_buf
+name|lwb_abd
 argument_list|,
 name|BP_GET_LSIZE
 argument_list|(
