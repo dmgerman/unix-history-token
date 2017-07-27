@@ -68,47 +68,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * These widths should allow the pointers to a node's children to fit within  * a single cache line.  The extra levels from a narrow width should not be  * a problem thanks to path compression.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__LP64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PCTRIE_WIDTH
-value|4
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PCTRIE_WIDTH
-value|3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|PCTRIE_COUNT
-value|(1<< PCTRIE_WIDTH)
-end_define
-
 begin_define
 define|#
 directive|define
