@@ -1692,6 +1692,8 @@ operator|)
 name|malloc
 argument_list|(
 name|s
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1721,7 +1723,7 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-name|strncpy
+name|memcpy
 argument_list|(
 name|ar
 operator|->
@@ -1731,6 +1733,15 @@ name|buff
 argument_list|,
 name|s
 argument_list|)
+expr_stmt|;
+name|ar
+operator|->
+name|strtab
+index|[
+name|s
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|ar
 operator|->
