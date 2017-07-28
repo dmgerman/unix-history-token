@@ -5243,6 +5243,25 @@ argument_list|(
 name|ep
 argument_list|)
 expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_IW_CXGBE
+argument_list|,
+literal|"%s: ep %p, history 0x%lx, flags 0x%lx"
+argument_list|,
+name|__func__
+argument_list|,
+name|ep
+argument_list|,
+name|epc
+operator|->
+name|history
+argument_list|,
+name|epc
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 name|kfree
 argument_list|(
 name|ep
