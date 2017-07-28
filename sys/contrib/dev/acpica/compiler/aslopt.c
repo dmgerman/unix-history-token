@@ -1456,7 +1456,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_NAME_DECLARATION
+name|OP_IS_NAME_DECLARATION
 condition|)
 block|{
 comment|/* We don't want to fuss with actual name declaration nodes here */
@@ -2080,7 +2080,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_NAME_DECLARATION
+name|OP_IS_NAME_DECLARATION
 operator|)
 condition|)
 block|{

@@ -223,11 +223,14 @@ define|\
 value|_Type                           *Pointer; \     UINT32                          Length;
 end_define
 
+begin_comment
+comment|/* Null terminated, ASCII characters only */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
 name|acpi_object_string
-comment|/* Null terminated, ASCII characters only */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_BUFFER_INFO
@@ -559,11 +562,14 @@ begin_comment
 comment|/* Handler for Address space */
 end_comment
 
+begin_comment
+comment|/* COMMON NOTIFY for POWER, PROCESSOR, DEVICE, and THERMAL */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
 name|acpi_object_notify_common
-comment|/* COMMON NOTIFY for POWER, PROCESSOR, DEVICE, and THERMAL */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_NOTIFY_INFO
@@ -676,11 +682,14 @@ begin_comment
 comment|/* For serial regions/fields */
 end_comment
 
+begin_comment
+comment|/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
 name|acpi_object_field_common
-comment|/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
@@ -914,8 +923,9 @@ name|TargetType
 decl_stmt|;
 comment|/* Used for Index Op */
 name|UINT8
-name|Reserved
+name|Resolved
 decl_stmt|;
+comment|/* Reference has been resolved to a value */
 name|void
 modifier|*
 name|Object
@@ -938,6 +948,11 @@ modifier|*
 name|IndexPointer
 decl_stmt|;
 comment|/* Used for Buffers and Strings */
+name|UINT8
+modifier|*
+name|Aml
+decl_stmt|;
+comment|/* Used for deferred resolution of the ref */
 name|UINT32
 name|Value
 decl_stmt|;

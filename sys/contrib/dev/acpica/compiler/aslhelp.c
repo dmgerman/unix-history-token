@@ -225,6 +225,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-vx<messageid>"
+argument_list|,
+literal|"Expect a specific warning, remark, or error"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-w<1|2|3>"
 argument_list|,
 literal|"Set warning reporting level"

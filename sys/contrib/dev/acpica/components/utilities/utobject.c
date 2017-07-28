@@ -1012,6 +1012,27 @@ name|ACPI_DESC_TYPE_NAMED
 condition|)
 block|{
 comment|/* A namespace node should never get here */
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Received a namespace node [%4.4s] "
+literal|"where an operand object is required"
+operator|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_NAMESPACE_NODE
+argument_list|,
+name|InternalObject
+argument_list|)
+operator|->
+name|Name
+operator|.
+name|Ascii
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_INTERNAL

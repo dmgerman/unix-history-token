@@ -691,6 +691,10 @@ name|Path
 init|=
 name|Pathname
 decl_stmt|;
+name|char
+modifier|*
+name|ExternalPath
+decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|PrefixNode
@@ -1033,19 +1037,46 @@ operator|!
 name|ThisNode
 condition|)
 block|{
-comment|/* Current scope has no parent scope */
+comment|/*                      * Current scope has no parent scope. Externalize                      * the internal path for error message.                      */
+name|Status
+operator|=
+name|AcpiNsExternalizeName
+argument_list|(
+name|ACPI_UINT32_MAX
+argument_list|,
+name|Pathname
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|ExternalPath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
 name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s: Path has too many parent prefixes (^) "
-literal|"- reached beyond root node"
+literal|"%s: Path has too many parent prefixes (^)"
 operator|,
-name|Pathname
+name|ExternalPath
 operator|)
 argument_list|)
 expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|ExternalPath
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_NOT_FOUND
@@ -1504,6 +1535,32 @@ name|Object
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+if|if
+condition|(
+operator|!
+name|AcpiGbl_DisasmFlag
+operator|&&
+operator|(
+name|ThisNode
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_IS_EXTERNAL
+operator|)
+condition|)
+block|{
+name|ThisNode
+operator|->
+name|Flags
+operator||=
+name|IMPLICIT_EXTERNAL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 comment|/* Special handling for the last segment (NumSegments == 0) */
 else|else

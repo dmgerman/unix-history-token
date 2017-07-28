@@ -522,6 +522,17 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid numeric logical opcode: %X"
+operator|,
+name|Opcode
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_INTERNAL
@@ -659,6 +670,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid object type for logical operator: %X"
+operator|,
+name|Operand0
+operator|->
+name|Common
+operator|.
+name|Type
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_INTERNAL
@@ -763,6 +789,17 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid comparison opcode: %X"
+operator|,
+name|Opcode
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_INTERNAL
@@ -942,6 +979,17 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid comparison opcode: %X"
+operator|,
+name|Opcode
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_INTERNAL
