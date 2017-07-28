@@ -809,9 +809,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Failed to allocate load buffer %zd for pool '%s' for '%s' "
+literal|"Failed to allocate load buffer %jd for pool '%s' for '%s' "
 literal|"(%lu)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|st
 operator|.
 name|st_size
