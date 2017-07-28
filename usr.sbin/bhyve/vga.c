@@ -5560,9 +5560,13 @@ operator|.
 name|atc_color_select_67
 operator|=
 operator|(
+operator|(
 name|val
 operator|&
 name|ATC_CS_C67
+operator|)
+operator|>>
+literal|2
 operator|)
 operator|<<
 literal|6
