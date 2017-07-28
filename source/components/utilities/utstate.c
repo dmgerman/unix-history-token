@@ -365,7 +365,7 @@ name|void
 modifier|*
 name|ExternalObject
 parameter_list|,
-name|UINT16
+name|UINT32
 name|Index
 parameter_list|)
 block|{

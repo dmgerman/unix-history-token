@@ -1173,7 +1173,7 @@ modifier|*
 name|String2
 parameter_list|)
 block|{
-name|UINT32
+name|ACPI_SIZE
 name|Length
 decl_stmt|;
 name|Length

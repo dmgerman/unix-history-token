@@ -563,6 +563,12 @@ literal|"Return the current date"
 block|}
 block|,
 block|{
+literal|"__METHOD__"
+block|,
+literal|"Return the declared name of the current control method"
+block|}
+block|,
+block|{
 literal|"__IASL__"
 block|,
 literal|"Permanently defined for the iASL compiler"

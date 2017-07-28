@@ -67,6 +67,12 @@ directive|define
 name|ACPI_USE_NATIVE_DIVIDE
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_MATH64
+end_define
+
 begin_comment
 comment|/* #define ACPI_THREAD_ID               thread_id */
 end_comment

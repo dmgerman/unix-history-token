@@ -915,7 +915,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiTbVerifyTempTable  *  * PARAMETERS:  TableDesc           - Table descriptor  *              Signature           - Table signature to verify  *              TableIndex          - Where the table index is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to validate and verify the table, the  *              returned table descriptor is in "VALIDATED" state.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiTbVerifyTempTable  *  * PARAMETERS:  TableDesc           - Table descriptor  *              Signature           - Table signature to verify  *              TableIndex          - Where the table index is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to validate and verify the table, the  *              returned table descriptor is in "VALIDATED" state.  *              Note that 'TableIndex' is required to be set to !NULL to  *              enable duplication check.  *  *****************************************************************************/
 end_comment
 
 begin_function

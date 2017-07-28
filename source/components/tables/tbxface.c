@@ -251,6 +251,8 @@ name|TableDesc
 decl_stmt|;
 name|UINT32
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -389,7 +391,8 @@ name|TableDesc
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+operator|&
+name|j
 argument_list|)
 expr_stmt|;
 if|if

@@ -36,21 +36,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acnames.h"
-end_include
-
-begin_comment
-comment|/* Common ACPI names and strings */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"actypes.h"
 end_include
 
 begin_comment
 comment|/* ACPICA data types and structures */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"platform/acenvex.h"
+end_include
+
+begin_comment
+comment|/* Extra environment-specific items */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"acnames.h"
+end_include
+
+begin_comment
+comment|/* Common ACPI names and strings */
 end_comment
 
 begin_include
@@ -111,16 +121,6 @@ end_include
 
 begin_comment
 comment|/* ACPI core subsystem external interfaces */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"platform/acenvex.h"
-end_include
-
-begin_comment
-comment|/* Extra environment-specific items */
 end_comment
 
 begin_endif

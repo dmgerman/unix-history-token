@@ -374,6 +374,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_SDEI_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SDEI,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_SLIT_OFFSET
 parameter_list|(
 name|f
@@ -17612,6 +17622,21 @@ block|,
 literal|0
 block|}
 block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * SDEI - Software Delegated Execption Interface Descriptor Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoSdei
+index|[]
+init|=
+block|{
 name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;

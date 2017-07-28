@@ -142,6 +142,12 @@ directive|define
 name|ACPI_USE_NATIVE_DIVIDE
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_MATH64
+end_define
+
 begin_endif
 endif|#
 directive|endif

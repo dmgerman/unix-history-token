@@ -672,6 +672,30 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* An entry in the expected messages array */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|asl_expected_message
+block|{
+name|UINT32
+name|MessageId
+decl_stmt|;
+name|char
+modifier|*
+name|MessageIdStr
+decl_stmt|;
+name|BOOLEAN
+name|MessageReceived
+decl_stmt|;
+block|}
+name|ASL_EXPECTED_MESSAGE
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* An entry in the listing file stack (for include files) */
 end_comment
 

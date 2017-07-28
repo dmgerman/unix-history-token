@@ -422,7 +422,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtWalkPackageTree  *  * PARAMETERS:  SourceObject        - The package to walk  *              TargetObject        - Target object (if package is being copied)  *              WalkCallback        - Called once for each package element  *              Context             - Passed to the callback function  *  * RETURN:      Status  *  * DESCRIPTION: Walk through a package  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtWalkPackageTree  *  * PARAMETERS:  SourceObject        - The package to walk  *              TargetObject        - Target object (if package is being copied)  *              WalkCallback        - Called once for each package element  *              Context             - Passed to the callback function  *  * RETURN:      Status  *  * DESCRIPTION: Walk through a package, including subpackages  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -460,12 +460,12 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
-name|UINT32
-name|ThisIndex
-decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ThisSourceObj
+decl_stmt|;
+name|UINT32
+name|ThisIndex
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -511,10 +511,26 @@ name|Index
 expr_stmt|;
 name|ThisSourceObj
 operator|=
-operator|(
-name|ACPI_OPERAND_OBJECT
-operator|*
-operator|)
+name|State
+operator|->
+name|Pkg
+operator|.
+name|SourceObject
+operator|->
+name|Package
+operator|.
+name|Elements
+index|[
+name|ThisIndex
+index|]
+expr_stmt|;
+name|State
+operator|->
+name|Pkg
+operator|.
+name|ThisTargetObj
+operator|=
+operator|&
 name|State
 operator|->
 name|Pkg
@@ -736,6 +752,15 @@ block|}
 block|}
 block|}
 comment|/* We should never get here */
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"State list did not terminate correctly"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_INTERNAL

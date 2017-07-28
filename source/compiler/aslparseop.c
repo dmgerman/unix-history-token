@@ -1411,7 +1411,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrCreateConstantLeafOp  *  * PARAMETERS:  ParseOpcode         - The constant opcode  *  * RETURN:      Pointer to the new op. Aborts on allocation failure  *  * DESCRIPTION: Create a leaf op (no children or peers) for one of the  *              special constants - __LINE__, __FILE__, and __DATE__.  *  * Note: An implemenation of __FUNC__ cannot happen here because we don't  * have a full parse tree at this time and cannot find the parent control  * method. If it is ever needed, __FUNC__ must be implemented later, after  * the parse tree has been fully constructed.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrCreateConstantLeafOp  *  * PARAMETERS:  ParseOpcode         - The constant opcode  *  * RETURN:      Pointer to the new op. Aborts on allocation failure  *  * DESCRIPTION: Create a leaf op (no children or peers) for one of the  *              special constants - __LINE__, __FILE__, and __DATE__.  *  * Note: The fullimplemenation of __METHOD__ cannot happen here because we  * don't have a full parse tree at this time and cannot find the parent  * control method. __METHOD__ must be implemented later, after the parse  * tree has been fully constructed.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1472,6 +1472,28 @@ operator|->
 name|Asl
 operator|.
 name|LineNumber
+expr_stmt|;
+break|break;
+case|case
+name|PARSEOP___METHOD__
+case|:
+comment|/* Will become a string literal later */
+name|Op
+operator|=
+name|TrAllocateOp
+argument_list|(
+name|PARSEOP___METHOD__
+argument_list|)
+expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|String
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 case|case

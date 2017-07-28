@@ -20,6 +20,32 @@ name|__ACEFI_H__
 end_define
 
 begin_comment
+comment|/*  * Single threaded environment where Mutex/Event/Sleep are fake. This model is  * sufficient for pre-boot AcpiExec.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEBUGGER_THREADING
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEBUGGER_THREADING
+value|DEBUGGER_SINGLE_THREADED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !DEBUGGER_THREADING */
+end_comment
+
+begin_comment
 comment|/* EDK2 EFI environemnt */
 end_comment
 
@@ -32,11 +58,40 @@ name|_EDK2_EFI
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_STDLIB
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|_GNU_EFI
+name|ACPI_USE_STANDARD_HEADERS
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_CLIBRARY
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_DIVIDE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_MATH64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -225,6 +280,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_STDLIB
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -238,6 +299,11 @@ directive|define
 name|INTN
 value|int64_t
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -261,6 +327,12 @@ name|ACPI_MACHINE_WIDTH
 value|32
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_STDLIB
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -274,6 +346,11 @@ directive|define
 name|INTN
 value|int32_t
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1055,7 +1132,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* GNU EFI definitions */
+comment|/* EFI math64 definitions */
 end_comment
 
 begin_if
@@ -1065,11 +1142,22 @@ name|defined
 argument_list|(
 name|_GNU_EFI
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_EDK2_EFI
+argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Math helpers  */
+comment|/*  * Math helpers, GNU EFI provided a platform independent 64-bit math  * support.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_DIV_64_BY_32
+end_ifndef
 
 begin_define
 define|#
@@ -1087,8 +1175,101 @@ parameter_list|,
 name|r32
 parameter_list|)
 define|\
-value|do {                                             \         UINT64 __n = ((UINT64) n_hi)<< 32 | (n_lo); \         (q32) = DivU64x32 ((__n), (d32),&(r32));    \     } while (0)
+value|do {                                                     \         UINT64 __n = ((UINT64) n_hi)<< 32 | (n_lo);         \         (q32) = (UINT32) DivU64x32 ((__n), (d32),&(r32));   \     } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MUL_64_BY_32
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_MUL_64_BY_32
+parameter_list|(
+name|n_hi
+parameter_list|,
+name|n_lo
+parameter_list|,
+name|m32
+parameter_list|,
+name|p32
+parameter_list|,
+name|c32
+parameter_list|)
+define|\
+value|do {                                             \         UINT64 __n = ((UINT64) n_hi)<< 32 | (n_lo); \         UINT64 __p = MultU64x32 (__n, (m32));        \         (p32) = (UINT32) __p;                        \         (c32) = (UINT32) (__p>> 32);                \     } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_SHIFT_LEFT_64_by_32
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_SHIFT_LEFT_64_BY_32
+parameter_list|(
+name|n_hi
+parameter_list|,
+name|n_lo
+parameter_list|,
+name|s32
+parameter_list|)
+define|\
+value|do {                                             \         UINT64 __n = ((UINT64) n_hi)<< 32 | (n_lo); \         UINT64 __r = LShiftU64 (__n, (s32));         \         (n_lo) = (UINT32) __r;                       \         (n_hi) = (UINT32) (__r>> 32);               \     } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_SHIFT_RIGHT_64_BY_32
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_SHIFT_RIGHT_64_BY_32
+parameter_list|(
+name|n_hi
+parameter_list|,
+name|n_lo
+parameter_list|,
+name|s32
+parameter_list|)
+define|\
+value|do {                                             \         UINT64 __n = ((UINT64) n_hi)<< 32 | (n_lo); \         UINT64 __r = RShiftU64 (__n, (s32));         \         (n_lo) = (UINT32) __r;                       \         (n_hi) = (UINT32) (__r>> 32);               \     } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_SHIFT_RIGHT_64
+end_ifndef
 
 begin_define
 define|#
@@ -1102,6 +1283,11 @@ parameter_list|)
 define|\
 value|do {                                \         (n_lo)>>= 1;                   \         (n_lo) |= (((n_hi)& 1)<< 31); \         (n_hi)>>= 1;                   \     } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1140,6 +1326,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|_ACPI_EFI_RUNTIME_SERVICES
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|_ACPI_EFI_SYSTEM_TABLE
 struct_decl|;
 end_struct_decl
@@ -1167,6 +1359,21 @@ modifier|*
 name|BS
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|_ACPI_EFI_RUNTIME_SERVICES
+modifier|*
+name|RT
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_STDLIB
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -1206,6 +1413,11 @@ modifier|*
 name|stderr
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

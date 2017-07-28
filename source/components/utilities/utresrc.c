@@ -540,25 +540,7 @@ name|AE_AML_NO_RESOURCE_END_TAG
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * The EndTag opcode must be followed by a zero byte.              * Although this byte is technically defined to be a checksum,              * in practice, all ASL compilers set this byte to zero.              */
-if|if
-condition|(
-operator|*
-operator|(
-name|Aml
-operator|+
-literal|1
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_AML_NO_RESOURCE_END_TAG
-argument_list|)
-expr_stmt|;
-block|}
+comment|/*              * Don't attempt to perform any validation on the 2nd byte.              * Although all known ASL compilers insert a zero for the 2nd              * byte, it can also be a checksum (as per the ACPI spec),              * and this is occasionally seen in the field. July 2017.              */
 comment|/* Return the pointer to the EndTag if requested */
 if|if
 condition|(

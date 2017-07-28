@@ -195,6 +195,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_SIG_SDEI
+value|"SDEI"
+end_define
+
+begin_comment
+comment|/* Software Delegated Exception Interface Table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_SIG_SLIC
 value|"SLIC"
 end_define
@@ -3357,6 +3368,24 @@ name|Irq
 decl_stmt|;
 block|}
 name|ACPI_MTMR_ENTRY
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*******************************************************************************  *  * SDEI - Software Delegated Exception Interface Descriptor Table  *  * Conforms to "Software Delegated Exception Interface (SDEI)" ARM DEN0054A,  * May 8th, 2017. Copyright 2017 ARM Ltd.  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_sdei
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+block|}
+name|ACPI_TABLE_SDEI
 typedef|;
 end_typedef
 

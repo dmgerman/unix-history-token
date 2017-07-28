@@ -1951,7 +1951,7 @@ struct|struct
 name|acpi_pkg_state
 block|{
 name|ACPI_STATE_COMMON
-name|UINT16
+name|UINT32
 name|Index
 decl_stmt|;
 name|union

@@ -73,6 +73,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_USE_NATIVE_MATH64
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_SYSTEM_XFACE
 value|APIENTRY
 end_define

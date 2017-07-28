@@ -547,6 +547,9 @@ literal|"Non-reducible expression"
 block|,
 comment|/*    ASL_MSG_CROSS_TABLE_SCOPE */
 literal|"Illegal open scope on external object from within DSDT"
+block|,
+comment|/*    ASL_MSG_EXCEPTION_NOT_RECEIVED */
+literal|"Expected remark, warning, or error did not occur. Message ID:"
 block|}
 decl_stmt|;
 end_decl_stmt

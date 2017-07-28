@@ -721,6 +721,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|AslCheckExpectedExceptions
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AslExpectException
+parameter_list|(
+name|char
+modifier|*
+name|MessageIdString
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ACPI_STATUS
 name|AslDisableException
 parameter_list|(
@@ -733,7 +753,7 @@ end_function_decl
 
 begin_function_decl
 name|BOOLEAN
-name|AslIsExceptionDisabled
+name|AslIsExceptionIgnored
 parameter_list|(
 name|UINT8
 name|Level

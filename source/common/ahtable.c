@@ -358,6 +358,12 @@ literal|"Smart Battery Specification Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_SDEI
+block|,
+literal|"Software Delegated Exception Interface Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_SLIC
 block|,
 literal|"Software Licensing Description Table"

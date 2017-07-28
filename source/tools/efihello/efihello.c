@@ -46,11 +46,21 @@ begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    main  *  * PARAMETERS:  argc/argv           - Standard argc/argv  *  * RETURN:      Status  *  * DESCRIPTION: C main function for efihello  *  ******************************************************************************/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_GNU_EFI
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_EDK2_EFI
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|int

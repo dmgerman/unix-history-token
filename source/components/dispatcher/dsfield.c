@@ -418,6 +418,15 @@ name|ACPI_PARSE_EXECUTE
 operator|)
 condition|)
 block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Parse execute mode is not set"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_INTERNAL
@@ -1521,6 +1530,15 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Parse deferred mode is not set"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_INTERNAL

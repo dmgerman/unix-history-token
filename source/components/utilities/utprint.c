@@ -419,9 +419,15 @@ name|String
 argument_list|)
 condition|)
 block|{
+name|AcpiUtShortMultiply
+argument_list|(
 name|Number
-operator|*=
+argument_list|,
 literal|10
+argument_list|,
+operator|&
+name|Number
+argument_list|)
 expr_stmt|;
 name|Number
 operator|+=
@@ -769,6 +775,9 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
+operator|(
+name|INT32
+operator|)
 name|ACPI_PTR_DIFF
 argument_list|(
 name|Pos
@@ -1527,6 +1536,9 @@ expr_stmt|;
 block|}
 name|Length
 operator|=
+operator|(
+name|INT32
+operator|)
 name|AcpiUtBoundStringLength
 argument_list|(
 name|s
@@ -1934,6 +1946,9 @@ block|}
 block|}
 return|return
 operator|(
+operator|(
+name|int
+operator|)
 name|ACPI_PTR_DIFF
 argument_list|(
 name|Pos
