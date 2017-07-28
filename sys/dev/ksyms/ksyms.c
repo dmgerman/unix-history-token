@@ -441,7 +441,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Get the symbol and string table sizes for a kernel module. Add it to the  * running total.   */
+comment|/*  * Get the symbol and string table sizes for a kernel module. Add it to the  * running total.  */
 end_comment
 
 begin_function
@@ -519,7 +519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For kernel module get the symbol and string table sizes, returning the  * totals in *ts.   */
+comment|/*  * For kernel module get the symbol and string table sizes, returning the  * totals in *ts.  */
 end_comment
 
 begin_function
@@ -569,14 +569,14 @@ name|des
 parameter_list|,
 name|sz
 parameter_list|)
-value|do {				\ 		copyout(src, (void *)des, sz);			\ 		des += sz;					\ 	} while (0)
+value|do {			\ 	copyout(src, (void *)des, sz);			\ 	des += sz;					\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYMBLKSZ
-value|256 * sizeof (Elf_Sym)
+value|(256 * sizeof(Elf_Sym))
 end_define
 
 begin_comment
@@ -596,6 +596,10 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|buf
+decl_stmt|;
 name|struct
 name|toffsets
 modifier|*
@@ -623,10 +627,6 @@ name|numsyms
 decl_stmt|;
 name|linker_symval_t
 name|symval
-decl_stmt|;
-name|char
-modifier|*
-name|buf
 decl_stmt|;
 name|int
 name|i
@@ -706,7 +706,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Fix up symbol table for kernel modules:  		 *   string offsets need adjusted  		 *   symbol values made absolute 		 */
+comment|/* 		 * Fix up symbol table for kernel modules: 		 *   string offsets need adjusted 		 *   symbol values made absolute 		 */
 name|symp
 operator|=
 operator|(
@@ -817,7 +817,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-else|else
 name|to
 operator|->
 name|to_resid
@@ -866,7 +865,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-else|else
 name|to
 operator|->
 name|to_resid
@@ -933,7 +931,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* Be kernel stack friendly */
 name|hdr
 operator|=
 name|malloc
@@ -951,7 +948,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Create the ELF header.  	 */
+comment|/* 	 * Create the ELF header. 	 */
 name|hdr
 operator|->
 name|kh_ehdr
@@ -1188,7 +1185,7 @@ name|e_shstrndx
 operator|=
 name|SHDR_SHSTRTAB
 expr_stmt|;
-comment|/*  	 * Add both the text and data Program headers.  	 */
+comment|/* 	 * Add both the text and data program headers. 	 */
 name|hdr
 operator|->
 name|kh_txtphdr
@@ -1261,7 +1258,7 @@ name|PF_W
 operator||
 name|PF_X
 expr_stmt|;
-comment|/*  	 * Add the Section headers: null, symtab, strtab, shstrtab,  	 */
+comment|/* 	 * Add the section headers: null, symtab, strtab, shstrtab. 	 */
 comment|/* First section header - null */
 comment|/* Second section header - symtab */
 name|hdr
@@ -1657,7 +1654,7 @@ name|sh_entsize
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Copy shstrtab into the header */
+comment|/* Copy shstrtab into the header. */
 name|bcopy
 argument_list|(
 name|ksyms_shstrtab
@@ -1744,7 +1741,7 @@ expr|struct
 name|ksyms_hdr
 argument_list|)
 expr_stmt|;
-comment|/* Emit Header */
+comment|/* emit header */
 name|copyout
 argument_list|(
 name|hdr
@@ -1769,7 +1766,7 @@ argument_list|,
 name|M_KSYMS
 argument_list|)
 expr_stmt|;
-comment|/* Add symbol and string tables for each kernelmodule */
+comment|/* Add symbol and string tables for each kernel module. */
 name|error
 operator|=
 name|linker_file_foreach
@@ -1854,10 +1851,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1885,6 +1878,11 @@ name|struct
 name|tsizes
 name|ts
 decl_stmt|;
+name|struct
+name|ksyms_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|size_t
 name|total_elf_sz
 decl_stmt|;
@@ -1893,12 +1891,7 @@ name|error
 decl_stmt|,
 name|try
 decl_stmt|;
-name|struct
-name|ksyms_softc
-modifier|*
-name|sc
-decl_stmt|;
-comment|/*  	 *  Limit one open() per process. The process must close() 	 *  before open()'ing again. 	 */
+comment|/* 	 * Limit one open() per process. The process must close() 	 * before open()'ing again. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1940,11 +1933,6 @@ block|}
 block|}
 name|sc
 operator|=
-operator|(
-expr|struct
-name|ksyms_softc
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -2028,11 +2016,13 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|failed
 goto|;
-comment|/* 	 * MOD_SLOCK doesn't work here (because of a lock reversal with  	 * KLD_SLOCK).  Therefore, simply try upto 3 times to get a "clean" 	 * snapshot of the kernel symbol table.  This should work fine in the 	 * rare case of a kernel module being loaded/unloaded at the same 	 * time.  	 */
+comment|/* 	 * MOD_SLOCK doesn't work here (because of a lock reversal with 	 * KLD_SLOCK).  Therefore, simply try up to 3 times to get a "clean" 	 * snapshot of the kernel symbol table.  This should work fine in the 	 * rare case of a kernel module being loaded/unloaded at the same 	 * time. 	 */
 for|for
 control|(
 name|try
@@ -2047,7 +2037,7 @@ name|try
 operator|++
 control|)
 block|{
-comment|/* 	 	* Map a buffer in the calling process memory space and 	 	* create a snapshot of the kernel symbol table in it. 	 	*/
+comment|/* 		 * Map a buffer in the calling process memory space and 		 * create a snapshot of the kernel symbol table in it. 		 */
 comment|/* Compute the size of buffer needed. */
 name|ksyms_size_calc
 argument_list|(
@@ -2078,11 +2068,9 @@ argument_list|(
 name|td
 argument_list|,
 operator|&
-operator|(
 name|sc
 operator|->
 name|sc_uaddr
-operator|)
 argument_list|,
 operator|(
 name|vm_size_t
@@ -2093,6 +2081,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 break|break;
 name|sc
@@ -2117,18 +2107,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
 condition|)
-block|{
-comment|/* Successful Snapshot */
+comment|/* successful snapshot */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-comment|/* Snapshot failed, unmap the memory and try again */
+comment|/* Snapshot failed, unmap the memory and try again. */
 operator|(
 name|void
 operator|)
@@ -2161,10 +2150,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -2185,28 +2170,28 @@ name|flags
 name|__unused
 parameter_list|)
 block|{
-name|int
-name|error
+name|struct
+name|ksyms_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|off_t
+name|off
 decl_stmt|;
 name|size_t
 name|len
 decl_stmt|,
 name|sz
 decl_stmt|;
-name|struct
-name|ksyms_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|off_t
-name|off
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
 name|vm_size_t
 name|ubase
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -2224,6 +2209,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2263,13 +2250,11 @@ if|if
 condition|(
 name|len
 operator|>
-operator|(
 name|sc
 operator|->
 name|sc_usize
 operator|-
 name|off
-operator|)
 condition|)
 name|len
 operator|=
@@ -2338,6 +2323,8 @@ name|buf
 argument_list|,
 name|sz
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|error
 operator|=
@@ -2358,6 +2345,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 break|break;
 name|len
@@ -2383,10 +2372,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -2415,15 +2400,13 @@ name|td
 name|__unused
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|ksyms_softc
 modifier|*
 name|sc
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -2441,6 +2424,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2455,7 +2440,7 @@ block|{
 case|case
 name|KIOCGSIZE
 case|:
-comment|/*  		 * Return the size (in bytes) of the symbol table 		 * snapshot. 		 */
+comment|/* 		 * Return the size (in bytes) of the symbol table 		 * snapshot. 		 */
 operator|*
 operator|(
 name|size_t
@@ -2503,10 +2488,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -2559,6 +2540,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2614,10 +2597,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -2642,15 +2621,13 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|ksyms_softc
 modifier|*
 name|sc
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -2668,6 +2645,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2675,8 +2654,8 @@ name|error
 operator|)
 return|;
 comment|/* Unmap the buffer from the process address space. */
-name|error
-operator|=
+return|return
+operator|(
 name|copyout_unmap
 argument_list|(
 name|td
@@ -2689,18 +2668,10 @@ name|sc
 operator|->
 name|sc_usize
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -2722,9 +2693,11 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|type
