@@ -6004,14 +6004,20 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"maxsize: %zd nsegments: %d maxsegsize: %zd\n"
+literal|"maxsize: %ju nsegments: %d maxsegsize: %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sctx
 operator|->
 name|isc_tx_maxsize
 argument_list|,
 name|nsegments
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sctx
 operator|->
 name|isc_tx_maxsegsize
