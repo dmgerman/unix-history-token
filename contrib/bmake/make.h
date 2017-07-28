@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.102 2016/12/07 15:00:46 christos Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.103 2017/07/20 19:29:54 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -2301,6 +2301,49 @@ define|#
 directive|define
 name|PATH_MAX
 value|MAXPATHLEN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYSV
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KILLPG
+parameter_list|(
+name|pid
+parameter_list|,
+name|sig
+parameter_list|)
+value|kill(-(pid), (sig))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KILLPG
+parameter_list|(
+name|pid
+parameter_list|,
+name|sig
+parameter_list|)
+value|killpg((pid), (sig))
 end_define
 
 begin_endif

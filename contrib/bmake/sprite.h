@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: sprite.h,v 1.11 2009/01/23 21:26:30 dsl Exp $	*/
+comment|/*	$NetBSD: sprite.h,v 1.14 2017/05/31 22:02:06 maya Exp $	*/
 end_comment
 
 begin_comment
@@ -18,13 +18,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SPRITE
+name|MAKE_SPRITE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SPRITE
+name|MAKE_SPRITE_H
 end_define
 
 begin_comment
@@ -117,7 +117,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SPRITE */
+comment|/* MAKE_SPRITE_H */
 end_comment
 
 end_unit
