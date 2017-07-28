@@ -1123,9 +1123,9 @@ argument_list|)
 comment|/* 	 * Workaround for Marvell Armada38X family HW issue 	 * between Cortex-A9 CPUs and on-chip devices that may 	 * cause hang on heavy load. 	 * To avoid that, map all registers including PCIe IO 	 * as strongly ordered instead of device memory. 	 */
 name|pmap_remap_vm_attr
 argument_list|(
-name|PTE2_ATTR_DEVICE
+name|VM_MEMATTR_DEVICE
 argument_list|,
-name|PTE2_ATTR_SO
+name|VM_MEMATTR_SO
 argument_list|)
 expr_stmt|;
 comment|/* Set IO Sync Barrier bit for all Mbus devices */
