@@ -1313,9 +1313,10 @@ name|et
 operator|.
 name|et_min_period
 operator|=
+name|nstosbt
+argument_list|(
 literal|20
-operator|*
-name|SBT_1NS
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
