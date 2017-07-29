@@ -10757,6 +10757,9 @@ name|struct
 name|obj_list
 modifier|*
 name|entry
+decl_stmt|,
+modifier|*
+name|tentry
 decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
@@ -11520,13 +11523,15 @@ name|dn
 expr_stmt|;
 name|done
 label|:
-name|STAILQ_FOREACH
+name|STAILQ_FOREACH_SAFE
 argument_list|(
 argument|entry
 argument_list|,
 argument|&on_cache
 argument_list|,
 argument|entry
+argument_list|,
+argument|tentry
 argument_list|)
 name|free
 argument_list|(
