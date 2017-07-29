@@ -9843,11 +9843,14 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* 		 * It is older pool without features. As we have already 		 * tested the label, just return without raising the error. 		 */
 return|return
 operator|(
-name|rc
+literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
