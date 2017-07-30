@@ -202,6 +202,22 @@ name|ENABLE_X86_RELAX_RELOCATIONS
 value|0
 end_define
 
+begin_comment
+comment|/* Enable each functionality of modules */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_ENABLE_ARCMT */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_ENABLE_OBJC_REWRITER */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_ENABLE_STATIC_ANALYZER */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

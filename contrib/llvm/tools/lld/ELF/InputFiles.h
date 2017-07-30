@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Threading.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -875,6 +881,11 @@ operator|::
 name|DWARFDebugLine
 operator|>
 name|DwarfLine
+expr_stmt|;
+name|llvm
+operator|::
+name|once_flag
+name|InitDwarfLine
 expr_stmt|;
 block|}
 end_decl_stmt
