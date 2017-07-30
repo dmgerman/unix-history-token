@@ -6870,7 +6870,6 @@ comment|/* Get the driver parameter tunables.  Lowest priority are the driver de
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|mpr_get_tunables
 parameter_list|(
@@ -7935,11 +7934,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|mpr_get_tunables
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|MPR_FUNCTRACE
 argument_list|(
 name|sc
