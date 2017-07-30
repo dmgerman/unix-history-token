@@ -323,6 +323,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAP_GUARD
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* reserve but don't map address range */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAP_EXCL
 value|0x00004000
 end_define

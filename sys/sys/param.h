@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1003515
+value|1003516
 end_define
 
 begin_comment
@@ -83,11 +83,19 @@ directive|define
 name|__FreeBSD_kernel__
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IN_RTLD
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -108,6 +116,13 @@ define|#
 directive|define
 name|P_OSREL_MAP_ANON
 value|800104
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_OSREL_MAP_GUARD
+value|1200035
 end_define
 
 begin_define
