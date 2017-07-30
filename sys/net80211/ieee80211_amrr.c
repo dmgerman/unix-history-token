@@ -520,6 +520,10 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+name|nrefs
+operator|++
+expr_stmt|;
+comment|/* XXX locking */
 name|amrr
 operator|=
 name|vap
@@ -615,6 +619,21 @@ argument_list|,
 name|M_80211_RATECTL
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|nrefs
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"imbalanced attach/detach"
+operator|)
+argument_list|)
+expr_stmt|;
+name|nrefs
+operator|--
+expr_stmt|;
+comment|/* XXX locking */
 block|}
 end_function
 
