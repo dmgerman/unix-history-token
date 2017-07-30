@@ -1458,6 +1458,9 @@ name|ich_arg
 operator|=
 name|dev
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FDT
 if|if
 condition|(
 name|ofw_bus_is_compatible
@@ -1473,6 +1476,8 @@ name|sc_mcp7941x
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * We have to wait until interrupts are enabled.  Usually I2C read 	 * and write only works when the interrupts are available. 	 */
 if|if
 condition|(
