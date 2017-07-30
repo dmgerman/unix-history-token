@@ -631,9 +631,6 @@ name|struct
 name|sysentvec
 modifier|*
 name|sv
-parameter_list|,
-name|long
-name|vdso_adjust
 parameter_list|)
 block|{
 name|struct
@@ -681,7 +678,9 @@ expr_stmt|;
 comment|/* Adjust our so relative to the sigcode_base */
 if|if
 condition|(
-name|vdso_adjust
+name|sv
+operator|->
+name|sv_shared_page_base
 operator|!=
 literal|0
 condition|)
@@ -690,7 +689,9 @@ name|ehdr
 operator|->
 name|e_entry
 operator|+=
-name|vdso_adjust
+name|sv
+operator|->
+name|sv_shared_page_base
 expr_stmt|;
 name|phdr
 operator|=
@@ -733,7 +734,9 @@ index|]
 operator|.
 name|p_vaddr
 operator|+=
-name|vdso_adjust
+name|sv
+operator|->
+name|sv_shared_page_base
 expr_stmt|;
 if|if
 condition|(
@@ -837,7 +840,9 @@ name|d_un
 operator|.
 name|d_ptr
 operator|+=
-name|vdso_adjust
+name|sv
+operator|->
+name|sv_shared_page_base
 expr_stmt|;
 break|break;
 case|case
@@ -876,7 +881,9 @@ name|d_un
 operator|.
 name|d_ptr
 operator|+=
-name|vdso_adjust
+name|sv
+operator|->
+name|sv_shared_page_base
 expr_stmt|;
 break|break;
 default|default:
@@ -940,7 +947,9 @@ index|]
 operator|.
 name|sh_addr
 operator|+=
-name|vdso_adjust
+name|sv
+operator|->
+name|sv_shared_page_base
 expr_stmt|;
 if|if
 condition|(
@@ -1034,7 +1043,9 @@ name|sym
 operator|->
 name|st_value
 operator|+=
-name|vdso_adjust
+name|sv
+operator|->
+name|sv_shared_page_base
 expr_stmt|;
 block|}
 block|}
