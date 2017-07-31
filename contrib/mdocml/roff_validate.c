@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: roff_validate.c,v 1.7 2017/06/06 15:01:04 schwarze Exp $ */
+comment|/*	$Id: roff_validate.c,v 1.9 2017/06/14 22:51:25 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -104,6 +104,12 @@ comment|/* ll */
 name|NULL
 block|,
 comment|/* mc */
+name|NULL
+block|,
+comment|/* po */
+name|NULL
+block|,
+comment|/* rj */
 name|NULL
 block|,
 comment|/* sp */

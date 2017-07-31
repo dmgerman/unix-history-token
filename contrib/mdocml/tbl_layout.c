@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_layout.c,v 1.42 2017/06/08 18:11:22 schwarze Exp $ */
+comment|/*	$Id: tbl_layout.c,v 1.44 2017/06/27 18:25:02 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -1534,6 +1540,32 @@ argument_list|,
 name|TBL_CELL_LEFT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tbl
+operator|->
+name|opts
+operator|.
+name|lvert
+operator|<
+name|tbl
+operator|->
+name|first_row
+operator|->
+name|vert
+condition|)
+name|tbl
+operator|->
+name|opts
+operator|.
+name|lvert
+operator|=
+name|tbl
+operator|->
+name|first_row
+operator|->
+name|vert
+expr_stmt|;
 return|return;
 block|}
 comment|/* 			 * Search for the widest line 			 * along the left and right margins. 			 */
@@ -1800,6 +1832,12 @@ operator|*
 name|p
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|spacing
+operator|=
+name|SIZE_MAX
 expr_stmt|;
 name|p
 operator|->

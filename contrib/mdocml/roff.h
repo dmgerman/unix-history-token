@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: roff.h,v 1.52 2017/06/07 23:29:49 schwarze Exp $	*/
+comment|/*	$Id: roff.h,v 1.58 2017/07/08 14:51:05 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -36,21 +36,6 @@ block|,
 name|MACROSET_MDOC
 block|,
 name|MACROSET_MAN
-block|}
-enum|;
-end_enum
-
-begin_enum
-enum|enum
-name|mdoc_os
-block|{
-name|MDOC_OS_OTHER
-init|=
-literal|0
-block|,
-name|MDOC_OS_NETBSD
-block|,
-name|MDOC_OS_OPENBSD
 block|}
 enum|;
 end_enum
@@ -153,6 +138,10 @@ block|,
 name|ROFF_ll
 block|,
 name|ROFF_mc
+block|,
+name|ROFF_po
+block|,
+name|ROFF_rj
 block|,
 name|ROFF_sp
 block|,
@@ -485,8 +474,6 @@ name|ROFF_pn
 block|,
 name|ROFF_pnr
 block|,
-name|ROFF_po
-block|,
 name|ROFF_ps
 block|,
 name|ROFF_psbb
@@ -510,8 +497,6 @@ block|,
 name|ROFF_rfschar
 block|,
 name|ROFF_rhang
-block|,
-name|ROFF_rj
 block|,
 name|ROFF_rm
 block|,
@@ -943,6 +928,10 @@ name|MAN_UR
 block|,
 name|MAN_UE
 block|,
+name|MAN_MT
+block|,
+name|MAN_ME
+block|,
 name|MAN_MAX
 block|}
 enum|;
@@ -1055,9 +1044,8 @@ modifier|*
 name|span
 decl_stmt|;
 comment|/* TBL */
-specifier|const
 name|struct
-name|eqn
+name|eqn_box
 modifier|*
 name|eqn
 decl_stmt|;
@@ -1196,8 +1184,12 @@ name|int
 name|hasbody
 decl_stmt|;
 comment|/* Document is not empty. */
+name|int
+name|rcsids
+decl_stmt|;
+comment|/* Bits indexed by enum mandoc_os. */
 name|enum
-name|mdoc_os
+name|mandoc_os
 name|os_e
 decl_stmt|;
 comment|/* Operating system. */
@@ -1241,7 +1233,7 @@ comment|/* Man macro lookup table. */
 specifier|const
 name|char
 modifier|*
-name|defos
+name|os_s
 decl_stmt|;
 comment|/* Default operating system. */
 name|struct
