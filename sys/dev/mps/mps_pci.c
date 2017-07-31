@@ -1181,6 +1181,10 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|msgs
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1251,7 +1255,12 @@ argument_list|,
 name|MPS_MSI_COUNT
 argument_list|)
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
 name|msgs
 operator|=
 literal|0
