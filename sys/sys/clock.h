@@ -127,7 +127,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Time-of-day clock register/unregister functions, and associated flags.  These  * functions can sleep.  Upon return from unregister, the clock's methods are  * not running and will not be called again.  *  * Flags:  *  *  CLOCKF_SETTIME_NO_TS  *    Do not pass a timespec to clock_settime(), the driver obtains its own time  *    and applies its own adjustments (this flag implies CLOCKF_SETTIME_NO_ADJ).  *  *  CLOCKF_SETTIME_NO_ADJ  *    Do not apply utc offset and resolution/accuracy adjustments to the value  *    passed to clock_settime(), the driver applies them itself.  *  *  CLOCKF_GETTIME_NO_ADJ  *    Do not apply utc offset and resolution/accuracy adjustments to the value  *    returned from clock_gettime(), the driver has already applied them.  */
+comment|/*  * Time-of-day clock functions and flags.  These functions might sleep.  *  * clock_register and clock_unregister() do what they say.  Upon return from  * unregister, the clock's methods are not running and will not be called again.  *  * clock_schedule() requests that a registered clock's clock_settime() calls  * happen at the given offset into the second.  The default is 0, meaning no  * specific scheduling.  To schedule the call as soon after top-of-second as  * possible, specify 1.  Each clock has its own schedule, but taskqueue_thread  * is shared by many tasks; the timing of the call is not guaranteed.  *  * Flags:  *  *  CLOCKF_SETTIME_NO_TS  *    Do not pass a timespec to clock_settime(), the driver obtains its own time  *    and applies its own adjustments (this flag implies CLOCKF_SETTIME_NO_ADJ).  *  *  CLOCKF_SETTIME_NO_ADJ  *    Do not apply utc offset and resolution/accuracy adjustments to the value  *    passed to clock_settime(), the driver applies them itself.  *  *  CLOCKF_GETTIME_NO_ADJ  *    Do not apply utc offset and resolution/accuracy adjustments to the value  *    returned from clock_gettime(), the driver has already applied them.  */
 end_comment
 
 begin_define
@@ -176,6 +176,19 @@ name|_resolution_us
 parameter_list|,
 name|int
 name|_flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|clock_schedule
+parameter_list|(
+name|device_t
+name|clockdev
+parameter_list|,
+name|u_int
+name|_offsetns
 parameter_list|)
 function_decl|;
 end_function_decl
