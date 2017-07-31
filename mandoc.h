@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.h,v 1.226 2017/06/08 18:11:22 schwarze Exp $ */
+comment|/*	$Id: mandoc.h,v 1.245 2017/07/08 14:51:04 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -85,9 +85,45 @@ name|mandocerr
 block|{
 name|MANDOCERR_OK
 block|,
+name|MANDOCERR_BASE
+block|,
+comment|/* ===== start of base system conventions ===== */
+name|MANDOCERR_MDOCDATE
+block|,
+comment|/* Mdocdate found: Dd ... */
+name|MANDOCERR_MDOCDATE_MISSING
+block|,
+comment|/* Mdocdate missing: Dd ... */
+name|MANDOCERR_ARCH_BAD
+block|,
+comment|/* unknown architecture: Dt ... arch */
+name|MANDOCERR_OS_ARG
+block|,
+comment|/* operating system explicitly specified: Os ... */
+name|MANDOCERR_RCS_MISSING
+block|,
+comment|/* RCS id missing */
+name|MANDOCERR_XR_BAD
+block|,
+comment|/* referenced manual not found: Xr name sec */
 name|MANDOCERR_STYLE
 block|,
 comment|/* ===== start of style suggestions ===== */
+name|MANDOCERR_DATE_LEGACY
+block|,
+comment|/* legacy man(7) date format: Dd ... */
+name|MANDOCERR_TITLE_CASE
+block|,
+comment|/* lower case character in document title */
+name|MANDOCERR_RCS_REP
+block|,
+comment|/* duplicate RCS id: ... */
+name|MANDOCERR_SEC_TYPO
+block|,
+comment|/* typo in section name: Sh ... */
+name|MANDOCERR_ARG_QUOTE
+block|,
+comment|/* unterminated quoted argument */
 name|MANDOCERR_MACRO_USELESS
 block|,
 comment|/* useless macro: macro */
@@ -100,9 +136,27 @@ comment|/* errnos out of order: Er ... */
 name|MANDOCERR_ER_REP
 block|,
 comment|/* duplicate errno: Er ... */
-name|MANDOCERR_ND_DOT
+name|MANDOCERR_DELIM
 block|,
-comment|/* description line ends with a full stop */
+comment|/* trailing delimiter: macro ... */
+name|MANDOCERR_DELIM_NB
+block|,
+comment|/* no blank before trailing delimiter: macro ... */
+name|MANDOCERR_FI_SKIP
+block|,
+comment|/* fill mode already enabled, skipping: fi */
+name|MANDOCERR_NF_SKIP
+block|,
+comment|/* fill mode already disabled, skipping: nf */
+name|MANDOCERR_FUNC
+block|,
+comment|/* function name without markup: name() */
+name|MANDOCERR_SPACE_EOL
+block|,
+comment|/* whitespace at end of input line */
+name|MANDOCERR_COMMENT_BAD
+block|,
+comment|/* bad comment style */
 name|MANDOCERR_WARNING
 block|,
 comment|/* ===== start of warnings ===== */
@@ -113,9 +167,6 @@ comment|/* missing manual title, using UNTITLED: line */
 name|MANDOCERR_TH_NOTITLE
 block|,
 comment|/* missing manual title, using "": [macro] */
-name|MANDOCERR_TITLE_CASE
-block|,
-comment|/* lower case character in document title */
 name|MANDOCERR_MSEC_MISSING
 block|,
 comment|/* missing manual section, using "": macro */
@@ -128,18 +179,15 @@ comment|/* missing date, using today's date */
 name|MANDOCERR_DATE_BAD
 block|,
 comment|/* cannot parse date, using it verbatim: date */
+name|MANDOCERR_DATE_FUTURE
+block|,
+comment|/* date in the future, using it anyway: date */
 name|MANDOCERR_OS_MISSING
 block|,
 comment|/* missing Os macro, using "" */
-name|MANDOCERR_PROLOG_REP
-block|,
-comment|/* duplicate prologue macro: macro */
 name|MANDOCERR_PROLOG_LATE
 block|,
 comment|/* late prologue macro: macro */
-name|MANDOCERR_DT_LATE
-block|,
-comment|/* skipping late title macro: Dt args */
 name|MANDOCERR_PROLOG_ORDER
 block|,
 comment|/* prologue macros out of order: macros */
@@ -186,6 +234,9 @@ comment|/* duplicate section title: Sh title */
 name|MANDOCERR_SEC_MSEC
 block|,
 comment|/* unexpected section: Sh title for ... only */
+name|MANDOCERR_XR_SELF
+block|,
+comment|/* cross reference to self: Xr name sec */
 name|MANDOCERR_XR_ORDER
 block|,
 comment|/* unusual Xr order: ... after ... */
@@ -220,12 +271,9 @@ comment|/* nested displays are not portable: macro ... */
 name|MANDOCERR_BL_MOVE
 block|,
 comment|/* moving content out of list: macro */
-name|MANDOCERR_FI_SKIP
+name|MANDOCERR_TA_LINE
 block|,
-comment|/* fill mode already enabled, skipping: fi */
-name|MANDOCERR_NF_SKIP
-block|,
-comment|/* fill mode already disabled, skipping: nf */
+comment|/* first macro on line: Ta */
 name|MANDOCERR_BLK_LINE
 block|,
 comment|/* line scope broken: macro breaks macro */
@@ -269,6 +317,9 @@ comment|/* empty head in list item: Bl -type It */
 name|MANDOCERR_IT_NOBODY
 block|,
 comment|/* empty list item: Bl -type It */
+name|MANDOCERR_IT_NOARG
+block|,
+comment|/* missing argument, using next line: Bl -c It */
 name|MANDOCERR_BF_NOFONT
 block|,
 comment|/* missing font type, using \fR: Bf */
@@ -297,9 +348,6 @@ name|MANDOCERR_EQN_NOBOX
 block|,
 comment|/* missing eqn box, using "": op */
 comment|/* related to bad arguments */
-name|MANDOCERR_ARG_QUOTE
-block|,
-comment|/* unterminated quoted argument */
 name|MANDOCERR_ARG_REP
 block|,
 comment|/* duplicate argument: macro arg */
@@ -349,15 +397,9 @@ comment|/* blank line in fill mode, using .sp */
 name|MANDOCERR_FI_TAB
 block|,
 comment|/* tab in filled text */
-name|MANDOCERR_SPACE_EOL
-block|,
-comment|/* whitespace at end of input line */
 name|MANDOCERR_EOS
 block|,
 comment|/* new sentence, new line */
-name|MANDOCERR_COMMENT_BAD
-block|,
-comment|/* bad comment style */
 name|MANDOCERR_ESC_BAD
 block|,
 comment|/* invalid escape sequence: esc */
@@ -415,6 +457,12 @@ comment|/* related to document structure and macros */
 name|MANDOCERR_FILE
 block|,
 comment|/* cannot open file */
+name|MANDOCERR_PROLOG_REP
+block|,
+comment|/* duplicate prologue macro: macro */
+name|MANDOCERR_DT_LATE
+block|,
+comment|/* skipping late title macro: Dt args */
 name|MANDOCERR_ROFFLOOP
 block|,
 comment|/* input stack limit exceeded, infinite loop? */
@@ -865,9 +913,6 @@ begin_enum
 enum|enum
 name|eqn_boxt
 block|{
-name|EQN_ROOT
-block|,
-comment|/* root of parse tree */
 name|EQN_TEXT
 block|,
 comment|/* text (number, variable, whatever) */
@@ -877,9 +922,6 @@ comment|/* nested `eqn' subexpression */
 name|EQN_LIST
 block|,
 comment|/* list (braces, etc.) */
-name|EQN_LISTONE
-block|,
-comment|/* singleton list */
 name|EQN_PILE
 block|,
 comment|/* vertical pile */
@@ -1072,37 +1114,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * An equation consists of a tree of expressions starting at a given  * line and position.  */
-end_comment
-
-begin_struct
-struct|struct
-name|eqn
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* identifier (or NULL) */
-name|struct
-name|eqn_box
-modifier|*
-name|root
-decl_stmt|;
-comment|/* root mathematical expression */
-name|int
-name|ln
-decl_stmt|;
-comment|/* invocation line */
-name|int
-name|pos
-decl_stmt|;
-comment|/* invocation position */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Parse options.  */
 end_comment
 
@@ -1174,6 +1185,21 @@ end_comment
 
 begin_enum
 enum|enum
+name|mandoc_os
+block|{
+name|MANDOC_OS_OTHER
+init|=
+literal|0
+block|,
+name|MANDOC_OS_NETBSD
+block|,
+name|MANDOC_OS_OPENBSD
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
 name|mandoc_esc
 block|{
 name|ESCAPE_ERROR
@@ -1211,6 +1237,9 @@ comment|/* a numbered glyph */
 name|ESCAPE_UNICODE
 block|,
 comment|/* a unicode codepoint */
+name|ESCAPE_BREAK
+block|,
+comment|/* break the output line */
 name|ESCAPE_NOSPACE
 block|,
 comment|/* suppress space if the last on a line */
@@ -1386,9 +1415,12 @@ parameter_list|(
 name|int
 parameter_list|,
 name|enum
-name|mandoclevel
+name|mandocerr
 parameter_list|,
 name|mandocmsg
+parameter_list|,
+name|enum
+name|mandoc_os
 parameter_list|,
 specifier|const
 name|char

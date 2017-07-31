@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term_ascii.c,v 1.57 2017/06/07 17:38:26 schwarze Exp $ */
+comment|/*	$Id: term_ascii.c,v 1.58 2017/06/14 14:24:20 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -1604,7 +1604,7 @@ literal|"<96>"
 block|,
 literal|"<97>"
 block|,
-literal|"<99>"
+literal|"<98>"
 block|,
 literal|"<99>"
 block|,

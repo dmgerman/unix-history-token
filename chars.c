@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: chars.c,v 1.70 2017/06/02 12:43:52 schwarze Exp $ */
+comment|/*	$Id: chars.c,v 1.71 2017/06/14 20:57:07 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -257,6 +257,14 @@ block|}
 block|,
 block|{
 literal|"ul"
+block|,
+literal|"_"
+block|,
+literal|0x005f
+block|}
+block|,
+block|{
+literal|"ru"
 block|,
 literal|"_"
 block|,

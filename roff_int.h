@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: roff_int.h,v 1.7 2015/11/07 14:01:16 schwarze Exp $	*/
+comment|/*	$Id: roff_int.h,v 1.9 2017/07/08 17:52:50 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -148,38 +148,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|roff_addeqn
-parameter_list|(
-name|struct
-name|roff_man
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|eqn
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|roff_addtbl
-parameter_list|(
-name|struct
-name|roff_man
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|tbl_span
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: out.h,v 1.29 2017/06/08 18:11:22 schwarze Exp $ */
+comment|/*	$Id: out.h,v 1.31 2017/06/27 18:25:02 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -58,6 +58,10 @@ name|size_t
 name|decimal
 decl_stmt|;
 comment|/* decimal position in cell */
+name|size_t
+name|spacing
+decl_stmt|;
+comment|/* spacing after the column */
 name|int
 name|flags
 decl_stmt|;
@@ -234,6 +238,8 @@ specifier|const
 name|struct
 name|tbl_span
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_term.c,v 1.363 2017/06/08 12:54:58 schwarze Exp $ */
+comment|/*	$Id: mdoc_term.c,v 1.364 2017/06/14 17:51:15 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -3262,15 +3262,13 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|term_hspan
+name|term_hen
 argument_list|(
 name|p
 argument_list|,
 operator|&
 name|su
 argument_list|)
-operator|/
-literal|24
 return|;
 block|}
 end_function
@@ -3908,15 +3906,13 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
-name|term_hspan
+name|term_hen
 argument_list|(
 name|p
 argument_list|,
 operator|&
 name|su
 argument_list|)
-operator|/
-literal|24
 operator|+
 name|dcol
 expr_stmt|;
@@ -3968,15 +3964,13 @@ argument_list|)
 expr_stmt|;
 name|width
 operator|=
-name|term_hspan
+name|term_hen
 argument_list|(
 name|p
 argument_list|,
 operator|&
 name|su
 argument_list|)
-operator|/
-literal|24
 operator|+
 name|dcol
 expr_stmt|;
