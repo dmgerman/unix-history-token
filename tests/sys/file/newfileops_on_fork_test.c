@@ -67,12 +67,23 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PORT
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|PORT
 value|9000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
