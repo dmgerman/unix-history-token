@@ -1618,9 +1618,6 @@ name|ds1307_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|long
-name|waitns
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
