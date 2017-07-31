@@ -1449,6 +1449,21 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* If the clock halted, we don't have good data. */
+if|if
+condition|(
+name|data
+index|[
+name|DS1307_SECS
+index|]
+operator|&
+name|DS1307_SECS_CH
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* If chip is in AM/PM mode remember that. */
 if|if
 condition|(
