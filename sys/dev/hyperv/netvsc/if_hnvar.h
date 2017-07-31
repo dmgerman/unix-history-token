@@ -158,9 +158,9 @@ decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
-name|hn_vf
+name|hn_rxvf_ifp
 decl_stmt|;
-comment|/* SR-IOV VF */
+comment|/* SR-IOV VF for RX */
 name|struct
 name|hn_tx_ring
 modifier|*
@@ -536,6 +536,12 @@ name|arpcom
 name|arpcom
 decl_stmt|;
 name|struct
+name|ifnet
+modifier|*
+name|hn_vf_ifp
+decl_stmt|;
+comment|/* SR-IOV VF */
+name|struct
 name|ifmedia
 name|hn_media
 decl_stmt|;
@@ -722,6 +728,12 @@ name|hn_ifaddr_evthand
 decl_stmt|;
 name|eventhandler_tag
 name|hn_ifnet_evthand
+decl_stmt|;
+name|eventhandler_tag
+name|hn_ifnet_atthand
+decl_stmt|;
+name|eventhandler_tag
+name|hn_ifnet_dethand
 decl_stmt|;
 block|}
 struct|;
