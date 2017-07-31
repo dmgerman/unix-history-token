@@ -26105,6 +26105,9 @@ break|break;
 case|case
 name|RNDIS_STATUS_TASK_OFFLOAD_CURRENT_CONFIG
 case|:
+case|case
+name|RNDIS_STATUS_LINK_SPEED_CHANGE
+case|:
 comment|/* Not really useful; ignore. */
 break|break;
 case|case
