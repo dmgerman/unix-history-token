@@ -619,7 +619,7 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0
+name|MPR_FLAGS_GEN35_IOC
 block|,
 literal|"Avago Technologies (LSI) SAS3408"
 block|}
@@ -633,7 +633,7 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0
+name|MPR_FLAGS_GEN35_IOC
 block|,
 literal|"Avago Technologies (LSI) SAS3416"
 block|}
@@ -647,7 +647,7 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0
+name|MPR_FLAGS_GEN35_IOC
 block|,
 literal|"Avago Technologies (LSI) SAS3508"
 block|}
@@ -661,7 +661,7 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0
+name|MPR_FLAGS_GEN35_IOC
 block|,
 literal|"Avago Technologies (LSI) SAS3508_1"
 block|}
@@ -675,7 +675,7 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0
+name|MPR_FLAGS_GEN35_IOC
 block|,
 literal|"Avago Technologies (LSI) SAS3516"
 block|}
@@ -689,7 +689,7 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0
+name|MPR_FLAGS_GEN35_IOC
 block|,
 literal|"Avago Technologies (LSI) SAS3516_1"
 block|}
@@ -703,7 +703,7 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0
+name|MPR_FLAGS_GEN35_IOC
 block|,
 literal|"Avago Technologies (LSI) SAS3616"
 block|}
@@ -717,7 +717,7 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0
+name|MPR_FLAGS_GEN35_IOC
 block|,
 literal|"Avago Technologies (LSI) SAS3708"
 block|}
@@ -731,7 +731,7 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0
+name|MPR_FLAGS_GEN35_IOC
 block|,
 literal|"Avago Technologies (LSI) SAS3716"
 block|}
@@ -992,89 +992,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Set flag if this is a Gen3.5 IOC */
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|device
-operator|==
-name|MPI26_MFGPAGE_DEVID_SAS3508
-operator|)
-operator|||
-operator|(
-name|m
-operator|->
-name|device
-operator|==
-name|MPI26_MFGPAGE_DEVID_SAS3508_1
-operator|)
-operator|||
-operator|(
-name|m
-operator|->
-name|device
-operator|==
-name|MPI26_MFGPAGE_DEVID_SAS3408
-operator|)
-operator|||
-operator|(
-name|m
-operator|->
-name|device
-operator|==
-name|MPI26_MFGPAGE_DEVID_SAS3516
-operator|)
-operator|||
-operator|(
-name|m
-operator|->
-name|device
-operator|==
-name|MPI26_MFGPAGE_DEVID_SAS3516_1
-operator|)
-operator|||
-operator|(
-name|m
-operator|->
-name|device
-operator|==
-name|MPI26_MFGPAGE_DEVID_SAS3416
-operator|)
-operator|||
-operator|(
-name|m
-operator|->
-name|device
-operator|==
-name|MPI26_MFGPAGE_DEVID_SAS3716
-operator|)
-operator|||
-operator|(
-name|m
-operator|->
-name|device
-operator|==
-name|MPI26_MFGPAGE_DEVID_SAS3616
-operator|)
-operator|||
-operator|(
-name|m
-operator|->
-name|device
-operator|==
-name|MPI26_MFGPAGE_DEVID_SAS3708
-operator|)
-condition|)
-block|{
-name|sc
-operator|->
-name|mpr_flags
-operator||=
-name|MPR_FLAGS_GEN35_IOC
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i
