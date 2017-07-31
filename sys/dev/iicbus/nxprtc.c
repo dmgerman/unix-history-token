@@ -2213,7 +2213,7 @@ literal|"WARNING: RTC battery failed; time is invalid\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Everything looks good if we make it to here; register as an RTC.  If 	 * we're using the timer to count fractional seconds, our resolution is 	 * 1e6/64, about 15.6ms.  Without the timer we still align the RTC clock 	 * when setting it so our error is an average .5s when reading it. 	 */
+comment|/* 	 * Everything looks good if we make it to here; register as an RTC.  If 	 * we're using the timer to count fractional seconds, our resolution is 	 * 1e6/64, about 15.6ms.  Without the timer we still align the RTC clock 	 * when setting it so our error is an average .5s when reading it. 	 * Schedule our clock_settime() method to be called at a .495ms offset 	 * into the second, because the clock hardware resets the divider chain 	 * to the mid-second point when you set the time and it takes about 5ms 	 * of i2c bus activity to set the clock. 	 */
 name|resolution
 operator|=
 name|sc
@@ -2243,6 +2243,15 @@ argument_list|,
 name|resolution
 argument_list|,
 name|clockflags
+argument_list|)
+expr_stmt|;
+name|clock_schedule
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|495000000
 argument_list|)
 expr_stmt|;
 block|}
@@ -2661,9 +2670,6 @@ name|nxprtc_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|long
-name|waitns
-decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -2681,48 +2687,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We stop the clock, set the time, then restart the clock.  Half a 	 * second after restarting the clock it ticks over to the next second. 	 * So to align the RTC, sleep until system time is halfway through the 	 * current second (shoot for .495 to allow time for i2c operations). 	 */
-name|getnanotime
-argument_list|(
-name|ts
-argument_list|)
-expr_stmt|;
-name|waitns
-operator|=
-literal|495000000
-operator|-
-name|ts
-operator|->
-name|tv_nsec
-expr_stmt|;
-if|if
-condition|(
-name|waitns
-operator|<
-literal|0
-condition|)
-name|waitns
-operator|+=
-literal|1000000000
-expr_stmt|;
-name|pause_sbt
-argument_list|(
-literal|"nxpset"
-argument_list|,
-name|nstosbt
-argument_list|(
-name|waitns
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-name|C_PREL
-argument_list|(
-literal|31
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Reserve use of the i2c bus and stop the RTC clock.  Note that if 	 * anything goes wrong from this point on, we leave the clock stopped, 	 * because we don't really know what state it's in. 	 */
+comment|/* 	 * We stop the clock, set the time, then restart the clock.  Half a 	 * second after restarting the clock it ticks over to the next second. 	 * So to align the RTC, we schedule this function to be called when 	 * system time is roughly halfway (.495) through the current second. 	 * 	 * Reserve use of the i2c bus and stop the RTC clock.  Note that if 	 * anything goes wrong from this point on, we leave the clock stopped, 	 * because we don't really know what state it's in. 	 */
 if|if
 condition|(
 operator|(

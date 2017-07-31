@@ -1326,7 +1326,7 @@ argument_list|,
 literal|"DS1307 square-wave output state"
 argument_list|)
 expr_stmt|;
-comment|/* Register as a clock with 1 second resolution. */
+comment|/*          * Register as a clock with 1 second resolution.  Schedule the          * clock_settime() method to be called just after top-of-second;          * resetting the time resets top-of-second in the hardware.          */
 name|clock_register_flags
 argument_list|(
 name|dev
@@ -1334,6 +1334,13 @@ argument_list|,
 literal|1000000
 argument_list|,
 name|CLOCKF_SETTIME_NO_TS
+argument_list|)
+expr_stmt|;
+name|clock_schedule
+argument_list|(
+name|dev
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1631,74 +1638,6 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-comment|/* Sleep until 1ms into the second, to align RTC's second to ours. */
-name|getnanotime
-argument_list|(
-name|ts
-argument_list|)
-expr_stmt|;
-name|waitns
-operator|=
-literal|1000000
-operator|-
-name|ts
-operator|->
-name|tv_nsec
-expr_stmt|;
-if|if
-condition|(
-name|waitns
-operator|<
-literal|0
-condition|)
-name|waitns
-operator|+=
-literal|1000000000
-expr_stmt|;
-name|pause_sbt
-argument_list|(
-literal|"set1307"
-argument_list|,
-name|nstosbt
-argument_list|(
-name|waitns
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-name|C_PREL
-argument_list|(
-literal|31
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Grab a fresh post-sleep idea of the time. */
-name|getnanotime
-argument_list|(
-name|ts
-argument_list|)
-expr_stmt|;
-name|ts
-operator|->
-name|tv_sec
-operator|-=
-name|utc_offset
-argument_list|()
-expr_stmt|;
-name|ts
-operator|->
-name|tv_nsec
-operator|=
-literal|0
-expr_stmt|;
-name|clock_ts_to_ct
-argument_list|(
-name|ts
-argument_list|,
-operator|&
-name|ct
 argument_list|)
 expr_stmt|;
 comment|/* If the chip is in AM/PM mode, adjust hour and set flags as needed. */
