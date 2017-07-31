@@ -72,6 +72,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RNDIS_STATUS_LINK_SPEED_CHANGE
+value|0x40010013L
+end_define
+
+begin_define
+define|#
+directive|define
 name|RNDIS_STATUS_NETWORK_CHANGE
 value|0x40010018L
 end_define
