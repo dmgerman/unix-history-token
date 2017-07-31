@@ -3708,7 +3708,9 @@ directive|ifdef
 name|KDTRACE_HOOKS
 if|if
 condition|(
-name|spin_time
+name|lda
+operator|.
+name|spin_cnt
 operator|!=
 literal|0
 condition|)
@@ -4272,7 +4274,9 @@ directive|ifdef
 name|KDTRACE_HOOKS
 if|if
 condition|(
-name|spin_time
+name|lda
+operator|.
+name|spin_cnt
 operator|!=
 literal|0
 condition|)
