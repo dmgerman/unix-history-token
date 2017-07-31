@@ -28,19 +28,8 @@ name|CLOCKSOURCE_MASK
 parameter_list|(
 name|x
 parameter_list|)
-value|((cycle_t)(-1ULL>> ((-(x))& 63)))
+value|((u64)(-1ULL>> ((-(x))& 63)))
 end_define
-
-begin_comment
-comment|/* clocksource cycle base type */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u64
-name|cycle_t
-typedef|;
-end_typedef
 
 begin_endif
 endif|#
