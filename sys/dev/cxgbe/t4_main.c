@@ -24172,6 +24172,8 @@ index|]
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#
@@ -36519,6 +36521,8 @@ name|sc
 argument_list|,
 operator|&
 name|stats
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -36768,6 +36772,8 @@ name|sc
 argument_list|,
 operator|&
 name|stats
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -37658,6 +37664,8 @@ name|stats
 index|[
 name|i
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -38025,6 +38033,8 @@ name|kbps
 argument_list|,
 operator|&
 name|ipg
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -42762,6 +42772,8 @@ name|sc
 argument_list|,
 operator|&
 name|stats
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -42904,6 +42916,8 @@ name|v4
 argument_list|,
 operator|&
 name|v6
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -43466,6 +43480,8 @@ name|sc
 argument_list|,
 operator|&
 name|stats
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -48145,6 +48161,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|fconf
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|done

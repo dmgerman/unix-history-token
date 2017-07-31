@@ -635,9 +635,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|mpr_print_evt_sas
+name|MPR_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|sas
 argument_list|,
 name|event
 argument_list|)

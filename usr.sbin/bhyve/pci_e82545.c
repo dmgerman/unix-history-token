@@ -7086,6 +7086,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|_Noreturn
 name|void
 modifier|*
 name|e82545_tx_thread

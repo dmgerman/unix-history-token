@@ -227,10 +227,6 @@ index|[
 name|NUM_PRIORITY_STATS
 index|]
 decl_stmt|;
-define|#
-directive|define
-name|NUM_PKT_STATS
-value|72
 block|}
 struct|;
 end_struct
@@ -283,10 +279,6 @@ name|unsigned
 name|long
 name|tx_errors
 decl_stmt|;
-define|#
-directive|define
-name|NUM_VF_STATS
-value|11
 block|}
 struct|;
 end_struct
@@ -355,10 +347,6 @@ name|unsigned
 name|long
 name|tx_errors
 decl_stmt|;
-define|#
-directive|define
-name|NUM_VPORT_STATS
-value|15
 block|}
 struct|;
 end_struct
@@ -403,10 +391,6 @@ name|unsigned
 name|long
 name|tx_chksum_offload
 decl_stmt|;
-define|#
-directive|define
-name|NUM_PORT_STATS
-value|8
 block|}
 struct|;
 end_struct
@@ -433,10 +417,6 @@ decl_stmt|;
 name|u32
 name|napi_quota
 decl_stmt|;
-define|#
-directive|define
-name|NUM_PERF_COUNTERS
-value|6
 block|}
 struct|;
 end_struct
@@ -472,20 +452,6 @@ define|#
 directive|define
 name|MLX4_NUM_PRIORITIES
 value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUM_FLOW_PRIORITY_STATS
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUM_FLOW_STATS
-value|(NUM_FLOW_PRIORITY_STATS*MLX4_NUM_PRIORITIES)
 end_define
 
 begin_struct
@@ -549,13 +515,6 @@ name|reset
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|NUM_ALL_STATS
-value|(NUM_PKT_STATS + NUM_FLOW_STATS + NUM_VPORT_STATS + \ 			 NUM_VF_STATS + NUM_PORT_STATS + NUM_PERF_STATS)
-end_define
 
 begin_endif
 endif|#

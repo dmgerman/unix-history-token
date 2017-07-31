@@ -2644,6 +2644,22 @@ name|AH_PREDEFINED_NAME
 modifier|*
 name|Info
 decl_stmt|;
+comment|/* Nameseg must start with an underscore */
+if|if
+condition|(
+operator|*
+name|Nameseg
+operator|!=
+literal|'_'
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/* Search for a match in the predefined name table */
 for|for
 control|(
 name|Info

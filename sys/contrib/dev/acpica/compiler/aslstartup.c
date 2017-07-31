@@ -267,7 +267,7 @@ literal|1
 expr_stmt|;
 name|Gbl_CommentState
 operator|.
-name|Latest_Parse_Node
+name|LatestParseOp
 operator|=
 name|NULL
 expr_stmt|;

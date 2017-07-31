@@ -30,148 +30,155 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NODE_VISITED
+name|OP_VISITED
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_IS_TARGET
+name|OP_IS_TARGET
 value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_IS_RESOURCE_DESC
+name|OP_IS_RESOURCE_DESC
 value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_IS_RESOURCE_FIELD
+name|OP_IS_RESOURCE_FIELD
 value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_HAS_NO_EXIT
+name|OP_HAS_NO_EXIT
 value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_IF_HAS_NO_EXIT
+name|OP_IF_HAS_NO_EXIT
 value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_NAME_INTERNALIZED
+name|OP_NAME_INTERNALIZED
 value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_METHOD_NO_RETVAL
+name|OP_METHOD_NO_RETVAL
 value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_METHOD_SOME_NO_RETVAL
+name|OP_METHOD_SOME_NO_RETVAL
 value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_RESULT_NOT_USED
+name|OP_RESULT_NOT_USED
 value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_METHOD_TYPED
+name|OP_METHOD_TYPED
 value|0x00000800
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_COULD_NOT_REDUCE
+name|OP_COULD_NOT_REDUCE
 value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_COMPILE_TIME_CONST
+name|OP_COMPILE_TIME_CONST
 value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_IS_TERM_ARG
+name|OP_IS_TERM_ARG
 value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_WAS_ONES_OP
+name|OP_WAS_ONES_OP
 value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_IS_NAME_DECLARATION
+name|OP_IS_NAME_DECLARATION
 value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_COMPILER_EMITTED
+name|OP_COMPILER_EMITTED
 value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_IS_DUPLICATE
+name|OP_IS_DUPLICATE
 value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_IS_RESOURCE_DATA
+name|OP_IS_RESOURCE_DATA
 value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODE_IS_NULL_RETURN
+name|OP_IS_NULL_RETURN
 value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_OP_FLAGS
+value|0x21
 end_define
 
 begin_comment
@@ -661,6 +668,30 @@ name|Level
 decl_stmt|;
 block|}
 name|ASL_ERROR_MSG
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* An entry in the expected messages array */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|asl_expected_message
+block|{
+name|UINT32
+name|MessageId
+decl_stmt|;
+name|char
+modifier|*
+name|MessageIdStr
+decl_stmt|;
+name|BOOLEAN
+name|MessageReceived
+decl_stmt|;
+block|}
+name|ASL_EXPECTED_MESSAGE
 typedef|;
 end_typedef
 

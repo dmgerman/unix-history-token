@@ -1592,9 +1592,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mps_print_iocfacts
+name|MPS_DPRINT_PAGE
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_XINFO
+argument_list|,
+name|iocfacts
 argument_list|,
 name|sc
 operator|->
@@ -6237,7 +6241,6 @@ comment|/* Get the driver parameter tunables.  Lowest priority are the driver de
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|mps_get_tunables
 parameter_list|(
@@ -7285,11 +7288,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|mps_get_tunables
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|MPS_FUNCTRACE
 argument_list|(
 name|sc
@@ -7749,9 +7747,11 @@ name|MPI2_EVENT_DATA_LOG_ENTRY_ADDED
 modifier|*
 name|entry
 decl_stmt|;
-name|mps_print_event
+name|MPS_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|generic
 argument_list|,
 name|event
 argument_list|)
@@ -9361,9 +9361,11 @@ name|cm
 operator|->
 name|cm_reply
 condition|)
-name|mps_print_event
+name|MPS_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|generic
 argument_list|,
 operator|(
 name|MPI2_EVENT_NOTIFICATION_REPLY
@@ -9842,9 +9844,15 @@ name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-name|mps_print_event
+if|if
+condition|(
+name|reply
+condition|)
+name|MPS_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|generic
 argument_list|,
 name|reply
 argument_list|)

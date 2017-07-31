@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -1765,7 +1771,7 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|kldfind
+name|modfind
 argument_list|(
 name|KMOD_NAME
 argument_list|)

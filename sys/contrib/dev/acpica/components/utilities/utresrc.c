@@ -407,11 +407,11 @@ argument_list|(
 name|UtWalkAmlResources
 argument_list|)
 expr_stmt|;
-comment|/*      * The absolute minimum resource template is one EndTag descriptor.      * However, we will treat a lone EndTag as just a simple buffer.      */
+comment|/* The absolute minimum resource template is one EndTag descriptor */
 if|if
 condition|(
 name|AmlLength
-operator|<=
+operator|<
 sizeof|sizeof
 argument_list|(
 name|AML_RESOURCE_END_TAG
@@ -540,25 +540,7 @@ name|AE_AML_NO_RESOURCE_END_TAG
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * The EndTag opcode must be followed by a zero byte.              * Although this byte is technically defined to be a checksum,              * in practice, all ASL compilers set this byte to zero.              */
-if|if
-condition|(
-operator|*
-operator|(
-name|Aml
-operator|+
-literal|1
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_AML_NO_RESOURCE_END_TAG
-argument_list|)
-expr_stmt|;
-block|}
+comment|/*              * Don't attempt to perform any validation on the 2nd byte.              * Although all known ASL compilers insert a zero for the 2nd              * byte, it can also be a checksum (as per the ACPI spec),              * and this is occasionally seen in the field. July 2017.              */
 comment|/* Return the pointer to the EndTag if requested */
 if|if
 condition|(
@@ -572,7 +554,7 @@ operator|=
 name|Aml
 expr_stmt|;
 block|}
-comment|/*              * Normal exit. Note: We allow the buffer to be larger than              * the resource template, as long as the END_TAG exists.              */
+comment|/* Normal exit */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

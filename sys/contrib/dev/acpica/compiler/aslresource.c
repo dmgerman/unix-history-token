@@ -812,7 +812,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_IS_RESOURCE_FIELD
+name|OP_IS_RESOURCE_FIELD
 expr_stmt|;
 name|Op
 operator|->
@@ -1127,7 +1127,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_DUPLICATE
+name|OP_IS_DUPLICATE
 operator|)
 condition|)
 block|{
@@ -1137,7 +1137,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_IS_DUPLICATE
+name|OP_IS_DUPLICATE
 expr_stmt|;
 name|AslError
 argument_list|(
@@ -1821,7 +1821,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|=
-name|NODE_IS_RESOURCE_DESC
+name|OP_IS_RESOURCE_DESC
 expr_stmt|;
 name|Info
 operator|->
@@ -2049,7 +2049,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_IS_RESOURCE_DESC
+name|OP_IS_RESOURCE_DESC
 expr_stmt|;
 block|}
 comment|/* ResourceTemplate Opcode is first (Op) */
@@ -2146,7 +2146,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_IS_RESOURCE_DESC
+name|OP_IS_RESOURCE_DESC
 expr_stmt|;
 name|Rnode
 operator|=
@@ -2239,9 +2239,9 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|=
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 operator||
-name|NODE_IS_RESOURCE_DESC
+name|OP_IS_RESOURCE_DESC
 expr_stmt|;
 name|UtSetParseOpName
 argument_list|(
@@ -2333,7 +2333,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_IS_RESOURCE_DATA
+name|OP_IS_RESOURCE_DATA
 expr_stmt|;
 name|UtSetParseOpName
 argument_list|(

@@ -1640,9 +1640,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mpr_print_iocfacts
+name|MPR_DPRINT_PAGE
 argument_list|(
 name|sc
+argument_list|,
+name|MPR_XINFO
+argument_list|,
+name|iocfacts
 argument_list|,
 name|sc
 operator|->
@@ -6870,7 +6874,6 @@ comment|/* Get the driver parameter tunables.  Lowest priority are the driver de
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|mpr_get_tunables
 parameter_list|(
@@ -7935,11 +7938,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|mpr_get_tunables
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|MPR_FUNCTRACE
 argument_list|(
 name|sc
@@ -8416,9 +8414,11 @@ name|MPI2_EVENT_DATA_LOG_ENTRY_ADDED
 modifier|*
 name|entry
 decl_stmt|;
-name|mpr_print_event
+name|MPR_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|generic
 argument_list|,
 name|event
 argument_list|)
@@ -10034,9 +10034,11 @@ name|cm
 operator|->
 name|cm_reply
 condition|)
-name|mpr_print_event
+name|MPR_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|generic
 argument_list|,
 operator|(
 name|MPI2_EVENT_NOTIFICATION_REPLY
@@ -10497,9 +10499,11 @@ if|if
 condition|(
 name|reply
 condition|)
-name|mpr_print_event
+name|MPR_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|generic
 argument_list|,
 name|reply
 argument_list|)

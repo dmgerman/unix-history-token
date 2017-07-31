@@ -351,6 +351,8 @@ operator||
 name|NFSSVC_NFSCBD
 operator||
 name|NFSSVC_DUMPMNTOPTS
+operator||
+name|NFSSVC_FORCEDISM
 operator|)
 operator|)
 operator|&&

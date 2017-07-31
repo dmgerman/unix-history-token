@@ -82,6 +82,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|METHOD_NAME__DMA
+value|"_DMA"
+end_define
+
+begin_define
+define|#
+directive|define
 name|METHOD_NAME__HID
 value|"_HID"
 end_define

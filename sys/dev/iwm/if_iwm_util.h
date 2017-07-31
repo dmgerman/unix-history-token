@@ -180,6 +180,27 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|iwm_mvm_send_lq_cmd
+parameter_list|(
+name|struct
+name|iwm_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|iwm_lq_cmd
+modifier|*
+name|lq
+parameter_list|,
+name|boolean_t
+name|init
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|boolean_t
 name|iwm_mvm_rx_diversity_allowed
 parameter_list|(

@@ -1283,7 +1283,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkResources  *  * PARAMETERS:  DeviceHandle    - Handle to the device object for the  *                                device we are querying  *              Name            - Method name of the resources we want.  *                                (METHOD_NAME__CRS, METHOD_NAME__PRS, or  *                                METHOD_NAME__AEI)  *              UserFunction    - Called for each resource  *              Context         - Passed to UserFunction  *  * RETURN:      Status  *  * DESCRIPTION: Retrieves the current or possible resource list for the  *              specified device. The UserFunction is called once for  *              each resource in the list.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkResources  *  * PARAMETERS:  DeviceHandle    - Handle to the device object for the  *                                device we are querying  *              Name            - Method name of the resources we want.  *                                (METHOD_NAME__CRS, METHOD_NAME__PRS, or  *                                METHOD_NAME__AEI or METHOD_NAME__DMA)  *              UserFunction    - Called for each resource  *              Context         - Passed to UserFunction  *  * RETURN:      Status  *  * DESCRIPTION: Retrieves the current or possible resource list for the  *              specified device. The UserFunction is called once for  *              each resource in the list.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1352,6 +1352,14 @@ name|Name
 argument_list|,
 name|METHOD_NAME__AEI
 argument_list|)
+operator|&&
+operator|!
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Name
+argument_list|,
+name|METHOD_NAME__DMA
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -1361,7 +1369,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Get the _CRS/_PRS/_AEI resource list */
+comment|/* Get the _CRS/_PRS/_AEI/_DMA resource list */
 name|Buffer
 operator|.
 name|Length

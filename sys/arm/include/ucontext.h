@@ -229,7 +229,7 @@ name|__gregset_t
 name|__gregs
 decl_stmt|;
 comment|/* 	 * Originally, rest of this structure was named __fpu, 35 * 4 bytes 	 * long, never accessed from kernel.  	 */
-name|size_t
+name|__size_t
 name|mc_vfp_size
 decl_stmt|;
 name|void

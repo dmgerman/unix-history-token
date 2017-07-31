@@ -12439,7 +12439,7 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_INFO
+name|MPR_XINFO
 argument_list|,
 literal|"Error sending command, "
 literal|"freezing SIM queue\n"

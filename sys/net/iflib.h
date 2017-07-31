@@ -711,12 +711,6 @@ literal|8
 index|]
 decl_stmt|;
 name|int
-name|isc_max_txqsets
-decl_stmt|;
-name|int
-name|isc_max_rxqsets
-decl_stmt|;
-name|int
 name|isc_tx_tso_segments_max
 decl_stmt|;
 name|int

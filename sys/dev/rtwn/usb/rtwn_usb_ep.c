@@ -1024,11 +1024,11 @@ index|]
 operator|.
 name|bufsize
 operator|=
-name|sc
+name|uc
 operator|->
-name|rx_dma_size
-operator|+
-literal|1024
+name|uc_rx_buf_size
+operator|*
+name|RTWN_USB_RXBUFSZ_UNIT
 expr_stmt|;
 name|error
 operator|=

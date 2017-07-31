@@ -547,7 +547,7 @@ name|AML_BANK_FIELD_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -643,7 +643,7 @@ name|AML_BUFFER_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 name|ACPI_BTYPE_BUFFER
 argument_list|)
@@ -1017,7 +1017,7 @@ name|AML_DEVICE_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -1185,7 +1185,7 @@ name|AML_ELSE_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -1197,7 +1197,7 @@ name|AML_DEFAULT_ARG_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -1341,7 +1341,7 @@ name|AML_FIELD_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -1449,7 +1449,7 @@ name|AML_METHOD_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -1509,7 +1509,7 @@ name|AML_IF_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -1569,7 +1569,7 @@ name|AML_INDEX_FIELD_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -2217,7 +2217,7 @@ name|AML_METHOD_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -2675,7 +2675,7 @@ name|AML_PACKAGE_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 name|ACPI_BTYPE_PACKAGE
 argument_list|)
@@ -2687,7 +2687,7 @@ name|AML_PACKAGE_LENGTH
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -2867,7 +2867,7 @@ name|AML_POWER_RESOURCE_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -2879,7 +2879,7 @@ name|AML_PROCESSOR_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -3275,7 +3275,7 @@ name|AML_SCOPE_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -3599,7 +3599,7 @@ name|AML_THERMAL_ZONE_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -3695,7 +3695,7 @@ name|AML_DWORD_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 name|ACPI_BTYPE_INTEGER
 argument_list|)
@@ -3779,7 +3779,7 @@ name|AML_BUFFER_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -3839,7 +3839,7 @@ name|AML_VARIABLE_PACKAGE_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 name|ACPI_BTYPE_PACKAGE
 argument_list|)
@@ -3887,7 +3887,7 @@ name|AML_WHILE_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 literal|0
 argument_list|)
@@ -4103,7 +4103,7 @@ name|AML_DWORD_OP
 argument_list|,
 literal|0
 argument_list|,
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 argument_list|,
 name|ACPI_BTYPE_INTEGER
 argument_list|)

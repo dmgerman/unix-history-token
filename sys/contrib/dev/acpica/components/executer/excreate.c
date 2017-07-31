@@ -147,7 +147,20 @@ name|Object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * For objects that can never change (i.e., the NS node will      * permanently point to the same object), we can simply attach      * the object to the new NS node. For other objects (such as      * Integers, buffers, etc.), we have to point the Alias node      * to the original Node.      */
+comment|/* Ensure that the target node is valid */
+if|if
+condition|(
+operator|!
+name|TargetNode
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NULL_OBJECT
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Construct the alias object (a namespace node) */
 switch|switch
 condition|(
 name|TargetNode
@@ -155,39 +168,19 @@ operator|->
 name|Type
 condition|)
 block|{
-comment|/* For these types, the sub-object can change dynamically via a Store */
 case|case
-name|ACPI_TYPE_INTEGER
+name|ACPI_TYPE_METHOD
 case|:
-case|case
-name|ACPI_TYPE_STRING
-case|:
-case|case
-name|ACPI_TYPE_BUFFER
-case|:
-case|case
-name|ACPI_TYPE_PACKAGE
-case|:
-case|case
-name|ACPI_TYPE_BUFFER_FIELD
-case|:
-comment|/*      * These types open a new scope, so we need the NS node in order to access      * any children.      */
-case|case
-name|ACPI_TYPE_DEVICE
-case|:
-case|case
-name|ACPI_TYPE_POWER
-case|:
-case|case
-name|ACPI_TYPE_PROCESSOR
-case|:
-case|case
-name|ACPI_TYPE_THERMAL
-case|:
-case|case
-name|ACPI_TYPE_LOCAL_SCOPE
-case|:
-comment|/*          * The new alias has the type ALIAS and points to the original          * NS node, not the object itself.          */
+comment|/*          * Control method aliases need to be differentiated with          * a special type          */
+name|AliasNode
+operator|->
+name|Type
+operator|=
+name|ACPI_TYPE_LOCAL_METHOD_ALIAS
+expr_stmt|;
+break|break;
+default|default:
+comment|/*          * All other object types.          *          * The new alias has the type ALIAS and points to the original          * NS node, not the object itself.          */
 name|AliasNode
 operator|->
 name|Type
@@ -206,16 +199,8 @@ name|TargetNode
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|ACPI_TYPE_METHOD
-case|:
-comment|/*          * Control method aliases need to be differentiated          */
-name|AliasNode
-operator|->
-name|Type
-operator|=
-name|ACPI_TYPE_LOCAL_METHOD_ALIAS
-expr_stmt|;
+block|}
+comment|/* Since both operands are Nodes, we don't need to delete them */
 name|AliasNode
 operator|->
 name|Object
@@ -227,29 +212,6 @@ argument_list|,
 name|TargetNode
 argument_list|)
 expr_stmt|;
-break|break;
-default|default:
-comment|/* Attach the original source object to the new Alias Node */
-comment|/*          * The new alias assumes the type of the target, and it points          * to the same object. The reference count of the object has an          * additional reference to prevent deletion out from under either the          * target node or the alias Node          */
-name|Status
-operator|=
-name|AcpiNsAttachObject
-argument_list|(
-name|AliasNode
-argument_list|,
-name|AcpiNsGetAttachedObject
-argument_list|(
-name|TargetNode
-argument_list|)
-argument_list|,
-name|TargetNode
-operator|->
-name|Type
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-comment|/* Since both operands are Nodes, we don't need to delete them */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

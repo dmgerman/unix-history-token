@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl.c,v 1.41 2017/06/08 18:11:22 schwarze Exp $ */
+comment|/*	$Id: tbl.c,v 1.42 2017/07/08 17:52:50 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -74,8 +74,7 @@ file|"libroff.h"
 end_include
 
 begin_function
-name|enum
-name|rofferr
+name|void
 name|tbl_read
 parameter_list|(
 name|struct
@@ -205,9 +204,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-return|return
-name|ROFF_IGN
-return|;
+return|return;
 block|}
 block|}
 comment|/* Process the other section types.  */
@@ -232,13 +229,10 @@ argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
-return|return
-name|ROFF_IGN
-return|;
+break|break;
 case|case
 name|TBL_PART_CDATA
 case|:
-return|return
 name|tbl_cdata
 argument_list|(
 name|tbl
@@ -249,14 +243,9 @@ name|p
 argument_list|,
 name|pos
 argument_list|)
-condition|?
-name|ROFF_TBL
-else|:
-name|ROFF_IGN
-return|;
-default|default:
+expr_stmt|;
 break|break;
-block|}
+default|default:
 name|tbl_data
 argument_list|(
 name|tbl
@@ -268,9 +257,8 @@ argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
-return|return
-name|ROFF_TBL
-return|;
+break|break;
+block|}
 block|}
 end_function
 
@@ -642,30 +630,14 @@ parameter_list|(
 name|struct
 name|tbl_node
 modifier|*
-modifier|*
-name|tblp
+name|tbl
 parameter_list|)
 block|{
-name|struct
-name|tbl_node
-modifier|*
-name|tbl
-decl_stmt|;
 name|struct
 name|tbl_span
 modifier|*
 name|sp
 decl_stmt|;
-name|tbl
-operator|=
-operator|*
-name|tblp
-expr_stmt|;
-operator|*
-name|tblp
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|tbl

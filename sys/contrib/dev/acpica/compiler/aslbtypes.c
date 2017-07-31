@@ -971,7 +971,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_METHOD_TYPED
+name|OP_METHOD_TYPED
 condition|)
 block|{
 name|ThisNodeBtype

@@ -96,8 +96,6 @@ parameter_list|(
 name|struct
 name|sysentvec
 modifier|*
-parameter_list|,
-name|long
 parameter_list|)
 function_decl|;
 end_function_decl

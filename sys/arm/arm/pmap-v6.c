@@ -1902,6 +1902,8 @@ decl_stmt|;
 comment|/* Map VM memattrs to indexes to tex_class table. */
 name|old_idx
 operator|=
+name|PTE2_ATTR2IDX
+argument_list|(
 name|pte2_attr_tab
 index|[
 operator|(
@@ -1909,9 +1911,12 @@ name|int
 operator|)
 name|old_attr
 index|]
+argument_list|)
 expr_stmt|;
 name|new_idx
 operator|=
+name|PTE2_ATTR2IDX
+argument_list|(
 name|pte2_attr_tab
 index|[
 operator|(
@@ -1919,6 +1924,7 @@ name|int
 operator|)
 name|new_attr
 index|]
+argument_list|)
 expr_stmt|;
 comment|/* Replace TEX attribute and apply it. */
 name|tex_class

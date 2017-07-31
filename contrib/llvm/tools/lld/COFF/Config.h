@@ -581,7 +581,7 @@ comment|// Options for manifest files.
 name|ManifestKind
 name|Manifest
 init|=
-name|SideBySide
+name|No
 decl_stmt|;
 name|int
 name|ManifestID

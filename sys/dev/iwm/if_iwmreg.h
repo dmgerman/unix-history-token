@@ -8137,6 +8137,42 @@ begin_comment
 comment|/* IWM_MCAST_FILTERING_CMD_API_S_VER_1 */
 end_comment
 
+begin_comment
+comment|/*  * The first MAC indices (starting from 0)  * are available to the driver, AUX follows  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_MAC_INDEX_AUX
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_MAC_INDEX_MIN_DRIVER
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_NUM_MAC_INDEX_DRIVER
+value|IWM_MAC_INDEX_AUX
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_NUM_MAC_INDEX
+value|(IWM_MAC_INDEX_AUX + 1)
+end_define
+
+begin_comment
+comment|/***********************************  * Statistics API  ***********************************/
+end_comment
+
 begin_struct
 struct|struct
 name|iwm_mvm_statistics_dbg
@@ -8194,54 +8230,6 @@ end_struct
 
 begin_comment
 comment|/* IWM_STATISTICS_SLOW_DIV_API_S_VER_2 */
-end_comment
-
-begin_struct
-struct|struct
-name|iwm_mvm_statistics_general_common
-block|{
-name|uint32_t
-name|temperature
-decl_stmt|;
-comment|/* radio temperature */
-name|uint32_t
-name|temperature_m
-decl_stmt|;
-comment|/* radio voltage */
-name|struct
-name|iwm_mvm_statistics_dbg
-name|dbg
-decl_stmt|;
-name|uint32_t
-name|sleep_time
-decl_stmt|;
-name|uint32_t
-name|slots_out
-decl_stmt|;
-name|uint32_t
-name|slots_idle
-decl_stmt|;
-name|uint32_t
-name|ttl_timestamp
-decl_stmt|;
-name|struct
-name|iwm_mvm_statistics_div
-name|div
-decl_stmt|;
-name|uint32_t
-name|rx_enable_counter
-decl_stmt|;
-comment|/* 	 * num_of_sos_states: 	 *  count the number of times we have to re-tune 	 *  in order to get out of bad PHY status 	 */
-name|uint32_t
-name|num_of_sos_states
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
-comment|/* IWM_STATISTICS_GENERAL_API_S_VER_5 */
 end_comment
 
 begin_struct
@@ -8455,6 +8443,61 @@ begin_comment
 comment|/* IWM_STATISTICS_HT_RX_PHY_API_S_VER_1 */
 end_comment
 
+begin_struct
+struct|struct
+name|iwm_mvm_statistics_tx_non_phy
+block|{
+name|uint32_t
+name|preamble_cnt
+decl_stmt|;
+name|uint32_t
+name|rx_detected_cnt
+decl_stmt|;
+name|uint32_t
+name|bt_prio_defer_cnt
+decl_stmt|;
+name|uint32_t
+name|bt_prio_kill_cnt
+decl_stmt|;
+name|uint32_t
+name|few_bytes_cnt
+decl_stmt|;
+name|uint32_t
+name|cts_timeout
+decl_stmt|;
+name|uint32_t
+name|ack_timeout
+decl_stmt|;
+name|uint32_t
+name|expected_ack_cnt
+decl_stmt|;
+name|uint32_t
+name|actual_ack_cnt
+decl_stmt|;
+name|uint32_t
+name|dump_msdu_cnt
+decl_stmt|;
+name|uint32_t
+name|burst_abort_next_frame_mismatch_cnt
+decl_stmt|;
+name|uint32_t
+name|burst_abort_missing_next_frame_cnt
+decl_stmt|;
+name|uint32_t
+name|cts_timeout_collision
+decl_stmt|;
+name|uint32_t
+name|ack_or_ba_timeout_collision
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* IWM_STATISTICS_TX_NON_PHY_API_S_VER_3 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -8578,47 +8621,9 @@ begin_struct
 struct|struct
 name|iwm_mvm_statistics_tx
 block|{
-name|uint32_t
-name|preamble_cnt
-decl_stmt|;
-name|uint32_t
-name|rx_detected_cnt
-decl_stmt|;
-name|uint32_t
-name|bt_prio_defer_cnt
-decl_stmt|;
-name|uint32_t
-name|bt_prio_kill_cnt
-decl_stmt|;
-name|uint32_t
-name|few_bytes_cnt
-decl_stmt|;
-name|uint32_t
-name|cts_timeout
-decl_stmt|;
-name|uint32_t
-name|ack_timeout
-decl_stmt|;
-name|uint32_t
-name|expected_ack_cnt
-decl_stmt|;
-name|uint32_t
-name|actual_ack_cnt
-decl_stmt|;
-name|uint32_t
-name|dump_msdu_cnt
-decl_stmt|;
-name|uint32_t
-name|burst_abort_next_frame_mismatch_cnt
-decl_stmt|;
-name|uint32_t
-name|burst_abort_missing_next_frame_cnt
-decl_stmt|;
-name|uint32_t
-name|cts_timeout_collision
-decl_stmt|;
-name|uint32_t
-name|ack_or_ba_timeout_collision
+name|struct
+name|iwm_mvm_statistics_tx_non_phy
+name|general
 decl_stmt|;
 name|struct
 name|iwm_mvm_statistics_tx_non_phy_agg
@@ -8676,11 +8681,40 @@ end_comment
 
 begin_struct
 struct|struct
-name|iwm_mvm_statistics_general
+name|iwm_mvm_statistics_general_v8
 block|{
+name|uint32_t
+name|radio_temperature
+decl_stmt|;
+name|uint32_t
+name|radio_voltage
+decl_stmt|;
 name|struct
-name|iwm_mvm_statistics_general_common
-name|common
+name|iwm_mvm_statistics_dbg
+name|dbg
+decl_stmt|;
+name|uint32_t
+name|sleep_time
+decl_stmt|;
+name|uint32_t
+name|slots_out
+decl_stmt|;
+name|uint32_t
+name|slots_idle
+decl_stmt|;
+name|uint32_t
+name|ttl_timestamp
+decl_stmt|;
+name|struct
+name|iwm_mvm_statistics_div
+name|slow_div
+decl_stmt|;
+name|uint32_t
+name|rx_enable_counter
+decl_stmt|;
+comment|/* 	 * num_of_sos_states: 	 *  count the number of times we have to re-tune 	 *  in order to get out of bad PHY status 	 */
+name|uint32_t
+name|num_of_sos_states
 decl_stmt|;
 name|uint32_t
 name|beacon_filtered
@@ -8688,16 +8722,16 @@ decl_stmt|;
 name|uint32_t
 name|missed_beacons
 decl_stmt|;
-name|int8_t
+name|uint8_t
 name|beacon_filter_average_energy
 decl_stmt|;
-name|int8_t
+name|uint8_t
 name|beacon_filter_reason
 decl_stmt|;
-name|int8_t
+name|uint8_t
 name|beacon_filter_current_energy
 decl_stmt|;
-name|int8_t
+name|uint8_t
 name|beacon_filter_reserved
 decl_stmt|;
 name|uint32_t
@@ -8707,13 +8741,49 @@ name|struct
 name|iwm_mvm_statistics_bt_activity
 name|bt_activity
 decl_stmt|;
+name|uint64_t
+name|rx_time
+decl_stmt|;
+name|uint64_t
+name|on_time_rf
+decl_stmt|;
+name|uint64_t
+name|on_time_scan
+decl_stmt|;
+name|uint64_t
+name|tx_time
+decl_stmt|;
+name|uint32_t
+name|beacon_counter
+index|[
+name|IWM_NUM_MAC_INDEX
+index|]
+decl_stmt|;
+name|uint8_t
+name|beacon_average_energy
+index|[
+name|IWM_NUM_MAC_INDEX
+index|]
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|4
+operator|-
+operator|(
+name|IWM_NUM_MAC_INDEX
+operator|%
+literal|4
+operator|)
+index|]
+decl_stmt|;
 block|}
 name|__packed
 struct|;
 end_struct
 
 begin_comment
-comment|/* IWM_STATISTICS_GENERAL_API_S_VER_5 */
+comment|/* IWM_STATISTICS_GENERAL_API_S_VER_8 */
 end_comment
 
 begin_struct
@@ -8746,14 +8816,13 @@ comment|/* IWM_STATISTICS_RX_API_S_VER_3 */
 end_comment
 
 begin_comment
-comment|/*  * IWM_STATISTICS_NOTIFICATION = 0x9d (notification only, not a command)  *  * By default, uCode issues this notification after receiving a beacon  * while associated.  To disable this behavior, set DISABLE_NOTIF flag in the  * IWM_REPLY_STATISTICS_CMD 0x9c, above.  *  * Statistics counters continue to increment beacon after beacon, but are  * cleared when changing channels or when driver issues IWM_REPLY_STATISTICS_CMD  * 0x9c with CLEAR_STATS bit set (see above).  *  * uCode also issues this notification during scans.  uCode clears statistics  * appropriately so that each notification contains statistics for only the  * one channel that has just been scanned.  */
+comment|/*  * IWM_STATISTICS_NOTIFICATION = 0x9d (notification only, not a command)  *  * By default, uCode issues this notification after receiving a beacon  * while associated.  To disable this behavior, set DISABLE_NOTIF flag in the  * IWM_STATISTICS_CMD (0x9c), below.  */
 end_comment
 
 begin_struct
 struct|struct
-name|iwm_notif_statistics
+name|iwm_notif_statistics_v10
 block|{
-comment|/* IWM_STATISTICS_NTFY_API_S_VER_8 */
 name|uint32_t
 name|flag
 decl_stmt|;
@@ -8766,13 +8835,47 @@ name|iwm_mvm_statistics_tx
 name|tx
 decl_stmt|;
 name|struct
-name|iwm_mvm_statistics_general
+name|iwm_mvm_statistics_general_v8
 name|general
 decl_stmt|;
 block|}
 name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/* IWM_STATISTICS_NTFY_API_S_VER_10 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_STATISTICS_FLG_CLEAR
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_STATISTICS_FLG_DISABLE_NOTIF
+value|0x2
+end_define
+
+begin_struct
+struct|struct
+name|iwm_statistics_cmd
+block|{
+name|uint32_t
+name|flags
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* IWM_STATISTICS_CMD_API_S_VER_1 */
+end_comment
 
 begin_comment
 comment|/***********************************  * Smart Fifo API  ***********************************/
@@ -9183,31 +9286,6 @@ end_comment
 begin_comment
 comment|/*  * BEGIN mvm/fw-api-mac.h  */
 end_comment
-
-begin_comment
-comment|/*  * The first MAC indices (starting from 0)  * are available to the driver, AUX follows  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_MAC_INDEX_AUX
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM_MAC_INDEX_MIN_DRIVER
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM_NUM_MAC_INDEX_DRIVER
-value|IWM_MAC_INDEX_AUX
-end_define
 
 begin_enum
 enum|enum
@@ -11123,7 +11201,94 @@ value|(1<< IWM_LQ_FLAG_DYNAMIC_BW_POS)
 end_define
 
 begin_comment
-comment|/**  * struct iwm_lq_cmd - link quality command  * @sta_id: station to update  * @control: not used  * @flags: combination of IWM_LQ_FLAG_*  * @mimo_delim: the first SISO index in rs_table, which separates MIMO  *	and SISO rates  * @single_stream_ant_msk: best antenna for SISO (can be dual in CDD).  *	Should be ANT_[ABC]  * @dual_stream_ant_msk: best antennas for MIMO, combination of ANT_[ABC]  * @initial_rate_index: first index from rs_table per AC category  * @agg_time_limit: aggregation max time threshold in usec/100, meaning  *	value of 100 is one usec. Range is 100 to 8000  * @agg_disable_start_th: try-count threshold for starting aggregation.  *	If a frame has higher try-count, it should not be selected for  *	starting an aggregation sequence.  * @agg_frame_cnt_limit: max frame count in an aggregation.  *	0: no limit  *	1: no aggregation (one frame per aggregation)  *	2 - 0x3f: maximal number of frames (up to 3f == 63)  * @rs_table: array of rates for each TX try, each is rate_n_flags,  *	meaning it is a combination of IWM_RATE_MCS_* and IWM_RATE_*_PLCP  * @bf_params: beam forming params, currently not used  */
+comment|/* Single Stream Tx Parameters (lq_cmd->ss_params)  * Flags to control a smart FW decision about whether BFER/STBC/SISO will be  * used for single stream Tx.  */
+end_comment
+
+begin_comment
+comment|/* Bit 0-1: Max STBC streams allowed. Can be 0-3.  * (0) - No STBC allowed  * (1) - 2x1 STBC allowed (HT/VHT)  * (2) - 4x2 STBC allowed (HT/VHT)  * (3) - 3x2 STBC allowed (HT only)  * All our chips are at most 2 antennas so only (1) is valid for now.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_LQ_SS_STBC_ALLOWED_POS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_LQ_SS_STBC_ALLOWED_MSK
+value|(3<< IWM_LQ_SS_STBC_ALLOWED_MSK)
+end_define
+
+begin_comment
+comment|/* 2x1 STBC is allowed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_LQ_SS_STBC_1SS_ALLOWED
+value|(1<< IWM_LQ_SS_STBC_ALLOWED_POS)
+end_define
+
+begin_comment
+comment|/* Bit 2: Beamformer (VHT only) is allowed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_LQ_SS_BFER_ALLOWED_POS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_LQ_SS_BFER_ALLOWED
+value|(1<< IWM_LQ_SS_BFER_ALLOWED_POS)
+end_define
+
+begin_comment
+comment|/* Bit 3: Force BFER or STBC for testing  * If this is set:  * If BFER is allowed then force the ucode to choose BFER else  * If STBC is allowed then force the ucode to choose STBC over SISO  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_LQ_SS_FORCE_POS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_LQ_SS_FORCE
+value|(1<< IWM_LQ_SS_FORCE_POS)
+end_define
+
+begin_comment
+comment|/* Bit 31: ss_params field is valid. Used for FW backward compatibility  * with other drivers which don't support the ss_params API yet  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_LQ_SS_PARAMS_VALID_POS
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWM_LQ_SS_PARAMS_VALID
+value|(1<< IWM_LQ_SS_PARAMS_VALID_POS)
+end_define
+
+begin_comment
+comment|/**  * struct iwm_lq_cmd - link quality command  * @sta_id: station to update  * @control: not used  * @flags: combination of IWM_LQ_FLAG_*  * @mimo_delim: the first SISO index in rs_table, which separates MIMO  *	and SISO rates  * @single_stream_ant_msk: best antenna for SISO (can be dual in CDD).  *	Should be ANT_[ABC]  * @dual_stream_ant_msk: best antennas for MIMO, combination of ANT_[ABC]  * @initial_rate_index: first index from rs_table per AC category  * @agg_time_limit: aggregation max time threshold in usec/100, meaning  *	value of 100 is one usec. Range is 100 to 8000  * @agg_disable_start_th: try-count threshold for starting aggregation.  *	If a frame has higher try-count, it should not be selected for  *	starting an aggregation sequence.  * @agg_frame_cnt_limit: max frame count in an aggregation.  *	0: no limit  *	1: no aggregation (one frame per aggregation)  *	2 - 0x3f: maximal number of frames (up to 3f == 63)  * @rs_table: array of rates for each TX try, each is rate_n_flags,  *	meaning it is a combination of IWM_RATE_MCS_* and IWM_RATE_*_PLCP  * @ss_params: single stream features. declare whether STBC or BFER are allowed.  */
 end_comment
 
 begin_struct
@@ -11134,7 +11299,7 @@ name|uint8_t
 name|sta_id
 decl_stmt|;
 name|uint8_t
-name|reserved1
+name|reduced_tpc
 decl_stmt|;
 name|uint16_t
 name|control
@@ -11178,7 +11343,7 @@ name|IWM_LQ_MAX_RETRY_NUM
 index|]
 decl_stmt|;
 name|uint32_t
-name|bf_params
+name|ss_params
 decl_stmt|;
 block|}
 struct|;
@@ -12134,7 +12299,10 @@ decl_stmt|;
 name|uint16_t
 name|measurement_req_id
 decl_stmt|;
-name|uint16_t
+name|uint8_t
+name|reduced_tpc
+decl_stmt|;
+name|uint8_t
 name|reserved
 decl_stmt|;
 name|uint32_t

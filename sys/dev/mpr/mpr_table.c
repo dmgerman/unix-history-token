@@ -1042,7 +1042,7 @@ end_function
 
 begin_function
 name|void
-name|_mpr_print_iocfacts
+name|mpr_print_iocfacts
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -1406,7 +1406,7 @@ end_function
 
 begin_function
 name|void
-name|_mpr_print_portfacts
+name|mpr_print_portfacts
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -1467,7 +1467,7 @@ end_function
 
 begin_function
 name|void
-name|_mpr_print_event
+name|mpr_print_evt_generic
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -1548,7 +1548,7 @@ end_function
 
 begin_function
 name|void
-name|_mpr_print_sasdev0
+name|mpr_print_sasdev0
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -1812,7 +1812,7 @@ end_function
 
 begin_function
 name|void
-name|_mpr_print_evt_sas
+name|mpr_print_evt_sas
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -1824,7 +1824,7 @@ modifier|*
 name|event
 parameter_list|)
 block|{
-name|_mpr_print_event
+name|mpr_print_evt_generic
 argument_list|(
 name|sc
 argument_list|,
@@ -2364,7 +2364,7 @@ end_function
 
 begin_function
 name|void
-name|_mpr_print_expander1
+name|mpr_print_expander1
 parameter_list|(
 name|struct
 name|mpr_softc
@@ -2711,7 +2711,7 @@ end_function
 
 begin_function
 name|void
-name|_mpr_print_sasphy0
+name|mpr_print_sasphy0
 parameter_list|(
 name|struct
 name|mpr_softc

@@ -95,7 +95,7 @@ decl_stmt|;
 comment|/* Store destination is the Debug op */
 name|DestOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_DEBUG
 argument_list|)
@@ -354,7 +354,7 @@ argument_list|)
 expr_stmt|;
 name|NewOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_STRING_LITERAL
 argument_list|)
@@ -544,7 +544,7 @@ condition|)
 block|{
 name|NewOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_STRING_LITERAL
 argument_list|)
@@ -648,7 +648,7 @@ argument_list|)
 expr_stmt|;
 name|NewOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_STRING_LITERAL
 argument_list|)
@@ -790,7 +790,7 @@ operator|.
 name|CompileFlags
 operator|&=
 operator|~
-name|NODE_COMPILE_TIME_CONST
+name|OP_COMPILE_TIME_CONST
 expr_stmt|;
 name|UtSetParseOpName
 argument_list|(
@@ -865,7 +865,7 @@ return|return;
 block|}
 name|NewConcatOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_CONCATENATE
 argument_list|)
@@ -959,7 +959,7 @@ name|Asl
 operator|.
 name|Next
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_ZERO
 argument_list|)

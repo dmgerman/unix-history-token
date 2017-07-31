@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20170531
+value|0x20170728
 end_define
 
 begin_include
@@ -339,7 +339,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Whether or not to verify the table checksum before installation. Set  * this to TRUE to verify the table checksum before install it to the table  * manager. Note that enabling this option causes errors to happen in some  * OSPMs during early initialization stages. Default behavior is to do such  * verification.  */
+comment|/*  * Whether or not to validate (map) an entire table to verify  * checksum/duplication in early stage before install. Set this to TRUE to  * allow early table validation before install it to the table manager.  * Note that enabling this option causes errors to happen in some OSPMs  * during early initialization stages. Default behavior is to allow such  * validation.  */
 end_comment
 
 begin_expr_stmt
@@ -347,7 +347,7 @@ name|ACPI_INIT_GLOBAL
 argument_list|(
 name|UINT8
 argument_list|,
-name|AcpiGbl_VerifyTableChecksum
+name|AcpiGbl_EnableTableValidation
 argument_list|,
 name|TRUE
 argument_list|)

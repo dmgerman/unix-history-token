@@ -30,6 +30,11 @@ name|secasvar
 modifier|*
 name|sav
 decl_stmt|;
+name|struct
+name|inpcb
+modifier|*
+name|inp
+decl_stmt|;
 name|uint8_t
 name|af
 decl_stmt|;

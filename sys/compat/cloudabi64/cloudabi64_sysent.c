@@ -909,32 +909,6 @@ comment|/* 32 = cloudabi_sys_mem_advise */
 block|{
 name|AS
 argument_list|(
-name|cloudabi_sys_mem_lock_args
-argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|cloudabi_sys_mem_lock
-block|,
-name|AUE_NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|SYF_CAPENABLED
-block|,
-name|SY_THR_STATIC
-block|}
-block|,
-comment|/* 33 = cloudabi_sys_mem_lock */
-block|{
-name|AS
-argument_list|(
 name|cloudabi_sys_mem_map_args
 argument_list|)
 block|,
@@ -957,7 +931,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 34 = cloudabi_sys_mem_map */
+comment|/* 33 = cloudabi_sys_mem_map */
 block|{
 name|AS
 argument_list|(
@@ -983,7 +957,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 35 = cloudabi_sys_mem_protect */
+comment|/* 34 = cloudabi_sys_mem_protect */
 block|{
 name|AS
 argument_list|(
@@ -1009,33 +983,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 36 = cloudabi_sys_mem_sync */
-block|{
-name|AS
-argument_list|(
-name|cloudabi_sys_mem_unlock_args
-argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|cloudabi_sys_mem_unlock
-block|,
-name|AUE_NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|SYF_CAPENABLED
-block|,
-name|SY_THR_STATIC
-block|}
-block|,
-comment|/* 37 = cloudabi_sys_mem_unlock */
+comment|/* 35 = cloudabi_sys_mem_sync */
 block|{
 name|AS
 argument_list|(
@@ -1061,7 +1009,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 38 = cloudabi_sys_mem_unmap */
+comment|/* 36 = cloudabi_sys_mem_unmap */
 block|{
 name|AS
 argument_list|(
@@ -1087,7 +1035,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 39 = cloudabi64_sys_poll */
+comment|/* 37 = cloudabi64_sys_poll */
 block|{
 name|AS
 argument_list|(
@@ -1113,7 +1061,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 40 = cloudabi64_sys_poll_fd */
+comment|/* 38 = cloudabi64_sys_poll_fd */
 block|{
 name|AS
 argument_list|(
@@ -1139,7 +1087,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 41 = cloudabi_sys_proc_exec */
+comment|/* 39 = cloudabi_sys_proc_exec */
 block|{
 name|AS
 argument_list|(
@@ -1165,7 +1113,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 42 = cloudabi_sys_proc_exit */
+comment|/* 40 = cloudabi_sys_proc_exit */
 block|{
 literal|0
 block|,
@@ -1188,7 +1136,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 43 = cloudabi_sys_proc_fork */
+comment|/* 41 = cloudabi_sys_proc_fork */
 block|{
 name|AS
 argument_list|(
@@ -1214,7 +1162,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 44 = cloudabi_sys_proc_raise */
+comment|/* 42 = cloudabi_sys_proc_raise */
 block|{
 name|AS
 argument_list|(
@@ -1240,7 +1188,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 45 = cloudabi_sys_random_get */
+comment|/* 43 = cloudabi_sys_random_get */
 block|{
 name|AS
 argument_list|(
@@ -1266,7 +1214,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 46 = cloudabi_sys_sock_accept */
+comment|/* 44 = cloudabi_sys_sock_accept */
 block|{
 name|AS
 argument_list|(
@@ -1292,7 +1240,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 47 = cloudabi_sys_sock_bind */
+comment|/* 45 = cloudabi_sys_sock_bind */
 block|{
 name|AS
 argument_list|(
@@ -1318,7 +1266,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 48 = cloudabi_sys_sock_connect */
+comment|/* 46 = cloudabi_sys_sock_connect */
 block|{
 name|AS
 argument_list|(
@@ -1344,7 +1292,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 49 = cloudabi_sys_sock_listen */
+comment|/* 47 = cloudabi_sys_sock_listen */
 block|{
 name|AS
 argument_list|(
@@ -1370,7 +1318,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 50 = cloudabi64_sys_sock_recv */
+comment|/* 48 = cloudabi64_sys_sock_recv */
 block|{
 name|AS
 argument_list|(
@@ -1396,7 +1344,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 51 = cloudabi64_sys_sock_send */
+comment|/* 49 = cloudabi64_sys_sock_send */
 block|{
 name|AS
 argument_list|(
@@ -1422,7 +1370,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 52 = cloudabi_sys_sock_shutdown */
+comment|/* 50 = cloudabi_sys_sock_shutdown */
 block|{
 name|AS
 argument_list|(
@@ -1448,7 +1396,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 53 = cloudabi_sys_sock_stat_get */
+comment|/* 51 = cloudabi_sys_sock_stat_get */
 block|{
 name|AS
 argument_list|(
@@ -1474,7 +1422,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 54 = cloudabi64_sys_thread_create */
+comment|/* 52 = cloudabi64_sys_thread_create */
 block|{
 name|AS
 argument_list|(
@@ -1500,7 +1448,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 55 = cloudabi_sys_thread_exit */
+comment|/* 53 = cloudabi_sys_thread_exit */
 block|{
 literal|0
 block|,
@@ -1523,7 +1471,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 56 = cloudabi_sys_thread_yield */
+comment|/* 54 = cloudabi_sys_thread_yield */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.h,v 1.126 2017/06/07 20:01:19 schwarze Exp $ */
+comment|/*	$Id: term.h,v 1.130 2017/07/08 14:51:05 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ end_enum
 
 begin_struct_decl
 struct_decl|struct
-name|eqn
+name|eqn_box
 struct_decl|;
 end_struct_decl
 
@@ -132,6 +132,10 @@ name|maxcols
 decl_stmt|;
 comment|/* Allocated bytes in buf. */
 name|size_t
+name|lastcol
+decl_stmt|;
+comment|/* Last byte in buf. */
+name|size_t
 name|col
 decl_stmt|;
 comment|/* Byte in buf to be written. */
@@ -200,10 +204,6 @@ name|size_t
 name|col
 decl_stmt|;
 comment|/* Byte position in buf. */
-name|size_t
-name|lastcol
-decl_stmt|;
-comment|/* Bytes in buf. */
 name|size_t
 name|viscol
 decl_stmt|;
@@ -335,6 +335,11 @@ directive|define
 name|TERMP_ENDMC
 value|(1<< 19)
 comment|/* Next break ends .mc mode. */
+define|#
+directive|define
+name|TERMP_MULTICOL
+value|(1<< 20)
+comment|/* Multiple column mode. */
 name|enum
 name|termtype
 name|type
@@ -535,7 +540,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|eqn
+name|eqn_box
 modifier|*
 parameter_list|)
 function_decl|;
@@ -564,6 +569,19 @@ parameter_list|(
 name|struct
 name|termp
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|term_setcol
+parameter_list|(
+name|struct
+name|termp
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -681,6 +699,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|term_hen
+parameter_list|(
+specifier|const
+name|struct
+name|termp
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|roffsu
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|term_vspan
 parameter_list|(
 specifier|const
@@ -738,6 +773,15 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|term_tab_iset
+parameter_list|(
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1365,6 +1365,16 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|AcpiGbl_GlobalList
+condition|)
+block|{
+goto|goto
+name|Exit
+goto|;
+block|}
 name|Element
 operator|=
 name|AcpiGbl_GlobalList
@@ -1434,7 +1444,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p Length 0x%04X %9.9s-%u "
+literal|"%p Length 0x%04X %9.9s-%4.4u "
 literal|"[Not a Descriptor - too small]\n"
 argument_list|,
 name|Descriptor
@@ -1468,7 +1478,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p Length 0x%04X %9.9s-%u [%s] "
+literal|"%p Length 0x%04X %9.9s-%4.4u [%s] "
 argument_list|,
 name|Descriptor
 argument_list|,
@@ -1659,6 +1669,8 @@ operator|->
 name|Next
 expr_stmt|;
 block|}
+name|Exit
+label|:
 operator|(
 name|void
 operator|)

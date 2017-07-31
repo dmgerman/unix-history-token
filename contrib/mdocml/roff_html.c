@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: roff_html.c,v 1.8 2017/06/08 12:54:58 schwarze Exp $ */
+comment|/*	$Id: roff_html.c,v 1.11 2017/06/24 14:38:33 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc.h"
 end_include
 
 begin_include
@@ -118,6 +124,12 @@ comment|/* ll */
 name|NULL
 block|,
 comment|/* mc */
+name|NULL
+block|,
+comment|/* po */
+name|roff_html_pre_ce
+block|,
+comment|/* rj */
 name|roff_html_pre_sp
 block|,
 comment|/* sp */

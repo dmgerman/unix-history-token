@@ -4742,6 +4742,8 @@ block|}
 name|t4_init_tp_params
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|t4_read_mtu_tbl

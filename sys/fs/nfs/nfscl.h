@@ -93,6 +93,20 @@ value|((r) * 2)
 end_define
 
 begin_comment
+comment|/* This macro checks to see if a forced dismount is about to occur. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSCL_FORCEDISM
+parameter_list|(
+name|m
+parameter_list|)
+value|(((m)->mnt_kern_flag& MNTK_UNMOUNTF) != 0 || \     (VFSTONFS(m)->nm_privflag& NFSMNTP_FORCEDISM) != 0)
+end_define
+
+begin_comment
 comment|/*  * These flag bits are used for the argument to nfscl_fillsattr() to  * indicate special handling of the attributes.  */
 end_comment
 

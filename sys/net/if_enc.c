@@ -1478,7 +1478,9 @@ name|ifp
 argument_list|,
 name|pdir
 argument_list|,
-name|NULL
+name|ctx
+operator|->
+name|inp
 argument_list|)
 operator|!=
 literal|0

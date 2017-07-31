@@ -353,7 +353,7 @@ comment|//----------------------------------------------------------------------
 comment|/// Get the listener that will be used to receive process events.
 comment|///
 comment|/// If no listener has been set via a call to
-comment|/// SBLaunchInfo::SetListener(), then an invalid SBListener will be
+comment|/// SBAttachInfo::SetListener(), then an invalid SBListener will be
 comment|/// returned (SBListener::IsValid() will return false). If a listener
 comment|/// has been set, then the valid listener object will be returned.
 comment|//----------------------------------------------------------------------

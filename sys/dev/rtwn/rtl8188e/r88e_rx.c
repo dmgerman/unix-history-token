@@ -984,12 +984,9 @@ name|rxs
 operator|->
 name|c_ieee
 operator|=
-name|le16toh
-argument_list|(
 name|physt
 operator|->
 name|chan
-argument_list|)
 expr_stmt|;
 name|rxs
 operator|->

@@ -19455,6 +19455,33 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 			 * The pool could already be imported, 			 * e.g., after reboot -r. 			 */
+if|if
+condition|(
+name|spa
+operator|->
+name|spa_state
+operator|==
+name|POOL_STATE_ACTIVE
+condition|)
+block|{
+name|mutex_exit
+argument_list|(
+operator|&
+name|spa_namespace_lock
+argument_list|)
+expr_stmt|;
+name|nvlist_free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* 			 * Remove the existing root pool from the namespace so 			 * that we can replace it with the correct config 			 * we just read in. 			 */
 name|spa_remove
 argument_list|(
