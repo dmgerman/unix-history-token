@@ -1348,14 +1348,14 @@ argument_list|,
 literal|"DS1307 square-wave output state"
 argument_list|)
 expr_stmt|;
-comment|/*          * Register as a clock with 1 second resolution.  Schedule the          * clock_settime() method to be called just after top-of-second;          * resetting the time resets top-of-second in the hardware.          */
+comment|/* 	 * Register as a clock with 1 second resolution.  Schedule the 	 * clock_settime() method to be called just after top-of-second; 	 * resetting the time resets top-of-second in the hardware. 	 */
 name|clock_register_flags
 argument_list|(
 name|dev
 argument_list|,
 literal|1000000
 argument_list|,
-name|CLOCKF_SETTIME_NO_TS
+name|CLOCKF_SETTIME_NO_ADJ
 argument_list|)
 expr_stmt|;
 name|clock_schedule
@@ -1674,6 +1674,22 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We request a timespec with no resolution-adjustment.  That also 	 * disables utc adjustment, so apply that ourselves. 	 */
+name|ts
+operator|->
+name|tv_sec
+operator|-=
+name|utc_offset
+argument_list|()
+expr_stmt|;
+name|clock_ts_to_ct
+argument_list|(
+name|ts
+argument_list|,
+operator|&
+name|ct
+argument_list|)
+expr_stmt|;
 comment|/* If the chip is in AM/PM mode, adjust hour and set flags as needed. */
 if|if
 condition|(
@@ -1725,26 +1741,6 @@ else|else
 name|pmflags
 operator|=
 literal|0
-expr_stmt|;
-name|getnanotime
-argument_list|(
-name|ts
-argument_list|)
-expr_stmt|;
-name|ts
-operator|->
-name|tv_sec
-operator|-=
-name|utc_offset
-argument_list|()
-expr_stmt|;
-name|clock_ts_to_ct
-argument_list|(
-name|ts
-argument_list|,
-operator|&
-name|ct
-argument_list|)
 expr_stmt|;
 name|data
 index|[
