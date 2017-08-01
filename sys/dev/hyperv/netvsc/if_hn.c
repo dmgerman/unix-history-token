@@ -8066,6 +8066,7 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
+comment|/* 	 * NOTE: 	 * Subscribe ether_ifattach event, instead of ifnet_arrival event, 	 * since interface's LLADDR is needed; interface LLADDR is not 	 * available when ifnet_arrival event is triggered. 	 */
 name|sc
 operator|->
 name|hn_ifnet_atthand
