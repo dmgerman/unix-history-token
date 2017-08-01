@@ -8704,12 +8704,6 @@ operator|->
 name|w_refcount
 operator|++
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|w_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|w
@@ -8724,7 +8718,12 @@ name|w_class
 operator|=
 name|lock_class
 expr_stmt|;
-elseif|else
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|w_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lock_class
