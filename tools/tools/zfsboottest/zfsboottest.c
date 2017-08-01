@@ -102,8 +102,6 @@ modifier|*
 name|line
 parameter_list|)
 block|{
-return|return
-operator|(
 name|fprintf
 argument_list|(
 name|stderr
@@ -112,6 +110,10 @@ literal|"%s"
 argument_list|,
 name|line
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
