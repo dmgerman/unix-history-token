@@ -905,6 +905,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|install_zoneinfo
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|zoneinfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|install_zoneinfo_file
 parameter_list|(
 specifier|const
@@ -1687,7 +1700,7 @@ name|len
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|lineno
@@ -1760,7 +1773,7 @@ if|if
 condition|(
 name|t
 operator|==
-literal|0
+name|NULL
 operator|||
 name|strlen
 argument_list|(
@@ -1839,7 +1852,7 @@ if|if
 condition|(
 name|name
 operator|==
-literal|0
+name|NULL
 operator|||
 name|strlen
 argument_list|(
@@ -1874,7 +1887,7 @@ if|if
 condition|(
 name|name
 operator|==
-literal|0
+name|NULL
 operator|||
 name|strlen
 argument_list|(
@@ -2142,7 +2155,7 @@ if|if
 condition|(
 name|zp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -2494,9 +2507,6 @@ modifier|*
 name|tlc
 decl_stmt|,
 modifier|*
-name|coord
-decl_stmt|,
-modifier|*
 name|file
 decl_stmt|,
 modifier|*
@@ -2549,7 +2559,7 @@ name|len
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|lineno
@@ -2628,8 +2638,7 @@ argument_list|,
 name|tlc
 argument_list|)
 expr_stmt|;
-name|coord
-operator|=
+comment|/* coord = */
 name|strsep
 argument_list|(
 operator|&
@@ -2662,7 +2671,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -2958,7 +2967,7 @@ name|continent
 operator|->
 name|menu
 operator|==
-literal|0
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -3469,6 +3478,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|set_zone_utc
 parameter_list|(
@@ -3492,9 +3502,9 @@ operator|)
 return|;
 return|return
 operator|(
-name|install_zoneinfo_file
+name|install_zoneinfo
 argument_list|(
-name|NULL
+literal|"UTC"
 argument_list|)
 operator|)
 return|;
