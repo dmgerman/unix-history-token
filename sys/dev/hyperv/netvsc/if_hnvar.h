@@ -794,7 +794,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HN_FLAG_VF
+name|HN_FLAG_RXVF
 value|0x0100
 end_define
 

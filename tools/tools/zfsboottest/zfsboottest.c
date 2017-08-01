@@ -93,7 +93,7 @@ value|8
 end_define
 
 begin_function
-name|void
+name|int
 name|pager_output
 parameter_list|(
 specifier|const
@@ -102,6 +102,8 @@ modifier|*
 name|line
 parameter_list|)
 block|{
+return|return
+operator|(
 name|fprintf
 argument_list|(
 name|stderr
@@ -110,7 +112,8 @@ literal|"%s"
 argument_list|,
 name|line
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

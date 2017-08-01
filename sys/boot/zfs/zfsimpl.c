@@ -3660,14 +3660,14 @@ name|vdev_state_t
 name|state
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|char
 name|buf
 index|[
 literal|512
 index|]
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|buf
 index|[

@@ -787,6 +787,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VV_READLINK
+value|0x2000
+end_define
+
+begin_comment
+comment|/* fdescfs linux vnode */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VMP_TMPMNTFREELIST
 value|0x0001
 end_define

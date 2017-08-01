@@ -26,6 +26,13 @@ name|FMNT_UNMOUNTF
 value|0x01
 end_define
 
+begin_define
+define|#
+directive|define
+name|FMNT_LINRDLNKF
+value|0x02
+end_define
+
 begin_struct
 struct|struct
 name|fdescmount

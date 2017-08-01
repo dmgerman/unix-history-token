@@ -101,10 +101,6 @@ name|bl_radix
 decl_stmt|;
 comment|/* coverage radix		*/
 name|daddr_t
-name|bl_skip
-decl_stmt|;
-comment|/* starting skip		*/
-name|daddr_t
 name|bl_cursor
 decl_stmt|;
 comment|/* next-fit search starts at	*/
