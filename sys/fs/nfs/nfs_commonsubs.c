@@ -235,6 +235,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_enable_uidtostring
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|NFSNAMEIDMUTEX
 expr_stmt|;
@@ -251,6 +260,35 @@ name|int
 name|nfsrv_lughashsize
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_nfs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_uidtostring
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfs_enable_uidtostring
+argument_list|,
+literal|0
+argument_list|,
+literal|"Make nfs always send numeric owner_names"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * This array of structures indicates, for V4:  * retfh - which of 3 types of calling args are used  *	0 - doesn't change cfh or use a sfh  *	1 - replaces cfh with a new one (unless it returns an error status)  *	2 - uses cfh and sfh  * needscfh - if the op wants a cfh and premtime  *	0 - doesn't use a cfh  *	1 - uses a cfh, but doesn't want pre-op attributes  *	2 - uses a cfh and wants pre-op attributes  * savereply - indicates a non-idempotent Op  *	0 - not non-idempotent  *	1 - non-idempotent  * Ops that are ordered via seqid# are handled separately from these  * non-idempotent Ops.  * Define it here, since it is used by both the client and server.  */
@@ -13967,6 +14005,9 @@ condition|(
 name|nfsrv_dnsnamelen
 operator|>
 literal|0
+operator|&&
+operator|!
+name|nfs_enable_uidtostring
 condition|)
 block|{
 comment|/* 		 * Always map nfsrv_defaultuid to "nobody". 		 */
@@ -15198,6 +15239,9 @@ condition|(
 name|nfsrv_dnsnamelen
 operator|>
 literal|0
+operator|&&
+operator|!
+name|nfs_enable_uidtostring
 condition|)
 block|{
 comment|/* 		 * Always map nfsrv_defaultgid to "nogroup". 		 */
