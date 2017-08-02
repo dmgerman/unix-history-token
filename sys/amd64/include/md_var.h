@@ -29,9 +29,22 @@ name|vm_page_dump
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|hw_lower_amd64_sharedpage
+decl_stmt|;
+end_decl_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|savefpu
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sysentvec
 struct_decl|;
 end_struct_decl
 
@@ -40,6 +53,17 @@ name|void
 name|amd64_db_resume_dbreg
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|amd64_lower_shared_page
+parameter_list|(
+name|struct
+name|sysentvec
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
