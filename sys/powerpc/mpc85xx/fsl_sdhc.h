@@ -102,19 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mmc/mmcvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/mmc/mmcbrvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mmcbr_if.h"
 end_include
 
 begin_comment

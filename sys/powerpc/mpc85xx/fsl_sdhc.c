@@ -126,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mmc/mmcvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/mmc/mmcbrvar.h>
 end_include
 
@@ -451,12 +445,8 @@ argument_list|,
 name|fsl_sdhc_release_host
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -501,24 +491,6 @@ name|fsl_sdhc_driver
 argument_list|,
 name|fsl_sdhc_devclass
 argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|mmc
-argument_list|,
-name|sdhci_fsl
-argument_list|,
-name|mmc_driver
-argument_list|,
-name|mmc_devclass
-argument_list|,
 name|NULL
 argument_list|,
 name|NULL
@@ -531,13 +503,21 @@ name|MODULE_DEPEND
 argument_list|(
 name|sdhci_fsl
 argument_list|,
-name|mmc
+name|sdhci
 argument_list|,
 literal|1
 argument_list|,
 literal|1
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MMC_DECLARE_BRIDGE
+argument_list|(
+name|sdhci_fsl
 argument_list|)
 expr_stmt|;
 end_expr_stmt
