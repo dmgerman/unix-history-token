@@ -617,17 +617,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|WARN_ON
-parameter_list|(
-name|condition
-parameter_list|)
-define|\
-value|do {								\ 		int __ret_warn_on = !!(condition);			\ 		if (unlikely(__ret_warn_on))				\ 			printf("%s %s", __FUNCTION__, __FILE__);	\ 		unlikely(__ret_warn_on);				\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ENA_ASSERT
 parameter_list|(
 name|cond
@@ -638,7 +627,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|do {								\ 		if (unlikely(!(cond))) {				\ 			ena_trc_err(					\ 				"Assert failed on %s:%s:%d:" format,	\ 				__FILE__, __func__, __LINE__, ##arg);	\ 			WARN_ON(cond);					\ 		}							\ 	} while (0)
+value|do {								\ 		if (unlikely(!(cond))) {				\ 			ena_trc_err(					\ 				"Assert failed on %s:%s:%d:" format,	\ 				__FILE__, __func__, __LINE__, ##arg);	\ 		}							\ 	} while (0)
 end_define
 
 begin_define
