@@ -309,7 +309,7 @@ name|device_t
 name|dev
 decl_stmt|;
 name|device_t
-name|mmcbr
+name|mmcbus
 decl_stmt|;
 name|struct
 name|mmcsd_part
@@ -969,7 +969,7 @@ name|dev
 parameter_list|)
 block|{
 name|device_t
-name|mmcbr
+name|mmcbus
 decl_stmt|;
 name|struct
 name|mmcsd_softc
@@ -1027,9 +1027,9 @@ name|dev
 expr_stmt|;
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 operator|=
-name|mmcbr
+name|mmcbus
 operator|=
 name|device_get_parent
 argument_list|(
@@ -1042,7 +1042,7 @@ name|mode
 operator|=
 name|mmcbr_get_mode
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Note that in principle with an SDHCI-like re-tuning implementation, 	 * the maximum data size can change at runtime due to a device removal/ 	 * insertion that results in switches to/from a transfer mode involving 	 * re-tuning, iff there are multiple devices on a given bus.  Until now 	 * mmc(4) lacks support for rescanning already attached buses, however, 	 * and sdhci(4) to date has no support for shared buses in the first 	 * place either. 	 */
@@ -1095,7 +1095,7 @@ condition|)
 block|{
 name|MMCBUS_ACQUIRE_BUS
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)
@@ -1104,7 +1104,7 @@ name|err
 operator|=
 name|mmc_send_ext_csd
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -1115,7 +1115,7 @@ argument_list|)
 expr_stmt|;
 name|MMCBUS_RELEASE_BUS
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)
@@ -1498,7 +1498,7 @@ operator|&&
 operator|(
 name|mmcbr_get_caps
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|)
 operator|&
 name|MMC_CAP_BOOT_NOACC
@@ -1929,7 +1929,7 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|,
-name|mmcbr
+name|mmcbus
 decl_stmt|;
 specifier|const
 name|char
@@ -1978,11 +1978,11 @@ name|sc
 operator|->
 name|dev
 expr_stmt|;
-name|mmcbr
+name|mmcbus
 operator|=
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 expr_stmt|;
 name|part
 operator|=
@@ -2378,7 +2378,7 @@ name|speed
 operator|=
 name|mmcbr_get_clock
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2408,7 +2408,7 @@ literal|""
 argument_list|,
 name|device_get_nameunit
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|)
 argument_list|,
 name|speed
@@ -3965,7 +3965,7 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|,
-name|mmcbr
+name|mmcbus
 decl_stmt|;
 name|void
 modifier|*
@@ -4369,15 +4369,15 @@ name|sc
 operator|->
 name|dev
 expr_stmt|;
-name|mmcbr
+name|mmcbus
 operator|=
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 expr_stmt|;
 name|MMCBUS_ACQUIRE_BUS
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)
@@ -4386,7 +4386,7 @@ name|err
 operator|=
 name|mmcsd_switch_part
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -4459,7 +4459,7 @@ name|void
 operator|)
 name|mmc_wait_for_app_cmd
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -4477,7 +4477,7 @@ name|void
 operator|)
 name|mmc_wait_for_cmd
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -4507,7 +4507,7 @@ name|err
 operator|=
 name|mmc_send_status
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -4562,7 +4562,7 @@ name|err
 operator|=
 name|mmcsd_switch_part
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -4595,7 +4595,7 @@ name|err
 operator|=
 name|mmc_send_ext_csd
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -4616,7 +4616,7 @@ goto|;
 block|}
 name|MMCBUS_RELEASE_BUS
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)
@@ -4748,7 +4748,7 @@ name|release
 label|:
 name|MMCBUS_RELEASE_BUS
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)
@@ -5007,7 +5007,7 @@ name|MMCBUS_WAIT_FOR_REQUEST
 argument_list|(
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|sc
 operator|->
@@ -5087,7 +5087,7 @@ name|MMCBUS_RETUNE_PAUSE
 argument_list|(
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|sc
 operator|->
@@ -5166,7 +5166,7 @@ name|MMCBUS_RETUNE_UNPAUSE
 argument_list|(
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|sc
 operator|->
@@ -5200,7 +5200,7 @@ name|MMCBUS_RETUNE_UNPAUSE
 argument_list|(
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|sc
 operator|->
@@ -5301,7 +5301,7 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|,
-name|mmcbr
+name|mmcbus
 decl_stmt|;
 name|u_int
 name|numblocks
@@ -5324,11 +5324,11 @@ name|sc
 operator|->
 name|dev
 expr_stmt|;
-name|mmcbr
+name|mmcbus
 operator|=
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 expr_stmt|;
 name|block
 operator|=
@@ -5638,7 +5638,7 @@ expr_stmt|;
 block|}
 name|MMCBUS_WAIT_FOR_REQUEST
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -5752,7 +5752,7 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|,
-name|mmcbr
+name|mmcbus
 decl_stmt|;
 name|u_int
 name|erase_sector
@@ -5771,11 +5771,11 @@ name|sc
 operator|->
 name|dev
 expr_stmt|;
-name|mmcbr
+name|mmcbus
 operator|=
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 expr_stmt|;
 name|block
 operator|=
@@ -5908,7 +5908,7 @@ block|}
 comment|/* 	 * Pause re-tuning so it won't interfere with the order of erase 	 * commands.  Note that these latter don't use the data lines, so 	 * re-tuning shouldn't actually become necessary during erase. 	 */
 name|MMCBUS_RETUNE_PAUSE
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -6008,7 +6008,7 @@ name|MMC_CMD_AC
 expr_stmt|;
 name|MMCBUS_WAIT_FOR_REQUEST
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -6141,7 +6141,7 @@ name|MMC_CMD_AC
 expr_stmt|;
 name|MMCBUS_WAIT_FOR_REQUEST
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -6239,7 +6239,7 @@ name|MMC_CMD_AC
 expr_stmt|;
 name|MMCBUS_WAIT_FOR_REQUEST
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -6348,7 +6348,7 @@ name|unpause
 label|:
 name|MMCBUS_RETUNE_UNPAUSE
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)
@@ -6411,7 +6411,7 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|,
-name|mmcbr
+name|mmcbus
 decl_stmt|;
 name|int
 name|err
@@ -6449,11 +6449,11 @@ name|sc
 operator|->
 name|dev
 expr_stmt|;
-name|mmcbr
+name|mmcbus
 operator|=
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 expr_stmt|;
 name|g_reset_bio
 argument_list|(
@@ -6511,7 +6511,7 @@ name|d_sectorsize
 expr_stmt|;
 name|MMCBUS_ACQUIRE_BUS
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)
@@ -6520,7 +6520,7 @@ name|err
 operator|=
 name|mmcsd_switch_part
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -6566,7 +6566,7 @@ argument_list|)
 expr_stmt|;
 name|MMCBUS_RELEASE_BUS
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)
@@ -6589,7 +6589,7 @@ argument_list|)
 expr_stmt|;
 name|MMCBUS_RELEASE_BUS
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)
@@ -6643,7 +6643,7 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|,
-name|mmcbr
+name|mmcbus
 decl_stmt|;
 name|int
 name|err
@@ -6666,11 +6666,11 @@ name|sc
 operator|->
 name|dev
 expr_stmt|;
-name|mmcbr
+name|mmcbus
 operator|=
 name|sc
 operator|->
-name|mmcbr
+name|mmcbus
 expr_stmt|;
 while|while
 condition|(
@@ -6782,7 +6782,7 @@ continue|continue;
 block|}
 name|MMCBUS_ACQUIRE_BUS
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)
@@ -6819,7 +6819,7 @@ name|err
 operator|=
 name|mmcsd_switch_part
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|,
@@ -6941,7 +6941,7 @@ name|release
 label|:
 name|MMCBUS_RELEASE_BUS
 argument_list|(
-name|mmcbr
+name|mmcbus
 argument_list|,
 name|dev
 argument_list|)

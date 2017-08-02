@@ -633,7 +633,7 @@ end_function
 
 begin_function
 specifier|static
-name|long
+name|uint64_t
 name|get_cntxct
 parameter_list|(
 name|bool

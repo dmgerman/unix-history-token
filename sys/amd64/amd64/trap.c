@@ -1276,7 +1276,9 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|out
+goto|;
 endif|#
 directive|endif
 comment|/* DEV_ISA */
@@ -1401,7 +1403,9 @@ condition|)
 goto|goto
 name|out
 goto|;
-break|break;
+goto|goto
+name|userout
+goto|;
 endif|#
 directive|endif
 block|}
@@ -3680,6 +3684,8 @@ expr_stmt|;
 comment|/* 	 * If the user-supplied value of %rip is not a canonical 	 * address, then some CPUs will trigger a ring 0 #GP during 	 * the sysret instruction.  However, the fault handler would 	 * execute in ring 0 with the user's %gs and %rsp which would 	 * not be safe.  Instead, use the full return path which 	 * catches the problem safely. 	 */
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|td
 operator|->
 name|td_frame
@@ -3687,6 +3693,7 @@ operator|->
 name|tf_rip
 operator|>=
 name|VM_MAXUSER_ADDRESS
+argument_list|)
 condition|)
 name|set_pcb_flags
 argument_list|(

@@ -175,6 +175,11 @@ name|defined
 argument_list|(
 name|SOC_ALLWINNER_H3
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_ALLWINNER_H5
+argument_list|)
 end_if
 
 begin_include
@@ -232,6 +237,11 @@ directive|if
 name|defined
 argument_list|(
 name|SOC_ALLWINNER_H3
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_ALLWINNER_H5
 argument_list|)
 end_if
 
@@ -302,6 +312,11 @@ directive|if
 name|defined
 argument_list|(
 name|SOC_ALLWINNER_H3
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_ALLWINNER_H5
 argument_list|)
 block|{
 literal|"allwinner,sun8i-h3-ccu"
@@ -1506,6 +1521,11 @@ directive|if
 name|defined
 argument_list|(
 name|SOC_ALLWINNER_H3
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_ALLWINNER_H5
 argument_list|)
 case|case
 name|H3_CCU
