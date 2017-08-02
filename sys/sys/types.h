@@ -1801,10 +1801,6 @@ directive|include
 file|<sys/select.h>
 end_include
 
-begin_comment
-comment|/*  * minor() gives a cookie instead of an index since we don't want to  * change the meanings of bits 0-15 or waste time and space shifting  * bits 16-31 for devices that don't use them.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1812,7 +1808,7 @@ name|major
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)(((u_int)(x)>> 8)&0xff))
+value|((int)((dev_t)(x)>> 32))
 end_define
 
 begin_comment
@@ -1826,7 +1822,7 @@ name|minor
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)((x)&0xffff00ff))
+value|((int)((x)& 0xffffffff))
 end_define
 
 begin_comment
@@ -1842,7 +1838,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((dev_t)(((x)<< 8) | (y)))
+value|(((dev_t)(x)<< 32) | (y))
 end_define
 
 begin_comment
