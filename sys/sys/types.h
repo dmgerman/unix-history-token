@@ -1838,7 +1838,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(((dev_t)(x)<< 32) | (y))
+value|(((dev_t)(x)<< 32) | (unsigned)(y))
 end_define
 
 begin_comment
