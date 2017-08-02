@@ -232,6 +232,12 @@ name|CLOCK_CCU
 block|}
 block|,
 block|{
+literal|"allwinner,sun50i-h5"
+block|,
+name|CLOCK_CCU
+block|}
+block|,
+block|{
 literal|"allwinner,sun8i-a33"
 block|,
 name|CLOCK_CCU
