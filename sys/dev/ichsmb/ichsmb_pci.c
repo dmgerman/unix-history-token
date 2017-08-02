@@ -130,198 +130,523 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_VENDOR_INTEL
+value|0x8086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_82801AA
-value|0x24138086
+value|0x2413
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_82801AB
-value|0x24238086
+value|0x2423
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_82801BA
-value|0x24438086
+value|0x2443
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_82801CA
-value|0x24838086
+value|0x2483
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_82801DC
-value|0x24C38086
+value|0x24C3
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_82801EB
-value|0x24D38086
+value|0x24D3
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_82801FB
-value|0x266A8086
+value|0x266A
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_82801GB
-value|0x27da8086
+value|0x27da
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_82801H
-value|0x283e8086
+value|0x283e
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_82801I
-value|0x29308086
+value|0x2930
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_EP80579
+value|0x5032
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_82801JI
-value|0x3a308086
+value|0x3a30
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_82801JD
+value|0x3a60
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_PCH
-value|0x3b308086
+value|0x3b30
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_6300ESB
-value|0x25a48086
+value|0x25a4
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_631xESB
-value|0x269b8086
+value|0x269b
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_DH89XXCC
-value|0x23308086
+value|0x2330
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_PATSBURG
-value|0x1d228086
+value|0x1d22
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_CPT
-value|0x1c228086
+value|0x1c22
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_PPT
-value|0x1e228086
+value|0x1e22
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_AVOTON
-value|0x1f3c8086
+value|0x1f3c
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_COLETOCRK
-value|0x23B08086
+value|0x23B0
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_LPT
-value|0x8c228086
+value|0x8c22
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_LPTLP
-value|0x9c228086
+value|0x9c22
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_WCPT
-value|0x8ca28086
+value|0x8ca2
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_WCPTLP
-value|0x9ca28086
+value|0x9ca2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_BAYTRAIL
+value|0x0f12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_BRASWELL
+value|0x2292
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_WELLSBURG
-value|0x8d228086
+value|0x8d22
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_SRPT
-value|0xa1238086
+value|0xa123
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID_SRPTLP
-value|0x9d238086
+value|0x9d23
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIS_SERIALBUS_SMBUS_PROGIF
-value|0x00
+name|ID_DENVERTON
+value|0x19df
 end_define
+
+begin_define
+define|#
+directive|define
+name|ID_BROXTON
+value|0x5ad4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_LEWISBURG
+value|0xa1a3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_LEWISBURG2
+value|0xa223
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_KABYLAKE
+value|0xa2a3
+end_define
+
+begin_struct
+specifier|static
+specifier|const
+struct|struct
+name|ichsmb_device
+block|{
+name|uint16_t
+name|id
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+name|ichsmb_devices
+index|[]
+init|=
+block|{
+block|{
+name|ID_82801AA
+block|,
+literal|"Intel 82801AA (ICH) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801AB
+block|,
+literal|"Intel 82801AB (ICH0) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801BA
+block|,
+literal|"Intel 82801BA (ICH2) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801CA
+block|,
+literal|"Intel 82801CA (ICH3) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801DC
+block|,
+literal|"Intel 82801DC (ICH4) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801EB
+block|,
+literal|"Intel 82801EB (ICH5) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801FB
+block|,
+literal|"Intel 82801FB (ICH6) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801GB
+block|,
+literal|"Intel 82801GB (ICH7) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801H
+block|,
+literal|"Intel 82801H (ICH8) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801I
+block|,
+literal|"Intel 82801I (ICH9) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801GB
+block|,
+literal|"Intel 82801GB (ICH7) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801H
+block|,
+literal|"Intel 82801H (ICH8) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801I
+block|,
+literal|"Intel 82801I (ICH9) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_EP80579
+block|,
+literal|"Intel EP80579 SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801JI
+block|,
+literal|"Intel 82801JI (ICH10) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801JD
+block|,
+literal|"Intel 82801JD (ICH10) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_PCH
+block|,
+literal|"Intel PCH SMBus controller"
+block|}
+block|,
+block|{
+name|ID_6300ESB
+block|,
+literal|"Intel 6300ESB (ICH) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_631xESB
+block|,
+literal|"Intel 631xESB/6321ESB (ESB2) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_DH89XXCC
+block|,
+literal|"Intel DH89xxCC SMBus controller"
+block|}
+block|,
+block|{
+name|ID_PATSBURG
+block|,
+literal|"Intel Patsburg SMBus controller"
+block|}
+block|,
+block|{
+name|ID_CPT
+block|,
+literal|"Intel Cougar Point SMBus controller"
+block|}
+block|,
+block|{
+name|ID_PPT
+block|,
+literal|"Intel Panther Point SMBus controller"
+block|}
+block|,
+block|{
+name|ID_AVOTON
+block|,
+literal|"Intel Avoton SMBus controller"
+block|}
+block|,
+block|{
+name|ID_LPT
+block|,
+literal|"Intel Lynx Point SMBus controller"
+block|}
+block|,
+block|{
+name|ID_LPTLP
+block|,
+literal|"Intel Lynx Point-LP SMBus controller"
+block|}
+block|,
+block|{
+name|ID_WCPT
+block|,
+literal|"Intel Wildcat Point SMBus controller"
+block|}
+block|,
+block|{
+name|ID_WCPTLP
+block|,
+literal|"Intel Wildcat Point-LP SMBus controller"
+block|}
+block|,
+block|{
+name|ID_BAYTRAIL
+block|,
+literal|"Intel Baytrail SMBus controller"
+block|}
+block|,
+block|{
+name|ID_BRASWELL
+block|,
+literal|"Intel Braswell SMBus controller"
+block|}
+block|,
+block|{
+name|ID_COLETOCRK
+block|,
+literal|"Intel Coleto Creek SMBus controller"
+block|}
+block|,
+block|{
+name|ID_WELLSBURG
+block|,
+literal|"Intel Wellsburg SMBus controller"
+block|}
+block|,
+block|{
+name|ID_SRPT
+block|,
+literal|"Intel Sunrise Point-H SMBus controller"
+block|}
+block|,
+block|{
+name|ID_SRPTLP
+block|,
+literal|"Intel Sunrise Point-LP SMBus controller"
+block|}
+block|,
+block|{
+name|ID_DENVERTON
+block|,
+literal|"Intel Denverton SMBus controller"
+block|}
+block|,
+block|{
+name|ID_BROXTON
+block|,
+literal|"Intel Broxton SMBus controller"
+block|}
+block|,
+block|{
+name|ID_LEWISBURG
+block|,
+literal|"Intel Lewisburg SMBus controller"
+block|}
+block|,
+block|{
+name|ID_LEWISBURG2
+block|,
+literal|"Intel Lewisburg SMBus controller"
+block|}
+block|,
+block|{
+name|ID_KABYLAKE
+block|,
+literal|"Intel Kaby Lake SMBus controller"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|, }
+struct|;
+end_struct
 
 begin_comment
 comment|/* Internal functions */
@@ -534,326 +859,76 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* Check PCI identifier */
-switch|switch
+specifier|const
+name|struct
+name|ichsmb_device
+modifier|*
+name|device
+decl_stmt|;
+if|if
 condition|(
-name|pci_get_devid
+name|pci_get_vendor
 argument_list|(
 name|dev
 argument_list|)
+operator|!=
+name|PCI_VENDOR_INTEL
 condition|)
-block|{
-case|case
-name|ID_82801AA
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801AA (ICH) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_82801AB
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801AB (ICH0) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_82801BA
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801BA (ICH2) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_82801CA
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801CA (ICH3) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_82801DC
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801DC (ICH4) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_82801EB
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801EB (ICH5) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_82801FB
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801FB (ICH6) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_82801GB
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801GB (ICH7) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_82801H
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801H (ICH8) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_82801I
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801I (ICH9) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_82801JI
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 82801JI (ICH10) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_PCH
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel PCH SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_6300ESB
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 6300ESB (ICH) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_631xESB
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel 631xESB/6321ESB (ESB2) SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_DH89XXCC
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel DH89xxCC SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_PATSBURG
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Patsburg SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_CPT
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Cougar Point SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_PPT
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Panther Point SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_AVOTON
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Avoton SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_LPT
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Lynx Point SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_LPTLP
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Lynx Point-LP SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_WCPT
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Wildcat Point SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_WCPTLP
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Wildcat Point-LP SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_COLETOCRK
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Coleto Creek SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_WELLSBURG
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Wellsburg SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_SRPT
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Sunrise Point-H SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ID_SRPTLP
-case|:
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Intel Sunrise Point-LP SMBus controller"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
-comment|/* Done */
+for|for
+control|(
+name|device
+operator|=
+name|ichsmb_devices
+init|;
+name|device
+operator|->
+name|name
+operator|!=
+name|NULL
+condition|;
+name|device
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|device
+operator|->
+name|id
+condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+name|device
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ichsmb_probe
 argument_list|(
 name|dev
 argument_list|)
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+name|ENXIO
 operator|)
 return|;
 block|}
