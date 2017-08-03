@@ -55,7 +55,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|putchar
 parameter_list|(
 name|int
@@ -64,7 +64,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|xputchar
 parameter_list|(
 name|int
@@ -106,7 +106,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|printf
 parameter_list|(
 specifier|const

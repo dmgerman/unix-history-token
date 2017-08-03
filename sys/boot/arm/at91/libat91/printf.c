@@ -16,7 +16,7 @@ file|"lib.h"
 end_include
 
 begin_function
-name|int
+name|void
 name|printf
 parameter_list|(
 specifier|const
@@ -42,13 +42,6 @@ name|buf
 index|[
 literal|10
 index|]
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|fmt_orig
-init|=
-name|fmt
 decl_stmt|;
 name|char
 modifier|*
@@ -244,16 +237,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-return|return
-call|(
-name|int
-call|)
-argument_list|(
-name|fmt
-operator|-
-name|fmt_orig
-argument_list|)
-return|;
+return|return;
 block|}
 end_function
 

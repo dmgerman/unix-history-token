@@ -621,7 +621,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|putchar
 parameter_list|(
 name|int
@@ -700,16 +700,11 @@ argument_list|(
 name|delay
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|xputchar
 parameter_list|(
 name|int
@@ -732,17 +727,6 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ch
-operator|==
-literal|'\n'
-condition|?
-literal|2
-else|:
-literal|1
-operator|)
-return|;
 block|}
 end_function
 

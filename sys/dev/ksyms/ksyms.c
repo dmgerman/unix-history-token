@@ -228,7 +228,7 @@ block|,
 operator|.
 name|d_flags
 operator|=
-name|D_TRACKCLOSE
+literal|0
 block|,
 operator|.
 name|d_open
