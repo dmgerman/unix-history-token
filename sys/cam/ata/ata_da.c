@@ -4879,7 +4879,7 @@ name|softc
 operator|->
 name|flags
 operator|&
-name|ADA_FLAG_CAN_RAHEAD
+name|ADA_FLAG_CAN_WCACHE
 condition|)
 name|softc
 operator|->
