@@ -533,7 +533,7 @@ name|arc4_numruns
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Throw away the first N words of output, as suggested in the 	 * paper "Weaknesses in the Key Scheduling Algorithm of RC4" 	 * by Fluher, Mantin, and Shamir.  (N = 256 in our case.) 	 */
+comment|/* 	 * Throw away the first N words of output, as suggested in the 	 * paper "Weaknesses in the Key Scheduling Algorithm of RC4" 	 * by Fluher, Mantin, and Shamir.  (N = 768 in our case.) 	 */
 for|for
 control|(
 name|n
@@ -542,7 +542,7 @@ literal|0
 init|;
 name|n
 operator|<
-literal|256
+literal|768
 operator|*
 literal|4
 condition|;
