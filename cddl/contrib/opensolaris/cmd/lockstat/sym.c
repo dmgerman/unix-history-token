@@ -136,12 +136,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ksyms.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
