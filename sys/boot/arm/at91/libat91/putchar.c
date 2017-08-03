@@ -22,11 +22,11 @@ file|"lib.h"
 end_include
 
 begin_comment
-comment|/*  * void putchar(int ch)  * Writes a character to the DBGU port.  It assumes that DBGU has  * already been initialized.  */
+comment|/*  * int putchar(int ch)  * Writes a character to the DBGU port.  It assumes that DBGU has  * already been initialized.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|putchar
 parameter_list|(
 name|int
@@ -63,11 +63,16 @@ operator|&
 literal|0xFF
 operator|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|xputchar
 parameter_list|(
 name|int
@@ -90,6 +95,17 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ch
+operator|==
+literal|'\n'
+condition|?
+literal|2
+else|:
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

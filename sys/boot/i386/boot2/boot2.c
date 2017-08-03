@@ -534,7 +534,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|printf
 parameter_list|(
 specifier|const
@@ -548,7 +548,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|putchar
 parameter_list|(
 name|int
@@ -2976,7 +2976,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|printf
 parameter_list|(
 specifier|const
@@ -2996,6 +2996,13 @@ name|buf
 index|[
 literal|10
 index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|fmt_orig
+init|=
+name|fmt
 decl_stmt|;
 name|char
 modifier|*
@@ -3146,13 +3153,22 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+call|(
+name|int
+call|)
+argument_list|(
+name|fmt
+operator|-
+name|fmt_orig
+argument_list|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|putchar
 parameter_list|(
 name|int
@@ -3175,6 +3191,17 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|c
+operator|==
+literal|'\n'
+condition|?
+literal|2
+else|:
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
