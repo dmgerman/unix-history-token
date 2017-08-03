@@ -804,17 +804,6 @@ name|fwp
 operator|->
 name|dev
 expr_stmt|;
-comment|/* serialize unloading the DMA maps */
-name|sx_xlock
-argument_list|(
-operator|&
-name|dev
-operator|->
-name|cmd
-operator|.
-name|dma_sx
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|num
@@ -861,16 +850,6 @@ name|dma_map
 argument_list|)
 expr_stmt|;
 block|}
-name|sx_xunlock
-argument_list|(
-operator|&
-name|dev
-operator|->
-name|cmd
-operator|.
-name|dma_sx
-argument_list|)
-expr_stmt|;
 name|kfree
 argument_list|(
 name|fwp
