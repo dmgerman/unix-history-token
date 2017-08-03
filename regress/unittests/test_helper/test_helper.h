@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: test_helper.h,v 1.6 2015/01/18 19:52:44 djm Exp $	*/
+comment|/*	$OpenBSD: test_helper.h,v 1.7 2017/03/14 01:10:07 dtucker Exp $	*/
 end_comment
 
 begin_comment
@@ -477,6 +477,41 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|assert_long
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|a1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|a2
+parameter_list|,
+name|long
+name|aa1
+parameter_list|,
+name|long
+name|aa2
+parameter_list|,
+name|enum
+name|test_predicate
+name|pred
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|assert_long_long
 parameter_list|(
 specifier|const
@@ -875,6 +910,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASSERT_LONG_EQ
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|assert_long(__FILE__, __LINE__, #a1, #a2, a1, a2, TEST_EQ)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASSERT_LONG_LONG_EQ
 parameter_list|(
 name|a1
@@ -1059,6 +1107,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASSERT_LONG_NE
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|assert_long(__FILE__, __LINE__, #a1, #a2, a1, a2, TEST_NE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASSERT_LONG_LONG_NE
 parameter_list|(
 name|a1
@@ -1225,6 +1286,19 @@ name|a2
 parameter_list|)
 define|\
 value|assert_u_int(__FILE__, __LINE__, #a1, #a2, a1, a2, TEST_LT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_LONG_LT
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|assert_long(__FILE__, __LINE__, #a1, #a2, a1, a2, TEST_LT)
 end_define
 
 begin_define
@@ -1401,6 +1475,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASSERT_LONG_LE
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|assert_long(__FILE__, __LINE__, #a1, #a2, a1, a2, TEST_LE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASSERT_LONG_LONG_LE
 parameter_list|(
 name|a1
@@ -1572,6 +1659,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASSERT_LONG_GT
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|assert_long(__FILE__, __LINE__, #a1, #a2, a1, a2, TEST_GT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASSERT_LONG_LONG_GT
 parameter_list|(
 name|a1
@@ -1738,6 +1838,19 @@ name|a2
 parameter_list|)
 define|\
 value|assert_u_int(__FILE__, __LINE__, #a1, #a2, a1, a2, TEST_GE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_LONG_GE
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|assert_long(__FILE__, __LINE__, #a1, #a2, a1, a2, TEST_GE)
 end_define
 
 begin_define

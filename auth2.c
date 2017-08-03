@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.136 2016/05/02 08:49:03 djm Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.137 2017/02/03 23:05:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -919,6 +919,14 @@ modifier|*
 name|ctxt
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 name|Authctxt
 modifier|*
 name|authctxt
@@ -1084,7 +1092,9 @@ literal|1
 expr_stmt|;
 name|debug2
 argument_list|(
-literal|"input_userauth_request: setting up authctxt for %s"
+literal|"%s: setting up authctxt for %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|user
 argument_list|)
@@ -1092,13 +1102,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|logit
-argument_list|(
-literal|"input_userauth_request: invalid user %s"
-argument_list|,
-name|user
-argument_list|)
-expr_stmt|;
+comment|/* Invalid user, fake password information */
 name|authctxt
 operator|->
 name|pw
@@ -1139,6 +1143,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ssh_packet_set_log_preamble
+argument_list|(
+name|ssh
+argument_list|,
+literal|"%suser %s"
+argument_list|,
+name|authctxt
+operator|->
+name|valid
+condition|?
+literal|"authenticating "
+else|:
+literal|"invalid "
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"%s%s"
@@ -1388,6 +1409,14 @@ modifier|*
 name|submethod
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 name|char
 modifier|*
 name|methods
@@ -1657,6 +1686,17 @@ operator|->
 name|success
 operator|=
 literal|1
+expr_stmt|;
+name|ssh_packet_set_log_preamble
+argument_list|(
+name|ssh
+argument_list|,
+literal|"user %s"
+argument_list|,
+name|authctxt
+operator|->
+name|user
+argument_list|)
 expr_stmt|;
 block|}
 else|else

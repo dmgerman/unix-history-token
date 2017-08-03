@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: hostfile.c,v 1.67 2016/09/17 18:00:27 tedu Exp $ */
+comment|/* $OpenBSD: hostfile.c,v 1.68 2017/03/10 04:26:06 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2102,7 +2102,22 @@ modifier|*
 name|hashed_host
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+name|lhost
 decl_stmt|;
+name|lhost
+operator|=
+name|xstrdup
+argument_list|(
+name|host
+argument_list|)
+expr_stmt|;
+name|lowercase
+argument_list|(
+name|lhost
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|store_hash
@@ -2115,7 +2130,7 @@ name|hashed_host
 operator|=
 name|host_hash
 argument_list|(
-name|host
+name|lhost
 argument_list|,
 name|NULL
 argument_list|,
@@ -2131,6 +2146,11 @@ argument_list|(
 literal|"%s: host_hash failed"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|lhost
 argument_list|)
 expr_stmt|;
 return|return
@@ -2160,19 +2180,26 @@ name|f
 argument_list|,
 literal|"%s,%s "
 argument_list|,
-name|host
+name|lhost
 argument_list|,
 name|ip
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
 literal|"%s "
 argument_list|,
-name|host
+name|lhost
+argument_list|)
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|lhost
 argument_list|)
 expr_stmt|;
 if|if

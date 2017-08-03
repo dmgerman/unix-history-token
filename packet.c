@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.243 2016/10/11 21:47:45 djm Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.247 2017/03/11 13:07:35 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1244,6 +1244,98 @@ operator|->
 name|state
 operator|->
 name|mux
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ssh_packet_set_log_preamble
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
+name|ssh
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|args
+decl_stmt|;
+name|int
+name|r
+decl_stmt|;
+name|free
+argument_list|(
+name|ssh
+operator|->
+name|log_preamble
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fmt
+operator|==
+name|NULL
+condition|)
+name|ssh
+operator|->
+name|log_preamble
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+block|{
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|r
+operator|=
+name|vasprintf
+argument_list|(
+operator|&
+name|ssh
+operator|->
+name|log_preamble
+argument_list|,
+name|fmt
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|<
+literal|0
+operator|||
+name|ssh
+operator|->
+name|log_preamble
+operator|==
+name|NULL
+condition|)
+return|return
+name|SSH_ERR_ALLOC_FAIL
+return|;
+block|}
+return|return
+literal|0
 return|;
 block|}
 end_function
@@ -4876,6 +4968,9 @@ name|rekey_interval
 operator|!=
 literal|0
 operator|&&
+operator|(
+name|int64_t
+operator|)
 name|state
 operator|->
 name|rekey_time
@@ -6953,9 +7048,15 @@ name|r
 operator|==
 literal|0
 condition|)
-return|return
+block|{
+name|r
+operator|=
 name|SSH_ERR_CONN_TIMEOUT
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Read data from the socket. */
 name|len
 operator|=
@@ -9112,6 +9213,8 @@ expr_stmt|;
 if|if
 condition|(
 name|need
+operator|+
+name|block_size
 operator|>
 name|PACKET_MAX_SIZE
 condition|)
@@ -9137,6 +9240,8 @@ argument_list|,
 name|PACKET_MAX_SIZE
 operator|-
 name|need
+operator|-
+name|block_size
 argument_list|)
 return|;
 block|}
@@ -10497,6 +10602,64 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|fmt_connection_id
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
+name|ssh
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|size_t
+name|l
+parameter_list|)
+block|{
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+name|l
+argument_list|,
+literal|"%.200s%s%s port %d"
+argument_list|,
+name|ssh
+operator|->
+name|log_preamble
+condition|?
+name|ssh
+operator|->
+name|log_preamble
+else|:
+literal|""
+argument_list|,
+name|ssh
+operator|->
+name|log_preamble
+condition|?
+literal|" "
+else|:
+literal|""
+argument_list|,
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
+argument_list|,
+name|ssh_remote_port
+argument_list|(
+name|ssh
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Pretty-print connection-terminating errors and exit.  */
 end_comment
@@ -10519,6 +10682,24 @@ name|int
 name|r
 parameter_list|)
 block|{
+name|char
+name|remote_id
+index|[
+literal|512
+index|]
+decl_stmt|;
+name|fmt_connection_id
+argument_list|(
+name|ssh
+argument_list|,
+name|remote_id
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|remote_id
+argument_list|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|r
@@ -10529,17 +10710,9 @@ name|SSH_ERR_CONN_CLOSED
 case|:
 name|logdie
 argument_list|(
-literal|"Connection closed by %.200s port %d"
+literal|"Connection closed by %s"
 argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
-argument_list|,
-name|ssh_remote_port
-argument_list|(
-name|ssh
-argument_list|)
+name|remote_id
 argument_list|)
 expr_stmt|;
 case|case
@@ -10547,7 +10720,7 @@ name|SSH_ERR_CONN_TIMEOUT
 case|:
 name|logdie
 argument_list|(
-literal|"Connection %s %.200s port %d timed out"
+literal|"Connection %s %s timed out"
 argument_list|,
 name|ssh
 operator|->
@@ -10559,15 +10732,7 @@ literal|"from"
 else|:
 literal|"to"
 argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
-argument_list|,
-name|ssh_remote_port
-argument_list|(
-name|ssh
-argument_list|)
+name|remote_id
 argument_list|)
 expr_stmt|;
 case|case
@@ -10575,17 +10740,9 @@ name|SSH_ERR_DISCONNECTED
 case|:
 name|logdie
 argument_list|(
-literal|"Disconnected from %.200s port %d"
+literal|"Disconnected from %s"
 argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
-argument_list|,
-name|ssh_remote_port
-argument_list|(
-name|ssh
-argument_list|)
+name|remote_id
 argument_list|)
 expr_stmt|;
 case|case
@@ -10599,17 +10756,9 @@ name|ECONNRESET
 condition|)
 name|logdie
 argument_list|(
-literal|"Connection reset by %.200s port %d"
+literal|"Connection reset by %s"
 argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
-argument_list|,
-name|ssh_remote_port
-argument_list|(
-name|ssh
-argument_list|)
+name|remote_id
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -10645,18 +10794,10 @@ condition|)
 block|{
 name|logdie
 argument_list|(
-literal|"Unable to negotiate with %.200s port %d: %s. "
+literal|"Unable to negotiate with %s: %s. "
 literal|"Their offer: %s"
 argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
-argument_list|,
-name|ssh_remote_port
-argument_list|(
-name|ssh
-argument_list|)
+name|remote_id
 argument_list|,
 name|ssh_err
 argument_list|(
@@ -10675,7 +10816,7 @@ comment|/* FALLTHROUGH */
 default|default:
 name|logdie
 argument_list|(
-literal|"%s%sConnection %s %.200s port %d: %s"
+literal|"%s%sConnection %s %s: %s"
 argument_list|,
 name|tag
 operator|!=
@@ -10703,15 +10844,7 @@ literal|"from"
 else|:
 literal|"to"
 argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
-argument_list|,
-name|ssh_remote_port
-argument_list|(
-name|ssh
-argument_list|)
+name|remote_id
 argument_list|,
 name|ssh_err
 argument_list|(
@@ -10749,6 +10882,11 @@ name|buf
 index|[
 literal|1024
 index|]
+decl_stmt|,
+name|remote_id
+index|[
+literal|512
+index|]
 decl_stmt|;
 name|va_list
 name|args
@@ -10777,6 +10915,18 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	 * Format the message.  Note that the caller must make sure the 	 * message is of limited size. 	 */
+name|fmt_connection_id
+argument_list|(
+name|ssh
+argument_list|,
+name|remote_id
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|remote_id
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|va_start
 argument_list|(
 name|args
@@ -10806,7 +10956,9 @@ expr_stmt|;
 comment|/* Display the error locally */
 name|logit
 argument_list|(
-literal|"Disconnecting: %.100s"
+literal|"Disconnecting %s: %.100s"
+argument_list|,
+name|remote_id
 argument_list|,
 name|buf
 argument_list|)
@@ -11971,13 +12123,13 @@ parameter_list|,
 name|u_int64_t
 name|bytes
 parameter_list|,
-name|time_t
+name|u_int32_t
 name|seconds
 parameter_list|)
 block|{
 name|debug3
 argument_list|(
-literal|"rekey after %llu bytes, %d seconds"
+literal|"rekey after %llu bytes, %u seconds"
 argument_list|,
 operator|(
 name|unsigned
@@ -11987,6 +12139,7 @@ operator|)
 name|bytes
 argument_list|,
 operator|(
+name|unsigned
 name|int
 operator|)
 name|seconds

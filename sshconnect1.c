@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect1.c,v 1.79 2016/09/19 07:52:42 natano Exp $ */
+comment|/* $OpenBSD: sshconnect1.c,v 1.80 2017/03/10 03:53:11 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -2120,11 +2120,24 @@ name|packet_get_char
 argument_list|()
 expr_stmt|;
 comment|/* Get the public key. */
+if|if
+condition|(
+operator|(
 name|server_key
 operator|=
 name|key_new
 argument_list|(
 name|KEY_RSA1
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: key_new(KEY_RSA1) failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|bits
@@ -2185,11 +2198,24 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the host key. */
+if|if
+condition|(
+operator|(
 name|host_key
 operator|=
 name|key_new
 argument_list|(
 name|KEY_RSA1
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: key_new(KEY_RSA1) failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|bits

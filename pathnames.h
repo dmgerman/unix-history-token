@@ -519,55 +519,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* path to login program */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOGIN_PROGRAM
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOGIN_PROGRAM_FALLBACK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LOGIN_PROGRAM
-value|LOGIN_PROGRAM_FALLBACK
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LOGIN_PROGRAM
-value|"/usr/bin/login"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOGIN_PROGRAM */
-end_comment
-
-begin_comment
 comment|/* Askpass program define */
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.272 2016/09/12 01:22:38 deraadt Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.273 2017/03/10 03:22:40 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -7159,6 +7159,11 @@ argument_list|(
 literal|"user denied adding this key"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|auth_sock
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -7203,6 +7208,11 @@ argument_list|,
 name|authfile
 argument_list|,
 name|r
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|auth_sock
 argument_list|)
 expr_stmt|;
 block|}

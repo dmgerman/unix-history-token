@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.166 2016/09/28 16:33:06 djm Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.167 2017/02/03 23:05:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1623,6 +1623,14 @@ name|pmonitor
 parameter_list|)
 block|{
 name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|mon_table
 modifier|*
 name|ent
@@ -1973,6 +1981,17 @@ argument_list|(
 literal|"%s: %s has been authenticated by privileged process"
 argument_list|,
 name|__func__
+argument_list|,
+name|authctxt
+operator|->
+name|user
+argument_list|)
+expr_stmt|;
+name|ssh_packet_set_log_preamble
+argument_list|(
+name|ssh
+argument_list|,
+literal|"user %s"
 argument_list|,
 name|authctxt
 operator|->
@@ -3722,6 +3741,14 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 name|char
 modifier|*
 name|username
@@ -3933,6 +3960,25 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|ssh_packet_set_log_preamble
+argument_list|(
+name|ssh
+argument_list|,
+literal|"%suser %s"
+argument_list|,
+name|authctxt
+operator|->
+name|valid
+condition|?
+literal|"authenticating"
+else|:
+literal|"invalid "
+argument_list|,
+name|authctxt
+operator|->
+name|user
+argument_list|)
+expr_stmt|;
 name|buffer_put_string
 argument_list|(
 name|m

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.480 2016/12/09 03:04:29 djm Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.485 2017/03/15 03:52:30 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -1370,11 +1370,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|s
-decl_stmt|,
-modifier|*
-name|newline
-init|=
-literal|"\n"
 decl_stmt|;
 name|char
 name|buf
@@ -1395,7 +1390,7 @@ argument_list|(
 operator|&
 name|server_version_string
 argument_list|,
-literal|"SSH-%d.%d-%.100s%s%s%s"
+literal|"SSH-%d.%d-%.100s%s%s\r\n"
 argument_list|,
 name|PROTOCOL_MAJOR_2
 argument_list|,
@@ -1417,8 +1412,6 @@ argument_list|,
 name|options
 operator|.
 name|version_addendum
-argument_list|,
-name|newline
 argument_list|)
 expr_stmt|;
 comment|/* Send our protocol version identification. */
@@ -4599,6 +4592,38 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|listen_sock
+argument_list|,
+name|F_SETFD
+argument_list|,
+name|FD_CLOEXEC
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"socket: CLOEXEC: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|listen_sock
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * Set socket options. 		 * Allow local port reuse in TIME_WAIT. 		 */
 if|if
 condition|(
@@ -7427,6 +7452,57 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|pubkey
+operator|!=
+name|NULL
+operator|&&
+name|pubkey
+operator|->
+name|type
+operator|==
+name|KEY_RSA1
+operator|)
+operator|||
+operator|(
+name|key
+operator|!=
+name|NULL
+operator|&&
+name|key
+operator|->
+name|type
+operator|==
+name|KEY_RSA1
+operator|)
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"Ignoring RSA1 key %s"
+argument_list|,
+name|options
+operator|.
+name|host_key_files
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|key_free
+argument_list|(
+name|key
+argument_list|)
+expr_stmt|;
+name|key_free
+argument_list|(
+name|pubkey
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|pubkey
 operator|==
 name|NULL
@@ -9526,9 +9602,6 @@ name|options
 operator|.
 name|rekey_limit
 argument_list|,
-operator|(
-name|time_t
-operator|)
 name|options
 operator|.
 name|rekey_interval
