@@ -6262,7 +6262,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
