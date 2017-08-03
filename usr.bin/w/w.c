@@ -2774,17 +2774,9 @@ block|}
 comment|/* Print number of users logged in to system */
 name|xo_emit
 argument_list|(
-literal|" {:users/%d} {N:user%s}"
+literal|" {:users/%d} {Np:user,users}"
 argument_list|,
 name|nusers
-argument_list|,
-name|nusers
-operator|==
-literal|1
-condition|?
-literal|""
-else|:
-literal|"s"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Print 1, 5, and 15 minute load averages. 	 */
