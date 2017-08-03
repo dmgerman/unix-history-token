@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: nonints.h,v 1.69 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: nonints.h,v 1.74 2016/09/05 00:40:29 sevan Exp $	*/
 end_comment
 
 begin_comment
@@ -310,19 +310,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|Cmd_Exec
@@ -472,6 +459,19 @@ end_function_decl
 
 begin_function_decl
 name|Boolean
+name|s2Boolean
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|Boolean
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Boolean
 name|getBoolean
 parameter_list|(
 specifier|const
@@ -479,6 +479,21 @@ name|char
 modifier|*
 parameter_list|,
 name|Boolean
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|cached_realpath
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -736,6 +751,37 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRLCPY
+end_ifndef
+
+begin_comment
+comment|/* strlcpy.c */
+end_comment
+
+begin_function_decl
+name|size_t
+name|strlcpy
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* suff.c */
@@ -1175,9 +1221,7 @@ parameter_list|,
 name|GNode
 modifier|*
 parameter_list|,
-name|Boolean
-parameter_list|,
-name|Boolean
+name|int
 parameter_list|,
 name|int
 modifier|*
@@ -1205,9 +1249,7 @@ parameter_list|,
 name|GNode
 modifier|*
 parameter_list|,
-name|Boolean
-parameter_list|,
-name|Boolean
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

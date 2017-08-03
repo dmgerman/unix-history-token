@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compat.c,v 1.101 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: compat.c,v 1.107 2017/07/20 19:29:54 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: compat.c,v 1.101 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.107 2017/07/20 19:29:54 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compat.c,v 1.101 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.107 2017/07/20 19:29:54 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -210,27 +210,38 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|pid_t
+name|compatChild
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|compatSigno
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CompatInterrupt --  *	Interrupt the creation of the current target and remove it if  *	it ain't precious.  *  * Results:  *	None.  *  * Side Effects:  *	The target is removed and the process exits. If .INTERRUPT exists,  *	its commands are run first WITH INTERRUPTS IGNORED..  *  *-----------------------------------------------------------------------  */
+comment|/*  * CompatDeleteTarget -- delete a failed, interrupted, or otherwise  * duffed target if not inhibited by .PRECIOUS.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|CompatInterrupt
+name|CompatDeleteTarget
 parameter_list|(
-name|int
-name|signo
-parameter_list|)
-block|{
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
+parameter_list|)
+block|{
 if|if
 condition|(
 operator|(
-name|curTarg
+name|gn
 operator|!=
 name|NULL
 operator|)
@@ -238,7 +249,7 @@ operator|&&
 operator|!
 name|Targ_Precious
 argument_list|(
-name|curTarg
+name|gn
 argument_list|)
 condition|)
 block|{
@@ -254,7 +265,7 @@ name|Var_Value
 argument_list|(
 name|TARGET
 argument_list|,
-name|curTarg
+name|gn
 argument_list|,
 operator|&
 name|p1
@@ -282,15 +293,52 @@ name|file
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*-  *-----------------------------------------------------------------------  * CompatInterrupt --  *	Interrupt the creation of the current target and remove it if  *	it ain't precious.  *  * Results:  *	None.  *  * Side Effects:  *	The target is removed and the process exits. If .INTERRUPT exists,  *	its commands are run first WITH INTERRUPTS IGNORED..  *  * XXX: is .PRECIOUS supposed to inhibit .INTERRUPT? I doubt it, but I've  * left the logic alone for now. - dholland 20160826  *  *-----------------------------------------------------------------------  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|CompatInterrupt
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
+block|{
+name|GNode
+modifier|*
+name|gn
+decl_stmt|;
+name|CompatDeleteTarget
+argument_list|(
+name|curTarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|curTarg
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|!
+name|Targ_Precious
+argument_list|(
+name|curTarg
+argument_list|)
+condition|)
+block|{
 comment|/* 	 * Run .INTERRUPT only if hit with interrupt signal 	 */
 if|if
 condition|(
@@ -336,6 +384,28 @@ argument_list|(
 name|signo
 argument_list|)
 expr_stmt|;
+comment|/*      * If there is a child running, pass the signal on      * we will exist after it has exited.      */
+name|compatSigno
+operator|=
+name|signo
+expr_stmt|;
+if|if
+condition|(
+name|compatChild
+operator|>
+literal|0
+condition|)
+block|{
+name|KILLPG
+argument_list|(
+name|compatChild
+argument_list|,
+name|signo
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|bmake_signal
 argument_list|(
 name|signo
@@ -350,6 +420,7 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -509,9 +580,7 @@ name|cmd
 argument_list|,
 name|gn
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 comment|/*      * brk_string will return an argv with a NULL in av[0], thus causing      * execvp to choke and die horribly. Besides, how can we execute a null      * command? In any case, we warn the user that the command expanded to      * nothing (is this the right thing to do?).      */
@@ -958,6 +1027,8 @@ block|}
 endif|#
 directive|endif
 comment|/*      * Fork and execute the single command. If the fork fails, we abort.      */
+name|compatChild
+operator|=
 name|cpid
 operator|=
 name|vFork
@@ -1065,19 +1136,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|mav
-condition|)
 name|free
 argument_list|(
 name|mav
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-condition|)
 name|free
 argument_list|(
 name|bp
@@ -1407,6 +1470,25 @@ literal|" (continuing)\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|deleteOnError
+condition|)
+block|{
+name|CompatDeleteTarget
+argument_list|(
+name|gn
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1446,6 +1528,30 @@ argument_list|(
 name|cmdStart
 argument_list|)
 expr_stmt|;
+name|compatChild
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|compatSigno
+condition|)
+block|{
+name|bmake_signal
+argument_list|(
+name|compatSigno
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|kill
+argument_list|(
+name|myPid
+argument_list|,
+name|compatSigno
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|status
@@ -1636,10 +1742,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
@@ -1875,10 +1977,20 @@ name|gn
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
 name|meta_job_finish
 argument_list|(
 name|NULL
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|gn
+operator|->
+name|made
+operator|=
+name|ERROR
 expr_stmt|;
 block|}
 endif|#
@@ -1961,7 +2073,7 @@ name|PrintOnError
 argument_list|(
 name|gn
 argument_list|,
-literal|"\n\nStop."
+literal|"\nStop."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2029,10 +2141,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
@@ -2325,7 +2433,7 @@ name|PrintOnError
 argument_list|(
 name|gn
 argument_list|,
-literal|"\n\nStop."
+literal|"\nStop."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2446,7 +2554,7 @@ name|PrintOnError
 argument_list|(
 name|gn
 argument_list|,
-literal|"\n\nStop."
+literal|"\nStop."
 argument_list|)
 expr_stmt|;
 name|exit

@@ -858,7 +858,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"bmake 20151022"
+value|"bmake 20160606"
 end_define
 
 begin_comment
@@ -891,7 +891,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"20151022"
+value|"20160606"
 end_define
 
 begin_comment
@@ -1154,6 +1154,14 @@ end_comment
 
 begin_comment
 comment|/* #undef const */
+end_comment
+
+begin_comment
+comment|/* Define to `int' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef mode_t */
 end_comment
 
 begin_comment

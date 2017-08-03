@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: hash.h,v 1.10 2009/01/24 10:59:09 dsl Exp $	*/
+comment|/*	$NetBSD: hash.h,v 1.12 2017/05/31 21:07:03 maya Exp $	*/
 end_comment
 
 begin_comment
@@ -18,13 +18,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_HASH
+name|_HASH_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_HASH
+name|_HASH_H
 end_define
 
 begin_comment
@@ -42,20 +42,11 @@ modifier|*
 name|next
 decl_stmt|;
 comment|/* Used to link together all the     					 * entries associated with the same 					 * bucket. */
-union|union
-block|{
 name|void
 modifier|*
 name|clientPtr
 decl_stmt|;
 comment|/* Arbitrary pointer */
-name|time_t
-name|clientTime
-decl_stmt|;
-comment|/* Arbitrary Time */
-block|}
-name|clientInfo
-union|;
 name|unsigned
 name|namehash
 decl_stmt|;
@@ -144,17 +135,7 @@ name|Hash_GetValue
 parameter_list|(
 name|h
 parameter_list|)
-value|((h)->clientInfo.clientPtr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|Hash_GetTimeValue
-parameter_list|(
-name|h
-parameter_list|)
-value|((h)->clientInfo.clientTime)
+value|((h)->clientPtr)
 end_define
 
 begin_comment
@@ -170,19 +151,7 @@ name|h
 parameter_list|,
 name|val
 parameter_list|)
-value|((h)->clientInfo.clientPtr = (val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|Hash_SetTimeValue
-parameter_list|(
-name|h
-parameter_list|,
-name|val
-parameter_list|)
-value|((h)->clientInfo.clientTime = (val))
+value|((h)->clientPtr = (val))
 end_define
 
 begin_comment
@@ -298,7 +267,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _HASH */
+comment|/* _HASH_H */
 end_comment
 
 end_unit

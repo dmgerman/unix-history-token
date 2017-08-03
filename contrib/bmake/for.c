@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: for.c,v 1.50 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: for.c,v 1.53 2017/04/16 21:04:44 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: for.c,v 1.50 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: for.c,v 1.53 2017/04/16 21:04:44 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: for.c,v 1.50 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: for.c,v 1.53 2017/04/16 21:04:44 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -686,9 +686,7 @@ name|ptr
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 comment|/*      * Split into words allowing for quoted strings.      */
@@ -1570,6 +1568,8 @@ operator|(
 name|ech
 operator|=
 literal|')'
+operator|,
+literal|1
 operator|)
 operator|)
 operator|||
@@ -1582,6 +1582,8 @@ operator|(
 name|ech
 operator|=
 literal|'}'
+operator|,
+literal|1
 operator|)
 operator|)
 condition|)

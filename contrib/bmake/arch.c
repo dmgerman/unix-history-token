@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: arch.c,v 1.64 2015/10/11 04:51:24 sjg Exp $	*/
+comment|/*	$NetBSD: arch.c,v 1.70 2017/04/16 20:49:09 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: arch.c,v 1.64 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: arch.c,v 1.70 2017/04/16 20:49:09 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: arch.c,v 1.64 2015/10/11 04:51:24 sjg Exp $"
+literal|"$NetBSD: arch.c,v 1.70 2017/04/16 20:49:09 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -126,12 +126,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_ifdef
@@ -254,12 +248,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
 
 begin_include
 include|#
@@ -767,12 +755,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|a
-operator|->
-name|fnametab
-condition|)
 name|free
 argument_list|(
 name|a
@@ -912,9 +894,9 @@ name|cp
 argument_list|,
 name|ctxt
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|,
 operator|&
 name|length
@@ -923,10 +905,6 @@ operator|&
 name|freeIt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|freeIt
-condition|)
 name|free
 argument_list|(
 name|freeIt
@@ -981,9 +959,9 @@ name|libName
 argument_list|,
 name|ctxt
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 block|}
@@ -1083,9 +1061,9 @@ name|cp
 argument_list|,
 name|ctxt
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|,
 operator|&
 name|length
@@ -1094,10 +1072,6 @@ operator|&
 name|freeIt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|freeIt
-condition|)
 name|free
 argument_list|(
 name|freeIt
@@ -1209,9 +1183,9 @@ name|memName
 argument_list|,
 name|ctxt
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|)
 expr_stmt|;
 comment|/* 	     * Now form an archive spec and recurse to deal with nested 	     * variables and multi-word variable values.... The results 	     * are just placed at the end of the nodeLst we're returning. 	     */
@@ -2419,6 +2393,8 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -2428,7 +2404,12 @@ name|elen
 argument_list|,
 name|SEEK_CUR
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|badarch
+goto|;
 if|if
 condition|(
 name|DEBUG
@@ -2501,6 +2482,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -2516,7 +2499,12 @@ literal|1
 argument_list|,
 name|SEEK_CUR
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|badarch
+goto|;
 block|}
 name|fclose
 argument_list|(
@@ -2588,12 +2576,6 @@ operator|->
 name|members
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ar
-operator|->
-name|fnametab
-condition|)
 name|free
 argument_list|(
 name|ar
@@ -2848,7 +2830,8 @@ argument_list|,
 literal|"Found svr4 archive name table with %lu entries\n"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|entry
 argument_list|)
@@ -2967,7 +2950,8 @@ argument_list|,
 name|name
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|ar
 operator|->
@@ -3312,6 +3296,8 @@ block|}
 else|else
 block|{
 comment|/* 		 * To make life easier, we reposition the file at the start 		 * of the header we just read before we return the stream. 		 * In a more general situation, it might be better to leave 		 * the file at the actual member, rather than its header, but 		 * not here... 		 */
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -3325,7 +3311,19 @@ argument_list|)
 argument_list|,
 name|SEEK_CUR
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|arch
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 return|return
 operator|(
 name|arch
@@ -3492,6 +3490,8 @@ literal|0
 condition|)
 block|{
 comment|/* Found as extended name */
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -3507,13 +3507,27 @@ name|elen
 argument_list|,
 name|SEEK_CUR
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|arch
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 return|return
 operator|(
 name|arch
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -3523,7 +3537,19 @@ name|elen
 argument_list|,
 name|SEEK_CUR
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|arch
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 goto|goto
 name|skip
 goto|;
@@ -3537,7 +3563,7 @@ label|:
 comment|/* 	     * This isn't the member we're after, so we need to advance the 	     * stream's pointer to the start of the next header. Files are 	     * padded with newlines to an even-byte boundary, so we need to 	     * extract the size of the file from the 'size' field of the 	     * header and round it up during the seek. 	     */
 name|arhPtr
 operator|->
-name|ar_size
+name|AR_SIZE
 index|[
 sizeof|sizeof
 argument_list|(
@@ -3567,6 +3593,8 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fseek
 argument_list|(
 name|arch
@@ -3582,7 +3610,19 @@ literal|1
 argument_list|,
 name|SEEK_CUR
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|arch
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 block|}
 block|}
 comment|/*      * We've looked everywhere, but the member is not to be found. Close the      * archive and return NULL -- an error.      */
@@ -3657,19 +3697,11 @@ argument_list|,
 literal|"r+"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p2
-condition|)
 name|free
 argument_list|(
 name|p2
@@ -3942,19 +3974,11 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p2
-condition|)
 name|free
 argument_list|(
 name|p2

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.96 2015/09/21 21:50:16 pooka Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.103 2017/07/20 19:29:54 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -113,6 +119,24 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FD_CLOEXEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FD_CLOEXEC
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -485,6 +509,11 @@ directive|define
 name|DONECYCLE
 value|0x2000
 comment|/* Used by MakePrintStatus */
+define|#
+directive|define
+name|INTERNAL
+value|0x4000
+comment|/* Internal use only */
 enum|enum
 name|enum_made
 block|{
@@ -1343,6 +1372,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Boolean
+name|deleteOnError
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if failed targets should be deleted */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
 name|keepgoing
 decl_stmt|;
 end_decl_stmt
@@ -2034,9 +2074,20 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+modifier|...
 parameter_list|)
-function_decl|;
+function_decl|MAKE_ATTR_PRINTFLIKE
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -2068,6 +2119,55 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|cached_lstat
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cached_stat
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|VARF_UNDEFERR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARF_WANTRES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARF_ASSIGN
+value|4
+end_define
 
 begin_ifdef
 ifdef|#
@@ -2201,6 +2301,49 @@ define|#
 directive|define
 name|PATH_MAX
 value|MAXPATHLEN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYSV
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KILLPG
+parameter_list|(
+name|pid
+parameter_list|,
+name|sig
+parameter_list|)
+value|kill(-(pid), (sig))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KILLPG
+parameter_list|(
+name|pid
+parameter_list|,
+name|sig
+parameter_list|)
+value|killpg((pid), (sig))
 end_define
 
 begin_endif

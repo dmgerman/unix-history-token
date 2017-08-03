@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cond.c,v 1.71 2015/12/02 00:28:24 sjg Exp $	*/
+comment|/*	$NetBSD: cond.c,v 1.75 2017/04/16 20:59:04 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: cond.c,v 1.71 2015/12/02 00:28:24 sjg Exp $"
+literal|"$NetBSD: cond.c,v 1.75 2017/04/16 20:59:04 riastradh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: cond.c,v 1.71 2015/12/02 00:28:24 sjg Exp $"
+literal|"$NetBSD: cond.c,v 1.75 2017/04/16 20:59:04 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -86,6 +86,12 @@ end_endif
 begin_comment
 comment|/*-  * cond.c --  *	Functions to handle conditionals in a makefile.  *  * Interface:  *	Cond_Eval 	Evaluate the conditional in the passed line.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
 
 begin_include
 include|#
@@ -775,9 +781,9 @@ name|cp
 argument_list|,
 name|VAR_CMD
 argument_list|,
-name|TRUE
-argument_list|,
-name|TRUE
+name|VARF_UNDEFERR
+operator||
+name|VARF_WANTRES
 argument_list|,
 operator|&
 name|len
@@ -799,10 +805,6 @@ argument_list|,
 name|cp2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|freeIt
-condition|)
 name|free
 argument_list|(
 name|freeIt
@@ -983,10 +985,6 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|p1
-condition|)
 name|free
 argument_list|(
 name|p1
@@ -1668,14 +1666,19 @@ argument_list|,
 name|VAR_CMD
 argument_list|,
 operator|(
+operator|(
+operator|!
 name|qt
-condition|?
-literal|0
-else|:
+operator|&&
 name|doEval
 operator|)
-argument_list|,
-name|TRUE
+condition|?
+name|VARF_UNDEFERR
+else|:
+literal|0
+operator|)
+operator||
+name|VARF_WANTRES
 argument_list|,
 operator|&
 name|len
@@ -2529,19 +2532,11 @@ block|}
 block|}
 name|done
 label|:
-if|if
-condition|(
-name|lhsFree
-condition|)
 name|free
 argument_list|(
 name|lhsFree
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rhsFree
-condition|)
 name|free
 argument_list|(
 name|rhsFree
@@ -2610,9 +2605,7 @@ literal|1
 argument_list|,
 name|VAR_CMD
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
+name|VARF_WANTRES
 argument_list|,
 operator|&
 name|length
@@ -2675,10 +2668,6 @@ literal|2
 else|:
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|freeIt
-condition|)
 name|free
 argument_list|(
 name|freeIt
@@ -2988,10 +2977,6 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|arg
-condition|)
 name|free
 argument_list|(
 name|arg
@@ -3116,10 +3101,6 @@ name|if_info
 operator|->
 name|doNot
 expr_stmt|;
-if|if
-condition|(
-name|arg
-condition|)
 name|free
 argument_list|(
 name|arg
@@ -3728,17 +3709,16 @@ operator|=
 name|info
 expr_stmt|;
 block|}
-name|if_info
-operator|=
+name|assert
+argument_list|(
 name|info
 operator|!=
 name|NULL
-condition|?
+argument_list|)
+expr_stmt|;
+name|if_info
+operator|=
 name|info
-else|:
-name|ifs
-operator|+
-literal|4
 expr_stmt|;
 name|condExpr
 operator|=
