@@ -18,6 +18,51 @@ end_define
 begin_define
 define|#
 directive|define
+name|IMX_IOMUXREG_LOWEST_SET_BIT
+parameter_list|(
+name|__mask
+parameter_list|)
+value|((((__mask) - 1)& (__mask)) ^ (__mask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX_IOMUXREG_SHIFTIN
+parameter_list|(
+name|__x
+parameter_list|,
+name|__mask
+parameter_list|)
+value|((__x) * IMX_IOMUXREG_LOWEST_SET_BIT(__mask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX_IOMUXREG_BIT
+parameter_list|(
+name|n
+parameter_list|)
+value|(1<< (n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX_IOMUXREG_BITS
+parameter_list|(
+name|__m
+parameter_list|,
+name|__n
+parameter_list|)
+define|\
+value|((IMX_IOMUXREG_BIT(MAX((__m), (__n)) + 1) - 1) ^ (IMX_IOMUXREG_BIT(MIN((__m), (__n))) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IOMUXC_GPR0
 value|0x00
 end_define
@@ -76,6 +121,113 @@ define|#
 directive|define
 name|IOMUXC_GPR3_HDMI_IPU2_DI1
 value|(3<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13
+value|0x34
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13_SATA_PHY_8
+parameter_list|(
+name|n
+parameter_list|)
+value|IMX_IOMUXREG_SHIFTIN(n, IMX_IOMUXREG_BITS(26, 24))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13_SATA_PHY_7
+parameter_list|(
+name|n
+parameter_list|)
+value|IMX_IOMUXREG_SHIFTIN(n, IMX_IOMUXREG_BITS(23, 19))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13_SATA_PHY_6
+parameter_list|(
+name|n
+parameter_list|)
+value|IMX_IOMUXREG_SHIFTIN(n, IMX_IOMUXREG_BITS(18, 16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13_SATA_SPEED
+parameter_list|(
+name|n
+parameter_list|)
+value|IMX_IOMUXREG_SHIFTIN(n, (1<< 15))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13_SATA_PHY_5
+parameter_list|(
+name|n
+parameter_list|)
+value|IMX_IOMUXREG_SHIFTIN(n, (1<< 14))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13_SATA_PHY_4
+parameter_list|(
+name|n
+parameter_list|)
+value|IMX_IOMUXREG_SHIFTIN(n, IMX_IOMUXREG_BITS(13, 11))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13_SATA_PHY_3
+parameter_list|(
+name|n
+parameter_list|)
+value|IMX_IOMUXREG_SHIFTIN(n, IMX_IOMUXREG_BITS(10, 7))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13_SATA_PHY_2
+parameter_list|(
+name|n
+parameter_list|)
+value|IMX_IOMUXREG_SHIFTIN(n, IMX_IOMUXREG_BITS(6, 2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13_SATA_PHY_1
+parameter_list|(
+name|n
+parameter_list|)
+value|IMX_IOMUXREG_SHIFTIN(n, (1<< 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMUX_GPR13_SATA_PHY_0
+parameter_list|(
+name|n
+parameter_list|)
+value|IMX_IOMUXREG_SHIFTIN(n, (1<< 0))
 end_define
 
 begin_endif

@@ -627,6 +627,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCGR5_SATA
+value|(0x3<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCGR5_SDMA
 value|(0x3<< 6)
 end_define
@@ -713,6 +720,56 @@ define|#
 directive|define
 name|CCM_CMEOR
 value|0x088
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_ANALOG_PLL_ENET
+value|0x000040e0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_ANALOG_PLL_ENET_LOCK
+value|(1u<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_ANALOG_PLL_ENET_ENABLE_100M
+value|(1u<< 20)
+end_define
+
+begin_comment
+comment|/* SATA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCM_ANALOG_PLL_ENET_BYPASS
+value|(1u<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCM_ANALOG_PLL_ENET_ENABLE
+value|(1u<< 13)
+end_define
+
+begin_comment
+comment|/* Ether */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCM_ANALOG_PLL_ENET_POWERDOWN
+value|(1u<< 12)
 end_define
 
 begin_endif
