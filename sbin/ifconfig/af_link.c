@@ -454,6 +454,7 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* 			 * If this is definitely a lagg device or the hwaddr 			 * matches the link addr, don't bother. 			 */
 if|if
 condition|(
 name|memcmp
@@ -465,6 +466,26 @@ operator|.
 name|sa_data
 argument_list|,
 name|laggaddr
+argument_list|,
+name|sdl
+operator|->
+name|sdl_alen
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|memcmp
+argument_list|(
+name|ifr
+operator|.
+name|ifr_addr
+operator|.
+name|sa_data
+argument_list|,
+name|LLADDR
+argument_list|(
+name|sdl
+argument_list|)
 argument_list|,
 name|sdl
 operator|->
