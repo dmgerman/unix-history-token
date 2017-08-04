@@ -172,7 +172,7 @@ end_elif
 begin_include
 include|#
 directive|include
-file|<Bcrypt.h>
+file|<bcrypt.h>
 end_include
 
 begin_comment
