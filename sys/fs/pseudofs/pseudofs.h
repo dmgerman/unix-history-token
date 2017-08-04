@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|PFS_NAMELEN
-value|24
+value|48
 end_define
 
 begin_define

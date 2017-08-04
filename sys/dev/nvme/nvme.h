@@ -3142,6 +3142,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nvme_use_nvd
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

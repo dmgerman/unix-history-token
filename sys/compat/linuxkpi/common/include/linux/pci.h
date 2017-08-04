@@ -1082,6 +1082,12 @@ decl_stmt|;
 name|uint16_t
 name|vendor
 decl_stmt|;
+name|uint16_t
+name|subsystem_vendor
+decl_stmt|;
+name|uint16_t
+name|subsystem_device
+decl_stmt|;
 name|unsigned
 name|int
 name|irq

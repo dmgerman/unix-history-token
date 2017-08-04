@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.125 2016/09/12 01:22:38 deraadt Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.126 2017/01/03 05:46:51 djm Exp $ */
 end_comment
 
 begin_comment
@@ -254,6 +254,48 @@ directive|define
 name|MAX_DIR_DEPTH
 value|64
 end_define
+
+begin_comment
+comment|/* Directory separator characters */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SFTP_DIRECTORY_CHARS
+value|"/\\"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HAVE_CYGWIN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFTP_DIRECTORY_CHARS
+value|"/"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_CYGWIN */
+end_comment
 
 begin_struct
 struct|struct
@@ -3631,6 +3673,19 @@ expr_stmt|;
 if|if
 condition|(
 name|count
+operator|>
+name|SSHBUF_SIZE_MAX
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: nonsensical number of entries"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|count
 operator|==
 literal|0
 condition|)
@@ -3775,11 +3830,11 @@ expr_stmt|;
 comment|/* 			 * Directory entries should never contain '/' 			 * These can be used to attack recursive ops 			 * (e.g. send '../../../../etc/passwd') 			 */
 if|if
 condition|(
-name|strchr
+name|strpbrk
 argument_list|(
 name|filename
 argument_list|,
-literal|'/'
+name|SFTP_DIRECTORY_CHARS
 argument_list|)
 operator|!=
 name|NULL

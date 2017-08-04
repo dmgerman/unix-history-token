@@ -240,6 +240,66 @@ begin_comment
 comment|/* SANDBOX_SECCOMP_FILTER_DEBUG */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BYTE_ORDER
+operator|==
+name|__LITTLE_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|ARG_LO_OFFSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARG_HI_OFFSET
+value|sizeof(uint32_t)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__BYTE_ORDER
+operator|==
+name|__BIG_ENDIAN
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ARG_LO_OFFSET
+value|sizeof(uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARG_HI_OFFSET
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"Unknown endianness"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Simple helpers to avoid manual errors (but larger BPF programs). */
 end_comment
@@ -254,7 +314,7 @@ parameter_list|,
 name|_errno
 parameter_list|)
 define|\
-value|BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, __NR_ ## _nr, 0, 1), \ 	BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ERRNO|(_errno))
+value|BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, (_nr), 0, 1), \ 	BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ERRNO|(_errno))
 end_define
 
 begin_define
@@ -265,7 +325,7 @@ parameter_list|(
 name|_nr
 parameter_list|)
 define|\
-value|BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, __NR_ ## _nr, 0, 1), \ 	BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ALLOW)
+value|BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, (_nr), 0, 1), \ 	BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ALLOW)
 end_define
 
 begin_define
@@ -280,9 +340,11 @@ parameter_list|,
 name|_arg_val
 parameter_list|)
 define|\
-value|BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, __NR_ ## _nr, 0, 4), \
-comment|/* load first syscall argument */
-value|\ 	BPF_STMT(BPF_LD+BPF_W+BPF_ABS, \ 	    offsetof(struct seccomp_data, args[(_arg_nr)])), \ 	BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, (_arg_val), 0, 1), \ 	BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ALLOW), \
+value|BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, (_nr), 0, 6), \
+comment|/* load and test first syscall argument, low word */
+value|\ 	BPF_STMT(BPF_LD+BPF_W+BPF_ABS, \ 	    offsetof(struct seccomp_data, args[(_arg_nr)]) + ARG_LO_OFFSET), \ 	BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, \ 	    ((_arg_val)& 0xFFFFFFFF), 0, 3), \
+comment|/* load and test first syscall argument, high word */
+value|\ 	BPF_STMT(BPF_LD+BPF_W+BPF_ABS, \ 	    offsetof(struct seccomp_data, args[(_arg_nr)]) + ARG_HI_OFFSET), \ 	BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, \ 	    (((uint32_t)((uint64_t)(_arg_val)>> 32))& 0xFFFFFFFF), 0, 1), \ 	BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ALLOW), \
 comment|/* reload syscall number; all rules expect it in accumulator */
 value|\ 	BPF_STMT(BPF_LD+BPF_W+BPF_ABS, \ 		offsetof(struct seccomp_data, nr))
 end_define
@@ -366,7 +428,7 @@ directive|ifdef
 name|__NR_lstat
 name|SC_DENY
 argument_list|(
-name|lstat
+name|__NR_lstat
 argument_list|,
 name|EACCES
 argument_list|)
@@ -378,7 +440,7 @@ directive|ifdef
 name|__NR_lstat64
 name|SC_DENY
 argument_list|(
-name|lstat64
+name|__NR_lstat64
 argument_list|,
 name|EACCES
 argument_list|)
@@ -390,7 +452,7 @@ directive|ifdef
 name|__NR_fstat
 name|SC_DENY
 argument_list|(
-name|fstat
+name|__NR_fstat
 argument_list|,
 name|EACCES
 argument_list|)
@@ -402,7 +464,7 @@ directive|ifdef
 name|__NR_fstat64
 name|SC_DENY
 argument_list|(
-name|fstat64
+name|__NR_fstat64
 argument_list|,
 name|EACCES
 argument_list|)
@@ -414,7 +476,7 @@ directive|ifdef
 name|__NR_open
 name|SC_DENY
 argument_list|(
-name|open
+name|__NR_open
 argument_list|,
 name|EACCES
 argument_list|)
@@ -426,7 +488,7 @@ directive|ifdef
 name|__NR_openat
 name|SC_DENY
 argument_list|(
-name|openat
+name|__NR_openat
 argument_list|,
 name|EACCES
 argument_list|)
@@ -438,7 +500,7 @@ directive|ifdef
 name|__NR_newfstatat
 name|SC_DENY
 argument_list|(
-name|newfstatat
+name|__NR_newfstatat
 argument_list|,
 name|EACCES
 argument_list|)
@@ -450,7 +512,7 @@ directive|ifdef
 name|__NR_stat
 name|SC_DENY
 argument_list|(
-name|stat
+name|__NR_stat
 argument_list|,
 name|EACCES
 argument_list|)
@@ -462,7 +524,7 @@ directive|ifdef
 name|__NR_stat64
 name|SC_DENY
 argument_list|(
-name|stat64
+name|__NR_stat64
 argument_list|,
 name|EACCES
 argument_list|)
@@ -475,7 +537,7 @@ directive|ifdef
 name|__NR_brk
 name|SC_ALLOW
 argument_list|(
-name|brk
+name|__NR_brk
 argument_list|)
 block|,
 endif|#
@@ -485,7 +547,7 @@ directive|ifdef
 name|__NR_clock_gettime
 name|SC_ALLOW
 argument_list|(
-name|clock_gettime
+name|__NR_clock_gettime
 argument_list|)
 block|,
 endif|#
@@ -495,7 +557,7 @@ directive|ifdef
 name|__NR_close
 name|SC_ALLOW
 argument_list|(
-name|close
+name|__NR_close
 argument_list|)
 block|,
 endif|#
@@ -505,7 +567,7 @@ directive|ifdef
 name|__NR_exit
 name|SC_ALLOW
 argument_list|(
-name|exit
+name|__NR_exit
 argument_list|)
 block|,
 endif|#
@@ -515,7 +577,7 @@ directive|ifdef
 name|__NR_exit_group
 name|SC_ALLOW
 argument_list|(
-name|exit_group
+name|__NR_exit_group
 argument_list|)
 block|,
 endif|#
@@ -525,7 +587,7 @@ directive|ifdef
 name|__NR_getpgid
 name|SC_ALLOW
 argument_list|(
-name|getpgid
+name|__NR_getpgid
 argument_list|)
 block|,
 endif|#
@@ -535,7 +597,7 @@ directive|ifdef
 name|__NR_getpid
 name|SC_ALLOW
 argument_list|(
-name|getpid
+name|__NR_getpid
 argument_list|)
 block|,
 endif|#
@@ -545,7 +607,7 @@ directive|ifdef
 name|__NR_getrandom
 name|SC_ALLOW
 argument_list|(
-name|getrandom
+name|__NR_getrandom
 argument_list|)
 block|,
 endif|#
@@ -555,7 +617,7 @@ directive|ifdef
 name|__NR_gettimeofday
 name|SC_ALLOW
 argument_list|(
-name|gettimeofday
+name|__NR_gettimeofday
 argument_list|)
 block|,
 endif|#
@@ -565,7 +627,7 @@ directive|ifdef
 name|__NR_madvise
 name|SC_ALLOW
 argument_list|(
-name|madvise
+name|__NR_madvise
 argument_list|)
 block|,
 endif|#
@@ -575,7 +637,7 @@ directive|ifdef
 name|__NR_mmap
 name|SC_ALLOW
 argument_list|(
-name|mmap
+name|__NR_mmap
 argument_list|)
 block|,
 endif|#
@@ -585,7 +647,7 @@ directive|ifdef
 name|__NR_mmap2
 name|SC_ALLOW
 argument_list|(
-name|mmap2
+name|__NR_mmap2
 argument_list|)
 block|,
 endif|#
@@ -595,7 +657,7 @@ directive|ifdef
 name|__NR_mremap
 name|SC_ALLOW
 argument_list|(
-name|mremap
+name|__NR_mremap
 argument_list|)
 block|,
 endif|#
@@ -605,7 +667,7 @@ directive|ifdef
 name|__NR_munmap
 name|SC_ALLOW
 argument_list|(
-name|munmap
+name|__NR_munmap
 argument_list|)
 block|,
 endif|#
@@ -615,7 +677,7 @@ directive|ifdef
 name|__NR__newselect
 name|SC_ALLOW
 argument_list|(
-name|_newselect
+name|__NR__newselect
 argument_list|)
 block|,
 endif|#
@@ -625,7 +687,7 @@ directive|ifdef
 name|__NR_poll
 name|SC_ALLOW
 argument_list|(
-name|poll
+name|__NR_poll
 argument_list|)
 block|,
 endif|#
@@ -635,7 +697,7 @@ directive|ifdef
 name|__NR_pselect6
 name|SC_ALLOW
 argument_list|(
-name|pselect6
+name|__NR_pselect6
 argument_list|)
 block|,
 endif|#
@@ -645,7 +707,7 @@ directive|ifdef
 name|__NR_read
 name|SC_ALLOW
 argument_list|(
-name|read
+name|__NR_read
 argument_list|)
 block|,
 endif|#
@@ -655,7 +717,7 @@ directive|ifdef
 name|__NR_rt_sigprocmask
 name|SC_ALLOW
 argument_list|(
-name|rt_sigprocmask
+name|__NR_rt_sigprocmask
 argument_list|)
 block|,
 endif|#
@@ -665,7 +727,7 @@ directive|ifdef
 name|__NR_select
 name|SC_ALLOW
 argument_list|(
-name|select
+name|__NR_select
 argument_list|)
 block|,
 endif|#
@@ -675,7 +737,7 @@ directive|ifdef
 name|__NR_shutdown
 name|SC_ALLOW
 argument_list|(
-name|shutdown
+name|__NR_shutdown
 argument_list|)
 block|,
 endif|#
@@ -685,7 +747,7 @@ directive|ifdef
 name|__NR_sigprocmask
 name|SC_ALLOW
 argument_list|(
-name|sigprocmask
+name|__NR_sigprocmask
 argument_list|)
 block|,
 endif|#
@@ -695,7 +757,7 @@ directive|ifdef
 name|__NR_time
 name|SC_ALLOW
 argument_list|(
-name|time
+name|__NR_time
 argument_list|)
 block|,
 endif|#
@@ -705,7 +767,7 @@ directive|ifdef
 name|__NR_write
 name|SC_ALLOW
 argument_list|(
-name|write
+name|__NR_write
 argument_list|)
 block|,
 endif|#
@@ -715,13 +777,81 @@ directive|ifdef
 name|__NR_socketcall
 name|SC_ALLOW_ARG
 argument_list|(
-name|socketcall
+name|__NR_socketcall
 argument_list|,
 literal|0
 argument_list|,
 name|SYS_SHUTDOWN
 argument_list|)
 block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NR_ioctl
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__s390__
+argument_list|)
+comment|/* Allow ioctls for ICA crypto card on s390 */
+name|SC_ALLOW_ARG
+argument_list|(
+name|__NR_ioctl
+argument_list|,
+literal|1
+argument_list|,
+name|Z90STAT_STATUS_MASK
+argument_list|)
+block|,
+name|SC_ALLOW_ARG
+argument_list|(
+name|__NR_ioctl
+argument_list|,
+literal|1
+argument_list|,
+name|ICARSAMODEXPO
+argument_list|)
+block|,
+name|SC_ALLOW_ARG
+argument_list|(
+name|__NR_ioctl
+argument_list|,
+literal|1
+argument_list|,
+name|ICARSACRT
+argument_list|)
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__ILP32__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__X32_SYSCALL_BIT
+argument_list|)
+comment|/* 	 * On Linux x32, the clock_gettime VDSO falls back to the 	 * x86-64 syscall under some circumstances, e.g. 	 * https://bugs.debian.org/849923 	 */
+name|SC_ALLOW
+argument_list|(
+name|__NR_clock_gettime
+operator|&
+operator|~
+name|__X32_SYSCALL_BIT
+argument_list|)
+block|;
 endif|#
 directive|endif
 comment|/* Default deny */

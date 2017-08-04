@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: log.c,v 1.48 2016/07/15 05:01:58 dtucker Exp $ */
+comment|/* $OpenBSD: log.c,v 1.49 2017/03/10 03:15:58 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1738,7 +1738,15 @@ argument_list|,
 sizeof|sizeof
 name|msgbuf
 argument_list|,
-literal|"%s\r\n"
+literal|"%.*s\r\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+name|msgbuf
+operator|-
+literal|3
 argument_list|,
 name|fmtbuf
 argument_list|)

@@ -175,6 +175,15 @@ parameter_list|)
 value|free(a)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CTASSERT
+parameter_list|(
+name|expr
+parameter_list|)
+end_define
+
 begin_include
 include|#
 directive|include
@@ -431,8 +440,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|BLIST_BMAP_RADIX
+operator|%
+name|BLIST_META_RADIX
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * For a subtree that can represent the state of up to 'radix' blocks, the  * number of leaf nodes of the subtree is L=radix/BLIST_BMAP_RADIX.  If 'm'  * is short for BLIST_META_RADIX, then for a tree of height h with L=m**h  * leaf nodes, the total number of tree nodes is 1 + m + m**2 + ... + m**h,  * or, equivalently, (m**(h+1)-1)/(m-1).  This quantity is called 'skip'  * in the 'meta' functions that process subtrees.  Since integer division  * discards remainders, we can express this computation as  * skip = (m * m**h) / (m - 1)  * skip = (m * radix / BLIST_BMAP_RADIX) / (m - 1)  * and if m divides BLIST_BMAP_RADIX, we can simplify further to  * skip = radix / (BLIST_BMAP_RADIX / m * (m - 1))  * so that a simple integer division is enough for the calculation.  */
+comment|/*  * For a subtree that can represent the state of up to 'radix' blocks, the  * number of leaf nodes of the subtree is L=radix/BLIST_BMAP_RADIX.  If 'm'  * is short for BLIST_META_RADIX, then for a tree of height h with L=m**h  * leaf nodes, the total number of tree nodes is 1 + m + m**2 + ... + m**h,  * or, equivalently, (m**(h+1)-1)/(m-1).  This quantity is called 'skip'  * in the 'meta' functions that process subtrees.  Since integer division  * discards remainders, we can express this computation as  * skip = (m * m**h) / (m - 1)  * skip = (m * (radix / BLIST_BMAP_RADIX)) / (m - 1)  * and since m divides BLIST_BMAP_RADIX, we can simplify further to  * skip = (radix / (BLIST_BMAP_RADIX / m)) / (m - 1)  * skip = radix / ((BLIST_BMAP_RADIX / m) * (m - 1))  * so that simple integer division by a constant can safely be used for the  * calculation.  */
 end_comment
 
 begin_function
@@ -450,9 +471,11 @@ operator|(
 name|radix
 operator|/
 operator|(
+operator|(
 name|BLIST_BMAP_RADIX
 operator|/
 name|BLIST_META_RADIX
+operator|)
 operator|*
 operator|(
 name|BLIST_META_RADIX

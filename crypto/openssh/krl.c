@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.c,v 1.38 2016/09/12 01:22:38 deraadt Exp $ */
+comment|/* $OpenBSD: krl.c,v 1.39 2017/03/10 07:18:32 dtucker Exp $ */
 end_comment
 
 begin_include
@@ -6109,7 +6109,7 @@ case|case
 name|KRL_SECTION_SIGNATURE
 case|:
 comment|/* Handled above, but still need to stay in synch */
-name|sshbuf_reset
+name|sshbuf_free
 argument_list|(
 name|sect
 argument_list|)
@@ -7214,6 +7214,13 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
 name|close
 argument_list|(
 name|fd

@@ -92,8 +92,7 @@ name|hflag
 condition|)
 name|xo_emit
 argument_list|(
-literal|"{:/%6s %7s %5s %5s %5s %6s %5s} {[:/%d}{:/%s}{]:}"
-literal|" {:/%s}\n"
+literal|"{T:/%6s %7s %5s %5s %5s %6s %5s} {[:/%d}{T:/%s}{]:} {T:/%s}\n"
 argument_list|,
 literal|"LWPID"
 argument_list|,
@@ -124,6 +123,11 @@ argument_list|,
 literal|"TDNAME"
 argument_list|)
 expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"threads"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -138,9 +142,14 @@ name|i
 operator|++
 control|)
 block|{
+name|xo_open_container
+argument_list|(
+literal|"thread"
+argument_list|)
+expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:lpwid/%6d} "
+literal|"{:lwpid/%6d} "
 argument_list|,
 name|pl
 index|[
@@ -354,7 +363,17 @@ operator|.
 name|pl_tdname
 argument_list|)
 expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"thread"
+argument_list|)
+expr_stmt|;
 block|}
+name|xo_close_container
+argument_list|(
+literal|"threads"
+argument_list|)
+expr_stmt|;
 name|procstat_freeptlwpinfo
 argument_list|(
 name|prstat
