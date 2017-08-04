@@ -11234,9 +11234,10 @@ argument_list|)
 expr_stmt|;
 name|lockmgr
 argument_list|(
-name|vp
+operator|&
+name|sn
 operator|->
-name|v_vnlock
+name|sn_lock
 argument_list|,
 name|LK_RELEASE
 argument_list|,
