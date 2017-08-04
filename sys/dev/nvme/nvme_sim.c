@@ -1478,6 +1478,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|nvme_use_nvd
+condition|)
+return|return;
 name|consumer_cookie
 operator|=
 name|nvme_register_consumer
@@ -1518,6 +1523,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|nvme_use_nvd
+condition|)
+return|return;
 comment|/* XXX Cleanup */
 name|nvme_unregister_consumer
 argument_list|(
