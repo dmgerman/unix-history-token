@@ -444,7 +444,11 @@ end_comment
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
+name|__XSI_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
 end_if
 
 begin_define
@@ -457,6 +461,17 @@ end_define
 begin_comment
 comment|/* any char will restart after stop */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -492,7 +507,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
+name|__XSI_VISIBLE
 end_if
 
 begin_define
@@ -505,6 +520,17 @@ end_define
 begin_comment
 comment|/* map NL to CR-NL (ala CRMOD) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -549,6 +575,17 @@ end_define
 begin_comment
 comment|/* discard EOT's (^D) on output) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
 
 begin_define
 define|#
