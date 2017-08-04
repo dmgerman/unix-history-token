@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.215 2016/11/30 03:07:37 djm Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.218 2017/03/15 03:52:30 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -307,7 +307,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_PKCS11_WHITELIST
-value|"/usr/lib/*,/usr/local/lib/*"
+value|"/usr/lib*/*,/usr/local/lib*/*"
 end_define
 
 begin_endif
@@ -4714,6 +4714,11 @@ modifier|*
 name|pin
 init|=
 name|NULL
+decl_stmt|,
+name|canonical_provider
+index|[
+name|PATH_MAX
+index|]
 decl_stmt|;
 name|int
 name|r
@@ -4790,6 +4795,43 @@ argument_list|(
 name|pin
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|realpath
+argument_list|(
+name|provider
+argument_list|,
+name|canonical_provider
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"failed PKCS#11 add of \"%.100s\": realpath: %s"
+argument_list|,
+name|provider
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|send
+goto|;
+block|}
+name|debug
+argument_list|(
+literal|"%s: remove %.100s"
+argument_list|,
+name|__func__
+argument_list|,
+name|canonical_provider
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|version
@@ -4854,7 +4896,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|provider
+name|canonical_provider
 argument_list|,
 name|id
 operator|->
@@ -4891,7 +4933,7 @@ if|if
 condition|(
 name|pkcs11_del_provider
 argument_list|(
-name|provider
+name|canonical_provider
 argument_list|)
 operator|==
 literal|0
@@ -4907,6 +4949,8 @@ literal|"process_remove_smartcard_key:"
 literal|" pkcs11_del_provider failed"
 argument_list|)
 expr_stmt|;
+name|send
+label|:
 name|free
 argument_list|(
 name|provider
@@ -6661,16 +6705,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ssh-agent [-c | -s] [-Dd] [-a bind_address] [-E fingerprint_hash]\n"
+literal|"usage: ssh-agent [-c | -s] [-Ddx] [-a bind_address] [-E fingerprint_hash]\n"
 literal|"                 [-P pkcs11_whitelist] [-t life] [command [arg ...]]\n"
 literal|"       ssh-agent [-c | -s] -k\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -x          Exit when the last client disconnects.\n"
 argument_list|)
 expr_stmt|;
 name|exit

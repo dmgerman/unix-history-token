@@ -4034,6 +4034,15 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 for|for
 control|(
 name|i

@@ -2263,6 +2263,17 @@ comment|/* #undef HAVE_LINUX_SECCOMP_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `llabs' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LLABS
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<locale.h> header file. */
 end_comment
 
@@ -2421,9 +2432,12 @@ begin_comment
 comment|/* Define to 1 if you have the `memset_s' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MEMSET_S */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_MEMSET_S
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `mkdtemp' function. */
