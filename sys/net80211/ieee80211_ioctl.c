@@ -10496,6 +10496,7 @@ name|ic_curchan
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ic
 operator|->
 name|ic_curchan
@@ -10515,6 +10516,7 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
