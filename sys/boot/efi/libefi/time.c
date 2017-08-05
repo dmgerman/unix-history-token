@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999, 2000  * Intel Corporation.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *   *    This product includes software developed by Intel Corporation and  *    its contributors.  *   * 4. Neither the name of Intel Corporation or its contributors may be  *    used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY INTEL CORPORATION AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL INTEL CORPORATION OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *   */
+comment|/*-  * Copyright (c) 1999, 2000  * Intel Corporation.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  *    This product includes software developed by Intel Corporation and  *    its contributors.  *  * 4. Neither the name of Intel Corporation or its contributors may be  *    used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY INTEL CORPORATION AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL INTEL CORPORATION OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ file|<sys/time.h>
 end_include
 
 begin_comment
-comment|/* // Accurate only for the past couple of centuries; // that will probably do. // // (#defines From FreeBSD 3.2 lib/libc/stdtime/tzfile.h) */
+comment|/*  * Accurate only for the past couple of centuries;  * that will probably do.  *  * (#defines From FreeBSD 3.2 lib/libc/stdtime/tzfile.h)  */
 end_comment
 
 begin_define
@@ -52,14 +52,14 @@ name|isleap
 parameter_list|(
 name|y
 parameter_list|)
-value|(((y) % 4) == 0&& (((y) % 100) != 0 || ((y) % 400) == 0))
+value|(((y) % 4) == 0&& \ 			    (((y) % 100) != 0 || ((y) % 400) == 0))
 end_define
 
 begin_define
 define|#
 directive|define
 name|SECSPERHOUR
-value|( 60*60 )
+value|(60*60)
 end_define
 
 begin_define
@@ -70,7 +70,7 @@ value|(24 * SECSPERHOUR)
 end_define
 
 begin_comment
-comment|/* //  These arrays give the cumulative number of days up to the first of the //  month number used as the index (1 -> 12) for regular and leap years. //  The value at index 13 is for the whole year. */
+comment|/*  *  These arrays give the cumulative number of days up to the first of the  *  month number used as the index (1 -> 12) for regular and leap years.  *  The value at index 13 is for the whole year.  */
 end_comment
 
 begin_decl_stmt
@@ -443,6 +443,14 @@ name|time_t
 name|time
 parameter_list|)
 block|{
+name|int
+name|lyear
+decl_stmt|,
+name|month
+decl_stmt|;
+name|time_t
+name|seconds
+decl_stmt|;
 if|if
 condition|(
 name|time
@@ -450,104 +458,118 @@ operator|>=
 literal|0
 condition|)
 block|{
-for|for
-control|(
 name|efi_time
 operator|->
 name|Year
 operator|=
 literal|1970
-init|;
+expr_stmt|;
+name|lyear
+operator|=
+name|isleap
+argument_list|(
+name|efi_time
+operator|->
+name|Year
+argument_list|)
+expr_stmt|;
+name|month
+operator|=
+literal|13
+expr_stmt|;
+name|seconds
+operator|=
+name|CumulativeDays
+index|[
+name|lyear
+index|]
+index|[
+name|month
+index|]
+operator|*
+name|SECSPERDAY
+expr_stmt|;
+while|while
+condition|(
 name|time
 operator|>
-name|CumulativeDays
-index|[
-name|isleap
-argument_list|(
-name|efi_time
-operator|->
-name|Year
-argument_list|)
-index|]
-index|[
-literal|13
-index|]
-operator|*
-name|SECSPERDAY
-condition|;
+name|seconds
+condition|)
+block|{
 name|time
 operator|-=
-name|CumulativeDays
-index|[
-name|isleap
-argument_list|(
-name|efi_time
-operator|->
-name|Year
-argument_list|)
-index|]
-index|[
-literal|13
-index|]
-operator|*
-name|SECSPERDAY
-operator|,
+name|seconds
+expr_stmt|;
 name|efi_time
 operator|->
 name|Year
 operator|++
-control|)
-empty_stmt|;
-for|for
-control|(
+expr_stmt|;
+name|lyear
+operator|=
+name|isleap
+argument_list|(
+name|efi_time
+operator|->
+name|Year
+argument_list|)
+expr_stmt|;
+name|seconds
+operator|=
+name|CumulativeDays
+index|[
+name|lyear
+index|]
+index|[
+name|month
+index|]
+operator|*
+name|SECSPERDAY
+expr_stmt|;
+block|}
 name|efi_time
 operator|->
 name|Month
 operator|=
 literal|0
-init|;
+expr_stmt|;
+while|while
+condition|(
 name|time
 operator|>
 name|CumulativeDays
 index|[
-name|isleap
-argument_list|(
-name|efi_time
-operator|->
-name|Year
-argument_list|)
+name|lyear
 index|]
 index|[
-name|efi_time
-operator|->
-name|Month
+name|month
 index|]
 operator|*
 name|SECSPERDAY
-condition|;
+condition|)
+block|{
 name|efi_time
 operator|->
 name|Month
 operator|++
-control|)
-empty_stmt|;
-name|time
-operator|-=
-name|CumulativeDays
-index|[
-name|isleap
-argument_list|(
-name|efi_time
-operator|->
-name|Year
-argument_list|)
-index|]
-index|[
+expr_stmt|;
+block|}
+name|month
+operator|=
 name|efi_time
 operator|->
 name|Month
 operator|-
 literal|1
+expr_stmt|;
+name|time
+operator|-=
+name|CumulativeDays
+index|[
+name|lyear
+index|]
+index|[
+name|month
 index|]
 operator|*
 name|SECSPERDAY
@@ -564,16 +586,15 @@ name|time
 operator|>
 name|SECSPERDAY
 condition|;
-name|time
-operator|-=
-name|SECSPERDAY
-operator|,
 name|efi_time
 operator|->
 name|Day
 operator|++
 control|)
-empty_stmt|;
+name|time
+operator|-=
+name|SECSPERDAY
+expr_stmt|;
 for|for
 control|(
 name|efi_time
@@ -586,16 +607,15 @@ name|time
 operator|>
 name|SECSPERHOUR
 condition|;
-name|time
-operator|-=
-name|SECSPERHOUR
-operator|,
 name|efi_time
 operator|->
 name|Hour
 operator|++
 control|)
-empty_stmt|;
+name|time
+operator|-=
+name|SECSPERHOUR
+expr_stmt|;
 for|for
 control|(
 name|efi_time
@@ -608,16 +628,15 @@ name|time
 operator|>
 literal|60
 condition|;
-name|time
-operator|-=
-literal|60
-operator|,
 name|efi_time
 operator|->
 name|Minute
 operator|++
 control|)
-empty_stmt|;
+name|time
+operator|-=
+literal|60
+expr_stmt|;
 name|efi_time
 operator|->
 name|Second
@@ -676,7 +695,7 @@ decl_stmt|;
 name|int
 name|Year
 decl_stmt|;
-comment|/*     //  Do a santity check     */
+comment|/* 	 *  Do a santity check 	 */
 if|if
 condition|(
 name|ETime
@@ -761,7 +780,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*     // Years     */
+comment|/* 	 * Years 	 */
 name|UTime
 operator|=
 literal|0
@@ -800,7 +819,7 @@ name|SECSPERDAY
 operator|)
 expr_stmt|;
 block|}
-comment|/*     // UTime should now be set to 00:00:00 on Jan 1 of the file's year.     //     // Months       */
+comment|/* 	 * UTime should now be set to 00:00:00 on Jan 1 of the file's year. 	 * 	 * Months   	 */
 name|UTime
 operator|+=
 operator|(
@@ -822,7 +841,7 @@ operator|*
 name|SECSPERDAY
 operator|)
 expr_stmt|;
-comment|/*     // UTime should now be set to 00:00:00 on the first of the file's month and year     //     // Days -- Don't count the file's day     */
+comment|/* 	 * UTime should now be set to 00:00:00 on the first of the file's 	 * month and year. 	 * 	 * Days -- Don't count the file's day 	 */
 name|UTime
 operator|+=
 operator|(
@@ -847,7 +866,7 @@ operator|*
 name|SECSPERDAY
 operator|)
 expr_stmt|;
-comment|/*     // Hours     */
+comment|/* 	 * Hours 	 */
 name|UTime
 operator|+=
 operator|(
@@ -858,7 +877,7 @@ operator|*
 name|SECSPERHOUR
 operator|)
 expr_stmt|;
-comment|/*     // Minutes     */
+comment|/* 	 * Minutes 	 */
 name|UTime
 operator|+=
 operator|(
@@ -869,14 +888,14 @@ operator|*
 literal|60
 operator|)
 expr_stmt|;
-comment|/*     // Seconds     */
+comment|/* 	 * Seconds 	 */
 name|UTime
 operator|+=
 name|ETime
 operator|->
 name|Second
 expr_stmt|;
-comment|/*     //  EFI time is repored in local time.  Adjust for any time zone offset to     //  get true UT     */
+comment|/* 	 * EFI time is repored in local time.  Adjust for any time zone 	 * offset to get true UT 	 */
 if|if
 condition|(
 name|ETime
@@ -886,7 +905,7 @@ operator|!=
 name|EFI_UNSPECIFIED_TIMEZONE
 condition|)
 block|{
-comment|/*     	//  TimeZone is kept in minues...     	*/
+comment|/* 		 * TimeZone is kept in minues... 		 */
 name|UTime
 operator|+=
 operator|(
@@ -899,7 +918,9 @@ operator|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|UTime
+operator|)
 return|;
 block|}
 end_function
@@ -931,7 +952,7 @@ decl_stmt|;
 name|EFI_STATUS
 name|Status
 decl_stmt|;
-comment|/* 	//  Get time from EFI 	*/
+comment|/* 	 *  Get time from EFI 	 */
 name|Status
 operator|=
 name|RS
@@ -958,7 +979,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 	//  Convert to UNIX time (ie seconds since the epoch 	*/
+comment|/* 	 *  Convert to UNIX time (ie seconds since the epoch 	 */
 name|tp
 operator|->
 name|tv_sec
@@ -976,12 +997,29 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* EfiTime.Nanosecond * 1000; */
-comment|/* 	//  Do something with the timezone if needed 	*/
+comment|/* 	 * Do something with the timezone if needed 	 */
 if|if
 condition|(
 name|tzp
+operator|!=
+name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|EfiTime
+operator|.
+name|TimeZone
+operator|==
+name|EFI_UNSPECIFIED_TIMEZONE
+condition|)
+name|tzp
+operator|->
+name|tz_minuteswest
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|tzp
 operator|->
 name|tz_minuteswest
@@ -989,16 +1027,8 @@ operator|=
 name|EfiTime
 operator|.
 name|TimeZone
-operator|==
-name|EFI_UNSPECIFIED_TIMEZONE
-condition|?
-literal|0
-else|:
-name|EfiTime
-operator|.
-name|TimeZone
 expr_stmt|;
-comment|/* 		//  This isn't quit right since it doesn't deal with EFI_TIME_IN_DAYLIGHT 		*/
+comment|/* 		 * This isn't quit right since it doesn't deal with 		 * EFI_TIME_IN_DAYLIGHT 		 */
 name|tzp
 operator|->
 name|tz_dsttime
@@ -1035,12 +1065,25 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|EFI_GetTimeOfDay
+name|memset
 argument_list|(
 operator|&
 name|tv
 argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tv
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|EFI_GetTimeOfDay
+argument_list|(
+operator|&
+name|tv
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1055,9 +1098,11 @@ operator|.
 name|tv_sec
 expr_stmt|;
 return|return
+operator|(
 name|tv
 operator|.
 name|tv_sec
+operator|)
 return|;
 block|}
 end_function
@@ -1070,10 +1115,12 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 name|time
 argument_list|(
 name|NULL
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
