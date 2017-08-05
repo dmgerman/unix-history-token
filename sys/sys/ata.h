@@ -192,11 +192,11 @@ name|ATA_SUPPORT_LBA
 value|0x0200
 define|#
 directive|define
-name|ATA_SUPPORT_IORDY
+name|ATA_SUPPORT_IORDYDIS
 value|0x0400
 define|#
 directive|define
-name|ATA_SUPPORT_IORDYDIS
+name|ATA_SUPPORT_IORDY
 value|0x0800
 define|#
 directive|define
