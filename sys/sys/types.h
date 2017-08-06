@@ -1811,10 +1811,6 @@ parameter_list|)
 value|((int)((dev_t)(x)>> 32))
 end_define
 
-begin_comment
-comment|/* major number */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1822,12 +1818,8 @@ name|minor
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)((x)& 0xffffffff))
+value|((int)(x))
 end_define
-
-begin_comment
-comment|/* minor number */
-end_comment
 
 begin_define
 define|#
@@ -1840,10 +1832,6 @@ name|y
 parameter_list|)
 value|(((dev_t)(x)<< 32) | (unsigned)(y))
 end_define
-
-begin_comment
-comment|/* create dev_t */
-end_comment
 
 begin_comment
 comment|/*  * These declarations belong elsewhere, but are repeated here and in  *<stdio.h> to give broken programs a better chance of working with  * 64-bit off_t's.  */
