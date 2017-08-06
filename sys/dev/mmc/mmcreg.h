@@ -617,6 +617,10 @@ define|#
 directive|define
 name|MMC_REQ_DONE
 value|1
+define|#
+directive|define
+name|MMC_TUNE_DONE
+value|2
 block|}
 struct|;
 end_struct
@@ -1849,14 +1853,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXT_CSD_HS_TIMING_DDR200
+name|EXT_CSD_HS_TIMING_HS200
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXT_CSD_HS_TIMING_DDR400
+name|EXT_CSD_HS_TIMING_HS400
 value|3
 end_define
 
@@ -1954,13 +1958,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXT_CSD_CARD_TYPE_HS400ES
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
 name|EXT_CSD_BUS_WIDTH_1
 value|0
 end_define
@@ -1998,6 +1995,13 @@ define|#
 directive|define
 name|EXT_CSD_BUS_WIDTH_ES
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT_CSD_STROBE_SUPPORT_EN
+value|0x01
 end_define
 
 begin_define
@@ -2702,6 +2706,39 @@ directive|define
 name|MMC_PART_MAX
 value|8
 end_define
+
+begin_define
+define|#
+directive|define
+name|MMC_TUNING_MAX
+value|64
+end_define
+
+begin_comment
+comment|/* Maximum tuning iterations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_TUNING_LEN
+value|64
+end_define
+
+begin_comment
+comment|/* Size of tuning data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMC_TUNING_LEN_HS200
+value|128
+end_define
+
+begin_comment
+comment|/* Size of tuning data in HS200 mode */
+end_comment
 
 begin_comment
 comment|/*  * Older versions of the MMC standard had a variable sector size.  However,  * I've been able to find no old MMC or SD cards that have a non 512  * byte sector size anywhere, so we assume that such cards are very rare  * and only note their existance in passing here...  */
