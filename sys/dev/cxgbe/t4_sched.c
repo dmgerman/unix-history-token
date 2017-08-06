@@ -1960,6 +1960,18 @@ argument|sc
 argument_list|,
 argument|i
 argument_list|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|port
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|sc
@@ -1974,6 +1986,7 @@ argument_list|,
 name|M_CXGBE
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mtx_initialized
