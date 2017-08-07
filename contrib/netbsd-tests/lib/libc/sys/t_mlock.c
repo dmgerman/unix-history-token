@@ -400,7 +400,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 name|void
 modifier|*
@@ -664,7 +664,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 comment|/* 	 * These are permitted to fail (EINVAL) but do not on NetBSD 	 */
 name|ATF_REQUIRE

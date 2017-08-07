@@ -372,8 +372,14 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__riscv64
+name|__riscv
 argument_list|)
+operator|&&
+operator|(
+name|__riscv_xlen
+operator|==
+literal|64
+operator|)
 end_elif
 
 begin_define

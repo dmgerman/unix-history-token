@@ -371,7 +371,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 operator|)
 end_if

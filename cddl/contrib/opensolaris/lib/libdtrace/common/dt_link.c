@@ -1210,7 +1210,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 comment|/* XXX */
 name|printf
@@ -2147,7 +2147,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 comment|/* XXX */
 elif|#
@@ -4973,7 +4973,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 end_elif
 

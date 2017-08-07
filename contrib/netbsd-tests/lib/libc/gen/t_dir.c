@@ -543,7 +543,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 end_if
 
@@ -817,7 +817,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 name|ATF_TP_ADD_TC
 argument_list|(

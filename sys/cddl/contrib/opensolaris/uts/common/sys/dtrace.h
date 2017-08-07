@@ -5675,7 +5675,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 end_elif
 

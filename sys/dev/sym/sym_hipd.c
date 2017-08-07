@@ -353,7 +353,7 @@ begin_elif
 elif|#
 directive|elif
 name|defined
-name|__riscv__
+name|__riscv
 end_elif
 
 begin_define
