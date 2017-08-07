@@ -2158,13 +2158,6 @@ name|struct
 name|mlx4_en_vf_stats
 name|vf_stats
 decl_stmt|;
-name|DECLARE_BITMAP
-argument_list|(
-name|stats_bitmap
-argument_list|,
-name|NUM_ALL_STATS
-argument_list|)
-expr_stmt|;
 name|struct
 name|list_head
 name|mc_list
