@@ -18398,6 +18398,7 @@ name|anychanged
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* 	 * Although this function delays and batches the invalidation 	 * of stale TLB entries, it does not need to call 	 * pmap_delayed_invl_started() and 	 * pmap_delayed_invl_finished(), because it does not 	 * ordinarily destroy mappings.  Stale TLB entries from 	 * protection-only changes need only be invalidated before the 	 * pmap lock is released, because protection-only changes do 	 * not destroy PV entries.  Even operations that iterate over 	 * a physical page's PV list of mappings, like 	 * pmap_remove_write(), acquire the pmap lock for each 	 * mapping.  Consequently, for protection-only changes, the 	 * pmap lock suffices to synchronize both page table and TLB 	 * updates. 	 * 	 * This function only destroys a mapping if pmap_demote_pde() 	 * fails.  In that case, stale TLB entries are immediately 	 * invalidated. 	 */
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -24625,7 +24626,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroy all managed, non-wired mappings in the given user-space  * pmap.  This pmap cannot be active on any processor besides the  * caller.  *  * This function cannot be applied to the kernel pmap.  Moreover, it  * is not intended for general use.  It is only to be used during  * process termination.  Consequently, it can be implemented in ways  * that make it faster than pmap_remove().  First, it can more quickly  * destroy mappings by iterating over the pmap's collection of PV  * entries, rather than searching the page table.  Second, it doesn't  * have to test and clear the page table entries atomically, because  * no processor is currently accessing the user address space.  In  * particular, a page table entry's dirty bit won't change state once  * this function starts.  */
+comment|/*  * Destroy all managed, non-wired mappings in the given user-space  * pmap.  This pmap cannot be active on any processor besides the  * caller.  *  * This function cannot be applied to the kernel pmap.  Moreover, it  * is not intended for general use.  It is only to be used during  * process termination.  Consequently, it can be implemented in ways  * that make it faster than pmap_remove().  First, it can more quickly  * destroy mappings by iterating over the pmap's collection of PV  * entries, rather than searching the page table.  Second, it doesn't  * have to test and clear the page table entries atomically, because  * no processor is currently accessing the user address space.  In  * particular, a page table entry's dirty bit won't change state once  * this function starts.  *  * Although this function destroys all of the pmap's managed,  * non-wired mappings, it can delay and batch the invalidation of TLB  * entries without calling pmap_delayed_invl_started() and  * pmap_delayed_invl_finished().  Because the pmap is not active on  * any other processor, none of these TLB entries will ever be used  * before their eventual invalidation.  Consequently, there is no need  * for either pmap_remove_all() or pmap_remove_write() to wait for  * that eventual TLB invalidation.  */
 end_comment
 
 begin_function
