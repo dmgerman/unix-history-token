@@ -188,8 +188,6 @@ name|dev
 parameter_list|)
 block|{
 name|long
-name|cg
-decl_stmt|,
 name|asked
 decl_stmt|,
 name|i
@@ -202,10 +200,6 @@ decl_stmt|;
 name|struct
 name|stat
 name|statb
-decl_stmt|;
-name|struct
-name|fs
-name|proto
 decl_stmt|;
 name|size_t
 name|size
@@ -781,110 +775,12 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|reply
-argument_list|(
-literal|"LOOK FOR ALTERNATE SUPERBLOCKS"
-argument_list|)
-operator|==
-literal|0
-condition|)
+comment|/* Looking for alternates is hard punt for now but retain structure */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-for|for
-control|(
-name|cg
-operator|=
-literal|0
-init|;
-name|cg
-operator|<
-name|proto
-operator|.
-name|fs_ncg
-condition|;
-name|cg
-operator|++
-control|)
-block|{
-name|bflag
-operator|=
-name|fsbtodb
-argument_list|(
-operator|&
-name|proto
-argument_list|,
-name|cgsblock
-argument_list|(
-operator|&
-name|proto
-argument_list|,
-name|cg
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|readsb
-argument_list|(
-literal|0
-argument_list|)
-operator|!=
-literal|0
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|cg
-operator|>=
-name|proto
-operator|.
-name|fs_ncg
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s %s\n%s %s\n%s %s\n"
-argument_list|,
-literal|"SEARCH FOR ALTERNATE SUPER-BLOCK"
-argument_list|,
-literal|"FAILED. YOU MUST USE THE"
-argument_list|,
-literal|"-b OPTION TO FSCK TO SPECIFY THE"
-argument_list|,
-literal|"LOCATION OF AN ALTERNATE"
-argument_list|,
-literal|"SUPER-BLOCK TO SUPPLY NEEDED"
-argument_list|,
-literal|"INFORMATION; SEE fsck_ffs(8)."
-argument_list|)
-expr_stmt|;
-name|bflag
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|pwarn
-argument_list|(
-literal|"USING ALTERNATE SUPERBLOCK AT %jd\n"
-argument_list|,
-name|bflag
-argument_list|)
-expr_stmt|;
-name|bflag
-operator|=
-literal|0
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2041,13 +1937,51 @@ operator|.
 name|fs_magic
 condition|)
 block|{
-name|badsb
-argument_list|(
+if|if
+condition|(
 name|listerr
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|preen
+condition|)
+name|printf
+argument_list|(
+literal|"%s: "
 argument_list|,
-literal|"VALUES IN SUPER BLOCK DISAGREE WITH THOSE IN FIRST ALTERNATE"
+name|cdevname
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"VALUES IN SUPER BLOCK LSB=%jd DISAGREE WITH THOSE IN\n"
+literal|"FIRST ALTERNATE LSB=%jd\n"
+argument_list|,
+name|sblk
+operator|.
+name|b_bno
+argument_list|,
+name|asblk
+operator|.
+name|b_bno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reply
+argument_list|(
+literal|"IGNORE ALTERNATE SUPER BLOCK"
+argument_list|)
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
 literal|0
@@ -2172,47 +2106,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|badsb
-parameter_list|(
-name|int
-name|listerr
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|listerr
-condition|)
-return|return;
-if|if
-condition|(
-name|preen
-condition|)
-name|printf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|cdevname
-argument_list|)
-expr_stmt|;
-name|pfatal
-argument_list|(
-literal|"BAD SUPER BLOCK: %s\n"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
