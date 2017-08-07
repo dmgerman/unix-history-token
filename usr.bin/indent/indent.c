@@ -199,6 +199,20 @@ comment|/* will always point to name 						 * of output file */
 end_comment
 
 begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|simple_backup_suffix
+init|=
+literal|".BAK"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Suffix to use for backup 						 * files */
+end_comment
+
+begin_decl_stmt
 name|char
 name|bakfile
 index|[
@@ -290,6 +304,13 @@ specifier|const
 name|char
 modifier|*
 name|profile_name
+init|=
+name|NULL
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|envval
 init|=
 name|NULL
 decl_stmt|;
@@ -658,6 +679,21 @@ expr_stmt|;
 name|tabs_to_var
 operator|=
 literal|0
+expr_stmt|;
+name|envval
+operator|=
+name|getenv
+argument_list|(
+literal|"SIMPLE_BACKUP_SUFFIX"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|envval
+condition|)
+name|simple_backup_suffix
+operator|=
+name|envval
 expr_stmt|;
 comment|/*--------------------------------------------------*\     |   		COMMAND LINE SCAN		 |     \*--------------------------------------------------*/
 ifdef|#
@@ -5882,9 +5918,11 @@ name|sprintf
 argument_list|(
 name|bakfile
 argument_list|,
-literal|"%s.BAK"
+literal|"%s%s"
 argument_list|,
 name|p
+argument_list|,
+name|simple_backup_suffix
 argument_list|)
 expr_stmt|;
 comment|/* copy in_name to backup file */
