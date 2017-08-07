@@ -94,6 +94,13 @@ name|MLX5_QCOUNTER_SETS_NETDEV
 value|64
 end_define
 
+begin_define
+define|#
+directive|define
+name|MLX5_MAX_NUMBER_OF_VFS
+value|128
+end_define
+
 begin_enum
 enum|enum
 block|{
@@ -1676,6 +1683,12 @@ decl_stmt|;
 name|struct
 name|list_head
 name|free_list
+decl_stmt|;
+name|s64
+name|pages_per_func
+index|[
+name|MLX5_MAX_NUMBER_OF_VFS
+index|]
 decl_stmt|;
 name|struct
 name|mlx5_core_health
@@ -3441,6 +3454,18 @@ end_function_decl
 begin_function_decl
 name|int
 name|mlx5_reclaim_startup_pages
+parameter_list|(
+name|struct
+name|mlx5_core_dev
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s64
+name|mlx5_wait_for_reclaim_vfs_pages
 parameter_list|(
 name|struct
 name|mlx5_core_dev
