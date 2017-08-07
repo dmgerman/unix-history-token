@@ -8443,6 +8443,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|identify_hypervisor
+argument_list|()
+expr_stmt|;
 comment|/* Init basic tunables, hz etc */
 name|init_param1
 argument_list|()

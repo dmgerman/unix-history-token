@@ -4076,7 +4076,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|void
 name|identify_hypervisor
 parameter_list|(
@@ -4743,14 +4742,6 @@ name|regs
 index|[
 literal|2
 index|]
-expr_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|XEN
-name|identify_hypervisor
-argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
