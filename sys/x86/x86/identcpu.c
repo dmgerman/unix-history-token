@@ -4333,7 +4333,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|void
 name|identify_hypervisor
 parameter_list|(
@@ -5030,9 +5029,6 @@ index|]
 expr_stmt|;
 endif|#
 directive|endif
-name|identify_hypervisor
-argument_list|()
-expr_stmt|;
 name|cpu_vendor_id
 operator|=
 name|find_cpu_vendor_id
