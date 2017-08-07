@@ -60,7 +60,7 @@ modifier|*
 name|xb_curp
 decl_stmt|;
 comment|/* Current insertion point */
-name|unsigned
+name|ssize_t
 name|xb_size
 decl_stmt|;
 comment|/* Size of buffer */
@@ -354,7 +354,7 @@ name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -375,7 +375,7 @@ operator|->
 name|xb_size
 condition|)
 block|{
-name|int
+name|ssize_t
 name|sz
 init|=
 name|xbp
@@ -460,12 +460,20 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
 if|if
 condition|(
+name|str
+operator|==
+name|NULL
+operator|||
+name|len
+operator|==
+literal|0
+operator|||
 operator|!
 name|xo_buf_has_room
 argument_list|(
@@ -515,7 +523,7 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen

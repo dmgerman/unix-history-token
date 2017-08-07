@@ -592,7 +592,7 @@ condition|(
 name|xep
 condition|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -980,7 +980,7 @@ name|xei_version
 operator|=
 name|XO_ENCODER_VERSION
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 name|func
@@ -1240,6 +1240,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -1328,6 +1330,9 @@ specifier|const
 name|char
 modifier|*
 name|value
+parameter_list|,
+name|xo_xof_flags_t
+name|flags
 parameter_list|)
 block|{
 name|void
@@ -1369,6 +1374,8 @@ argument_list|,
 name|value
 argument_list|,
 name|private
+argument_list|,
+name|flags
 argument_list|)
 return|;
 block|}

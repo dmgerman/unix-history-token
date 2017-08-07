@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -219,6 +225,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HOST_NAME_MAX
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -251,6 +263,15 @@ end_endif
 
 begin_comment
 comment|/* _SC_HOST_NAME_MAX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HOST_NAME_MAX */
 end_comment
 
 begin_ifndef
@@ -608,12 +629,10 @@ argument_list|(
 name|full_msg
 argument_list|)
 decl_stmt|;
-comment|/* Output to stderr if requested. */
+comment|/* Output to stderr if requested, then we've been passed a v0 header */
 if|if
 condition|(
-name|xo_logstat
-operator|&
-name|LOG_PERROR
+name|v0_hdr
 condition|)
 block|{
 name|struct
@@ -1518,14 +1537,14 @@ end_function
 
 begin_function
 specifier|static
-name|size_t
+name|ssize_t
 name|xo_snprintf
 parameter_list|(
 name|char
 modifier|*
 name|out
 parameter_list|,
-name|size_t
+name|ssize_t
 name|outsize
 parameter_list|,
 specifier|const
@@ -1536,10 +1555,10 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|status
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|retval
 init|=
 literal|0
@@ -1624,7 +1643,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|xo_ssize_t
 name|xo_syslog_handle_write
 parameter_list|(
 name|void

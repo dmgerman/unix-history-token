@@ -204,7 +204,7 @@ define|#
 directive|define
 name|XO_ENCODER_HANDLER_ARGS
 define|\
-value|xo_handle_t *xop __attribute__ ((__unused__)),		\ 	xo_encoder_op_t op __attribute__ ((__unused__)),	\ 	const char *name __attribute__ ((__unused__)),		\         const char *value __attribute__ ((__unused__)),		\ 	void *private __attribute__ ((__unused__))
+value|xo_handle_t *xop __attribute__ ((__unused__)),		\ 	xo_encoder_op_t op __attribute__ ((__unused__)),	\ 	const char *name __attribute__ ((__unused__)),		\         const char *value __attribute__ ((__unused__)),		\ 	void *private __attribute__ ((__unused__)),		\ 	xo_xof_flags_t flags __attribute__ ((__unused__))
 end_define
 
 begin_typedef
@@ -461,6 +461,9 @@ specifier|const
 name|char
 modifier|*
 name|value
+parameter_list|,
+name|xo_xof_flags_t
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

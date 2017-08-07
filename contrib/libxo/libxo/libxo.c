@@ -251,6 +251,46 @@ comment|/* HAVE_GETTEXT */
 end_comment
 
 begin_comment
+comment|/* Rather lame that we can't count on these... */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FALSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TRUE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Three styles of specifying thread-local variables are supported.  * configure.ac has the brains to run each possibility through the  * compiler and see what works; we are left to define the THREAD_LOCAL  * macro to the right value.  Most toolchains (clang, gcc) use  * "before", but some (borland) use "after" and I've heard of some  * (ms) that use __declspec.  Any others out there?  */
 end_comment
 
@@ -448,7 +488,7 @@ value|(8*1024)
 end_define
 
 begin_comment
-comment|/* Anything wider is just sillyb */
+comment|/* Anything wider is just silly */
 end_comment
 
 begin_define
@@ -765,6 +805,13 @@ begin_comment
 comment|/*  * libxo supports colors and effects, for those who like them.  * XO_COL_* ("colors") refers to fancy ansi codes, while X__EFF_*  * ("effects") are bits since we need to maintain state.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|xo_color_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -889,13 +936,6 @@ begin_typedef
 typedef|typedef
 name|uint8_t
 name|xo_effect_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint8_t
-name|xo_color_t
 typedef|;
 end_typedef
 
@@ -1027,26 +1067,29 @@ name|mbstate_t
 name|xo_mbstate
 decl_stmt|;
 comment|/* Multi-byte character conversion state */
-name|unsigned
+name|ssize_t
 name|xo_anchor_offset
 decl_stmt|;
 comment|/* Start of anchored text */
-name|unsigned
+name|ssize_t
 name|xo_anchor_columns
 decl_stmt|;
 comment|/* Number of columns since the start anchor */
-name|int
+name|ssize_t
 name|xo_anchor_min_width
 decl_stmt|;
 comment|/* Desired width of anchored text */
-name|unsigned
+name|ssize_t
 name|xo_units_offset
 decl_stmt|;
 comment|/* Start of units insertion point */
-name|unsigned
+name|ssize_t
 name|xo_columns
 decl_stmt|;
 comment|/* Columns emitted during this xo_emit call */
+ifndef|#
+directive|ifndef
+name|LIBXO_TEXT_ONLY
 name|uint8_t
 name|xo_color_map_fg
 index|[
@@ -1061,6 +1104,9 @@ name|XO_NUM_COLORS
 index|]
 decl_stmt|;
 comment|/* Background color mappings */
+endif|#
+directive|endif
+comment|/* LIBXO_TEXT_ONLY */
 name|xo_colors_t
 name|xo_colors
 decl_stmt|;
@@ -1767,19 +1813,19 @@ modifier|*
 name|xfi_next
 decl_stmt|;
 comment|/* Next character in format string */
-name|unsigned
+name|ssize_t
 name|xfi_len
 decl_stmt|;
 comment|/* Length of field */
-name|unsigned
+name|ssize_t
 name|xfi_clen
 decl_stmt|;
 comment|/* Content length */
-name|unsigned
+name|ssize_t
 name|xfi_flen
 decl_stmt|;
 comment|/* Format length */
-name|unsigned
+name|ssize_t
 name|xfi_elen
 decl_stmt|;
 comment|/* Encoding length */
@@ -1881,7 +1927,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|ssize_t
 name|xo_transition
 parameter_list|(
 name|xo_handle_t
@@ -1898,6 +1944,36 @@ name|name
 parameter_list|,
 name|xo_state_t
 name|new_state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|xo_set_options_simple
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|input
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|xo_color_find
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1924,7 +2000,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|ssize_t
 name|nlen
 parameter_list|,
 specifier|const
@@ -1932,15 +2008,23 @@ name|char
 modifier|*
 name|value
 parameter_list|,
-name|int
+name|ssize_t
 name|vlen
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|ssize_t
+name|flen
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|encoding
 parameter_list|,
-name|int
+name|ssize_t
 name|elen
 parameter_list|)
 function_decl|;
@@ -2000,7 +2084,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|xo_ssize_t
 name|xo_write_to_file
 parameter_list|(
 name|void
@@ -2529,28 +2613,6 @@ argument_list|,
 name|XOF_FLUSH_LINE
 argument_list|)
 expr_stmt|;
-comment|/*      * We only want to do color output on terminals, but we only want      * to do this if the user has asked for color.      */
-if|if
-condition|(
-name|XOF_ISSET
-argument_list|(
-name|xop
-argument_list|,
-name|XOF_COLOR_ALLOWED
-argument_list|)
-operator|&&
-name|isatty
-argument_list|(
-literal|1
-argument_list|)
-condition|)
-name|XOF_SET
-argument_list|(
-name|xop
-argument_list|,
-name|XOF_COLOR
-argument_list|)
-expr_stmt|;
 comment|/*      * We need to initialize the locale, which isn't really pretty.      * Libraries should depend on their caller to set up the      * environment.  But we really can't count on the caller to do      * this, because well, they won't.  Trust me.      */
 if|if
 condition|(
@@ -2668,48 +2730,6 @@ argument_list|,
 name|XO_DEPTH
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_LIBXO_OPTIONS
-argument_list|)
-if|if
-condition|(
-operator|!
-name|XOF_ISSET
-argument_list|(
-name|xop
-argument_list|,
-name|XOF_NO_ENV
-argument_list|)
-condition|)
-block|{
-name|char
-modifier|*
-name|env
-init|=
-name|getenv
-argument_list|(
-literal|"LIBXO_OPTIONS"
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|env
-condition|)
-name|xo_set_options
-argument_list|(
-name|xop
-argument_list|,
-name|env
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* NO_GETENV */
 name|XOIF_CLEAR
 argument_list|(
 name|xop
@@ -2744,6 +2764,48 @@ argument_list|(
 name|xop
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_LIBXO_OPTIONS
+argument_list|)
+if|if
+condition|(
+operator|!
+name|XOF_ISSET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_NO_ENV
+argument_list|)
+condition|)
+block|{
+name|char
+modifier|*
+name|env
+init|=
+name|getenv
+argument_list|(
+literal|"LIBXO_OPTIONS"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|env
+condition|)
+name|xo_set_options_simple
+argument_list|(
+name|xop
+argument_list|,
+name|env
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* NO_LIBXO_OPTIONS */
 name|xo_default_inited
 operator|=
 literal|1
@@ -2978,24 +3040,24 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_escape_xml
 parameter_list|(
 name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|xo_xff_flags_t
 name|flags
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|slen
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|delta
 init|=
 literal|0
@@ -3018,11 +3080,12 @@ decl_stmt|;
 name|int
 name|attr
 init|=
-operator|(
+name|XOF_BIT_ISSET
+argument_list|(
 name|flags
-operator|&
+argument_list|,
 name|XFF_ATTR
-operator|)
+argument_list|)
 decl_stmt|;
 for|for
 control|(
@@ -3272,14 +3335,14 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_escape_json
 parameter_list|(
 name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|xo_xff_flags_t
@@ -3287,7 +3350,7 @@ name|flags
 name|UNUSED
 parameter_list|)
 block|{
-name|unsigned
+name|ssize_t
 name|delta
 init|=
 literal|0
@@ -3513,14 +3576,14 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_escape_sdparams
 parameter_list|(
 name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|xo_xff_flags_t
@@ -3528,7 +3591,7 @@ name|flags
 name|UNUSED
 parameter_list|)
 block|{
-name|unsigned
+name|ssize_t
 name|delta
 init|=
 literal|0
@@ -3717,7 +3780,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|xo_xff_flags_t
@@ -3818,7 +3881,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_write
 parameter_list|(
 name|xo_handle_t
@@ -3826,7 +3889,7 @@ modifier|*
 name|xop
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -3916,7 +3979,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_vsnprintf
 parameter_list|(
 name|xo_handle_t
@@ -3939,10 +4002,10 @@ block|{
 name|va_list
 name|va_local
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|xbp
@@ -4124,7 +4187,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_printf_v
 parameter_list|(
 name|xo_handle_t
@@ -4149,7 +4212,7 @@ name|xop
 operator|->
 name|xo_data
 decl_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|xbp
@@ -4166,7 +4229,7 @@ operator|->
 name|xb_bufp
 operator|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -4292,7 +4355,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_printf
 parameter_list|(
 name|xo_handle_t
@@ -4307,7 +4370,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -4348,10 +4411,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-name|xo_utf8_bits
+name|uint8_t
+name|xo_utf8_data_bits
 index|[
-literal|7
+literal|5
 index|]
 init|=
 block|{
@@ -4364,13 +4427,35 @@ block|,
 literal|0x0f
 block|,
 literal|0x07
-block|,
-literal|0x03
-block|,
-literal|0x01
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uint8_t
+name|xo_utf8_len_bits
+index|[
+literal|5
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|0x00
+block|,
+literal|0xc0
+block|,
+literal|0xe0
+block|,
+literal|0xf0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * If the byte has a high-bit set, it's UTF-8, not ASCII.  */
+end_comment
 
 begin_function
 specifier|static
@@ -4391,10 +4476,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Look at the high bits of the first byte to determine the length  * of the UTF-8 character.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
-name|int
+name|ssize_t
 name|xo_utf8_to_wc_len
 parameter_list|(
 specifier|const
@@ -4403,23 +4492,22 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
-name|unsigned
-name|b
+name|uint8_t
+name|bval
 init|=
 operator|(
-name|unsigned
-name|char
+name|uint8_t
 operator|)
 operator|*
 name|buf
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 decl_stmt|;
 if|if
 condition|(
 operator|(
-name|b
+name|bval
 operator|&
 literal|0x80
 operator|)
@@ -4434,7 +4522,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|b
+name|bval
 operator|&
 literal|0xe0
 operator|)
@@ -4449,7 +4537,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|b
+name|bval
 operator|&
 literal|0xf0
 operator|)
@@ -4464,7 +4552,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|b
+name|bval
 operator|&
 literal|0xf8
 operator|)
@@ -4474,36 +4562,6 @@ condition|)
 name|len
 operator|=
 literal|4
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|b
-operator|&
-literal|0xfc
-operator|)
-operator|==
-literal|0xf8
-condition|)
-name|len
-operator|=
-literal|5
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|b
-operator|&
-literal|0xfe
-operator|)
-operator|==
-literal|0xfc
-condition|)
-name|len
-operator|=
-literal|6
 expr_stmt|;
 else|else
 name|len
@@ -4519,7 +4577,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_buf_utf8_len
 parameter_list|(
 name|xo_handle_t
@@ -4531,7 +4589,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|ssize_t
 name|bufsiz
 parameter_list|)
 block|{
@@ -4545,7 +4603,7 @@ operator|)
 operator|*
 name|buf
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 decl_stmt|,
 name|i
@@ -4560,9 +4618,8 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|xo_failure
@@ -4678,7 +4735,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -4699,7 +4756,7 @@ index|[
 literal|0
 index|]
 return|;
-name|int
+name|ssize_t
 name|i
 decl_stmt|;
 name|wchar_t
@@ -4724,7 +4781,7 @@ operator|=
 operator|*
 name|cp
 operator|&
-name|xo_utf8_bits
+name|xo_utf8_data_bits
 index|[
 name|len
 index|]
@@ -4747,6 +4804,7 @@ name|wc
 operator|<<=
 literal|6
 expr_stmt|;
+comment|/* Low six bits have data */
 name|wc
 operator||=
 name|cp
@@ -4789,14 +4847,14 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_utf8_emit_len
 parameter_list|(
 name|wchar_t
 name|wc
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|len
 decl_stmt|;
 if|if
@@ -4891,39 +4949,22 @@ name|len
 operator|=
 literal|4
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|wc
-operator|&
-operator|(
-operator|(
-literal|1
-operator|<<
-literal|26
-operator|)
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
-name|wc
-condition|)
-name|len
-operator|=
-literal|5
-expr_stmt|;
 else|else
 name|len
 operator|=
-literal|6
+operator|-
+literal|1
 expr_stmt|;
+comment|/* Invalid */
 return|return
 name|len
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Emit one wide character into the given buffer  */
+end_comment
 
 begin_function
 specifier|static
@@ -4934,14 +4975,14 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|wchar_t
 name|wc
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|i
 decl_stmt|;
 if|if
@@ -4963,6 +5004,7 @@ literal|0x7f
 expr_stmt|;
 return|return;
 block|}
+comment|/* Start with the low bits and insert them, six bits at a time */
 for|for
 control|(
 name|i
@@ -4996,36 +5038,41 @@ name|wc
 operator|>>=
 literal|6
 expr_stmt|;
+comment|/* Drop the low six bits */
 block|}
+comment|/* Finish off the first byte with the length bits */
 name|buf
 index|[
 literal|0
 index|]
 operator|&=
-name|xo_utf8_bits
+name|xo_utf8_data_bits
 index|[
 name|len
 index|]
 expr_stmt|;
+comment|/* Clear out the length bits */
 name|buf
 index|[
 literal|0
 index|]
 operator||=
-operator|~
-name|xo_utf8_bits
+name|xo_utf8_len_bits
 index|[
 name|len
 index|]
-operator|<<
-literal|1
 expr_stmt|;
+comment|/* Drop in new length bits */
 block|}
 end_function
 
+begin_comment
+comment|/*  * Append a single UTF-8 character to a buffer, converting it to locale  * encoding.  Returns the number of columns consumed by that character,  * as best we can determine it.  */
+end_comment
+
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_buf_append_locale_from_utf8
 parameter_list|(
 name|xo_handle_t
@@ -5041,14 +5088,14 @@ name|char
 modifier|*
 name|ibuf
 parameter_list|,
-name|int
+name|ssize_t
 name|ilen
 parameter_list|)
 block|{
 name|wchar_t
 name|wc
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 decl_stmt|;
 comment|/*      * Build our wide character from the input buffer; the number of      * bits we pull off the first character is dependent on the length,      * but we put 6 bits off all other bytes.      */
@@ -5076,7 +5123,7 @@ name|xo_failure
 argument_list|(
 name|xop
 argument_list|,
-literal|"invalid utf-8 byte sequence"
+literal|"invalid UTF-8 byte sequence"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5212,6 +5259,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Append a UTF-8 string to a buffer, converting it into locale encoding  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -5230,7 +5281,7 @@ name|char
 modifier|*
 name|cp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -5248,7 +5299,7 @@ name|cp
 operator|+
 name|len
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|save_off
 init|=
 name|xbp
@@ -5259,7 +5310,7 @@ name|xbp
 operator|->
 name|xb_curp
 decl_stmt|;
-name|int
+name|ssize_t
 name|slen
 decl_stmt|;
 name|int
@@ -5448,7 +5499,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -5485,7 +5536,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -6147,7 +6198,7 @@ name|xo_retain_entry_t
 modifier|*
 name|xrep
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|sz
 init|=
 sizeof|sizeof
@@ -6336,7 +6387,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -6344,7 +6395,7 @@ argument_list|(
 name|fmt
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|plen
 init|=
 name|xo_program
@@ -6508,7 +6559,7 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|xbp
@@ -6525,7 +6576,7 @@ operator|->
 name|xb_bufp
 operator|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 name|vsnprintf
@@ -7179,7 +7230,7 @@ name|xo_buffer_t
 modifier|*
 name|xbp
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -7278,7 +7329,7 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|xbp
@@ -7523,7 +7574,7 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|ssize_t
 name|bufsiz
 init|=
 sizeof|sizeof
@@ -7531,7 +7582,7 @@ argument_list|(
 name|buf
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc2
 decl_stmt|;
 name|va_copy
@@ -7678,6 +7729,10 @@ argument_list|,
 name|bp
 argument_list|,
 name|rc
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -8119,7 +8174,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Create a handle for use by later libxo functions.  *  * Note: normal use of libxo does not require a distinct handle, since  * the default handle (used when NULL is passed) generates text on stdout.  *  * @style Style of output desired (XO_STYLE_* value)  * @flags Set of XOF_* flags in use with this handle  */
+comment|/**  * Create a handle for use by later libxo functions.  *  * Note: normal use of libxo does not require a distinct handle, since  * the default handle (used when NULL is passed) generates text on stdout.  *  * @param style Style of output desired (XO_STYLE_* value)  * @param flags Set of XOF_* flags in use with this handle  * @return Newly allocated handle  * @see xo_destroy  */
 end_comment
 
 begin_function
@@ -8198,7 +8253,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Create a handle that will write to the given file.  Use  * the XOF_CLOSE_FP flag to have the file closed on xo_destroy().  * @fp FILE pointer to use  * @style Style of output desired (XO_STYLE_* value)  * @flags Set of XOF_* flags to use with this handle  */
+comment|/**  * Create a handle that will write to the given file.  Use  * the XOF_CLOSE_FP flag to have the file closed on xo_destroy().  *  * @param fp FILE pointer to use  * @param style Style of output desired (XO_STYLE_* value)  * @param flags Set of XOF_* flags to use with this handle  * @return Newly allocated handle  * @see xo_destroy  */
 end_comment
 
 begin_function
@@ -8265,7 +8320,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Set the default handler to output to a file.  * @xop libxo handle  * @fp FILE pointer to use  */
+comment|/**  * Set the default handler to output to a file.  *  * @param xop libxo handle  * @param fp FILE pointer to use  * @return 0 on success, non-zero on failure  */
 end_comment
 
 begin_function
@@ -8338,7 +8393,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Set the default handler to output to a file.  * @fp FILE pointer to use  */
+comment|/**  * Set the default handler to output to a file.  *  * @param fp FILE pointer to use  * @return 0 on success, non-zero on failure  */
 end_comment
 
 begin_function
@@ -8362,7 +8417,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Release any resources held by the handle.  * @xop XO handle to alter (or NULL for default handle)  */
+comment|/**  * Release any resources held by the handle.  *  * @param xop XO handle to alter (or NULL for default handle)  */
 end_comment
 
 begin_function
@@ -8503,7 +8558,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Record a new output style to use for the given handle (or default if  * handle is NULL).  This output style will be used for any future output.  *  * @xop XO handle to alter (or NULL for default handle)  * @style new output style (XO_STYLE_*)  */
+comment|/**  * Record a new output style to use for the given handle (or default if  * handle is NULL).  This output style will be used for any future output.  *  * @param xop XO handle to alter (or NULL for default handle)  * @param style new output style (XO_STYLE_*)  */
 end_comment
 
 begin_function
@@ -8534,6 +8589,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Return the current style of a handle  *  * @param xop XO handle to access  * @return The handle's current style  */
+end_comment
+
 begin_function
 name|xo_style_t
 name|xo_get_style
@@ -8558,6 +8617,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Return the XO_STYLE_* value matching a given name  *  * @param name String name of a style  * @return XO_STYLE_* value  */
+end_comment
 
 begin_function
 specifier|static
@@ -8731,11 +8794,13 @@ block|{
 name|xo_xff_flags_t
 name|xm_value
 decl_stmt|;
+comment|/* Flag value */
 specifier|const
 name|char
 modifier|*
 name|xm_name
 decl_stmt|;
+comment|/* String name */
 block|}
 name|xo_mapping_t
 typedef|;
@@ -8755,7 +8820,7 @@ name|char
 modifier|*
 name|value
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -8947,6 +9012,12 @@ literal|"color"
 block|}
 block|,
 block|{
+name|XOF_COLOR
+block|,
+literal|"color-force"
+block|}
+block|,
+block|{
 name|XOF_COLUMNS
 block|,
 literal|"columns"
@@ -8962,6 +9033,12 @@ block|{
 name|XOF_FLUSH
 block|,
 literal|"flush"
+block|}
+block|,
+block|{
+name|XOF_FLUSH_LINE
+block|,
+literal|"flush-line"
 block|}
 block|,
 block|{
@@ -9076,6 +9153,86 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Options available via the environment variable ($LIBXO_OPTIONS) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|xo_mapping_t
+name|xo_xof_simple_names
+index|[]
+init|=
+block|{
+block|{
+name|XOF_COLOR_ALLOWED
+block|,
+literal|"color"
+block|}
+block|,
+block|{
+name|XOF_FLUSH
+block|,
+literal|"flush"
+block|}
+block|,
+block|{
+name|XOF_FLUSH_LINE
+block|,
+literal|"flush-line"
+block|}
+block|,
+block|{
+name|XOF_NO_HUMANIZE
+block|,
+literal|"no-humanize"
+block|}
+block|,
+block|{
+name|XOF_NO_LOCALE
+block|,
+literal|"no-locale"
+block|}
+block|,
+block|{
+name|XOF_RETAIN_NONE
+block|,
+literal|"no-retain"
+block|}
+block|,
+block|{
+name|XOF_PRETTY
+block|,
+literal|"pretty"
+block|}
+block|,
+block|{
+name|XOF_RETAIN_ALL
+block|,
+literal|"retain"
+block|}
+block|,
+block|{
+name|XOF_UNDERSCORES
+block|,
+literal|"underscores"
+block|}
+block|,
+block|{
+name|XOF_WARN
+block|,
+literal|"warn"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Convert string name to XOF_* flag value.  * Not all are useful.  Or safe.  Or sane.  */
 end_comment
 
@@ -9106,6 +9263,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Set the style of an libxo handle based on a string name  *  * @param xop XO handle  * @param name String value of name  * @return 0 on success, non-zero on failure  */
+end_comment
 
 begin_function
 name|int
@@ -9163,7 +9324,474 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the options for a handle using a string of options  * passed in.  The input is a comma-separated set of names  * and optional values: "xml,pretty,indent=4"  */
+comment|/*  * Fill in the color map, based on the input string; currently unimplemented  * Look for something like "colors=red/blue+green/yellow" as fg/bg pairs.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|xo_set_color_map
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+name|char
+modifier|*
+name|value
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|LIBXO_TEXT_ONLY
+return|return;
+endif|#
+directive|endif
+comment|/* LIBXO_TEXT_ONLY */
+name|char
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|ep
+decl_stmt|,
+modifier|*
+name|vp
+decl_stmt|,
+modifier|*
+name|np
+decl_stmt|;
+name|ssize_t
+name|len
+init|=
+name|value
+condition|?
+name|strlen
+argument_list|(
+name|value
+argument_list|)
+operator|+
+literal|1
+else|:
+literal|0
+decl_stmt|;
+name|int
+name|num
+init|=
+literal|1
+decl_stmt|,
+name|fg
+decl_stmt|,
+name|bg
+decl_stmt|;
+for|for
+control|(
+name|cp
+operator|=
+name|value
+operator|,
+name|ep
+operator|=
+name|cp
+operator|+
+name|len
+operator|-
+literal|1
+init|;
+name|cp
+operator|&&
+operator|*
+name|cp
+operator|&&
+name|cp
+operator|<
+name|ep
+condition|;
+name|cp
+operator|=
+name|np
+control|)
+block|{
+name|np
+operator|=
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|'+'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+condition|)
+operator|*
+name|np
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|vp
+operator|=
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+condition|)
+operator|*
+name|vp
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|fg
+operator|=
+operator|*
+name|cp
+condition|?
+name|xo_color_find
+argument_list|(
+name|cp
+argument_list|)
+else|:
+operator|-
+literal|1
+expr_stmt|;
+name|bg
+operator|=
+operator|(
+name|vp
+operator|&&
+operator|*
+name|vp
+operator|)
+condition|?
+name|xo_color_find
+argument_list|(
+name|vp
+argument_list|)
+else|:
+operator|-
+literal|1
+expr_stmt|;
+name|xop
+operator|->
+name|xo_color_map_fg
+index|[
+name|num
+index|]
+operator|=
+operator|(
+name|fg
+operator|<
+literal|0
+operator|)
+condition|?
+name|num
+else|:
+name|fg
+expr_stmt|;
+name|xop
+operator|->
+name|xo_color_map_bg
+index|[
+name|num
+index|]
+operator|=
+operator|(
+name|bg
+operator|<
+literal|0
+operator|)
+condition|?
+name|num
+else|:
+name|bg
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|num
+operator|>
+name|XO_NUM_COLORS
+condition|)
+break|break;
+block|}
+comment|/* If no color initialization happened, then we don't need the map */
+if|if
+condition|(
+name|num
+operator|>
+literal|0
+condition|)
+name|XOF_SET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_MAP
+argument_list|)
+expr_stmt|;
+else|else
+name|XOF_CLEAR
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_MAP
+argument_list|)
+expr_stmt|;
+comment|/* Fill in the rest of the colors with the defaults */
+for|for
+control|(
+init|;
+name|num
+operator|<
+name|XO_NUM_COLORS
+condition|;
+name|num
+operator|++
+control|)
+name|xop
+operator|->
+name|xo_color_map_fg
+index|[
+name|num
+index|]
+operator|=
+name|xop
+operator|->
+name|xo_color_map_bg
+index|[
+name|num
+index|]
+operator|=
+name|num
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|xo_set_options_simple
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|input
+parameter_list|)
+block|{
+name|xo_xof_flags_t
+name|new_flag
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|ep
+decl_stmt|,
+modifier|*
+name|vp
+decl_stmt|,
+modifier|*
+name|np
+decl_stmt|,
+modifier|*
+name|bp
+decl_stmt|;
+name|ssize_t
+name|len
+init|=
+name|strlen
+argument_list|(
+name|input
+argument_list|)
+operator|+
+literal|1
+decl_stmt|;
+name|bp
+operator|=
+name|alloca
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|bp
+argument_list|,
+name|input
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|cp
+operator|=
+name|bp
+operator|,
+name|ep
+operator|=
+name|cp
+operator|+
+name|len
+operator|-
+literal|1
+init|;
+name|cp
+operator|&&
+name|cp
+operator|<
+name|ep
+condition|;
+name|cp
+operator|=
+name|np
+control|)
+block|{
+name|np
+operator|=
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|','
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+condition|)
+operator|*
+name|np
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|vp
+operator|=
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|'='
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+condition|)
+operator|*
+name|vp
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+literal|"colors"
+argument_list|,
+name|cp
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|xo_set_color_map
+argument_list|(
+name|xop
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|new_flag
+operator|=
+name|xo_name_lookup
+argument_list|(
+name|xo_xof_simple_names
+argument_list|,
+name|cp
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|new_flag
+operator|!=
+literal|0
+condition|)
+block|{
+name|XOF_SET
+argument_list|(
+name|xop
+argument_list|,
+name|new_flag
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"no-color"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|XOF_CLEAR
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_ALLOWED
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|xo_failure
+argument_list|(
+name|xop
+argument_list|,
+literal|"unknown simple option: %s"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Set the options for a handle using a string of options  * passed in.  The input is a comma-separated set of names  * and optional values: "xml,pretty,indent=4"  *  * @param xop XO handle  * @param input Comma-separated set of option values  * @return 0 on success, non-zero on failure  */
 end_comment
 
 begin_function
@@ -9204,11 +9832,12 @@ literal|1
 decl_stmt|,
 name|new_style
 decl_stmt|,
-name|len
-decl_stmt|,
 name|rc
 init|=
 literal|0
+decl_stmt|;
+name|ssize_t
+name|len
 decl_stmt|;
 name|xo_xof_flags_t
 name|new_flag
@@ -9252,7 +9881,7 @@ operator|==
 literal|':'
 condition|)
 block|{
-name|int
+name|ssize_t
 name|sz
 decl_stmt|;
 for|for
@@ -9592,7 +10221,13 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* XXX Look for colors=red-blue+green-yellow */
+name|xo_set_color_map
+argument_list|(
+name|xop
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* 	 * For options, we don't allow "encoder" since we want to 	 * handle it explicitly below as "encoder=xxx". 	 */
@@ -9655,8 +10290,7 @@ argument_list|,
 name|new_flag
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|strcmp
@@ -9668,7 +10302,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|XOF_CLEAR
 argument_list|(
 name|xop
@@ -9676,7 +10309,6 @@ argument_list|,
 name|XOF_COLOR_ALLOWED
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -9784,7 +10416,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-block|}
 if|if
 condition|(
 name|style
@@ -9804,7 +10435,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Set one or more flags for a given handle (or default if handle is NULL).  * These flags will affect future output.  *  * @xop XO handle to alter (or NULL for default handle)  * @flags Flags to be set (XOF_*)  */
+comment|/**  * Set one or more flags for a given handle (or default if handle is NULL).  * These flags will affect future output.  *  * @param xop XO handle to alter (or NULL for default handle)  * @param flags Flags to be set (XOF_*)  */
 end_comment
 
 begin_function
@@ -9836,6 +10467,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Accessor to return the current set of flags for a handle  * @param xop XO handle  * @return Current set of flags  */
+end_comment
+
 begin_function
 name|xo_xof_flags_t
 name|xo_get_flags
@@ -9861,7 +10496,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * strndup with a twist: len< 0 means strlen  */
+comment|/**  * strndup with a twist: len< 0 means len = strlen(str)  */
 end_comment
 
 begin_function
@@ -9875,7 +10510,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -9934,7 +10569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Record a leading prefix for the XPath we generate.  This allows the  * generated data to be placed within an XML hierarchy but still have  * accurate XPath expressions.  *  * @xop XO handle to alter (or NULL for default handle)  * @path The XPath expression  */
+comment|/**  * Record a leading prefix for the XPath we generate.  This allows the  * generated data to be placed within an XML hierarchy but still have  * accurate XPath expressions.  *  * @param xop XO handle to alter (or NULL for default handle)  * @param path The XPath expression  */
 end_comment
 
 begin_function
@@ -10002,7 +10637,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Record the info data for a set of tags  *  * @xop XO handle to alter (or NULL for default handle)  * @info Info data (xo_info_t) to be recorded (or NULL) (MUST BE SORTED)  * @count Number of entries in info (or -1 to count them ourselves)  */
+comment|/**  * Record the info data for a set of tags  *  * @param xop XO handle to alter (or NULL for default handle)  * @param info Info data (xo_info_t) to be recorded (or NULL) (MUST BE SORTED)  * @pararm count Number of entries in info (or -1 to count them ourselves)  */
 end_comment
 
 begin_function
@@ -10120,7 +10755,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Clear one or more flags for a given handle (or default if handle is NULL).  * These flags will affect future output.  *  * @xop XO handle to alter (or NULL for default handle)  * @flags Flags to be cleared (XOF_*)  */
+comment|/**  * Clear one or more flags for a given handle (or default if handle is NULL).  * These flags will affect future output.  *  * @param xop XO handle to alter (or NULL for default handle)  * @param flags Flags to be cleared (XOF_*)  */
 end_comment
 
 begin_function
@@ -10504,7 +11139,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|ssize_t
 name|nlen
 parameter_list|)
 block|{
@@ -10711,7 +11346,7 @@ name|char
 modifier|*
 name|cp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|int
@@ -10734,21 +11369,23 @@ name|wc
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|ilen
 decl_stmt|,
 name|olen
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|width
 decl_stmt|;
 name|int
 name|attr
 init|=
-operator|(
+name|XOF_BIT_ISSET
+argument_list|(
 name|flags
-operator|&
+argument_list|,
 name|XFF_ATTR
-operator|)
+argument_list|)
 decl_stmt|;
 specifier|const
 name|char
@@ -10827,6 +11464,18 @@ name|len
 operator|-=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+operator|||
+operator|*
+name|cp
+operator|==
+literal|'\0'
+condition|)
+break|break;
 block|}
 block|}
 if|if
@@ -11189,7 +11838,7 @@ name|xo_xml_quot
 expr_stmt|;
 else|else
 break|break;
-name|int
+name|ssize_t
 name|slen
 init|=
 name|strlen
@@ -11565,7 +12214,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_format_string
 parameter_list|(
 name|xo_handle_t
@@ -11610,9 +12259,10 @@ name|wcp
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|cols
 init|=
 literal|0
@@ -11621,7 +12271,7 @@ name|rc
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|off
 init|=
 name|xbp
@@ -12188,7 +12838,7 @@ name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|start_offset
 parameter_list|)
 block|{
@@ -12286,7 +12936,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_count_utf8_cols
 parameter_list|(
 specifier|const
@@ -12294,17 +12944,17 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|tlen
 decl_stmt|;
 name|wchar_t
 name|wc
 decl_stmt|;
-name|int
+name|ssize_t
 name|cols
 init|=
 literal|0
@@ -12377,7 +13027,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 	     * Find the width-in-columns of this character, which must be done 	     * in wide characters, since we lack a mbswidth() function. 	     */
-name|int
+name|ssize_t
 name|width
 init|=
 name|xo_wcwidth
@@ -12718,7 +13368,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_format_gettext
 parameter_list|(
 name|xo_handle_t
@@ -12728,10 +13378,10 @@ parameter_list|,
 name|xo_xff_flags_t
 name|flags
 parameter_list|,
-name|int
+name|ssize_t
 name|start_offset
 parameter_list|,
-name|int
+name|ssize_t
 name|cols
 parameter_list|,
 name|int
@@ -12780,7 +13430,7 @@ name|xb_bufp
 operator|+
 name|start_offset
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 init|=
 name|xbp
@@ -13007,7 +13657,7 @@ return|;
 block|}
 block|}
 comment|/*      * Since the new string string might be in gettext's buffer or      * in the buffer (as the plural form), we make a copy.      */
-name|int
+name|ssize_t
 name|nlen
 init|=
 name|strlen
@@ -13087,7 +13737,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|xo_xff_flags_t
@@ -13105,7 +13755,7 @@ argument_list|(
 name|xop
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|start_offset
 init|=
 name|xo_buf_offset
@@ -13199,6 +13849,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Bump one of the 'width' values in a format strings (e.g. "%40.50.60s").  * @param xfp Formatting instructions  * @param digit Single digit (0-9) of input  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -13252,14 +13906,14 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_trim_ws
 parameter_list|(
 name|xo_buffer_t
 modifier|*
 name|xbp
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -13273,7 +13927,7 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-name|int
+name|ssize_t
 name|delta
 decl_stmt|;
 comment|/* First trim leading space */
@@ -13407,7 +14061,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_do_format_field
 parameter_list|(
 name|xo_handle_t
@@ -13423,7 +14077,7 @@ name|char
 modifier|*
 name|fmt
 parameter_list|,
-name|int
+name|ssize_t
 name|flen
 parameter_list|,
 name|xo_xff_flags_t
@@ -13449,7 +14103,7 @@ name|xp
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|,
 name|cols
@@ -13479,6 +14133,10 @@ name|flags
 operator|&
 name|XFF_NO_OUTPUT
 operator|)
+condition|?
+literal|1
+else|:
+literal|0
 decl_stmt|;
 name|int
 name|need_enc
@@ -13493,7 +14151,7 @@ name|real_need_enc
 init|=
 name|need_enc
 decl_stmt|;
-name|int
+name|ssize_t
 name|old_cols
 init|=
 name|xop
@@ -13524,7 +14182,7 @@ name|xop
 operator|->
 name|xo_data
 expr_stmt|;
-name|unsigned
+name|ssize_t
 name|start_offset
 init|=
 name|xo_buf_offset
@@ -14363,7 +15021,7 @@ name|xop
 operator|->
 name|xo_fmt
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 init|=
 name|cp
@@ -14527,7 +15185,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|int
+name|ssize_t
 name|columns
 init|=
 name|rc
@@ -15182,7 +15840,7 @@ name|XFF_GT_FLAGS
 condition|)
 block|{
 comment|/* 	 * Handle gettext()ing the field by looking up the value 	 * and then copying it in, while converting to locale, if 	 * needed. 	 */
-name|int
+name|ssize_t
 name|new_cols
 init|=
 name|xo_format_gettext
@@ -15238,6 +15896,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Remove any numeric precision/width format from the format string by  * inserting the "%" after the [0-9]+, returning the substring.  */
+end_comment
 
 begin_function
 specifier|static
@@ -15312,15 +15974,13 @@ argument_list|)
 condition|)
 break|break;
 block|}
-name|cp
-operator|-=
-literal|1
-expr_stmt|;
 operator|*
+operator|--
 name|cp
 operator|=
 literal|'%'
 expr_stmt|;
+comment|/* Back off and insert the '%' */
 return|return
 name|cp
 return|;
@@ -15386,14 +16046,14 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_humanize
 parameter_list|(
 name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|,
 name|uint64_t
@@ -15486,15 +16146,15 @@ typedef|typedef
 struct|struct
 name|xo_humanize_save_s
 block|{
-name|unsigned
+name|ssize_t
 name|xhs_offset
 decl_stmt|;
 comment|/* Saved xo_offset */
-name|unsigned
+name|ssize_t
 name|xhs_columns
 decl_stmt|;
 comment|/* Saved xo_columns */
-name|unsigned
+name|ssize_t
 name|xhs_anchor_columns
 decl_stmt|;
 comment|/* Saved xo_anchor_columns */
@@ -15538,7 +16198,7 @@ name|XOF_NO_HUMANIZE
 argument_list|)
 condition|)
 return|return;
-name|unsigned
+name|ssize_t
 name|end_offset
 init|=
 name|xbp
@@ -15644,10 +16304,10 @@ name|savep
 operator|->
 name|xhs_offset
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 operator|(
@@ -15755,6 +16415,94 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Convenience function that either append a fixed value (if one is  * given) or formats a field using a format string.  If it's  * encode_only, then we can't skip formatting the field, since it may  * be pulling arguments off the stack.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|xo_simple_field
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+name|unsigned
+name|encode_only
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|value
+parameter_list|,
+name|ssize_t
+name|vlen
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|ssize_t
+name|flen
+parameter_list|,
+name|xo_xff_flags_t
+name|flags
+parameter_list|)
+block|{
+if|if
+condition|(
+name|encode_only
+condition|)
+name|flags
+operator||=
+name|XFF_NO_OUTPUT
+expr_stmt|;
+if|if
+condition|(
+name|vlen
+operator|==
+literal|0
+condition|)
+name|xo_do_format_field
+argument_list|(
+name|xop
+argument_list|,
+name|NULL
+argument_list|,
+name|fmt
+argument_list|,
+name|flen
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|encode_only
+condition|)
+name|xo_data_append_content
+argument_list|(
+name|xop
+argument_list|,
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Html mode: append a<div> to the output buffer contain a field  * along with all the supporting information indicated by the flags.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -15777,7 +16525,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|ssize_t
 name|nlen
 parameter_list|,
 specifier|const
@@ -15785,15 +16533,23 @@ name|char
 modifier|*
 name|value
 parameter_list|,
-name|int
+name|ssize_t
 name|vlen
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|ssize_t
+name|flen
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|encoding
 parameter_list|,
-name|int
+name|ssize_t
 name|elen
 parameter_list|)
 block|{
@@ -15845,6 +16601,10 @@ condition|(
 name|encoding
 operator|==
 name|NULL
+operator|&&
+name|fmt
+operator|!=
+name|NULL
 condition|)
 block|{
 name|char
@@ -15853,7 +16613,7 @@ name|enc
 init|=
 name|alloca
 argument_list|(
-name|vlen
+name|flen
 operator|+
 literal|1
 argument_list|)
@@ -15862,14 +16622,14 @@ name|memcpy
 argument_list|(
 name|enc
 argument_list|,
-name|value
+name|fmt
 argument_list|,
-name|vlen
+name|flen
 argument_list|)
 expr_stmt|;
 name|enc
 index|[
-name|vlen
+name|flen
 index|]
 operator|=
 literal|'\0'
@@ -15918,6 +16678,10 @@ argument_list|,
 name|XOF_XPATH
 argument_list|)
 operator|)
+condition|?
+literal|1
+else|:
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -16079,7 +16843,7 @@ operator|->
 name|xo_depth
 index|]
 decl_stmt|;
-name|int
+name|ssize_t
 name|olen
 init|=
 name|xsp
@@ -16095,7 +16859,7 @@ argument_list|)
 else|:
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|dlen
 init|=
 name|pbp
@@ -16206,20 +16970,22 @@ operator|&
 name|XFF_ENCODE_ONLY
 condition|)
 block|{
-comment|/* 	 * Even if this is encode-only, we need to go through the 	 * work of formatting it to make sure the args are cleared 	 * from xo_vap. 	 */
-name|xo_do_format_field
+comment|/* 	 * Even if this is encode-only, we need to go through the 	 * work of formatting it to make sure the args are cleared 	 * from xo_vap.  This is not true when vlen is zero, since 	 * that means our "value" isn't on the stack. 	 */
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
+name|TRUE
+argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|encoding
 argument_list|,
 name|elen
 argument_list|,
 name|flags
-operator||
-name|XFF_NO_OUTPUT
 argument_list|)
 expr_stmt|;
 return|return;
@@ -16733,7 +17499,7 @@ name|xop
 operator|->
 name|xo_data
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|base_offset
 init|=
 name|xbp
@@ -16790,15 +17556,19 @@ name|xop
 operator|->
 name|xo_anchor_columns
 expr_stmt|;
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|FALSE
 argument_list|,
 name|value
 argument_list|,
 name|vlen
+argument_list|,
+name|fmt
+argument_list|,
+name|flen
 argument_list|,
 name|flags
 argument_list|)
@@ -16819,7 +17589,7 @@ index|[]
 init|=
 literal|"\" data-number=\""
 decl_stmt|;
-name|int
+name|ssize_t
 name|div_len
 init|=
 sizeof|sizeof
@@ -16829,7 +17599,7 @@ argument_list|)
 operator|-
 literal|1
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|end_offset
 init|=
 name|xbp
@@ -16840,7 +17610,7 @@ name|xbp
 operator|->
 name|xb_bufp
 decl_stmt|;
-name|int
+name|ssize_t
 name|olen
 init|=
 name|end_offset
@@ -16906,7 +17676,7 @@ name|olen
 argument_list|)
 condition|)
 block|{
-name|unsigned
+name|ssize_t
 name|new_offset
 init|=
 name|xbp
@@ -17030,7 +17800,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -17082,6 +17852,10 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -17105,10 +17879,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
+name|value
 parameter_list|,
-name|unsigned
-name|len
+name|ssize_t
+name|vlen
 parameter_list|)
 block|{
 specifier|const
@@ -17120,7 +17894,7 @@ name|xfip
 operator|->
 name|xfi_format
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|flen
 init|=
 name|xfip
@@ -17192,25 +17966,21 @@ case|case
 name|XO_STYLE_ENCODER
 case|:
 comment|/* 	 * Even though we don't care about text, we need to do 	 * enough parsing work to skip over the right bits of xo_vap. 	 */
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|TRUE
+argument_list|,
+name|value
+argument_list|,
+name|vlen
 argument_list|,
 name|fmt
 argument_list|,
 name|flen
 argument_list|,
 name|flags
-operator||
-name|XFF_NO_OUTPUT
 argument_list|)
 expr_stmt|;
 return|return;
@@ -17224,7 +17994,7 @@ name|xop
 operator|->
 name|xo_data
 decl_stmt|;
-name|int
+name|ssize_t
 name|start
 init|=
 name|xbp
@@ -17235,7 +18005,7 @@ name|xbp
 operator|->
 name|xb_bufp
 decl_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|xbp
@@ -17244,7 +18014,7 @@ name|xb_size
 operator|-
 name|start
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 if|if
@@ -17335,7 +18105,7 @@ expr_stmt|;
 comment|/* Reset start */
 if|if
 condition|(
-name|len
+name|vlen
 condition|)
 block|{
 name|char
@@ -17372,7 +18142,7 @@ name|newstr
 init|=
 name|alloca
 argument_list|(
-name|len
+name|vlen
 operator|+
 literal|1
 argument_list|)
@@ -17381,14 +18151,14 @@ name|memcpy
 argument_list|(
 name|newstr
 argument_list|,
-name|str
+name|value
 argument_list|,
-name|len
+name|vlen
 argument_list|)
 expr_stmt|;
 name|newstr
 index|[
-name|len
+name|vlen
 index|]
 operator|=
 literal|'\0'
@@ -17397,7 +18167,7 @@ if|if
 condition|(
 name|newstr
 index|[
-name|len
+name|vlen
 operator|-
 literal|1
 index|]
@@ -17816,15 +18586,23 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|ssize_t
 name|nlen
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|format
+name|value
 parameter_list|,
-name|int
+name|ssize_t
+name|vlen
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|ssize_t
 name|flen
 parameter_list|,
 specifier|const
@@ -17832,7 +18610,7 @@ name|char
 modifier|*
 name|encoding
 parameter_list|,
-name|int
+name|ssize_t
 name|elen
 parameter_list|,
 name|xo_xff_flags_t
@@ -17923,7 +18701,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 name|xo_transition
@@ -18074,7 +18852,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 name|xo_transition
@@ -18181,7 +18959,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 name|xo_transition
@@ -18303,13 +19081,17 @@ name|xop
 operator|->
 name|xo_anchor_columns
 expr_stmt|;
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|FALSE
 argument_list|,
-name|format
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|fmt
 argument_list|,
 name|flen
 argument_list|,
@@ -18360,7 +19142,11 @@ name|name
 argument_list|,
 name|nlen
 argument_list|,
-name|format
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|fmt
 argument_list|,
 name|flen
 argument_list|,
@@ -18381,17 +19167,17 @@ operator|&
 name|XFF_DISPLAY_ONLY
 condition|)
 block|{
-name|flags
-operator||=
-name|XFF_NO_OUTPUT
-expr_stmt|;
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|TRUE
 argument_list|,
-name|format
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|fmt
 argument_list|,
 name|flen
 argument_list|,
@@ -18405,7 +19191,7 @@ condition|(
 name|encoding
 condition|)
 block|{
-name|format
+name|fmt
 operator|=
 name|encoding
 expr_stmt|;
@@ -18431,7 +19217,7 @@ name|memcpy
 argument_list|(
 name|enc
 argument_list|,
-name|format
+name|fmt
 argument_list|,
 name|flen
 argument_list|)
@@ -18443,7 +19229,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|format
+name|fmt
 operator|=
 name|xo_fix_encoding
 argument_list|(
@@ -18456,7 +19242,7 @@ name|flen
 operator|=
 name|strlen
 argument_list|(
-name|format
+name|fmt
 argument_list|)
 expr_stmt|;
 block|}
@@ -18480,7 +19266,7 @@ name|xop
 argument_list|,
 literal|"missing field name: %s"
 argument_list|,
-name|format
+name|fmt
 argument_list|)
 expr_stmt|;
 name|name
@@ -18661,13 +19447,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|FALSE
 argument_list|,
-name|format
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|fmt
 argument_list|,
 name|flen
 argument_list|,
@@ -18725,17 +19515,17 @@ operator|&
 name|XFF_DISPLAY_ONLY
 condition|)
 block|{
-name|flags
-operator||=
-name|XFF_NO_OUTPUT
-expr_stmt|;
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|TRUE
 argument_list|,
-name|format
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|fmt
 argument_list|,
 name|flen
 argument_list|,
@@ -18749,7 +19539,7 @@ condition|(
 name|encoding
 condition|)
 block|{
-name|format
+name|fmt
 operator|=
 name|encoding
 expr_stmt|;
@@ -18775,7 +19565,7 @@ name|memcpy
 argument_list|(
 name|enc
 argument_list|,
-name|format
+name|fmt
 argument_list|,
 name|flen
 argument_list|)
@@ -18787,7 +19577,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|format
+name|fmt
 operator|=
 name|xo_fix_encoding
 argument_list|(
@@ -18800,14 +19590,13 @@ name|flen
 operator|=
 name|strlen
 argument_list|(
-name|format
+name|fmt
 argument_list|)
 expr_stmt|;
 block|}
 name|int
 name|first
 init|=
-operator|!
 operator|(
 name|xop
 operator|->
@@ -18822,6 +19611,10 @@ name|xs_flags
 operator|&
 name|XSF_NOT_FIRST
 operator|)
+condition|?
+literal|0
+else|:
+literal|1
 decl_stmt|;
 name|xo_format_prep
 argument_list|(
@@ -18854,6 +19647,17 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|vlen
+operator|!=
+literal|0
+condition|)
+name|quote
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|flen
 operator|==
 literal|0
@@ -18863,7 +19667,7 @@ name|quote
 operator|=
 literal|0
 expr_stmt|;
-name|format
+name|fmt
 operator|=
 literal|"true"
 expr_stmt|;
@@ -18878,9 +19682,9 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-literal|"diouxXDOUeEfFgGaAcCp"
+literal|"diouDOUeEfFgG"
 argument_list|,
-name|format
+name|fmt
 index|[
 name|flen
 operator|-
@@ -18919,7 +19723,7 @@ name|xop
 argument_list|,
 literal|"missing field name: %s"
 argument_list|,
-name|format
+name|fmt
 argument_list|)
 expr_stmt|;
 name|name
@@ -19002,7 +19806,7 @@ name|xop
 operator|->
 name|xo_data
 expr_stmt|;
-name|int
+name|ssize_t
 name|off
 init|=
 name|xbp
@@ -19032,8 +19836,8 @@ name|XOF_UNDERSCORES
 argument_list|)
 condition|)
 block|{
-name|int
-name|now
+name|ssize_t
+name|coff
 init|=
 name|xbp
 operator|->
@@ -19048,7 +19852,7 @@ control|(
 init|;
 name|off
 operator|<
-name|now
+name|coff
 condition|;
 name|off
 operator|++
@@ -19110,13 +19914,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|FALSE
 argument_list|,
-name|format
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|fmt
 argument_list|,
 name|flen
 argument_list|,
@@ -19147,17 +19955,17 @@ operator|&
 name|XFF_DISPLAY_ONLY
 condition|)
 block|{
-name|flags
-operator||=
-name|XFF_NO_OUTPUT
-expr_stmt|;
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|TRUE
 argument_list|,
-name|format
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|fmt
 argument_list|,
 name|flen
 argument_list|,
@@ -19171,7 +19979,7 @@ condition|(
 name|encoding
 condition|)
 block|{
-name|format
+name|fmt
 operator|=
 name|encoding
 expr_stmt|;
@@ -19197,7 +20005,7 @@ name|memcpy
 argument_list|(
 name|enc
 argument_list|,
-name|format
+name|fmt
 argument_list|,
 name|flen
 argument_list|)
@@ -19209,7 +20017,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|format
+name|fmt
 operator|=
 name|xo_fix_encoding
 argument_list|(
@@ -19222,7 +20030,7 @@ name|flen
 operator|=
 name|strlen
 argument_list|(
-name|format
+name|fmt
 argument_list|)
 expr_stmt|;
 block|}
@@ -19246,7 +20054,7 @@ name|xop
 argument_list|,
 literal|"missing field name: %s"
 argument_list|,
-name|format
+name|fmt
 argument_list|)
 expr_stmt|;
 name|name
@@ -19281,13 +20089,17 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|FALSE
 argument_list|,
-name|format
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|fmt
 argument_list|,
 name|flen
 argument_list|,
@@ -19314,17 +20126,17 @@ operator|&
 name|XFF_DISPLAY_ONLY
 condition|)
 block|{
-name|flags
-operator||=
-name|XFF_NO_OUTPUT
-expr_stmt|;
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|TRUE
 argument_list|,
-name|format
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|fmt
 argument_list|,
 name|flen
 argument_list|,
@@ -19366,7 +20178,7 @@ name|quote
 operator|=
 literal|0
 expr_stmt|;
-name|format
+name|fmt
 operator|=
 literal|"true"
 expr_stmt|;
@@ -19383,7 +20195,7 @@ name|strchr
 argument_list|(
 literal|"diouxXDOUeEfFgGaAcCp"
 argument_list|,
-name|format
+name|fmt
 index|[
 name|flen
 operator|-
@@ -19407,7 +20219,7 @@ condition|(
 name|encoding
 condition|)
 block|{
-name|format
+name|fmt
 operator|=
 name|encoding
 expr_stmt|;
@@ -19433,7 +20245,7 @@ name|memcpy
 argument_list|(
 name|enc
 argument_list|,
-name|format
+name|fmt
 argument_list|,
 name|flen
 argument_list|)
@@ -19445,7 +20257,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|format
+name|fmt
 operator|=
 name|xo_fix_encoding
 argument_list|(
@@ -19458,7 +20270,7 @@ name|flen
 operator|=
 name|strlen
 argument_list|(
-name|format
+name|fmt
 argument_list|)
 expr_stmt|;
 block|}
@@ -19482,7 +20294,7 @@ name|xop
 argument_list|,
 literal|"missing field name: %s"
 argument_list|,
-name|format
+name|fmt
 argument_list|)
 expr_stmt|;
 name|name
@@ -19499,7 +20311,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|unsigned
+name|ssize_t
 name|name_offset
 init|=
 name|xo_buf_offset
@@ -19528,7 +20340,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|unsigned
+name|ssize_t
 name|value_offset
 init|=
 name|xo_buf_offset
@@ -19539,13 +20351,17 @@ operator|->
 name|xo_data
 argument_list|)
 decl_stmt|;
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|FALSE
 argument_list|,
-name|format
+name|value
+argument_list|,
+name|vlen
+argument_list|,
+name|fmt
 argument_list|,
 name|flen
 argument_list|,
@@ -19590,6 +20406,8 @@ name|xo_data
 argument_list|,
 name|value_offset
 argument_list|)
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|xo_buf_reset
@@ -19623,7 +20441,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|unsigned
+name|ssize_t
 name|len
 parameter_list|)
 block|{
@@ -19636,7 +20454,7 @@ name|xfip
 operator|->
 name|xfi_format
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|flen
 init|=
 name|xfip
@@ -19677,7 +20495,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|int
+name|ssize_t
 name|start_offset
 init|=
 operator|-
@@ -19722,7 +20540,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|end_offset
 init|=
 name|xop
@@ -19811,17 +20629,17 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
+name|value
 parameter_list|,
-name|int
-name|len
+name|ssize_t
+name|vlen
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|fmt
 parameter_list|,
-name|int
+name|ssize_t
 name|flen
 parameter_list|,
 name|xo_xff_flags_t
@@ -19839,27 +20657,15 @@ block|{
 case|case
 name|XO_STYLE_TEXT
 case|:
-if|if
-condition|(
-name|len
-condition|)
-name|xo_data_append_content
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|str
+name|FALSE
 argument_list|,
-name|len
+name|value
 argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-else|else
-name|xo_do_format_field
-argument_list|(
-name|xop
-argument_list|,
-name|NULL
+name|vlen
 argument_list|,
 name|fmt
 argument_list|,
@@ -19872,22 +20678,6 @@ break|break;
 case|case
 name|XO_STYLE_HTML
 case|:
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-block|{
-name|str
-operator|=
-name|fmt
-expr_stmt|;
-name|len
-operator|=
-name|flen
-expr_stmt|;
-block|}
 name|xo_buf_append_div
 argument_list|(
 name|xop
@@ -19900,9 +20690,13 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|str
+name|value
 argument_list|,
-name|len
+name|vlen
+argument_list|,
+name|fmt
+argument_list|,
+name|flen
 argument_list|,
 name|NULL
 argument_list|,
@@ -19924,22 +20718,6 @@ condition|(
 name|tag_name
 condition|)
 block|{
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-block|{
-name|str
-operator|=
-name|fmt
-expr_stmt|;
-name|len
-operator|=
-name|flen
-expr_stmt|;
-block|}
 name|xo_open_container_h
 argument_list|(
 name|xop
@@ -19955,9 +20733,13 @@ literal|"message"
 argument_list|,
 literal|7
 argument_list|,
-name|str
+name|value
 argument_list|,
-name|len
+name|vlen
+argument_list|,
+name|fmt
+argument_list|,
+name|flen
 argument_list|,
 name|NULL
 argument_list|,
@@ -19977,25 +20759,21 @@ block|}
 else|else
 block|{
 comment|/* 	     * Even though we don't care about labels, we need to do 	     * enough parsing work to skip over the right bits of xo_vap. 	     */
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|TRUE
+argument_list|,
+name|value
+argument_list|,
+name|vlen
 argument_list|,
 name|fmt
 argument_list|,
 name|flen
 argument_list|,
 name|flags
-operator||
-name|XFF_NO_OUTPUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -20003,25 +20781,21 @@ break|break;
 case|case
 name|XO_STYLE_ENCODER
 case|:
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-name|xo_do_format_field
+name|xo_simple_field
 argument_list|(
 name|xop
 argument_list|,
-name|NULL
+name|TRUE
+argument_list|,
+name|value
+argument_list|,
+name|vlen
 argument_list|,
 name|fmt
 argument_list|,
 name|flen
 argument_list|,
 name|flags
-operator||
-name|XFF_NO_OUTPUT
 argument_list|)
 expr_stmt|;
 break|break;
@@ -20319,7 +21093,7 @@ decl_stmt|,
 modifier|*
 name|xp
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -20710,6 +21484,106 @@ comment|/* LIBXO_TEXT_ONLY */
 block|}
 end_function
 
+begin_comment
+comment|/*  * If the color map is in use (--libxo colors=xxxx), then update  * the incoming foreground and background colors from the map.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|xo_colors_update
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+name|xo_colors_t
+modifier|*
+name|newp
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|LIBXO_TEXT_ONLY
+return|return;
+endif|#
+directive|endif
+comment|/* LIBXO_TEXT_ONLY */
+name|xo_color_t
+name|fg
+init|=
+name|newp
+operator|->
+name|xoc_col_fg
+decl_stmt|;
+if|if
+condition|(
+name|XOF_ISSET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_MAP
+argument_list|)
+operator|&&
+name|fg
+operator|<
+name|XO_NUM_COLORS
+condition|)
+name|fg
+operator|=
+name|xop
+operator|->
+name|xo_color_map_fg
+index|[
+name|fg
+index|]
+expr_stmt|;
+comment|/* Fetch from color map */
+name|newp
+operator|->
+name|xoc_col_fg
+operator|=
+name|fg
+expr_stmt|;
+name|xo_color_t
+name|bg
+init|=
+name|newp
+operator|->
+name|xoc_col_bg
+decl_stmt|;
+if|if
+condition|(
+name|XOF_ISSET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_MAP
+argument_list|)
+operator|&&
+name|bg
+operator|<
+name|XO_NUM_COLORS
+condition|)
+name|bg
+operator|=
+name|xop
+operator|->
+name|xo_color_map_bg
+index|[
+name|bg
+index|]
+expr_stmt|;
+comment|/* Fetch from color map */
+name|newp
+operator|->
+name|xoc_col_bg
+operator|=
+name|bg
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -20904,11 +21778,16 @@ name|XO_COL_DEFAULT
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
+name|xo_color_t
+name|fg
+init|=
 name|newp
 operator|->
 name|xoc_col_fg
+decl_stmt|;
+if|if
+condition|(
+name|fg
 operator|!=
 name|oldp
 operator|->
@@ -20928,16 +21807,12 @@ argument_list|,
 literal|";3%u"
 argument_list|,
 operator|(
-name|newp
-operator|->
-name|xoc_col_fg
+name|fg
 operator|!=
 name|XO_COL_DEFAULT
 operator|)
 condition|?
-name|newp
-operator|->
-name|xoc_col_fg
+name|fg
 operator|-
 literal|1
 else|:
@@ -20945,11 +21820,16 @@ literal|9
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|xo_color_t
+name|bg
+init|=
 name|newp
 operator|->
 name|xoc_col_bg
+decl_stmt|;
+if|if
+condition|(
+name|bg
 operator|!=
 name|oldp
 operator|->
@@ -20969,16 +21849,12 @@ argument_list|,
 literal|";4%u"
 argument_list|,
 operator|(
-name|newp
-operator|->
-name|xoc_col_bg
+name|bg
 operator|!=
 name|XO_COL_DEFAULT
 operator|)
 condition|?
-name|newp
-operator|->
-name|xoc_col_bg
+name|bg
 operator|-
 literal|1
 else|:
@@ -21315,10 +22191,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
+name|value
 parameter_list|,
-name|unsigned
-name|len
+name|ssize_t
+name|vlen
 parameter_list|)
 block|{
 specifier|const
@@ -21330,7 +22206,7 @@ name|xfip
 operator|->
 name|xfi_format
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|flen
 init|=
 name|xfip
@@ -21343,7 +22219,7 @@ decl_stmt|;
 comment|/* If the string is static and we've in an encoding style, bail */
 if|if
 condition|(
-name|len
+name|vlen
 operator|!=
 literal|0
 operator|&&
@@ -21361,16 +22237,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|len
+name|vlen
 condition|)
 name|xo_buf_append
 argument_list|(
 operator|&
 name|xb
 argument_list|,
-name|str
+name|value
 argument_list|,
-name|len
+name|vlen
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -21453,6 +22329,14 @@ argument_list|,
 name|xb
 operator|.
 name|xb_bufp
+argument_list|)
+expr_stmt|;
+name|xo_colors_update
+argument_list|(
+name|xop
+argument_list|,
+operator|&
+name|xoc
 argument_list|)
 expr_stmt|;
 if|if
@@ -21551,10 +22435,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
+name|value
 parameter_list|,
-name|unsigned
-name|len
+name|ssize_t
+name|vlen
 parameter_list|)
 block|{
 specifier|const
@@ -21566,7 +22450,7 @@ name|xfip
 operator|->
 name|xfi_format
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|flen
 init|=
 name|xfip
@@ -21613,9 +22497,9 @@ literal|"units"
 argument_list|,
 name|NULL
 argument_list|,
-name|str
+name|value
 argument_list|,
-name|len
+name|vlen
 argument_list|,
 name|fmt
 argument_list|,
@@ -21635,14 +22519,14 @@ name|xop
 operator|->
 name|xo_data
 decl_stmt|;
-name|int
+name|ssize_t
 name|start
 init|=
 name|xop
 operator|->
 name|xo_units_offset
 decl_stmt|;
-name|int
+name|ssize_t
 name|stop
 init|=
 name|xbp
@@ -21704,15 +22588,15 @@ else|else
 return|return;
 if|if
 condition|(
-name|len
+name|vlen
 condition|)
 name|xo_data_escape
 argument_list|(
 name|xop
 argument_list|,
-name|str
+name|value
 argument_list|,
-name|len
+name|vlen
 argument_list|)
 expr_stmt|;
 else|else
@@ -21738,7 +22622,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|now
 init|=
 name|xbp
@@ -21749,7 +22633,7 @@ name|xbp
 operator|->
 name|xb_bufp
 decl_stmt|;
-name|int
+name|ssize_t
 name|delta
 init|=
 name|now
@@ -21839,7 +22723,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_find_width
 parameter_list|(
 name|xo_handle_t
@@ -21853,10 +22737,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
+name|value
 parameter_list|,
-name|unsigned
-name|len
+name|ssize_t
+name|vlen
 parameter_list|)
 block|{
 specifier|const
@@ -21868,7 +22752,7 @@ name|xfip
 operator|->
 name|xfi_format
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|flen
 init|=
 name|xfip
@@ -21890,31 +22774,31 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
-name|len
+name|vlen
 condition|)
 block|{
 name|bp
 operator|=
 name|alloca
 argument_list|(
-name|len
+name|vlen
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Make local NUL-terminated copy of str */
+comment|/* Make local NUL-terminated copy of value */
 name|memcpy
 argument_list|(
 name|bp
 argument_list|,
-name|str
+name|value
 argument_list|,
-name|len
+name|vlen
 argument_list|)
 expr_stmt|;
 name|bp
 index|[
-name|len
+name|vlen
 index|]
 operator|=
 literal|'\0'
@@ -21972,12 +22856,19 @@ condition|(
 name|flen
 condition|)
 block|{
+comment|/* 	 * We really expect the format for width to be "{:/%d}" or 	 * "{:/%u}", so if that's the case, we just grab our width off 	 * the argument list.  But we need to avoid optimized logic if 	 * there's a custom formatter. 	 */
 if|if
 condition|(
+name|xop
+operator|->
+name|xo_formatter
+operator|==
+name|NULL
+operator|&&
 name|flen
-operator|!=
+operator|==
 literal|2
-operator|||
+operator|&&
 name|strncmp
 argument_list|(
 literal|"%d"
@@ -21986,22 +22877,10 @@ name|fmt
 argument_list|,
 name|flen
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
-name|xo_failure
-argument_list|(
-name|xop
-argument_list|,
-literal|"invalid width format: '%*.*s'"
-argument_list|,
-name|flen
-argument_list|,
-name|flen
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
+block|{
 if|if
 condition|(
 operator|!
@@ -22023,6 +22902,216 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|xop
+operator|->
+name|xo_formatter
+operator|==
+name|NULL
+operator|&&
+name|flen
+operator|==
+literal|2
+operator|&&
+name|strncmp
+argument_list|(
+literal|"%u"
+argument_list|,
+name|fmt
+argument_list|,
+name|flen
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|XOF_ISSET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_NO_VA_ARG
+argument_list|)
+condition|)
+name|width
+operator|=
+name|va_arg
+argument_list|(
+name|xop
+operator|->
+name|xo_vap
+argument_list|,
+name|unsigned
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 	     * So we have a format and it's not a simple one like 	     * "{:/%d}".  That means we need to format the field, 	     * extract the value from the formatted output, and then 	     * discard that output. 	     */
+name|int
+name|anchor_was_set
+init|=
+name|FALSE
+decl_stmt|;
+name|xo_buffer_t
+modifier|*
+name|xbp
+init|=
+operator|&
+name|xop
+operator|->
+name|xo_data
+decl_stmt|;
+name|ssize_t
+name|start_offset
+init|=
+name|xo_buf_offset
+argument_list|(
+name|xbp
+argument_list|)
+decl_stmt|;
+name|bp
+operator|=
+name|xo_buf_cur
+argument_list|(
+name|xbp
+argument_list|)
+expr_stmt|;
+comment|/* Save start of the string */
+name|cp
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|XOIF_ISSET
+argument_list|(
+name|xop
+argument_list|,
+name|XOIF_ANCHOR
+argument_list|)
+condition|)
+block|{
+name|XOIF_CLEAR
+argument_list|(
+name|xop
+argument_list|,
+name|XOIF_ANCHOR
+argument_list|)
+expr_stmt|;
+name|anchor_was_set
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+name|ssize_t
+name|rc
+init|=
+name|xo_do_format_field
+argument_list|(
+name|xop
+argument_list|,
+name|xbp
+argument_list|,
+name|fmt
+argument_list|,
+name|flen
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|rc
+operator|>=
+literal|0
+condition|)
+block|{
+name|xo_buf_append
+argument_list|(
+name|xbp
+argument_list|,
+literal|""
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Append a NUL */
+name|width
+operator|=
+name|strtol
+argument_list|(
+name|bp
+argument_list|,
+operator|&
+name|cp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|width
+operator|==
+name|LONG_MIN
+operator|||
+name|width
+operator|==
+name|LONG_MAX
+operator|||
+name|bp
+operator|==
+name|cp
+operator|||
+operator|*
+name|cp
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|width
+operator|=
+literal|0
+expr_stmt|;
+name|xo_failure
+argument_list|(
+name|xop
+argument_list|,
+literal|"invalid width for anchor: '%s'"
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Reset the cur pointer to where we found it */
+name|xbp
+operator|->
+name|xb_curp
+operator|=
+name|xbp
+operator|->
+name|xb_bufp
+operator|+
+name|start_offset
+expr_stmt|;
+if|if
+condition|(
+name|anchor_was_set
+condition|)
+name|XOIF_SET
+argument_list|(
+name|xop
+argument_list|,
+name|XOIF_ANCHOR
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 name|width
@@ -22088,29 +23177,12 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
+name|value
 parameter_list|,
-name|unsigned
-name|len
+name|ssize_t
+name|vlen
 parameter_list|)
 block|{
-if|if
-condition|(
-name|xo_style
-argument_list|(
-name|xop
-argument_list|)
-operator|!=
-name|XO_STYLE_TEXT
-operator|&&
-name|xo_style
-argument_list|(
-name|xop
-argument_list|)
-operator|!=
-name|XO_STYLE_HTML
-condition|)
-return|return;
 if|if
 condition|(
 name|XOIF_ISSET
@@ -22172,9 +23244,9 @@ name|xop
 argument_list|,
 name|xfip
 argument_list|,
-name|str
+name|value
 argument_list|,
-name|len
+name|vlen
 argument_list|)
 expr_stmt|;
 block|}
@@ -22196,29 +23268,12 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|str
+name|value
 parameter_list|,
-name|unsigned
-name|len
+name|ssize_t
+name|vlen
 parameter_list|)
 block|{
-if|if
-condition|(
-name|xo_style
-argument_list|(
-name|xop
-argument_list|)
-operator|!=
-name|XO_STYLE_TEXT
-operator|&&
-name|xo_style
-argument_list|(
-name|xop
-argument_list|)
-operator|!=
-name|XO_STYLE_HTML
-condition|)
-return|return;
 if|if
 condition|(
 operator|!
@@ -22246,7 +23301,7 @@ argument_list|,
 name|XOIF_UNITS_PENDING
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|width
 init|=
 name|xo_find_width
@@ -22255,9 +23310,9 @@ name|xop
 argument_list|,
 name|xfip
 argument_list|,
-name|str
+name|value
 argument_list|,
-name|len
+name|vlen
 argument_list|)
 decl_stmt|;
 if|if
@@ -22291,14 +23346,14 @@ name|xop
 operator|->
 name|xo_data
 decl_stmt|;
-name|int
+name|ssize_t
 name|start
 init|=
 name|xop
 operator|->
 name|xo_anchor_offset
 decl_stmt|;
-name|int
+name|ssize_t
 name|stop
 init|=
 name|xbp
@@ -22309,7 +23364,7 @@ name|xbp
 operator|->
 name|xb_bufp
 decl_stmt|;
-name|int
+name|ssize_t
 name|abswidth
 init|=
 operator|(
@@ -22323,7 +23378,7 @@ else|:
 operator|-
 name|width
 decl_stmt|;
-name|int
+name|ssize_t
 name|blen
 init|=
 name|abswidth
@@ -22410,7 +23465,7 @@ comment|/* Already left justified */
 goto|goto
 name|done
 goto|;
-name|int
+name|ssize_t
 name|now
 init|=
 name|xbp
@@ -22421,7 +23476,7 @@ name|xbp
 operator|->
 name|xb_bufp
 decl_stmt|;
-name|int
+name|ssize_t
 name|delta
 init|=
 name|now
@@ -23231,7 +24286,7 @@ operator|==
 literal|','
 condition|)
 break|break;
-name|int
+name|ssize_t
 name|slen
 init|=
 name|np
@@ -24305,7 +25360,7 @@ name|format
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|ssize_t
 name|flen
 init|=
 literal|0
@@ -25152,6 +26207,9 @@ name|xfip
 operator|->
 name|xfi_ftype
 argument_list|,
+operator|(
+name|int
+operator|)
 name|xfip
 operator|->
 name|xfi_clen
@@ -25163,6 +26221,9 @@ condition|?
 else|:
 literal|""
 argument_list|,
+operator|(
+name|int
+operator|)
 name|xfip
 operator|->
 name|xfi_flen
@@ -25174,6 +26235,9 @@ condition|?
 else|:
 literal|""
 argument_list|,
+operator|(
+name|int
+operator|)
 name|xfip
 operator|->
 name|xfi_elen
@@ -25938,12 +27002,6 @@ condition|)
 goto|goto
 name|bail2
 goto|;
-name|xo_buf_cleanup
-argument_list|(
-operator|&
-name|xb
-argument_list|)
-expr_stmt|;
 name|char
 modifier|*
 name|new_fmt
@@ -25965,6 +27023,12 @@ condition|)
 goto|goto
 name|bail2
 goto|;
+name|xo_buf_cleanup
+argument_list|(
+operator|&
+name|xb
+argument_list|)
+expr_stmt|;
 operator|*
 name|new_fmtp
 operator|=
@@ -26007,14 +27071,14 @@ name|xo_field_info_t
 modifier|*
 name|fields
 parameter_list|,
-name|unsigned
+name|ssize_t
 modifier|*
 name|fstart
 parameter_list|,
 name|unsigned
 name|min_fstart
 parameter_list|,
-name|unsigned
+name|ssize_t
 modifier|*
 name|fend
 parameter_list|,
@@ -26030,7 +27094,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|base
 init|=
 name|fstart
@@ -26038,7 +27102,7 @@ index|[
 name|min_fstart
 index|]
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|blen
 init|=
 name|fend
@@ -26102,15 +27166,16 @@ name|field
 init|=
 name|min_fstart
 decl_stmt|,
+name|len
+decl_stmt|,
+name|fnum
+decl_stmt|;
+name|ssize_t
 name|soff
 decl_stmt|,
 name|doff
 init|=
 name|base
-decl_stmt|,
-name|len
-decl_stmt|,
-name|fnum
 decl_stmt|;
 name|xo_field_info_t
 modifier|*
@@ -26342,7 +27407,7 @@ modifier|*
 name|fields
 name|UNUSED
 parameter_list|,
-name|unsigned
+name|ssize_t
 modifier|*
 name|fstart
 name|UNUSED
@@ -26351,7 +27416,7 @@ name|unsigned
 name|min_fstart
 name|UNUSED
 parameter_list|,
-name|unsigned
+name|ssize_t
 modifier|*
 name|fend
 name|UNUSED
@@ -26380,7 +27445,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_do_emit_fields
 parameter_list|(
 name|xo_handle_t
@@ -26434,7 +27499,7 @@ decl_stmt|;
 name|unsigned
 name|field
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -26507,7 +27572,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Highest recorded fend[] entry */
-name|unsigned
+name|ssize_t
 name|fstart
 index|[
 name|flimit
@@ -26528,7 +27593,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|unsigned
+name|ssize_t
 name|fend
 index|[
 name|flimit
@@ -26559,13 +27624,13 @@ name|field
 operator|=
 literal|0
 init|;
-name|xfip
-operator|->
-name|xfi_ftype
-operator|&&
 name|field
 operator|<
 name|max_fields
+operator|&&
+name|xfip
+operator|->
+name|xfi_ftype
 condition|;
 name|xfip
 operator|++
@@ -26625,7 +27690,7 @@ name|xfip
 operator|->
 name|xfi_content
 decl_stmt|;
-name|int
+name|ssize_t
 name|clen
 init|=
 name|xfip
@@ -26789,7 +27854,7 @@ operator|&=
 operator|~
 name|XFF_WS
 expr_stmt|;
-comment|/* Block later handling of this */
+comment|/* Prevent later handling of this flag */
 block|}
 block|}
 if|if
@@ -26805,6 +27870,10 @@ argument_list|,
 name|content
 argument_list|,
 name|clen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|xfip
 operator|->
@@ -26972,7 +28041,7 @@ operator|=
 name|max_fields
 expr_stmt|;
 comment|/* Leave a blank slot at the beginning */
-name|int
+name|ssize_t
 name|sz
 init|=
 operator|(
@@ -27419,9 +28488,6 @@ operator|)
 condition|?
 name|rc
 else|:
-operator|(
-name|int
-operator|)
 name|xop
 operator|->
 name|xo_columns
@@ -27778,7 +28844,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_hv
 parameter_list|(
 name|xo_handle_t
@@ -27794,7 +28860,7 @@ name|va_list
 name|vap
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -27853,7 +28919,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_h
 parameter_list|(
 name|xo_handle_t
@@ -27868,7 +28934,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -27927,7 +28993,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit
 parameter_list|(
 specifier|const
@@ -27947,7 +29013,7 @@ argument_list|(
 name|NULL
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_start
@@ -27999,7 +29065,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_hvf
 parameter_list|(
 name|xo_handle_t
@@ -28018,7 +29084,7 @@ name|va_list
 name|vap
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -28077,7 +29143,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_hf
 parameter_list|(
 name|xo_handle_t
@@ -28095,7 +29161,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -28154,7 +29220,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_f
 parameter_list|(
 name|xo_emit_flags_t
@@ -28177,7 +29243,7 @@ argument_list|(
 name|NULL
 argument_list|)
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_start
@@ -28233,7 +29299,7 @@ comment|/*  * Emit a single field by providing the info information typically pr
 end_comment
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_field_hv
 parameter_list|(
 name|xo_handle_t
@@ -28264,7 +29330,7 @@ name|va_list
 name|vap
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -28463,7 +29529,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_field_h
 parameter_list|(
 name|xo_handle_t
@@ -28493,7 +29559,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -28535,7 +29601,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_emit_field
 parameter_list|(
 specifier|const
@@ -28561,7 +29627,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -28603,7 +29669,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_attr_hv
 parameter_list|(
 name|xo_handle_t
@@ -28625,7 +29691,7 @@ name|vap
 parameter_list|)
 block|{
 specifier|const
-name|int
+name|ssize_t
 name|extra
 init|=
 literal|5
@@ -28638,12 +29704,12 @@ argument_list|(
 name|xop
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|nlen
 init|=
 name|strlen
@@ -28660,7 +29726,7 @@ name|xop
 operator|->
 name|xo_attrs
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|name_offset
 decl_stmt|,
 name|value_offset
@@ -28896,6 +29962,8 @@ name|xbp
 argument_list|,
 name|value_offset
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -28907,7 +29975,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_attr_h
 parameter_list|(
 name|xo_handle_t
@@ -28927,7 +29995,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -28965,7 +30033,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_attr
 parameter_list|(
 specifier|const
@@ -28981,7 +30049,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|va_list
@@ -29276,6 +30344,12 @@ decl_stmt|;
 if|if
 condition|(
 name|top
+operator|!=
+name|NULL
+operator|&&
+name|name
+operator|!=
+name|NULL
 operator|&&
 name|strcmp
 argument_list|(
@@ -29465,7 +30539,7 @@ specifier|static
 name|xo_xsf_flags_t
 name|xo_stack_flags
 parameter_list|(
-name|unsigned
+name|xo_xof_flags_t
 name|xflags
 parameter_list|)
 block|{
@@ -29568,7 +30642,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_do_open_container
 parameter_list|(
 name|xo_handle_t
@@ -29584,7 +30658,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -29859,6 +30933,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -29921,7 +30997,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_container_h
 parameter_list|(
 name|xo_handle_t
@@ -29948,7 +31024,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_container
 parameter_list|(
 specifier|const
@@ -29971,7 +31047,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_container_hd
 parameter_list|(
 name|xo_handle_t
@@ -29998,7 +31074,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_container_d
 parameter_list|(
 specifier|const
@@ -30042,7 +31118,7 @@ argument_list|(
 name|xop
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -30102,7 +31178,7 @@ condition|(
 name|name
 condition|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -30349,6 +31425,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -30360,7 +31438,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_container_h
 parameter_list|(
 name|xo_handle_t
@@ -30389,7 +31467,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_container
 parameter_list|(
 specifier|const
@@ -30410,7 +31488,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_container_hd
 parameter_list|(
 name|xo_handle_t
@@ -30430,7 +31508,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_container_d
 parameter_list|(
 name|void
@@ -30465,7 +31543,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -30647,6 +31725,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -30711,7 +31791,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_list_h
 parameter_list|(
 name|xo_handle_t
@@ -30738,7 +31818,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_list
 parameter_list|(
 specifier|const
@@ -30761,7 +31841,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_list_hd
 parameter_list|(
 name|xo_handle_t
@@ -30788,7 +31868,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_list_d
 parameter_list|(
 specifier|const
@@ -30825,7 +31905,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -30869,7 +31949,7 @@ condition|(
 name|name
 condition|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -31060,6 +32140,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -31102,7 +32184,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_list_h
 parameter_list|(
 name|xo_handle_t
@@ -31131,7 +32213,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_list
 parameter_list|(
 specifier|const
@@ -31152,7 +32234,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_list_hd
 parameter_list|(
 name|xo_handle_t
@@ -31172,7 +32254,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_list_d
 parameter_list|(
 name|void
@@ -31207,7 +32289,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -31411,6 +32493,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -31456,7 +32540,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -31500,7 +32584,7 @@ condition|(
 name|name
 condition|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -31675,6 +32759,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -31741,7 +32827,7 @@ argument_list|(
 name|xop
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -31988,6 +33074,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -32050,7 +33138,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_instance_h
 parameter_list|(
 name|xo_handle_t
@@ -32077,7 +33165,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_instance
 parameter_list|(
 specifier|const
@@ -32100,7 +33188,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_instance_hd
 parameter_list|(
 name|xo_handle_t
@@ -32127,7 +33215,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_instance_d
 parameter_list|(
 specifier|const
@@ -32171,7 +33259,7 @@ argument_list|(
 name|xop
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -32231,7 +33319,7 @@ condition|(
 name|name
 condition|)
 block|{
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -32462,6 +33550,8 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -32473,7 +33563,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_instance_h
 parameter_list|(
 name|xo_handle_t
@@ -32502,7 +33592,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_instance
 parameter_list|(
 specifier|const
@@ -32523,7 +33613,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_instance_hd
 parameter_list|(
 name|xo_handle_t
@@ -32543,7 +33633,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_instance_d
 parameter_list|(
 name|void
@@ -32578,7 +33668,7 @@ name|xo_stack_t
 modifier|*
 name|xsp
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 init|=
 literal|0
@@ -32781,7 +33871,7 @@ name|limit
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xo_state_t
@@ -33015,7 +34105,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|xo_transition
 parameter_list|(
 name|xo_handle_t
@@ -33038,8 +34128,10 @@ name|xo_stack_t
 modifier|*
 name|xsp
 decl_stmt|;
-name|int
+name|ssize_t
 name|rc
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|old_state
@@ -33052,10 +34144,6 @@ name|xo_default
 argument_list|(
 name|xop
 argument_list|)
-expr_stmt|;
-name|rc
-operator|=
-literal|0
 expr_stmt|;
 name|xsp
 operator|=
@@ -34185,7 +35273,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_marker_h
 parameter_list|(
 name|xo_handle_t
@@ -34238,7 +35326,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_open_marker
 parameter_list|(
 specifier|const
@@ -34259,7 +35347,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_marker_h
 parameter_list|(
 name|xo_handle_t
@@ -34293,7 +35381,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_close_marker
 parameter_list|(
 specifier|const
@@ -34396,7 +35484,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_flush_h
 parameter_list|(
 name|xo_handle_t
@@ -34404,7 +35492,7 @@ modifier|*
 name|xop
 parameter_list|)
 block|{
-name|int
+name|ssize_t
 name|rc
 decl_stmt|;
 name|xop
@@ -34434,6 +35522,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -34478,7 +35568,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_flush
 parameter_list|(
 name|void
@@ -34494,7 +35584,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_finish_h
 parameter_list|(
 name|xo_handle_t
@@ -34609,6 +35699,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -34623,7 +35715,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|xo_ssize_t
 name|xo_finish
 parameter_list|(
 name|void
@@ -34689,7 +35781,7 @@ name|xop
 argument_list|)
 expr_stmt|;
 comment|/*      * If the format string doesn't end with a newline, we pop      * one on ourselves.      */
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
@@ -34797,6 +35889,10 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
 name|fmt
 argument_list|,
 name|strlen
@@ -34880,6 +35976,10 @@ argument_list|,
 literal|"message"
 argument_list|,
 literal|7
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|fmt
 argument_list|,
@@ -35082,6 +36182,15 @@ name|cp
 operator|+
 literal|1
 expr_stmt|;
+name|xo_handle_t
+modifier|*
+name|xop
+init|=
+name|xo_default
+argument_list|(
+name|NULL
+argument_list|)
+decl_stmt|;
 for|for
 control|(
 name|save
@@ -35200,7 +36309,7 @@ if|if
 condition|(
 name|xo_set_options
 argument_list|(
-name|NULL
+name|xop
 argument_list|,
 name|cp
 argument_list|)
@@ -35225,7 +36334,7 @@ if|if
 condition|(
 name|xo_set_options
 argument_list|(
-name|NULL
+name|xop
 argument_list|,
 name|cp
 argument_list|)
@@ -35250,7 +36359,7 @@ if|if
 condition|(
 name|xo_set_options
 argument_list|(
-name|NULL
+name|xop
 argument_list|,
 operator|++
 name|cp
@@ -35330,6 +36439,28 @@ literal|1
 return|;
 block|}
 block|}
+comment|/*      * We only want to do color output on terminals, but we only want      * to do this if the user has asked for color.      */
+if|if
+condition|(
+name|XOF_ISSET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR_ALLOWED
+argument_list|)
+operator|&&
+name|isatty
+argument_list|(
+literal|1
+argument_list|)
+condition|)
+name|XOF_SET
+argument_list|(
+name|xop
+argument_list|,
+name|XOF_COLOR
+argument_list|)
+expr_stmt|;
 name|argv
 index|[
 name|save
@@ -35519,7 +36650,7 @@ name|xo_attr_h
 argument_list|(
 name|xop
 argument_list|,
-literal|"__version"
+literal|"version"
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -35556,6 +36687,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|version
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -35771,6 +36904,10 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -35799,7 +36936,7 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-name|int
+name|ssize_t
 name|len
 init|=
 name|strlen
