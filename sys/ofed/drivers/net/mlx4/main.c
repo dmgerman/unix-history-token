@@ -10191,7 +10191,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|s64
 name|mlx4_read_clock
 parameter_list|(
 name|struct
@@ -10207,7 +10207,7 @@ name|clocklo
 decl_stmt|,
 name|clockhi1
 decl_stmt|;
-name|cycle_t
+name|s64
 name|cycles
 decl_stmt|;
 name|int
@@ -10310,6 +10310,8 @@ name|clocklo
 expr_stmt|;
 return|return
 name|cycles
+operator|&
+name|CORE_CLOCK_MASK
 return|;
 block|}
 end_function
