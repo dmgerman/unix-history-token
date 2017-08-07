@@ -83,9 +83,6 @@ name|struct
 name|callout
 name|callout
 decl_stmt|;
-name|uint32_t
-name|flags
-decl_stmt|;
 block|}
 struct|;
 end_struct
