@@ -952,7 +952,7 @@ name|kvp_ip_val
 operator|.
 name|adapter_id
 argument_list|,
-name|MAX_IP_ADDR_SIZE
+name|MAX_ADAPTER_ID_SIZE
 argument_list|,
 operator|(
 name|char
