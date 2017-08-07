@@ -4425,6 +4425,9 @@ break|break;
 case|case
 name|IB_CM_REQ_SENT
 case|:
+case|case
+name|IB_CM_MRA_REQ_RCVD
+case|:
 name|ib_cancel_mad
 argument_list|(
 name|cm_id_priv
@@ -4531,9 +4534,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-case|case
-name|IB_CM_MRA_REQ_RCVD
-case|:
 case|case
 name|IB_CM_REP_SENT
 case|:
