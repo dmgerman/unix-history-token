@@ -6304,11 +6304,14 @@ name|sc_active
 operator|.
 name|jj_queue
 expr_stmt|;
-name|pbp
-operator|=
+name|GJQ_LAST
+argument_list|(
 name|sc
 operator|->
 name|sc_flush_queue
+argument_list|,
+name|pbp
+argument_list|)
 expr_stmt|;
 name|fbp
 operator|=

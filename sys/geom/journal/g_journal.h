@@ -464,6 +464,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|GJQ_LAST
+parameter_list|(
+name|head
+parameter_list|,
+name|bp
+parameter_list|)
+value|do {						\ 	struct bio *_bp;						\ 									\ 	if ((head) == NULL) {						\ 		(bp) = (head);						\ 		break;							\ 	}								\ 	for (_bp = (head); _bp->bio_next != NULL; _bp = _bp->bio_next)	\ 		continue;						\ 	(bp) = (_bp);							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GJQ_FIRST
 parameter_list|(
 name|head
