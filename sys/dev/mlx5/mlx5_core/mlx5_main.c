@@ -4227,6 +4227,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|mlx5_wait_for_reclaim_vfs_pages
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|free_comp_eqs
 argument_list|(
 name|dev
