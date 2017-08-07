@@ -6085,7 +6085,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|s64
 name|mlx4_read_clock
 parameter_list|(
 name|struct
