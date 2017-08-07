@@ -5260,23 +5260,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|mlx4_set_stats_bitmap
-parameter_list|(
-name|struct
-name|mlx4_dev
-modifier|*
-name|dev
-parameter_list|,
-name|unsigned
-name|long
-modifier|*
-name|stats_bitmap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|mlx4_SET_PORT_general
 parameter_list|(
