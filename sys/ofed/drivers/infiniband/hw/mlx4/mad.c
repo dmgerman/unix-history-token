@@ -5389,6 +5389,10 @@ argument_list|(
 literal|1
 argument_list|)
 index|]
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 decl_stmt|;
 name|union
 name|mlx4_counter
