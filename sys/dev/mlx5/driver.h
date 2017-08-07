@@ -2358,6 +2358,9 @@ decl_stmt|;
 name|u16
 name|op
 decl_stmt|;
+name|u8
+name|busy
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2724,6 +2727,18 @@ name|rtn
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|mlx5_enter_error_state
+parameter_list|(
+name|struct
+name|mlx5_core_dev
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -3612,6 +3627,18 @@ name|dev
 parameter_list|,
 name|u32
 name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mlx5_trigger_cmd_completions
+parameter_list|(
+name|struct
+name|mlx5_core_dev
+modifier|*
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
