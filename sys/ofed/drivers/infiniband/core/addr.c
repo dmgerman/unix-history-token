@@ -800,10 +800,10 @@ name|long
 name|time
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|int
 name|delay
 decl_stmt|;
+comment|/* under FreeBSD ticks are 32-bit */
 name|delay
 operator|=
 name|time
@@ -812,9 +812,6 @@ name|jiffies
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|long
-operator|)
 name|delay
 operator|<=
 literal|0
