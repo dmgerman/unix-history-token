@@ -206,6 +206,10 @@ name|ABD_FLAG_LINEAR
 operator|)
 operator|!=
 literal|0
+condition|?
+name|B_TRUE
+else|:
+name|B_FALSE
 operator|)
 return|;
 block|}
