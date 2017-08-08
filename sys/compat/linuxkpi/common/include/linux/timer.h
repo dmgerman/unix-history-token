@@ -80,6 +80,13 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|TIMER_IRQSAFE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
 name|setup_timer
 parameter_list|(
 name|timer
@@ -88,8 +95,23 @@ name|func
 parameter_list|,
 name|dat
 parameter_list|)
-define|\
-value|do {									\ 	(timer)->function = (func);					\ 	(timer)->data = (dat);						\ 	callout_init(&(timer)->timer_callout, 1);			\ } while (0)
+value|do {				\ 	(timer)->function = (func);					\ 	(timer)->data = (dat);						\ 	callout_init(&(timer)->timer_callout, 1);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__setup_timer
+parameter_list|(
+name|timer
+parameter_list|,
+name|func
+parameter_list|,
+name|dat
+parameter_list|,
+name|flags
+parameter_list|)
+value|do {			\ 	CTASSERT(((flags)& ~TIMER_IRQSAFE) == 0);			\ 	setup_timer(timer, func, dat);					\ } while (0)
 end_define
 
 begin_define
@@ -99,8 +121,7 @@ name|init_timer
 parameter_list|(
 name|timer
 parameter_list|)
-define|\
-value|do {									\ 	(timer)->function = NULL;					\ 	(timer)->data = 0;						\ 	callout_init(&(timer)->timer_callout, 1);			\ } while (0)
+value|do {						\ 	(timer)->function = NULL;					\ 	(timer)->data = 0;						\ 	callout_init(&(timer)->timer_callout, 1);			\ } while (0)
 end_define
 
 begin_function_decl
@@ -193,8 +214,27 @@ name|round_jiffies_relative
 parameter_list|(
 name|j
 parameter_list|)
-define|\
 value|round_jiffies(j)
+end_define
+
+begin_define
+define|#
+directive|define
+name|round_jiffies_up
+parameter_list|(
+name|j
+parameter_list|)
+value|round_jiffies(j)
+end_define
+
+begin_define
+define|#
+directive|define
+name|round_jiffies_up_relative
+parameter_list|(
+name|j
+parameter_list|)
+value|round_jiffies_up(j)
 end_define
 
 begin_endif
