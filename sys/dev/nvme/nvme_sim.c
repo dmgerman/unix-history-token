@@ -1036,9 +1036,10 @@ name|NULL
 decl_stmt|;
 name|max_trans
 operator|=
-literal|256
+name|ctrlr
+operator|->
+name|num_io_queues
 expr_stmt|;
-comment|/* XXX not so simple -- must match queues */
 name|unit
 operator|=
 name|device_get_unit
