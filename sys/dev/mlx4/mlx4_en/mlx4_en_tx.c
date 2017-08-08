@@ -4458,10 +4458,8 @@ name|packets
 operator|+=
 name|num_pkts
 expr_stmt|;
-name|priv
+name|ring
 operator|->
-name|port_stats
-operator|.
 name|tso_packets
 operator|++
 expr_stmt|;
@@ -4550,40 +4548,6 @@ argument_list|,
 name|ihs
 argument_list|)
 expr_stmt|;
-comment|/* trim off empty mbufs */
-while|while
-condition|(
-name|mb
-operator|->
-name|m_len
-operator|==
-literal|0
-condition|)
-block|{
-name|mb
-operator|=
-name|m_free
-argument_list|(
-name|mb
-argument_list|)
-expr_stmt|;
-comment|/* check if all data has been inlined */
-if|if
-condition|(
-name|mb
-operator|==
-name|NULL
-condition|)
-block|{
-name|nr_segs
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|skip_dma
-goto|;
-block|}
-block|}
 name|err
 operator|=
 name|bus_dmamap_load_mbuf_sg
@@ -4617,6 +4581,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* Too many mbuf fragments */
+name|ring
+operator|->
+name|defrag_attempts
+operator|++
+expr_stmt|;
 name|m
 operator|=
 name|m_defrag
@@ -4690,6 +4659,14 @@ goto|goto
 name|tx_drop
 goto|;
 block|}
+comment|/* If there were no errors and we didn't load anything, don't sync. */
+if|if
+condition|(
+name|nr_segs
+operator|!=
+literal|0
+condition|)
+block|{
 comment|/* make sure all mbuf data is written to RAM */
 name|bus_dmamap_sync
 argument_list|(
@@ -4704,8 +4681,31 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-name|skip_dma
-label|:
+block|}
+else|else
+block|{
+comment|/* All data was inlined, free the mbuf. */
+name|bus_dmamap_unload
+argument_list|(
+name|ring
+operator|->
+name|dma_tag
+argument_list|,
+name|tx_info
+operator|->
+name|dma_map
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|mb
+argument_list|)
+expr_stmt|;
+name|mb
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* compute number of DS needed */
 name|ds_cnt
 operator|=

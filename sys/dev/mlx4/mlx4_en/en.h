@@ -1118,6 +1118,14 @@ name|unsigned
 name|long
 name|wake_queue
 decl_stmt|;
+name|unsigned
+name|long
+name|tso_packets
+decl_stmt|;
+name|unsigned
+name|long
+name|defrag_attempts
+decl_stmt|;
 name|struct
 name|mlx4_bf
 name|bf

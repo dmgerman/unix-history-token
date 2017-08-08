@@ -14278,6 +14278,28 @@ argument_list|,
 literal|"TX checksum offloads"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|node_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"defrag_attempts"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|priv
+operator|->
+name|port_stats
+operator|.
+name|defrag_attempts
+argument_list|,
+literal|"Oversized chains defragged"
+argument_list|)
+expr_stmt|;
 comment|/* Could strdup the names and add in a loop.  This is simpler. */
 name|SYSCTL_ADD_ULONG
 argument_list|(
@@ -15174,6 +15196,46 @@ operator|->
 name|bytes
 argument_list|,
 literal|"TX bytes"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|ring_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tso_packets"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tx_ring
+operator|->
+name|tso_packets
+argument_list|,
+literal|"TSO packets"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|ring_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"defrag_attempts"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tx_ring
+operator|->
+name|defrag_attempts
+argument_list|,
+literal|"Oversized chains defragged"
 argument_list|)
 expr_stmt|;
 block|}
