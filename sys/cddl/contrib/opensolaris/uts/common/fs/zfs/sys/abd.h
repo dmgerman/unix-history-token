@@ -538,6 +538,7 @@ name|abd_t
 modifier|*
 name|abd
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buf
@@ -594,6 +595,7 @@ name|abd_t
 modifier|*
 name|abd
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|buf
