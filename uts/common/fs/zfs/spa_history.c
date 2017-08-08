@@ -2751,7 +2751,7 @@ name|operation
 argument_list|,
 name|NULL
 argument_list|,
-literal|"pool version %llu; software version %llu/%d; uts %s %s %s %s"
+literal|"pool version %llu; software version %llu/%llu; uts %s %s %s %s"
 argument_list|,
 operator|(
 name|u_longlong_t
