@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_macro.c,v 1.210 2017/01/10 13:47:00 schwarze Exp $ */
+comment|/*	$Id: mdoc_macro.c,v 1.224 2017/05/30 16:22:03 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008-2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012-2016 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008-2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012-2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -235,7 +235,8 @@ name|struct
 name|roff_man
 modifier|*
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 parameter_list|,
 name|int
 parameter_list|,
@@ -284,6 +285,22 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|break_intermediate
+parameter_list|(
+name|struct
+name|roff_node
+modifier|*
+parameter_list|,
+name|struct
+name|roff_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|parse_rest
 parameter_list|(
@@ -291,7 +308,8 @@ name|struct
 name|roff_man
 modifier|*
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 parameter_list|,
 name|int
 parameter_list|,
@@ -306,10 +324,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|enum
+name|roff_tok
 name|rew_alt
 parameter_list|(
-name|int
+name|enum
+name|roff_tok
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -323,7 +343,8 @@ name|struct
 name|roff_man
 modifier|*
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -369,20 +390,11 @@ name|mdoc_macro
 name|__mdoc_macros
 index|[
 name|MDOC_MAX
+operator|-
+name|MDOC_Dd
 index|]
 init|=
 block|{
-block|{
-name|in_line_argn
-block|,
-name|MDOC_CALLABLE
-operator||
-name|MDOC_PARSED
-operator||
-name|MDOC_JOIN
-block|}
-block|,
-comment|/* Ap */
 block|{
 name|in_line_eoln
 block|,
@@ -508,6 +520,19 @@ name|MDOC_JOIN
 block|}
 block|,
 comment|/* An */
+block|{
+name|in_line_argn
+block|,
+name|MDOC_CALLABLE
+operator||
+name|MDOC_PARSED
+operator||
+name|MDOC_IGNDELIM
+operator||
+name|MDOC_JOIN
+block|}
+block|,
+comment|/* Ap */
 block|{
 name|in_line
 block|,
@@ -1494,20 +1519,6 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* br */
-block|{
-name|in_line_eoln
-block|,
-literal|0
-block|}
-block|,
-comment|/* sp */
-block|{
-name|in_line_eoln
-block|,
-literal|0
-block|}
-block|,
 comment|/* %U */
 block|{
 name|phrase_ta
@@ -1520,13 +1531,6 @@ name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ta */
-block|{
-name|in_line_eoln
-block|,
-name|MDOC_PROLOGUE
-block|}
-block|,
-comment|/* ll */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1540,6 +1544,8 @@ specifier|const
 name|mdoc_macros
 init|=
 name|__mdoc_macros
+operator|-
+name|MDOC_Dd
 decl_stmt|;
 end_decl_stmt
 
@@ -1629,7 +1635,7 @@ name|n
 operator|->
 name|pos
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -1684,7 +1690,8 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
+name|enum
+name|roff_tok
 name|res
 decl_stmt|;
 if|if
@@ -1725,9 +1732,15 @@ condition|)
 block|{
 name|res
 operator|=
-name|mdoc_hash_find
+name|roffhash_find
 argument_list|(
+name|mdoc
+operator|->
+name|mdocmac
+argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1751,20 +1764,6 @@ condition|)
 return|return
 name|res
 return|;
-if|if
-condition|(
-name|res
-operator|!=
-name|MDOC_br
-operator|&&
-name|res
-operator|!=
-name|MDOC_sp
-operator|&&
-name|res
-operator|!=
-name|MDOC_ll
-condition|)
 name|mandoc_msg
 argument_list|(
 name|MANDOCERR_MACRO_CALL
@@ -2040,10 +2039,12 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|enum
+name|roff_tok
 name|rew_alt
 parameter_list|(
-name|int
+name|enum
+name|roff_tok
 name|tok
 parameter_list|)
 block|{
@@ -2166,7 +2167,8 @@ name|roff_man
 modifier|*
 name|mdoc
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 name|tok
 parameter_list|)
 block|{
@@ -2223,6 +2225,94 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|break_intermediate
+parameter_list|(
+name|struct
+name|roff_node
+modifier|*
+name|n
+parameter_list|,
+name|struct
+name|roff_node
+modifier|*
+name|breaker
+parameter_list|)
+block|{
+if|if
+condition|(
+name|n
+operator|!=
+name|breaker
+operator|&&
+name|n
+operator|->
+name|type
+operator|!=
+name|ROFFT_BLOCK
+operator|&&
+name|n
+operator|->
+name|type
+operator|!=
+name|ROFFT_HEAD
+operator|&&
+operator|(
+name|n
+operator|->
+name|type
+operator|!=
+name|ROFFT_BODY
+operator|||
+name|n
+operator|->
+name|end
+operator|!=
+name|ENDBODY_NOT
+operator|)
+condition|)
+name|n
+operator|=
+name|n
+operator|->
+name|parent
+expr_stmt|;
+while|while
+condition|(
+name|n
+operator|!=
+name|breaker
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|n
+operator|->
+name|flags
+operator|&
+name|NODE_VALID
+operator|)
+condition|)
+name|n
+operator|->
+name|flags
+operator||=
+name|NODE_BROKEN
+expr_stmt|;
+name|n
+operator|=
+name|n
+operator|->
+name|parent
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/*  * If there is an open sub-block of the target requiring  * explicit close-out, postpone closing out the target until  * the rew_pending() call closing out the sub-block.  */
 end_comment
@@ -2237,7 +2327,8 @@ name|roff_man
 modifier|*
 name|mdoc
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 name|tok
 parameter_list|,
 name|int
@@ -2260,6 +2351,17 @@ decl_stmt|;
 name|int
 name|irc
 decl_stmt|;
+if|if
+condition|(
+name|target
+operator|->
+name|flags
+operator|&
+name|NODE_VALID
+condition|)
+return|return
+literal|0
+return|;
 name|irc
 operator|=
 literal|0
@@ -2295,26 +2397,7 @@ name|flags
 operator|&
 name|NODE_ENDED
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|n
-operator|->
-name|flags
-operator|&
-name|NODE_VALID
-operator|)
-condition|)
-name|n
-operator|->
-name|flags
-operator||=
-name|NODE_BROKEN
-expr_stmt|;
 continue|continue;
-block|}
 if|if
 condition|(
 name|n
@@ -2339,11 +2422,14 @@ name|irc
 operator|=
 literal|1
 expr_stmt|;
-name|n
+name|break_intermediate
+argument_list|(
+name|mdoc
 operator|->
-name|flags
-operator|=
-name|NODE_BROKEN
+name|last
+argument_list|,
+name|target
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2356,7 +2442,7 @@ condition|)
 name|target
 operator|->
 name|flags
-operator|=
+operator||=
 name|NODE_ENDED
 expr_stmt|;
 elseif|else
@@ -2386,12 +2472,12 @@ name|ppos
 argument_list|,
 literal|"%s breaks %s"
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|tok
 index|]
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -2410,8 +2496,6 @@ argument_list|,
 name|tok
 argument_list|,
 name|target
-argument_list|,
-name|ENDBODY_NOSPACE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2815,6 +2899,10 @@ else|else
 block|{
 if|if
 condition|(
+name|tok
+operator|!=
+name|TOKEN_NONE
+operator|&&
 name|mdoc_macros
 index|[
 name|tok
@@ -2933,7 +3021,8 @@ name|enum
 name|margserr
 name|ac
 decl_stmt|;
-name|int
+name|enum
+name|roff_tok
 name|atok
 decl_stmt|,
 name|ntok
@@ -3077,27 +3166,8 @@ name|flags
 operator|&
 name|NODE_ENDED
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|n
-operator|->
-name|flags
-operator|&
-name|NODE_VALID
-operator|)
-condition|)
-name|n
-operator|->
-name|flags
-operator||=
-name|NODE_BROKEN
-expr_stmt|;
 continue|continue;
-block|}
-comment|/* 		 * Mismatching end macros can never break anything, 		 * SYNOPSIS name blocks can never be broken, 		 * and we only care about the breaking of BLOCKs. 		 */
+comment|/* 		 * Mismatching end macros can never break anything 		 * and we only care about the breaking of BLOCKs. 		 */
 if|if
 condition|(
 name|body
@@ -3106,17 +3176,37 @@ name|NULL
 operator|||
 name|n
 operator|->
-name|tok
-operator|==
-name|MDOC_Nm
-operator|||
-name|n
-operator|->
 name|type
 operator|!=
 name|ROFFT_BLOCK
 condition|)
 continue|continue;
+comment|/* 		 * SYNOPSIS name blocks can not be broken themselves, 		 * but they do get broken together with a broken child. 		 */
+if|if
+condition|(
+name|n
+operator|->
+name|tok
+operator|==
+name|MDOC_Nm
+condition|)
+block|{
+if|if
+condition|(
+name|later
+operator|!=
+name|NULL
+condition|)
+name|n
+operator|->
+name|flags
+operator||=
+name|NODE_BROKEN
+operator||
+name|NODE_ENDED
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|n
@@ -3141,11 +3231,6 @@ operator|->
 name|tok
 condition|)
 block|{
-name|assert
-argument_list|(
-name|body
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Found the start of our own block. 			 * When there is no pending sub block, 			 * just proceed to closing out. 			 */
 if|if
 condition|(
@@ -3179,12 +3264,12 @@ name|ppos
 argument_list|,
 literal|"%s breaks %s"
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|atok
 index|]
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|later
 operator|->
@@ -3205,8 +3290,6 @@ argument_list|,
 name|atok
 argument_list|,
 name|body
-argument_list|,
-name|ENDBODY_SPACE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3236,7 +3319,7 @@ name|ROFF_NEXT_CHILD
 expr_stmt|;
 break|break;
 block|}
-comment|/* Explicit blocks close out description lines. */
+comment|/* 		 * Explicit blocks close out description lines, but 		 * even those can get broken together with a child. 		 */
 if|if
 condition|(
 name|n
@@ -3246,6 +3329,21 @@ operator|==
 name|MDOC_Nd
 condition|)
 block|{
+if|if
+condition|(
+name|later
+operator|!=
+name|NULL
+condition|)
+name|n
+operator|->
+name|flags
+operator||=
+name|NODE_BROKEN
+operator||
+name|NODE_ENDED
+expr_stmt|;
+else|else
 name|rew_last
 argument_list|(
 name|mdoc
@@ -3256,6 +3354,15 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* Breaking an open sub block. */
+name|break_intermediate
+argument_list|(
+name|mdoc
+operator|->
+name|last
+argument_list|,
+name|body
+argument_list|)
+expr_stmt|;
 name|n
 operator|->
 name|flags
@@ -3292,7 +3399,7 @@ name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -3316,14 +3423,14 @@ name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|MDOC_br
+name|ROFF_br
 argument_list|)
 expr_stmt|;
 name|rew_elem
 argument_list|(
 name|mdoc
 argument_list|,
-name|MDOC_br
+name|ROFF_br
 argument_list|)
 expr_stmt|;
 block|}
@@ -3398,7 +3505,7 @@ name|ppos
 argument_list|,
 literal|"%s %s"
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -3506,12 +3613,6 @@ condition|)
 break|break;
 name|ntok
 operator|=
-name|ac
-operator|==
-name|ARGS_QWORD
-condition|?
-name|TOKEN_NONE
-else|:
 name|lookup
 argument_list|(
 name|mdoc
@@ -3600,6 +3701,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|pending
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ntok
@@ -3652,11 +3757,6 @@ name|target
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|pending
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3711,7 +3811,8 @@ name|nc
 decl_stmt|,
 name|nl
 decl_stmt|;
-name|int
+name|enum
+name|roff_tok
 name|ntok
 decl_stmt|;
 name|enum
@@ -3897,18 +3998,12 @@ block|}
 name|ntok
 operator|=
 operator|(
-name|ac
-operator|==
-name|ARGS_QWORD
-operator|||
-operator|(
 name|tok
 operator|==
 name|MDOC_Fn
 operator|&&
 operator|!
 name|cnt
-operator|)
 operator|)
 condition|?
 name|TOKEN_NONE
@@ -4003,7 +4098,7 @@ name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -4042,25 +4137,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * Non-quote-enclosed punctuation.  Set up our scope, if 		 * a word; rewind the scope, if a delimiter; then append 		 * the word. 		 */
+comment|/* 		 * Handle punctuation.  Set up our scope, if a word; 		 * rewind the scope, if a delimiter; then append the word. 		 */
+if|if
+condition|(
+operator|(
 name|d
 operator|=
-name|ac
-operator|==
-name|ARGS_QWORD
-condition|?
-name|DELIM_NONE
-else|:
 name|mdoc_isdelim
 argument_list|(
 name|p
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DELIM_NONE
+operator|)
 operator|!=
-name|d
+name|DELIM_NONE
 condition|)
 block|{
 comment|/* 			 * If we encounter closing punctuation, no word 			 * has been emitted, no scope is open, and we're 			 * allowed to have an empty element, then start 			 * a new scope. 			 */
@@ -4128,7 +4217,12 @@ comment|/* 			 * Close out our scope, if one is open, before 			 * any punctuati
 if|if
 condition|(
 name|scope
+operator|&&
+name|tok
+operator|!=
+name|MDOC_Lk
 condition|)
+block|{
 name|rew_elem
 argument_list|(
 name|mdoc
@@ -4150,6 +4244,7 @@ name|mayopen
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -4193,14 +4288,14 @@ name|p
 argument_list|,
 name|d
 argument_list|,
-name|MDOC_JOIN
-operator|&
 name|mdoc_macros
 index|[
 name|tok
 index|]
 operator|.
 name|flags
+operator|&
+name|MDOC_JOIN
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If the first argument is a closing delimiter, 		 * do not suppress spacing before it. 		 */
@@ -4254,7 +4349,12 @@ block|}
 if|if
 condition|(
 name|scope
+operator|&&
+name|tok
+operator|!=
+name|MDOC_Lk
 condition|)
+block|{
 name|rew_elem
 argument_list|(
 name|mdoc
@@ -4262,6 +4362,11 @@ argument_list|,
 name|tok
 argument_list|)
 expr_stmt|;
+name|scope
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 * If no elements have been collected and we're allowed to have 	 * empties (nc), open a scope and close it out.  Otherwise, 	 * raise a warning. 	 */
 if|if
 condition|(
@@ -4316,7 +4421,7 @@ name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -4337,6 +4442,17 @@ argument_list|,
 name|pos
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|scope
+condition|)
+name|rew_elem
+argument_list|(
+name|mdoc
+argument_list|,
+name|tok
 argument_list|)
 expr_stmt|;
 block|}
@@ -4436,7 +4552,7 @@ name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -4554,7 +4670,7 @@ name|ppos
 argument_list|,
 literal|"It breaks %s"
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|blk
 operator|->
@@ -4611,12 +4727,12 @@ name|ppos
 argument_list|,
 literal|"%s breaks %s"
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|tok
 index|]
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -4716,7 +4832,7 @@ name|ppos
 argument_list|,
 literal|"It breaks %s"
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|blk
 operator|->
@@ -4737,7 +4853,7 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* Close out prior implicit scopes. */
-name|rew_last
+name|rew_pending
 argument_list|(
 name|mdoc
 argument_list|,
@@ -4793,14 +4909,14 @@ name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|MDOC_br
+name|ROFF_br
 argument_list|)
 expr_stmt|;
 name|rew_elem
 argument_list|(
 name|mdoc
 argument_list|,
-name|MDOC_br
+name|ROFF_br
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5078,7 +5194,7 @@ name|la
 argument_list|,
 literal|"%s ... %s"
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -5135,10 +5251,6 @@ operator|&&
 name|ac
 operator|!=
 name|ARGS_PHRASE
-operator|&&
-name|ac
-operator|!=
-name|ARGS_QWORD
 operator|&&
 name|mdoc_isdelim
 argument_list|(
@@ -5550,10 +5662,6 @@ name|body
 operator|==
 name|NULL
 operator|&&
-name|ac
-operator|!=
-name|ARGS_QWORD
-operator|&&
 name|mdoc_isdelim
 argument_list|(
 name|p
@@ -5824,10 +5932,6 @@ name|head
 operator|==
 name|NULL
 operator|&&
-name|ac
-operator|!=
-name|ARGS_QWORD
-operator|&&
 name|mdoc_isdelim
 argument_list|(
 name|p
@@ -6017,7 +6121,8 @@ name|enum
 name|margserr
 name|ac
 decl_stmt|;
-name|int
+name|enum
+name|roff_tok
 name|ntok
 decl_stmt|;
 name|int
@@ -6292,11 +6397,6 @@ block|}
 name|ntok
 operator|=
 operator|(
-name|ac
-operator|==
-name|ARGS_QWORD
-operator|||
-operator|(
 name|tok
 operator|==
 name|MDOC_Pf
@@ -6304,7 +6404,6 @@ operator|&&
 name|state
 operator|==
 literal|0
-operator|)
 operator|)
 condition|?
 name|TOKEN_NONE
@@ -6368,10 +6467,6 @@ break|break;
 block|}
 if|if
 condition|(
-name|ac
-operator|==
-name|ARGS_QWORD
-operator|||
 name|mdoc_macros
 index|[
 name|tok
@@ -6459,14 +6554,14 @@ name|p
 argument_list|,
 name|DELIM_MAX
 argument_list|,
-name|MDOC_JOIN
-operator|&
 name|mdoc_macros
 index|[
 name|tok
 index|]
 operator|.
 name|flags
+operator|&
+name|MDOC_JOIN
 argument_list|)
 expr_stmt|;
 block|}
@@ -6490,7 +6585,7 @@ name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -6643,12 +6738,10 @@ name|tok
 operator|==
 name|MDOC_Fd
 operator|||
-name|mdoc_macronames
+operator|*
+name|roff_name
 index|[
 name|tok
-index|]
-index|[
-literal|0
 index|]
 operator|==
 literal|'%'
@@ -6667,7 +6760,7 @@ name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|mdoc_macronames
+name|roff_name
 index|[
 name|tok
 index|]
@@ -6744,7 +6837,8 @@ name|roff_man
 modifier|*
 name|mdoc
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 name|tok
 parameter_list|,
 name|int

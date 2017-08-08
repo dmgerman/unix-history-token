@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term_ps.c,v 1.82 2016/08/10 11:03:43 schwarze Exp $ */
+comment|/*	$Id: term_ps.c,v 1.85 2017/06/07 17:38:26 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015, 2016 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015, 2016, 2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -508,7 +508,7 @@ function_decl|__attribute__
 parameter_list|(
 function_decl|(__format__
 parameter_list|(
-name|printf
+name|__printf__
 parameter_list|,
 function_decl|2
 operator|,
@@ -2285,10 +2285,37 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|termp
+operator|*
+name|p
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|tcol
+operator|=
+name|p
+operator|->
+name|tcols
+operator|=
+name|mandoc_calloc
+argument_list|(
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|p
+operator|->
+name|tcol
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|maxtcol
+operator|=
+literal|1
 expr_stmt|;
 name|p
 operator|->
@@ -2314,8 +2341,10 @@ operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|enum
-name|termfont
+operator|*
+name|p
+operator|->
+name|fontq
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2342,8 +2371,10 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|termp_ps
+operator|*
+name|p
+operator|->
+name|ps
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5572,6 +5603,22 @@ name|ps_closepage
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|tcol
+operator|->
+name|offset
+operator|-=
+name|p
+operator|->
+name|ti
+expr_stmt|;
+name|p
+operator|->
+name|ti
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

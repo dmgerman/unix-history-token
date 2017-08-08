@@ -23,7 +23,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*	$Id: compat_fts.c,v 1.12 2016/10/18 23:58:12 schwarze Exp $	*/
+comment|/*	$Id: compat_fts.c,v 1.14 2017/02/18 12:24:24 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -246,24 +246,6 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|O_DIRECTORY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|O_DIRECTORY
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|O_CLOEXEC
 end_ifndef
 
@@ -272,24 +254,6 @@ define|#
 directive|define
 name|O_CLOEXEC
 value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PATH_MAX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PATH_MAX
-value|4096
 end_define
 
 begin_endif
@@ -378,7 +342,7 @@ modifier|*
 name|parent
 decl_stmt|,
 modifier|*
-name|tmp
+name|prev
 decl_stmt|;
 comment|/* Options check. */
 if|if
@@ -507,6 +471,8 @@ for|for
 control|(
 name|root
 operator|=
+name|prev
+operator|=
 name|NULL
 operator|,
 name|nitems
@@ -625,25 +591,21 @@ name|root
 operator|==
 name|NULL
 condition|)
-name|tmp
-operator|=
 name|root
 operator|=
 name|p
 expr_stmt|;
 else|else
-block|{
-name|tmp
+name|prev
 operator|->
 name|fts_link
 operator|=
 name|p
 expr_stmt|;
-name|tmp
+name|prev
 operator|=
 name|p
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if

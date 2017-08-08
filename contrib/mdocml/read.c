@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: read.c,v 1.157 2017/01/09 01:37:03 schwarze Exp $ */
+comment|/*	$Id: read.c,v 1.192 2017/07/20 14:36:36 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -43,23 +43,6 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|HAVE_ERR
-end_if
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -76,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
 end_include
 
 begin_include
@@ -150,12 +127,6 @@ directive|include
 file|"libmandoc.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"roff_int.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -168,17 +139,17 @@ struct|struct
 name|mparse
 block|{
 name|struct
-name|roff_man
-modifier|*
-name|man
-decl_stmt|;
-comment|/* man parser */
-name|struct
 name|roff
 modifier|*
 name|roff
 decl_stmt|;
 comment|/* roff parser (!NULL) */
+name|struct
+name|roff_man
+modifier|*
+name|man
+decl_stmt|;
+comment|/* man parser */
 name|char
 modifier|*
 name|sodest
@@ -205,7 +176,7 @@ comment|/* preprocessed copy of input */
 specifier|const
 name|char
 modifier|*
-name|defos
+name|os_s
 decl_stmt|;
 comment|/* default operating system */
 name|mandocmsg
@@ -218,8 +189,8 @@ name|file_status
 decl_stmt|;
 comment|/* status of current parse */
 name|enum
-name|mandoclevel
-name|wlevel
+name|mandocerr
+name|mmin
 decl_stmt|;
 comment|/* ignore messages below this */
 name|int
@@ -274,7 +245,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mparse_buf_r
 parameter_list|(
 name|struct
@@ -360,7 +331,7 @@ init|=
 block|{
 name|MANDOCERR_OK
 block|,
-name|MANDOCERR_WARNING
+name|MANDOCERR_OK
 block|,
 name|MANDOCERR_WARNING
 block|,
@@ -389,14 +360,60 @@ init|=
 block|{
 literal|"ok"
 block|,
+literal|"base system convention"
+block|,
+literal|"Mdocdate found"
+block|,
+literal|"Mdocdate missing"
+block|,
+literal|"unknown architecture"
+block|,
+literal|"operating system explicitly specified"
+block|,
+literal|"RCS id missing"
+block|,
+literal|"referenced manual not found"
+block|,
+literal|"generic style suggestion"
+block|,
+literal|"legacy man(7) date format"
+block|,
+literal|"lower case character in document title"
+block|,
+literal|"duplicate RCS id"
+block|,
+literal|"typo in section name"
+block|,
+literal|"unterminated quoted argument"
+block|,
+literal|"useless macro"
+block|,
+literal|"consider using OS macro"
+block|,
+literal|"errnos out of order"
+block|,
+literal|"duplicate errno"
+block|,
+literal|"trailing delimiter"
+block|,
+literal|"no blank before trailing delimiter"
+block|,
+literal|"fill mode already enabled, skipping"
+block|,
+literal|"fill mode already disabled, skipping"
+block|,
+literal|"function name without markup"
+block|,
+literal|"whitespace at end of input line"
+block|,
+literal|"bad comment style"
+block|,
 literal|"generic warning"
 block|,
 comment|/* related to the prologue */
 literal|"missing manual title, using UNTITLED"
 block|,
 literal|"missing manual title, using \"\""
-block|,
-literal|"lower case character in document title"
 block|,
 literal|"missing manual section, using \"\""
 block|,
@@ -406,13 +423,11 @@ literal|"missing date, using today's date"
 block|,
 literal|"cannot parse date, using it verbatim"
 block|,
+literal|"date in the future, using it anyway"
+block|,
 literal|"missing Os macro, using \"\""
 block|,
-literal|"duplicate prologue macro"
-block|,
 literal|"late prologue macro"
-block|,
-literal|"skipping late title macro"
 block|,
 literal|"prologue macros out of order"
 block|,
@@ -437,11 +452,15 @@ literal|"missing comma before name"
 block|,
 literal|"missing description line, using \"\""
 block|,
+literal|"description line outside NAME section"
+block|,
 literal|"sections out of conventional order"
 block|,
 literal|"duplicate section title"
 block|,
 literal|"unexpected section"
+block|,
+literal|"cross reference to self"
 block|,
 literal|"unusual Xr order"
 block|,
@@ -466,11 +485,11 @@ literal|"nested displays are not portable"
 block|,
 literal|"moving content out of list"
 block|,
-literal|"fill mode already enabled, skipping"
-block|,
-literal|"fill mode already disabled, skipping"
+literal|"first macro on line"
 block|,
 literal|"line scope broken"
+block|,
+literal|"skipping blank line in line scope"
 block|,
 comment|/* related to missing macro arguments */
 literal|"skipping empty request"
@@ -497,6 +516,8 @@ literal|"empty head in list item"
 block|,
 literal|"empty list item"
 block|,
+literal|"missing argument, using next line"
+block|,
 literal|"missing font type, using \\fR"
 block|,
 literal|"unknown font type, using \\fR"
@@ -516,8 +537,6 @@ block|,
 literal|"missing eqn box, using \"\""
 block|,
 comment|/* related to bad macro arguments */
-literal|"unterminated quoted argument"
-block|,
 literal|"duplicate argument"
 block|,
 literal|"skipping duplicate argument"
@@ -536,6 +555,8 @@ literal|"comma in function argument"
 block|,
 literal|"parenthesis in function name"
 block|,
+literal|"unknown library name"
+block|,
 literal|"invalid content in Rs block"
 block|,
 literal|"invalid Boolean argument"
@@ -549,9 +570,7 @@ literal|"blank line in fill mode, using .sp"
 block|,
 literal|"tab in filled text"
 block|,
-literal|"whitespace at end of input line"
-block|,
-literal|"bad comment style"
+literal|"new sentence, new line"
 block|,
 literal|"invalid escape sequence"
 block|,
@@ -592,6 +611,10 @@ block|,
 comment|/* related to document structure and macros */
 name|NULL
 block|,
+literal|"duplicate prologue macro"
+block|,
+literal|"skipping late title macro"
+block|,
 literal|"input stack limit exceeded, infinite loop?"
 block|,
 literal|"skipping bad character"
@@ -620,6 +643,8 @@ block|,
 literal|"skipping display without arguments"
 block|,
 literal|"missing list type, using -item"
+block|,
+literal|"argument is not numeric, using 1"
 block|,
 literal|"missing manual name, using \"\""
 block|,
@@ -670,7 +695,7 @@ init|=
 block|{
 literal|"SUCCESS"
 block|,
-literal|"RESERVED"
+literal|"STYLE"
 block|,
 literal|"WARNING"
 block|,
@@ -895,9 +920,6 @@ operator|==
 name|MPARSE_MDOC
 condition|)
 block|{
-name|mdoc_hash_init
-argument_list|()
-expr_stmt|;
 name|curp
 operator|->
 name|man
@@ -906,22 +928,32 @@ name|macroset
 operator|=
 name|MACROSET_MDOC
 expr_stmt|;
+if|if
+condition|(
 name|curp
 operator|->
 name|man
 operator|->
-name|first
+name|mdocmac
+operator|==
+name|NULL
+condition|)
+name|curp
 operator|->
-name|tok
+name|man
+operator|->
+name|mdocmac
 operator|=
-name|TOKEN_NONE
+name|roffhash_alloc
+argument_list|(
+name|MDOC_Dd
+argument_list|,
+name|MDOC_MAX
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|man_hash_init
-argument_list|()
-expr_stmt|;
 name|curp
 operator|->
 name|man
@@ -930,6 +962,30 @@ name|macroset
 operator|=
 name|MACROSET_MAN
 expr_stmt|;
+if|if
+condition|(
+name|curp
+operator|->
+name|man
+operator|->
+name|manmac
+operator|==
+name|NULL
+condition|)
+name|curp
+operator|->
+name|man
+operator|->
+name|manmac
+operator|=
+name|roffhash_alloc
+argument_list|(
+name|MAN_TH
+argument_list|,
+name|MAN_MAX
+argument_list|)
+expr_stmt|;
+block|}
 name|curp
 operator|->
 name|man
@@ -940,7 +996,6 @@ name|tok
 operator|=
 name|TOKEN_NONE
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -950,7 +1005,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mparse_buf_r
 parameter_list|(
 name|struct
@@ -969,12 +1024,6 @@ name|int
 name|start
 parameter_list|)
 block|{
-specifier|const
-name|struct
-name|tbl_span
-modifier|*
-name|span
-decl_stmt|;
 name|struct
 name|buf
 name|ln
@@ -992,10 +1041,6 @@ name|size_t
 name|pos
 decl_stmt|;
 comment|/* byte number in the ln buffer */
-name|size_t
-name|j
-decl_stmt|;
-comment|/* auxiliary byte number in the blk buffer */
 name|enum
 name|rofferr
 name|rr
@@ -1355,352 +1400,6 @@ literal|'?'
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Trailing backslash = a plain char. */
-if|if
-condition|(
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-index|]
-operator|!=
-literal|'\\'
-operator|||
-name|i
-operator|+
-literal|1
-operator|==
-name|blk
-operator|.
-name|sz
-condition|)
-block|{
-name|ln
-operator|.
-name|buf
-index|[
-name|pos
-operator|++
-index|]
-operator|=
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-operator|++
-index|]
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* 			 * Found escape and at least one other character. 			 * When it's a newline character, skip it. 			 * When there is a carriage return in between, 			 * skip that one as well. 			 */
-if|if
-condition|(
-literal|'\r'
-operator|==
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|&&
-name|i
-operator|+
-literal|2
-operator|<
-name|blk
-operator|.
-name|sz
-operator|&&
-literal|'\n'
-operator|==
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-operator|+
-literal|2
-index|]
-condition|)
-operator|++
-name|i
-expr_stmt|;
-if|if
-condition|(
-literal|'\n'
-operator|==
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-operator|+
-literal|1
-index|]
-condition|)
-block|{
-name|i
-operator|+=
-literal|2
-expr_stmt|;
-operator|++
-name|lnn
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-literal|'"'
-operator|==
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|||
-literal|'#'
-operator|==
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-operator|+
-literal|1
-index|]
-condition|)
-block|{
-name|j
-operator|=
-name|i
-expr_stmt|;
-name|i
-operator|+=
-literal|2
-expr_stmt|;
-comment|/* Comment, skip to end of line */
-for|for
-control|(
-init|;
-name|i
-operator|<
-name|blk
-operator|.
-name|sz
-condition|;
-operator|++
-name|i
-control|)
-block|{
-if|if
-condition|(
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-index|]
-operator|!=
-literal|'\n'
-condition|)
-continue|continue;
-if|if
-condition|(
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|==
-literal|' '
-operator|||
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|==
-literal|'\t'
-condition|)
-name|mandoc_msg
-argument_list|(
-name|MANDOCERR_SPACE_EOL
-argument_list|,
-name|curp
-argument_list|,
-name|curp
-operator|->
-name|line
-argument_list|,
-name|pos
-operator|+
-name|i
-operator|-
-literal|1
-operator|-
-name|j
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-operator|++
-name|i
-expr_stmt|;
-operator|++
-name|lnn
-expr_stmt|;
-break|break;
-block|}
-comment|/* Backout trailing whitespaces */
-for|for
-control|(
-init|;
-name|pos
-operator|>
-literal|0
-condition|;
-operator|--
-name|pos
-control|)
-block|{
-if|if
-condition|(
-name|ln
-operator|.
-name|buf
-index|[
-name|pos
-operator|-
-literal|1
-index|]
-operator|!=
-literal|' '
-condition|)
-break|break;
-if|if
-condition|(
-name|pos
-operator|>
-literal|2
-operator|&&
-name|ln
-operator|.
-name|buf
-index|[
-name|pos
-operator|-
-literal|2
-index|]
-operator|==
-literal|'\\'
-condition|)
-break|break;
-block|}
-break|break;
-block|}
-comment|/* Catch escaped bogus characters. */
-name|c
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|)
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-operator|+
-literal|1
-index|]
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|isascii
-argument_list|(
-name|c
-argument_list|)
-operator|&&
-operator|(
-name|isgraph
-argument_list|(
-name|c
-argument_list|)
-operator|||
-name|isblank
-argument_list|(
-name|c
-argument_list|)
-operator|)
-operator|)
-condition|)
-block|{
-name|mandoc_vmsg
-argument_list|(
-name|MANDOCERR_CHAR_BAD
-argument_list|,
-name|curp
-argument_list|,
-name|curp
-operator|->
-name|line
-argument_list|,
-name|pos
-argument_list|,
-literal|"0x%x"
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-name|i
-operator|+=
-literal|2
-expr_stmt|;
-name|ln
-operator|.
-name|buf
-index|[
-name|pos
-operator|++
-index|]
-operator|=
-literal|'?'
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* Some other escape sequence, copy& cont. */
-name|ln
-operator|.
-name|buf
-index|[
-name|pos
-operator|++
-index|]
-operator|=
-name|blk
-operator|.
-name|buf
-index|[
-name|i
-operator|++
-index|]
-expr_stmt|;
 name|ln
 operator|.
 name|buf
@@ -1721,6 +1420,8 @@ block|}
 if|if
 condition|(
 name|pos
+operator|+
+literal|1
 operator|>=
 name|ln
 operator|.
@@ -1733,6 +1434,33 @@ name|ln
 argument_list|,
 literal|256
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|blk
+operator|.
+name|sz
+operator|||
+name|blk
+operator|.
+name|buf
+index|[
+name|i
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|ln
+operator|.
+name|buf
+index|[
+name|pos
+operator|++
+index|]
+operator|=
+literal|'\n'
 expr_stmt|;
 name|ln
 operator|.
@@ -1879,25 +1607,13 @@ name|ROFF_REPARSE
 case|:
 if|if
 condition|(
-name|REPARSE_LIMIT
-operator|>=
 operator|++
 name|curp
 operator|->
 name|reparse_count
+operator|>
+name|REPARSE_LIMIT
 condition|)
-name|mparse_buf_r
-argument_list|(
-name|curp
-argument_list|,
-name|ln
-argument_list|,
-name|of
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|else
 name|mandoc_msg
 argument_list|(
 name|MANDOCERR_ROFFLOOP
@@ -1913,11 +1629,43 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|mparse_buf_r
+argument_list|(
+name|curp
+argument_list|,
+name|ln
+argument_list|,
+name|of
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|1
+operator|||
+name|start
+operator|==
+literal|1
+condition|)
+block|{
 name|pos
 operator|=
 literal|0
 expr_stmt|;
 continue|continue;
+block|}
+name|free
+argument_list|(
+name|ln
+operator|.
+name|buf
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 case|case
 name|ROFF_APPEND
 case|:
@@ -1997,7 +1745,9 @@ operator|.
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 comment|/* 			 * We remove `so' clauses from our lookaside 			 * buffer because we're going to descend into 			 * the file recursively. 			 */
 if|if
@@ -2167,59 +1917,6 @@ argument_list|(
 name|curp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Lastly, push down into the parsers themselves. 		 * If libroff returns ROFF_TBL, then add it to the 		 * currently open parse.  Since we only get here if 		 * there does exist data (see tbl_data.c), we're 		 * guaranteed that something's been allocated. 		 * Do the same for ROFF_EQN. 		 */
-if|if
-condition|(
-name|rr
-operator|==
-name|ROFF_TBL
-condition|)
-while|while
-condition|(
-operator|(
-name|span
-operator|=
-name|roff_span
-argument_list|(
-name|curp
-operator|->
-name|roff
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|roff_addtbl
-argument_list|(
-name|curp
-operator|->
-name|man
-argument_list|,
-name|span
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|rr
-operator|==
-name|ROFF_EQN
-condition|)
-name|roff_addeqn
-argument_list|(
-name|curp
-operator|->
-name|man
-argument_list|,
-name|roff_eqn
-argument_list|(
-name|curp
-operator|->
-name|roff
-argument_list|)
-argument_list|)
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 operator|(
@@ -2299,6 +1996,9 @@ operator|.
 name|buf
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2330,6 +2030,10 @@ modifier|*
 name|with_mmap
 parameter_list|)
 block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
 name|gzFile
 name|gz
 decl_stmt|;
@@ -2338,10 +2042,6 @@ name|off
 decl_stmt|;
 name|ssize_t
 name|ssz
-decl_stmt|;
-name|struct
-name|stat
-name|st
 decl_stmt|;
 if|if
 condition|(
@@ -2356,18 +2056,29 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|mandoc_vmsg
 argument_list|(
-operator|(
-name|int
-operator|)
-name|MANDOCLEVEL_SYSERR
+name|MANDOCERR_FILE
 argument_list|,
-literal|"%s"
+name|curp
 argument_list|,
-name|file
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"fstat: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/* 	 * If we're a regular file, try just reading in the whole entry 	 * via mmap().  This is faster than reading it into blocks, and 	 * since each file is only a few bytes to begin with, I'm not 	 * concerned that this is going to tank any machines. 	 */
 if|if
 condition|(
@@ -2482,18 +2193,29 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+block|{
+name|mandoc_vmsg
 argument_list|(
-operator|(
-name|int
-operator|)
-name|MANDOCLEVEL_SYSERR
+name|MANDOCERR_FILE
 argument_list|,
-literal|"%s"
+name|curp
 argument_list|,
-name|file
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"gzdopen: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 else|else
 name|gz
@@ -2643,18 +2365,27 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|mandoc_vmsg
 argument_list|(
-operator|(
-name|int
-operator|)
-name|MANDOCLEVEL_SYSERR
+name|MANDOCERR_FILE
 argument_list|,
-literal|"%s"
+name|curp
 argument_list|,
-name|file
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"read: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|off
 operator|+=
 operator|(
@@ -3289,16 +3020,20 @@ name|int
 name|options
 parameter_list|,
 name|enum
-name|mandoclevel
-name|wlevel
+name|mandocerr
+name|mmin
 parameter_list|,
 name|mandocmsg
 name|mmsg
 parameter_list|,
+name|enum
+name|mandoc_os
+name|os_e
+parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|defos
+name|os_s
 parameter_list|)
 block|{
 name|struct
@@ -3327,9 +3062,9 @@ name|options
 expr_stmt|;
 name|curp
 operator|->
-name|wlevel
+name|mmin
 operator|=
-name|wlevel
+name|mmin
 expr_stmt|;
 name|curp
 operator|->
@@ -3339,9 +3074,9 @@ name|mmsg
 expr_stmt|;
 name|curp
 operator|->
-name|defos
+name|os_s
 operator|=
-name|defos
+name|os_s
 expr_stmt|;
 name|curp
 operator|->
@@ -3368,7 +3103,7 @@ name|curp
 argument_list|,
 name|curp
 operator|->
-name|defos
+name|os_s
 argument_list|,
 name|curp
 operator|->
@@ -3390,9 +3125,6 @@ operator|&
 name|MPARSE_MDOC
 condition|)
 block|{
-name|mdoc_hash_init
-argument_list|()
-expr_stmt|;
 name|curp
 operator|->
 name|man
@@ -3400,6 +3132,29 @@ operator|->
 name|macroset
 operator|=
 name|MACROSET_MDOC
+expr_stmt|;
+if|if
+condition|(
+name|curp
+operator|->
+name|man
+operator|->
+name|mdocmac
+operator|==
+name|NULL
+condition|)
+name|curp
+operator|->
+name|man
+operator|->
+name|mdocmac
+operator|=
+name|roffhash_alloc
+argument_list|(
+name|MDOC_Dd
+argument_list|,
+name|MDOC_MAX
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -3412,9 +3167,6 @@ operator|&
 name|MPARSE_MAN
 condition|)
 block|{
-name|man_hash_init
-argument_list|()
-expr_stmt|;
 name|curp
 operator|->
 name|man
@@ -3422,6 +3174,29 @@ operator|->
 name|macroset
 operator|=
 name|MACROSET_MAN
+expr_stmt|;
+if|if
+condition|(
+name|curp
+operator|->
+name|man
+operator|->
+name|manmac
+operator|==
+name|NULL
+condition|)
+name|curp
+operator|->
+name|man
+operator|->
+name|manmac
+operator|=
+name|roffhash_alloc
+argument_list|(
+name|MAN_TH
+argument_list|,
+name|MAN_MAX
+argument_list|)
 expr_stmt|;
 block|}
 name|curp
@@ -3433,6 +3208,16 @@ operator|->
 name|tok
 operator|=
 name|TOKEN_NONE
+expr_stmt|;
+name|curp
+operator|->
+name|man
+operator|->
+name|meta
+operator|.
+name|os_e
+operator|=
+name|os_e
 expr_stmt|;
 return|return
 name|curp
@@ -3464,6 +3249,19 @@ operator|->
 name|man
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|curp
+operator|->
+name|sodest
+argument_list|)
+expr_stmt|;
+name|curp
+operator|->
+name|sodest
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|curp
@@ -3484,18 +3282,11 @@ name|file_status
 operator|=
 name|MANDOCLEVEL_OK
 expr_stmt|;
-name|free
-argument_list|(
 name|curp
 operator|->
-name|sodest
-argument_list|)
-expr_stmt|;
-name|curp
-operator|->
-name|sodest
+name|gzip
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -3510,6 +3301,24 @@ modifier|*
 name|curp
 parameter_list|)
 block|{
+name|roffhash_free
+argument_list|(
+name|curp
+operator|->
+name|man
+operator|->
+name|mdocmac
+argument_list|)
+expr_stmt|;
+name|roffhash_free
+argument_list|(
+name|curp
+operator|->
+name|man
+operator|->
+name|manmac
+argument_list|)
+expr_stmt|;
 name|roff_man_free
 argument_list|(
 name|curp
@@ -3517,12 +3326,6 @@ operator|->
 name|man
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|curp
-operator|->
-name|roff
-condition|)
 name|roff_free
 argument_list|(
 name|curp
@@ -3769,6 +3572,19 @@ name|enum
 name|mandoclevel
 name|level
 decl_stmt|;
+if|if
+condition|(
+name|er
+operator|<
+name|m
+operator|->
+name|mmin
+operator|&&
+name|er
+operator|!=
+name|MANDOCERR_FILE
+condition|)
+return|return;
 name|level
 operator|=
 name|MANDOCLEVEL_UNSUPP
@@ -3785,19 +3601,6 @@ condition|)
 name|level
 operator|--
 expr_stmt|;
-if|if
-condition|(
-name|level
-operator|<
-name|m
-operator|->
-name|wlevel
-operator|&&
-name|er
-operator|!=
-name|MANDOCERR_FILE
-condition|)
-return|return;
 if|if
 condition|(
 name|m

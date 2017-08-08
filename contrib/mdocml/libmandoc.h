@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmandoc.h,v 1.64 2016/07/19 13:36:13 schwarze Exp $ */
+comment|/*	$Id: libmandoc.h,v 1.70 2017/07/08 17:52:49 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, 2011, 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2009, 2010, 2011, 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014, 2015, 2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_enum
@@ -29,11 +29,6 @@ comment|/* include another file */
 name|ROFF_IGN
 block|,
 comment|/* ignore current line */
-name|ROFF_TBL
-block|,
-comment|/* a table row was successfully parsed */
-name|ROFF_EQN
-comment|/* an equation was successfully parsed */
 block|}
 enum|;
 end_enum
@@ -56,18 +51,6 @@ end_struct
 begin_struct_decl
 struct_decl|struct
 name|mparse
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|tbl_span
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|eqn
 struct_decl|;
 end_struct_decl
 
@@ -130,7 +113,7 @@ function_decl|__attribute__
 parameter_list|(
 function_decl|(__format__
 parameter_list|(
-name|printf
+name|__printf__
 parameter_list|,
 function_decl|5
 operator|,
@@ -169,7 +152,7 @@ modifier|*
 name|mandoc_normdate
 parameter_list|(
 name|struct
-name|mparse
+name|roff_man
 modifier|*
 parameter_list|,
 name|char
@@ -224,15 +207,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|mdoc_hash_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|mdoc_parseln
 parameter_list|(
@@ -257,15 +231,6 @@ parameter_list|(
 name|struct
 name|roff_man
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|man_hash_init
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -317,6 +282,7 @@ begin_function_decl
 name|int
 name|preconv_encode
 parameter_list|(
+specifier|const
 name|struct
 name|buf
 modifier|*
@@ -526,36 +492,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|roff_getformat
-parameter_list|(
-specifier|const
-name|struct
-name|roff
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|struct
-name|tbl_span
-modifier|*
-name|roff_span
-parameter_list|(
-specifier|const
-name|struct
-name|roff
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|struct
-name|eqn
-modifier|*
-name|roff_eqn
 parameter_list|(
 specifier|const
 name|struct

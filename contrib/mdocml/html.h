@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: html.h,v 1.78 2017/01/19 16:59:30 schwarze Exp $ */
+comment|/*	$Id: html.h,v 1.87 2017/07/08 14:51:04 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -37,7 +37,7 @@ name|TAG_A
 block|,
 name|TAG_TABLE
 block|,
-name|TAG_TBODY
+name|TAG_COLGROUP
 block|,
 name|TAG_COL
 block|,
@@ -59,6 +59,10 @@ name|TAG_DD
 block|,
 name|TAG_PRE
 block|,
+name|TAG_VAR
+block|,
+name|TAG_CITE
+block|,
 name|TAG_B
 block|,
 name|TAG_I
@@ -74,6 +78,8 @@ block|,
 name|TAG_MROW
 block|,
 name|TAG_MI
+block|,
+name|TAG_MN
 block|,
 name|TAG_MO
 block|,
@@ -137,19 +143,6 @@ decl_stmt|;
 name|enum
 name|htmltag
 name|tag
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|tagq
-block|{
-name|struct
-name|tag
-modifier|*
-name|head
 decl_stmt|;
 block|}
 struct|;
@@ -238,10 +231,11 @@ index|]
 decl_stmt|;
 comment|/* output buffer */
 name|struct
-name|tagq
-name|tags
+name|tag
+modifier|*
+name|tag
 decl_stmt|;
-comment|/* stack of open tags */
+comment|/* last open tag */
 name|struct
 name|rofftbl
 name|tbl
@@ -299,15 +293,37 @@ end_struct
 
 begin_struct_decl
 struct_decl|struct
+name|roff_node
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|tbl_span
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|eqn
+name|eqn_box
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|void
+name|roff_html_pre
+parameter_list|(
+name|struct
+name|html
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|roff_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -437,7 +453,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|eqn
+name|eqn_box
 modifier|*
 parameter_list|)
 function_decl|;
@@ -449,6 +465,30 @@ name|print_paragraph
 parameter_list|(
 name|struct
 name|html
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|print_endline
+parameter_list|(
+name|struct
+name|html
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|html_make_id
+parameter_list|(
+specifier|const
+name|struct
+name|roff_node
 modifier|*
 parameter_list|)
 function_decl|;

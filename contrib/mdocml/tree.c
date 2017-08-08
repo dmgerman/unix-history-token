@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tree.c,v 1.72 2017/01/12 17:29:33 schwarze Exp $ */
+comment|/*	$Id: tree.c,v 1.77 2017/07/08 14:51:05 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -555,7 +555,7 @@ name|ROFFT_BODY
 case|:
 name|p
 operator|=
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -568,7 +568,7 @@ name|ROFFT_HEAD
 case|:
 name|p
 operator|=
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -581,7 +581,7 @@ name|ROFFT_TAIL
 case|:
 name|p
 operator|=
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -594,7 +594,7 @@ name|ROFFT_ELEM
 case|:
 name|p
 operator|=
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -631,7 +631,7 @@ name|ROFFT_BLOCK
 case|:
 name|p
 operator|=
-name|mdoc_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -920,6 +920,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|NODE_BROKEN
+operator|&
+name|n
+operator|->
+name|flags
+condition|)
+name|printf
+argument_list|(
+literal|" BROKEN"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|NODE_NOSRC
 operator|&
 name|n
@@ -961,8 +974,6 @@ argument_list|(
 name|n
 operator|->
 name|eqn
-operator|->
-name|root
 operator|->
 name|first
 argument_list|,
@@ -1158,7 +1169,7 @@ name|ROFFT_BODY
 case|:
 name|p
 operator|=
-name|man_macronames
+name|roff_name
 index|[
 name|n
 operator|->
@@ -1307,8 +1318,6 @@ name|n
 operator|->
 name|eqn
 operator|->
-name|root
-operator|->
 name|first
 argument_list|,
 name|indent
@@ -1449,17 +1458,6 @@ operator|->
 name|type
 condition|)
 block|{
-case|case
-name|EQN_ROOT
-case|:
-name|t
-operator|=
-literal|"eqn-root"
-expr_stmt|;
-break|break;
-case|case
-name|EQN_LISTONE
-case|:
 case|case
 name|EQN_LIST
 case|:

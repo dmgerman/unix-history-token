@@ -1,17 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmdoc.h,v 1.108 2015/11/07 14:01:16 schwarze Exp $ */
+comment|/*	$Id: libmdoc.h,v 1.112 2017/05/30 16:22:03 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014, 2015, 2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MACRO_PROT_ARGS
-value|struct roff_man *mdoc, \ 			int tok, \ 			int line, \ 			int ppos, \ 			int *pos, \ 			char *buf
+value|struct roff_man *mdoc, \ 			enum roff_tok tok, \ 			int line, \ 			int ppos, \ 			int *pos, \ 			char *buf
 end_define
 
 begin_struct
@@ -73,9 +73,6 @@ comment|/* normal word */
 name|ARGS_PUNCT
 block|,
 comment|/* series of punctuation */
-name|ARGS_QWORD
-block|,
-comment|/* quoted word */
 name|ARGS_PHRASE
 comment|/* Bl -column phrase */
 block|}
@@ -137,7 +134,8 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 parameter_list|,
 name|struct
 name|mdoc_arg
@@ -160,7 +158,8 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 parameter_list|,
 name|struct
 name|mdoc_arg
@@ -181,7 +180,8 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -200,14 +200,12 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 parameter_list|,
 name|struct
 name|roff_node
 modifier|*
-parameter_list|,
-name|enum
-name|mdoc_endbody
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -259,17 +257,6 @@ name|mdoc_state_reset
 parameter_list|(
 name|struct
 name|roff_man
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mdoc_hash_find
-parameter_list|(
-specifier|const
-name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -349,7 +336,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 parameter_list|,
 name|struct
 name|mdoc_arg
@@ -382,7 +370,8 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|enum
+name|roff_tok
 parameter_list|,
 name|char
 modifier|*

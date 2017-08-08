@@ -75,11 +75,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|MAN_CONF_FILE
 value|"/etc/man.conf"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MANPATH_BASE
+value|"/usr/share/man"
 end_define
 
 begin_define
@@ -94,6 +107,13 @@ define|#
 directive|define
 name|UTF8_LOCALE
 value|"en_US.UTF-8"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_CMSG_XPG42
+value|0
 end_define
 
 begin_define
@@ -121,6 +141,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_FTS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_FTS_COMPARE_CONST
 value|1
 end_define
 
@@ -178,6 +205,13 @@ define|#
 directive|define
 name|HAVE_REALLOCARRAY
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_RECALLOCARRAY
+value|0
 end_define
 
 begin_define
@@ -281,13 +315,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_FTS_COMPARE_CONST
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|BINM_APROPOS
 value|"apropos"
 end_define
@@ -319,6 +346,24 @@ directive|define
 name|BINM_WHATIS
 value|"whatis"
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|recallocarray
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

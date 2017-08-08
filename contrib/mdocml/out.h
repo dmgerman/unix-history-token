@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: out.h,v 1.27 2015/11/07 14:01:16 schwarze Exp $ */
+comment|/*	$Id: out.h,v 1.31 2017/06/27 18:25:02 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_enum
@@ -58,6 +58,10 @@ name|size_t
 name|decimal
 decl_stmt|;
 comment|/* decimal position in cell */
+name|size_t
+name|spacing
+decl_stmt|;
+comment|/* spacing after the column */
 name|int
 name|flags
 decl_stmt|;
@@ -80,6 +84,25 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|size_t
+function_decl|(
+modifier|*
+name|tbl_sulen
+function_decl|)
+parameter_list|(
+specifier|const
+name|struct
+name|roffsu
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -119,6 +142,10 @@ begin_struct
 struct|struct
 name|rofftbl
 block|{
+name|tbl_sulen
+name|sulen
+decl_stmt|;
+comment|/* calculate scaling unit length */
 name|tbl_strlen
 name|slen
 decl_stmt|;
@@ -137,7 +164,7 @@ name|void
 modifier|*
 name|arg
 decl_stmt|;
-comment|/* passed to slen and len */
+comment|/* passed to sulen, slen, and len */
 block|}
 struct|;
 end_struct
@@ -179,7 +206,9 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|int
+specifier|const
+name|char
+modifier|*
 name|a2roffsu
 parameter_list|(
 specifier|const
@@ -209,6 +238,8 @@ specifier|const
 name|struct
 name|tbl_span
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|)
