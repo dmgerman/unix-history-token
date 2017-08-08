@@ -3000,16 +3000,17 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+operator|(
 name|cfgflags
-operator|>=
+operator|&
+operator|~
+literal|0x3
+operator|)
+operator|==
 literal|0
-operator|||
-name|cfgflags
-operator|<=
-literal|3
 argument_list|,
 operator|(
-literal|"[p4,%d] illegal cfgflags cfg=%d on cpu=%d ri=%d"
+literal|"[p4,%d] illegal cfgflags cfg=%#x on cpu=%d ri=%d"
 operator|,
 name|__LINE__
 operator|,
@@ -3120,16 +3121,17 @@ expr_stmt|;
 block|}
 name|KASSERT
 argument_list|(
+operator|(
 name|cfgflags
-operator|>=
+operator|&
+operator|~
+literal|0x3
+operator|)
+operator|==
 literal|0
-operator|||
-name|cfgflags
-operator|<=
-literal|3
 argument_list|,
 operator|(
-literal|"[p4,%d] illegal runcount cfg=%d on cpu=%d ri=%d"
+literal|"[p4,%d] illegal runcount cfg=%#x on cpu=%d ri=%d"
 operator|,
 name|__LINE__
 operator|,
