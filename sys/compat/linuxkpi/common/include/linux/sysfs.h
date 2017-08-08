@@ -145,7 +145,27 @@ name|__ATTR_RO
 parameter_list|(
 name|_name
 parameter_list|)
-value|{						\ 	.attr = { .name = __stringify(_name), .mode = 0444 },		\ 	.show   = _name##_show,						\ }
+value|__ATTR(_name, 0444, _name##_show, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ATTR_WO
+parameter_list|(
+name|_name
+parameter_list|)
+value|__ATTR(_name, 0200, NULL, _name##_store)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ATTR_RW
+parameter_list|(
+name|_name
+parameter_list|)
+value|__ATTR(_name, 0644, _name##_show, _name##_store)
 end_define
 
 begin_define
@@ -153,6 +173,17 @@ define|#
 directive|define
 name|__ATTR_NULL
 value|{ .attr = { .name = NULL } }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_GROUPS
+parameter_list|(
+name|_name
+parameter_list|)
+define|\
+value|static struct attribute_group _name##_group = {			\ 		.attrs = _name##_attrs,					\ 	};								\ 	static struct attribute_group *_name##_groups[] = {		\&_name##_group,						\ 		NULL,							\ 	};
 end_define
 
 begin_comment
