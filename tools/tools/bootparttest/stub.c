@@ -86,7 +86,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|pager_output
 parameter_list|(
 specifier|const
@@ -102,6 +102,11 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
