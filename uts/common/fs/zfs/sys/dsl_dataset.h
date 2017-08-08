@@ -1306,6 +1306,11 @@ name|char
 modifier|*
 name|fsname
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|tosnap
+parameter_list|,
 name|void
 modifier|*
 name|owner
