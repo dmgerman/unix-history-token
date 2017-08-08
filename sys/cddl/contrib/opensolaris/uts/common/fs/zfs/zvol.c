@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Copyright (c) 2006-2010 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Portions Copyright 2010 Robert Milkowski  *  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Copyright (c) 2006-2010 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Portions Copyright 2010 Robert Milkowski  *  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -6156,15 +6156,6 @@ operator|->
 name|lr_length
 decl_stmt|;
 comment|/* length of user data */
-name|blkptr_t
-modifier|*
-name|bp
-init|=
-operator|&
-name|lr
-operator|->
-name|lr_blkptr
-decl_stmt|;
 name|dmu_buf_t
 modifier|*
 name|db
@@ -6299,33 +6290,13 @@ condition|)
 block|{
 name|blkptr_t
 modifier|*
-name|obp
+name|bp
 init|=
-name|dmu_buf_get_blkptr
-argument_list|(
-name|db
-argument_list|)
+operator|&
+name|lr
+operator|->
+name|lr_blkptr
 decl_stmt|;
-if|if
-condition|(
-name|obp
-condition|)
-block|{
-name|ASSERT
-argument_list|(
-name|BP_IS_HOLE
-argument_list|(
-name|bp
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|*
-name|bp
-operator|=
-operator|*
-name|obp
-expr_stmt|;
-block|}
 name|zgd
 operator|->
 name|zgd_db
