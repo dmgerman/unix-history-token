@@ -4061,6 +4061,11 @@ name|t_free
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
 block|}
 name|xo_emit
 argument_list|(
