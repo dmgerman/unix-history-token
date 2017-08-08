@@ -158,22 +158,6 @@ parameter_list|)
 value|(((num)& ((num) - 1)) == 0)
 end_define
 
-begin_function_decl
-specifier|static
-name|void
-name|badsb
-parameter_list|(
-name|int
-name|listerr
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Read in a superblock finding an alternate if necessary.  * Return 1 if successful, 0 if unsuccessful, -1 if file system  * is already clean (ckclean and preen mode only).  */
 end_comment
