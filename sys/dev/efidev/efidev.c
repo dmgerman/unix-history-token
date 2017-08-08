@@ -79,13 +79,6 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|d_open_t
-name|efidev_open
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_ioctl_t
 name|efidev_ioctl
 decl_stmt|;
@@ -109,51 +102,12 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
-name|d_open
-operator|=
-name|efidev_open
-block|,
-operator|.
 name|d_ioctl
 operator|=
 name|efidev_ioctl
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|int
-name|efidev_open
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
-name|__unused
-parameter_list|,
-name|int
-name|oflags
-name|__unused
-parameter_list|,
-name|int
-name|devtype
-name|__unused
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-name|__unused
-parameter_list|)
-block|{
-comment|/* 	 * Only return success when we have an actual runtime to call. 	 */
-return|return
-name|efi_rt_ok
-argument_list|()
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -820,6 +774,19 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+comment|/* 		 * If we have no efi environment, then don't create the device. 		 */
+if|if
+condition|(
+name|efi_rt_ok
+argument_list|()
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|make_dev_args_init
 argument_list|(
 operator|&
