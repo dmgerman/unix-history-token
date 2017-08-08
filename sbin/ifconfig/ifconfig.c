@@ -3692,7 +3692,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"socket(family %u,SOCK_DGRAM"
+literal|"socket(family %u,SOCK_DGRAM)"
 argument_list|,
 name|ifr
 operator|.
