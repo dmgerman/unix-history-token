@@ -619,6 +619,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|dirfd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|B_TRUE
