@@ -6796,7 +6796,7 @@ name|delta_y
 operator|>
 name|sc
 operator|->
-name|cap_resx
+name|cap_resy
 condition|)
 name|sc
 operator|->
