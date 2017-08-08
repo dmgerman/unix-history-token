@@ -342,12 +342,6 @@ decl_stmt|;
 name|char
 name|what
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|zfs_prop_get_table
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|entity_namecheck
