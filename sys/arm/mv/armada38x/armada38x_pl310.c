@@ -126,6 +126,13 @@ operator||
 name|PREFETCH_CTRL_DL_ON_WRAP
 argument_list|)
 expr_stmt|;
+comment|/* Disable L2 cache sync for IO coherent operation */
+name|sc
+operator|->
+name|sc_io_coherent
+operator|=
+name|true
+expr_stmt|;
 block|}
 end_function
 
