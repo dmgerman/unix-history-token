@@ -701,7 +701,7 @@ literal|0x3b228086
 block|,
 literal|0x00
 block|,
-literal|"Intel 5 Series/3400 Series"
+literal|"Intel Ibex Peak"
 block|,
 literal|0
 block|}
@@ -711,7 +711,7 @@ literal|0x3b238086
 block|,
 literal|0x00
 block|,
-literal|"Intel 5 Series/3400 Series"
+literal|"Intel Ibex Peak"
 block|,
 literal|0
 block|}
@@ -721,7 +721,7 @@ literal|0x3b258086
 block|,
 literal|0x00
 block|,
-literal|"Intel 5 Series/3400 Series (RAID)"
+literal|"Intel Ibex Peak (RAID)"
 block|,
 literal|0
 block|}
@@ -731,7 +731,7 @@ literal|0x3b298086
 block|,
 literal|0x00
 block|,
-literal|"Intel 5 Series/3400 Series"
+literal|"Intel Ibex Peak-M"
 block|,
 literal|0
 block|}
@@ -741,7 +741,7 @@ literal|0x3b2c8086
 block|,
 literal|0x00
 block|,
-literal|"Intel 5 Series/3400 Series (RAID)"
+literal|"Intel Ibex Peak-M (RAID)"
 block|,
 literal|0
 block|}
@@ -751,7 +751,7 @@ literal|0x3b2f8086
 block|,
 literal|0x00
 block|,
-literal|"Intel 5 Series/3400 Series"
+literal|"Intel Ibex Peak-M Series"
 block|,
 literal|0
 block|}

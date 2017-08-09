@@ -532,7 +532,7 @@ block|,
 block|{
 name|HDA_INTEL_PCH
 block|,
-literal|"Intel 5 Series/3400 Series"
+literal|"Intel Ibex Peak"
 block|,
 literal|0
 block|,
@@ -542,7 +542,7 @@ block|,
 block|{
 name|HDA_INTEL_PCH2
 block|,
-literal|"Intel 5 Series/3400 Series"
+literal|"Intel Ibex Peak"
 block|,
 literal|0
 block|,
