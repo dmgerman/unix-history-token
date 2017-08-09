@@ -751,7 +751,7 @@ literal|0x3b2f8086
 block|,
 literal|0x00
 block|,
-literal|"Intel Ibex Peak-M Series"
+literal|"Intel Ibex Peak-M"
 block|,
 literal|0
 block|}
