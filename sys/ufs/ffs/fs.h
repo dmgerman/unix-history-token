@@ -452,6 +452,56 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * A recovery structure placed at the end of the boot block area by newfs  * that can be used by fsck to search for alternate superblocks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESID
+value|(4096 - 20)
+end_define
+
+begin_comment
+comment|/* disk sector size minus recovery area size */
+end_comment
+
+begin_struct
+struct|struct
+name|fsrecovery
+block|{
+name|char
+name|block
+index|[
+name|RESID
+index|]
+decl_stmt|;
+comment|/* unused part of sector */
+name|int32_t
+name|fsr_magic
+decl_stmt|;
+comment|/* magic number */
+name|int32_t
+name|fsr_fsbtodb
+decl_stmt|;
+comment|/* fsbtodb and dbtofsb shift constant */
+name|int32_t
+name|fsr_sblkno
+decl_stmt|;
+comment|/* offset of super-block in filesys */
+name|int32_t
+name|fsr_fpg
+decl_stmt|;
+comment|/* blocks per group * fs_frag */
+name|u_int32_t
+name|fsr_ncg
+decl_stmt|;
+comment|/* number of cylinder groups */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Per cylinder group information; summarized in blocks allocated  * from first cylinder group data blocks.  These blocks have to be  * read in from fs_csaddr (size fs_cssize) in addition to the  * super block.  */
 end_comment
 
