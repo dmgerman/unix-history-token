@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ofw_if.h"
 end_include
 
@@ -2207,6 +2213,22 @@ name|FDT_MODEL_LEN
 argument_list|)
 operator|!=
 literal|0
+condition|)
+comment|/* 			 * Sometimes it's convenient to provide one 			 * fixup entry that refers to many boards. 			 * To handle this case, simply check if model 			 * is compatible parameter 			 */
+if|if
+condition|(
+operator|!
+name|ofw_bus_node_is_compatible
+argument_list|(
+name|root
+argument_list|,
+name|fdt_fixup_table
+index|[
+name|i
+index|]
+operator|.
+name|model
+argument_list|)
 condition|)
 continue|continue;
 if|if
