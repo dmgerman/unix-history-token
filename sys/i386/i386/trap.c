@@ -1586,7 +1586,9 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|out
+goto|;
 endif|#
 directive|endif
 comment|/* POWERFAIL_NMI */
@@ -1734,7 +1736,9 @@ condition|)
 goto|goto
 name|out
 goto|;
-break|break;
+goto|goto
+name|userout
+goto|;
 endif|#
 directive|endif
 block|}
