@@ -11,36 +11,6 @@ directive|define
 name|JEMALLOC_INTERNAL_SPIN_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JEMALLOC_SPIN_C_
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SPIN_INLINE
-value|extern inline
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SPIN_INLINE
-value|inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -61,7 +31,8 @@ typedef|;
 end_typedef
 
 begin_function
-name|SPIN_INLINE
+specifier|static
+specifier|inline
 name|void
 name|spin_adaptive
 parameter_list|(
