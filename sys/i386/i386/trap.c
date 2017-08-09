@@ -1702,7 +1702,9 @@ argument_list|(
 literal|"NMI indicates hardware failure"
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|out
+goto|;
 endif|#
 directive|endif
 comment|/* POWERFAIL_NMI */
@@ -1880,7 +1882,9 @@ condition|)
 goto|goto
 name|out
 goto|;
-break|break;
+goto|goto
+name|userout
+goto|;
 endif|#
 directive|endif
 block|}
