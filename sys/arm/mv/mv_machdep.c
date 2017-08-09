@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/arm/mpcore_timervar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/arm/nexusvar.h>
 end_include
 
@@ -1120,6 +1126,15 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADA38X
 argument_list|)
+comment|/* Configure timers' base frequency */
+name|arm_tmr_change_frequency
+argument_list|(
+name|get_cpu_freq
+argument_list|()
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Workaround for Marvell Armada38X family HW issue 	 * between Cortex-A9 CPUs and on-chip devices that may 	 * cause hang on heavy load. 	 * To avoid that, map all registers including PCIe IO 	 * as strongly ordered instead of device memory. 	 */
 name|pmap_remap_vm_attr
 argument_list|(
