@@ -227,6 +227,19 @@ name|PlatformProperties
 operator|>
 name|PlatformPropertiesSP
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|lldb
+operator|::
+name|addr_t
+operator|,
+literal|6
+operator|>
+name|MmapArgList
+expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// @class Platform Platform.h "lldb/Target/Platform.h"
 comment|/// @brief A plug-in interface definition class for debug platform that
@@ -1630,12 +1643,22 @@ name|file_spec
 argument_list|)
 block|;
 name|virtual
-name|uint64_t
-name|ConvertMmapFlagsToPlatform
+name|MmapArgList
+name|GetMmapArgumentList
 argument_list|(
 argument|const ArchSpec&arch
 argument_list|,
+argument|lldb::addr_t addr
+argument_list|,
+argument|lldb::addr_t length
+argument_list|,
+argument|unsigned prot
+argument_list|,
 argument|unsigned flags
+argument_list|,
+argument|lldb::addr_t fd
+argument_list|,
+argument|lldb::addr_t offset
 argument_list|)
 block|;
 name|virtual
