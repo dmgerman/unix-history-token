@@ -1177,7 +1177,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Page allocation parameters for vm_page for the functions  * vm_page_alloc(), vm_page_grab(), vm_page_alloc_contig() and  * vm_page_alloc_freelist().  Some functions support only a subset  * of the flags, and ignore others, see the flags legend.  *  * Bits 0 - 1 define class.  * Bits 2 - 15 dedicated for flags.  * Legend:  * (a) - vm_page_alloc() supports the flag.  * (c) - vm_page_alloc_contig() supports the flag.  * (f) - vm_page_alloc_freelist() supports the flag.  * (g) - vm_page_grab() supports the flag.  * Bits above 15 define the count of additional pages that the caller  * intends to allocate.  */
+comment|/*  * Page allocation parameters for vm_page for the functions  * vm_page_alloc(), vm_page_grab(), vm_page_alloc_contig() and  * vm_page_alloc_freelist().  Some functions support only a subset  * of the flags, and ignore others, see the flags legend.  *  * The meaning of VM_ALLOC_ZERO differs slightly between the vm_page_alloc*()  * and the vm_page_grab*() functions.  See these functions for details.  *  * Bits 0 - 1 define class.  * Bits 2 - 15 dedicated for flags.  * Legend:  * (a) - vm_page_alloc() supports the flag.  * (c) - vm_page_alloc_contig() supports the flag.  * (f) - vm_page_alloc_freelist() supports the flag.  * (g) - vm_page_grab() supports the flag.  * (p) - vm_page_grab_pages() supports the flag.  * Bits above 15 define the count of additional pages that the caller  * intends to allocate.  */
 end_comment
 
 begin_define
@@ -1216,7 +1216,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* (acfg) Allocate non pageable page */
+comment|/* (acfgp) Allocate a wired page */
 end_comment
 
 begin_define
@@ -1227,7 +1227,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* (acfg) Try to obtain a zeroed page */
+comment|/* (acfgp) Allocate a prezeroed page */
 end_comment
 
 begin_define
@@ -1249,7 +1249,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/* (acg) Do not busy the page */
+comment|/* (acgp) Do not excl busy the page */
 end_comment
 
 begin_define
@@ -1260,7 +1260,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* (g) Ignore shared busy flag */
+comment|/* (gp) Ignore shared busy flag */
 end_comment
 
 begin_define
@@ -1282,7 +1282,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* (acg) Shared busy the page */
+comment|/* (acgp) Shared busy the page */
 end_comment
 
 begin_define
@@ -1602,6 +1602,29 @@ parameter_list|,
 name|vm_pindex_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_grab_pages
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|pindex
+parameter_list|,
+name|int
+name|allocflags
+parameter_list|,
+name|vm_page_t
+modifier|*
+name|ma
+parameter_list|,
+name|int
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
