@@ -511,7 +511,7 @@ literal|0x28228086
 block|,
 literal|0x00
 block|,
-literal|"Intel ICH8"
+literal|"Intel ICH8+ (RAID)"
 block|,
 literal|0
 block|}
@@ -541,7 +541,7 @@ literal|0x282a8086
 block|,
 literal|0x00
 block|,
-literal|"Intel ICH8M"
+literal|"Intel ICH8M+ (RAID)"
 block|,
 literal|0
 block|}
@@ -671,7 +671,7 @@ literal|0x3a058086
 block|,
 literal|0x00
 block|,
-literal|"Intel ICH10"
+literal|"Intel ICH10 (RAID)"
 block|,
 literal|0
 block|}
@@ -691,7 +691,7 @@ literal|0x3a258086
 block|,
 literal|0x00
 block|,
-literal|"Intel ICH10"
+literal|"Intel ICH10 (RAID)"
 block|,
 literal|0
 block|}
@@ -721,7 +721,7 @@ literal|0x3b258086
 block|,
 literal|0x00
 block|,
-literal|"Intel 5 Series/3400 Series"
+literal|"Intel 5 Series/3400 Series (RAID)"
 block|,
 literal|0
 block|}
@@ -741,7 +741,7 @@ literal|0x3b2c8086
 block|,
 literal|0x00
 block|,
-literal|"Intel 5 Series/3400 Series"
+literal|"Intel 5 Series/3400 Series (RAID)"
 block|,
 literal|0
 block|}
@@ -981,7 +981,7 @@ literal|0x1c048086
 block|,
 literal|0x00
 block|,
-literal|"Intel Cougar Point"
+literal|"Intel Cougar Point (RAID)"
 block|,
 literal|0
 block|}
@@ -991,7 +991,17 @@ literal|0x1c058086
 block|,
 literal|0x00
 block|,
-literal|"Intel Cougar Point"
+literal|"Intel Cougar Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1c068086
+block|,
+literal|0x00
+block|,
+literal|"Intel Cougar Point (RAID)"
 block|,
 literal|0
 block|}
@@ -1031,7 +1041,7 @@ literal|0x28268086
 block|,
 literal|0x00
 block|,
-literal|"Intel Patsburg (RAID)"
+literal|"Intel Patsburg+ (RAID)"
 block|,
 literal|0
 block|}
@@ -1287,26 +1297,6 @@ literal|0
 block|}
 block|,
 block|{
-literal|0x28238086
-block|,
-literal|0x00
-block|,
-literal|"Intel Wellsburg (RAID)"
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|0x28278086
-block|,
-literal|0x00
-block|,
-literal|"Intel Wellsburg (RAID)"
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|0x8c028086
 block|,
 literal|0x00
@@ -1537,6 +1527,26 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x28238086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg+ (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x28278086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wellsburg+ (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x9c028086
 block|,
 literal|0x00
@@ -1702,6 +1712,116 @@ block|,
 literal|0x00
 block|,
 literal|"Intel Sunrise Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa1828086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lewisburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa1868086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lewisburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa1d28086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lewisburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa1d68086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lewisburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa2028086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lewisburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa2068086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lewisburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa2528086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lewisburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa2568086
+block|,
+literal|0x00
+block|,
+literal|"Intel Lewisburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa2828086
+block|,
+literal|0x00
+block|,
+literal|"Intel Union Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa2868086
+block|,
+literal|0x00
+block|,
+literal|"Intel Union Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xa28e8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Union Point (RAID)"
 block|,
 literal|0
 block|}
