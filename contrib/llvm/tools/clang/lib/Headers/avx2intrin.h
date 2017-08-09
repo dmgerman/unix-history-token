@@ -4133,6 +4133,13 @@ modifier|*
 name|__V
 parameter_list|)
 block|{
+typedef|typedef
+name|__v4di
+name|__v4di_aligned
+name|__attribute__
+typedef|((
+name|aligned
+typedef|(32)));
 return|return
 operator|(
 name|__m256i
@@ -4141,7 +4148,7 @@ name|__builtin_nontemporal_load
 argument_list|(
 operator|(
 specifier|const
-name|__v4di
+name|__v4di_aligned
 operator|*
 operator|)
 name|__V

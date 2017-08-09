@@ -1464,6 +1464,10 @@ name|class
 name|ASTStmtReader
 block|;
 name|friend
+name|class
+name|ASTReader
+block|;
+name|friend
 name|TrailingObjects
 block|;
 name|Stmt
@@ -1611,6 +1615,18 @@ name|CtorArgs
 specifier|const
 operator|&
 name|Args
+argument_list|)
+block|;
+specifier|static
+name|CoroutineBodyStmt
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|EmptyShell
+argument_list|,
+argument|unsigned NumParams
 argument_list|)
 block|;
 name|bool
@@ -2068,6 +2084,20 @@ index|]
 operator|=
 name|PromiseCall
 block|;   }
+name|CoreturnStmt
+argument_list|(
+name|EmptyShell
+argument_list|)
+operator|:
+name|CoreturnStmt
+argument_list|(
+argument|{}
+argument_list|,
+argument|{}
+argument_list|,
+argument|{}
+argument_list|)
+block|{}
 name|SourceLocation
 name|getKeywordLoc
 argument_list|()

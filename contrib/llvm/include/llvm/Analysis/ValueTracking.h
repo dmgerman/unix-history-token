@@ -1169,6 +1169,30 @@ operator|=
 literal|6
 argument_list|)
 decl_stmt|;
+comment|/// This is a wrapper around GetUnderlyingObjects and adds support for basic
+comment|/// ptrtoint+arithmetic+inttoptr sequences.
+name|void
+name|getUnderlyingObjectsForCodeGen
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Value
+operator|*
+operator|>
+operator|&
+name|Objects
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl_stmt|;
 comment|/// Return true if the only users of this pointer are lifetime markers.
 name|bool
 name|onlyUsedByLifetimeMarkers

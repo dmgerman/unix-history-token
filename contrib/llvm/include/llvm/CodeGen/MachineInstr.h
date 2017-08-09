@@ -1323,6 +1323,16 @@ operator|==
 literal|1
 return|;
 block|}
+comment|/// Return the number of memory operands.
+name|unsigned
+name|getNumMemOperands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumMemRefs
+return|;
+block|}
 comment|/// API for querying MachineInstr properties. They are the same as MCInstrDesc
 comment|/// queries but they are bundle aware.
 enum|enum

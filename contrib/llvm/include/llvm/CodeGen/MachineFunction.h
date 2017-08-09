@@ -2438,6 +2438,24 @@ name|uint64_t
 name|Size
 parameter_list|)
 function_decl|;
+comment|/// Allocate a new MachineMemOperand by copying an existing one,
+comment|/// replacing only AliasAnalysis information. MachineMemOperands are owned
+comment|/// by the MachineFunction and need not be explicitly deallocated.
+name|MachineMemOperand
+modifier|*
+name|getMachineMemOperand
+parameter_list|(
+specifier|const
+name|MachineMemOperand
+modifier|*
+name|MMO
+parameter_list|,
+specifier|const
+name|AAMDNodes
+modifier|&
+name|AAInfo
+parameter_list|)
+function_decl|;
 name|using
 name|OperandCapacity
 init|=
