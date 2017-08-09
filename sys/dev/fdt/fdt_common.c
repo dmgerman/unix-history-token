@@ -157,6 +157,13 @@ name|FDT_REG_CELLS
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|FDT_RANGES_SIZE
+value|48
+end_define
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -635,7 +642,7 @@ block|{
 name|pcell_t
 name|ranges
 index|[
-literal|6
+name|FDT_RANGES_SIZE
 index|]
 decl_stmt|,
 modifier|*
