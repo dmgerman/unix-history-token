@@ -145,6 +145,15 @@ end_define
 
 begin_decl_stmt
 specifier|static
+name|int
+name|g_mbr_once
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|dos_partition
 name|historical_bogus_partition_table
@@ -1734,6 +1743,27 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|g_mbr_once
+condition|)
+block|{
+name|g_mbr_once
+operator|=
+literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"WARNING: geom_mbr (geom %s) is deprecated, "
+literal|"use gpart instead.\n"
+argument_list|,
+name|gp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(

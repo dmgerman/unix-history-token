@@ -179,6 +179,13 @@ name|LABELSIZE
 value|(148 + 16 * MAXPARTITIONS)
 end_define
 
+begin_decl_stmt
+specifier|static
+name|int
+name|g_bsd_once
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -2093,6 +2100,27 @@ name|hot
 operator|=
 name|g_bsd_hotwrite
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|g_bsd_once
+condition|)
+block|{
+name|g_bsd_once
+operator|=
+literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"WARNING: geom_bsd (geom %s) is deprecated, "
+literal|"use gpart instead.\n"
+argument_list|,
+name|gp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|gp

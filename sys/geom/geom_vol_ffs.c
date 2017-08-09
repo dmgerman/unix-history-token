@@ -122,6 +122,13 @@ name|SBLOCKSEARCH
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|g_vol_ffs_once
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|g_vol_ffs_softc
@@ -537,6 +544,27 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|g_vol_ffs_once
+condition|)
+block|{
+name|g_vol_ffs_once
+operator|=
+literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"WARNING: geom_vol_Ffs (geom %s) is deprecated, "
+literal|"use glabel instead.\n"
+argument_list|,
+name|gp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
