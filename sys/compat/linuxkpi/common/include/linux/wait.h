@@ -338,7 +338,7 @@ name|state
 parameter_list|,
 name|lock
 parameter_list|)
-value|({	\ 	DEFINE_WAIT(__wq);					\ 	const int __timeout = (timeout)< 1 ? 1 : (timeout);	\ 	int __start = ticks;					\ 	int __ret = 0;						\ 								\ 	for (;;) {						\ 		linux_prepare_to_wait(&(wqh),&__wq, state);	\ 		if (cond) {					\ 			__ret = 1;				\ 			break;					\ 		}						\ 		__ret = linux_wait_event_common(&(wqh),&__wq,	\ 		    __timeout, state, lock);			\ 		if (__ret != 0)					\ 			break;					\ 	}							\ 	linux_finish_wait(&(wqh),&__wq);			\ 	if (__timeout != MAX_SCHEDULE_TIMEOUT) {		\ 		if (__ret == -EWOULDBLOCK)			\ 			__ret = !!(cond);			\ 		else if (__ret != -ERESTARTSYS) {		\ 			__ret = __timeout + __start - ticks;	\
+value|({	\ 	DEFINE_WAIT(__wq);					\ 	const int __timeout = ((int)(timeout))< 1 ? 1 : (timeout);	\ 	int __start = ticks;					\ 	int __ret = 0;						\ 								\ 	for (;;) {						\ 		linux_prepare_to_wait(&(wqh),&__wq, state);	\ 		if (cond)					\ 			break;					\ 		__ret = linux_wait_event_common(&(wqh),&__wq,	\ 		    __timeout, state, lock);			\ 		if (__ret != 0)					\ 			break;					\ 	}							\ 	linux_finish_wait(&(wqh),&__wq);			\ 	if (__timeout != MAX_SCHEDULE_TIMEOUT) {		\ 		if (__ret == -EWOULDBLOCK)			\ 			__ret = !!(cond);			\ 		else if (__ret != -ERESTARTSYS) {		\ 			__ret = __timeout + __start - ticks;	\
 comment|/* range check return value */
 value|\ 			if (__ret< 1)				\ 				__ret = 1;			\ 			else if (__ret> __timeout)		\ 				__ret = __timeout;		\ 		}						\ 	}							\ 	__ret;							\ })
 end_define
@@ -352,7 +352,7 @@ name|wqh
 parameter_list|,
 name|cond
 parameter_list|)
-value|({					\ 	__wait_event_common(wqh, cond, MAX_SCHEDULE_TIMEOUT,		\ 	    TASK_UNINTERRUPTIBLE, NULL);				\ })
+value|do {					\ 	(void) __wait_event_common(wqh, cond, MAX_SCHEDULE_TIMEOUT,	\ 	    TASK_UNINTERRUPTIBLE, NULL);				\ } while (0)
 end_define
 
 begin_define
