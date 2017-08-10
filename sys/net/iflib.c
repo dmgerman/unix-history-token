@@ -20383,7 +20383,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_FLAGS
-value|(IFCAP_TXCSUM_IPV6 | IFCAP_RXCSUM_IPV6 | IFCAP_HWCSUM | IFCAP_LRO | \ 		     IFCAP_TSO4 | IFCAP_TSO6 | IFCAP_VLAN_HWTAGGING |	\ 		     IFCAP_VLAN_MTU | IFCAP_VLAN_HWFILTER | IFCAP_VLAN_HWTSO)
+value|(IFCAP_TXCSUM_IPV6 | IFCAP_RXCSUM_IPV6 | IFCAP_HWCSUM | IFCAP_LRO | \ 		     IFCAP_TSO4 | IFCAP_TSO6 | IFCAP_VLAN_HWTAGGING | IFCAP_HWSTATS | \ 		     IFCAP_VLAN_MTU | IFCAP_VLAN_HWFILTER | IFCAP_VLAN_HWTSO)
 end_define
 
 begin_function
@@ -22331,6 +22331,8 @@ argument_list|,
 name|scctx
 operator|->
 name|isc_capenable
+operator||
+name|IFCAP_HWSTATS
 argument_list|)
 expr_stmt|;
 name|if_setcapenable
@@ -22340,6 +22342,8 @@ argument_list|,
 name|scctx
 operator|->
 name|isc_capenable
+operator||
+name|IFCAP_HWSTATS
 argument_list|)
 expr_stmt|;
 if|if
