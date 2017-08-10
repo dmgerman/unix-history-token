@@ -59,6 +59,12 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/smp.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1781,6 +1787,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
 name|mp_ncpus
 operator|=
 literal|2
@@ -1789,6 +1798,8 @@ name|mp_maxid
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 name|max_apic_id
 operator|=
 literal|1
@@ -1827,6 +1838,9 @@ parameter_list|)
 block|{
 name|vm_paddr_t
 name|addr
+decl_stmt|;
+name|u_int
+name|cpu_mask
 decl_stmt|;
 comment|/* Is this a pre-defined config? */
 name|printf
@@ -2406,6 +2420,9 @@ operator|<
 name|MAXCPU
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
 name|mp_ncpus
 operator|++
 expr_stmt|;
@@ -2415,6 +2432,8 @@ name|mp_ncpus
 operator|-
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 name|max_apic_id
 operator|=
 name|max
