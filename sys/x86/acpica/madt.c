@@ -886,6 +886,21 @@ name|user_x2apic
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Truncate max_apic_id if not in x2APIC mode. Some structures 	 * will already be allocated with the previous max_apic_id, but 	 * at least we can prevent wasting more memory elsewhere. 	 */
+if|if
+condition|(
+operator|!
+name|x2apic_mode
+condition|)
+name|max_apic_id
+operator|=
+name|min
+argument_list|(
+name|max_apic_id
+argument_list|,
+name|xAPIC_MAX_APIC_ID
+argument_list|)
+expr_stmt|;
 name|madt
 operator|=
 name|pmap_mapbios
@@ -1061,7 +1076,7 @@ name|ioapics
 argument_list|)
 operator|*
 operator|(
-name|MAX_APIC_ID
+name|IOAPIC_MAX_ID
 operator|+
 literal|1
 operator|)
@@ -1158,7 +1173,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|MAX_APIC_ID
+name|IOAPIC_MAX_ID
 condition|;
 name|i
 operator|++
@@ -1710,7 +1725,7 @@ name|apic
 operator|->
 name|Id
 operator|>
-name|MAX_APIC_ID
+name|IOAPIC_MAX_ID
 condition|)
 name|panic
 argument_list|(
@@ -2069,7 +2084,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|MAX_APIC_ID
+name|IOAPIC_MAX_ID
 condition|;
 name|i
 operator|++

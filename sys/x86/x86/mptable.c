@@ -713,7 +713,7 @@ name|void
 modifier|*
 name|ioapics
 index|[
-name|MAX_APIC_ID
+name|IOAPIC_MAX_ID
 operator|+
 literal|1
 index|]
@@ -2034,7 +2034,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|MAX_APIC_ID
+name|IOAPIC_MAX_ID
 condition|;
 name|i
 operator|++
@@ -2857,7 +2857,7 @@ name|apic
 operator|->
 name|apic_id
 operator|>
-name|MAX_APIC_ID
+name|IOAPIC_MAX_ID
 condition|)
 name|panic
 argument_list|(
@@ -3435,7 +3435,7 @@ if|if
 condition|(
 name|apic_id
 operator|>
-name|MAX_APIC_ID
+name|IOAPIC_MAX_ID
 condition|)
 block|{
 name|printf

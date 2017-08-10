@@ -608,6 +608,30 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|MAXCPU
+operator|<=
+name|MAX_APIC_ID
+argument_list|,
+literal|"MAXCPU cannot be larger that MAX_APIC_ID"
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|xAPIC_MAX_APIC_ID
+operator|<=
+name|MAX_APIC_ID
+argument_list|,
+literal|"xAPIC_MAX_APIC_ID cannot be larger that MAX_APIC_ID"
+argument_list|)
+assert|;
+end_assert
+
 begin_comment
 comment|/* Holds pending bitmap based IPIs per CPU */
 end_comment
@@ -3493,7 +3517,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"CPU %d added twice"
+literal|"CPU %u added twice"
 operator|,
 name|apic_id
 operator|)
@@ -3521,7 +3545,7 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"CPU %d claims to be BSP, but CPU %d already is"
+literal|"CPU %u claims to be BSP, but CPU %u already is"
 operator|,
 name|apic_id
 operator|,
@@ -3549,7 +3573,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"SMP: Added CPU %d (%s)\n"
+literal|"SMP: Added CPU %u (%s)\n"
 argument_list|,
 name|apic_id
 argument_list|,
