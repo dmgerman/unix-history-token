@@ -550,8 +550,7 @@ specifier|inline
 name|int
 name|linux_timer_jiffies_until
 parameter_list|(
-name|unsigned
-name|long
+name|int
 name|expires
 parameter_list|)
 block|{

@@ -61,8 +61,7 @@ name|unsigned
 name|long
 name|data
 decl_stmt|;
-name|unsigned
-name|long
+name|int
 name|expires
 decl_stmt|;
 block|}
@@ -133,8 +132,7 @@ name|struct
 name|timer_list
 modifier|*
 parameter_list|,
-name|unsigned
-name|long
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -204,7 +202,7 @@ parameter_list|(
 name|j
 parameter_list|)
 define|\
-value|((unsigned long)(((j) + linux_timer_hz_mask)& ~linux_timer_hz_mask))
+value|((int)(((j) + linux_timer_hz_mask)& ~linux_timer_hz_mask))
 end_define
 
 begin_define

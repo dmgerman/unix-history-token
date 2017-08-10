@@ -174,7 +174,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|long
+name|int
 name|linux_wait_for_common
 parameter_list|(
 name|struct
@@ -188,14 +188,14 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|long
+name|int
 name|linux_wait_for_timeout_common
 parameter_list|(
 name|struct
 name|completion
 modifier|*
 parameter_list|,
-name|long
+name|int
 parameter_list|,
 name|int
 parameter_list|)

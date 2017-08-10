@@ -7527,8 +7527,7 @@ name|timer_list
 modifier|*
 name|timer
 parameter_list|,
-name|unsigned
-name|long
+name|int
 name|expires
 parameter_list|)
 block|{
@@ -7758,7 +7757,7 @@ comment|/*  * Indefinite wait for done != 0 with or without signals.  */
 end_comment
 
 begin_function
-name|long
+name|int
 name|linux_wait_for_common
 parameter_list|(
 name|struct
@@ -7770,7 +7769,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|long
+name|int
 name|error
 decl_stmt|;
 if|if
@@ -7904,7 +7903,7 @@ comment|/*  * Time limited wait for done != 0 with or without signals.  */
 end_comment
 
 begin_function
-name|long
+name|int
 name|linux_wait_for_timeout_common
 parameter_list|(
 name|struct
@@ -7912,20 +7911,21 @@ name|completion
 modifier|*
 name|c
 parameter_list|,
-name|long
+name|int
 name|timeout
 parameter_list|,
 name|int
 name|flags
 parameter_list|)
 block|{
-name|long
+name|int
 name|end
 init|=
 name|jiffies
 operator|+
 name|timeout
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|int
