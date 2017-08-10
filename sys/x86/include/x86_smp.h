@@ -272,8 +272,8 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|cpu_info
+modifier|*
 name|cpu_info
-index|[]
 decl_stmt|;
 end_decl_stmt
 

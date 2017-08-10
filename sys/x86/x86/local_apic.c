@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -275,6 +281,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_LAPIC
+argument_list|,
+literal|"local_apic"
+argument_list|,
+literal|"Local APIC items"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Sanity checks on IDT vectors. */
@@ -490,12 +509,8 @@ index|]
 decl_stmt|;
 block|}
 decl|static
+modifier|*
 name|lapics
-index|[
-name|MAX_APIC_ID
-operator|+
-literal|1
-index|]
 struct|;
 end_struct
 
@@ -3029,7 +3044,7 @@ if|if
 condition|(
 name|apic_id
 operator|>
-name|MAX_APIC_ID
+name|max_apic_id
 condition|)
 block|{
 name|printf
@@ -7717,7 +7732,7 @@ literal|0
 init|;
 name|apic_id
 operator|<=
-name|MAX_APIC_ID
+name|max_apic_id
 condition|;
 name|apic_id
 operator|++
@@ -8638,6 +8653,29 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|lapics
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|lapics
+argument_list|)
+operator|*
+operator|(
+name|max_apic_id
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|M_LAPIC
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
 comment|/* Initialize the local APIC. */
 name|retval
 operator|=
