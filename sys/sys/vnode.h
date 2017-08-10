@@ -799,6 +799,17 @@ begin_comment
 comment|/* force the insmntque to succeed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VV_READLINK
+value|0x2000
+end_define
+
+begin_comment
+comment|/* fdescfs linux vnode */
+end_comment
+
 begin_comment
 comment|/*  * Vnode attributes.  A field value of VNOVAL represents a field whose value  * is unavailable (getattr) or which is not to be changed (setattr).  */
 end_comment
