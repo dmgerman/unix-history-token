@@ -860,6 +860,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|unsigned
+name|int
+name|max_apic_id
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
