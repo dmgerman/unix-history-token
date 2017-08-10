@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015-2016 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Portions of this software were developed by SRI International and the  * University of Cambridge Computer Laboratory under DARPA/AFRL contract  * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by the University of Cambridge  * Computer Laboratory as part of the CTSRD Project, with support from the  * UK Higher Education Innovation Fund (HEIF).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2015-2017 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Portions of this software were developed by SRI International and the  * University of Cambridge Computer Laboratory under DARPA/AFRL contract  * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by the University of Cambridge  * Computer Laboratory as part of the CTSRD Project, with support from the  * UK Higher Education Innovation Fund (HEIF).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -948,6 +948,9 @@ name|int
 name|ipi
 parameter_list|)
 block|{
+name|uintptr_t
+name|mask
+decl_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_SMP
@@ -973,11 +976,22 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|sbi_send_ipi
-argument_list|(
+name|mask
+operator|=
+operator|(
+literal|1
+operator|<<
+operator|(
 name|pc
 operator|->
 name|pc_cpuid
+operator|)
+operator|)
+expr_stmt|;
+name|sbi_send_ipi
+argument_list|(
+operator|&
+name|mask
 argument_list|)
 expr_stmt|;
 name|CTR1
@@ -1109,6 +1123,9 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
+name|uintptr_t
+name|mask
+decl_stmt|;
 name|CTR1
 argument_list|(
 name|KTR_SMP
@@ -1117,6 +1134,10 @@ literal|"ipi_selected: ipi: %x"
 argument_list|,
 name|ipi
 argument_list|)
+expr_stmt|;
+name|mask
+operator|=
+literal|0
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
@@ -1153,15 +1174,36 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|ipi_send
+name|atomic_set_32
 argument_list|(
+operator|&
 name|pc
+operator|->
+name|pc_pending_ipis
 argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
+name|mask
+operator||=
+operator|(
+literal|1
+operator|<<
+operator|(
+name|pc
+operator|->
+name|pc_cpuid
+operator|)
+operator|)
+expr_stmt|;
 block|}
 block|}
+name|sbi_send_ipi
+argument_list|(
+operator|&
+name|mask
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
