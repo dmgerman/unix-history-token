@@ -152,6 +152,13 @@ begin_comment
 comment|/* 2 weeks in seconds */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_PASSWORD_LEN
+value|1024
+end_define
+
 begin_function
 name|void
 name|disable_forwarding
@@ -229,6 +236,18 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|password
+argument_list|)
+operator|>
+name|MAX_PASSWORD_LEN
+condition|)
+return|return
+literal|0
+return|;
 ifndef|#
 directive|ifndef
 name|HAVE_CYGWIN
