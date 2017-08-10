@@ -1858,7 +1858,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Write out a regular Content-length header for the benefit of      non-Subversion RFC-822 parsers. */
+if|if
+condition|(
+name|propstring
+condition|)
+block|{
+comment|/* Write out a regular Content-length header for the benefit of          non-Subversion RFC-822 parsers. */
 name|svn_hash_sets
 argument_list|(
 name|headers
@@ -1878,6 +1883,7 @@ name|len
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|SVN_ERR
 argument_list|(
 name|write_revision_headers

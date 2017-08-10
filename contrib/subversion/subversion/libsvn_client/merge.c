@@ -19916,6 +19916,10 @@ argument_list|(
 name|scratch_pool
 argument_list|)
 decl_stmt|;
+name|apr_pool_t
+modifier|*
+name|swmi_pool
+decl_stmt|;
 name|apr_hash_t
 modifier|*
 name|subtrees_with_mergeinfo
@@ -19941,6 +19945,14 @@ name|pre_merge_status_baton_t
 name|pre_merge_status_baton
 decl_stmt|;
 comment|/* Case 1: Subtrees with explicit mergeinfo. */
+comment|/* Use a subpool for subtrees_with_mergeinfo, as it can be very large      and is temporary. */
+name|swmi_pool
+operator|=
+name|svn_pool_create
+argument_list|(
+name|scratch_pool
+argument_list|)
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|get_wc_explicit_mergeinfo_catalog
@@ -19956,9 +19968,9 @@ name|depth
 argument_list|,
 name|ctx
 argument_list|,
-name|result_pool
+name|swmi_pool
 argument_list|,
-name|scratch_pool
+name|swmi_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -20083,6 +20095,11 @@ name|compare_merge_path_t_as_paths
 argument_list|)
 expr_stmt|;
 block|}
+name|svn_pool_destroy
+argument_list|(
+name|swmi_pool
+argument_list|)
+expr_stmt|;
 comment|/* Case 2: Switched subtrees      Case 10: Paths at depths of 'empty' or 'files'      Case 11: Paths missing from disk */
 name|pre_merge_status_baton
 operator|.
@@ -38852,6 +38869,16 @@ name|target_mergeinfo_cat
 init|=
 name|NULL
 decl_stmt|;
+comment|/* Using a local subpool for 'target_mergeinfo_cat' can make a big      reduction in overall memory usage. */
+name|apr_pool_t
+modifier|*
+name|tmic_pool
+init|=
+name|svn_pool_create
+argument_list|(
+name|scratch_pool
+argument_list|)
+decl_stmt|;
 name|source_peg_rev
 operator|.
 name|kind
@@ -38962,9 +38989,9 @@ name|ctx
 argument_list|,
 name|ra_session
 argument_list|,
-name|result_pool
+name|tmic_pool
 argument_list|,
-name|scratch_pool
+name|tmic_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -39049,9 +39076,9 @@ name|ctx
 argument_list|,
 name|ra_session
 argument_list|,
-name|scratch_pool
+name|tmic_pool
 argument_list|,
-name|scratch_pool
+name|tmic_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -39113,6 +39140,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|svn_pool_destroy
+argument_list|(
+name|tmic_pool
+argument_list|)
+expr_stmt|;
 return|return
 name|SVN_NO_ERROR
 return|;

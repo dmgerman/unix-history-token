@@ -405,13 +405,27 @@ name|pool
 argument_list|)
 decl_stmt|;
 return|return
-name|svn_error_quick_wrap
+name|svn_error_quick_wrapf
 argument_list|(
 name|err
 argument_list|,
 name|_
 argument_list|(
-literal|"Couldn't open rep-cache database"
+literal|"Couldn't open rep-cache database '%s'"
+argument_list|)
+argument_list|,
+name|svn_dirent_local_style
+argument_list|(
+name|path_rep_cache_db
+argument_list|(
+name|fs
+operator|->
+name|path
+argument_list|,
+name|pool
+argument_list|)
+argument_list|,
+name|pool
 argument_list|)
 argument_list|)
 return|;
