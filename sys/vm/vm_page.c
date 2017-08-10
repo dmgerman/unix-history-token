@@ -3058,6 +3058,13 @@ block|{
 name|u_int
 name|x
 decl_stmt|;
+name|vm_page_lock_assert
+argument_list|(
+name|m
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|vm_page_assert_sbusied
 argument_list|(
 name|m
