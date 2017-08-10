@@ -901,6 +901,10 @@ define|#
 directive|define
 name|MPS_FLAGS_WD_AVAILABLE
 value|(1<< 6)
+define|#
+directive|define
+name|MPS_FLAGS_REALLOCATED
+value|(1<< 7)
 name|u_int
 name|mps_debug
 decl_stmt|;
@@ -3031,6 +3035,7 @@ name|sc
 parameter_list|,
 name|struct
 name|mps_command
+modifier|*
 modifier|*
 name|cm
 parameter_list|,

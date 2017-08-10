@@ -3251,7 +3251,7 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 goto|goto
-name|Ret
+name|RetFree
 goto|;
 block|}
 name|mps_unlock
@@ -3486,6 +3486,7 @@ name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|60
@@ -3496,6 +3497,12 @@ expr_stmt|;
 if|if
 condition|(
 name|err
+operator|||
+operator|(
+name|cm
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|mps_printf
@@ -3510,7 +3517,7 @@ name|err
 argument_list|)
 expr_stmt|;
 goto|goto
-name|Ret
+name|RetFree
 goto|;
 block|}
 name|rpl
@@ -3629,6 +3636,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|RetFree
+label|:
 if|if
 condition|(
 name|cm
@@ -3642,8 +3651,6 @@ argument_list|,
 name|cm
 argument_list|)
 expr_stmt|;
-name|Ret
-label|:
 name|mps_unlock
 argument_list|(
 name|sc
@@ -3694,6 +3701,8 @@ decl_stmt|;
 name|MPI2_DEFAULT_REPLY
 modifier|*
 name|rpl
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|mps_command
@@ -4164,6 +4173,7 @@ name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|30
@@ -4198,11 +4208,19 @@ block|}
 comment|/* 		 * Copy the reply data and sense data to user space. 		 */
 if|if
 condition|(
+operator|(
+name|cm
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
 name|cm
 operator|->
 name|cm_reply
 operator|!=
 name|NULL
+operator|)
 condition|)
 block|{
 name|rpl
@@ -4673,6 +4691,7 @@ name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|30
@@ -4683,6 +4702,12 @@ expr_stmt|;
 if|if
 condition|(
 name|err
+operator|||
+operator|(
+name|cm
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|mps_printf
@@ -5461,6 +5486,8 @@ decl_stmt|;
 name|MPI2_DIAG_BUFFER_POST_REPLY
 modifier|*
 name|reply
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|mps_command
@@ -5667,6 +5694,7 @@ name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|30
@@ -5677,6 +5705,12 @@ expr_stmt|;
 if|if
 condition|(
 name|status
+operator|||
+operator|(
+name|cm
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|mps_printf
@@ -5791,6 +5825,12 @@ name|MPS_DIAG_SUCCESS
 expr_stmt|;
 name|done
 label|:
+if|if
+condition|(
+name|cm
+operator|!=
+name|NULL
+condition|)
 name|mps_free_command
 argument_list|(
 name|sc
@@ -5835,6 +5875,8 @@ decl_stmt|;
 name|MPI2_DIAG_RELEASE_REPLY
 modifier|*
 name|reply
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|mps_command
@@ -5987,6 +6029,7 @@ name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|30
@@ -5997,6 +6040,12 @@ expr_stmt|;
 if|if
 condition|(
 name|status
+operator|||
+operator|(
+name|cm
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|mps_printf
@@ -6112,6 +6161,19 @@ expr_stmt|;
 block|}
 name|done
 label|:
+if|if
+condition|(
+name|cm
+operator|!=
+name|NULL
+condition|)
+name|mps_free_command
+argument_list|(
+name|sc
+argument_list|,
+name|cm
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|status

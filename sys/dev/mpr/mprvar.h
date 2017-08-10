@@ -913,6 +913,10 @@ define|#
 directive|define
 name|MPR_FLAGS_GEN35_IOC
 value|(1<< 6)
+define|#
+directive|define
+name|MPR_FLAGS_REALLOCATED
+value|(1<< 7)
 name|u_int
 name|mpr_debug
 decl_stmt|;
@@ -3250,6 +3254,7 @@ parameter_list|,
 name|struct
 name|mpr_command
 modifier|*
+modifier|*
 name|cm
 parameter_list|,
 name|int
@@ -3272,6 +3277,7 @@ name|sc
 parameter_list|,
 name|struct
 name|mpr_command
+modifier|*
 modifier|*
 name|cm
 parameter_list|)
