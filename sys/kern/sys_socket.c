@@ -3407,6 +3407,13 @@ name|kaiocb
 modifier|*
 name|job
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|SOCKBUF_LOCK
 argument_list|(
 name|sb
@@ -3514,6 +3521,9 @@ name|sorele
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
