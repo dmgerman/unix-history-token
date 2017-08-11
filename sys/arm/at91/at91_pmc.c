@@ -184,7 +184,7 @@ end_decl_stmt
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
-name|M_PMC
+name|M_PMC_CLK
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -192,7 +192,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
-name|M_PMC
+name|M_PMC_CLK
 argument_list|,
 literal|"at91_pmc_clocks"
 argument_list|,
@@ -1275,7 +1275,7 @@ operator|*
 name|clk
 argument_list|)
 argument_list|,
-name|M_PMC
+name|M_PMC_CLK
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -1308,7 +1308,7 @@ name|malloc
 argument_list|(
 name|buflen
 argument_list|,
-name|M_PMC
+name|M_PMC_CLK
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1434,14 +1434,14 @@ name|clk
 operator|->
 name|name
 argument_list|,
-name|M_PMC
+name|M_PMC_CLK
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|clk
 argument_list|,
-name|M_PMC
+name|M_PMC_CLK
 argument_list|)
 expr_stmt|;
 block|}
