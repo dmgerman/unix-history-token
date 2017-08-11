@@ -1859,10 +1859,8 @@ block|}
 if|if
 condition|(
 name|ax
-operator|>
-name|LDBL_MAX
-operator|/
-literal|2
+operator|>=
+name|HALF_LDBL_MAX
 condition|)
 return|return
 operator|(

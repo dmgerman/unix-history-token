@@ -61,7 +61,7 @@ begin_define
 define|#
 directive|define
 name|THRESH
-value|(LDBL_MAX / 2.414213562373095048801688724209698L)
+value|(HALF_LDBL_MAX / 1.207106781186547524400844362104849L)
 end_define
 
 begin_function
