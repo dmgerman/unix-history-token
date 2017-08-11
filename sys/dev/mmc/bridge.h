@@ -468,7 +468,7 @@ begin_define
 define|#
 directive|define
 name|MMC_VERSION
-value|4
+value|5
 end_define
 
 begin_define
