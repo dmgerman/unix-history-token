@@ -807,10 +807,13 @@ name|sv_minuser
 operator|=
 name|VM_MIN_ADDRESS
 block|,
+comment|/* Keep top page reserved to work around AMD Ryzen stability issues. */
 operator|.
 name|sv_maxuser
 operator|=
 name|VM_MAXUSER_ADDRESS
+operator|-
+name|PAGE_SIZE
 block|,
 operator|.
 name|sv_stackprot
