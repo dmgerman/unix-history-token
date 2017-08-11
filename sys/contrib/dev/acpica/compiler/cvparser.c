@@ -148,9 +148,6 @@ argument_list|(
 name|Filename
 argument_list|)
 decl_stmt|;
-name|UINT64
-name|i
-decl_stmt|;
 name|char
 modifier|*
 name|FileExt
@@ -160,6 +157,9 @@ operator|+
 name|Length
 operator|-
 literal|4
+decl_stmt|;
+name|UINT64
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -178,7 +178,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 for|for
@@ -211,18 +213,22 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvInitFileTree  *  * PARAMETERS:  Table      - input table  *              AmlStart   - Address of the starting point of the AML.  *              AmlLength  - Length of the AML file.  *  * RETURN:      none  *  * DESCRIPTION: Initialize the file dependency tree by scanning the AML.  *              This is referred as ASL_CV_INIT_FILETREE.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvInitFileTree  *  * PARAMETERS:  Table      - input table  *              AmlStart   - Address of the starting point of the AML.  *              AmlLength  - Length of the AML file.  *  * RETURN:      None  *  * DESCRIPTION: Initialize the file dependency tree by scanning the AML.  *              This is referred as ASL_CV_INIT_FILETREE.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -578,7 +584,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvClearOpComments  *  * PARAMETERS:  Op -- clear all comments within this Op  *  * RETURN:      none  *  * DESCRIPTION: Clear all converter-related fields of the given Op.  *              This is referred as ASL_CV_CLEAR_OP_COMMENTS.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvClearOpComments  *  * PARAMETERS:  Op -- clear all comments within this Op  *  * RETURN:      None  *  * DESCRIPTION: Clear all converter-related fields of the given Op.  *              This is referred as ASL_CV_CLEAR_OP_COMMENTS.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -658,7 +664,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvCommentExists  *  * PARAMETERS:  address - check if this address appears in the list  *  * RETURN:      BOOLEAN - TRUE if the address exists.  *  * DESCRIPTION: look at the pointer address and check if this appears in the  *              list of all addresses. If it exitsts in the list, return TRUE  *              if it exists. Otherwise add to the list and return FALSE.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvCommentExists  *  * PARAMETERS:  Address - check if this address appears in the list  *  * RETURN:      BOOLEAN - TRUE if the address exists.  *  * DESCRIPTION: Look at the pointer address and check if this appears in the  *              list of all addresses. If it exists in the list, return TRUE  *              if it exists. Otherwise add to the list and return FALSE.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -701,7 +707,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/*      * FILENAME_COMMENT and PARENTFILENAME_COMMENT are not treated as comments.      * They serve as markers for where the file starts and ends.      */
+comment|/*      * FILENAME_COMMENT and PARENTFILENAME_COMMENT are not treated as      * comments. They serve as markers for where the file starts and ends.      */
 if|if
 condition|(
 operator|(
@@ -786,7 +792,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*          * If the execution gets to this point, it means that this address          * does not exists in the list. Add this address to the          * beginning of the list.          */
+comment|/*          * If the execution gets to this point, it means that this          * address does not exists in the list. Add this address to the          * beginning of the list.          */
 name|Current
 operator|=
 name|AcpiGbl_CommentAddrListHead
@@ -895,7 +901,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvFileAddressLookup  *  * PARAMETERS:  Address        - address to look up  *              Head           - file dependency tree  *  * RETURN:      ACPI_FLE_NODE - pointer to a file node containing the address  *  * DESCRIPTION: Look for the given address in the file dependency tree.  *              Returns the first file node where the given address is within  *              the file node's starting and ending address.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvFileAddressLookup  *  * PARAMETERS:  Address        - address to look up  *              Head           - file dependency tree  *  * RETURN:      ACPI_FILE_NODE - pointer to a file node containing the address  *  * DESCRIPTION: Look for the given address in the file dependency tree.  *              Returns the first file node where the given address is within  *              the file node's starting and ending address.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1066,7 +1072,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvAddToFileTree  *  * PARAMETERS:  Filename          - Address containing the name of the current  *                                  filename  *              PreviousFilename  - Address containing the name of the previous  *                                  filename  *  * RETURN:      void  *  * DESCRIPTION: Add this filename to the AcpiGbl_FileTree if it does not exist.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvAddToFileTree  *  * PARAMETERS:  Filename          - Address containing the name of the current  *                                  filename  *              PreviousFilename  - Address containing the name of the previous  *                                  filename  *  * RETURN:      None  *  * DESCRIPTION: Add this filename to the AcpiGbl_FileTree if it does not exist.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1156,7 +1162,7 @@ operator|&&
 name|PreviousFilename
 condition|)
 block|{
-comment|/*          * Update the end of the previous file and all of their parents' ending          * Addresses. This is done to ensure that parent file ranges extend to          * the end of their childrens' files.          */
+comment|/*          * Update the end of the previous file and all of their parents'          * ending addresses. This is done to ensure that parent file          * ranges extend to the end of their childrens' files.          */
 name|Node
 operator|=
 name|CvFilenameExists
@@ -1332,7 +1338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvSetFileParent  *  * PARAMETERS:  ChildFile  - contains the filename of the child file  *              ParentFile - contains the filename of the parent file.  *  * RETURN:      none  *  * DESCRIPTION: point the parent pointer of the Child to the node that  *              corresponds with the parent file node.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvSetFileParent  *  * PARAMETERS:  ChildFile  - contains the filename of the child file  *              ParentFile - contains the filename of the parent file.  *  * RETURN:      None  *  * DESCRIPTION: Point the parent pointer of the Child to the node that  *              corresponds with the parent file node.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1431,7 +1437,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvCaptureCommentsOnly  *  * PARAMETERS:  ParserState         - A parser state object  *  * RETURN:      none  *  * DESCRIPTION: look at the aml that the parser state is pointing to,  *              capture any AML_COMMENT_OP and it's arguments and increment the  *              aml pointer past the comment. Comments are transferred to parse  *              nodes through CvTransferComments() as well as  *              AcpiPsBuildNamedOp().  *              This is referred as ASL_CV_CAPTURE_COMMENTS_ONLY.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvCaptureCommentsOnly  *  * PARAMETERS:  ParserState         - A parser state object  *  * RETURN:      None  *  * DESCRIPTION: Look at the aml that the parser state is pointing to,  *              capture any AML_COMMENT_OP and it's arguments and increment the  *              aml pointer past the comment. Comments are transferred to parse  *              nodes through CvTransferComments() as well as  *              AcpiPsBuildNamedOp().  *              This is referred as ASL_CV_CAPTURE_COMMENTS_ONLY.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1546,12 +1552,12 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/* Increment past the comment option and point the approperiate char pointers.*/
+comment|/*              * Increment past the comment option and point the              * appropriate char pointers              */
 name|Aml
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* found a comment. Now, set pointers to these comments. */
+comment|/* Found a comment. Now, set pointers to these comments. */
 switch|switch
 condition|(
 name|CommentOption
@@ -1564,7 +1570,7 @@ name|StdDefBlockFlag
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* add to a linked list of nodes. This list will be taken by the parse node created next. */
+comment|/*                      * Add to a linked list of nodes. This list will be                      * taken by the parse node created next.                      */
 name|CommentNode
 operator|=
 name|AcpiOsAcquireObject
@@ -1628,7 +1634,7 @@ argument_list|(
 literal|"found regular comment.\n"
 argument_list|)
 expr_stmt|;
-comment|/* add to a linked list of nodes. This list will be taken by the parse node created next. */
+comment|/*                      * Add to a linked list of nodes. This list will be                      * taken by the parse node created next.                      */
 name|CommentNode
 operator|=
 name|AcpiOsAcquireObject
@@ -1692,7 +1698,7 @@ argument_list|(
 literal|"found endblk comment.\n"
 argument_list|)
 expr_stmt|;
-comment|/* add to a linked list of nodes. This will be taken by the next created parse node. */
+comment|/* Add to a linked list of nodes. This will be                      * taken by the next created parse node.                      */
 name|CommentNode
 operator|=
 name|AcpiOsAcquireObject
@@ -1807,7 +1813,8 @@ name|END_DEFBLK_COMMENT
 case|:
 name|CvDbgPrint
 argument_list|(
-literal|"Found comment that belongs after the } for a definition block.\n"
+literal|"Found comment that belongs after"
+literal|" the } for a definition block.\n"
 argument_list|)
 expr_stmt|;
 name|AcpiGbl_CurrentScope
@@ -1963,12 +1970,11 @@ expr_stmt|;
 goto|goto
 name|DefBlock
 goto|;
-break|break;
 block|}
-comment|/* end switch statement */
+comment|/* End switch statement */
 block|}
-comment|/* end else */
-comment|/* determine the length and move forward that amount */
+comment|/* End else */
+comment|/* Determine the length and move forward that amount */
 name|Length
 operator|=
 literal|0
@@ -2042,7 +2048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvCaptureComments  *  * PARAMETERS:  ParserState         - A parser state object  *  * RETURN:      none  *  * DESCRIPTION: Wrapper function for CvCaptureCommentsOnly  *              This is referred as ASL_CV_CAPTURE_COMMENTS.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvCaptureComments  *  * PARAMETERS:  ParserState         - A parser state object  *  * RETURN:      None  *  * DESCRIPTION: Wrapper function for CvCaptureCommentsOnly  *              This is referred as ASL_CV_CAPTURE_COMMENTS.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2074,7 +2080,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/*      * Before parsing, check to see that comments that come directly after      * deferred opcodes aren't being processed.      */
+comment|/*      * Before parsing, check to see that comments that come directly      * after deferred opcodes aren't being processed.      */
 name|Aml
 operator|=
 name|WalkState
@@ -2153,7 +2159,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvTransferComments  *  * PARAMETERS:  Op    - Transfer comments to this Op  *  * RETURN:      none  *  * DESCRIPTION: Transfer all of the commments stored in global containers to the  *              given Op. This will be invoked shortly after the parser creates  *              a ParseOp.  *              This is referred as ASL_CV_TRANSFER_COMMENTS.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvTransferComments  *  * PARAMETERS:  Op                  - Transfer comments to this Op  *  * RETURN:      None  *  * DESCRIPTION: Transfer all of the commments stored in global containers to the  *              given Op. This will be invoked shortly after the parser creates  *              a ParseOp.  *              This is referred as ASL_CV_TRANSFER_COMMENTS.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -4785,7 +4785,7 @@ argument_list|(
 name|device
 argument_list|)
 decl_stmt|;
-name|cycle_t
+name|s64
 name|cycles
 decl_stmt|;
 name|values
@@ -4813,7 +4813,7 @@ expr_stmt|;
 if|if
 condition|(
 name|cycles
-operator|<
+operator|>=
 literal|0
 condition|)
 block|{

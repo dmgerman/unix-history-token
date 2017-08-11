@@ -8320,11 +8320,7 @@ name|bp
 operator|->
 name|b_flags
 operator|&
-operator|(
-name|B_DONE
-operator||
-name|B_DELWRI
-operator|)
+name|B_CACHE
 operator|)
 operator|==
 literal|0

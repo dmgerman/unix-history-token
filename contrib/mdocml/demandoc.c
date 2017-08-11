@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: demandoc.c,v 1.28 2017/01/10 13:47:00 schwarze Exp $ */
+comment|/*	$Id: demandoc.c,v 1.29 2017/06/24 14:38:32 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"roff.h"
 end_include
 
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"mdoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mandoc.h"
 end_include
 
 begin_function_decl
@@ -361,9 +361,11 @@ name|mparse_alloc
 argument_list|(
 name|MPARSE_SO
 argument_list|,
-name|MANDOCLEVEL_BADARG
+name|MANDOCERR_MAX
 argument_list|,
 name|NULL
+argument_list|,
+name|MANDOC_OS_OTHER
 argument_list|,
 name|NULL
 argument_list|)

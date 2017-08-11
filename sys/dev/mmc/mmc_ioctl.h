@@ -112,7 +112,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MMC_IOC_CMD_MULTI
+name|MMC_IOC_MULTI_CMD
 value|_IOWR(MMC_IOC_BASE, 1, struct mmc_ioc_multi_cmd)
 end_define
 

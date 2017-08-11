@@ -761,6 +761,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|L2_CB_SHIFT
+value|2
+end_define
+
+begin_comment
+comment|/* C,B bit field shift */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|L2_AP
 parameter_list|(
 name|x
@@ -793,11 +804,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|L2_TEX_SHIFT
+value|6
+end_define
+
+begin_comment
+comment|/* type extension field shift */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|L2_TEX
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<<	6)
+value|((x)<<	L2_TEX_SHIFT)
 end_define
 
 begin_comment
@@ -1543,6 +1565,21 @@ define|#
 directive|define
 name|PTE2_ATTR_MASK
 value|(L2_TEX0 | L2_C | L2_B)
+end_define
+
+begin_comment
+comment|/* PTE2 attributes to TEX class index: (TEX0 C B)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTE2_ATTR2IDX
+parameter_list|(
+name|attr
+parameter_list|)
+define|\
+value|((((attr)& (L2_C | L2_B))>> L2_CB_SHIFT) |		\     (((attr)& L2_TEX0)>> (L2_TEX_SHIFT - L2_CB_SHIFT)))
 end_define
 
 begin_define

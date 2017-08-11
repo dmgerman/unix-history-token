@@ -7193,6 +7193,12 @@ argument_list|(
 name|modulep
 argument_list|)
 expr_stmt|;
+name|identify_cpu
+argument_list|()
+expr_stmt|;
+name|identify_hypervisor
+argument_list|()
+expr_stmt|;
 comment|/* Init basic tunables, hz etc */
 name|init_param1
 argument_list|()
@@ -7995,7 +8001,7 @@ argument_list|(
 name|VTY_VT
 argument_list|)
 expr_stmt|;
-name|identify_cpu
+name|finishidentcpu
 argument_list|()
 expr_stmt|;
 comment|/* Final stage of CPU initialization */

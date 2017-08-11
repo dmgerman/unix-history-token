@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: utf8.c,v 1.3 2016/05/30 12:57:21 schwarze Exp $ */
+comment|/* $OpenBSD: utf8.c,v 1.5 2017/02/19 00:10:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -216,6 +216,8 @@ name|loc
 argument_list|,
 literal|"US-ASCII"
 argument_list|)
+operator|!=
+literal|0
 operator|&&
 name|strcmp
 argument_list|(
@@ -223,6 +225,26 @@ name|loc
 argument_list|,
 literal|"UTF-8"
 argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|loc
+argument_list|,
+literal|"ANSI_X3.4-1968"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|loc
+argument_list|,
+literal|"646"
+argument_list|)
+operator|!=
+literal|0
 return|;
 block|}
 end_function
@@ -476,6 +498,11 @@ name|free
 argument_list|(
 name|src
 argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|fail

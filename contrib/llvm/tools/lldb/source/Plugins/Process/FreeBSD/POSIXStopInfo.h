@@ -196,56 +196,6 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// @class POSIXCrashStopInfo
-end_comment
-
-begin_comment
-comment|/// @brief Represents the stop state of process that is ready to crash.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|class
-name|POSIXCrashStopInfo
-range|:
-name|public
-name|POSIXStopInfo
-block|{
-name|public
-operator|:
-name|POSIXCrashStopInfo
-argument_list|(
-argument|FreeBSDThread&thread
-argument_list|,
-argument|uint32_t status
-argument_list|,
-argument|CrashReason reason
-argument_list|,
-argument|lldb::addr_t fault_addr
-argument_list|)
-block|;
-operator|~
-name|POSIXCrashStopInfo
-argument_list|()
-block|;
-name|lldb
-operator|::
-name|StopReason
-name|GetStopReason
-argument_list|()
-specifier|const
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// @class POSIXNewThreadStopInfo
 end_comment
 

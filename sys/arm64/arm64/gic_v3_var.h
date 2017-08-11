@@ -153,6 +153,17 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|gic_v3_devinfo
+block|{
+name|int
+name|gic_domain
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define

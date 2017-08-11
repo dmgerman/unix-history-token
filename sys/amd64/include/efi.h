@@ -80,6 +80,15 @@ end_struct_decl
 
 begin_function_decl
 name|int
+name|efi_rt_ok
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|efi_get_table
 parameter_list|(
 name|struct

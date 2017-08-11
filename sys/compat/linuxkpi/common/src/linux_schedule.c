@@ -988,7 +988,7 @@ name|task_struct
 modifier|*
 name|task
 decl_stmt|;
-name|long
+name|int
 name|ret
 decl_stmt|;
 if|if
@@ -1004,6 +1004,28 @@ argument_list|)
 expr_stmt|;
 name|DROP_GIANT
 argument_list|()
+expr_stmt|;
+comment|/* range check timeout */
+if|if
+condition|(
+name|timeout
+operator|<
+literal|1
+condition|)
+name|timeout
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|timeout
+operator|==
+name|MAX_SCHEDULE_TIMEOUT
+condition|)
+name|timeout
+operator|=
+literal|0
 expr_stmt|;
 name|task
 operator|=

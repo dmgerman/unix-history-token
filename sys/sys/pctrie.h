@@ -45,7 +45,7 @@ parameter_list|)
 define|\ 									\
 value|CTASSERT(sizeof(((struct type *)0)->field) == sizeof(uint64_t));	\
 comment|/*									\  * XXX This assert protects flag bits, it does not enforce natural	\  * alignment.  32bit architectures do not naturally align 64bit fields.	\  */
-value|\ CTASSERT((__offsetof(struct type, field)& (sizeof(uint32_t) - 1)) == 0); \ 									\ static __inline struct type *						\ name##_PCTRIE_VAL2PTR(uint64_t *val)					\ {									\ 									\ 	if (val == NULL)						\ 		return (NULL);						\ 	return (struct type *)						\ 	    ((uintptr_t)val - __offsetof(struct type, field));		\ }									\ 									\ static __inline uint64_t *						\ name##_PCTRIE_PTR2VAL(struct type *ptr)					\ {									\ 									\ 	return&ptr->field;						\ }									\ 									\ static __inline int							\ name##_PCTRIE_INSERT(struct pctrie *ptree, struct type *ptr)		\ {									\ 									\ 	return pctrie_insert(ptree, name##_PCTRIE_PTR2VAL(ptr),		\ 	    allocfn);							\ }									\ 									\ static __inline struct type *						\ name##_PCTRIE_LOOKUP(struct pctrie *ptree, uint64_t key)		\ {									\ 									\ 	return name##_PCTRIE_VAL2PTR(pctrie_lookup(ptree, key));	\ }									\ 									\ static __inline struct type *						\ name##_PCTRIE_LOOKUP_LE(struct pctrie *ptree, uint64_t key)		\ {									\ 									\ 	return name##_PCTRIE_VAL2PTR(pctrie_lookup_le(ptree, key));	\ }									\ 									\ static __inline __unused struct type *					\ name##_PCTRIE_LOOKUP_GE(struct pctrie *ptree, uint64_t key)		\ {									\ 									\ 	return name##_PCTRIE_VAL2PTR(pctrie_lookup_ge(ptree, key));	\ }									\ 									\ static __inline __unused void						\ name##_PCTRIE_RECLAIM(struct pctrie *ptree)				\ {									\ 									\ 	pctrie_reclaim_allnodes(ptree, freefn);				\ }									\ 									\ static __inline void							\ name##_PCTRIE_REMOVE(struct pctrie *ptree, uint64_t key)		\ {									\ 									\ 	pctrie_remove(ptree, key, freefn);				\ }
+value|\ CTASSERT((__offsetof(struct type, field)& (sizeof(uint32_t) - 1)) == 0); \ 									\ static __inline struct type *						\ name##_PCTRIE_VAL2PTR(uint64_t *val)					\ {									\ 									\ 	if (val == NULL)						\ 		return (NULL);						\ 	return (struct type *)						\ 	    ((uintptr_t)val - __offsetof(struct type, field));		\ }									\ 									\ static __inline uint64_t *						\ name##_PCTRIE_PTR2VAL(struct type *ptr)					\ {									\ 									\ 	return&ptr->field;						\ }									\ 									\ static __inline int							\ name##_PCTRIE_INSERT(struct pctrie *ptree, struct type *ptr)		\ {									\ 									\ 	return pctrie_insert(ptree, name##_PCTRIE_PTR2VAL(ptr),		\ 	    allocfn);							\ }									\ 									\ static __inline struct type *						\ name##_PCTRIE_LOOKUP(struct pctrie *ptree, uint64_t key)		\ {									\ 									\ 	return name##_PCTRIE_VAL2PTR(pctrie_lookup(ptree, key));	\ }									\ 									\ static __inline __unused struct type *						\ name##_PCTRIE_LOOKUP_LE(struct pctrie *ptree, uint64_t key)		\ {									\ 									\ 	return name##_PCTRIE_VAL2PTR(pctrie_lookup_le(ptree, key));	\ }									\ 									\ static __inline __unused struct type *					\ name##_PCTRIE_LOOKUP_GE(struct pctrie *ptree, uint64_t key)		\ {									\ 									\ 	return name##_PCTRIE_VAL2PTR(pctrie_lookup_ge(ptree, key));	\ }									\ 									\ static __inline __unused void						\ name##_PCTRIE_RECLAIM(struct pctrie *ptree)				\ {									\ 									\ 	pctrie_reclaim_allnodes(ptree, freefn);				\ }									\ 									\ static __inline void							\ name##_PCTRIE_REMOVE(struct pctrie *ptree, uint64_t key)		\ {									\ 									\ 	pctrie_remove(ptree, key, freefn);				\ }
 end_define
 
 begin_typedef
@@ -255,6 +255,47 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * These widths should allow the pointers to a node's children to fit within  * a single cache line.  The extra levels from a narrow width should not be  * a problem thanks to path compression.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCTRIE_WIDTH
+value|4
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PCTRIE_WIDTH
+value|3
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|PCTRIE_COUNT
+value|(1<< PCTRIE_WIDTH)
+end_define
 
 begin_endif
 endif|#

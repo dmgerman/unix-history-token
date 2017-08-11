@@ -89,7 +89,7 @@ block|{
 comment|/* Check if user wants to ignore this exception */
 if|if
 condition|(
-name|AslIsExceptionDisabled
+name|AslIsExceptionIgnored
 argument_list|(
 name|Level
 argument_list|,

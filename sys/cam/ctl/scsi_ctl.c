@@ -4795,7 +4795,7 @@ name|periph
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For a wildcard attachment, commands can come in with a specific 	 * target/lun.  Reset the target and LUN fields back to the wildcard 	 * values before we send them back down to the SIM. 	 */
-name|xpt_setup_ccb
+name|xpt_setup_ccb_flags
 argument_list|(
 operator|&
 name|ccb
@@ -4807,6 +4807,12 @@ operator|->
 name|path
 argument_list|,
 name|CAM_PRIORITY_NONE
+argument_list|,
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
 argument_list|)
 expr_stmt|;
 name|xpt_action

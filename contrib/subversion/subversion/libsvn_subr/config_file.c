@@ -3938,17 +3938,17 @@ literal|"### built-in ssh scheme were not predefined, it could be defined"
 name|NL
 literal|"### as:"
 name|NL
-literal|"# ssh = $SVN_SSH ssh -q"
+literal|"# ssh = $SVN_SSH ssh -q --"
 name|NL
 literal|"### If you wanted to define a new 'rsh' scheme, to be used with"
 name|NL
 literal|"### 'svn+rsh:' URLs, you could do so as follows:"
 name|NL
-literal|"# rsh = rsh"
+literal|"# rsh = rsh --"
 name|NL
 literal|"### Or, if you wanted to specify a full path and arguments:"
 name|NL
-literal|"# rsh = /path/to/rsh -l myusername"
+literal|"# rsh = /path/to/rsh -l myusername --"
 name|NL
 literal|"### On Windows, if you are specifying a full path to a command,"
 name|NL

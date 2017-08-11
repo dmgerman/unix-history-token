@@ -381,6 +381,20 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x125b
+block|,
+literal|0x9100
+block|,
+literal|0xa000
+block|,
+literal|0x1000
+block|,
+literal|"ASIX AX99100 PCIe 1/2/3/4-port RS-232/422/485"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x1282
 block|,
 literal|0x6585

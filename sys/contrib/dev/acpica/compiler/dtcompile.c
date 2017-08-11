@@ -828,7 +828,15 @@ operator|->
 name|TableInfo
 condition|)
 block|{
-comment|/* Simple table, just walk the info table */
+comment|/* Simple table, just walk the info table, unless its empty */
+if|if
+condition|(
+name|FieldList
+operator|&&
+operator|*
+name|FieldList
+condition|)
+block|{
 name|Subtable
 operator|=
 name|NULL
@@ -873,6 +881,7 @@ expr_stmt|;
 name|DtPopSubtable
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

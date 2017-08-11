@@ -361,7 +361,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__riscv__
+name|__riscv
 end_ifdef
 
 begin_define

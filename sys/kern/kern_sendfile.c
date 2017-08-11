@@ -4065,6 +4065,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|sbytes
+operator|=
+literal|0
+expr_stmt|;
 name|hdr_uio
 operator|=
 name|trl_uio

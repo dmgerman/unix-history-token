@@ -158,7 +158,7 @@ expr_stmt|;
 comment|/* Create new list node of arbitrary type */
 name|ListOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_DEFAULT_ARG
 argument_list|)
@@ -316,7 +316,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_VISITED
+name|OP_VISITED
 condition|)
 block|{
 name|Next
@@ -389,7 +389,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_VISITED
+name|OP_VISITED
 expr_stmt|;
 comment|/*          * Since we will reposition Externals to the Root, set Namepath          * to the fully qualified name and recalculate the aml length          */
 name|Status
@@ -1162,7 +1162,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_VISITED
+name|OP_VISITED
 operator|)
 condition|)
 block|{
@@ -1289,7 +1289,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|=
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 expr_stmt|;
 name|UtSetParseOpName
 argument_list|(
@@ -1299,7 +1299,7 @@ expr_stmt|;
 comment|/* Create a Zero op for the If predicate */
 name|PredicateOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_ZERO
 argument_list|)

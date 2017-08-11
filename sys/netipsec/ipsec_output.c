@@ -770,6 +770,11 @@ name|secpolicy
 modifier|*
 name|sp
 parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|,
 name|u_int
 name|idx
 parameter_list|)
@@ -870,6 +875,8 @@ name|ctx
 argument_list|,
 operator|&
 name|m
+argument_list|,
+name|inp
 argument_list|,
 name|sav
 argument_list|,
@@ -1062,6 +1069,10 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|inp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|IPSEC_INIT_CTX
 argument_list|(
@@ -1070,6 +1081,8 @@ name|ctx
 argument_list|,
 operator|&
 name|m
+argument_list|,
+name|inp
 argument_list|,
 name|sav
 argument_list|,
@@ -1309,6 +1322,8 @@ argument_list|(
 name|m
 argument_list|,
 name|sp
+argument_list|,
+name|inp
 argument_list|,
 literal|0
 argument_list|)
@@ -2235,6 +2250,11 @@ name|secpolicy
 modifier|*
 name|sp
 parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|,
 name|u_int
 name|idx
 parameter_list|)
@@ -2364,6 +2384,8 @@ name|ctx
 argument_list|,
 operator|&
 name|m
+argument_list|,
+name|inp
 argument_list|,
 name|sav
 argument_list|,
@@ -2555,6 +2577,10 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|inp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|IPSEC_INIT_CTX
 argument_list|(
@@ -2563,6 +2589,8 @@ name|ctx
 argument_list|,
 operator|&
 name|m
+argument_list|,
+name|inp
 argument_list|,
 name|sav
 argument_list|,
@@ -2808,6 +2836,8 @@ argument_list|(
 name|m
 argument_list|,
 name|sp
+argument_list|,
+name|inp
 argument_list|,
 literal|0
 argument_list|)
@@ -3492,6 +3522,8 @@ name|m
 argument_list|,
 name|sp
 argument_list|,
+name|NULL
+argument_list|,
 name|idx
 argument_list|)
 operator|)
@@ -3523,6 +3555,8 @@ argument_list|(
 name|m
 argument_list|,
 name|sp
+argument_list|,
+name|NULL
 argument_list|,
 name|idx
 argument_list|)

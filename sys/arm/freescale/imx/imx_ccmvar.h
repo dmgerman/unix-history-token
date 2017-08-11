@@ -113,6 +113,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|imx6_ccm_sata_enable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Routines to get and set the arm clock root divisor register. */
 end_comment

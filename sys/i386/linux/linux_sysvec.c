@@ -5444,8 +5444,6 @@ argument_list|)
 argument_list|(
 operator|&
 name|elf_linux_sysvec
-argument_list|,
-name|LINUX_SHAREDPAGE
 argument_list|)
 expr_stmt|;
 name|bcopy

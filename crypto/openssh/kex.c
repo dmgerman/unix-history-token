@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.c,v 1.127 2016/10/10 19:28:48 markus Exp $ */
+comment|/* $OpenBSD: kex.c,v 1.131 2017/03/15 07:07:39 markus Exp $ */
 end_comment
 
 begin_comment
@@ -840,6 +840,9 @@ name|cp
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|m
 decl_stmt|;
 name|size_t
 name|len
@@ -986,6 +989,9 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|m
+operator|=
 name|match_list
 argument_list|(
 name|ret
@@ -994,11 +1000,19 @@ name|p
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 continue|continue;
 comment|/* Algorithm already present */
+block|}
 if|if
 condition|(
 name|strlcat
@@ -1052,7 +1066,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Assemble a list of algorithms from a default list and a string from a  * configuration file. The user-provided string may begin with '+' to  * indicate that it should be appended to the default.  */
+comment|/*  * Assemble a list of algorithms from a default list and a string from a  * configuration file. The user-provided string may begin with '+' to  * indicate that it should be appended to the default or '-' that the  * specified names should be removed.  */
 end_comment
 
 begin_function
@@ -1109,14 +1123,10 @@ condition|(
 operator|*
 operator|*
 name|list
-operator|!=
+operator|==
 literal|'+'
 condition|)
 block|{
-return|return
-literal|0
-return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1149,6 +1159,50 @@ name|list
 operator|=
 name|ret
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+operator|*
+name|list
+operator|==
+literal|'-'
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|match_filter_list
+argument_list|(
+name|def
+argument_list|,
+operator|*
+name|list
+operator|+
+literal|1
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+name|SSH_ERR_ALLOC_FAIL
+return|;
+name|free
+argument_list|(
+operator|*
+name|list
+argument_list|)
+expr_stmt|;
+operator|*
+name|list
+operator|=
+name|ret
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -1726,16 +1780,6 @@ operator|&
 name|kex_protocol_error
 argument_list|)
 expr_stmt|;
-name|ssh_dispatch_set
-argument_list|(
-name|ssh
-argument_list|,
-name|SSH2_MSG_KEXINIT
-argument_list|,
-operator|&
-name|kex_input_kexinit
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1765,6 +1809,8 @@ operator|=
 name|sshkey_alg_list
 argument_list|(
 literal|0
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|,
@@ -2254,6 +2300,16 @@ name|SSH2_MSG_NEWKEYS
 argument_list|,
 operator|&
 name|kex_protocol_error
+argument_list|)
+expr_stmt|;
+name|ssh_dispatch_set
+argument_list|(
+name|ssh
+argument_list|,
+name|SSH2_MSG_KEXINIT
+argument_list|,
+operator|&
+name|kex_input_kexinit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2902,6 +2958,16 @@ argument_list|(
 name|ssh
 argument_list|)
 expr_stmt|;
+name|ssh_dispatch_set
+argument_list|(
+name|ssh
+argument_list|,
+name|SSH2_MSG_KEXINIT
+argument_list|,
+operator|&
+name|kex_input_kexinit
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 literal|0
@@ -3531,9 +3597,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 name|SSH_ERR_INTERNAL_ERROR
 return|;
+block|}
 name|enc
 operator|->
 name|name
@@ -3654,9 +3727,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 name|SSH_ERR_INTERNAL_ERROR
 return|;
+block|}
 comment|/* truncate the key */
 if|if
 condition|(
@@ -3798,6 +3878,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|free
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 name|SSH_ERR_INTERNAL_ERROR
 return|;

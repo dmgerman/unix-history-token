@@ -5925,7 +5925,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add pernament link-layer record for given interface address.  */
+comment|/*  * Add permanent link-layer record for given interface address.  */
 end_comment
 
 begin_function

@@ -272,6 +272,16 @@ begin_comment
 comment|/* Has native 64-bit integer support */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_MATH64
+end_define
+
+begin_comment
+comment|/* Has native 64-bit integer support */
+end_comment
+
 begin_comment
 comment|/*  * In the case of the Itanium Processor Family (IPF), the hardware does not  * support misaligned memory transfers. Set the MISALIGNMENT_NOT_SUPPORTED  * flag to indicate that special precautions must be taken to avoid alignment  * faults. (IA64 or ia64 is currently used by existing compilers to indicate  * IPF.)  *  * Note: EM64T and other X86-64 processors support misaligned transfers,  * so there is no need to define this flag.  */
 end_comment
@@ -1745,6 +1755,20 @@ parameter_list|(
 name|dest
 parameter_list|)
 value|(memcpy (ACPI_CAST_PTR (char, (dest)), ACPI_SIG_RSDP, 8))
+end_define
+
+begin_comment
+comment|/*  * Algorithm to obtain access bit width.  * Can be used with AccessWidth of ACPI_GENERIC_ADDRESS and AccessSize of  * ACPI_RESOURCE_GENERIC_REGISTER.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ACCESS_BIT_WIDTH
+parameter_list|(
+name|size
+parameter_list|)
+value|(1<< ((size) + 2))
 end_define
 
 begin_comment

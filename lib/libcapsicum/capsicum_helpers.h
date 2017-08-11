@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -110,6 +116,8 @@ block|{
 name|TIOCGETA
 block|,
 name|TIOCGWINSZ
+block|,
+name|FIODTYPE
 block|}
 decl_stmt|;
 name|cap_rights_init

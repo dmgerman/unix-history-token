@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|MAXMEMDOM
-value|1
+value|2
 end_define
 
 begin_endif

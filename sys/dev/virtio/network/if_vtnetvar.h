@@ -829,7 +829,7 @@ begin_define
 define|#
 directive|define
 name|VTNET_MIN_TX_SEGS
-value|4
+value|32
 end_define
 
 begin_define

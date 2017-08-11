@@ -308,12 +308,6 @@ name|mda_si_drv1
 operator|=
 name|cdev
 expr_stmt|;
-name|args
-operator|.
-name|mda_unit
-operator|=
-name|dev
-expr_stmt|;
 name|error
 operator|=
 name|make_dev_s
@@ -438,12 +432,6 @@ operator|.
 name|mda_si_drv1
 operator|=
 name|cdev
-expr_stmt|;
-name|args
-operator|.
-name|mda_unit
-operator|=
-name|dev
 expr_stmt|;
 name|error
 operator|=

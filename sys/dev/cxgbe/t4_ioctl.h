@@ -99,6 +99,9 @@ comment|/* flash boot rom */
 name|T4_LOAD_BOOTCFG
 block|,
 comment|/* flash bootcfg */
+name|T4_CUDBG_DUMP
+block|,
+comment|/* debug dump of chip state */
 block|}
 enum|;
 end_enum
@@ -1084,6 +1087,30 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|t4_cudbg_dump
+block|{
+name|uint8_t
+name|wr_flash
+decl_stmt|;
+name|uint8_t
+name|bitmap
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|uint32_t
+name|len
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1222,6 +1249,13 @@ define|#
 directive|define
 name|CHELSIO_T4_LOAD_BOOTCFG
 value|_IOW('f', T4_LOAD_BOOTCFG, struct t4_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_CUDBG_DUMP
+value|_IOWR('f', T4_CUDBG_DUMP, struct t4_cudbg_dump)
 end_define
 
 begin_endif

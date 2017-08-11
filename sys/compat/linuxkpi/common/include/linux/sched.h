@@ -48,6 +48,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/bitmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/compat.h>
 end_include
 
@@ -55,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<linux/completion.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/mm_types.h>
 end_include
 
 begin_include
@@ -72,19 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/mm_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<linux/bitmap.h>
+file|<linux/time.h>
 end_include
 
 begin_include
@@ -594,6 +606,44 @@ name|timeout
 parameter_list|)
 value|schedule_timeout(timeout)
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|uint64_t
+name|local_clock
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
+name|nanotime
+argument_list|(
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|ts
+operator|.
+name|tv_sec
+operator|*
+name|NSEC_PER_SEC
+operator|+
+name|ts
+operator|.
+name|tv_nsec
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

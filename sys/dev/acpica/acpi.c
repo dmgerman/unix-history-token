@@ -2076,6 +2076,34 @@ name|started
 operator|=
 literal|1
 expr_stmt|;
+comment|/*      * Initialize the ACPICA subsystem.      */
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
+operator|=
+name|AcpiInitializeSubsystem
+argument_list|()
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ACPI: Could not initialize Subsystem: %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Pre-allocate space for RSDT/XSDT and DSDT tables and allow resizing      * if more tables exist.      */
 if|if
 condition|(
@@ -2716,36 +2744,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Start up the ACPI CA subsystem. */
-name|status
-operator|=
-name|AcpiInitializeSubsystem
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|status
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Could not initialize Subsystem: %s\n"
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|status
-argument_list|)
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* Override OS interfaces if the user requested. */
 name|acpi_reset_interfaces
 argument_list|(

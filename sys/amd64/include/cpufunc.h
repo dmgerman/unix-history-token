@@ -160,6 +160,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|__pure2
 name|u_int
 name|bsfl
 parameter_list|(
@@ -182,6 +183,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|__pure2
 name|u_long
 name|bsfq
 parameter_list|(
@@ -204,6 +206,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|__pure2
 name|u_int
 name|bsrl
 parameter_list|(
@@ -226,6 +229,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|__pure2
 name|u_long
 name|bsrq
 parameter_list|(
@@ -463,6 +467,7 @@ end_define
 begin_function
 specifier|static
 name|__inline
+name|__pure2
 name|int
 name|ffsl
 parameter_list|(
@@ -504,6 +509,7 @@ end_define
 begin_function
 specifier|static
 name|__inline
+name|__pure2
 name|int
 name|ffsll
 parameter_list|(
@@ -535,6 +541,7 @@ end_define
 begin_function
 specifier|static
 name|__inline
+name|__pure2
 name|int
 name|fls
 parameter_list|(
@@ -576,6 +583,7 @@ end_define
 begin_function
 specifier|static
 name|__inline
+name|__pure2
 name|int
 name|flsl
 parameter_list|(
@@ -617,6 +625,7 @@ end_define
 begin_function
 specifier|static
 name|__inline
+name|__pure2
 name|int
 name|flsll
 parameter_list|(

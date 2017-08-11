@@ -237,176 +237,162 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_mem_lock
+name|CLOUDABI64_SYS_cloudabi_sys_mem_map
 value|33
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_mem_map
+name|CLOUDABI64_SYS_cloudabi_sys_mem_protect
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_mem_protect
+name|CLOUDABI64_SYS_cloudabi_sys_mem_sync
 value|35
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_mem_sync
+name|CLOUDABI64_SYS_cloudabi_sys_mem_unmap
 value|36
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_mem_unlock
+name|CLOUDABI64_SYS_cloudabi64_sys_poll
 value|37
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_mem_unmap
+name|CLOUDABI64_SYS_cloudabi64_sys_poll_fd
 value|38
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi64_sys_poll
+name|CLOUDABI64_SYS_cloudabi_sys_proc_exec
 value|39
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi64_sys_poll_fd
+name|CLOUDABI64_SYS_cloudabi_sys_proc_exit
 value|40
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_proc_exec
+name|CLOUDABI64_SYS_cloudabi_sys_proc_fork
 value|41
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_proc_exit
+name|CLOUDABI64_SYS_cloudabi_sys_proc_raise
 value|42
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_proc_fork
+name|CLOUDABI64_SYS_cloudabi_sys_random_get
 value|43
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_proc_raise
+name|CLOUDABI64_SYS_cloudabi_sys_sock_accept
 value|44
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_random_get
+name|CLOUDABI64_SYS_cloudabi_sys_sock_bind
 value|45
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_sock_accept
+name|CLOUDABI64_SYS_cloudabi_sys_sock_connect
 value|46
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_sock_bind
+name|CLOUDABI64_SYS_cloudabi_sys_sock_listen
 value|47
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_sock_connect
+name|CLOUDABI64_SYS_cloudabi64_sys_sock_recv
 value|48
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_sock_listen
+name|CLOUDABI64_SYS_cloudabi64_sys_sock_send
 value|49
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi64_sys_sock_recv
+name|CLOUDABI64_SYS_cloudabi_sys_sock_shutdown
 value|50
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi64_sys_sock_send
+name|CLOUDABI64_SYS_cloudabi_sys_sock_stat_get
 value|51
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_sock_shutdown
+name|CLOUDABI64_SYS_cloudabi64_sys_thread_create
 value|52
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_sock_stat_get
+name|CLOUDABI64_SYS_cloudabi_sys_thread_exit
 value|53
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi64_sys_thread_create
+name|CLOUDABI64_SYS_cloudabi_sys_thread_yield
 value|54
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_thread_exit
-value|55
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLOUDABI64_SYS_cloudabi_sys_thread_yield
-value|56
-end_define
-
-begin_define
-define|#
-directive|define
 name|CLOUDABI64_SYS_MAXSYSCALL
-value|57
+value|55
 end_define
 
 end_unit

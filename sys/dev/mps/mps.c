@@ -1592,9 +1592,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mps_print_iocfacts
+name|MPS_DPRINT_PAGE
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_XINFO
+argument_list|,
+name|iocfacts
 argument_list|,
 name|sc
 operator|->
@@ -1819,6 +1823,13 @@ name|reallocating
 operator|=
 name|FALSE
 expr_stmt|;
+name|sc
+operator|->
+name|mps_flags
+operator|&=
+operator|~
+name|MPS_FLAGS_REALLOCATED
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2012,6 +2023,13 @@ block|{
 name|reallocating
 operator|=
 name|TRUE
+expr_stmt|;
+comment|/* Record that we reallocated everything */
+name|sc
+operator|->
+name|mps_flags
+operator||=
+name|MPS_FLAGS_REALLOCATED
 expr_stmt|;
 block|}
 comment|/* 	 * Some things should be done if attaching or re-allocating after a Diag 	 * Reset, but are not needed after a Diag Reset if the FW has not 	 * changed. 	 */
@@ -6237,7 +6255,6 @@ comment|/* Get the driver parameter tunables.  Lowest priority are the driver de
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|mps_get_tunables
 parameter_list|(
@@ -7285,11 +7302,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|mps_get_tunables
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|MPS_FUNCTRACE
 argument_list|(
 name|sc
@@ -7749,9 +7761,11 @@ name|MPI2_EVENT_DATA_LOG_ENTRY_ADDED
 modifier|*
 name|entry
 decl_stmt|;
-name|mps_print_event
+name|MPS_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|generic
 argument_list|,
 name|event
 argument_list|)
@@ -9361,9 +9375,11 @@ name|cm
 operator|->
 name|cm_reply
 condition|)
-name|mps_print_event
+name|MPS_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|generic
 argument_list|,
 operator|(
 name|MPI2_EVENT_NOTIFICATION_REPLY
@@ -9554,6 +9570,8 @@ decl_stmt|;
 name|MPI2_EVENT_NOTIFICATION_REPLY
 modifier|*
 name|reply
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|mps_command
@@ -9803,6 +9821,7 @@ name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|60
@@ -9810,6 +9829,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cm
+operator|!=
+name|NULL
+condition|)
 name|reply
 operator|=
 operator|(
@@ -9842,9 +9867,15 @@ name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-name|mps_print_event
+if|if
+condition|(
+name|reply
+condition|)
+name|MPS_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|generic
 argument_list|,
 name|reply
 argument_list|)
@@ -9862,6 +9893,12 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cm
+operator|!=
+name|NULL
+condition|)
 name|mps_free_command
 argument_list|(
 name|sc
@@ -11567,7 +11604,8 @@ parameter_list|,
 name|struct
 name|mps_command
 modifier|*
-name|cm
+modifier|*
+name|cmp
 parameter_list|,
 name|int
 name|timeout
@@ -11586,6 +11624,14 @@ name|timeval
 name|cur_time
 decl_stmt|,
 name|start_time
+decl_stmt|;
+name|struct
+name|mps_command
+modifier|*
+name|cm
+init|=
+operator|*
+name|cmp
 decl_stmt|;
 if|if
 condition|(
@@ -11850,6 +11896,22 @@ else|:
 literal|"failed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mps_flags
+operator|&
+name|MPS_FLAGS_REALLOCATED
+condition|)
+block|{
+comment|/* 			 * Tell the caller that we freed the command in a 			 * reinit. 			 */
+operator|*
+name|cmp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|ETIMEDOUT
@@ -12218,6 +12280,7 @@ name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|0
@@ -12241,6 +12304,12 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cm
+operator|!=
+name|NULL
+condition|)
 name|mps_free_command
 argument_list|(
 name|sc

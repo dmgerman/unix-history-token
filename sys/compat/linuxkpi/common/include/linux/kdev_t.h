@@ -28,7 +28,7 @@ name|MAJOR
 parameter_list|(
 name|dev
 parameter_list|)
-value|major((dev))
+value|major(dev)
 end_define
 
 begin_define
@@ -38,7 +38,7 @@ name|MINOR
 parameter_list|(
 name|dev
 parameter_list|)
-value|minor((dev))
+value|minor(dev)
 end_define
 
 begin_define
@@ -50,7 +50,7 @@ name|ma
 parameter_list|,
 name|mi
 parameter_list|)
-value|makedev((ma), (mi))
+value|makedev(ma, mi)
 end_define
 
 begin_function

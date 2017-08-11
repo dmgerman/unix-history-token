@@ -194,12 +194,22 @@ name|CalculateTrapHandlerSymbolNames
 argument_list|()
 name|override
 block|;
-name|uint64_t
-name|ConvertMmapFlagsToPlatform
+name|MmapArgList
+name|GetMmapArgumentList
 argument_list|(
 argument|const ArchSpec&arch
 argument_list|,
+argument|lldb::addr_t addr
+argument_list|,
+argument|lldb::addr_t length
+argument_list|,
+argument|unsigned prot
+argument_list|,
 argument|unsigned flags
+argument_list|,
+argument|lldb::addr_t fd
+argument_list|,
+argument|lldb::addr_t offset
 argument_list|)
 name|override
 block|;

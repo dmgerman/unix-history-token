@@ -174,6 +174,16 @@ name|COMPILER_VA_MACRO
 value|1
 end_define
 
+begin_comment
+comment|/* GCC supports native multiply/shift on 32-bit platforms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_MATH64
+end_define
+
 begin_endif
 endif|#
 directive|endif

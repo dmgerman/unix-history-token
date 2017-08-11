@@ -73,13 +73,23 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-comment|/* If not a predefined name, cannot typecheck args */
+comment|/*      * If not a predefined name, cannot typecheck args, because      * we have no idea what argument types are expected.      * Also, ignore typecheck if warnings/errors if this method      * has already been evaluated at least once -- in order      * to suppress repetitive messages.      */
 if|if
 condition|(
 operator|!
 name|Info
 operator|->
 name|Predefined
+operator|||
+operator|(
+name|Info
+operator|->
+name|Node
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_EVALUATED
+operator|)
 condition|)
 block|{
 return|return;
@@ -187,6 +197,15 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Prevent any additional typechecking for this method */
+name|Info
+operator|->
+name|Node
+operator|->
+name|Flags
+operator||=
+name|ANOBJ_EVALUATED
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -224,6 +243,14 @@ if|if
 condition|(
 operator|!
 name|Predefined
+operator|||
+operator|(
+name|Node
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_EVALUATED
+operator|)
 condition|)
 block|{
 return|return;
@@ -431,6 +458,17 @@ decl_stmt|;
 name|UINT32
 name|RequiredParamCount
 decl_stmt|;
+if|if
+condition|(
+name|Node
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_EVALUATED
+condition|)
+block|{
+return|return;
+block|}
 if|if
 condition|(
 operator|!

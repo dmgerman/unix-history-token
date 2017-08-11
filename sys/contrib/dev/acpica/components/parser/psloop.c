@@ -385,6 +385,23 @@ name|ArgTypes
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_PARSE
+operator|,
+literal|"Final argument count: %u pass %u\n"
+operator|,
+name|WalkState
+operator|->
+name|ArgCount
+operator|,
+name|WalkState
+operator|->
+name|PassNumber
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/*          * Handle executable code at "module-level". This refers to          * executable opcodes that appear outside of any control method.          */
 if|if
 condition|(
@@ -703,6 +720,21 @@ name|ACPI_IMODE_LOAD_PASS2
 operator|)
 condition|)
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_PARSE
+operator|,
+literal|"Setup Package/Buffer: Pass %u, AML Ptr: %p\n"
+operator|,
+name|WalkState
+operator|->
+name|PassNumber
+operator|,
+name|AmlOpStart
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/*                  * Skip parsing of Buffers and Packages because we don't have                  * enough info in the first pass to parse them correctly.                  */
 name|Op
 operator|->
@@ -1567,6 +1599,19 @@ continue|continue;
 block|}
 block|}
 comment|/* Check for arguments that need to be processed */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_PARSE
+operator|,
+literal|"Parseloop: argument count: %u\n"
+operator|,
+name|WalkState
+operator|->
+name|ArgCount
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|WalkState

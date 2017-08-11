@@ -247,7 +247,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 operator|*
 name|regvalue
@@ -350,7 +350,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 operator|*
 name|regvalue
@@ -553,7 +553,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 name|regs
 operator|.
@@ -649,7 +649,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 name|regs
 operator|.

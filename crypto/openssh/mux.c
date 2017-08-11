@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mux.c,v 1.63 2016/10/19 23:21:56 dtucker Exp $ */
+comment|/* $OpenBSD: mux.c,v 1.64 2017/01/21 11:32:04 guenther Exp $ */
 end_comment
 
 begin_comment
@@ -11700,9 +11700,6 @@ name|struct
 name|sockaddr_un
 name|addr
 decl_stmt|;
-name|socklen_t
-name|sun_len
-decl_stmt|;
 name|int
 name|sock
 decl_stmt|;
@@ -11781,23 +11778,6 @@ operator|.
 name|sun_family
 operator|=
 name|AF_UNIX
-expr_stmt|;
-name|sun_len
-operator|=
-name|offsetof
-argument_list|(
-expr|struct
-name|sockaddr_un
-argument_list|,
-name|sun_path
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|path
-argument_list|)
-operator|+
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -11885,7 +11865,10 @@ operator|)
 operator|&
 name|addr
 argument_list|,
-name|sun_len
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
 argument_list|)
 operator|==
 operator|-

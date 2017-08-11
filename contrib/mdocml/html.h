@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: html.h,v 1.85 2017/05/04 22:16:09 schwarze Exp $ */
+comment|/*	$Id: html.h,v 1.87 2017/07/08 14:51:04 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -78,6 +78,8 @@ block|,
 name|TAG_MROW
 block|,
 name|TAG_MI
+block|,
+name|TAG_MN
 block|,
 name|TAG_MO
 block|,
@@ -303,7 +305,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|eqn
+name|eqn_box
 struct_decl|;
 end_struct_decl
 
@@ -451,7 +453,7 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|eqn
+name|eqn_box
 modifier|*
 parameter_list|)
 function_decl|;

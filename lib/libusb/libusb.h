@@ -1188,6 +1188,12 @@ name|libusb_ss_usb_device_capability_descriptor
 modifier|*
 name|ss_usb_cap
 decl_stmt|;
+name|struct
+name|libusb_bos_dev_capability_descriptor
+modifier|*
+modifier|*
+name|dev_capability
+decl_stmt|;
 block|}
 name|libusb_bos_descriptor
 name|__aligned

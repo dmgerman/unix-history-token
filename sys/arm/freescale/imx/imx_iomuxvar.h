@@ -64,7 +64,7 @@ name|uint32_t
 name|imx_iomux_gpr_get
 parameter_list|(
 name|u_int
-name|regnum
+name|regaddr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -74,7 +74,7 @@ name|void
 name|imx_iomux_gpr_set
 parameter_list|(
 name|u_int
-name|regnum
+name|regaddr
 parameter_list|,
 name|uint32_t
 name|val
@@ -87,7 +87,7 @@ name|void
 name|imx_iomux_gpr_set_masked
 parameter_list|(
 name|u_int
-name|regnum
+name|regaddr
 parameter_list|,
 name|uint32_t
 name|clrbits

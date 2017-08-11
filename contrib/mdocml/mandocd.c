@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandocd.c,v 1.5 2017/02/17 14:31:52 schwarze Exp $ */
+comment|/*	$Id: mandocd.c,v 1.6 2017/06/24 14:38:32 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -750,9 +750,11 @@ name|MPARSE_UTF8
 operator||
 name|MPARSE_LATIN1
 argument_list|,
-name|MANDOCLEVEL_BADARG
+name|MANDOCERR_MAX
 argument_list|,
 name|NULL
+argument_list|,
+name|MANDOC_OS_OTHER
 argument_list|,
 name|defos
 argument_list|)

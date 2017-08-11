@@ -334,10 +334,6 @@ name|ifnet
 modifier|*
 name|sc_ifp
 decl_stmt|;
-name|struct
-name|mtx
-name|sc_ro_mtx
-decl_stmt|;
 name|u_int
 name|sc_fibnum
 decl_stmt|;
@@ -371,10 +367,6 @@ init|=
 literal|"stf"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Note that mutable fields in the softc are not currently locked.  * We do lock sc_ro in stf_output though.  */
-end_comment
 
 begin_expr_stmt
 specifier|static
@@ -1021,22 +1013,6 @@ name|if_dunit
 operator|=
 name|IF_DUNIT_NONE
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-operator|(
-name|sc
-operator|)
-operator|->
-name|sc_ro_mtx
-argument_list|,
-literal|"stf ro"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|encap_cookie
@@ -1188,16 +1164,6 @@ argument_list|,
 operator|(
 literal|"Unexpected error detaching encap_cookie"
 operator|)
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-operator|(
-name|sc
-operator|)
-operator|->
-name|sc_ro_mtx
 argument_list|)
 expr_stmt|;
 name|bpfdetach

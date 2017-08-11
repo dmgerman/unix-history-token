@@ -774,6 +774,19 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+comment|/* 		 * If we have no efi environment, then don't create the device. 		 */
+if|if
+condition|(
+name|efi_rt_ok
+argument_list|()
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|make_dev_args_init
 argument_list|(
 operator|&

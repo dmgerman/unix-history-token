@@ -330,6 +330,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|flopenat
+parameter_list|(
+name|int
+name|_dirfd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_path
+parameter_list|,
+name|int
+name|_flags
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|forkpty
 parameter_list|(
 name|int

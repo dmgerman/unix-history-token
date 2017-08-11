@@ -4004,6 +4004,35 @@ goto|goto
 name|drv_rgtr_fail
 goto|;
 block|}
+name|rc
+operator|=
+name|bnxt_hwrm_func_rgtr_async_events
+argument_list|(
+name|softc
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|softc
+operator|->
+name|dev
+argument_list|,
+literal|"attach: hwrm rgtr async evts failed\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|drv_rgtr_fail
+goto|;
+block|}
 comment|/* Get the HW capabilities */
 name|rc
 operator|=
@@ -4397,7 +4426,7 @@ index|]
 expr_stmt|;
 name|scctx
 operator|->
-name|isc_max_rxqsets
+name|isc_nrxqsets_max
 operator|=
 name|min
 argument_list|(
@@ -4421,13 +4450,13 @@ argument_list|)
 expr_stmt|;
 name|scctx
 operator|->
-name|isc_max_rxqsets
+name|isc_nrxqsets_max
 operator|=
 name|min
 argument_list|(
 name|scctx
 operator|->
-name|isc_max_rxqsets
+name|isc_nrxqsets_max
 argument_list|,
 name|softc
 operator|->
@@ -4438,7 +4467,7 @@ argument_list|)
 expr_stmt|;
 name|scctx
 operator|->
-name|isc_max_txqsets
+name|isc_ntxqsets_max
 operator|=
 name|min
 argument_list|(
@@ -4456,7 +4485,7 @@ name|max_cp_rings
 operator|-
 name|scctx
 operator|->
-name|isc_max_rxqsets
+name|isc_nrxqsets_max
 operator|-
 literal|1
 argument_list|)
@@ -11766,7 +11795,7 @@ expr_stmt|;
 else|else
 name|flow_ctrl
 operator|=
-literal|"none"
+literal|"FC - none"
 expr_stmt|;
 name|iflib_link_state_change
 argument_list|(
@@ -11788,11 +11817,21 @@ name|softc
 operator|->
 name|dev
 argument_list|,
-literal|"Link is UP %s, %s\n"
+literal|"Link is UP %s, %s - %d Mbps \n"
 argument_list|,
 name|duplex
 argument_list|,
 name|flow_ctrl
+argument_list|,
+operator|(
+name|softc
+operator|->
+name|link_info
+operator|.
+name|link_speed
+operator|*
+literal|100
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

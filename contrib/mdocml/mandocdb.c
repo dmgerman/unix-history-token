@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandocdb.c,v 1.250 2017/05/17 22:27:12 schwarze Exp $ */
+comment|/*	$Id: mandocdb.c,v 1.253 2017/07/28 14:48:25 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -2786,9 +2786,11 @@ name|mparse_alloc
 argument_list|(
 name|mparse_options
 argument_list|,
-name|MANDOCLEVEL_BADARG
+name|MANDOCERR_MAX
 argument_list|,
 name|NULL
+argument_list|,
+name|MANDOC_OS_OTHER
 argument_list|,
 name|NULL
 argument_list|)
@@ -11080,6 +11082,10 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 name|say
 argument_list|(

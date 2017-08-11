@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libroff.h,v 1.39 2015/11/07 14:01:16 schwarze Exp $ */
+comment|/*	$Id: libroff.h,v 1.42 2017/07/08 17:52:49 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015, 2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_enum
@@ -91,22 +91,17 @@ struct|struct
 name|eqn_node
 block|{
 name|struct
-name|eqn
-name|eqn
-decl_stmt|;
-comment|/* syntax tree of this equation */
-name|struct
 name|mparse
 modifier|*
 name|parse
 decl_stmt|;
 comment|/* main parser, for error reporting */
 name|struct
-name|eqn_node
+name|roff_node
 modifier|*
-name|next
+name|node
 decl_stmt|;
-comment|/* singly linked list of equations */
+comment|/* syntax tree of this equation */
 name|struct
 name|eqn_def
 modifier|*
@@ -118,6 +113,16 @@ modifier|*
 name|data
 decl_stmt|;
 comment|/* source code of this equation */
+name|char
+modifier|*
+name|start
+decl_stmt|;
+comment|/* first byte of the current token */
+name|char
+modifier|*
+name|end
+decl_stmt|;
+comment|/* first byte of the next token */
 name|size_t
 name|defsz
 decl_stmt|;
@@ -127,13 +132,9 @@ name|sz
 decl_stmt|;
 comment|/* length of the source code */
 name|size_t
-name|cur
+name|toksz
 decl_stmt|;
-comment|/* parse point in the source code */
-name|size_t
-name|rew
-decl_stmt|;
-comment|/* beginning of the current token */
+comment|/* length of the current token */
 name|int
 name|gsize
 decl_stmt|;
@@ -231,8 +232,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|enum
-name|rofferr
+name|void
 name|tbl_read
 parameter_list|(
 name|struct
@@ -309,7 +309,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|tbl_cdata
 parameter_list|(
 name|struct
@@ -348,7 +348,6 @@ parameter_list|(
 name|struct
 name|tbl_node
 modifier|*
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -359,10 +358,6 @@ name|eqn_node
 modifier|*
 name|eqn_alloc
 parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
 name|struct
 name|mparse
 modifier|*
@@ -371,13 +366,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|enum
-name|rofferr
-name|eqn_end
+name|void
+name|eqn_box_free
 parameter_list|(
 name|struct
-name|eqn_node
-modifier|*
+name|eqn_box
 modifier|*
 parameter_list|)
 function_decl|;
@@ -395,24 +388,37 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|enum
-name|rofferr
+name|void
+name|eqn_parse
+parameter_list|(
+name|struct
+name|eqn_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|eqn_read
 parameter_list|(
 name|struct
 name|eqn_node
 modifier|*
-modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|eqn_reset
+parameter_list|(
+name|struct
+name|eqn_node
 modifier|*
 parameter_list|)
 function_decl|;

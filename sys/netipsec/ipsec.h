@@ -888,13 +888,15 @@ name|_ctx
 parameter_list|,
 name|_mp
 parameter_list|,
+name|_inp
+parameter_list|,
 name|_sav
 parameter_list|,
 name|_af
 parameter_list|,
 name|_enc
 parameter_list|)
-value|do {	\ 	(_ctx)->mp = (_mp);				\ 	(_ctx)->sav = (_sav);				\ 	(_ctx)->af = (_af);				\ 	(_ctx)->enc = (_enc);				\ } while(0)
+value|do {	\ 	(_ctx)->mp = (_mp);				\ 	(_ctx)->inp = (_inp);				\ 	(_ctx)->sav = (_sav);				\ 	(_ctx)->af = (_af);				\ 	(_ctx)->enc = (_enc);				\ } while(0)
 end_define
 
 begin_function_decl

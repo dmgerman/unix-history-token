@@ -865,9 +865,9 @@ index|[
 name|WORK_ST_CANCEL
 index|]
 operator|=
-name|WORK_ST_IDLE
+name|WORK_ST_EXEC
 block|,
-comment|/* complete cancel */
+comment|/* failed to cancel */
 block|}
 decl_stmt|;
 name|struct
@@ -949,6 +949,9 @@ name|WORK_ST_TIMER
 case|:
 case|case
 name|WORK_ST_TASK
+case|:
+case|case
+name|WORK_ST_CANCEL
 case|:
 name|WQ_EXEC_UNLOCK
 argument_list|(
@@ -1066,16 +1069,16 @@ index|[
 name|WORK_ST_EXEC
 index|]
 operator|=
-name|WORK_ST_TASK
+name|WORK_ST_EXEC
 block|,
-comment|/* queue task another time */
+comment|/* NOP */
 index|[
 name|WORK_ST_CANCEL
 index|]
 operator|=
-name|WORK_ST_IDLE
+name|WORK_ST_TASK
 block|,
-comment|/* complete cancel */
+comment|/* failed to cancel */
 block|}
 decl_stmt|;
 name|struct
@@ -1102,6 +1105,9 @@ condition|)
 block|{
 case|case
 name|WORK_ST_TIMER
+case|:
+case|case
+name|WORK_ST_CANCEL
 case|:
 name|linux_delayed_work_enqueue
 argument_list|(
@@ -1153,30 +1159,30 @@ index|[
 name|WORK_ST_TIMER
 index|]
 operator|=
-name|WORK_ST_IDLE
+name|WORK_ST_TIMER
 block|,
-comment|/* idle */
+comment|/* can't happen */
 index|[
 name|WORK_ST_TASK
 index|]
 operator|=
 name|WORK_ST_IDLE
 block|,
-comment|/* idle */
+comment|/* cancel and drain */
 index|[
 name|WORK_ST_EXEC
 index|]
 operator|=
 name|WORK_ST_IDLE
 block|,
-comment|/* idle */
+comment|/* too late, drain */
 index|[
 name|WORK_ST_CANCEL
 index|]
 operator|=
 name|WORK_ST_IDLE
 block|,
-comment|/* idle */
+comment|/* cancel and drain */
 block|}
 decl_stmt|;
 name|struct
@@ -1211,6 +1217,51 @@ block|{
 case|case
 name|WORK_ST_IDLE
 case|:
+case|case
+name|WORK_ST_TIMER
+case|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|WORK_ST_EXEC
+case|:
+name|tq
+operator|=
+name|work
+operator|->
+name|work_queue
+operator|->
+name|taskqueue
+expr_stmt|;
+if|if
+condition|(
+name|taskqueue_cancel
+argument_list|(
+name|tq
+argument_list|,
+operator|&
+name|work
+operator|->
+name|work_task
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|taskqueue_drain
+argument_list|(
+name|tq
+argument_list|,
+operator|&
+name|work
+operator|->
+name|work_task
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1381,28 +1432,28 @@ index|]
 operator|=
 name|WORK_ST_CANCEL
 block|,
-comment|/* cancel */
+comment|/* try to cancel */
 index|[
 name|WORK_ST_TASK
 index|]
 operator|=
 name|WORK_ST_CANCEL
 block|,
-comment|/* cancel */
+comment|/* try to cancel */
 index|[
 name|WORK_ST_EXEC
 index|]
 operator|=
-name|WORK_ST_CANCEL
+name|WORK_ST_EXEC
 block|,
-comment|/* cancel */
+comment|/* NOP */
 index|[
 name|WORK_ST_CANCEL
 index|]
 operator|=
 name|WORK_ST_CANCEL
 block|,
-comment|/* cancel */
+comment|/* NOP */
 block|}
 decl_stmt|;
 name|struct
@@ -1428,6 +1479,9 @@ block|{
 case|case
 name|WORK_ST_TIMER
 case|:
+case|case
+name|WORK_ST_CANCEL
+case|:
 if|if
 condition|(
 name|linux_cancel_timer
@@ -1437,17 +1491,30 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
+block|{
+name|atomic_cmpxchg
+argument_list|(
+operator|&
+name|dwork
+operator|->
+name|work
+operator|.
+name|state
+argument_list|,
+name|WORK_ST_CANCEL
+argument_list|,
+name|WORK_ST_IDLE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 comment|/* FALLTHROUGH */
 case|case
 name|WORK_ST_TASK
-case|:
-case|case
-name|WORK_ST_EXEC
 case|:
 name|tq
 operator|=
@@ -1477,11 +1544,27 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|atomic_cmpxchg
+argument_list|(
+operator|&
+name|dwork
+operator|->
+name|work
+operator|.
+name|state
+argument_list|,
+name|WORK_ST_CANCEL
+argument_list|,
+name|WORK_ST_IDLE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 comment|/* FALLTHROUGH */
 default|default:
 return|return
@@ -1533,28 +1616,28 @@ index|]
 operator|=
 name|WORK_ST_IDLE
 block|,
-comment|/* idle */
+comment|/* cancel and drain */
 index|[
 name|WORK_ST_TASK
 index|]
 operator|=
 name|WORK_ST_IDLE
 block|,
-comment|/* idle */
+comment|/* cancel and drain */
 index|[
 name|WORK_ST_EXEC
 index|]
 operator|=
 name|WORK_ST_IDLE
 block|,
-comment|/* idle */
+comment|/* too late, drain */
 index|[
 name|WORK_ST_CANCEL
 index|]
 operator|=
 name|WORK_ST_IDLE
 block|,
-comment|/* idle */
+comment|/* cancel and drain */
 block|}
 decl_stmt|;
 name|struct
@@ -1597,7 +1680,58 @@ literal|0
 operator|)
 return|;
 case|case
+name|WORK_ST_EXEC
+case|:
+name|tq
+operator|=
+name|dwork
+operator|->
+name|work
+operator|.
+name|work_queue
+operator|->
+name|taskqueue
+expr_stmt|;
+if|if
+condition|(
+name|taskqueue_cancel
+argument_list|(
+name|tq
+argument_list|,
+operator|&
+name|dwork
+operator|->
+name|work
+operator|.
+name|work_task
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|taskqueue_drain
+argument_list|(
+name|tq
+argument_list|,
+operator|&
+name|dwork
+operator|->
+name|work
+operator|.
+name|work_task
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
 name|WORK_ST_TIMER
+case|:
+case|case
+name|WORK_ST_CANCEL
 case|:
 if|if
 condition|(
@@ -1898,6 +2032,9 @@ case|:
 case|case
 name|WORK_ST_TASK
 case|:
+case|case
+name|WORK_ST_CANCEL
+case|:
 return|return
 operator|(
 literal|1
@@ -1953,9 +2090,6 @@ operator|)
 return|;
 case|case
 name|WORK_ST_EXEC
-case|:
-case|case
-name|WORK_ST_CANCEL
 case|:
 name|tq
 operator|=

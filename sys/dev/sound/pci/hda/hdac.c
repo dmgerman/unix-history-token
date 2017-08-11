@@ -440,6 +440,26 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_INTEL_KBLKH
+block|,
+literal|"Intel Kabylake-H"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_CFLK
+block|,
+literal|"Intel Coffelake"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_82801F
 block|,
 literal|"Intel 82801F"
@@ -512,7 +532,7 @@ block|,
 block|{
 name|HDA_INTEL_PCH
 block|,
-literal|"Intel 5 Series/3400 Series"
+literal|"Intel Ibex Peak"
 block|,
 literal|0
 block|,
@@ -522,7 +542,7 @@ block|,
 block|{
 name|HDA_INTEL_PCH2
 block|,
-literal|"Intel 5 Series/3400 Series"
+literal|"Intel Ibex Peak"
 block|,
 literal|0
 block|,

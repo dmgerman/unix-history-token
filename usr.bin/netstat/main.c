@@ -2416,9 +2416,6 @@ block|{
 name|rt_stats
 argument_list|()
 expr_stmt|;
-name|flowtable_stats
-argument_list|()
-expr_stmt|;
 block|}
 else|else
 name|routepr

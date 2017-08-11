@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: manpath.c,v 1.33 2017/02/10 15:45:28 schwarze Exp $	*/
+comment|/*	$Id: manpath.c,v 1.35 2017/07/01 09:47:30 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -375,6 +375,34 @@ operator|->
 name|manpath
 argument_list|,
 name|defp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|manpath_base
+parameter_list|(
+name|struct
+name|manpaths
+modifier|*
+name|dirs
+parameter_list|)
+block|{
+name|char
+name|path_base
+index|[]
+init|=
+name|MANPATH_BASE
+decl_stmt|;
+name|manpath_parseline
+argument_list|(
+name|dirs
+argument_list|,
+name|path_base
 argument_list|,
 literal|0
 argument_list|)
@@ -1540,7 +1568,7 @@ name|strtonum
 argument_list|(
 name|cp
 argument_list|,
-literal|58
+literal|1
 argument_list|,
 literal|1000
 argument_list|,

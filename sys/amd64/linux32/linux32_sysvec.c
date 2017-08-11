@@ -5591,8 +5591,6 @@ argument_list|)
 argument_list|(
 operator|&
 name|elf_linux_sysvec
-argument_list|,
-name|LINUX32_SHAREDPAGE
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -5622,7 +5620,9 @@ operator|-
 operator|(
 name|caddr_t
 operator|)
-name|LINUX32_SHAREDPAGE
+name|elf_linux_sysvec
+operator|.
+name|sv_shared_page_base
 operator|)
 expr_stmt|;
 block|}

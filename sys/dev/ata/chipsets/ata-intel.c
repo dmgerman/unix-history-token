@@ -1197,7 +1197,7 @@ literal|"ICH10"
 block|}
 block|,
 block|{
-name|ATA_5Series_S1
+name|ATA_IBP_S1
 block|,
 literal|0
 block|,
@@ -1207,11 +1207,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"5 Series/3400 Series PCH"
+literal|"Ibex Peak"
 block|}
 block|,
 block|{
-name|ATA_5Series_S2
+name|ATA_IBP_S2
 block|,
 literal|0
 block|,
@@ -1221,11 +1221,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"5 Series/3400 Series PCH"
+literal|"Ibex Peak"
 block|}
 block|,
 block|{
-name|ATA_5Series_S3
+name|ATA_IBP_S3
 block|,
 literal|0
 block|,
@@ -1235,11 +1235,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"5 Series/3400 Series PCH"
+literal|"Ibex Peak"
 block|}
 block|,
 block|{
-name|ATA_5Series_S4
+name|ATA_IBP_S4
 block|,
 literal|0
 block|,
@@ -1249,11 +1249,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"5 Series/3400 Series PCH"
+literal|"Ibex Peak-M"
 block|}
 block|,
 block|{
-name|ATA_5Series_S5
+name|ATA_IBP_S5
 block|,
 literal|0
 block|,
@@ -1263,11 +1263,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"5 Series/3400 Series PCH"
+literal|"Ibex Peak-M"
 block|}
 block|,
 block|{
-name|ATA_5Series_S6
+name|ATA_IBP_S6
 block|,
 literal|0
 block|,
@@ -1277,7 +1277,7 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"5 Series/3400 Series PCH"
+literal|"Ibex Peak-M"
 block|}
 block|,
 block|{

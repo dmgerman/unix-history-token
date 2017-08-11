@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.190 2017/04/16 21:23:43 riastradh Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.191 2017/07/20 19:29:54 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.190 2017/04/16 21:23:43 riastradh Exp $"
+literal|"$NetBSD: job.c,v 1.191 2017/07/20 19:29:54 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.190 2017/04/16 21:23:43 riastradh Exp $"
+literal|"$NetBSD: job.c,v 1.191 2017/07/20 19:29:54 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1097,49 +1097,6 @@ end_decl_stmt
 begin_comment
 comment|/* Set of signals we handle */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SYSV
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|KILLPG
-parameter_list|(
-name|pid
-parameter_list|,
-name|sig
-parameter_list|)
-value|kill(-(pid), (sig))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KILLPG
-parameter_list|(
-name|pid
-parameter_list|,
-name|sig
-parameter_list|)
-value|killpg((pid), (sig))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static

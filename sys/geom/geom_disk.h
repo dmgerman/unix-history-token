@@ -179,6 +179,25 @@ end_typedef
 
 begin_struct
 struct|struct
+name|disk_alias
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|disk_alias
+argument_list|)
+name|da_next
+expr_stmt|;
+specifier|const
+name|char
+modifier|*
+name|da_alias
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|disk
 block|{
 comment|/* Fields which are private to geom_disk */
@@ -309,6 +328,14 @@ name|void
 modifier|*
 name|d_drv1
 decl_stmt|;
+comment|/* Fields private to geom_disk, to be moved on next version bump */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|disk_alias
+argument_list|)
+name|d_aliases
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -505,6 +532,22 @@ name|dp
 parameter_list|,
 name|int
 name|flag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|disk_add_alias
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|disk
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

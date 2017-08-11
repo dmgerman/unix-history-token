@@ -332,6 +332,19 @@ name|BIOS_WARM
 value|(0x0a)
 end_define
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CPUS
+argument_list|,
+literal|"cpus"
+argument_list|,
+literal|"CPU items"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* lock region used by kernel profiling */
 end_comment
@@ -574,23 +587,15 @@ end_comment
 begin_decl_stmt
 name|struct
 name|cpu_info
+modifier|*
 name|cpu_info
-index|[
-name|MAX_APIC_ID
-operator|+
-literal|1
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
+modifier|*
 name|apic_cpuids
-index|[
-name|MAX_APIC_ID
-operator|+
-literal|1
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -602,6 +607,30 @@ name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|MAXCPU
+operator|<=
+name|MAX_APIC_ID
+argument_list|,
+literal|"MAXCPU cannot be larger that MAX_APIC_ID"
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|xAPIC_MAX_APIC_ID
+operator|<=
+name|MAX_APIC_ID
+argument_list|,
+literal|"xAPIC_MAX_APIC_ID cannot be larger that MAX_APIC_ID"
+argument_list|)
+assert|;
+end_assert
 
 begin_comment
 comment|/* Holds pending bitmap based IPIs per CPU */
@@ -2272,7 +2301,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|MAX_APIC_ID
+name|max_apic_id
 condition|;
 operator|++
 name|i
@@ -3368,6 +3397,83 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|cpu_alloc
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+name|__unused
+parameter_list|)
+block|{
+comment|/* 	 * Dynamically allocate the arrays that depend on the 	 * maximum APIC ID. 	 */
+name|cpu_info
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|cpu_info
+argument_list|)
+operator|*
+operator|(
+name|max_apic_id
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|M_CPUS
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+name|apic_cpuids
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|apic_cpuids
+argument_list|)
+operator|*
+operator|(
+name|max_apic_id
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|M_CPUS
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|cpu_alloc
+argument_list|,
+name|SI_SUB_CPU
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|cpu_alloc
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Add a logical CPU to the topology.  */
 end_comment
@@ -3387,7 +3493,7 @@ if|if
 condition|(
 name|apic_id
 operator|>
-name|MAX_APIC_ID
+name|max_apic_id
 condition|)
 block|{
 name|panic
@@ -3411,7 +3517,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"CPU %d added twice"
+literal|"CPU %u added twice"
 operator|,
 name|apic_id
 operator|)
@@ -3439,7 +3545,7 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"CPU %d claims to be BSP, but CPU %d already is"
+literal|"CPU %u claims to be BSP, but CPU %u already is"
 operator|,
 name|apic_id
 operator|,
@@ -3463,28 +3569,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|mp_ncpus
-operator|<
-name|MAXCPU
-condition|)
-block|{
-name|mp_ncpus
-operator|++
-expr_stmt|;
-name|mp_maxid
-operator|=
-name|mp_ncpus
-operator|-
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"SMP: Added CPU %d (%s)\n"
+literal|"SMP: Added CPU %u (%s)\n"
 argument_list|,
 name|apic_id
 argument_list|,

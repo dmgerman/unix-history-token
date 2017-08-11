@@ -34,6 +34,10 @@ name|nfsmount_common
 name|nm_com
 decl_stmt|;
 comment|/* Common fields for nlm */
+name|uint32_t
+name|nm_privflag
+decl_stmt|;
+comment|/* Private flags */
 name|int
 name|nm_numgrps
 decl_stmt|;
@@ -307,6 +311,24 @@ define|#
 directive|define
 name|nm_vinvalbuf
 value|nm_com.nmcom_vinvalbuf
+end_define
+
+begin_comment
+comment|/* Private flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNTP_FORCEDISM
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSMNTP_CANCELRPCS
+value|0x00000002
 end_define
 
 begin_define

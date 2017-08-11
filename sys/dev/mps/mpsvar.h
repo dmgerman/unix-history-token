@@ -901,6 +901,10 @@ define|#
 directive|define
 name|MPS_FLAGS_WD_AVAILABLE
 value|(1<< 6)
+define|#
+directive|define
+name|MPS_FLAGS_REALLOCATED
+value|(1<< 7)
 name|u_int
 name|mps_debug
 decl_stmt|;
@@ -909,6 +913,9 @@ name|disable_msix
 decl_stmt|;
 name|u_int
 name|disable_msi
+decl_stmt|;
+name|u_int
+name|msi_msgs
 decl_stmt|;
 name|int
 name|tm_cmds_active
@@ -2700,6 +2707,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|mps_get_tunables
+parameter_list|(
+name|struct
+name|mps_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|mps_attach
 parameter_list|(
@@ -3016,6 +3035,7 @@ name|sc
 parameter_list|,
 name|struct
 name|mps_command
+modifier|*
 modifier|*
 name|cm
 parameter_list|,

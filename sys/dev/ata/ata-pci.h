@@ -1007,42 +1007,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_5Series_S1
+name|ATA_IBP_S1
 value|0x3b208086
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_5Series_S2
+name|ATA_IBP_S2
 value|0x3b218086
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_5Series_S3
+name|ATA_IBP_S3
 value|0x3b268086
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_5Series_S4
+name|ATA_IBP_S4
 value|0x3b288086
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_5Series_S5
+name|ATA_IBP_S5
 value|0x3b2d8086
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATA_5Series_S6
+name|ATA_IBP_S6
 value|0x3b2e8086
 end_define
 

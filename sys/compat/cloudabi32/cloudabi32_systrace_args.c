@@ -1760,51 +1760,9 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi_sys_mem_lock */
-case|case
-literal|33
-case|:
-block|{
-name|struct
-name|cloudabi_sys_mem_lock_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|uarg
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|mapping
-expr_stmt|;
-comment|/* const void * */
-name|uarg
-index|[
-literal|1
-index|]
-operator|=
-name|p
-operator|->
-name|mapping_len
-expr_stmt|;
-comment|/* size_t */
-operator|*
-name|n_args
-operator|=
-literal|2
-expr_stmt|;
-break|break;
-block|}
 comment|/* cloudabi_sys_mem_map */
 case|case
-literal|34
+literal|33
 case|:
 block|{
 name|struct
@@ -1886,7 +1844,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_mem_protect */
 case|case
-literal|35
+literal|34
 case|:
 block|{
 name|struct
@@ -1938,7 +1896,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_mem_sync */
 case|case
-literal|36
+literal|35
 case|:
 block|{
 name|struct
@@ -1988,51 +1946,9 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi_sys_mem_unlock */
-case|case
-literal|37
-case|:
-block|{
-name|struct
-name|cloudabi_sys_mem_unlock_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|uarg
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|mapping
-expr_stmt|;
-comment|/* const void * */
-name|uarg
-index|[
-literal|1
-index|]
-operator|=
-name|p
-operator|->
-name|mapping_len
-expr_stmt|;
-comment|/* size_t */
-operator|*
-name|n_args
-operator|=
-literal|2
-expr_stmt|;
-break|break;
-block|}
 comment|/* cloudabi_sys_mem_unmap */
 case|case
-literal|38
+literal|36
 case|:
 block|{
 name|struct
@@ -2074,7 +1990,7 @@ break|break;
 block|}
 comment|/* cloudabi32_sys_poll */
 case|case
-literal|39
+literal|37
 case|:
 block|{
 name|struct
@@ -2129,7 +2045,7 @@ break|break;
 block|}
 comment|/* cloudabi32_sys_poll_fd */
 case|case
-literal|40
+literal|38
 case|:
 block|{
 name|struct
@@ -2217,7 +2133,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_proc_exec */
 case|case
-literal|41
+literal|39
 case|:
 block|{
 name|struct
@@ -2292,7 +2208,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_proc_exit */
 case|case
-literal|42
+literal|40
 case|:
 block|{
 name|struct
@@ -2321,7 +2237,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_proc_fork */
 case|case
-literal|43
+literal|41
 case|:
 block|{
 operator|*
@@ -2333,7 +2249,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_proc_raise */
 case|case
-literal|44
+literal|42
 case|:
 block|{
 name|struct
@@ -2362,7 +2278,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_random_get */
 case|case
-literal|45
+literal|43
 case|:
 block|{
 name|struct
@@ -2404,7 +2320,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_sock_accept */
 case|case
-literal|46
+literal|44
 case|:
 block|{
 name|struct
@@ -2434,9 +2350,9 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|buf
+name|unused
 expr_stmt|;
-comment|/* cloudabi_sockstat_t * */
+comment|/* void * */
 operator|*
 name|n_args
 operator|=
@@ -2446,7 +2362,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_sock_bind */
 case|case
-literal|47
+literal|45
 case|:
 block|{
 name|struct
@@ -2508,7 +2424,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_sock_connect */
 case|case
-literal|48
+literal|46
 case|:
 block|{
 name|struct
@@ -2570,7 +2486,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_sock_listen */
 case|case
-literal|49
+literal|47
 case|:
 block|{
 name|struct
@@ -2609,7 +2525,7 @@ break|break;
 block|}
 comment|/* cloudabi32_sys_sock_recv */
 case|case
-literal|50
+literal|48
 case|:
 block|{
 name|struct
@@ -2664,7 +2580,7 @@ break|break;
 block|}
 comment|/* cloudabi32_sys_sock_send */
 case|case
-literal|51
+literal|49
 case|:
 block|{
 name|struct
@@ -2719,7 +2635,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_sock_shutdown */
 case|case
-literal|52
+literal|50
 case|:
 block|{
 name|struct
@@ -2758,7 +2674,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_sock_stat_get */
 case|case
-literal|53
+literal|51
 case|:
 block|{
 name|struct
@@ -2810,7 +2726,7 @@ break|break;
 block|}
 comment|/* cloudabi32_sys_thread_create */
 case|case
-literal|54
+literal|52
 case|:
 block|{
 name|struct
@@ -2842,7 +2758,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_thread_exit */
 case|case
-literal|55
+literal|53
 case|:
 block|{
 name|struct
@@ -2884,7 +2800,7 @@ break|break;
 block|}
 comment|/* cloudabi_sys_thread_yield */
 case|case
-literal|56
+literal|54
 case|:
 block|{
 operator|*
@@ -4207,39 +4123,9 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi_sys_mem_lock */
-case|case
-literal|33
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"userland const void *"
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|p
-operator|=
-literal|"size_t"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
 comment|/* cloudabi_sys_mem_map */
 case|case
-literal|34
+literal|33
 case|:
 switch|switch
 condition|(
@@ -4301,7 +4187,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_mem_protect */
 case|case
-literal|35
+literal|34
 case|:
 switch|switch
 condition|(
@@ -4339,7 +4225,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_mem_sync */
 case|case
-literal|36
+literal|35
 case|:
 switch|switch
 condition|(
@@ -4375,39 +4261,9 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi_sys_mem_unlock */
-case|case
-literal|37
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"userland const void *"
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|p
-operator|=
-literal|"size_t"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
 comment|/* cloudabi_sys_mem_unmap */
 case|case
-literal|38
+literal|36
 case|:
 switch|switch
 condition|(
@@ -4437,7 +4293,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi32_sys_poll */
 case|case
-literal|39
+literal|37
 case|:
 switch|switch
 condition|(
@@ -4475,7 +4331,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi32_sys_poll_fd */
 case|case
-literal|40
+literal|38
 case|:
 switch|switch
 condition|(
@@ -4537,7 +4393,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_proc_exec */
 case|case
-literal|41
+literal|39
 case|:
 switch|switch
 condition|(
@@ -4591,7 +4447,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_proc_exit */
 case|case
-literal|42
+literal|40
 case|:
 switch|switch
 condition|(
@@ -4613,12 +4469,12 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_proc_fork */
 case|case
-literal|43
+literal|41
 case|:
 break|break;
 comment|/* cloudabi_sys_proc_raise */
 case|case
-literal|44
+literal|42
 case|:
 switch|switch
 condition|(
@@ -4640,7 +4496,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_random_get */
 case|case
-literal|45
+literal|43
 case|:
 switch|switch
 condition|(
@@ -4670,7 +4526,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_accept */
 case|case
-literal|46
+literal|44
 case|:
 switch|switch
 condition|(
@@ -4690,7 +4546,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland cloudabi_sockstat_t *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 default|default:
@@ -4700,7 +4556,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_bind */
 case|case
-literal|47
+literal|45
 case|:
 switch|switch
 condition|(
@@ -4746,7 +4602,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_connect */
 case|case
-literal|48
+literal|46
 case|:
 switch|switch
 condition|(
@@ -4792,7 +4648,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_listen */
 case|case
-literal|49
+literal|47
 case|:
 switch|switch
 condition|(
@@ -4822,7 +4678,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi32_sys_sock_recv */
 case|case
-literal|50
+literal|48
 case|:
 switch|switch
 condition|(
@@ -4860,7 +4716,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi32_sys_sock_send */
 case|case
-literal|51
+literal|49
 case|:
 switch|switch
 condition|(
@@ -4898,7 +4754,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_shutdown */
 case|case
-literal|52
+literal|50
 case|:
 switch|switch
 condition|(
@@ -4928,7 +4784,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_stat_get */
 case|case
-literal|53
+literal|51
 case|:
 switch|switch
 condition|(
@@ -4966,7 +4822,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi32_sys_thread_create */
 case|case
-literal|54
+literal|52
 case|:
 switch|switch
 condition|(
@@ -4988,7 +4844,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_thread_exit */
 case|case
-literal|55
+literal|53
 case|:
 switch|switch
 condition|(
@@ -5018,7 +4874,7 @@ empty_stmt|;
 break|break;
 comment|/* cloudabi_sys_thread_yield */
 case|case
-literal|56
+literal|54
 case|:
 break|break;
 default|default:
@@ -5701,7 +5557,7 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi_sys_mem_lock */
+comment|/* cloudabi_sys_mem_map */
 case|case
 literal|33
 case|:
@@ -5720,7 +5576,7 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi_sys_mem_map */
+comment|/* cloudabi_sys_mem_protect */
 case|case
 literal|34
 case|:
@@ -5739,7 +5595,7 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi_sys_mem_protect */
+comment|/* cloudabi_sys_mem_sync */
 case|case
 literal|35
 case|:
@@ -5758,7 +5614,7 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi_sys_mem_sync */
+comment|/* cloudabi_sys_mem_unmap */
 case|case
 literal|36
 case|:
@@ -5777,47 +5633,9 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi_sys_mem_unlock */
-case|case
-literal|37
-case|:
-if|if
-condition|(
-name|ndx
-operator|==
-literal|0
-operator|||
-name|ndx
-operator|==
-literal|1
-condition|)
-name|p
-operator|=
-literal|"void"
-expr_stmt|;
-break|break;
-comment|/* cloudabi_sys_mem_unmap */
-case|case
-literal|38
-case|:
-if|if
-condition|(
-name|ndx
-operator|==
-literal|0
-operator|||
-name|ndx
-operator|==
-literal|1
-condition|)
-name|p
-operator|=
-literal|"void"
-expr_stmt|;
-break|break;
 comment|/* cloudabi32_sys_poll */
 case|case
-literal|39
+literal|37
 case|:
 if|if
 condition|(
@@ -5836,7 +5654,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi32_sys_poll_fd */
 case|case
-literal|40
+literal|38
 case|:
 if|if
 condition|(
@@ -5855,7 +5673,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_proc_exec */
 case|case
-literal|41
+literal|39
 case|:
 if|if
 condition|(
@@ -5874,7 +5692,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_proc_exit */
 case|case
-literal|42
+literal|40
 case|:
 if|if
 condition|(
@@ -5893,11 +5711,11 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_proc_fork */
 case|case
-literal|43
+literal|41
 case|:
 comment|/* cloudabi_sys_proc_raise */
 case|case
-literal|44
+literal|42
 case|:
 if|if
 condition|(
@@ -5916,7 +5734,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_random_get */
 case|case
-literal|45
+literal|43
 case|:
 if|if
 condition|(
@@ -5935,7 +5753,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_accept */
 case|case
-literal|46
+literal|44
 case|:
 if|if
 condition|(
@@ -5954,7 +5772,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_bind */
 case|case
-literal|47
+literal|45
 case|:
 if|if
 condition|(
@@ -5973,7 +5791,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_connect */
 case|case
-literal|48
+literal|46
 case|:
 if|if
 condition|(
@@ -5992,7 +5810,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_listen */
 case|case
-literal|49
+literal|47
 case|:
 if|if
 condition|(
@@ -6011,7 +5829,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi32_sys_sock_recv */
 case|case
-literal|50
+literal|48
 case|:
 if|if
 condition|(
@@ -6030,7 +5848,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi32_sys_sock_send */
 case|case
-literal|51
+literal|49
 case|:
 if|if
 condition|(
@@ -6049,7 +5867,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_shutdown */
 case|case
-literal|52
+literal|50
 case|:
 if|if
 condition|(
@@ -6068,7 +5886,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_sock_stat_get */
 case|case
-literal|53
+literal|51
 case|:
 if|if
 condition|(
@@ -6087,7 +5905,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi32_sys_thread_create */
 case|case
-literal|54
+literal|52
 case|:
 if|if
 condition|(
@@ -6106,7 +5924,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_thread_exit */
 case|case
-literal|55
+literal|53
 case|:
 if|if
 condition|(
@@ -6125,7 +5943,7 @@ expr_stmt|;
 break|break;
 comment|/* cloudabi_sys_thread_yield */
 case|case
-literal|56
+literal|54
 case|:
 default|default:
 break|break;

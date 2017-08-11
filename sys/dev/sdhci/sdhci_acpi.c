@@ -165,8 +165,6 @@ literal|1
 block|,
 literal|"Intel Bay Trail/Braswell eMMC 4.5/4.5.1 Controller"
 block|,
-name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
-operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
 operator||
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
@@ -227,8 +225,6 @@ block|,
 name|SDHCI_QUIRK_BROKEN_DMA
 operator||
 comment|/* APL18 erratum */
-name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
-operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
 operator||
 name|SDHCI_QUIRK_WAIT_WHILE_BUSY
@@ -1659,6 +1655,20 @@ argument_list|(
 name|mmcbr_switch_vccq
 argument_list|,
 name|sdhci_generic_switch_vccq
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|mmcbr_tune
+argument_list|,
+name|sdhci_generic_tune
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|mmcbr_retune
+argument_list|,
+name|sdhci_generic_retune
 argument_list|)
 block|,
 name|DEVMETHOD

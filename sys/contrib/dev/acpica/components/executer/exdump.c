@@ -378,7 +378,7 @@ operator|.
 name|Count
 argument_list|)
 block|,
-literal|"Elements"
+literal|"Element Count"
 block|}
 block|,
 block|{
@@ -2232,6 +2232,14 @@ condition|(
 name|Count
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|ObjDesc
+condition|)
+block|{
+return|return;
+block|}
 name|Target
 operator|=
 name|ACPI_ADD_PTR
@@ -2478,7 +2486,7 @@ name|Start
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : %p"
+literal|"%20s : %p "
 argument_list|,
 name|Name
 argument_list|,
@@ -2492,7 +2500,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"(%s %2.2X)"
+literal|"%s (Type %2.2X)"
 argument_list|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -2585,6 +2593,14 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"- No attached objects"
+argument_list|)
+expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
@@ -4549,7 +4565,16 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Unknown Type] %X\n"
+literal|"[%s] Type: %2.2X\n"
+argument_list|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
 argument_list|,
 name|ObjDesc
 operator|->
@@ -4636,21 +4661,6 @@ argument_list|,
 name|Flags
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"\nAttached Object (%p):\n"
-argument_list|,
-operator|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
-name|ObjDesc
-operator|)
-operator|->
-name|Object
-argument_list|)
-expr_stmt|;
 name|ObjDesc
 operator|=
 operator|(
@@ -4662,6 +4672,43 @@ name|ObjDesc
 operator|)
 operator|->
 name|Object
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ObjDesc
+condition|)
+block|{
+name|return_VOID
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\nAttached Object %p"
+argument_list|,
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|==
+name|ACPI_DESC_TYPE_NAMED
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" - Namespace Node"
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|":\n"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|DumpObject
@@ -4720,6 +4767,15 @@ expr_stmt|;
 block|}
 name|DumpObject
 label|:
+if|if
+condition|(
+operator|!
+name|ObjDesc
+condition|)
+block|{
+name|return_VOID
+expr_stmt|;
+block|}
 comment|/* Common Fields */
 name|AcpiExDumpObject
 argument_list|(

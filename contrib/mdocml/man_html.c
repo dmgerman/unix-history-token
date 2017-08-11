@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_html.c,v 1.143 2017/06/08 12:54:58 schwarze Exp $ */
+comment|/*	$Id: man_html.c,v 1.145 2017/06/25 11:42:02 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"mandoc_aux.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc.h"
 end_include
 
 begin_include
@@ -618,6 +624,20 @@ name|NULL
 block|}
 block|,
 comment|/* UE */
+block|{
+name|man_UR_pre
+block|,
+name|NULL
+block|}
+block|,
+comment|/* MT */
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ME */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1135,6 +1155,9 @@ name|MAN_RS
 case|:
 case|case
 name|MAN_UR
+case|:
+case|case
+name|MAN_MT
 case|:
 name|fillmode
 argument_list|(
@@ -2936,6 +2959,10 @@ parameter_list|(
 name|MAN_ARGS
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|n
 operator|=
 name|n
@@ -2971,6 +2998,49 @@ operator|==
 name|ROFFT_TEXT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|->
+name|tok
+operator|==
+name|MAN_MT
+condition|)
+block|{
+name|mandoc_asprintf
+argument_list|(
+operator|&
+name|cp
+argument_list|,
+literal|"mailto:%s"
+argument_list|,
+name|n
+operator|->
+name|child
+operator|->
+name|string
+argument_list|)
+expr_stmt|;
+name|print_otag
+argument_list|(
+name|h
+argument_list|,
+name|TAG_A
+argument_list|,
+literal|"cTh"
+argument_list|,
+literal|"Mt"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|print_otag
 argument_list|(
 name|h

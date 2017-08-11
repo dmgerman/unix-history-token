@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tree.c,v 1.74 2017/04/24 23:06:18 schwarze Exp $ */
+comment|/*	$Id: tree.c,v 1.77 2017/07/08 14:51:05 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -975,8 +975,6 @@ name|n
 operator|->
 name|eqn
 operator|->
-name|root
-operator|->
 name|first
 argument_list|,
 name|indent
@@ -1320,8 +1318,6 @@ name|n
 operator|->
 name|eqn
 operator|->
-name|root
-operator|->
 name|first
 argument_list|,
 name|indent
@@ -1462,17 +1458,6 @@ operator|->
 name|type
 condition|)
 block|{
-case|case
-name|EQN_ROOT
-case|:
-name|t
-operator|=
-literal|"eqn-root"
-expr_stmt|;
-break|break;
-case|case
-name|EQN_LISTONE
-case|:
 case|case
 name|EQN_LIST
 case|:

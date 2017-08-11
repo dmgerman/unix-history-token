@@ -327,6 +327,8 @@ name|ACPI_DMT_PMTT
 block|,
 name|ACPI_DMT_PPTT
 block|,
+name|ACPI_DMT_SDEI
+block|,
 name|ACPI_DMT_SLIC
 block|,
 name|ACPI_DMT_SRAT
@@ -2006,6 +2008,14 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoSbst
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoSdei
 index|[]
 decl_stmt|;
 end_decl_stmt

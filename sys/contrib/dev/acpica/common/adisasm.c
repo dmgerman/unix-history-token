@@ -717,6 +717,11 @@ name|Table
 argument_list|)
 expr_stmt|;
 block|}
+name|AcDeleteTableList
+argument_list|(
+name|ListHead
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|File
@@ -1495,6 +1500,11 @@ name|AE_OK
 expr_stmt|;
 continue|continue;
 block|}
+name|AcDeleteTableList
+argument_list|(
+name|ExternalListHead
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status
@@ -1541,6 +1551,11 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AcDeleteTableList
+argument_list|(
+name|ExternalListHead
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status
@@ -1577,6 +1592,11 @@ operator|->
 name|Next
 expr_stmt|;
 block|}
+name|AcDeleteTableList
+argument_list|(
+name|ExternalListHead
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE

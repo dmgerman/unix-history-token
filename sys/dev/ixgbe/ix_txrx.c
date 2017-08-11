@@ -6678,11 +6678,6 @@ literal|0
 condition|)
 return|return;
 block|}
-name|IXGBE_RX_UNLOCK
-argument_list|(
-name|rxr
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -6693,11 +6688,6 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
-argument_list|)
-expr_stmt|;
-name|IXGBE_RX_LOCK
-argument_list|(
-name|rxr
 argument_list|)
 expr_stmt|;
 block|}
@@ -7842,6 +7832,11 @@ name|next_to_check
 operator|=
 name|i
 expr_stmt|;
+name|IXGBE_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 name|ixgbe_rx_input
 argument_list|(
 name|rxr
@@ -7851,6 +7846,11 @@ argument_list|,
 name|sendmp
 argument_list|,
 name|ptype
+argument_list|)
+expr_stmt|;
+name|IXGBE_RX_LOCK
+argument_list|(
+name|rxr
 argument_list|)
 expr_stmt|;
 name|i
@@ -7902,15 +7902,15 @@ name|next_to_check
 operator|=
 name|i
 expr_stmt|;
+name|IXGBE_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Flush any outstanding LRO work 	 */
 name|tcp_lro_flush_all
 argument_list|(
 name|lro
-argument_list|)
-expr_stmt|;
-name|IXGBE_RX_UNLOCK
-argument_list|(
-name|rxr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Still have cleaning to do? 	 */

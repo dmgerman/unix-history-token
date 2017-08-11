@@ -254,7 +254,7 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
-name|cloudabi_msgflags_t
+name|cloudabi_riflags_t
 parameter_list|,
 name|size_t
 modifier|*
@@ -262,10 +262,7 @@ parameter_list|,
 name|size_t
 modifier|*
 parameter_list|,
-name|cloudabi_sockaddr_t
-modifier|*
-parameter_list|,
-name|cloudabi_msgflags_t
+name|cloudabi_roflags_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -292,8 +289,6 @@ name|cloudabi_fd_t
 modifier|*
 parameter_list|,
 name|size_t
-parameter_list|,
-name|cloudabi_msgflags_t
 parameter_list|,
 name|size_t
 modifier|*

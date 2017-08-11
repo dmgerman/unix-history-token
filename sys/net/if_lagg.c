@@ -4109,6 +4109,11 @@ argument_list|(
 name|lp
 argument_list|)
 expr_stmt|;
+name|LAGG_WUNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4126,6 +4131,11 @@ literal|0
 condition|)
 block|{
 comment|/* Remove the port, without calling pr_delport. */
+name|LAGG_WLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|lagg_port_destroy
 argument_list|(
 name|lp
@@ -4144,11 +4154,6 @@ name|error
 operator|)
 return|;
 block|}
-name|LAGG_WUNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Update lagg capabilities */
 name|lagg_capabilities
 argument_list|(

@@ -390,7 +390,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 comment|/* RISCVTODO: check that these values are correct */
 specifier|const
@@ -609,7 +609,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 operator|||
 name|defined
@@ -2101,7 +2101,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__riscv__
+name|__riscv
 argument_list|)
 typedef|typedef
 name|unsigned

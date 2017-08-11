@@ -1036,9 +1036,10 @@ name|NULL
 decl_stmt|;
 name|max_trans
 operator|=
-literal|256
+name|ctrlr
+operator|->
+name|num_io_queues
 expr_stmt|;
-comment|/* XXX not so simple -- must match queues */
 name|unit
 operator|=
 name|device_get_unit
@@ -1478,6 +1479,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|nvme_use_nvd
+condition|)
+return|return;
 name|consumer_cookie
 operator|=
 name|nvme_register_consumer
@@ -1518,6 +1524,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|nvme_use_nvd
+condition|)
+return|return;
 comment|/* XXX Cleanup */
 name|nvme_unregister_consumer
 argument_list|(

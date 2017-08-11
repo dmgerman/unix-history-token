@@ -1162,6 +1162,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_CTRL2_64BIT_ENABLE
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_CTRL2_HOST_V4_ENABLE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_CTRL2_CMD23_ENABLE
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_CTRL2_ADMA2_LENGTH_MODE
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_CTRL2_UHS2_IFACE_ENABLE
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHCI_CTRL2_SAMPLING_CLOCK
 value|0x0080
 end_define
@@ -1699,6 +1734,20 @@ name|SDHCI_SPEC_400
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|SDHCI_SPEC_410
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_SPEC_420
+value|5
+end_define
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -1725,6 +1774,11 @@ begin_struct
 struct|struct
 name|sdhci_slot
 block|{
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+comment|/* Slot mutex */
 name|u_int
 name|quirks
 decl_stmt|;
@@ -1765,6 +1819,22 @@ define|#
 directive|define
 name|SDHCI_NON_REMOVABLE
 value|0x04
+define|#
+directive|define
+name|SDHCI_TUNING_SUPPORTED
+value|0x08
+define|#
+directive|define
+name|SDHCI_TUNING_ENABLED
+value|0x10
+define|#
+directive|define
+name|SDHCI_SDR50_NEEDS_TUNING
+value|0x20
+define|#
+directive|define
+name|SDHCI_SLOT_EMBEDDED
+value|0x40
 name|u_char
 name|version
 decl_stmt|;
@@ -1815,6 +1885,11 @@ name|timeout_callout
 decl_stmt|;
 comment|/* Card command/data response timeout */
 name|struct
+name|callout
+name|retune_callout
+decl_stmt|;
+comment|/* Re-tuning mode 1 callout */
+name|struct
 name|mmc_host
 name|host
 decl_stmt|;
@@ -1831,6 +1906,28 @@ modifier|*
 name|curcmd
 decl_stmt|;
 comment|/* Current command of current request */
+name|struct
+name|mmc_request
+modifier|*
+name|tune_req
+decl_stmt|;
+comment|/* Tuning request */
+name|struct
+name|mmc_command
+modifier|*
+name|tune_cmd
+decl_stmt|;
+comment|/* Tuning command of tuning request */
+name|struct
+name|mmc_data
+modifier|*
+name|tune_data
+decl_stmt|;
+comment|/* Tuning data of tuning command */
+name|uint32_t
+name|retune_ticks
+decl_stmt|;
+comment|/* Re-tuning callout ticks [hz] */
 name|uint32_t
 name|intmask
 decl_stmt|;
@@ -1847,6 +1944,40 @@ name|uint8_t
 name|hostctrl
 decl_stmt|;
 comment|/* Current host control register */
+name|uint8_t
+name|retune_count
+decl_stmt|;
+comment|/* Controller re-tuning count [s] */
+name|uint8_t
+name|retune_mode
+decl_stmt|;
+comment|/* Controller re-tuning mode */
+define|#
+directive|define
+name|SDHCI_RETUNE_MODE_1
+value|0x00
+define|#
+directive|define
+name|SDHCI_RETUNE_MODE_2
+value|0x01
+define|#
+directive|define
+name|SDHCI_RETUNE_MODE_3
+value|0x02
+name|uint8_t
+name|retune_req
+decl_stmt|;
+comment|/* Re-tuning request status */
+define|#
+directive|define
+name|SDHCI_RETUNE_REQ_NEEDED
+value|0x01
+comment|/* Re-tuning w/o circuit reset needed */
+define|#
+directive|define
+name|SDHCI_RETUNE_REQ_RESET
+value|0x02
+comment|/* Re-tuning w/ circuit reset needed */
 name|u_char
 name|power
 decl_stmt|;
@@ -1885,11 +2016,6 @@ directive|define
 name|PLATFORM_DATA_STARTED
 value|8
 comment|/* Data xfer is handled by platform */
-name|struct
-name|mtx
-name|mtx
-decl_stmt|;
-comment|/* Slot mutex */
 ifdef|#
 directive|ifdef
 name|MMCCAM
@@ -2059,6 +2185,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sdhci_generic_tune
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|reqdev
+parameter_list|,
+name|bool
+name|hs400
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sdhci_generic_switch_vccq
 parameter_list|(
 name|device_t
@@ -2066,6 +2208,22 @@ name|brdev
 parameter_list|,
 name|device_t
 name|reqdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sdhci_generic_retune
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|reqdev
+parameter_list|,
+name|bool
+name|reset
 parameter_list|)
 function_decl|;
 end_function_decl

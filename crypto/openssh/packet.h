@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.h,v 1.74 2016/10/11 21:47:45 djm Exp $ */
+comment|/* $OpenBSD: packet.h,v 1.76 2017/02/03 23:03:33 djm Exp $ */
 end_comment
 
 begin_comment
@@ -233,6 +233,11 @@ name|local_ipaddr
 decl_stmt|;
 name|int
 name|local_port
+decl_stmt|;
+comment|/* Optional preamble for log messages (e.g. username) */
+name|char
+modifier|*
+name|log_preamble
 decl_stmt|;
 comment|/* Dispatcher table */
 name|dispatch_fn
@@ -575,6 +580,36 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|ssh_packet_set_log_preamble
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1097,7 +1132,7 @@ modifier|*
 parameter_list|,
 name|u_int64_t
 parameter_list|,
-name|time_t
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl

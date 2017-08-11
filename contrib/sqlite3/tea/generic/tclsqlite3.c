@@ -577,6 +577,10 @@ name|nIndex
 decl_stmt|;
 comment|/* Statistics for most recent operation */
 name|int
+name|nVMStep
+decl_stmt|;
+comment|/* Another statistic for most recent operation */
+name|int
 name|nTransaction
 decl_stmt|;
 comment|/* Number of nested [transaction] methods */
@@ -2520,11 +2524,28 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|SQLITE_OMIT_TRACE
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SQLITE_OMIT_FLOATING_POINT
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|SQLITE_OMIT_DEPRECATED
+argument_list|)
+end_if
 
 begin_comment
 comment|/* ** This routine is called by the SQLite trace handler whenever a new ** block of SQL is executed.  The TCL script in pDb->zTrace is executed. */
@@ -3029,11 +3050,28 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|SQLITE_OMIT_TRACE
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SQLITE_OMIT_FLOATING_POINT
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|SQLITE_OMIT_DEPRECATED
+argument_list|)
+end_if
 
 begin_comment
 comment|/* ** This routine is called by the SQLite profile handler after a statement ** SQL has executed.  The TCL script in pDb->zProfile is evaluated. */
@@ -5095,6 +5133,7 @@ name|char
 modifier|*
 name|zReply
 decl_stmt|;
+comment|/* EVIDENCE-OF: R-38590-62769 The first parameter to the authorizer   ** callback is a copy of the third parameter to the   ** sqlite3_set_authorizer() interface.   */
 name|SqliteDb
 modifier|*
 name|pDb
@@ -5114,6 +5153,7 @@ condition|)
 return|return
 name|SQLITE_OK
 return|;
+comment|/* EVIDENCE-OF: R-56518-44310 The second parameter to the callback is an   ** integer action code that specifies the particular action to be   ** authorized. */
 switch|switch
 condition|(
 name|code
@@ -6008,6 +6048,12 @@ name|pzOut
 comment|/* OUT: Pointer to next SQL statement */
 parameter_list|)
 block|{
+name|unsigned
+name|int
+name|prepFlags
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SQLITE_TEST
@@ -6038,8 +6084,21 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* If the statement cache is large, use the SQLITE_PREPARE_PERSISTENT   ** flags, which uses less lookaside memory.  But if the cache is small,   ** omit that flag to make full use of lookaside */
+if|if
+condition|(
+name|pDb
+operator|->
+name|maxStmt
+operator|>
+literal|5
+condition|)
+name|prepFlags
+operator|=
+name|SQLITE_PREPARE_PERSISTENT
+expr_stmt|;
 return|return
-name|sqlite3_prepare_v2
+name|sqlite3_prepare_v3
 argument_list|(
 name|pDb
 operator|->
@@ -6049,6 +6108,8 @@ name|zSql
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|prepFlags
 argument_list|,
 name|ppStmt
 argument_list|,
@@ -7274,6 +7335,10 @@ name|int
 name|nCol
 decl_stmt|;
 comment|/* Number of columns returned by pStmt */
+name|int
+name|evalFlags
+decl_stmt|;
+comment|/* Flags used */
 name|Tcl_Obj
 modifier|*
 name|pArray
@@ -7288,6 +7353,17 @@ comment|/* Array of column names */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SQLITE_EVAL_WITHOUTNULLS
+value|0x00001
+end_define
+
+begin_comment
+comment|/* Unset array(*) for NULL */
+end_comment
 
 begin_comment
 comment|/* ** Release any cache of column names currently held as part of ** the DbEvalContext structure passed as the first argument. */
@@ -7394,7 +7470,11 @@ comment|/* Object containing SQL script */
 name|Tcl_Obj
 modifier|*
 name|pArray
+parameter_list|,
 comment|/* Name of Tcl array to set (*) element of */
+name|int
+name|evalFlags
+comment|/* Flags controlling evaluation */
 parameter_list|)
 block|{
 name|memset
@@ -7452,6 +7532,12 @@ name|pArray
 argument_list|)
 expr_stmt|;
 block|}
+name|p
+operator|->
+name|evalFlags
+operator|=
+name|evalFlags
+expr_stmt|;
 block|}
 end_function
 
@@ -7933,6 +8019,19 @@ argument_list|(
 name|pStmt
 argument_list|,
 name|SQLITE_STMTSTATUS_AUTOINDEX
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|pDb
+operator|->
+name|nVMStep
+operator|=
+name|sqlite3_stmt_status
+argument_list|(
+name|pStmt
+argument_list|,
+name|SQLITE_STMTSTATUS_VM_STEP
 argument_list|,
 literal|1
 argument_list|)
@@ -8597,17 +8696,6 @@ name|i
 operator|++
 control|)
 block|{
-name|Tcl_Obj
-modifier|*
-name|pVal
-init|=
-name|dbEvalColumnValue
-argument_list|(
-name|p
-argument_list|,
-name|i
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|pArray
@@ -8626,7 +8714,60 @@ index|]
 argument_list|,
 literal|0
 argument_list|,
-name|pVal
+name|dbEvalColumnValue
+argument_list|(
+name|p
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|evalFlags
+operator|&
+name|SQLITE_EVAL_WITHOUTNULLS
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|sqlite3_column_type
+argument_list|(
+name|p
+operator|->
+name|pPreStmt
+operator|->
+name|pStmt
+argument_list|,
+name|i
+argument_list|)
+operator|==
+name|SQLITE_NULL
+condition|)
+block|{
+name|Tcl_UnsetVar2
+argument_list|(
+name|interp
+argument_list|,
+name|Tcl_GetString
+argument_list|(
+name|pArray
+argument_list|)
+argument_list|,
+name|Tcl_GetString
+argument_list|(
+name|apColName
+index|[
+name|i
+index|]
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -8645,7 +8786,12 @@ index|[
 name|i
 index|]
 argument_list|,
-name|pVal
+name|dbEvalColumnValue
+argument_list|(
+name|p
+argument_list|,
+name|i
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -11357,7 +11503,11 @@ literal|"Error: cannot open file: "
 argument_list|,
 name|zFile
 argument_list|,
-name|NULL
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|sqlite3_finalize
@@ -12012,6 +12162,8 @@ literal|2
 index|]
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|rc
@@ -12115,11 +12267,96 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/*   **    $db eval $sql ?array? ?{  ...code... }?   **   ** The SQL statement in $sql is evaluated.  For each row, the values are   ** placed in elements of the array named "array" and ...code... is executed.   ** If "array" and "code" are omitted, then no callback is every invoked.   ** If "array" is an empty string, then the values are placed in variables   ** that have the same name as the fields extracted by the query.   */
+comment|/*   **    $db eval ?options? $sql ?array? ?{  ...code... }?   **   ** The SQL statement in $sql is evaluated.  For each row, the values are   ** placed in elements of the array named "array" and ...code... is executed.   ** If "array" and "code" are omitted, then no callback is every invoked.   ** If "array" is an empty string, then the values are placed in variables   ** that have the same name as the fields extracted by the query.   */
 case|case
 name|DB_EVAL
 case|:
 block|{
+name|int
+name|evalFlags
+init|=
+literal|0
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|zOpt
+decl_stmt|;
+while|while
+condition|(
+name|objc
+operator|>
+literal|3
+operator|&&
+operator|(
+name|zOpt
+operator|=
+name|Tcl_GetString
+argument_list|(
+name|objv
+index|[
+literal|2
+index|]
+argument_list|)
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|zOpt
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|zOpt
+argument_list|,
+literal|"-withoutnulls"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|evalFlags
+operator||=
+name|SQLITE_EVAL_WITHOUTNULLS
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Tcl_AppendResult
+argument_list|(
+name|interp
+argument_list|,
+literal|"unknown option: \""
+argument_list|,
+name|zOpt
+argument_list|,
+literal|"\""
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|TCL_ERROR
+return|;
+block|}
+name|objc
+operator|--
+expr_stmt|;
+name|objv
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|objc
@@ -12139,7 +12376,7 @@ literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"SQL ?ARRAY-NAME? ?SCRIPT?"
+literal|"?OPTIONS? SQL ?ARRAY-NAME? ?SCRIPT?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -12179,6 +12416,8 @@ name|objv
 index|[
 literal|2
 index|]
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -12302,7 +12541,7 @@ decl_stmt|;
 if|if
 condition|(
 name|objc
-operator|==
+operator|>=
 literal|5
 operator|&&
 operator|*
@@ -12367,6 +12606,8 @@ literal|2
 index|]
 argument_list|,
 name|pArray
+argument_list|,
+name|evalFlags
 argument_list|)
 expr_stmt|;
 name|cd2
@@ -12534,6 +12775,10 @@ literal|"option requires an argument: "
 argument_list|,
 name|z
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -12625,6 +12870,10 @@ name|z
 argument_list|,
 literal|"\": must be -argcount or -deterministic"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -13555,6 +13804,13 @@ name|defined
 argument_list|(
 name|SQLITE_OMIT_FLOATING_POINT
 argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|SQLITE_OMIT_DEPRECATED
+argument_list|)
 if|if
 condition|(
 name|pDb
@@ -14037,7 +14293,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*   **     $db status (step|sort|autoindex)   **   ** Display SQLITE_STMTSTATUS_FULLSCAN_STEP or   ** SQLITE_STMTSTATUS_SORT for the most recent eval.   */
+comment|/*   **     $db status (step|sort|autoindex|vmstep)   **   ** Display SQLITE_STMTSTATUS_FULLSCAN_STEP or   ** SQLITE_STMTSTATUS_SORT for the most recent eval.   */
 case|case
 name|DB_STATUS
 case|:
@@ -14141,13 +14397,33 @@ operator|->
 name|nIndex
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|zOp
+argument_list|,
+literal|"vmstep"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|v
+operator|=
+name|pDb
+operator|->
+name|nVMStep
+expr_stmt|;
+block|}
 else|else
 block|{
 name|Tcl_AppendResult
 argument_list|(
 name|interp
 argument_list|,
-literal|"bad argument: should be autoindex, step, or sort"
+literal|"bad argument: should be autoindex, step, sort or vmstep"
 argument_list|,
 operator|(
 name|char
@@ -14435,8 +14711,8 @@ name|defined
 argument_list|(
 name|SQLITE_OMIT_FLOATING_POINT
 argument_list|)
-expr|\
 operator|&&
+expr|\
 operator|!
 name|defined
 argument_list|(
@@ -15405,6 +15681,12 @@ argument_list|(
 name|interp
 argument_list|,
 literal|"preupdate_hook was omitted at compile-time"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|rc
@@ -15786,6 +16068,10 @@ operator|->
 name|db
 argument_list|)
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -16733,30 +17019,6 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-literal|0
-condition|)
-block|{
-name|Tcl_SetResult
-argument_list|(
-name|interp
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|"malloc failed"
-argument_list|,
-name|TCL_STATIC
-argument_list|)
-expr_stmt|;
-return|return
-name|TCL_ERROR
-return|;
-block|}
 name|memset
 argument_list|(
 name|p

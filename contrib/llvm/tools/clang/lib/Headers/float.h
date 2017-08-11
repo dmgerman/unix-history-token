@@ -54,6 +54,27 @@ operator|>
 argument_list|)
 end_if
 
+begin_comment
+comment|/* Prior to Apple's 10.7 SDK, float.h SDK header used to apply an extra level  * of #include_next<float.h> to keep Metrowerks compilers happy. Avoid this  * extra indirection.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_FLOAT_H_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_empty
 empty|#  include_next<float.h>
 end_empty

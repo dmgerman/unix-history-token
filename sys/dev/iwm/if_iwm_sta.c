@@ -937,15 +937,6 @@ condition|)
 return|return
 name|ret
 return|;
-name|mbufq_drain
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_snd
-argument_list|)
-expr_stmt|;
-comment|/* XXX needed ? */
 for|for
 control|(
 name|ac

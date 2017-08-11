@@ -596,7 +596,7 @@ parameter_list|(
 specifier|const
 name|SBBreakpoint
 modifier|&
-name|sb_file
+name|sb_bkpt
 parameter_list|)
 function_decl|;
 name|bool
@@ -605,7 +605,7 @@ parameter_list|(
 specifier|const
 name|SBBreakpoint
 modifier|&
-name|sb_file
+name|sb_bkpt
 parameter_list|)
 function_decl|;
 name|void

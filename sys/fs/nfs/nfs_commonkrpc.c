@@ -2124,15 +2124,12 @@ name|nmp
 operator|!=
 name|NULL
 operator|&&
-operator|(
+name|NFSCL_FORCEDISM
+argument_list|(
 name|nmp
 operator|->
 name|nm_mountp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_UNMOUNTF
-operator|)
+argument_list|)
 condition|)
 block|{
 name|m_freem
@@ -5495,13 +5492,12 @@ decl_stmt|;
 comment|/* Terminate all requests while attempting a forced unmount. */
 if|if
 condition|(
+name|NFSCL_FORCEDISM
+argument_list|(
 name|nmp
 operator|->
 name|nm_mountp
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_UNMOUNTF
+argument_list|)
 condition|)
 return|return
 operator|(

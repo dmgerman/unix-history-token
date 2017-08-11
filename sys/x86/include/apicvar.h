@@ -26,15 +26,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_APIC_ID
+name|xAPIC_MAX_APIC_ID
 value|0xfe
 end_define
 
 begin_define
 define|#
 directive|define
-name|APIC_ID_ALL
+name|xAPIC_ID_ALL
 value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_APIC_ID
+value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_ID_ALL
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAPIC_MAX_ID
+value|xAPIC_MAX_APIC_ID
 end_define
 
 begin_comment
@@ -545,8 +566,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+modifier|*
 name|apic_cpuids
-index|[]
 decl_stmt|;
 end_decl_stmt
 

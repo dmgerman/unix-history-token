@@ -742,7 +742,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_METHOD_NO_RETVAL
+name|OP_METHOD_NO_RETVAL
 condition|)
 block|{
 comment|/* Method NEVER returns a value */
@@ -771,7 +771,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_METHOD_SOME_NO_RETVAL
+name|OP_METHOD_SOME_NO_RETVAL
 condition|)
 block|{
 comment|/* Method SOMETIMES returns a value, SOMETIMES not */

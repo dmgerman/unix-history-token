@@ -520,6 +520,22 @@ literal|"Intel Sunrise Point USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0xa1af8086
+case|:
+return|return
+operator|(
+literal|"Intel Lewisburg USB 3.0 controller"
+operator|)
+return|;
+case|case
+literal|0xa2af8086
+case|:
+return|return
+operator|(
+literal|"Intel Union Point USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0xa01b177d
 case|:
 return|return

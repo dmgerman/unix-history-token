@@ -14515,7 +14515,11 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Determine the BAR's length by writing all 1's.  The bottom 	 * log_2(size) bits of the BAR will stick as 0 when we read 	 * the value back. 	 */
+comment|/* 	 * Determine the BAR's length by writing all 1's.  The bottom 	 * log_2(size) bits of the BAR will stick as 0 when we read 	 * the value back. 	 * 	 * NB: according to the PCI Local Bus Specification, rev. 3.0: 	 * "Software writes 0FFFFFFFFh to both registers, reads them back, 	 * and combines the result into a 64-bit value." (section 6.2.5.1) 	 * 	 * Writes to both registers must be performed before attempting to 	 * read back the size value. 	 */
+name|testval
+operator|=
+literal|0
+expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|dev
@@ -14523,17 +14527,6 @@ argument_list|,
 name|reg
 argument_list|,
 literal|0xffffffff
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-name|testval
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|reg
 argument_list|,
 literal|4
 argument_list|)
@@ -14577,6 +14570,17 @@ operator|<<
 literal|32
 expr_stmt|;
 block|}
+name|testval
+operator||=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|reg
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Restore the original value of the BAR.  We may have reprogrammed 	 * the BAR of the low-level console device and when booting verbose, 	 * we need the console device addressable. 	 */
 name|pci_write_config
 argument_list|(

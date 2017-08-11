@@ -120,6 +120,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|TF_FLAGS
+parameter_list|(
+name|tf
+parameter_list|)
+value|((tf)->tf_eflags)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TF_FP
 parameter_list|(
 name|tf
@@ -159,6 +169,16 @@ parameter_list|(
 name|pcb
 parameter_list|)
 value|((pcb)->pcb_rbp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TF_FLAGS
+parameter_list|(
+name|tf
+parameter_list|)
+value|((tf)->tf_rflags)
 end_define
 
 begin_define
@@ -415,6 +435,17 @@ argument_list|(
 name|tf
 argument_list|)
 argument_list|)
+operator|&&
+operator|(
+name|TF_FLAGS
+argument_list|(
+name|tf
+argument_list|)
+operator|&
+name|PSL_I
+operator|)
+operator|!=
+literal|0
 condition|)
 name|stack_capture
 argument_list|(
@@ -429,7 +460,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* We interrupted a thread in user mode. */
+comment|/* We were running in usermode or had interrupts disabled. */
 name|nmi_stack
 operator|->
 name|depth
@@ -640,7 +671,6 @@ name|depth
 operator|==
 literal|0
 condition|)
-comment|/* We interrupted a thread in user mode. */
 return|return
 operator|(
 name|EAGAIN

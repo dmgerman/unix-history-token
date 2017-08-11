@@ -1834,6 +1834,8 @@ argument_list|)
 decl_stmt|;
 comment|/// Get the intersection (logical and) of all of the potential IR flags
 comment|/// of each scalar operation (VL) that will be converted into a vector (I).
+comment|/// If OpValue is non-null, we only consider operations similar to OpValue
+comment|/// when intersecting.
 comment|/// Flag set: NSW, NUW, exact, and all of fast-math.
 name|void
 name|propagateIRFlags
@@ -1848,6 +1850,12 @@ name|Value
 operator|*
 operator|>
 name|VL
+argument_list|,
+name|Value
+operator|*
+name|OpValue
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 block|}

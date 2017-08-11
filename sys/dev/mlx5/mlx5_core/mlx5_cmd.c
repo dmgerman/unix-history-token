@@ -5966,8 +5966,11 @@ decl_stmt|;
 name|int
 name|pages_queue
 decl_stmt|;
+specifier|const
 name|gfp_t
 name|gfp
+init|=
+name|GFP_KERNEL
 decl_stmt|;
 name|int
 name|err
@@ -5983,14 +5986,6 @@ name|is_manage_pages
 argument_list|(
 name|in
 argument_list|)
-expr_stmt|;
-name|gfp
-operator|=
-name|callback
-condition|?
-name|GFP_ATOMIC
-else|:
-name|GFP_KERNEL
 expr_stmt|;
 name|inb
 operator|=

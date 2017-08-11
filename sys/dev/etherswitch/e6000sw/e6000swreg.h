@@ -293,6 +293,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PORT_CONTROL_1_FID_MASK
+value|0xf
+end_define
+
+begin_define
+define|#
+directive|define
 name|PORT_VLAN_MAP
 value|0x6
 end_define
@@ -841,22 +848,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|E6000SW_NUM_VGROUPS
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
 name|E6000SW_MAX_PORTS
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|E6000SW_PORT_NO_VGROUP
-value|-1
+value|8
 end_define
 
 begin_define

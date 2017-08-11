@@ -772,7 +772,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_TARGET
+name|OP_IS_TARGET
 condition|)
 block|{
 name|MethodInfo
@@ -937,7 +937,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_TARGET
+name|OP_IS_TARGET
 condition|)
 block|{
 name|MethodInfo
@@ -1041,7 +1041,7 @@ name|AE_ERROR
 operator|)
 return|;
 block|}
-comment|/*          * A child indicates a possible return value. A simple Return or          * Return() is marked with NODE_IS_NULL_RETURN by the parser so          * that it is not counted as a "real" return-with-value, although          * the AML code that is actually emitted is Return(0). The AML          * definition of Return has a required parameter, so we are          * forced to convert a null return to Return(0).          */
+comment|/*          * A child indicates a possible return value. A simple Return or          * Return() is marked with OP_IS_NULL_RETURN by the parser so          * that it is not counted as a "real" return-with-value, although          * the AML code that is actually emitted is Return(0). The AML          * definition of Return has a required parameter, so we are          * forced to convert a null return to Return(0).          */
 if|if
 condition|(
 operator|(
@@ -1079,7 +1079,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_NULL_RETURN
+name|OP_IS_NULL_RETURN
 operator|)
 operator|)
 condition|)
@@ -1704,7 +1704,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_HAS_NO_EXIT
+name|OP_HAS_NO_EXIT
 operator|)
 operator|)
 condition|)
@@ -1765,7 +1765,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_METHOD_SOME_NO_RETVAL
+name|OP_METHOD_SOME_NO_RETVAL
 expr_stmt|;
 block|}
 else|else
@@ -1776,7 +1776,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_METHOD_NO_RETVAL
+name|OP_METHOD_NO_RETVAL
 expr_stmt|;
 block|}
 block|}
@@ -1842,7 +1842,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_HAS_NO_EXIT
+name|OP_HAS_NO_EXIT
 expr_stmt|;
 comment|/* Used in the "typing" pass later */
 name|Op
@@ -1894,7 +1894,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_HAS_NO_EXIT
+name|OP_HAS_NO_EXIT
 operator|)
 operator|&&
 operator|(
@@ -1931,7 +1931,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_IF_HAS_NO_EXIT
+name|OP_IF_HAS_NO_EXIT
 expr_stmt|;
 block|}
 break|break;
@@ -1947,7 +1947,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_HAS_NO_EXIT
+name|OP_HAS_NO_EXIT
 operator|)
 operator|&&
 operator|(
@@ -1957,7 +1957,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IF_HAS_NO_EXIT
+name|OP_IF_HAS_NO_EXIT
 operator|)
 condition|)
 block|{
@@ -1972,7 +1972,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_HAS_NO_EXIT
+name|OP_HAS_NO_EXIT
 expr_stmt|;
 block|}
 break|break;
@@ -1986,7 +1986,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_HAS_NO_EXIT
+name|OP_HAS_NO_EXIT
 operator|)
 operator|&&
 operator|(
@@ -2009,7 +2009,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_HAS_NO_EXIT
+name|OP_HAS_NO_EXIT
 expr_stmt|;
 block|}
 break|break;

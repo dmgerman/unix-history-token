@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_markdown.c,v 1.22 2017/05/30 16:31:29 schwarze Exp $ */
+comment|/*	$Id: mdoc_markdown.c,v 1.23 2017/06/14 01:31:26 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -3742,6 +3742,8 @@ decl_stmt|,
 name|sz
 decl_stmt|,
 name|uc
+decl_stmt|,
+name|breakline
 decl_stmt|;
 comment|/* No spacing before closing delimiters. */
 if|if
@@ -3826,6 +3828,10 @@ name|outflags
 operator|&=
 operator|~
 name|MD_spc
+expr_stmt|;
+name|breakline
+operator|=
+literal|0
 expr_stmt|;
 name|prevfont
 operator|=
@@ -4155,6 +4161,14 @@ name|prevfont
 expr_stmt|;
 break|break;
 case|case
+name|ESCAPE_BREAK
+case|:
+name|breakline
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 name|ESCAPE_NOSPACE
 case|:
 case|case
@@ -4344,6 +4358,53 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|breakline
+operator|&&
+operator|(
+operator|*
+name|s
+operator|==
+literal|'\0'
+operator|||
+operator|*
+name|s
+operator|==
+literal|' '
+operator|||
+operator|*
+name|s
+operator|==
+name|ASCII_NBRSP
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"  \n"
+argument_list|)
+expr_stmt|;
+name|breakline
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+operator|==
+literal|' '
+operator|||
+operator|*
+name|s
+operator|==
+name|ASCII_NBRSP
+condition|)
+name|s
+operator|++
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

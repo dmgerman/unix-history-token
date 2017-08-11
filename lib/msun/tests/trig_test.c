@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<atf-c.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"test-utils.h"
 end_include
 
@@ -90,7 +96,7 @@ name|exceptmask
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	volatile long double _d = x;					\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal((func)(_d), (result)));				\ 	assert(((void)(func), fetestexcept(exceptmask) == (excepts)));	\ } while (0)
+value|do {		\ 	volatile long double _d = x;					\ 	ATF_CHECK(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	ATF_CHECK(fpequal((func)(_d), (result)));				\ 	ATF_CHECK(((void)(func), fetestexcept(exceptmask) == (excepts)));	\ } while (0)
 end_define
 
 begin_define
@@ -129,17 +135,47 @@ parameter_list|)
 value|do {		\ 	test(prefix, x, (double)result, exceptmask, excepts);		\ 	test(prefix##f, x, (float)result, exceptmask, excepts);		\ } while (0)
 end_define
 
-begin_comment
-comment|/*  * Test special cases in sin(), cos(), and tan().  */
-end_comment
+begin_expr_stmt
+name|ATF_TC
+argument_list|(
+name|special
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function
-specifier|static
-name|void
-name|run_special_tests
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|ATF_TC_HEAD
+argument_list|(
+argument|special
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"descr"
+argument_list|,
+literal|"test special cases in sin(), cos(), and tan()"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|special
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* Values at 0 should be exact. */
 name|testall
@@ -348,19 +384,55 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_comment
-comment|/*  * Tests to ensure argument reduction for large arguments is accurate.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__i386__
+end_ifndef
 
-begin_function
-specifier|static
-name|void
-name|run_reduction_tests
-parameter_list|(
-name|void
-parameter_list|)
+begin_expr_stmt
+name|ATF_TC
+argument_list|(
+name|reduction
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_HEAD
+argument_list|(
+argument|reduction
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"descr"
+argument_list|,
+literal|"tests to ensure argument reduction for large arguments is accurate"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|reduction
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* floats very close to odd multiples of pi */
 specifier|static
@@ -441,22 +513,28 @@ block|,
 literal|1.6061597222105160737e+4326L
 block|, 	}
 decl_stmt|;
-elif|#
-directive|elif
-name|LDBL_MANT_DIG
-operator|==
-literal|113
-specifier|static
-specifier|const
-name|long
-name|double
-name|ld_pi_odd
-index|[]
-init|=
-block|{
-comment|/* XXX */
-block|}
-decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|&&
+expr|\
+operator|(
+operator|(
+name|__clang_major__
+operator|>=
+literal|5
+operator|)
+operator|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"test fails with clang 5.0+ - bug 220989"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|unsigned
@@ -479,7 +557,7 @@ name|i
 operator|++
 control|)
 block|{
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -495,7 +573,7 @@ operator|<
 name|FLT_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cosf
 argument_list|(
@@ -509,7 +587,7 @@ operator|-
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -525,7 +603,7 @@ operator|<
 name|FLT_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -542,7 +620,7 @@ operator|<
 name|FLT_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cosf
 argument_list|(
@@ -557,7 +635,7 @@ operator|-
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -574,7 +652,7 @@ operator|<
 name|FLT_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -592,7 +670,7 @@ operator|<
 name|FLT_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cosf
 argument_list|(
@@ -607,7 +685,7 @@ operator|==
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -625,7 +703,7 @@ operator|<
 name|FLT_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -644,7 +722,7 @@ operator|<
 name|FLT_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cosf
 argument_list|(
@@ -660,7 +738,7 @@ operator|==
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -697,7 +775,7 @@ name|i
 operator|++
 control|)
 block|{
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -715,7 +793,7 @@ operator|*
 name|DBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cos
 argument_list|(
@@ -729,7 +807,7 @@ operator|-
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -747,7 +825,7 @@ operator|*
 name|DBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -766,7 +844,7 @@ operator|*
 name|DBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cos
 argument_list|(
@@ -781,7 +859,7 @@ operator|-
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -800,7 +878,7 @@ operator|*
 name|DBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -820,7 +898,7 @@ operator|*
 name|DBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cos
 argument_list|(
@@ -835,7 +913,7 @@ operator|==
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -855,7 +933,7 @@ operator|*
 name|DBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -876,7 +954,7 @@ operator|*
 name|DBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cos
 argument_list|(
@@ -892,7 +970,7 @@ operator|==
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabs
 argument_list|(
@@ -917,8 +995,9 @@ block|}
 if|#
 directive|if
 name|LDBL_MANT_DIG
-operator|>
-literal|53
+operator|==
+literal|64
+comment|/* XXX: || LDBL_MANT_DIG == 113 */
 for|for
 control|(
 name|i
@@ -936,7 +1015,7 @@ name|i
 operator|++
 control|)
 block|{
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabsl
 argument_list|(
@@ -952,7 +1031,7 @@ operator|<
 name|LDBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cosl
 argument_list|(
@@ -966,7 +1045,7 @@ operator|-
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabsl
 argument_list|(
@@ -982,7 +1061,7 @@ operator|<
 name|LDBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabsl
 argument_list|(
@@ -999,7 +1078,7 @@ operator|<
 name|LDBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cosl
 argument_list|(
@@ -1014,7 +1093,7 @@ operator|-
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabsl
 argument_list|(
@@ -1031,7 +1110,7 @@ operator|<
 name|LDBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabsl
 argument_list|(
@@ -1049,7 +1128,7 @@ operator|<
 name|LDBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cosl
 argument_list|(
@@ -1064,7 +1143,7 @@ operator|==
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabsl
 argument_list|(
@@ -1082,7 +1161,7 @@ operator|<
 name|LDBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabsl
 argument_list|(
@@ -1101,7 +1180,7 @@ operator|<
 name|LDBL_EPSILON
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|cosl
 argument_list|(
@@ -1117,7 +1196,7 @@ operator|==
 literal|1.0
 argument_list|)
 expr_stmt|;
-name|assert
+name|ATF_CHECK
 argument_list|(
 name|fabsl
 argument_list|(
@@ -1140,19 +1219,49 @@ block|}
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
-begin_comment
-comment|/*  * Tests the accuracy of these functions over the primary range.  */
-end_comment
+begin_expr_stmt
+name|ATF_TC
+argument_list|(
+name|accuracy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function
-specifier|static
-name|void
-name|run_accuracy_tests
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|ATF_TC_HEAD
+argument_list|(
+argument|accuracy
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"descr"
+argument_list|,
+literal|"tests the accuracy of these functions over the primary range"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|accuracy
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* For small args, sin(x) = tan(x) = x, and cos(x) = 1. */
 name|testall
@@ -1312,61 +1421,56 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX missing: 	 * - tests for ld128 	 * - tests for other rounding modes (probably won't pass for now) 	 * - tests for large numbers that get reduced to hi+lo with lo!=0 	 */
 block|}
-end_function
+end_block
 
-begin_function
-name|int
-name|main
-parameter_list|(
-name|void
-parameter_list|)
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_macro
+name|ATF_TP_ADD_TCS
+argument_list|(
+argument|tp
+argument_list|)
+end_macro
+
+begin_block
 block|{
-name|printf
+name|ATF_TP_ADD_TC
 argument_list|(
-literal|"1..3\n"
-argument_list|)
-expr_stmt|;
-name|run_special_tests
-argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 1 - trig\n"
+name|tp
+argument_list|,
+name|special
 argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
 name|__i386__
-name|run_reduction_tests
-argument_list|()
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|accuracy
+argument_list|)
+expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|reduction
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|printf
-argument_list|(
-literal|"ok 2 - trig\n"
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__i386__
-name|run_accuracy_tests
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|printf
-argument_list|(
-literal|"ok 3 - trig\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|atf_no_error
+argument_list|()
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

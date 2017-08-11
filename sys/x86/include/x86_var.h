@@ -318,6 +318,13 @@ name|xsave_mask
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|max_apic_id
+decl_stmt|;
+end_decl_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|pcb
@@ -489,7 +496,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|finishidentcpu
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|identify_cpu
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|identify_hypervisor
 parameter_list|(
 name|void
 parameter_list|)

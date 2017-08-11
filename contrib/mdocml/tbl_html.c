@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_html.c,v 1.21 2017/06/08 18:11:22 schwarze Exp $ */
+comment|/*	$Id: tbl_html.c,v 1.22 2017/06/12 20:14:18 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -365,6 +365,8 @@ operator|->
 name|tbl
 argument_list|,
 name|sp
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)

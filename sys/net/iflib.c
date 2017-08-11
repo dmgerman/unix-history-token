@@ -871,6 +871,13 @@ name|TX_SW_DESC_MAPPED
 value|(1<< 4)
 end_define
 
+begin_define
+define|#
+directive|define
+name|M_TOOBIG
+value|M_UNUSED_8
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -16010,11 +16017,30 @@ operator|>
 operator|*
 name|nsegs
 condition|)
+block|{
+name|ifsd_m
+index|[
+name|pidx
+index|]
+operator|=
+operator|*
+name|m0
+expr_stmt|;
+name|ifsd_m
+index|[
+name|pidx
+index|]
+operator|->
+name|m_flags
+operator||=
+name|M_TOOBIG
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|m
 operator|=
 operator|*
@@ -16231,6 +16257,15 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|i
+operator|>=
+name|max_segs
+condition|)
+goto|goto
+name|err
+goto|;
 name|max_sgsize
 operator|=
 name|MIN
@@ -16295,15 +16330,6 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|>=
-name|max_segs
-condition|)
-goto|goto
-name|err
-goto|;
 block|}
 name|count
 operator|++
@@ -17717,11 +17743,30 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* if the number of clusters exceeds the number of segments 				 * there won't be space on the ring to save a pointer to each 				 * cluster so we simply free the list here 				 */
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_TOOBIG
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|m_free
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|ifsd_m
 index|[
 name|cidx
@@ -20383,7 +20428,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_FLAGS
-value|(IFCAP_TXCSUM_IPV6 | IFCAP_RXCSUM_IPV6 | IFCAP_HWCSUM | IFCAP_LRO | \ 		     IFCAP_TSO4 | IFCAP_TSO6 | IFCAP_VLAN_HWTAGGING |	\ 		     IFCAP_VLAN_MTU | IFCAP_VLAN_HWFILTER | IFCAP_VLAN_HWTSO)
+value|(IFCAP_TXCSUM_IPV6 | IFCAP_RXCSUM_IPV6 | IFCAP_HWCSUM | IFCAP_LRO | \ 		     IFCAP_TSO4 | IFCAP_TSO6 | IFCAP_VLAN_HWTAGGING | IFCAP_HWSTATS | \ 		     IFCAP_VLAN_MTU | IFCAP_VLAN_HWFILTER | IFCAP_VLAN_HWTSO)
 end_define
 
 begin_function
@@ -22331,6 +22376,8 @@ argument_list|,
 name|scctx
 operator|->
 name|isc_capenable
+operator||
+name|IFCAP_HWSTATS
 argument_list|)
 expr_stmt|;
 name|if_setcapenable
@@ -22340,6 +22387,8 @@ argument_list|,
 name|scctx
 operator|->
 name|isc_capenable
+operator||
+name|IFCAP_HWSTATS
 argument_list|)
 expr_stmt|;
 if|if

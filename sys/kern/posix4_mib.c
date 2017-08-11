@@ -348,16 +348,6 @@ end_expr_stmt
 begin_expr_stmt
 name|P1B_SYSCTL
 argument_list|(
-name|CTL_P1003_1B_AIO_LISTIO_MAX
-argument_list|,
-name|aio_listio_max
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|P1B_SYSCTL
-argument_list|(
 name|CTL_P1003_1B_AIO_MAX
 argument_list|,
 name|aio_max

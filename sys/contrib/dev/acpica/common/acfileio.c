@@ -92,6 +92,55 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcDeleteTableList  *  * PARAMETERS:  ListHead            - List to delete  *  * RETURN:      Status  *  * DESCRIPTION: Delete a list of tables. This is useful for removing memory  *              allocated by AcGetAllTablesFromFile  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcDeleteTableList
+parameter_list|(
+name|ACPI_NEW_TABLE_DESC
+modifier|*
+name|ListHead
+parameter_list|)
+block|{
+name|ACPI_NEW_TABLE_DESC
+modifier|*
+name|Current
+init|=
+name|ListHead
+decl_stmt|;
+name|ACPI_NEW_TABLE_DESC
+modifier|*
+name|Previous
+init|=
+name|Current
+decl_stmt|;
+while|while
+condition|(
+name|Current
+condition|)
+block|{
+name|Current
+operator|=
+name|Current
+operator|->
+name|Next
+expr_stmt|;
+name|AcpiOsFree
+argument_list|(
+name|Previous
+argument_list|)
+expr_stmt|;
+name|Previous
+operator|=
+name|Current
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcGetAllTablesFromFile  *  * PARAMETERS:  Filename            - Table filename  *              GetOnlyAmlTables    - TRUE if the tables must be AML tables  *              ReturnListHead      - Where table list is returned  *  * RETURN:      Status  *  * DESCRIPTION: Get all ACPI tables from within a single file.  *  ******************************************************************************/
 end_comment
 

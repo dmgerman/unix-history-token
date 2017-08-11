@@ -1057,7 +1057,7 @@ name|InstrumentationRuntimeType
 name|type
 parameter_list|)
 function_decl|;
-comment|// Save the state of the process in a core file (or mini dump on Windows).
+comment|/// Save the state of the process in a core file (or mini dump on Windows).
 name|lldb
 operator|::
 name|SBError

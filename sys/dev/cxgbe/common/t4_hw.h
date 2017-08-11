@@ -1086,8 +1086,34 @@ name|FLASH_CFG_START
 operator|+
 name|FLASH_CFG_MAX_SIZE
 block|,
-comment|/* 	 * Sectors 32-63 are reserved for FLASH failover. 	 */
-block|}
+comment|/* 	 * Sectors 32-63 for CUDBG. 	 */
+name|FLASH_CUDBG_START_SEC
+init|=
+literal|32
+block|,
+name|FLASH_CUDBG_NSECS
+init|=
+literal|32
+block|,
+name|FLASH_CUDBG_START
+init|=
+name|FLASH_START
+argument_list|(
+name|FLASH_CUDBG_START_SEC
+argument_list|)
+block|,
+name|FLASH_CUDBG_MAX_SIZE
+init|=
+name|FLASH_MAX_SIZE
+argument_list|(
+name|FLASH_CUDBG_NSECS
+argument_list|)
+block|,
+comment|/* 	 * Size of defined FLASH regions. 	 */
+name|FLASH_END_SEC
+init|=
+literal|64
+block|, }
 enum|;
 end_enum
 

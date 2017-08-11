@@ -144,7 +144,8 @@ comment|/// Container class for CodeGen predicate results.
 comment|/// This is convenient because std::bitset does not have a constructor
 comment|/// with an initializer list of set bits.
 comment|///
-comment|/// Each InstructionSelector subclass should define a PredicateBitset class with:
+comment|/// Each InstructionSelector subclass should define a PredicateBitset class
+comment|/// with:
 comment|///   const unsigned MAX_SUBTARGET_PREDICATES = 192;
 comment|///   using PredicateBitset = PredicateBitsetImpl<MAX_SUBTARGET_PREDICATES>;
 comment|/// and updating the constant to suit the target. Tablegen provides a suitable
@@ -272,7 +273,8 @@ comment|/// - OpIdx - Operand index
 comment|/// - Expected integer
 name|GIM_CheckConstantInt
 block|,
-comment|/// Check the operand is a specific literal integer (i.e. MO.isImm() or MO.isCImm() is true).
+comment|/// Check the operand is a specific literal integer (i.e. MO.isImm() or
+comment|/// MO.isCImm() is true).
 comment|/// - InsnID - Instruction ID
 comment|/// - OpIdx - Operand index
 comment|/// - Expected integer

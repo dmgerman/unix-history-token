@@ -10063,12 +10063,6 @@ name|data
 operator|=
 name|dmbuf
 expr_stmt|;
-name|mm
-operator|=
-name|control
-operator|->
-name|data
-expr_stmt|;
 for|for
 control|(
 name|mm

@@ -2584,11 +2584,7 @@ begin_function_decl
 specifier|static
 name|void
 name|printRegisteredTargetsForVersion
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 

@@ -41,6 +41,53 @@ directive|include
 file|"nvme_private.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|nvme_use_nvd
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nvme
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"NVMe sysctl tunables"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_nvme
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|use_nvd
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|nvme_use_nvd
+argument_list|,
+literal|1
+argument_list|,
+literal|"1 = Create NVD devices, 0 = Create NDA devices"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * CTLTYPE_S64 and sysctl_handle_64 were added in r217616.  Define these  *  explicitly here for older kernels that don't include the r217616  *  changeset.  */
 end_comment

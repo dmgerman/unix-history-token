@@ -511,6 +511,35 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
+literal|"anchor {[:/%d}{:address/%p}..{:port/%u}{]:}\n"
+argument_list|,
+literal|18
+argument_list|,
+name|NULL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"anchor {[:18}{:address/%p}..{:port/%u}{]:}\n"
+argument_list|,
+name|NULL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"anchor {[:/18}{:address/%p}..{:port/%u}{]:}\n"
+argument_list|,
+name|NULL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
 literal|"df {:used-percent/%5.0f}{U:%%}\n"
 argument_list|,
 operator|(

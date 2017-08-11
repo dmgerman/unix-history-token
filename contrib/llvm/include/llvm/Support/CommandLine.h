@@ -263,21 +263,6 @@ init|=
 literal|""
 parameter_list|)
 function_decl|;
-comment|// Function pointer type for printing version information.
-name|using
-name|VersionPrinterTy
-init|=
-name|std
-operator|::
-name|function
-operator|<
-name|void
-argument_list|(
-name|raw_ostream
-operator|&
-argument_list|)
-operator|>
-decl_stmt|;
 comment|///===---------------------------------------------------------------------===//
 comment|/// SetVersionPrinter - Override the default (LLVM specific) version printer
 comment|///                     used to print out the version when --version is given
@@ -286,8 +271,12 @@ comment|///                     CommandLine utilities to print their own version
 name|void
 name|SetVersionPrinter
 parameter_list|(
-name|VersionPrinterTy
+name|void
+function_decl|(
+modifier|*
 name|func
+function_decl|)
+parameter_list|()
 parameter_list|)
 function_decl|;
 comment|///===---------------------------------------------------------------------===//
@@ -300,8 +289,12 @@ comment|///                          information specific to the tool.
 name|void
 name|AddExtraVersionPrinter
 parameter_list|(
-name|VersionPrinterTy
+name|void
+function_decl|(
+modifier|*
 name|func
+function_decl|)
+parameter_list|()
 parameter_list|)
 function_decl|;
 comment|// PrintOptionValues - Print option values.

@@ -6493,11 +6493,6 @@ return|return;
 block|}
 endif|#
 directive|endif
-name|IXL_RX_UNLOCK
-argument_list|(
-name|rxr
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -6508,11 +6503,6 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
-argument_list|)
-expr_stmt|;
-name|IXL_RX_LOCK
-argument_list|(
-name|rxr
 argument_list|)
 expr_stmt|;
 block|}
@@ -7810,6 +7800,11 @@ name|next_check
 operator|=
 name|i
 expr_stmt|;
+name|IXL_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 name|ixl_rx_input
 argument_list|(
 name|rxr
@@ -7819,6 +7814,11 @@ argument_list|,
 name|sendmp
 argument_list|,
 name|ptype
+argument_list|)
+expr_stmt|;
+name|IXL_RX_LOCK
+argument_list|(
+name|rxr
 argument_list|)
 expr_stmt|;
 name|i
@@ -7869,6 +7869,11 @@ operator|->
 name|next_check
 operator|=
 name|i
+expr_stmt|;
+name|IXL_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -7939,11 +7944,6 @@ directive|endif
 endif|#
 directive|endif
 comment|/* defined(INET6) || defined(INET) */
-name|IXL_RX_UNLOCK
-argument_list|(
-name|rxr
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FALSE

@@ -7512,6 +7512,12 @@ specifier|const
 block|;
 comment|// C++17 std::align_val_t
 name|bool
+name|isStdByteType
+argument_list|()
+specifier|const
+block|;
+comment|// C++17 std::byte
+name|bool
 name|isAtomicType
 argument_list|()
 specifier|const

@@ -46,28 +46,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|tabsize
-value|8
-end_define
-
-begin_comment
-comment|/* the size of a tab */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tabmask
-value|0177770
-end_define
-
-begin_comment
-comment|/* mask used when figuring length of lines 				 * with tabs */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|false
 value|0
 end_define
@@ -724,6 +702,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* "b = (int) a" vs "b = (int)a" */
+end_comment
+
+begin_decl_stmt
+name|int
+name|tabsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the size of a tab */
 end_comment
 
 begin_comment

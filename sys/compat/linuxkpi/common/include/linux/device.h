@@ -682,7 +682,40 @@ parameter_list|,
 name|_store
 parameter_list|)
 define|\
-value|struct device_attribute dev_attr_##_name =			\ 	    { { #_name, NULL, _mode }, _show, _store }
+value|struct device_attribute dev_attr_##_name =			\ 	    __ATTR(_name, _mode, _show, _store)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICE_ATTR_RO
+parameter_list|(
+name|_name
+parameter_list|)
+define|\
+value|struct device_attribute dev_attr_##_name = __ATTR_RO(_name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICE_ATTR_WO
+parameter_list|(
+name|_name
+parameter_list|)
+define|\
+value|struct device_attribute dev_attr_##_name = __ATTR_WO(_name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICE_ATTR_RW
+parameter_list|(
+name|_name
+parameter_list|)
+define|\
+value|struct device_attribute dev_attr_##_name = __ATTR_RW(_name)
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_man.c,v 1.119 2017/06/08 12:54:58 schwarze Exp $ */
+comment|/*	$Id: mdoc_man.c,v 1.122 2017/06/14 22:51:25 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -970,20 +970,35 @@ init|=
 block|{
 name|pre_br
 block|,
+comment|/* br */
 name|pre_onearg
 block|,
+comment|/* ce */
 name|pre_ft
 block|,
+comment|/* ft */
 name|pre_onearg
 block|,
+comment|/* ll */
 name|pre_onearg
 block|,
+comment|/* mc */
+name|pre_onearg
+block|,
+comment|/* po */
+name|pre_onearg
+block|,
+comment|/* rj */
 name|pre_sp
 block|,
+comment|/* sp */
 name|pre_ta
 block|,
+comment|/* ta */
 name|pre_onearg
-block|, }
+block|,
+comment|/* ti */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1783,9 +1798,9 @@ comment|/* Bq */
 block|{
 name|NULL
 block|,
-name|NULL
+name|pre_bk
 block|,
-name|NULL
+name|post_bk
 block|,
 name|NULL
 block|,
@@ -1796,9 +1811,9 @@ comment|/* Bsx */
 block|{
 name|NULL
 block|,
-name|NULL
+name|pre_bk
 block|,
-name|NULL
+name|post_bk
 block|,
 name|NULL
 block|,
@@ -1913,9 +1928,9 @@ comment|/* Eo */
 block|{
 name|NULL
 block|,
-name|NULL
+name|pre_bk
 block|,
-name|NULL
+name|post_bk
 block|,
 name|NULL
 block|,
@@ -1965,9 +1980,9 @@ comment|/* Ns */
 block|{
 name|NULL
 block|,
-name|NULL
+name|pre_bk
 block|,
-name|NULL
+name|post_bk
 block|,
 name|NULL
 block|,
@@ -1978,9 +1993,9 @@ comment|/* Nx */
 block|{
 name|NULL
 block|,
-name|NULL
+name|pre_bk
 block|,
-name|NULL
+name|post_bk
 block|,
 name|NULL
 block|,
@@ -2511,9 +2526,9 @@ comment|/* En */
 block|{
 name|NULL
 block|,
-name|NULL
+name|pre_bk
 block|,
-name|NULL
+name|post_bk
 block|,
 name|NULL
 block|,
@@ -5770,6 +5785,9 @@ return|;
 case|case
 name|ROFFT_BODY
 case|:
+case|case
+name|ROFFT_ELEM
+case|:
 name|outflags
 operator||=
 name|MMAN_Bk
@@ -5793,19 +5811,50 @@ parameter_list|(
 name|DECL_ARGS
 parameter_list|)
 block|{
-if|if
+switch|switch
 condition|(
 name|n
 operator|->
 name|type
-operator|==
-name|ROFFT_BODY
 condition|)
+block|{
+case|case
+name|ROFFT_ELEM
+case|:
+while|while
+condition|(
+operator|(
+name|n
+operator|=
+name|n
+operator|->
+name|parent
+operator|)
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+name|n
+operator|->
+name|tok
+operator|==
+name|MDOC_Bk
+condition|)
+return|return;
+comment|/* FALLTHROUGH */
+case|case
+name|ROFFT_BODY
+case|:
 name|outflags
 operator|&=
 operator|~
 name|MMAN_Bk
 expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 block|}
 end_function
 

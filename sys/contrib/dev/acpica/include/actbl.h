@@ -1302,6 +1302,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Maximum value of the ValidationCount field in ACPI_TABLE_DESC.  * When reached, ValidationCount cannot be changed any more and the table will  * be permanently regarded as validated.  *  * This is to prevent situations in which unbalanced table get/put operations  * may cause premature table unmapping in the OS to happen.  *  * The maximum validation count can be defined to any value, but should be  * greater than the maximum number of OS early stage mapping slots to avoid  * leaking early stage table mappings to the late stage.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_TABLE_VALIDATIONS
+value|ACPI_UINT16_MAX
+end_define
+
+begin_comment
 comment|/* Masks for Flags field above */
 end_comment
 
@@ -1343,6 +1354,13 @@ define|#
 directive|define
 name|ACPI_TABLE_ORIGIN_MASK
 value|(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_IS_VERIFIED
+value|(4)
 end_define
 
 begin_define

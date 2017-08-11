@@ -2885,8 +2885,18 @@ name|STMT_MS_DEPENDENT_EXISTS
 block|,
 comment|// MSDependentExistsStmt
 name|EXPR_LAMBDA
+block|,
 comment|// LambdaExpr
-block|}
+name|STMT_COROUTINE_BODY
+block|,
+name|STMT_CORETURN
+block|,
+name|EXPR_COAWAIT
+block|,
+name|EXPR_COYIELD
+block|,
+name|EXPR_DEPENDENT_COAWAIT
+block|,     }
 enum|;
 comment|/// \brief The kinds of designators that can occur in a
 comment|/// DesignatedInitExpr.

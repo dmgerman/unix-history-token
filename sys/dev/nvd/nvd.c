@@ -508,6 +508,14 @@ name|int
 name|nvd_load
 parameter_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|nvme_use_nvd
+condition|)
+return|return
+literal|0
+return|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -564,6 +572,12 @@ name|nvd_disk
 modifier|*
 name|disk
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|nvme_use_nvd
+condition|)
+return|return;
 while|while
 condition|(
 operator|!

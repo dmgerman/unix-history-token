@@ -3672,6 +3672,14 @@ argument_list|,
 name|DEVSTAT_PRIORITY_DISK
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Add alias for older nvd drives to ease transition. 	 */
+name|disk_add_alias
+argument_list|(
+name|disk
+argument_list|,
+literal|"nvd"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Acquire a reference to the periph before we register with GEOM. 	 * We'll release this reference once GEOM calls us back (via 	 * ndadiskgonecb()) telling us that our provider has been freed. 	 */
 if|if
 condition|(

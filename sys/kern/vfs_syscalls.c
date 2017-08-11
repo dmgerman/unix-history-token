@@ -13124,6 +13124,16 @@ operator|->
 name|v_type
 operator|!=
 name|VLNK
+operator|&&
+operator|(
+name|vp
+operator|->
+name|v_vflag
+operator|&
+name|VV_READLINK
+operator|)
+operator|==
+literal|0
 condition|)
 name|error
 operator|=

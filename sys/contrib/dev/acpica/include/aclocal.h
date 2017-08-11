@@ -543,6 +543,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IMPLICIT_EXTERNAL
+value|0x02
+end_define
+
+begin_comment
+comment|/* iASL only: This object created implicitly via External */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ANOBJ_IS_EXTERNAL
 value|0x08
 end_define
@@ -1940,7 +1951,7 @@ struct|struct
 name|acpi_pkg_state
 block|{
 name|ACPI_STATE_COMMON
-name|UINT16
+name|UINT32
 name|Index
 decl_stmt|;
 name|union
@@ -3059,7 +3070,7 @@ name|SpacesBefore
 decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
-name|Latest_Parse_Node
+name|LatestParseOp
 decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
