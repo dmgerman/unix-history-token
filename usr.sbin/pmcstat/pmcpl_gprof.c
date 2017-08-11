@@ -2027,7 +2027,8 @@ name|pgf
 operator|->
 name|pgf_nbuckets
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|image
 operator|->
 name|pi_end
@@ -2035,9 +2036,9 @@ operator|-
 name|image
 operator|->
 name|pi_start
-operator|)
-operator|/
+argument_list|,
 name|FUNCTION_ALIGNMENT
+argument_list|)
 expr_stmt|;
 comment|/* see<machine/profile.h> */
 name|pgf
