@@ -11031,6 +11031,9 @@ name|desiredpages
 condition|)
 block|{
 comment|/* 		 * We must allocate system pages since blocking 		 * here could interfere with paging I/O, no 		 * matter which process we are. 		 * 		 * Only exclusive busy can be tested here. 		 * Blocking on shared busy might lead to 		 * deadlocks once allocbuf() is called after 		 * pages are vfs_busy_pages(). 		 */
+operator|(
+name|void
+operator|)
 name|vm_page_grab_pages
 argument_list|(
 name|obj

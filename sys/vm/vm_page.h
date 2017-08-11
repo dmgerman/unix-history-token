@@ -1293,7 +1293,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* (g) Do not sleep, return NULL */
+comment|/* (gp) Do not sleep */
 end_comment
 
 begin_define
@@ -1607,7 +1607,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_page_grab_pages
 parameter_list|(
 name|vm_object_t

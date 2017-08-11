@@ -5547,6 +5547,9 @@ operator|->
 name|pm_tsb_obj
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|vm_page_grab_pages
 argument_list|(
 name|pm

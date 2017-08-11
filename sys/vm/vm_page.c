@@ -11789,11 +11789,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the specified range of pages from the given object.  For each  * page offset within the range, if a page already exists within the object  * at that offset and it is busy, then wait for it to change state.  If,  * instead, the page doesn't exist, then allocate it.  *  * The caller must always specify an allocation class.  *  * allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs the pages  *  * The caller must always specify that the pages are to be busied and/or  * wired.  *  * optional allocation flags:  *	VM_ALLOC_IGN_SBUSY	do not sleep on soft busy pages  *	VM_ALLOC_NOBUSY		do not exclusive busy the page  *	VM_ALLOC_SBUSY		set page to sbusy state  *	VM_ALLOC_WIRED		wire the pages  *	VM_ALLOC_ZERO		zero and validate any invalid pages  *  * This routine may sleep.  */
+comment|/*  * Return the specified range of pages from the given object.  For each  * page offset within the range, if a page already exists within the object  * at that offset and it is busy, then wait for it to change state.  If,  * instead, the page doesn't exist, then allocate it.  *  * The caller must always specify an allocation class.  *  * allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs the pages  *  * The caller must always specify that the pages are to be busied and/or  * wired.  *  * optional allocation flags:  *	VM_ALLOC_IGN_SBUSY	do not sleep on soft busy pages  *	VM_ALLOC_NOBUSY		do not exclusive busy the page  *	VM_ALLOC_NOWAIT		do not sleep  *	VM_ALLOC_SBUSY		set page to sbusy state  *	VM_ALLOC_WIRED		wire the pages  *	VM_ALLOC_ZERO		zero and validate any invalid pages  *  * If VM_ALLOC_NOWAIT is not specified, this routine may sleep.  Otherwise, it  * may return a partial prefix of the requested range.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|vm_page_grab_pages
 parameter_list|(
 name|vm_object_t
@@ -11897,7 +11897,11 @@ name|count
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|i
 operator|=
 literal|0
@@ -11958,6 +11962,17 @@ condition|(
 name|sleep
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|allocflags
+operator|&
+name|VM_ALLOC_NOWAIT
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
 comment|/* 				 * Reference the page before unlocking and 				 * sleeping so that the page daemon is less 				 * likely to reclaim it. 				 */
 name|vm_page_aflag_set
 argument_list|(
@@ -12096,6 +12111,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|allocflags
+operator|&
+name|VM_ALLOC_NOWAIT
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
 name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
@@ -12169,6 +12195,11 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|i
+operator|)
+return|;
 block|}
 end_function
 
