@@ -90,27 +90,11 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|uint32_t
-name|_mm_crc32_u32
-parameter_list|(
-name|uint32_t
-name|x
-parameter_list|,
-name|uint32_t
-name|y
-parameter_list|)
-block|{
-asm|__asm("crc32l %1,%0" : "+r" (x) : "r" (y));
-return|return
-operator|(
-name|x
-operator|)
-return|;
-block|}
-end_function
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
 
 begin_function
 specifier|static
@@ -133,6 +117,38 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|_mm_crc32_u32
+parameter_list|(
+name|uint32_t
+name|x
+parameter_list|,
+name|uint32_t
+name|y
+parameter_list|)
+block|{
+asm|__asm("crc32l %1,%0" : "+r" (x) : "r" (y));
+return|return
+operator|(
+name|x
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* CRC-32C (iSCSI) polynomial in reversed bit order. */
