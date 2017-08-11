@@ -100,15 +100,30 @@ begin_define
 define|#
 directive|define
 name|LINUXKPI_PROT_VALID
-value|(1<< 4)
+value|(1<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUXKPI_CACHE_MODE_SHIFT
-value|3
+value|4
 end_define
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+operator|(
+name|VM_PROT_ALL
+operator|&
+operator|-
+name|LINUXKPI_PROT_VALID
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -124,11 +139,11 @@ return|return
 operator|(
 operator|(
 name|attr
-operator||
-name|LINUXKPI_PROT_VALID
-operator|)
 operator|<<
 name|LINUXKPI_CACHE_MODE_SHIFT
+operator|)
+operator||
+name|LINUXKPI_PROT_VALID
 operator|)
 return|;
 block|}
@@ -144,27 +159,17 @@ name|pgprot_t
 name|prot
 parameter_list|)
 block|{
-name|int
-name|val
-decl_stmt|;
-name|val
-operator|=
-name|prot
-operator|>>
-name|LINUXKPI_CACHE_MODE_SHIFT
-expr_stmt|;
 if|if
 condition|(
-name|val
+name|prot
 operator|&
 name|LINUXKPI_PROT_VALID
 condition|)
 return|return
 operator|(
-name|val
-operator|&
-operator|~
-name|LINUXKPI_PROT_VALID
+name|prot
+operator|>>
+name|LINUXKPI_CACHE_MODE_SHIFT
 operator|)
 return|;
 else|else
@@ -183,7 +188,7 @@ name|virt_to_page
 parameter_list|(
 name|x
 parameter_list|)
-value|PHYS_TO_VM_PAGE(vtophys((x)))
+value|PHYS_TO_VM_PAGE(vtophys(x))
 end_define
 
 begin_define
@@ -193,7 +198,7 @@ name|page_to_pfn
 parameter_list|(
 name|pp
 parameter_list|)
-value|(VM_PAGE_TO_PHYS((pp))>> PAGE_SHIFT)
+value|(VM_PAGE_TO_PHYS(pp)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -215,7 +220,7 @@ name|page
 parameter_list|,
 name|n
 parameter_list|)
-value|pfn_to_page(page_to_pfn((page)) + (n))
+value|pfn_to_page(page_to_pfn(page) + (n))
 end_define
 
 begin_define
@@ -225,7 +230,7 @@ name|clear_page
 parameter_list|(
 name|page
 parameter_list|)
-value|memset((page), 0, PAGE_SIZE)
+value|memset(page, 0, PAGE_SIZE)
 end_define
 
 begin_define
@@ -236,7 +241,7 @@ parameter_list|(
 name|prot
 parameter_list|)
 define|\
-value|((prot) | cachemode2protval(VM_MEMATTR_UNCACHEABLE))
+value|(((prot)& VM_PROT_ALL) | cachemode2protval(VM_MEMATTR_UNCACHEABLE))
 end_define
 
 begin_define
@@ -247,7 +252,7 @@ parameter_list|(
 name|prot
 parameter_list|)
 define|\
-value|((prot) | cachemode2protval(VM_MEMATTR_WRITE_COMBINING))
+value|(((prot)& VM_PROT_ALL) | cachemode2protval(VM_MEMATTR_WRITE_COMBINING))
 end_define
 
 begin_undef

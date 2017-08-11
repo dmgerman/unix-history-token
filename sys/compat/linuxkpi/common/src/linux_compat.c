@@ -5614,7 +5614,11 @@ name|vmap
 operator|->
 name|vm_page_prot
 operator|=
+operator|(
 name|nprot
+operator|&
+name|VM_PROT_ALL
+operator|)
 expr_stmt|;
 name|vmap
 operator|->
