@@ -152,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|KERNELDUMP_BUFFER_SIZE
-value|1024
+value|4096
 end_define
 
 begin_define
