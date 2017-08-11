@@ -180,12 +180,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/rtc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clock_if.h"
 end_include
 
@@ -658,12 +652,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Set the native RTC. */
-name|atrtc_set
-argument_list|(
-name|ts
-argument_list|)
-expr_stmt|;
 name|settime
 operator|.
 name|cmd
