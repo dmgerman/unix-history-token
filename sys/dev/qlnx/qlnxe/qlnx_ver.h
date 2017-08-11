@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|QLNX_VERSION_BUILD
-value|6
+value|7
 end_define
 
 end_unit
