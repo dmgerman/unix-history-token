@@ -595,7 +595,7 @@ expr_stmt|;
 name|vfp_enable
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If the previous thread on this cpu to use the VFP was not the 	 * current threas, or the current thread last used it on a different 	 * cpu we need to restore the old state. 	 */
+comment|/* 	 * If the previous thread on this cpu to use the VFP was not the 	 * current thread, or the current thread last used it on a different 	 * cpu we need to restore the old state. 	 */
 if|if
 condition|(
 name|PCPU_GET
