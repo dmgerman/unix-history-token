@@ -196,6 +196,42 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Set *CONTENTS_P to be a readable svn_stream_t that receives the text    representation REP as seen in filesystem FS.  Read the latest element    of the delta chain from FILE at offset OFFSET.    Use POOL for allocations. */
+end_comment
+
+begin_function_decl
+name|svn_error_t
+modifier|*
+name|svn_fs_fs__get_contents_from_file
+parameter_list|(
+name|svn_stream_t
+modifier|*
+modifier|*
+name|contents_p
+parameter_list|,
+name|svn_fs_t
+modifier|*
+name|fs
+parameter_list|,
+name|representation_t
+modifier|*
+name|rep
+parameter_list|,
+name|apr_file_t
+modifier|*
+name|file
+parameter_list|,
+name|apr_off_t
+name|offset
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Attempt to fetch the text representation of node-revision NODEREV as    seen in filesystem FS and pass it along with the BATON to the PROCESSOR.    Set *SUCCESS only of the data could be provided and the processing    had been called.    Use POOL for all allocations.  */
 end_comment
 
