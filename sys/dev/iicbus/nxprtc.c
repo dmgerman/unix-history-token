@@ -3134,7 +3134,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_DEFAULT
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
