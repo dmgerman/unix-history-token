@@ -1466,6 +1466,20 @@ operator|->
 name|vkbd
 expr_stmt|;
 block|}
+comment|/* Pass device for probing after both channels are established */
+if|if
+condition|(
+name|s
+operator|->
+name|state
+operator|==
+name|OPEN
+condition|)
+name|hid_initialise
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

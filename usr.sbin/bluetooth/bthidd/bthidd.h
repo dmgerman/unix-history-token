@@ -120,6 +120,11 @@ name|int32_t
 name|vkbd
 decl_stmt|;
 comment|/* virual keyboard */
+name|void
+modifier|*
+name|ctx
+decl_stmt|;
+comment|/* product specific dev state */
 name|bdaddr_t
 name|bdaddr
 decl_stmt|;
@@ -278,6 +283,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|session_close
+parameter_list|(
+name|bthid_session_p
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|hid_initialise
 parameter_list|(
 name|bthid_session_p
 name|s

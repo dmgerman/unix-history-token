@@ -195,6 +195,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|ctx
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|d
@@ -717,6 +723,13 @@ name|maxfd
 operator|--
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|s
+operator|->
+name|ctx
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|s
