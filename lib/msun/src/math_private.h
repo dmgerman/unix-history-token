@@ -553,17 +553,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * XXX LDBL_MAX is broken on i386.  If the precise value of LDBL_MAX is not  * needed, this may be worked around by instead referring to a proxy, such  * as HALF_LDBL_MAX, below.  HALF_LDBL_MAX is approximately LDBL_MAX / 2,  * actually just greater than.  Note that 2 * HALF_LDBL_MAX will always  * overflow to infinity, regardless of the precision and rounding modes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HALF_LDBL_MAX
-value|__CONCAT(__CONCAT(0x0.8p, LDBL_MAX_EXP), L)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
