@@ -898,6 +898,12 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * If we have just been running VFP instructions we will 		 * need to save the state to memcpy it below. 		 */
+if|if
+condition|(
+name|td
+operator|==
+name|curthread
+condition|)
 name|vfp_save_state
 argument_list|(
 name|td
