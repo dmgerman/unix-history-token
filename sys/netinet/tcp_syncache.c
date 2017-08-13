@@ -1419,7 +1419,12 @@ index|]
 operator|.
 name|sch_last_overflow
 operator|=
-name|INT64_MIN
+operator|-
+operator|(
+name|SYNCOOKIE_LIFETIME
+operator|+
+literal|1
+operator|)
 expr_stmt|;
 block|}
 comment|/* Create the syncache entry zone. */
