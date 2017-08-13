@@ -1435,12 +1435,20 @@ name|aic
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * 8.8.178.135 is IPv4 address of freefall.freebsd.org 	 * as of 27 October 2013. 	 */
+comment|/* XXX: hardcoded addresses for "google-public-dns-a.google.com". */
+define|#
+directive|define
+name|GOOGLE_DNS_IPV4
+value|"8.8.8.8"
+define|#
+directive|define
+name|GOOGLE_DNS_IPV6
+value|"2001:4860:4860::8888"
 name|inet_pton
 argument_list|(
 name|AF_INET
 argument_list|,
-literal|"8.8.178.135"
+name|GOOGLE_DNS_IPV4
 argument_list|,
 operator|&
 name|ip4
@@ -1473,7 +1481,7 @@ name|stderr
 argument_list|,
 literal|"Unable to resolve %s.\n"
 argument_list|,
-literal|"8.8.178.135"
+name|GOOGLE_DNS_IPV4
 argument_list|)
 expr_stmt|;
 name|hpc
@@ -1506,12 +1514,11 @@ name|result
 operator||=
 name|GETHOSTBYADDR_AF_INET
 expr_stmt|;
-comment|/* 	 * 2001:1900:2254:206c::16:87 is IPv6 address of freefall.freebsd.org 	 * as of 27 October 2013. 	 */
 name|inet_pton
 argument_list|(
 name|AF_INET6
 argument_list|,
-literal|"2001:1900:2254:206c::16:87"
+name|GOOGLE_DNS_IPV6
 argument_list|,
 operator|&
 name|ip6
@@ -1545,7 +1552,7 @@ name|stderr
 argument_list|,
 literal|"Unable to resolve %s.\n"
 argument_list|,
-literal|"2001:1900:2254:206c::16:87"
+name|GOOGLE_DNS_IPV6
 argument_list|)
 expr_stmt|;
 block|}
