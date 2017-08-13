@@ -1718,9 +1718,17 @@ case|:
 operator|*
 name|result
 operator|=
+operator|(
+name|NIRQ
+operator|-
 name|sc
 operator|->
 name|gic_nirqs
+operator|)
+operator|/
+name|sc
+operator|->
+name|gic_nchildren
 expr_stmt|;
 return|return
 operator|(
