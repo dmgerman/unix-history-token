@@ -99,7 +99,7 @@ name|CHECK
 parameter_list|(
 name|expr
 parameter_list|)
-value|do {						\ 	if ((expr))							\ 		printf("ok %d %s:%u\n", ntest, __FILE__, __LINE__);	\ 	else								\ 		printf("not ok %d %s:%u\n", ntest, __FILE__, __LINE__);\ 	ntest++;							\ } while (0)
+value|do {						\ 	if ((expr))							\ 		printf("ok %d # %s:%u\n", ntest, __FILE__, __LINE__);	\ 	else								\ 		printf("not ok %d # %s:%u\n", ntest, __FILE__, __LINE__); \ 	fflush(stdout);							\ 	ntest++;							\ } while (0)
 end_define
 
 begin_define
@@ -109,7 +109,7 @@ name|CHECKX
 parameter_list|(
 name|expr
 parameter_list|)
-value|do {						\ 	if ((expr)) {							\ 		printf("ok %d %s:%u\n", ntest, __FILE__, __LINE__);	\ 	} else {							\ 		printf("not ok %d %s:%u\n", ntest, __FILE__, __LINE__);\ 		exit(1);						\ 	}								\ 	ntest++;							\ } while (0)
+value|do {						\ 	if ((expr)) {							\ 		printf("ok %d # %s:%u\n", ntest, __FILE__, __LINE__);	\ 	} else {							\ 		printf("not ok %d # %s:%u\n", ntest, __FILE__, __LINE__); \ 		exit(1);						\ 	}								\ 	fflush(stdout);							\ 	ntest++;							\ } while (0)
 end_define
 
 begin_define
@@ -8540,6 +8540,11 @@ decl_stmt|;
 name|printf
 argument_list|(
 literal|"1..188\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 name|capcas
