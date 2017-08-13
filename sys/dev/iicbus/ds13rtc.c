@@ -1981,7 +1981,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"chiptype"
+literal|"compatible"
 argument_list|,
 operator|&
 name|htype
