@@ -2327,7 +2327,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Last usage of the cpus array, unmap it. */
-name|pmap_unmapdev
+name|pmap_unmapbios
 argument_list|(
 operator|(
 name|vm_offset_t
