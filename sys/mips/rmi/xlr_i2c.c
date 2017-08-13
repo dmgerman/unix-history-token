@@ -850,7 +850,7 @@ name|sc
 operator|->
 name|iicbus
 argument_list|,
-literal|"ds1374_rtc"
+literal|"ds13rtc"
 argument_list|,
 literal|0
 argument_list|)
@@ -951,6 +951,26 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * The old ds1374 rtc driver only handled one chip type.  The new 	 * ds13rtc driver handles all ds13xx chips, but must be told the chip 	 * type via hints.  XLR historically hasn't had a standard hints file, 	 * so set up the hint now if it isn't already there. 	 */
+define|#
+directive|define
+name|HINTNAME
+value|"hint.ds13rtc.0.compatible"
+if|if
+condition|(
+operator|!
+name|testenv
+argument_list|(
+name|HINTNAME
+argument_list|)
+condition|)
+name|kern_setenv
+argument_list|(
+name|HINTNAME
+argument_list|,
+literal|"dallas,ds1374"
+argument_list|)
+expr_stmt|;
 name|bus_generic_attach
 argument_list|(
 name|dev
