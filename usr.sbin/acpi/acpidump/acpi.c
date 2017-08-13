@@ -9299,8 +9299,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|assert
-argument_list|(
+name|len
+operator|=
 operator|(
 name|size_t
 operator|)
@@ -9319,6 +9319,10 @@ name|wrkdir
 argument_list|,
 name|iname
 argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|len
 operator|<=
 sizeof|sizeof
 argument_list|(
@@ -9486,8 +9490,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Dump iasl's output to stdout */
-name|assert
-argument_list|(
+name|len
+operator|=
 operator|(
 name|size_t
 operator|)
@@ -9506,6 +9510,10 @@ name|wrkdir
 argument_list|,
 name|oname
 argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|len
 operator|<=
 sizeof|sizeof
 argument_list|(
