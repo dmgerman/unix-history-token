@@ -6184,8 +6184,6 @@ name|pbp
 decl_stmt|;
 name|off_t
 name|joffset
-decl_stmt|,
-name|size
 decl_stmt|;
 name|u_char
 modifier|*
@@ -6211,10 +6209,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|size
-operator|=
-literal|0
-expr_stmt|;
 name|pp
 operator|=
 name|sc
@@ -6517,12 +6511,6 @@ operator|=
 name|bp
 operator|->
 name|bio_length
-expr_stmt|;
-name|size
-operator|+=
-name|ent
-operator|->
-name|je_length
 expr_stmt|;
 name|data
 operator|=
