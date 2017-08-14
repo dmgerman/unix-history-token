@@ -6824,7 +6824,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Fix up rcvif and go through hn(4)'s if_input and  		 * increase ipackets. 		 */
 for|for
 control|(
 name|mn
@@ -6842,7 +6841,7 @@ operator|->
 name|m_nextpkt
 control|)
 block|{
-comment|/* Allow tapping on the VF. */
+comment|/* 			 * Allow tapping on the VF. 			 */
 name|ETHER_BPF_MTAP
 argument_list|(
 name|vf_ifp
@@ -6850,6 +6849,36 @@ argument_list|,
 name|mn
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Update VF stats. 			 */
+if|if
+condition|(
+operator|(
+name|vf_ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_HWSTATS
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|if_inc_counter
+argument_list|(
+name|vf_ifp
+argument_list|,
+name|IFCOUNTER_IBYTES
+argument_list|,
+name|mn
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 			 * XXX IFCOUNTER_IMCAST 			 * This stat updating is kinda invasive, since it 			 * requires two checks on the mbuf: the length check 			 * and the ethernet header check.  As of this write, 			 * all multicast packets go directly to hn(4), which 			 * makes imcast stat updating in the VF a try in vian. 			 */
+comment|/* 			 * Fix up rcvif and increase hn(4)'s ipackets. 			 */
 name|mn
 operator|->
 name|m_pkthdr
@@ -6868,6 +6897,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Go through hn(4)'s if_input. 		 */
 name|hn_ifp
 operator|->
 name|if_input
