@@ -173,6 +173,10 @@ decl_stmt|;
 name|int
 name|hn_pktbuf_len
 decl_stmt|;
+name|int
+name|hn_rx_flags
+decl_stmt|;
+comment|/* HN_RX_FLAG_ */
 name|uint8_t
 modifier|*
 name|hn_rxbuf
@@ -222,9 +226,6 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|hn_rx_sysctl_tree
-decl_stmt|;
-name|int
-name|hn_rx_flags
 decl_stmt|;
 name|void
 modifier|*
@@ -281,6 +282,13 @@ define|#
 directive|define
 name|HN_RX_FLAG_BR_REF
 value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_RX_FLAG_XPNT_VF
+value|0x0004
 end_define
 
 begin_struct
