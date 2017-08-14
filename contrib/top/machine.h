@@ -201,10 +201,17 @@ name|int
 name|thread
 decl_stmt|;
 comment|/* show threads */
+define|#
+directive|define
+name|TOP_MAX_UIDS
+value|8
 name|int
 name|uid
+index|[
+name|TOP_MAX_UIDS
+index|]
 decl_stmt|;
-comment|/* only this uid (unless uid == -1) */
+comment|/* only these uids (unless uid[0] == -1) */
 name|int
 name|wcpu
 decl_stmt|;
