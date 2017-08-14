@@ -616,7 +616,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int
+name|u_long
 name|g_journal_cache_used
 init|=
 literal|0
@@ -625,7 +625,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int
+name|u_long
 name|g_journal_cache_limit
 init|=
 literal|64
@@ -674,7 +674,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int
+name|u_long
 name|g_journal_cache_low
 init|=
 literal|0
@@ -701,7 +701,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern_geom_journal_cache
 argument_list|,
@@ -729,7 +729,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|u_int
+name|u_long
 name|limit
 decl_stmt|;
 name|int
@@ -741,7 +741,7 @@ name|g_journal_cache_limit
 expr_stmt|;
 name|error
 operator|=
-name|sysctl_handle_int
+name|sysctl_handle_long
 argument_list|(
 name|oidp
 argument_list|,
@@ -801,7 +801,7 @@ name|OID_AUTO
 argument_list|,
 name|limit
 argument_list|,
-name|CTLTYPE_UINT
+name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RWTUN
 argument_list|,
@@ -14894,11 +14894,17 @@ name|GJ_DEBUG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Out of cache, force switch (used=%u "
-literal|"limit=%u)."
+literal|"Out of cache, force switch (used=%jd "
+literal|"limit=%jd)."
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|g_journal_cache_used
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|g_journal_cache_limit
 argument_list|)
 expr_stmt|;
