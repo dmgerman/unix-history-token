@@ -16007,11 +16007,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sc
+operator|->
+name|hn_flags
+operator|&
+name|HN_FLAG_RXVF
+operator|)
+operator|||
+operator|(
 name|sc
 operator|->
 name|hn_xvf_flags
 operator|&
 name|HN_XVFFLAG_ENABLED
+operator|)
 condition|)
 block|{
 comment|/* 			 * Since we have reattached the NVS part, 			 * change the datapath to VF again; in case 			 * that it is lost, after the NVS was detached. 			 */
