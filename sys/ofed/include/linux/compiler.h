@@ -246,6 +246,38 @@ parameter_list|)
 value|x = x
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACCESS_ONCE
+parameter_list|(
+name|x
+parameter_list|)
+value|(*(volatile __typeof(x) *)&(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_ONCE
+parameter_list|(
+name|x
+parameter_list|,
+name|v
+parameter_list|)
+value|do {		\ 	barrier();			\ 	ACCESS_ONCE(x) = (v);		\ 	barrier();			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|READ_ONCE
+parameter_list|(
+name|x
+parameter_list|)
+value|({			\ 	__typeof(x) __var = ({		\ 		barrier();		\ 		ACCESS_ONCE(x);		\ 	});				\ 	barrier();			\ 	__var;				\ })
+end_define
+
 begin_endif
 endif|#
 directive|endif
