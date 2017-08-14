@@ -9183,9 +9183,13 @@ name|en_err
 argument_list|(
 name|priv
 argument_list|,
-literal|"Bad MTU size:%d.\n"
+literal|"Bad MTU size:%d, max %u.\n"
 argument_list|,
 name|new_mtu
+argument_list|,
+name|priv
+operator|->
+name|max_mtu
 argument_list|)
 expr_stmt|;
 return|return
