@@ -491,7 +491,7 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|HN_NVS_DATAPATH_SYNTHETIC
+name|HN_NVS_DATAPATH_SYNTH
 value|0
 end_define
 
