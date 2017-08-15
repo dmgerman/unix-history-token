@@ -5812,9 +5812,8 @@ name|F_T5_OPT_2_VALID
 expr_stmt|;
 name|opt2
 operator||=
-name|F_CONG_CNTRL_VALID
+name|F_T5_ISS
 expr_stmt|;
-comment|/* OPT_2_ISS really, for T5 */
 block|}
 if|if
 condition|(
