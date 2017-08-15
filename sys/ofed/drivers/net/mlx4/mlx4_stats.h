@@ -391,6 +391,10 @@ name|unsigned
 name|long
 name|tx_chksum_offload
 decl_stmt|;
+name|unsigned
+name|long
+name|defrag_attempts
+decl_stmt|;
 block|}
 struct|;
 end_struct
