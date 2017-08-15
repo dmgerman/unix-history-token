@@ -1015,7 +1015,7 @@ literal|""
 block|,
 literal|0
 block|,
-literal|0
+name|FNM_NOMATCH
 block|}
 block|,
 block|{
