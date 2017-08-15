@@ -1754,7 +1754,11 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|MHLEN
+operator|-
+name|MLX5E_NET_IP_ALIGN
+operator|)
 operator|>=
 name|byte_cnt
 operator|&&
@@ -1772,6 +1776,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* get IP header aligned */
+name|mb
+operator|->
+name|m_data
+operator|+=
+name|MLX5E_NET_IP_ALIGN
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|rq
