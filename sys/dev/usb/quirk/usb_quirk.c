@@ -2575,6 +2575,8 @@ argument_list|,
 literal|0xffff
 argument_list|,
 name|UQ_MSC_NO_SYNC_CACHE
+argument_list|,
+name|UQ_MSC_NO_PREVENT_ALLOW
 argument_list|)
 block|,
 name|USB_QUIRK_VP
