@@ -211,6 +211,9 @@ literal|"Binary file %s matches\n"
 block|,
 comment|/* 9*/
 literal|"%s (BSD grep) %s\n"
+block|,
+comment|/* 10*/
+literal|"%s (BSD grep, GNU compatible) %s\n"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -3176,6 +3179,24 @@ break|break;
 case|case
 literal|'V'
 case|:
+ifdef|#
+directive|ifdef
+name|WITH_GNU
+name|printf
+argument_list|(
+name|getstr
+argument_list|(
+literal|10
+argument_list|)
+argument_list|,
+name|getprogname
+argument_list|()
+argument_list|,
+name|VERSION
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 name|getstr
@@ -3189,6 +3210,8 @@ argument_list|,
 name|VERSION
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|0
