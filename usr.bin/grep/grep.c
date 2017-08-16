@@ -3850,6 +3850,10 @@ condition|(
 name|aargc
 operator|==
 literal|0
+operator|&&
+name|dirbehave
+operator|!=
+name|DIR_RECURSE
 condition|)
 name|exit
 argument_list|(
