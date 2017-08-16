@@ -84,12 +84,6 @@ directive|include
 file|"tre-fastmatch.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
-end_include
-
 begin_function_decl
 specifier|static
 name|int
@@ -123,7 +117,7 @@ parameter_list|(
 name|errcode
 parameter_list|)
 define|\
-value|{									\     if (fg->pattern)							\       xfree(fg->pattern);						\     if (fg->wpattern)							\       xfree(fg->wpattern);						\     if (fg->qsBc_table)							\       hashtable_free(fg->qsBc_table);					\     fg = NULL;								\     return errcode;							\   }
+value|{									\     if (fg->pattern)							\       free(fg->pattern);						\     if (fg->wpattern)							\       free(fg->wpattern);						\     if (fg->qsBc_table)							\       hashtable_free(fg->qsBc_table);					\     fg = NULL;								\     return errcode;							\   }
 end_define
 
 begin_comment
@@ -150,7 +144,7 @@ define|#
 directive|define
 name|STORE_MBS_PAT
 define|\
-value|{									\     size_t siz;								\ 									\     siz = wcstombs(NULL, fg->wpattern, 0);				\     if (siz == (size_t)-1)						\       return REG_BADPAT;						\     fg->len = siz;							\     fg->pattern = xmalloc(siz + 1);					\     if (fg->pattern == NULL)						\       return REG_ESPACE;						\     wcstombs(fg->pattern, fg->wpattern, siz);				\     fg->pattern[siz] = '\0';						\   }									\  #define IS_OUT_OF_BOUNDS						\   ((!fg->reversed							\     ? ((type == STR_WIDE) ? ((j + fg->wlen)> len)			\ 			  : ((j + fg->len)> len))			\     : (j< 0)))
+value|{									\     size_t siz;								\ 									\     siz = wcstombs(NULL, fg->wpattern, 0);				\     if (siz == (size_t)-1)						\       return REG_BADPAT;						\     fg->len = siz;							\     fg->pattern = malloc(siz + 1);					\     if (fg->pattern == NULL)						\       return REG_ESPACE;						\     wcstombs(fg->pattern, fg->wpattern, siz);				\     fg->pattern[siz] = '\0';						\   }									\  #define IS_OUT_OF_BOUNDS						\   ((!fg->reversed							\     ? ((type == STR_WIDE) ? ((j + fg->wlen)> len)			\ 			  : ((j + fg->len)> len))			\     : (j< 0)))
 end_define
 
 begin_comment
@@ -303,7 +297,7 @@ define|#
 directive|define
 name|FILL_BMGS
 define|\
-value|if (!fg->hasdot)							\     {									\       fg->sbmGs = xmalloc(fg->len * sizeof(int));			\       if (!fg->sbmGs)							\ 	return REG_ESPACE;						\       if (fg->len == 1)							\ 	fg->sbmGs[0] = 1;						\       else								\ 	_FILL_BMGS(fg->sbmGs, fg->pattern, fg->len, false);		\       DPRINT_BMGS(fg->len, "GS shift for pos %d is %d\n", fg->sbmGs);	\     }
+value|if (!fg->hasdot)							\     {									\       fg->sbmGs = malloc(fg->len * sizeof(int));			\       if (!fg->sbmGs)							\ 	return REG_ESPACE;						\       if (fg->len == 1)							\ 	fg->sbmGs[0] = 1;						\       else								\ 	_FILL_BMGS(fg->sbmGs, fg->pattern, fg->len, false);		\       DPRINT_BMGS(fg->len, "GS shift for pos %d is %d\n", fg->sbmGs);	\     }
 end_define
 
 begin_comment
@@ -315,7 +309,7 @@ define|#
 directive|define
 name|FILL_BMGS_WIDE
 define|\
-value|if (!fg->hasdot)							\     {									\       fg->bmGs = xmalloc(fg->wlen * sizeof(int));			\       if (!fg->bmGs)							\ 	return REG_ESPACE;						\       if (fg->wlen == 1)						\ 	fg->bmGs[0] = 1;						\       else								\ 	_FILL_BMGS(fg->bmGs, fg->wpattern, fg->wlen, true);		\       DPRINT_BMGS(fg->wlen, "GS shift (wide) for pos %d is %d\n",	\ 		  fg->bmGs);						\     }
+value|if (!fg->hasdot)							\     {									\       fg->bmGs = malloc(fg->wlen * sizeof(int));			\       if (!fg->bmGs)							\ 	return REG_ESPACE;						\       if (fg->wlen == 1)						\ 	fg->bmGs[0] = 1;						\       else								\ 	_FILL_BMGS(fg->bmGs, fg->wpattern, fg->wlen, true);		\       DPRINT_BMGS(fg->wlen, "GS shift (wide) for pos %d is %d\n",	\ 		  fg->bmGs);						\     }
 end_define
 
 begin_define
@@ -332,7 +326,7 @@ parameter_list|,
 name|wide
 parameter_list|)
 define|\
-value|{									\     char *p;								\     tre_char_t *wp;							\ 									\     if (wide)								\       {									\ 	if (fg->icase)							\ 	  {								\ 	    wp = xmalloc(plen * sizeof(tre_char_t));			\ 	    if (wp == NULL)						\ 	      return REG_ESPACE;					\ 	    for (unsigned int i = 0; i< plen; i++)			\ 	      wp[i] = towlower(pat[i]);					\ 	    _CALC_BMGS(arr, wp, plen);					\ 	    xfree(wp);							\ 	  }								\ 	else								\ 	  _CALC_BMGS(arr, pat, plen);					\       }									\     else								\       {									\ 	if (fg->icase)							\ 	  {								\ 	    p = xmalloc(plen);						\ 	    if (p == NULL)						\ 	      return REG_ESPACE;					\ 	    for (unsigned int i = 0; i< plen; i++)			\ 	      p[i] = tolower((unsigned char)pat[i]);                    \ 	    _CALC_BMGS(arr, p, plen);					\ 	    xfree(p);							\ 	  }								\ 	else								\ 	  _CALC_BMGS(arr, pat, plen);					\       }									\   }
+value|{									\     char *p;								\     tre_char_t *wp;							\ 									\     if (wide)								\       {									\ 	if (fg->icase)							\ 	  {								\ 	    wp = malloc(plen * sizeof(tre_char_t));			\ 	    if (wp == NULL)						\ 	      return REG_ESPACE;					\ 	    for (unsigned int i = 0; i< plen; i++)			\ 	      wp[i] = towlower(pat[i]);					\ 	    _CALC_BMGS(arr, wp, plen);					\ 	    free(wp);							\ 	  }								\ 	else								\ 	  _CALC_BMGS(arr, pat, plen);					\       }									\     else								\       {									\ 	if (fg->icase)							\ 	  {								\ 	    p = malloc(plen);						\ 	    if (p == NULL)						\ 	      return REG_ESPACE;					\ 	    for (unsigned int i = 0; i< plen; i++)			\ 	      p[i] = tolower((unsigned char)pat[i]);                    \ 	    _CALC_BMGS(arr, p, plen);					\ 	    free(p);							\ 	  }								\ 	else								\ 	  _CALC_BMGS(arr, pat, plen);					\       }									\   }
 end_define
 
 begin_define
@@ -347,7 +341,7 @@ parameter_list|,
 name|plen
 parameter_list|)
 define|\
-value|{									\     int f = 0, g;							\ 									\     int *suff = xmalloc(plen * sizeof(int));				\     if (suff == NULL)							\       return REG_ESPACE;						\ 									\     suff[plen - 1] = plen;						\     g = plen - 1;							\     for (int i = plen - 2; i>= 0; i--)					\       {									\ 	if (i> g&& suff[i + plen - 1 - f]< i - g)			\ 	  suff[i] = suff[i + plen - 1 - f];				\ 	else								\ 	  {								\ 	    if (i< g)							\ 	      g = i;							\ 	    f = i;							\ 	    while (g>= 0&& pat[g] == pat[g + plen - 1 - f])		\ 	      g--;							\ 	    suff[i] = f - g;						\ 	  }								\       }									\ 									\     for (unsigned int i = 0; i< plen; i++)				\       arr[i] = plen;							\     g = 0;								\     for (int i = plen - 1; i>= 0; i--)					\       if (suff[i] == i + 1)						\ 	for(; (unsigned long)g< plen - 1 - i; g++)			\ 	  if (arr[g] == plen)						\ 	    arr[g] = plen - 1 - i;					\     for (unsigned int i = 0; i<= plen - 2; i++)			\       arr[plen - 1 - suff[i]] = plen - 1 - i;				\ 									\     xfree(suff);							\   }
+value|{									\     int f = 0, g;							\ 									\     int *suff = malloc(plen * sizeof(int));				\     if (suff == NULL)							\       return REG_ESPACE;						\ 									\     suff[plen - 1] = plen;						\     g = plen - 1;							\     for (int i = plen - 2; i>= 0; i--)					\       {									\ 	if (i> g&& suff[i + plen - 1 - f]< i - g)			\ 	  suff[i] = suff[i + plen - 1 - f];				\ 	else								\ 	  {								\ 	    if (i< g)							\ 	      g = i;							\ 	    f = i;							\ 	    while (g>= 0&& pat[g] == pat[g + plen - 1 - f])		\ 	      g--;							\ 	    suff[i] = f - g;						\ 	  }								\       }									\ 									\     for (unsigned int i = 0; i< plen; i++)				\       arr[i] = plen;							\     g = 0;								\     for (int i = plen - 1; i>= 0; i--)					\       if (suff[i] == i + 1)						\ 	for(; (unsigned long)g< plen - 1 - i; g++)			\ 	  if (arr[g] == plen)						\ 	    arr[g] = plen - 1 - i;					\     for (unsigned int i = 0; i<= plen - 2; i++)			\       arr[plen - 1 - suff[i]] = plen - 1 - i;				\ 									\     free(suff);							\   }
 end_define
 
 begin_comment
@@ -368,7 +362,7 @@ parameter_list|,
 name|dstlen
 parameter_list|)
 define|\
-value|dstlen = srclen;							\   dst = xmalloc((dstlen + 1) * sizeof(tre_char_t));			\   if (dst == NULL)							\     return REG_ESPACE;							\   if (dstlen> 0)							\     memcpy(dst, src, dstlen * sizeof(tre_char_t));			\   dst[dstlen] = TRE_CHAR('\0');
+value|dstlen = srclen;							\   dst = malloc((dstlen + 1) * sizeof(tre_char_t));			\   if (dst == NULL)							\     return REG_ESPACE;							\   if (dstlen> 0)							\     memcpy(dst, src, dstlen * sizeof(tre_char_t));			\   dst[dstlen] = TRE_CHAR('\0');
 end_define
 
 begin_comment
@@ -399,7 +393,7 @@ parameter_list|(
 name|literal
 parameter_list|)
 define|\
-value|if (!literal&& n == 1&& pat[0] == TRE_CHAR('$'))			\     {									\       n--;								\       fg->eol = true;							\     }									\ 									\   if (n == 0)								\     {									\       fg->matchall = true;						\       fg->pattern = xmalloc(sizeof(char));				\       if (!fg->pattern)							\ 	FAIL_COMP(REG_ESPACE);						\       fg->pattern[0] = '\0';						\       fg->wpattern = xmalloc(sizeof(tre_char_t));			\       if (!fg->wpattern)						\ 	FAIL_COMP(REG_ESPACE);						\       fg->wpattern[0] = TRE_CHAR('\0');					\       DPRINT(("Matching every input\n"));				\       return REG_OK;							\     }
+value|if (!literal&& n == 1&& pat[0] == TRE_CHAR('$'))			\     {									\       n--;								\       fg->eol = true;							\     }									\ 									\   if (n == 0)								\     {									\       fg->matchall = true;						\       fg->pattern = malloc(sizeof(char));				\       if (!fg->pattern)							\ 	FAIL_COMP(REG_ESPACE);						\       fg->pattern[0] = '\0';						\       fg->wpattern = malloc(sizeof(tre_char_t));			\       if (!fg->wpattern)						\ 	FAIL_COMP(REG_ESPACE);						\       fg->wpattern[0] = TRE_CHAR('\0');					\       DPRINT(("Matching every input\n"));				\       return REG_OK;							\     }
 end_define
 
 begin_comment
@@ -759,7 +753,7 @@ name|REG_BADPAT
 return|;
 name|tmp
 operator|=
-name|xmalloc
+name|malloc
 argument_list|(
 operator|(
 name|n
@@ -958,7 +952,7 @@ name|_escmap
 condition|)
 name|_escmap
 operator|=
-name|xmalloc
+name|malloc
 argument_list|(
 name|n
 operator|*
@@ -974,7 +968,7 @@ operator|!
 name|_escmap
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -1172,7 +1166,7 @@ block|}
 continue|continue;
 name|badpat
 label|:
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -1254,7 +1248,7 @@ name|fg
 operator|->
 name|escmap
 operator|=
-name|xmalloc
+name|malloc
 argument_list|(
 name|fg
 operator|->
@@ -1417,7 +1411,7 @@ name|_escmap
 expr_stmt|;
 endif|#
 directive|endif
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -2275,7 +2269,7 @@ name|fg
 operator|->
 name|hasdot
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|fg
 operator|->
@@ -2288,14 +2282,14 @@ name|fg
 operator|->
 name|wescmap
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|fg
 operator|->
 name|wescmap
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fg
 operator|->
@@ -2311,7 +2305,7 @@ name|fg
 operator|->
 name|hasdot
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|fg
 operator|->
@@ -2324,14 +2318,14 @@ name|fg
 operator|->
 name|escmap
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|fg
 operator|->
 name|escmap
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fg
 operator|->
