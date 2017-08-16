@@ -306,6 +306,11 @@ init|=
 literal|0x2800000
 block|,
 comment|/* interrupt threads */
+name|SI_SUB_TASKQ
+init|=
+literal|0x2880000
+block|,
+comment|/* task queues */
 ifdef|#
 directive|ifdef
 name|EARLY_AP_STARTUP
