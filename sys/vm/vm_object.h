@@ -332,6 +332,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OBJ_PG_DTOR
+value|0x0080
+end_define
+
+begin_comment
+comment|/* dont reset object, leave that for dtor */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OBJ_MIGHTBEDIRTY
 value|0x0100
 end_define
