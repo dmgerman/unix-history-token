@@ -5381,7 +5381,7 @@ return|;
 case|case
 name|CONS_CURSORTYPE
 case|:
-comment|/* set cursor type (obsolete) */
+comment|/* set cursor type (old interface + HIDDEN) */
 name|s
 operator|=
 name|spltty

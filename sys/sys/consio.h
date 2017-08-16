@@ -316,11 +316,7 @@ value|_IOWR('c', 6, ssaver_t)
 end_define
 
 begin_comment
-comment|/* set the text cursor type (obsolete, see CONS_CURSORSHAPE below) */
-end_comment
-
-begin_comment
-comment|/* #define CONS_BLINK_CURSOR (1<< 0) #define CONS_CHAR_CURSOR (1<< 1) */
+comment|/*  * Set the text cursor type.  *  * This is an old interface extended to support the CONS_HIDDEN_CURSOR bit.  * New code should use CONS_CURSORSHAPE.  CONS_CURSOR_ATTRS gives the 3  * bits supported by the (extended) old interface.  The old interface is  * especially unusable for hiding the cursor (even with its extension)  * since it changes the cursor on all vtys.  */
 end_comment
 
 begin_define
