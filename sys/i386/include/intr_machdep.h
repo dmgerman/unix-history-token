@@ -395,6 +395,9 @@ decl_stmt|;
 name|u_int
 name|is_handlers
 decl_stmt|;
+name|u_int
+name|is_cpu
+decl_stmt|;
 block|}
 struct|;
 end_struct
