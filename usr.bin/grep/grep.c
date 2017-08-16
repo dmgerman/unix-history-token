@@ -125,11 +125,22 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_FASTMATCH
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"fastmatch.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -268,12 +279,23 @@ name|r_pattern
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_FASTMATCH
+end_ifndef
+
 begin_decl_stmt
 name|fastmatch_t
 modifier|*
 name|fg_pattern
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Filename exclusion/inclusion patterns */
@@ -3691,6 +3713,9 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|WITHOUT_FASTMATCH
 name|fg_pattern
 operator|=
 name|grep_calloc
@@ -3704,6 +3729,8 @@ name|fg_pattern
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|r_pattern
 operator|=
 name|grep_calloc
@@ -3732,6 +3759,10 @@ operator|++
 name|i
 control|)
 block|{
+ifndef|#
+directive|ifndef
+name|WITHOUT_FASTMATCH
+comment|/* Attempt compilation with fastmatch regex and fallback to 		   regex(3) if it fails. */
 if|if
 condition|(
 name|fastncomp
@@ -3758,11 +3789,12 @@ name|len
 argument_list|,
 name|cflags
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
-comment|/* Fall back to full regex library */
+continue|continue;
+endif|#
+directive|endif
 name|c
 operator|=
 name|regcomp
@@ -3814,7 +3846,6 @@ argument_list|,
 name|re_error
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
