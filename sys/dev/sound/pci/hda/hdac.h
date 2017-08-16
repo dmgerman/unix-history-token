@@ -280,6 +280,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_KBLKH
+value|HDA_MODEL_CONSTRUCT(INTEL, 0xa2f0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_CFLK
+value|HDA_MODEL_CONSTRUCT(INTEL, 0xa348)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_ALL
 value|HDA_MODEL_CONSTRUCT(INTEL, 0xffff)
 end_define

@@ -440,6 +440,26 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_INTEL_KBLKH
+block|,
+literal|"Intel Kabylake-H"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_CFLK
+block|,
+literal|"Intel Coffelake"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_82801F
 block|,
 literal|"Intel 82801F"
