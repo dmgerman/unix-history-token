@@ -764,7 +764,7 @@ name|memchr
 argument_list|(
 name|bufpos
 argument_list|,
-literal|'\n'
+name|fileeol
 argument_list|,
 name|bufrem
 argument_list|)
@@ -882,7 +882,7 @@ name|memchr
 argument_list|(
 name|bufpos
 argument_list|,
-literal|'\n'
+name|fileeol
 argument_list|,
 name|bufrem
 argument_list|)
@@ -1370,6 +1370,10 @@ condition|(
 name|binbehave
 operator|!=
 name|BINFILE_TEXT
+operator|&&
+name|fileeol
+operator|!=
+literal|'\0'
 operator|&&
 name|memchr
 argument_list|(
