@@ -204,19 +204,19 @@ end_include
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|SGX_DEBUG
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|DEBUG
+name|SGX_DEBUG
 end_undef
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|SGX_DEBUG
 end_ifdef
 
 begin_define
