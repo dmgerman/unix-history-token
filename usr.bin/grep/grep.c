@@ -1798,6 +1798,17 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|line
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
 name|add_pattern
 argument_list|(
 name|line
@@ -1817,6 +1828,7 @@ operator|)
 name|rlen
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|line
