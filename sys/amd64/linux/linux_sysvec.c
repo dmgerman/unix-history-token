@@ -4335,6 +4335,12 @@ modifier|*
 name|param
 parameter_list|)
 block|{
+name|amd64_lower_shared_page
+argument_list|(
+operator|&
+name|elf_linux_sysvec
+argument_list|)
+expr_stmt|;
 name|linux_szsigcode
 operator|=
 operator|(
