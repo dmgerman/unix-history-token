@@ -153,6 +153,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|int
+name|lasta
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|ctxover
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|bool
 name|file_matching
@@ -823,11 +837,19 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
+name|ctxover
+operator|=
+name|false
+expr_stmt|;
 name|linesqueued
 operator|=
 literal|0
 expr_stmt|;
 name|tail
+operator|=
+literal|0
+expr_stmt|;
+name|lasta
 operator|=
 literal|0
 expr_stmt|;
@@ -978,7 +1000,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Process the file line-by-line */
+comment|/* Process the file line-by-line, enqueue non-matching lines */
 if|if
 condition|(
 operator|(
@@ -1002,6 +1024,23 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* Except don't enqueue lines that appear in -A ctx */
+if|if
+condition|(
+name|ln
+operator|.
+name|line_no
+operator|==
+literal|0
+operator|||
+name|lasta
+operator|!=
+name|ln
+operator|.
+name|line_no
+condition|)
+block|{
+comment|/* queue is maxed to Bflag number of lines */
 name|enqueue
 argument_list|(
 operator|&
@@ -1011,6 +1050,27 @@ expr_stmt|;
 name|linesqueued
 operator|++
 expr_stmt|;
+name|ctxover
+operator|=
+name|false
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 				 * Indicate to procline() that we have ctx 				 * overlap and make sure queue is empty. 				 */
+if|if
+condition|(
+operator|!
+name|ctxover
+condition|)
+name|clearqueue
+argument_list|()
+expr_stmt|;
+name|ctxover
+operator|=
+name|true
+expr_stmt|;
+block|}
 block|}
 name|c
 operator|+=
@@ -1846,7 +1906,14 @@ operator|&&
 operator|!
 name|tail
 operator|&&
+operator|(
+name|Bflag
+operator|||
 name|Aflag
+operator|)
+operator|&&
+operator|!
+name|ctxover
 condition|)
 name|printf
 argument_list|(
@@ -1864,21 +1931,12 @@ operator|>
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|first
-operator|&&
-operator|!
-name|prev
-condition|)
-name|printf
-argument_list|(
-literal|"--\n"
-argument_list|)
-expr_stmt|;
 name|printqueue
 argument_list|()
+expr_stmt|;
+name|ctxover
+operator|=
+name|false
 expr_stmt|;
 block|}
 name|linesqueued
@@ -1899,6 +1957,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Print -A lines following matches */
+name|lasta
+operator|=
+name|l
+operator|->
+name|line_no
+expr_stmt|;
 name|printline
 argument_list|(
 name|l
