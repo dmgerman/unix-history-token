@@ -648,7 +648,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|TUNABLE_LONG
 argument_list|(
 literal|"kern.geom.journal.cache.limit"
 argument_list|,
