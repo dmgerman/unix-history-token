@@ -1380,6 +1380,9 @@ name|startm
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|retry
+decl_stmt|;
 comment|/* Initialize to avoid a false positive warning from GCC. */
 name|lastmatch
 operator|.
@@ -1408,6 +1411,10 @@ expr_stmt|;
 name|startm
 operator|=
 name|m
+expr_stmt|;
+name|retry
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1694,6 +1701,35 @@ name|r
 operator|=
 name|REG_NOMATCH
 expr_stmt|;
+comment|/* 				 * If we're doing whole word matching and we 				 * matched once, then we should try the pattern 				 * again after advancing just past the start  of 				 * the earliest match. This allows the pattern 				 * to  match later on in the line and possibly 				 * still match a whole word. 				 */
+if|if
+condition|(
+name|r
+operator|==
+name|REG_NOMATCH
+operator|&&
+operator|(
+name|retry
+operator|==
+literal|0
+operator|||
+name|pmatch
+operator|.
+name|rm_so
+operator|+
+literal|1
+operator|<
+name|retry
+operator|)
+condition|)
+name|retry
+operator|=
+name|pmatch
+operator|.
+name|rm_so
+operator|+
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1849,17 +1885,23 @@ condition|)
 break|break;
 block|}
 block|}
+comment|/* 		 * Advance to just past the start of the earliest match, try 		 * again just in case we still have a chance to match later in 		 * the string. 		 */
 if|if
 condition|(
-name|vflag
+name|lastmatches
+operator|==
+literal|0
+operator|&&
+name|retry
+operator|>
+literal|0
 condition|)
 block|{
-name|c
+name|st
 operator|=
-operator|!
-name|c
+name|retry
 expr_stmt|;
-break|break;
+continue|continue;
 block|}
 comment|/* One pass if we are not recording matches */
 if|if
@@ -1937,6 +1979,15 @@ operator|=
 name|nst
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|vflag
+condition|)
+name|c
+operator|=
+operator|!
+name|c
+expr_stmt|;
 comment|/* Count the matches if we have a match limit */
 if|if
 condition|(
