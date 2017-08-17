@@ -315,6 +315,26 @@ parameter_list|)
 value|((s)->s_flags& SBUF_INCLUDENUL)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SBUF_ISDRAINTOEOR
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_flags& SBUF_DRAINTOEOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUF_DODRAINTOEOR
+parameter_list|(
+name|s
+parameter_list|)
+value|(SBUF_ISSECTION(s)&& SBUF_ISDRAINTOEOR(s))
+end_define
+
 begin_comment
 comment|/*  * Set / clear flags  */
 end_comment
@@ -1484,6 +1504,12 @@ literal|0
 expr_stmt|;
 name|s
 operator|->
+name|s_rec_off
+operator|=
+literal|0
+expr_stmt|;
+name|s
+operator|->
 name|s_sect_len
 operator|=
 literal|0
@@ -1728,6 +1754,28 @@ name|s
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SBUF_DODRAINTOEOR
+argument_list|(
+name|s
+argument_list|)
+operator|&&
+name|s
+operator|->
+name|s_rec_off
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|s
+operator|->
+name|s_error
+operator|=
+name|EDEADLK
+operator|)
+return|;
 name|len
 operator|=
 name|s
@@ -1742,6 +1790,15 @@ name|s
 operator|->
 name|s_buf
 argument_list|,
+name|SBUF_DODRAINTOEOR
+argument_list|(
+name|s
+argument_list|)
+condition|?
+name|s
+operator|->
+name|s_rec_off
+else|:
 name|s
 operator|->
 name|s_len
@@ -1793,6 +1850,12 @@ expr_stmt|;
 name|s
 operator|->
 name|s_len
+operator|-=
+name|len
+expr_stmt|;
+name|s
+operator|->
+name|s_rec_off
 operator|-=
 name|len
 expr_stmt|;
@@ -3717,6 +3780,14 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|s_rec_off
+operator|=
+name|s
+operator|->
+name|s_len
+expr_stmt|;
 name|SBUF_SETFLAG
 argument_list|(
 name|s
@@ -3865,6 +3936,10 @@ operator|-
 literal|1
 condition|)
 block|{
+name|s
+operator|->
+name|s_rec_off
+operator|=
 name|s
 operator|->
 name|s_sect_len
