@@ -778,17 +778,19 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: vidcontrol [-CHPpx] [-b color] [-c appearance] [-f [[size] file]]"
 argument_list|,
 literal|"                  [-g geometry] [-h size] [-i active | adapter | mode]"
 argument_list|,
-literal|"                  [-M char] [-m on | off] [-r foreground background]"
+literal|"                  [-M char] [-m on | off]"
 argument_list|,
-literal|"                  [-S on | off] [-s number] [-T xterm | cons25] [-t N | off]"
+literal|"                  [-r foreground background] [-S on | off] [-s number]"
 argument_list|,
-literal|"                  [mode] [foreground [background]] [show]"
+literal|"                  [-T xterm | cons25] [-t N | off] [mode]"
+argument_list|,
+literal|"                  [foreground [background]] [show]"
 argument_list|)
 expr_stmt|;
 else|else
@@ -796,7 +798,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s%s\n\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: vidcontrol [-CdHLPpx] [-b color] [-c appearance] [-f [size] file]"
 argument_list|,
