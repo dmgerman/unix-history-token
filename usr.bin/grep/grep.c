@@ -227,6 +227,8 @@ name|int
 name|cflags
 init|=
 name|REG_NOSUB
+operator||
+name|REG_NEWLINE
 decl_stmt|;
 end_decl_stmt
 

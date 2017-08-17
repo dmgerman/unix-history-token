@@ -291,7 +291,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_LINE_MATCHES
+name|MAX_MATCHES
 value|32
 end_define
 
