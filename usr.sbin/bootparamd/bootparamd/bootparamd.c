@@ -1557,6 +1557,20 @@ operator|)
 return|;
 else|#
 directive|else
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|bpf
+argument_list|)
+condition|)
+name|warnx
+argument_list|(
+literal|"could not close %s"
+argument_list|,
+name|bootpfile
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
