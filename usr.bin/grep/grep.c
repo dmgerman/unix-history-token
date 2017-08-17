@@ -354,7 +354,6 @@ comment|/* Command-line flags */
 end_comment
 
 begin_decl_stmt
-name|unsigned
 name|long
 name|long
 name|Aflag
@@ -366,7 +365,6 @@ comment|/* -A x: print x lines trailing each match */
 end_comment
 
 begin_decl_stmt
-name|unsigned
 name|long
 name|long
 name|Bflag
@@ -1951,7 +1949,6 @@ name|char
 modifier|*
 name|pn
 decl_stmt|;
-name|unsigned
 name|long
 name|long
 name|l
@@ -2477,6 +2474,8 @@ operator|>
 name|LLONG_MAX
 operator|/
 literal|10
+operator|-
+literal|1
 condition|)
 block|{
 name|errno
@@ -2540,7 +2539,7 @@ literal|0
 expr_stmt|;
 name|l
 operator|=
-name|strtoull
+name|strtoll
 argument_list|(
 name|optarg
 argument_list|,
@@ -2552,33 +2551,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
 name|errno
 operator|==
 name|ERANGE
-operator|)
-operator|&&
-operator|(
-name|l
-operator|==
-name|ULLONG_MAX
-operator|)
-operator|)
 operator|||
-operator|(
-operator|(
 name|errno
 operator|==
 name|EINVAL
-operator|)
-operator|&&
-operator|(
-name|l
-operator|==
-literal|0
-operator|)
-operator|)
 condition|)
 name|err
 argument_list|(
@@ -2607,6 +2586,26 @@ argument_list|(
 literal|2
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|l
+operator|<
+literal|0
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|err
+argument_list|(
+literal|2
+argument_list|,
+literal|"context argument must be non-negative"
 argument_list|)
 expr_stmt|;
 block|}

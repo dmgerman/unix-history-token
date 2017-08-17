@@ -95,7 +95,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
 name|long
 name|long
 name|count
