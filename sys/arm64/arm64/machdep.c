@@ -1105,11 +1105,16 @@ modifier|*
 name|regs
 parameter_list|)
 block|{
-name|panic
+name|printf
 argument_list|(
 literal|"ARM64TODO: fill_dbregs"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EDOOFUS
+operator|)
+return|;
 block|}
 end_function
 
@@ -1128,11 +1133,16 @@ modifier|*
 name|regs
 parameter_list|)
 block|{
-name|panic
+name|printf
 argument_list|(
 literal|"ARM64TODO: set_dbregs"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EDOOFUS
+operator|)
+return|;
 block|}
 end_function
 
@@ -1149,14 +1159,14 @@ name|u_long
 name|addr
 parameter_list|)
 block|{
-name|panic
+name|printf
 argument_list|(
 literal|"ARM64TODO: ptrace_set_pc"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EDOOFUS
 operator|)
 return|;
 block|}
