@@ -172,6 +172,10 @@ name|ln
 decl_stmt|;
 comment|/* Current line */
 name|size_t
+name|lnstart
+decl_stmt|;
+comment|/* Start of line processing */
+name|size_t
 name|matchidx
 decl_stmt|;
 comment|/* Latest used match index */
@@ -1092,10 +1096,16 @@ operator|)
 condition|;
 control|)
 block|{
-comment|/* Reset match count for every line processed */
+comment|/* Reset match count and line start for every line processed */
 name|pc
 operator|.
 name|matchidx
+operator|=
+literal|0
+expr_stmt|;
+name|pc
+operator|.
+name|lnstart
 operator|=
 literal|0
 expr_stmt|;
@@ -1329,6 +1339,43 @@ argument_list|,
 literal|':'
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|pc
+operator|.
+name|matchidx
+operator|>=
+name|MAX_LINE_MATCHES
+condition|)
+block|{
+comment|/* Reset matchidx and try again */
+name|pc
+operator|.
+name|matchidx
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|procline
+argument_list|(
+operator|&
+name|pc
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|printline
+argument_list|(
+operator|&
+name|pc
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+else|else
+break|break;
+block|}
 name|first_match
 operator|=
 name|false
@@ -1615,12 +1662,8 @@ name|wend
 decl_stmt|;
 name|size_t
 name|st
-init|=
-literal|0
 decl_stmt|,
 name|nst
-init|=
-literal|0
 decl_stmt|;
 name|unsigned
 name|int
@@ -1650,6 +1693,7 @@ literal|0
 decl_stmt|,
 name|matchidx
 decl_stmt|;
+name|unsigned
 name|int
 name|retry
 decl_stmt|;
@@ -1736,6 +1780,16 @@ operator|(
 literal|0
 operator|)
 return|;
+name|st
+operator|=
+name|pc
+operator|->
+name|lnstart
+expr_stmt|;
+name|nst
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Initialize to avoid a false positive warning from GCC. */
 name|lastmatch
 operator|.
@@ -2046,7 +2100,9 @@ operator|&&
 operator|(
 name|retry
 operator|==
-literal|0
+name|pc
+operator|->
+name|lnstart
 operator|||
 name|pmatch
 operator|.
@@ -2208,7 +2264,19 @@ name|matchidx
 operator|>=
 name|MAX_LINE_MATCHES
 condition|)
+block|{
+name|pc
+operator|->
+name|lnstart
+operator|=
+name|nst
+expr_stmt|;
+name|lastmatches
+operator|=
+literal|0
+expr_stmt|;
 break|break;
+block|}
 block|}
 comment|/* 		 * Advance to just past the start of the earliest match, try 		 * again just in case we still have a chance to match later in 		 * the string. 		 */
 if|if
@@ -2219,7 +2287,9 @@ literal|0
 operator|&&
 name|retry
 operator|>
-literal|0
+name|pc
+operator|->
+name|lnstart
 condition|)
 block|{
 name|st
@@ -2304,6 +2374,12 @@ comment|/* Advance st based on previous matches */
 name|st
 operator|=
 name|nst
+expr_stmt|;
+name|pc
+operator|->
+name|lnstart
+operator|=
+name|st
 expr_stmt|;
 block|}
 comment|/* Reflect the new matchidx in the context */
