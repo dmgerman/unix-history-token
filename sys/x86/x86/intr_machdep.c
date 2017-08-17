@@ -237,6 +237,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -300,6 +306,11 @@ name|timeout_task
 name|intrbalance_task
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
