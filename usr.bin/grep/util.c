@@ -2124,6 +2124,10 @@ name|pc
 operator|->
 name|lnstart
 operator|||
+operator|(
+name|unsigned
+name|int
+operator|)
 name|pmatch
 operator|.
 name|rm_so
