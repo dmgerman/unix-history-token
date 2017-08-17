@@ -314,6 +314,9 @@ struct|struct
 name|str
 block|{
 name|off_t
+name|boff
+decl_stmt|;
+name|off_t
 name|off
 decl_stmt|;
 name|size_t
