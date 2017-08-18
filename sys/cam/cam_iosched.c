@@ -331,7 +331,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Called to see if the limiter thinks this IOP can be allowed to  * proceed. If so, the limiter assumes that the while IOP proceeded  * and makes any accounting of it that's needed.  */
+comment|/*  * Called to see if the limiter thinks this IOP can be allowed to  * proceed. If so, the limiter assumes that the IOP proceeded  * and makes any accounting of it that's needed.  */
 end_comment
 
 begin_typedef
@@ -351,7 +351,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Called when an I/O completes so the limiter can updates its  * accounting. Pending I/Os may complete in any order (even when  * sent to the hardware at the same time), so the limiter may not  * make any assumptions other than this I/O has completed. If it  * returns 1, then xpt_schedule() needs to be called again.  */
+comment|/*  * Called when an I/O completes so the limiter can update its  * accounting. Pending I/Os may complete in any order (even when  * sent to the hardware at the same time), so the limiter may not  * make any assumptions other than this I/O has completed. If it  * returns 1, then xpt_schedule() needs to be called again.  */
 end_comment
 
 begin_typedef
@@ -1606,7 +1606,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-comment|/* 	 * So if we have any more bw quota left, allow it, 	 * otherwise wait. Not, we'll go negative and that's 	 * OK. We'll just get a lettle less next quota. 	 * 	 * Note on going negative: that allows us to process 	 * requests in order better, since we won't allow 	 * shorter reads to get around the long one that we 	 * don't have the quota to do just yet. It also prevents 	 * starvation by being a little more permissive about 	 * what we let through this quantum (to prevent the 	 * starvation), at the cost of getting a little less 	 * next quantum. 	 */
+comment|/* 	 * So if we have any more bw quota left, allow it, 	 * otherwise wait. Note, we'll go negative and that's 	 * OK. We'll just get a little less next quota. 	 * 	 * Note on going negative: that allows us to process 	 * requests in order better, since we won't allow 	 * shorter reads to get around the long one that we 	 * don't have the quota to do just yet. It also prevents 	 * starvation by being a little more permissive about 	 * what we let through this quantum (to prevent the 	 * starvation), at the cost of getting a little less 	 * next quantum. 	 */
 if|if
 condition|(
 name|ios
@@ -2128,7 +2128,7 @@ name|read_stats
 operator|.
 name|ema
 expr_stmt|;
-comment|/* 		 * Simple PLL-like engine. Since we're steering to a range for 		 * the SP (set point) that makes things a little more 		 * complicated. In addition, we're not directly controlling our 		 * PV (process variable), the read latency, but instead are 		 * manipulating the write bandwidth limit for our MV 		 * (manipulation variable), analysis of this code gets a bit 		 * messy. Also, the MV is a very noisy control surface for read 		 * latency since it is affected by many hidden processes inside 		 * the device which change how responsive read latency will be 		 * in reaction to changes in write bandwidth. Unlike the classic 		 * boiler control PLL. this may result in over-steering while 		 * the SSD takes its time to react to the new, lower load. This 		 * is why we use a relatively low alpha of between .1 and .25 to 		 * compensate for this effect. At .1, it takes ~22 steering 		 * intervals to back off by a factor of 10. At .2 it only takes 		 * ~10. At .25 it only takes ~8. However some preliminary data 		 * from the SSD drives suggests a reasponse time in 10's of 		 * seconds before latency drops regardless of the new write 		 * rate. Careful observation will be reqiured to tune this 		 * effectively. 		 * 		 * Also, when there's no read traffic, we jack up the write 		 * limit too regardless of the last read latency.  10 is 		 * somewhat arbitrary. 		 */
+comment|/* 		 * Simple PLL-like engine. Since we're steering to a range for 		 * the SP (set point) that makes things a little more 		 * complicated. In addition, we're not directly controlling our 		 * PV (process variable), the read latency, but instead are 		 * manipulating the write bandwidth limit for our MV 		 * (manipulation variable), analysis of this code gets a bit 		 * messy. Also, the MV is a very noisy control surface for read 		 * latency since it is affected by many hidden processes inside 		 * the device which change how responsive read latency will be 		 * in reaction to changes in write bandwidth. Unlike the classic 		 * boiler control PLL. this may result in over-steering while 		 * the SSD takes its time to react to the new, lower load. This 		 * is why we use a relatively low alpha of between .1 and .25 to 		 * compensate for this effect. At .1, it takes ~22 steering 		 * intervals to back off by a factor of 10. At .2 it only takes 		 * ~10. At .25 it only takes ~8. However some preliminary data 		 * from the SSD drives suggests a reasponse time in 10's of 		 * seconds before latency drops regardless of the new write 		 * rate. Careful observation will be required to tune this 		 * effectively. 		 * 		 * Also, when there's no read traffic, we jack up the write 		 * limit too regardless of the last read latency.  10 is 		 * somewhat arbitrary. 		 */
 if|if
 condition|(
 name|lat
@@ -5103,7 +5103,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * gets the next trim from the trim queue.  *  * Assumes we're called with the periph lock held.  It removes this  * trim from the queue and the device must explicitly reinstert it  * should the need arise.  */
+comment|/*  * gets the next trim from the trim queue.  *  * Assumes we're called with the periph lock held.  It removes this  * trim from the queue and the device must explicitly reinsert it  * should the need arise.  */
 end_comment
 
 begin_function
@@ -5185,7 +5185,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * gets the an available trim from the trim queue, if there's no trim  * already pending. It removes this trim from the queue and the device  * must explicitly reinstert it should the need arise.  *  * Assumes we're called with the periph lock held.  */
+comment|/*  * gets an available trim from the trim queue, if there's no trim  * already pending. It removes this trim from the queue and the device  * must explicitly reinsert it should the need arise.  *  * Assumes we're called with the periph lock held.  */
 end_comment
 
 begin_function
@@ -6107,7 +6107,7 @@ name|CAM_IOSCHED_DYNAMIC
 end_ifdef
 
 begin_comment
-comment|/*  * After the method presented in Jack Crenshaw's 1998 article "Integer  * Suqare Roots," reprinted at  * http://www.embedded.com/electronics-blogs/programmer-s-toolbox/4219659/Integer-Square-Roots  * and well worth the read. Briefly, we find the power of 4 that's the  * largest smaller than val. We then check each smaller power of 4 to  * see if val is still bigger. The right shifts at each step divide  * the result by 2 which after successive application winds up  * accumulating the right answer. It could also have been accumulated  * using a separate root counter, but this code is smaller and faster  * than that method. This method is also integer size invariant.  * It returns floor(sqrt((float)val)), or the larget integer less than  * or equal to the square root.  */
+comment|/*  * After the method presented in Jack Crenshaw's 1998 article "Integer  * Square Roots," reprinted at  * http://www.embedded.com/electronics-blogs/programmer-s-toolbox/4219659/Integer-Square-Roots  * and well worth the read. Briefly, we find the power of 4 that's the  * largest smaller than val. We then check each smaller power of 4 to  * see if val is still bigger. The right shifts at each step divide  * the result by 2 which after successive application winds up  * accumulating the right answer. It could also have been accumulated  * using a separate root counter, but this code is smaller and faster  * than that method. This method is also integer size invariant.  * It returns floor(sqrt((float)val)), or the largest integer less than  * or equal to the square root.  */
 end_comment
 
 begin_function
@@ -6334,7 +6334,7 @@ index|]
 operator|++
 expr_stmt|;
 comment|/* Put all> 1024ms values into the last bucket. */
-comment|/* 	 * Classic expoentially decaying average with a tiny alpha 	 * (2 ^ -alpha_bits). For more info see the NIST statistical 	 * handbook. 	 * 	 * ema_t = y_t * alpha + ema_t-1 * (1 - alpha)		[nist] 	 * ema_t = y_t * alpha + ema_t-1 - alpha * ema_t-1 	 * ema_t = alpha * y_t - alpha * ema_t-1 + ema_t-1 	 * alpha = 1 / (1<< alpha_bits) 	 * sub e == ema_t-1, b == 1/alpha (== 1<< alpha_bits), d == y_t - ema_t-1 	 *	= y_t/b - e/b + be/b 	 *      = (y_t - e + be) / b 	 *	= (e + d) / b 	 * 	 * Since alpha is a power of two, we can compute this w/o any mult or 	 * division. 	 * 	 * Variance can also be computed. Usually, it would be expressed as follows: 	 *	diff_t = y_t - ema_t-1 	 *	emvar_t = (1 - alpha) * (emavar_t-1 + diff_t^2 * alpha) 	 *	  = emavar_t-1 - alpha * emavar_t-1 + delta_t^2 * alpha - (delta_t * alpha)^2 	 * sub b == 1/alpha (== 1<< alpha_bits), e == emavar_t-1, d = delta_t^2 	 *	  = e - e/b + dd/b + dd/bb 	 *	  = (bbe - be + bdd + dd) / bb 	 *	  = (bbe + b(dd-e) + dd) / bb (which is expanded below bb = 1<<(2*alpha_bits)) 	 */
+comment|/* 	 * Classic exponentially decaying average with a tiny alpha 	 * (2 ^ -alpha_bits). For more info see the NIST statistical 	 * handbook. 	 * 	 * ema_t = y_t * alpha + ema_t-1 * (1 - alpha)		[nist] 	 * ema_t = y_t * alpha + ema_t-1 - alpha * ema_t-1 	 * ema_t = alpha * y_t - alpha * ema_t-1 + ema_t-1 	 * alpha = 1 / (1<< alpha_bits) 	 * sub e == ema_t-1, b == 1/alpha (== 1<< alpha_bits), d == y_t - ema_t-1 	 *	= y_t/b - e/b + be/b 	 *      = (y_t - e + be) / b 	 *	= (e + d) / b 	 * 	 * Since alpha is a power of two, we can compute this w/o any mult or 	 * division. 	 * 	 * Variance can also be computed. Usually, it would be expressed as follows: 	 *	diff_t = y_t - ema_t-1 	 *	emvar_t = (1 - alpha) * (emavar_t-1 + diff_t^2 * alpha) 	 *	  = emavar_t-1 - alpha * emavar_t-1 + delta_t^2 * alpha - (delta_t * alpha)^2 	 * sub b == 1/alpha (== 1<< alpha_bits), e == emavar_t-1, d = delta_t^2 	 *	  = e - e/b + dd/b + dd/bb 	 *	  = (bbe - be + bdd + dd) / bb 	 *	  = (bbe + b(dd-e) + dd) / bb (which is expanded below bb = 1<<(2*alpha_bits)) 	 */
 comment|/* 	 * XXX possible numeric issues 	 *	o We assume right shifted integers do the right thing, since that's 	 *	  implementation defined. You can change the right shifts to / (1LL<< alpha). 	 *	o alpha_bits = 9 gives ema ceiling of 23 bits of seconds for ema and 14 bits 	 *	  for emvar. This puts a ceiling of 13 bits on alpha since we need a 	 *	  few tens of seconds of representation. 	 *	o We mitigate alpha issues by never setting it too high. 	 */
 name|y
 operator|=
