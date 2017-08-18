@@ -12565,6 +12565,8 @@ literal|0
 condition|)
 name|as_warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -60144,6 +60146,8 @@ argument_list|,
 name|fragp
 operator|->
 name|fr_line
+argument_list|,
+literal|"%s"
 argument_list|,
 name|msg
 argument_list|)
