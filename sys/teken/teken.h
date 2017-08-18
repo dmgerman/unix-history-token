@@ -445,6 +445,13 @@ name|TP_MOUSE
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|TP_SETBORDER
+value|7
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
