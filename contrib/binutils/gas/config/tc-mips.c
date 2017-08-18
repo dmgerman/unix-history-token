@@ -10882,9 +10882,11 @@ comment|/* Never set the bit for $0, which is always zero.  */
 name|mips_gprmask
 operator|&=
 operator|~
+operator|(
 literal|1
 operator|<<
 literal|0
+operator|)
 expr_stmt|;
 block|}
 else|else
