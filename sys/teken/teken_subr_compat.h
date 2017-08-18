@@ -6,7 +6,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|teken_subr_cons25_set_adapter_border
+name|teken_subr_cons25_set_border
 parameter_list|(
 name|teken_t
 modifier|*
@@ -89,7 +89,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|teken_subr_cons25_set_adapter_background
+name|teken_subr_cons25_set_default_background
 parameter_list|(
 name|teken_t
 modifier|*
@@ -144,7 +144,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|teken_subr_cons25_set_adapter_foreground
+name|teken_subr_cons25_set_default_foreground
 parameter_list|(
 name|teken_t
 modifier|*
