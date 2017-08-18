@@ -8262,6 +8262,9 @@ argument_list|)
 operator|)
 expr_stmt|;
 return|return
+operator|(
+name|int
+operator|)
 name|BFD_ALIGN
 argument_list|(
 name|ret
