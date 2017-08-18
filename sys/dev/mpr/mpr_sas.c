@@ -5924,7 +5924,6 @@ name|io_cmds_active
 operator|!=
 literal|0
 condition|)
-block|{
 name|cm
 operator|->
 name|cm_sc
@@ -5932,23 +5931,6 @@ operator|->
 name|io_cmds_active
 operator|--
 expr_stmt|;
-block|}
-else|else
-block|{
-name|mpr_dprint
-argument_list|(
-name|cm
-operator|->
-name|cm_sc
-argument_list|,
-name|MPR_INFO
-argument_list|,
-literal|"Warning: "
-literal|"io_cmds_active is out of sync - resynching to "
-literal|"0\n"
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -12439,7 +12421,7 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_INFO
+name|MPR_XINFO
 argument_list|,
 literal|"Error sending command, "
 literal|"freezing SIM queue\n"

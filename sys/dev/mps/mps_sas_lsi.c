@@ -610,9 +610,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|mps_print_evt_sas
+name|MPS_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|sas
 argument_list|,
 name|event
 argument_list|)
@@ -4125,6 +4127,8 @@ decl_stmt|;
 name|Mpi2SataPassthroughReply_t
 modifier|*
 name|reply
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|mps_command
@@ -4369,6 +4373,7 @@ name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|60
@@ -4388,6 +4393,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+comment|/* XXX KDM need to fix the case where this command is destroyed */
 name|callout_stop
 argument_list|(
 operator|&
@@ -4396,6 +4402,12 @@ operator|->
 name|cm_callout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cm
+operator|!=
+name|NULL
+condition|)
 name|reply
 operator|=
 operator|(
@@ -4497,6 +4509,12 @@ label|:
 comment|/* 	 * If the SATA_ID_TIMEOUT flag has been set for this command, don't free 	 * it.  The command will be freed after sending a target reset TM. If 	 * the command did timeout, use EWOULDBLOCK. 	 */
 if|if
 condition|(
+operator|(
+name|cm
+operator|!=
+name|NULL
+operator|)
+operator|&&
 operator|(
 name|cm
 operator|->
@@ -5684,6 +5702,7 @@ name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|5

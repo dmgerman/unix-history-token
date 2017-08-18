@@ -913,6 +913,10 @@ define|#
 directive|define
 name|MPR_FLAGS_GEN35_IOC
 value|(1<< 6)
+define|#
+directive|define
+name|MPR_FLAGS_REALLOCATED
+value|(1<< 7)
 name|u_int
 name|mpr_debug
 decl_stmt|;
@@ -921,6 +925,9 @@ name|disable_msix
 decl_stmt|;
 name|u_int
 name|disable_msi
+decl_stmt|;
+name|int
+name|msi_msgs
 decl_stmt|;
 name|u_int
 name|atomic_desc_capable
@@ -2871,6 +2878,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|mpr_get_tunables
+parameter_list|(
+name|struct
+name|mpr_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|mpr_attach
 parameter_list|(
@@ -3235,6 +3254,7 @@ parameter_list|,
 name|struct
 name|mpr_command
 modifier|*
+modifier|*
 name|cm
 parameter_list|,
 name|int
@@ -3257,6 +3277,7 @@ name|sc
 parameter_list|,
 name|struct
 name|mpr_command
+modifier|*
 modifier|*
 name|cm
 parameter_list|)
