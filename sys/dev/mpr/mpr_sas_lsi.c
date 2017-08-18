@@ -635,9 +635,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|mpr_print_evt_sas
+name|MPR_DPRINT_EVENT
 argument_list|(
 name|sc
+argument_list|,
+name|sas
 argument_list|,
 name|event
 argument_list|)
@@ -1402,6 +1404,8 @@ decl_stmt|;
 name|Mpi2RaidActionReply_t
 modifier|*
 name|reply
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|mpr_command
@@ -1494,9 +1498,16 @@ name|mpr_request_polled
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cm
+operator|!=
+name|NULL
+condition|)
 name|reply
 operator|=
 operator|(
@@ -5110,6 +5121,7 @@ name|mpr_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|60
@@ -5129,6 +5141,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+comment|/* XXX KDM need to fix the case where this command is destroyed */
 name|callout_stop
 argument_list|(
 operator|&
@@ -5137,6 +5150,12 @@ operator|->
 name|cm_callout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cm
+operator|!=
+name|NULL
+condition|)
 name|reply
 operator|=
 operator|(
@@ -7318,6 +7337,7 @@ name|mpr_wait_command
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|cm
 argument_list|,
 literal|5

@@ -5641,7 +5641,6 @@ name|io_cmds_active
 operator|!=
 literal|0
 condition|)
-block|{
 name|cm
 operator|->
 name|cm_sc
@@ -5649,23 +5648,6 @@ operator|->
 name|io_cmds_active
 operator|--
 expr_stmt|;
-block|}
-else|else
-block|{
-name|mps_dprint
-argument_list|(
-name|cm
-operator|->
-name|cm_sc
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"Warning: "
-literal|"io_cmds_active is out of sync - resynching to "
-literal|"0\n"
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
