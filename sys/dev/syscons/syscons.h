@@ -1129,7 +1129,7 @@ name|dflt_curs_attr
 decl_stmt|;
 name|struct
 name|cursor_attr
-name|curr_curs_attr
+name|base_curs_attr
 decl_stmt|;
 name|struct
 name|cursor_attr

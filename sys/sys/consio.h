@@ -622,6 +622,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CONS_SHAPEONLY_CURSOR
+value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CONS_RESET_CURSOR
 value|(1<< 30)
 end_define
@@ -631,13 +638,6 @@ define|#
 directive|define
 name|CONS_LOCAL_CURSOR
 value|(1U<< 31)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONS_CURSOR_FLAGS
-value|(CONS_RESET_CURSOR | CONS_LOCAL_CURSOR)
 end_define
 
 begin_struct

@@ -4737,7 +4737,7 @@ name|flags
 operator|=
 name|scp
 operator|->
-name|curr_curs_attr
+name|base_curs_attr
 operator|.
 name|flags
 operator|&
@@ -4749,7 +4749,7 @@ name|flags
 operator|=
 name|scp
 operator|->
-name|curr_curs_attr
+name|base_curs_attr
 operator|.
 name|flags
 operator||
