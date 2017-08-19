@@ -1983,12 +1983,6 @@ typedef|typedef
 struct|struct
 block|{
 name|int
-name|cursor_start
-decl_stmt|;
-name|int
-name|cursor_end
-decl_stmt|;
-name|int
 name|shift_state
 decl_stmt|;
 name|int

@@ -230,26 +230,7 @@ name|bios_values_t
 modifier|*
 name|values
 parameter_list|)
-block|{
-name|values
-operator|->
-name|cursor_start
-operator|=
-literal|0
-expr_stmt|;
-name|values
-operator|->
-name|cursor_end
-operator|=
-literal|32
-expr_stmt|;
-name|values
-operator|->
-name|shift_state
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_function
