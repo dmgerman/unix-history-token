@@ -622,6 +622,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CONS_DEFAULT_CURSOR
+value|(1<< 28)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CONS_SHAPEONLY_CURSOR
 value|(1<< 29)
 end_define
