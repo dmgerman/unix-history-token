@@ -40,6 +40,31 @@ name|BCM2835_VCBUS_SDRAM_UNCACHED
 value|0xC0000000
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOC_BCM2836
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BCM2835_ARM_IO_BASE
+value|0x3f000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM2835_VCBUS_SDRAM_BASE
+value|BCM2835_VCBUS_SDRAM_UNCACHED
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -50,8 +75,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCM2835_VCBUS_SDRAM_BASE
+value|BCM2835_VCBUS_SDRAM_CACHED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|BCM2835_ARM_IO_SIZE
-value|0x02000000
+value|0x01000000
 end_define
 
 begin_comment
@@ -65,7 +102,7 @@ name|PHYS_TO_VCBUS
 parameter_list|(
 name|pa
 parameter_list|)
-value|((pa) + BCM2835_VCBUS_SDRAM_CACHED)
+value|((pa) + BCM2835_VCBUS_SDRAM_BASE)
 end_define
 
 begin_comment
@@ -107,7 +144,7 @@ name|VCBUS_TO_PHYS
 parameter_list|(
 name|vca
 parameter_list|)
-value|((vca) - BCM2835_VCBUS_SDRAM_CACHED)
+value|((vca)& ~(BCM2835_VCBUS_SDRAM_BASE))
 end_define
 
 begin_endif

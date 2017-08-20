@@ -51,20 +51,6 @@ name|BCM_DMA_CH_ANY
 value|(-1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|BCM_DMA_CH_FAST1
-value|(2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM_DMA_CH_FAST2
-value|(3)
-end_define
-
 begin_comment
 comment|/* Peripheral DREQ Signals (4.2.1.3) */
 end_comment

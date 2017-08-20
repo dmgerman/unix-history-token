@@ -38,7 +38,7 @@ literal|0
 block|,
 literal|1
 block|,
-literal|0x20205000
+literal|0x205000
 block|}
 block|,
 comment|/* BSC0 GPIO pins and base address. */
@@ -47,12 +47,19 @@ literal|2
 block|,
 literal|3
 block|,
-literal|0x20804000
+literal|0x804000
 block|}
 comment|/* BSC1 GPIO pins and base address. */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BCM_BSC_BASE_MASK
+value|0x00ffffff
+end_define
 
 begin_struct
 struct|struct
