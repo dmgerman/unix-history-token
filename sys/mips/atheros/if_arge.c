@@ -6599,6 +6599,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|m_freem
+argument_list|(
+operator|*
+name|m_head
+argument_list|)
+expr_stmt|;
 operator|*
 name|m_head
 operator|=
