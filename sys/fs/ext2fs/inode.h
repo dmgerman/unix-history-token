@@ -227,6 +227,10 @@ name|uint32_t
 name|i_gen
 decl_stmt|;
 comment|/* Generation number. */
+name|uint64_t
+name|i_facl
+decl_stmt|;
+comment|/* EA block number. */
 name|uint32_t
 name|i_flags
 decl_stmt|;

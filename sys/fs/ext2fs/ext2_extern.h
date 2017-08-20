@@ -107,6 +107,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|daddr_t
+name|ext2_allocfacl
+parameter_list|(
+name|struct
+name|inode
+modifier|*
+name|ip
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ext2_balloc
 parameter_list|(
