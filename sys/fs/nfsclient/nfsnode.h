@@ -148,6 +148,11 @@ name|mtx
 name|n_mtx
 decl_stmt|;
 comment|/* Protects all of these members */
+name|struct
+name|lock
+name|n_excl
+decl_stmt|;
+comment|/* Exclusive helper for shared 						   vnode lock */
 name|u_quad_t
 name|n_size
 decl_stmt|;
@@ -753,8 +758,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|ncl_upgrade_vnlock
+name|bool
+name|ncl_excl_start
 parameter_list|(
 name|struct
 name|vnode
@@ -765,13 +770,14 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ncl_downgrade_vnlock
+name|ncl_excl_finish
 parameter_list|(
 name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|int
+name|bool
+name|old_lock
 parameter_list|)
 function_decl|;
 end_function_decl
