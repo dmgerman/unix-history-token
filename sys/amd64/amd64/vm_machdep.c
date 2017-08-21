@@ -947,7 +947,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* New segment registers. */
-name|set_pcb_flags
+name|set_pcb_flags_raw
 argument_list|(
 name|pcb2
 argument_list|,
@@ -1667,7 +1667,7 @@ argument_list|,
 name|cpu_max_ext_state_size
 argument_list|)
 expr_stmt|;
-name|set_pcb_flags
+name|set_pcb_flags_raw
 argument_list|(
 name|pcb2
 argument_list|,
