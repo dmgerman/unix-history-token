@@ -4062,7 +4062,7 @@ begin_define
 define|#
 directive|define
 name|MAX_SDS_RINGS
-value|4
+value|32
 end_define
 
 begin_comment
@@ -5341,9 +5341,14 @@ name|int32_t
 name|rx_in
 decl_stmt|;
 comment|/* next standard rcv ring to add mbufs */
-specifier|volatile
 name|uint64_t
 name|count
+decl_stmt|;
+name|uint64_t
+name|lro_pkt_count
+decl_stmt|;
+name|uint64_t
+name|lro_bytes
 decl_stmt|;
 block|}
 name|qla_rdesc_t
@@ -5687,12 +5692,22 @@ decl_stmt|;
 name|uint32_t
 name|user_pri_iscsi
 decl_stmt|;
-name|uint64_t
-name|iscsi_pkt_count
-decl_stmt|;
 comment|/* Flash Descriptor Table */
 name|qla_flash_desc_table_t
 name|fdt
+decl_stmt|;
+comment|/* stats */
+name|q80_mac_stats_t
+name|mac
+decl_stmt|;
+name|q80_rcv_stats_t
+name|rcv
+decl_stmt|;
+name|q80_xmt_stats_t
+name|xmt
+index|[
+name|NUM_TX_RINGS
+index|]
 decl_stmt|;
 comment|/* Minidump Related */
 name|uint32_t
