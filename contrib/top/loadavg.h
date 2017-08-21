@@ -24,7 +24,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|FreeBSD
+name|__FreeBSD__
 argument_list|)
 operator|)
 end_if
