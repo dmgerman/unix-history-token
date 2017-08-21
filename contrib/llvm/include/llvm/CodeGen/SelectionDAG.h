@@ -6858,8 +6858,9 @@ function_decl|;
 comment|/// If an existing load has uses of its chain, create a token factor node with
 comment|/// that chain and the new memory node's chain and update users of the old
 comment|/// chain to the token factor. This ensures that the new memory node will have
-comment|/// the same relative memory dependency position as the old load.
-name|void
+comment|/// the same relative memory dependency position as the old load. Returns the
+comment|/// new merged load chain.
+name|SDValue
 name|makeEquivalentMemoryOrdering
 parameter_list|(
 name|LoadSDNode

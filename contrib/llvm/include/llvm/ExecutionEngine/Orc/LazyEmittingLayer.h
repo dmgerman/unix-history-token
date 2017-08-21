@@ -451,25 +451,29 @@ literal|"Invalid emit-state."
 argument_list|)
 expr_stmt|;
 block|}
-name|void
+name|Error
 name|removeModuleFromBaseLayer
 argument_list|(
-argument|BaseLayerT&BaseLayer
+argument|BaseLayerT& BaseLayer
 argument_list|)
 block|{
-if|if
-condition|(
+return|return
 name|EmitState
 operator|!=
 name|NotEmitted
-condition|)
+operator|?
 name|BaseLayer
 operator|.
 name|removeModule
 argument_list|(
 name|Handle
 argument_list|)
-expr_stmt|;
+operator|:
+name|Error
+operator|::
+name|success
+argument_list|()
+return|;
 block|}
 name|void
 name|emitAndFinalize
@@ -968,6 +972,9 @@ name|ModuleHandleT
 name|H
 parameter_list|)
 block|{
+name|Error
+name|Err
+init|=
 operator|(
 operator|*
 name|H
@@ -977,7 +984,7 @@ name|removeModuleFromBaseLayer
 argument_list|(
 name|BaseLayer
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|ModuleList
 operator|.
 name|erase
@@ -986,10 +993,7 @@ name|H
 argument_list|)
 expr_stmt|;
 return|return
-name|Error
-operator|::
-name|success
-argument_list|()
+name|Err
 return|;
 block|}
 comment|/// @brief Search for the given named symbol.
