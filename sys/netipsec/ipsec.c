@@ -3028,7 +3028,6 @@ operator|&
 name|spidx
 argument_list|)
 expr_stmt|;
-comment|/* Fill ports in spidx if we have inpcb. */
 name|ipsec4_get_ulp
 argument_list|(
 name|m
@@ -3904,7 +3903,6 @@ operator|&
 name|spidx
 argument_list|)
 expr_stmt|;
-comment|/* Fill ports in spidx if we have inpcb. */
 name|ipsec6_get_ulp
 argument_list|(
 name|m
