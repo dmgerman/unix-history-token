@@ -173,6 +173,10 @@ decl_stmt|;
 name|int
 name|hn_pktbuf_len
 decl_stmt|;
+name|int
+name|hn_rx_flags
+decl_stmt|;
+comment|/* HN_RX_FLAG_ */
 name|uint8_t
 modifier|*
 name|hn_rxbuf
@@ -222,9 +226,6 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|hn_rx_sysctl_tree
-decl_stmt|;
-name|int
-name|hn_rx_flags
 decl_stmt|;
 name|void
 modifier|*
@@ -281,6 +282,13 @@ define|#
 directive|define
 name|HN_RX_FLAG_BR_REF
 value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_RX_FLAG_XPNT_VF
+value|0x0004
 end_define
 
 begin_struct
@@ -536,12 +544,6 @@ name|arpcom
 name|arpcom
 decl_stmt|;
 name|struct
-name|ifnet
-modifier|*
-name|hn_vf_ifp
-decl_stmt|;
-comment|/* SR-IOV VF */
-name|struct
 name|ifmedia
 name|hn_media
 decl_stmt|;
@@ -571,6 +573,20 @@ name|hn_rx_ring
 modifier|*
 name|hn_rx_ring
 decl_stmt|;
+name|struct
+name|rmlock
+name|hn_vf_lock
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|hn_vf_ifp
+decl_stmt|;
+comment|/* SR-IOV VF */
+name|uint32_t
+name|hn_xvf_flags
+decl_stmt|;
+comment|/* transparent VF flags */
 name|int
 name|hn_tx_ring_cnt
 decl_stmt|;
@@ -735,6 +751,51 @@ decl_stmt|;
 name|eventhandler_tag
 name|hn_ifnet_dethand
 decl_stmt|;
+name|eventhandler_tag
+name|hn_ifnet_lnkhand
+decl_stmt|;
+comment|/* 	 * Transparent VF delayed initialization. 	 */
+name|int
+name|hn_vf_rdytick
+decl_stmt|;
+comment|/* ticks, 0 == ready */
+name|struct
+name|taskqueue
+modifier|*
+name|hn_vf_taskq
+decl_stmt|;
+name|struct
+name|timeout_task
+name|hn_vf_init
+decl_stmt|;
+comment|/* 	 * Saved information for VF under transparent mode. 	 */
+name|void
+function_decl|(
+modifier|*
+name|hn_vf_input
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|hn_saved_caps
+decl_stmt|;
+name|u_int
+name|hn_saved_tsomax
+decl_stmt|;
+name|u_int
+name|hn_saved_tsosegcnt
+decl_stmt|;
+name|u_int
+name|hn_saved_tsosegsz
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -807,6 +868,20 @@ define|#
 directive|define
 name|HN_FLAG_ERRORS
 value|(HN_FLAG_RXBUF_REF | HN_FLAG_CHIM_REF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_XVFFLAG_ENABLED
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_XVFFLAG_ACCBPF
+value|0x0002
 end_define
 
 begin_define
