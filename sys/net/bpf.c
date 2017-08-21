@@ -363,6 +363,13 @@ name|int
 name|bif_flags
 decl_stmt|;
 comment|/* Interface flags */
+name|struct
+name|bpf_if
+modifier|*
+modifier|*
+name|bif_bpf
+decl_stmt|;
+comment|/* Pointer to pointer to us */
 block|}
 struct|;
 end_struct
@@ -9853,6 +9860,12 @@ literal|"bpfattach2: driverp already initialized"
 operator|)
 argument_list|)
 expr_stmt|;
+name|bp
+operator|->
+name|bif_bpf
+operator|=
+name|driverp
+expr_stmt|;
 operator|*
 name|driverp
 operator|=
@@ -10082,6 +10095,13 @@ operator|->
 name|bif_flags
 operator||=
 name|BPFIF_FLAG_DYING
+expr_stmt|;
+operator|*
+name|bp
+operator|->
+name|bif_bpf
+operator|=
+name|NULL
 expr_stmt|;
 name|BPFIF_WUNLOCK
 argument_list|(
@@ -10318,19 +10338,6 @@ expr_stmt|;
 block|}
 name|BPF_UNLOCK
 argument_list|()
-expr_stmt|;
-comment|/* 	 * Note that we cannot zero other pointers to 	 * custom DLTs possibly used by given interface. 	 */
-if|if
-condition|(
-name|nmatched
-operator|!=
-literal|0
-condition|)
-name|ifp
-operator|->
-name|if_bpf
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 end_function

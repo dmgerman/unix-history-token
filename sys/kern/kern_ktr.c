@@ -2119,7 +2119,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-comment|/* just timestap please */
+comment|/* just timestamp please */
 if|if
 condition|(
 name|strchr

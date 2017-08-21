@@ -2719,6 +2719,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|rv
+operator|&&
+name|pgrep
+condition|)
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|did_action
 operator|&&

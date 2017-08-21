@@ -339,6 +339,10 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+name|lfence_works
+operator|=
+name|LMB_NONE
+expr_stmt|;
 asm|__asm __volatile(
 literal|"	pushfl\n"
 literal|"	popl	%%eax\n"
@@ -402,11 +406,6 @@ name|select_lmb
 argument_list|()
 expr_stmt|;
 block|}
-else|else
-name|lfence_works
-operator|=
-name|LMB_NONE
-expr_stmt|;
 end_if
 
 begin_elif

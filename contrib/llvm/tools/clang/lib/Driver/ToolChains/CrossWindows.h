@@ -254,7 +254,9 @@ return|;
 block|}
 name|bool
 name|IsUnwindTablesDefault
-argument_list|()
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|)
 specifier|const
 name|override
 block|;

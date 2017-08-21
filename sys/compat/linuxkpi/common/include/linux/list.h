@@ -187,6 +187,12 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|prefetch
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -195,6 +201,11 @@ parameter_list|(
 name|x
 parameter_list|)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

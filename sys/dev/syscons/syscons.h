@@ -1129,7 +1129,7 @@ name|dflt_curs_attr
 decl_stmt|;
 name|struct
 name|cursor_attr
-name|curr_curs_attr
+name|base_curs_attr
 decl_stmt|;
 name|struct
 name|cursor_attr
@@ -1982,12 +1982,6 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|int
-name|cursor_start
-decl_stmt|;
-name|int
-name|cursor_end
-decl_stmt|;
 name|int
 name|shift_state
 decl_stmt|;

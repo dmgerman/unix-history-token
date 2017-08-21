@@ -3205,7 +3205,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait specified idle threads to switch once.  This ensures that even  * preempted threads have cycled through the switch function once,  * exiting their codepaths.  This allows us to change global pointers  * with no other synchronization.  */
+comment|/*  * Wait for specified idle threads to switch once.  This ensures that even  * preempted threads have cycled through the switch function once,  * exiting their codepaths.  This allows us to change global pointers  * with no other synchronization.  */
 end_comment
 
 begin_function

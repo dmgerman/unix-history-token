@@ -3673,9 +3673,11 @@ name|vd
 operator|->
 name|vdev_guid
 argument_list|,
-name|vd
+name|cp
 operator|->
-name|vdev_path
+name|provider
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -4032,7 +4034,7 @@ name|ZFS_LOG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Provider %s not found."
+literal|"Vdev %s not found."
 argument_list|,
 name|vd
 operator|->
@@ -4072,9 +4074,11 @@ literal|1
 argument_list|,
 literal|"Provider %s has unsupported sectorsize."
 argument_list|,
-name|vd
+name|cp
 operator|->
-name|vdev_path
+name|provider
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|vdev_geom_close_locked
@@ -4182,9 +4186,11 @@ name|printf
 argument_list|(
 literal|"ZFS WARNING: Unable to open %s for writing (error=%d).\n"
 argument_list|,
-name|vd
+name|cp
 operator|->
-name|vdev_path
+name|provider
+operator|->
+name|name
 argument_list|,
 name|error
 argument_list|)

@@ -2575,6 +2575,8 @@ argument_list|,
 literal|0xffff
 argument_list|,
 name|UQ_MSC_NO_SYNC_CACHE
+argument_list|,
+name|UQ_MSC_NO_PREVENT_ALLOW
 argument_list|)
 block|,
 name|USB_QUIRK_VP
@@ -4798,6 +4800,12 @@ name|UQ_AU_SET_SPDIF_CM6206
 index|]
 operator|=
 literal|"UQ_AU_SET_SPDIF_CM6206"
+block|,
+index|[
+name|UQ_WMT_IGNORE
+index|]
+operator|=
+literal|"UQ_WMT_IGNORE"
 block|, }
 decl_stmt|;
 end_decl_stmt

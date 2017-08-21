@@ -149,47 +149,16 @@ directive|include
 file|"efigop.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|EFI_STRINGIZE
-parameter_list|(
-name|a
-parameter_list|)
-value|#a
-end_define
+begin_comment
+comment|/*  * FreeBSD UUID  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|EFI_PROTOCOL_DEFINITION
-parameter_list|(
-name|a
-parameter_list|)
-value|EFI_STRINGIZE(Protocol/a/a.h)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFI_GUID_DEFINITION
-parameter_list|(
-name|a
-parameter_list|)
-value|EFI_STRINGIZE(Guid/a/a##.h)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EFI_GUID_STRING
-parameter_list|(
-name|guidpointer
-parameter_list|,
-name|shortstring
-parameter_list|,
-name|longstring
-parameter_list|)
+name|FREEBSD_BOOT_VAR_GUID
+define|\
+value|{ 0xCFEE69AD, 0xA0DE, 0x47A9, {0x93, 0xA8, 0xF6, 0x31, 0x06, 0xF8, 0xAE, 0x99} }
 end_define
 
 begin_endif

@@ -331,6 +331,11 @@ operator|::
 name|string
 name|ExtName
 expr_stmt|;
+name|std
+operator|::
+name|string
+name|SymbolName
+expr_stmt|;
 name|uint16_t
 name|Ordinal
 init|=
@@ -476,6 +481,8 @@ argument_list|,
 argument|ArrayRef<COFFShortExport> Exports
 argument_list|,
 argument|COFF::MachineTypes Machine
+argument_list|,
+argument|bool MakeWeakAliases
 argument_list|)
 expr_stmt|;
 block|}

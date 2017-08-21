@@ -1381,6 +1381,7 @@ operator|=
 name|_mm_loadu_si128
 argument_list|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)

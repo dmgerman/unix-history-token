@@ -3667,6 +3667,11 @@ name|CXCallingConv_Win64
 init|=
 literal|10
 block|,
+comment|/* Alias for compatibility with older versions of API. */
+name|CXCallingConv_X86_64Win64
+init|=
+name|CXCallingConv_Win64
+block|,
 name|CXCallingConv_X86_64SysV
 init|=
 literal|11

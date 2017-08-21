@@ -1962,6 +1962,7 @@ name|addr
 operator|-
 literal|1
 expr_stmt|;
+comment|/* 	 * We cannot rely on PHYS_TO_DMAP because this code is also used in 	 * i386, so use pmap_mapbios to map the memory, this will end up using 	 * the default memory attribute (WB), and the DMAP when available. 	 */
 name|cpus
 operator|=
 operator|(
@@ -1969,9 +1970,11 @@ expr|struct
 name|cpu_info
 operator|*
 operator|)
-name|PHYS_TO_DMAP
+name|pmap_mapbios
 argument_list|(
 name|addr
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make a pass over the table to populate the cpus[] and 	 * mem_info[] tables. 	 */
@@ -2323,6 +2326,31 @@ name|domain
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Last usage of the cpus array, unmap it. */
+name|pmap_unmapbios
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|cpus
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|cpus
+argument_list|)
+operator|*
+operator|(
+name|max_apic_id
+operator|+
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+name|cpus
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 

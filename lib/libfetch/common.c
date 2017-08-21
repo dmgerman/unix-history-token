@@ -1073,6 +1073,8 @@ block|{
 name|service
 operator|=
 name|sep
+operator|+
+literal|1
 expr_stmt|;
 block|}
 else|else

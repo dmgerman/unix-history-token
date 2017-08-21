@@ -5247,6 +5247,23 @@ name|cmd
 condition|)
 block|{
 case|case
+name|TP_SETLOCALCURSOR
+case|:
+comment|/* 		 * 0 means normal (usually block), 1 means hidden, and 		 * 2 means blinking (always block) for compatibility with 		 * syscons.  We don't support any changes except hiding, 		 * so must map 2 to 0. 		 */
+name|arg
+operator|=
+operator|(
+name|arg
+operator|==
+literal|1
+operator|)
+condition|?
+literal|0
+else|:
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|TP_SHOWCURSOR
 case|:
 name|vtbuf_cursor_visibility

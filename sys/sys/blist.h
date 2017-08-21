@@ -96,7 +96,7 @@ name|daddr_t
 name|bl_blocks
 decl_stmt|;
 comment|/* area of coverage		*/
-name|daddr_t
+name|u_daddr_t
 name|bl_radix
 decl_stmt|;
 comment|/* coverage radix		*/

@@ -1140,9 +1140,18 @@ comment|/// by default.
 name|virtual
 name|bool
 name|IsUnwindTablesDefault
-argument_list|()
+argument_list|(
 specifier|const
-expr_stmt|;
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Test whether this toolchain defaults to PIC.
 name|virtual
 name|bool

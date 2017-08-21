@@ -434,7 +434,7 @@ name|SYSINIT
 argument_list|(
 name|linux_tasklet
 argument_list|,
-name|SI_SUB_INIT_IF
+name|SI_SUB_TASKQ
 argument_list|,
 name|SI_ORDER_THIRD
 argument_list|,
@@ -513,7 +513,7 @@ name|SYSUNINIT
 argument_list|(
 name|linux_tasklet
 argument_list|,
-name|SI_SUB_INIT_IF
+name|SI_SUB_TASKQ
 argument_list|,
 name|SI_ORDER_THIRD
 argument_list|,

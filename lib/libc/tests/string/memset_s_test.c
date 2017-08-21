@@ -475,7 +475,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* n> smax */
+comment|/* n> smax, handler */
 end_comment
 
 begin_expr_stmt
@@ -511,6 +511,19 @@ block|,
 literal|3
 block|}
 decl_stmt|;
+name|e
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+name|set_constraint_handler_s
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|memset_s
@@ -526,6 +539,25 @@ argument_list|,
 literal|9
 argument_list|,
 literal|3
+argument_list|)
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|e
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|strcmp
+argument_list|(
+name|m
+argument_list|,
+literal|"memset_s : n> smax"
 argument_list|)
 operator|==
 literal|0

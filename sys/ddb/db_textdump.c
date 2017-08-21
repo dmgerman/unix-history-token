@@ -1804,8 +1804,10 @@ operator|&
 name|trailer_offset
 argument_list|)
 expr_stmt|;
-name|mkdumpheader
+name|dump_init_header
 argument_list|(
+name|di
+argument_list|,
 operator|&
 name|kdh
 argument_list|,
@@ -1814,10 +1816,6 @@ argument_list|,
 name|KERNELDUMP_TEXT_VERSION
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|TEXTDUMP_BLOCKSIZE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1901,8 +1899,10 @@ operator|+
 name|TEXTDUMP_BLOCKSIZE
 operator|)
 expr_stmt|;
-name|mkdumpheader
+name|dump_init_header
 argument_list|(
+name|di
+argument_list|,
 operator|&
 name|kdh
 argument_list|,
@@ -1911,10 +1911,6 @@ argument_list|,
 name|KERNELDUMP_TEXT_VERSION
 argument_list|,
 name|dumplen
-argument_list|,
-literal|0
-argument_list|,
-name|TEXTDUMP_BLOCKSIZE
 argument_list|)
 expr_stmt|;
 operator|(

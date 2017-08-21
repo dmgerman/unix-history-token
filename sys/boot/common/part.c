@@ -2899,7 +2899,7 @@ name|part
 operator|->
 name|p_size
 argument_list|)
-operator|+
+operator|-
 literal|1
 expr_stmt|;
 name|entry

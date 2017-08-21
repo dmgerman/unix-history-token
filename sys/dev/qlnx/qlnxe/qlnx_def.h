@@ -62,13 +62,20 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//#define QLNX_MAX_RSS	30
+comment|//#define QLNX_MAX_RSS		30
 end_comment
 
 begin_define
 define|#
 directive|define
 name|QLNX_MAX_RSS
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|QLNX_DEFAULT_RSS
 value|16
 end_define
 
@@ -531,6 +538,32 @@ name|uint64_t
 name|tx_pkts_completed
 decl_stmt|;
 name|uint64_t
+name|tx_tso_pkts
+decl_stmt|;
+name|uint64_t
+name|tx_non_tso_pkts
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|QLNX_TRACE_PERF_DATA
+name|uint64_t
+name|tx_pkts_trans_ctx
+decl_stmt|;
+name|uint64_t
+name|tx_pkts_compl_ctx
+decl_stmt|;
+name|uint64_t
+name|tx_pkts_trans_fp
+decl_stmt|;
+name|uint64_t
+name|tx_pkts_compl_fp
+decl_stmt|;
+name|uint64_t
+name|tx_pkts_compl_intr
+decl_stmt|;
+endif|#
+directive|endif
+name|uint64_t
 name|tx_lso_wnd_min_len
 decl_stmt|;
 name|uint64_t
@@ -557,6 +590,29 @@ index|[
 name|QLNX_FP_MAX_SEGS
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|QLNX_TRACE_PERF_DATA
+name|uint64_t
+name|tx_pkts_hist
+index|[
+name|QLNX_FP_MAX_SEGS
+index|]
+decl_stmt|;
+name|uint64_t
+name|tx_comInt
+index|[
+name|QLNX_FP_MAX_SEGS
+index|]
+decl_stmt|;
+name|uint64_t
+name|tx_pkts_q
+index|[
+name|QLNX_FP_MAX_SEGS
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|uint64_t
 name|err_tx_nsegs_gt_elem_left
 decl_stmt|;
@@ -867,6 +923,34 @@ define|#
 directive|define
 name|QLNX_TX_ELEM_RESERVE
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|QLNX_TX_ELEM_THRESH
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|QLNX_TX_ELEM_MAX_THRESH
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|QLNX_TX_ELEM_MIN_THRESH
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|QLNX_TX_COMPL_THRESH
+value|32
 end_define
 
 begin_define
@@ -1298,6 +1382,9 @@ name|uint32_t
 name|storm_stats_enable
 decl_stmt|;
 name|uint32_t
+name|storm_stats_gather
+decl_stmt|;
+name|uint32_t
 name|personality
 decl_stmt|;
 block|}
@@ -1365,12 +1452,27 @@ name|QLNX_MAX_SEGMENTS_NON_TSO
 value|(ETH_TX_MAX_BDS_PER_NON_LSO_PACKET - 1)
 end_define
 
+begin_comment
+comment|//#define QLNX_MAX_TSO_FRAME_SIZE		((64 * 1024 - 1) + 22)
+end_comment
+
 begin_define
 define|#
 directive|define
 name|QLNX_MAX_TSO_FRAME_SIZE
-value|((64 * 1024 - 1) + 22)
+value|65536
 end_define
+
+begin_define
+define|#
+directive|define
+name|QLNX_MAX_TX_MBUF_SIZE
+value|65536
+end_define
+
+begin_comment
+comment|/* bytes - bd_len = 16bits */
+end_comment
 
 begin_define
 define|#
@@ -2204,6 +2306,54 @@ parameter_list|)
 define|\
 value|((flags)& (PARSING_AND_ERR_FLAGS_TAG8021QEXIST_MASK \<< PARSING_AND_ERR_FLAGS_TAG8021QEXIST_SHIFT))
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|prefetch
+parameter_list|(
+name|void
+modifier|*
+name|x
+parameter_list|)
+block|{
+asm|__asm volatile("prefetcht0 %0" :: "m" (*(unsigned long *)x));
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|prefetch
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

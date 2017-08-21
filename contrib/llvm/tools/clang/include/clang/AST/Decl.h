@@ -7057,8 +7057,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Indicates if the function declaration will have a body, once we're done
-comment|/// parsing it.  (We don't set it to false when we're done parsing, in the
-comment|/// hopes this is simpler.)
+comment|/// parsing it.
 name|unsigned
 name|WillHaveBody
 range|:

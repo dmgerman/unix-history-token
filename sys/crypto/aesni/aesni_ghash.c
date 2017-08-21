@@ -1400,11 +1400,13 @@ name|Y
 decl_stmt|,
 name|T
 decl_stmt|;
+specifier|const
 name|__m128i
 modifier|*
 name|KEY
 init|=
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -1558,6 +1560,7 @@ operator|=
 name|_mm_loadu_si128
 argument_list|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -1820,6 +1823,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -2097,6 +2101,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -2116,6 +2121,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -2137,6 +2143,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -2158,6 +2165,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -2265,6 +2273,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -2943,6 +2952,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -2969,6 +2979,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -2995,6 +3006,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -3021,6 +3033,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -3047,6 +3060,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -3073,6 +3087,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -3099,6 +3114,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -3125,6 +3141,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -3572,6 +3589,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -3739,6 +3757,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -4030,11 +4049,13 @@ name|Y
 decl_stmt|,
 name|T
 decl_stmt|;
+specifier|const
 name|__m128i
 modifier|*
 name|KEY
 init|=
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -4188,6 +4209,7 @@ operator|=
 name|_mm_loadu_si128
 argument_list|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -4450,6 +4472,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -4727,6 +4750,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -4746,6 +4770,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -4767,6 +4792,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -4788,6 +4814,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -4895,6 +4922,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -5042,6 +5070,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -5061,6 +5090,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -5082,6 +5112,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -5103,6 +5134,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -5210,6 +5242,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -5979,6 +6012,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -6005,6 +6039,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -6031,6 +6066,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -6057,6 +6093,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -6083,6 +6120,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -6109,6 +6147,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -6135,6 +6174,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -6161,6 +6201,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -6546,6 +6587,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)
@@ -6685,6 +6727,7 @@ argument_list|(
 operator|&
 operator|(
 operator|(
+specifier|const
 name|__m128i
 operator|*
 operator|)

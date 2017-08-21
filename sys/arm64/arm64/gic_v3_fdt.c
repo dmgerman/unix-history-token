@@ -1053,6 +1053,11 @@ name|gic_v3_ofw_devinfo
 modifier|*
 name|di
 decl_stmt|;
+name|struct
+name|gic_v3_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|device_t
 name|child
 decl_stmt|;
@@ -1066,6 +1071,13 @@ name|addr_cells
 decl_stmt|,
 name|size_cells
 decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|parent
 operator|=
 name|ofw_bus_get_node
@@ -1321,6 +1333,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|sc
+operator|->
+name|gic_nchildren
+operator|++
+expr_stmt|;
 name|device_set_ivars
 argument_list|(
 name|child

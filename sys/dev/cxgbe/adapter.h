@@ -1029,6 +1029,10 @@ name|link_config
 name|link_cfg
 decl_stmt|;
 name|struct
+name|link_config
+name|old_link_cfg
+decl_stmt|;
+name|struct
 name|timeval
 name|last_refreshed
 decl_stmt|;
@@ -4438,14 +4442,6 @@ parameter_list|(
 name|struct
 name|port_info
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|link_config
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4456,10 +4452,6 @@ name|t4_os_link_changed
 parameter_list|(
 name|struct
 name|port_info
-modifier|*
-parameter_list|,
-name|struct
-name|link_config
 modifier|*
 parameter_list|)
 function_decl|;

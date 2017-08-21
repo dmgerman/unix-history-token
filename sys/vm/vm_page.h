@@ -1293,7 +1293,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* (g) Do not sleep, return NULL */
+comment|/* (gp) Do not sleep */
 end_comment
 
 begin_define
@@ -1550,6 +1550,21 @@ end_function_decl
 
 begin_function_decl
 name|vm_page_t
+name|vm_page_alloc_after
+parameter_list|(
+name|vm_object_t
+parameter_list|,
+name|vm_pindex_t
+parameter_list|,
+name|int
+parameter_list|,
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
 name|vm_page_alloc_contig
 parameter_list|(
 name|vm_object_t
@@ -1607,7 +1622,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_page_grab_pages
 parameter_list|(
 name|vm_object_t

@@ -275,7 +275,7 @@ modifier|*
 name|tf
 parameter_list|)
 block|{
-comment|/* XXX using printf */
+comment|/* 	 * printf() depends on loader runtime and UEFI firmware health 	 * to produce the console output, in case of exception, the 	 * loader or firmware runtime may fail to support the printf(). 	 */
 name|printf
 argument_list|(
 literal|"===================================================="
@@ -555,6 +555,7 @@ name|my_handler
 operator|>>
 literal|16
 expr_stmt|;
+comment|/* 	 * We reuse uefi selector for the code segment for the exception 	 * handler code, while the reason for the fault might be the 	 * corruption of that gdt entry. On the other hand, allocating 	 * our own descriptor might be not much better, if gdt is corrupted. 	 */
 name|loader_idt_e
 operator|->
 name|gd_selector
@@ -563,7 +564,6 @@ name|fw_idt_e
 operator|->
 name|gd_selector
 expr_stmt|;
-comment|/* XXX */
 name|loader_idt_e
 operator|->
 name|gd_ist

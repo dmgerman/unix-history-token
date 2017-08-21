@@ -98,6 +98,11 @@ value|0x00000002
 comment|/* nulterm byte is counted in len */
 define|#
 directive|define
+name|SBUF_DRAINTOEOR
+value|0x00000004
+comment|/* use section 0 as drain EOR marker */
+define|#
+directive|define
 name|SBUF_USRFLAGMSK
 value|0x0000ffff
 comment|/* mask of flags the user may specify */
@@ -129,6 +134,10 @@ name|ssize_t
 name|s_sect_len
 decl_stmt|;
 comment|/* current length of section */
+name|ssize_t
+name|s_rec_off
+decl_stmt|;
+comment|/* current record start offset */
 block|}
 struct|;
 end_struct

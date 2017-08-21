@@ -50,6 +50,16 @@ name|uint16_t
 name|interrupt_psm
 decl_stmt|;
 comment|/* interrupt PSM */
+name|uint16_t
+name|vendor_id
+decl_stmt|;
+comment|/* primary vendor id */
+name|uint16_t
+name|product_id
+decl_stmt|;
+name|uint16_t
+name|version
+decl_stmt|;
 name|unsigned
 name|new_device
 range|:
