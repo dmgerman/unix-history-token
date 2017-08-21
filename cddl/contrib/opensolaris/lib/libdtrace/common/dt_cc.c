@@ -6820,13 +6820,15 @@ operator|=
 literal|1
 init|;
 name|i
-operator|<
+operator|<=
 name|args
 index|[
 literal|2
 index|]
 operator|.
 name|value
+operator|+
+literal|1
 condition|;
 name|i
 operator|++
@@ -6865,7 +6867,7 @@ name|D_LLQUANT_MAGTOOBIG
 argument_list|,
 literal|"llquantize( ) "
 literal|"factor (%d) raised to power of high magnitude "
-literal|"(%d) overflows 64-bits\n"
+literal|"(%d) plus 1 overflows 64-bits\n"
 argument_list|,
 name|args
 index|[
