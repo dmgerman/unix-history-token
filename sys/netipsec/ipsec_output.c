@@ -1370,6 +1370,9 @@ name|inp
 argument_list|,
 operator|&
 name|error
+argument_list|,
+operator|!
+name|forwarding
 argument_list|)
 expr_stmt|;
 if|if
@@ -2884,6 +2887,9 @@ name|inp
 argument_list|,
 operator|&
 name|error
+argument_list|,
+operator|!
+name|forwarding
 argument_list|)
 expr_stmt|;
 if|if
