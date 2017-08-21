@@ -1656,14 +1656,6 @@ block|{
 name|u_int
 name|i
 decl_stmt|;
-comment|/* Clear OS lock */
-name|WRITE_SPECIALREG
-argument_list|(
-name|OSLAR_EL1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Find out many breakpoints and watchpoints we can use */
 name|dbg_watchpoint_num
 operator|=
@@ -1711,7 +1703,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|db_printf
+name|printf
 argument_list|(
 literal|"%d watchpoints and %d breakpoints supported\n"
 argument_list|,

@@ -57,6 +57,15 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|dbg_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|initarm
 parameter_list|(
 name|struct

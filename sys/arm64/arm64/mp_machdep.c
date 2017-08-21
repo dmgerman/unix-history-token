@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/debug_monitor.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -1169,7 +1163,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|dbg_monitor_init
+name|dbg_init
 argument_list|()
 expr_stmt|;
 end_expr_stmt
