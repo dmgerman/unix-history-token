@@ -969,6 +969,17 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Release the thread lock while yielding to 			 * allow other threads to acquire the lock 			 * pointed to by TDQ_LOCKPTR(td). Else a 			 * deadlock like situation might happen. 			 */
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
