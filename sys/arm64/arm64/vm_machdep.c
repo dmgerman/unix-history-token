@@ -299,9 +299,11 @@ argument_list|)
 expr_stmt|;
 name|td2
 operator|->
-name|td_pcb
+name|td_proc
 operator|->
-name|pcb_l0addr
+name|p_md
+operator|.
+name|md_l0addr
 operator|=
 name|vtophys
 argument_list|(
