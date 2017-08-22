@@ -607,7 +607,7 @@ name|i
 operator|+
 literal|1
 index|]
-operator|<
+operator|<=
 name|start
 condition|)
 continue|continue;
