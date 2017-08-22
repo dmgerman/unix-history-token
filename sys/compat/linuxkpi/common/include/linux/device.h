@@ -122,6 +122,12 @@ name|device
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|fwnode_handle
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|class
@@ -142,6 +148,12 @@ name|kobj
 decl_stmt|;
 name|devclass_t
 name|bsdclass
+decl_stmt|;
+specifier|const
+name|struct
+name|dev_pm_ops
+modifier|*
+name|pm
 decl_stmt|;
 name|void
 function_decl|(
@@ -492,6 +504,11 @@ name|attribute_group
 modifier|*
 modifier|*
 name|groups
+decl_stmt|;
+name|struct
+name|fwnode_handle
+modifier|*
+name|fwnode
 decl_stmt|;
 name|spinlock_t
 name|devres_lock
@@ -888,6 +905,20 @@ parameter_list|,
 modifier|...
 parameter_list|)
 value|device_printf((dev)->bsddev, fmt, ##__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dev_dbg
+parameter_list|(
+name|dev
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_define

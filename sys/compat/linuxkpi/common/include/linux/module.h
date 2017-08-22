@@ -351,6 +351,16 @@ parameter_list|)
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|postcore_initcall
+parameter_list|(
+name|fn
+parameter_list|)
+value|module_init(fn)
+end_define
+
 begin_endif
 endif|#
 directive|endif

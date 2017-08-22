@@ -141,6 +141,12 @@ name|files_struct
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|pfs_node
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
@@ -153,6 +159,13 @@ define|#
 directive|define
 name|i_cdev
 value|v_rdev
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_private
+value|v_data
 end_define
 
 begin_define
@@ -186,6 +199,11 @@ name|struct
 name|inode
 modifier|*
 name|d_inode
+decl_stmt|;
+name|struct
+name|pfs_node
+modifier|*
+name|d_pfs_node
 decl_stmt|;
 block|}
 struct|;
