@@ -99,9 +99,22 @@ directive|include
 file|"huf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"error_private.h"
+end_include
+
 begin_comment
 comment|/* ************************************************************** *  Error Management ****************************************************************/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HUF_isError
+value|ERR_isError
+end_define
 
 begin_define
 define|#
@@ -126,7 +139,7 @@ name|e
 parameter_list|,
 name|f
 parameter_list|)
-value|size_t const e = f; if (ERR_isError(e)) return f
+value|size_t const e = f; if (ERR_isError(e)) return e
 end_define
 
 begin_define
@@ -2852,7 +2865,7 @@ name|HUF_FLUSHBITS
 parameter_list|(
 name|s
 parameter_list|)
-value|(fast ? BIT_flushBitsFast(s) : BIT_flushBits(s))
+value|BIT_flushBits(s)
 end_define
 
 begin_define
@@ -2942,19 +2955,6 @@ name|ostart
 decl_stmt|;
 name|size_t
 name|n
-decl_stmt|;
-specifier|const
-name|unsigned
-name|fast
-init|=
-operator|(
-name|dstSize
-operator|>=
-name|HUF_BLOCKBOUND
-argument_list|(
-name|srcSize
-argument_list|)
-operator|)
 decl_stmt|;
 name|BIT_CStream_t
 name|bitC

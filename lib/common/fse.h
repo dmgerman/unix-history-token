@@ -3,18 +3,6 @@ begin_comment
 comment|/* ******************************************************************    FSE : Finite State Entropy codec    Public Prototypes declaration    Copyright (C) 2013-2016, Yann Collet.     BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)     Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are    met:         * Redistributions of source code must retain the above copyright    notice, this list of conditions and the following disclaimer.        * Redistributions in binary form must reproduce the above    copyright notice, this list of conditions and the following disclaimer    in the documentation and/or other materials provided with the    distribution.     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT    OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.     You can contact the author at :    - Source repository : https://github.com/Cyan4973/FiniteStateEntropy ****************************************************************** */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FSE_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FSE_H
-end_define
-
 begin_if
 if|#
 directive|if
@@ -30,6 +18,12 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|FSE_H
+define|#
+directive|define
+name|FSE_H
 comment|/*-***************************************** *  Dependencies ******************************************/
 include|#
 directive|include
@@ -527,9 +521,24 @@ name|dt
 parameter_list|)
 function_decl|;
 comment|/*! Tutorial : ---------- (Note : these functions only decompress FSE-compressed blocks.  If block is uncompressed, use memcpy() instead  If block is a single repeated byte, use memset() instead )  The first step is to obtain the normalized frequencies of symbols. This can be performed by FSE_readNCount() if it was saved using FSE_writeNCount(). 'normalizedCounter' must be already allocated, and have at least 'maxSymbolValuePtr[0]+1' cells of signed short. In practice, that means it's necessary to know 'maxSymbolValue' beforehand, or size the table to handle worst case situations (typically 256). FSE_readNCount() will provide 'tableLog' and 'maxSymbolValue'. The result of FSE_readNCount() is the number of bytes read from 'rBuffer'. Note that 'rBufferSize' must be at least 4 bytes, even if useful information is less than that. If there is an error, the function will return an error code, which can be tested using FSE_isError().  The next step is to build the decompression tables 'FSE_DTable' from 'normalizedCounter'. This is performed by the function FSE_buildDTable(). The space required by 'FSE_DTable' must be already allocated using FSE_createDTable(). If there is an error, the function will return an error code, which can be tested using FSE_isError().  `FSE_DTable` can then be used to decompress `cSrc`, with FSE_decompress_usingDTable(). `cSrcSize` must be strictly correct, otherwise decompression will fail. FSE_decompress_usingDTable() result will tell how many bytes were regenerated (<=`dstCapacity`). If there is an error, the function will return an error code, which can be tested using FSE_isError(). (ex: dst buffer too small) */
-ifdef|#
-directive|ifdef
+endif|#
+directive|endif
+comment|/* FSE_H */
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FSE_STATIC_LINKING_ONLY
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|FSE_H_FSE_STATIC_LINKING_ONLY
+argument_list|)
+define|#
+directive|define
+name|FSE_H_FSE_STATIC_LINKING_ONLY
 comment|/* *** Dependency *** */
 include|#
 directive|include
@@ -845,6 +854,20 @@ name|maxLog
 parameter_list|)
 function_decl|;
 comment|/**< same as FSE_decompress(), using an externally allocated `workSpace` produced with `FSE_DTABLE_SIZE_U32(maxLog)` */
+typedef|typedef
+enum|enum
+block|{
+name|FSE_repeat_none
+block|,
+comment|/**< Cannot use the previous table */
+name|FSE_repeat_check
+block|,
+comment|/**< Can use the previous table but it must be checked */
+name|FSE_repeat_valid
+comment|/**< Can use the previous table and it is asumed to be valid */
+block|}
+name|FSE_repeat
+typedef|;
 comment|/* ***************************************** *  FSE symbol compression API *******************************************/
 comment|/*!    This API consists of small unitary functions, which highly benefit from being inlined.    Hence their body are included in next section. */
 typedef|typedef
@@ -1837,15 +1860,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FSE_H */
-end_comment
 
 end_unit
 

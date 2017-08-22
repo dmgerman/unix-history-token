@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_comment
@@ -76,29 +76,11 @@ return|;
 case|case
 name|PREFIX
 argument_list|(
-name|parameter_unknown
-argument_list|)
-case|:
-return|return
-literal|"Unknown parameter type"
-return|;
-case|case
-name|PREFIX
-argument_list|(
 name|frameParameter_unsupported
 argument_list|)
 case|:
 return|return
 literal|"Unsupported frame parameter"
-return|;
-case|case
-name|PREFIX
-argument_list|(
-name|frameParameter_unsupportedBy32bits
-argument_list|)
-case|:
-return|return
-literal|"Frame parameter unsupported in 32-bits mode"
 return|;
 case|case
 name|PREFIX
@@ -112,20 +94,38 @@ return|;
 case|case
 name|PREFIX
 argument_list|(
-name|compressionParameter_unsupported
+name|corruption_detected
 argument_list|)
 case|:
 return|return
-literal|"Compression parameter is not supported"
+literal|"Corrupted block detected"
 return|;
 case|case
 name|PREFIX
 argument_list|(
-name|compressionParameter_outOfBound
+name|checksum_wrong
 argument_list|)
 case|:
 return|return
-literal|"Compression parameter is out of bound"
+literal|"Restored data doesn't match checksum"
+return|;
+case|case
+name|PREFIX
+argument_list|(
+name|parameter_unsupported
+argument_list|)
+case|:
+return|return
+literal|"Unsupported parameter"
+return|;
+case|case
+name|PREFIX
+argument_list|(
+name|parameter_outOfBound
+argument_list|)
+case|:
+return|return
+literal|"Parameter is out of bound"
 return|;
 case|case
 name|PREFIX
@@ -171,24 +171,6 @@ argument_list|)
 case|:
 return|return
 literal|"Src size is incorrect"
-return|;
-case|case
-name|PREFIX
-argument_list|(
-name|corruption_detected
-argument_list|)
-case|:
-return|return
-literal|"Corrupted block detected"
-return|;
-case|case
-name|PREFIX
-argument_list|(
-name|checksum_wrong
-argument_list|)
-case|:
-return|return
-literal|"Restored data doesn't match checksum"
 return|;
 case|case
 name|PREFIX

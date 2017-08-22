@@ -90,7 +90,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|InitializeCriticalSection((a))
+value|(InitializeCriticalSection((a)), 0)
 define|#
 directive|define
 name|pthread_mutex_destroy
@@ -125,7 +125,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|InitializeConditionVariable((a))
+value|(InitializeConditionVariable((a)), 0)
 define|#
 directive|define
 name|pthread_cond_destroy
@@ -251,7 +251,7 @@ define|#
 directive|define
 name|pthread_mutex_t
 value|int
-comment|/* #define rather than typedef, as sometimes pthread support is implicit, resulting in duplicated symbols */
+comment|/* #define rather than typedef, because sometimes pthread support is implicit, resulting in duplicated symbols */
 define|#
 directive|define
 name|pthread_mutex_init
@@ -260,6 +260,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
+value|((void)a, 0)
 define|#
 directive|define
 name|pthread_mutex_destroy
@@ -290,6 +291,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
+value|((void)a, 0)
 define|#
 directive|define
 name|pthread_cond_destroy

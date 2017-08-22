@@ -3,18 +3,6 @@ begin_comment
 comment|/* ******************************************************************    Huffman coder, part of New Generation Entropy library    header file    Copyright (C) 2013-2016, Yann Collet.     BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)     Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are    met:         * Redistributions of source code must retain the above copyright    notice, this list of conditions and the following disclaimer.        * Redistributions in binary form must reproduce the above    copyright notice, this list of conditions and the following disclaimer    in the documentation and/or other materials provided with the    distribution.     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT    OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.     You can contact the author at :    - Source repository : https://github.com/Cyan4973/FiniteStateEntropy ****************************************************************** */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HUF_H_298734234
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HUF_H_298734234
-end_define
-
 begin_if
 if|#
 directive|if
@@ -30,6 +18,12 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|HUF_H_298734234
+define|#
+directive|define
+name|HUF_H_298734234
 comment|/* *** Dependencies *** */
 include|#
 directive|include
@@ -263,10 +257,25 @@ define|#
 directive|define
 name|HUF_DECOMPRESS_WORKSPACE_SIZE_U32
 value|(HUF_DECOMPRESS_WORKSPACE_SIZE / sizeof(U32))
+endif|#
+directive|endif
+comment|/* HUF_H_298734234 */
 comment|/* ******************************************************************  *  WARNING !!  *  The following section contains advanced and experimental definitions  *  which shall never be used in the context of dll  *  because they are not guaranteed to remain stable in the future.  *  Only consider them in association with static linking.  *******************************************************************/
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HUF_STATIC_LINKING_ONLY
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HUF_H_HUF_STATIC_LINKING_ONLY
+argument_list|)
+define|#
+directive|define
+name|HUF_H_HUF_STATIC_LINKING_ONLY
 comment|/* *** Dependencies *** */
 include|#
 directive|include
@@ -1422,15 +1431,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HUF_H_298734234 */
-end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_comment
@@ -372,24 +372,6 @@ begin_comment
 comment|/*_******************************************************* *  Benchmark wrappers *********************************************************/
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|blockType_e
-name|blockType
-decl_stmt|;
-name|U32
-name|unusedBits
-decl_stmt|;
-name|U32
-name|origSize
-decl_stmt|;
-block|}
-name|blockProperties_t
-typedef|;
-end_typedef
-
 begin_function
 name|size_t
 name|local_ZSTD_compress
@@ -590,26 +572,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_function_decl
-specifier|extern
-name|size_t
-name|ZSTD_getcBlockSize
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|src
-parameter_list|,
-name|size_t
-name|srcSize
-parameter_list|,
-name|blockProperties_t
-modifier|*
-name|bpPtr
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern

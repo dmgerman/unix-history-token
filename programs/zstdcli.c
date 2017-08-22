@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ value|19
 end_define
 
 begin_comment
-comment|/* when not using --ultra */
+comment|/* without using --ultra */
 end_comment
 
 begin_endif
@@ -74,6 +74,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|/* fprintf(), stdin, stdout, stderr */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -96,6 +106,10 @@ include|#
 directive|include
 file|"fileio.h"
 end_include
+
+begin_comment
+comment|/* stdinmark, stdoutmark, ZSTD_EXTENSION */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -129,6 +143,10 @@ include|#
 directive|include
 file|"dibio.h"
 end_include
+
+begin_comment
+comment|/* ZDICT_cover_params_t, DiB_trainFromFiles() */
+end_comment
 
 begin_endif
 endif|#
@@ -292,7 +310,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEFAULT_DISPLAY_LEVEL
+name|DISPLAY_LEVEL_DEFAULT
 value|2
 end_define
 
@@ -385,7 +403,7 @@ specifier|static
 name|int
 name|g_displayLevel
 init|=
-name|DEFAULT_DISPLAY_LEVEL
+name|DISPLAY_LEVEL_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
@@ -418,12 +436,12 @@ parameter_list|)
 block|{
 name|DISPLAY
 argument_list|(
-literal|"Usage :\n"
+literal|"Usage : \n"
 argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|"      %s [args] [FILE(s)] [-o file]\n"
+literal|"      %s [args] [FILE(s)] [-o file] \n"
 argument_list|,
 name|programName
 argument_list|)
@@ -435,7 +453,7 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|"FILE    : a filename\n"
+literal|"FILE    : a filename \n"
 argument_list|)
 expr_stmt|;
 name|DISPLAY
@@ -445,7 +463,7 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|"Arguments :\n"
+literal|"Arguments : \n"
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -499,7 +517,7 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|" -h/-H  : display help/long help and exit\n"
+literal|" -h/-H  : display help/long help and exit \n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -536,12 +554,12 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|"Advanced arguments :\n"
+literal|"Advanced arguments : \n"
 argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|" -V     : display Version number and exit\n"
+literal|" -V     : display Version number and exit \n"
 argument_list|)
 expr_stmt|;
 name|DISPLAY
@@ -561,7 +579,7 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|" -l     : print information about zstd compressed files.\n"
+literal|" -l     : print information about zstd compressed files \n"
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -683,11 +701,6 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|"--list  : list information about a zstd compressed file \n"
-argument_list|)
-expr_stmt|;
-name|DISPLAY
-argument_list|(
 literal|"--      : All arguments after \"--\" are treated as files \n"
 argument_list|)
 expr_stmt|;
@@ -701,7 +714,7 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|"Dictionary builder :\n"
+literal|"Dictionary builder : \n"
 argument_list|)
 expr_stmt|;
 name|DISPLAY
@@ -752,7 +765,7 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|"Benchmark arguments :\n"
+literal|"Benchmark arguments : \n"
 argument_list|)
 expr_stmt|;
 name|DISPLAY
@@ -767,7 +780,7 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|" -i#    : minimum evaluation time in seconds (default : 3s)\n"
+literal|" -i#    : minimum evaluation time in seconds (default : 3s) \n"
 argument_list|)
 expr_stmt|;
 name|DISPLAY
@@ -777,7 +790,7 @@ argument_list|)
 expr_stmt|;
 name|DISPLAY
 argument_list|(
-literal|"--priority=rt : set process priority to real-time\n"
+literal|"--priority=rt : set process priority to real-time \n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1967,6 +1980,154 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|printVersion
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|DISPLAY
+argument_list|(
+name|WELCOME_MESSAGE
+argument_list|)
+expr_stmt|;
+comment|/* format support */
+name|DISPLAYLEVEL
+argument_list|(
+literal|3
+argument_list|,
+literal|"*** supports: zstd"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ZSTD_LEGACY_SUPPORT
+argument_list|)
+operator|&&
+operator|(
+name|ZSTD_LEGACY_SUPPORT
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+name|ZSTD_LEGACY_SUPPORT
+operator|<
+literal|8
+operator|)
+name|DISPLAYLEVEL
+argument_list|(
+literal|3
+argument_list|,
+literal|", zstd legacy v0.%d+"
+argument_list|,
+name|ZSTD_LEGACY_SUPPORT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ZSTD_GZCOMPRESS
+name|DISPLAYLEVEL
+argument_list|(
+literal|3
+argument_list|,
+literal|", gzip"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ZSTD_LZ4COMPRESS
+name|DISPLAYLEVEL
+argument_list|(
+literal|3
+argument_list|,
+literal|", lz4"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ZSTD_LZMACOMPRESS
+name|DISPLAYLEVEL
+argument_list|(
+literal|3
+argument_list|,
+literal|", lzma, xz "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|DISPLAYLEVEL
+argument_list|(
+literal|3
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* posix support */
+ifdef|#
+directive|ifdef
+name|_POSIX_C_SOURCE
+name|DISPLAYLEVEL
+argument_list|(
+literal|4
+argument_list|,
+literal|"_POSIX_C_SOURCE defined: %ldL\n"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|_POSIX_C_SOURCE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|_POSIX_VERSION
+name|DISPLAYLEVEL
+argument_list|(
+literal|4
+argument_list|,
+literal|"_POSIX_VERSION defined: %ldL \n"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|_POSIX_VERSION
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PLATFORM_POSIX_VERSION
+name|DISPLAYLEVEL
+argument_list|(
+literal|4
+argument_list|,
+literal|"PLATFORM_POSIX_VERSION defined: %ldL\n"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|PLATFORM_POSIX_VERSION
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3674,10 +3835,8 @@ name|g_displayOut
 operator|=
 name|stdout
 expr_stmt|;
-name|DISPLAY
-argument_list|(
-name|WELCOME_MESSAGE
-argument_list|)
+name|printVersion
+argument_list|()
 expr_stmt|;
 name|CLEAN_RETURN
 argument_list|(
@@ -4197,6 +4356,7 @@ condition|(
 name|lastCommand
 condition|)
 block|{
+comment|/* forgotten argument */
 name|DISPLAY
 argument_list|(
 literal|"error : command must be followed by argument \n"
@@ -4208,7 +4368,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* forgotten argument */
 comment|/* Welcome message (if verbose) */
 name|DISPLAYLEVEL
 argument_list|(
@@ -4217,57 +4376,6 @@ argument_list|,
 name|WELCOME_MESSAGE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_POSIX_C_SOURCE
-name|DISPLAYLEVEL
-argument_list|(
-literal|4
-argument_list|,
-literal|"_POSIX_C_SOURCE defined: %ldL\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|_POSIX_C_SOURCE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|_POSIX_VERSION
-name|DISPLAYLEVEL
-argument_list|(
-literal|4
-argument_list|,
-literal|"_POSIX_VERSION defined: %ldL\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|_POSIX_VERSION
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|PLATFORM_POSIX_VERSION
-name|DISPLAYLEVEL
-argument_list|(
-literal|4
-argument_list|,
-literal|"PLATFORM_POSIX_VERSION defined: %ldL\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|PLATFORM_POSIX_VERSION
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|nbThreads
@@ -4285,7 +4393,7 @@ name|DISPLAYLEVEL
 argument_list|(
 literal|3
 argument_list|,
-literal|"Note: %d physical core(s) detected\n"
+literal|"Note: %d physical core(s) detected \n"
 argument_list|,
 name|nbThreads
 argument_list|)
@@ -4455,6 +4563,9 @@ operator|==
 name|zom_list
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|ZSTD_NODECOMPRESS
 name|int
 specifier|const
 name|ret
@@ -4473,6 +4584,20 @@ argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|DISPLAY
+argument_list|(
+literal|"file information is not supported \n"
+argument_list|)
+expr_stmt|;
+name|CLEAN_RETURN
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Check if benchmark is selected */
 if|if
@@ -4529,6 +4654,16 @@ operator|(
 name|void
 operator|)
 name|bench_nbSeconds
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|blockSize
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setRealTimePrio
 expr_stmt|;
 goto|goto
 name|_end
@@ -4675,6 +4810,29 @@ goto|goto
 name|_end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|ZSTD_NODECOMPRESS
+if|if
+condition|(
+name|operation
+operator|==
+name|zom_test
+condition|)
+block|{
+name|outFileName
+operator|=
+name|nulmark
+expr_stmt|;
+name|FIO_setRemoveSrcFile
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* test mode */
+endif|#
+directive|endif
 comment|/* No input filename ==> use stdin and stdout */
 name|filenameIdx
 operator|+=
@@ -4998,6 +5156,11 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+operator|(
+name|void
+operator|)
+name|suffix
+expr_stmt|;
 name|DISPLAY
 argument_list|(
 literal|"Compression not supported\n"
@@ -5012,24 +5175,6 @@ comment|/* decompression or test */
 ifndef|#
 directive|ifndef
 name|ZSTD_NODECOMPRESS
-if|if
-condition|(
-name|operation
-operator|==
-name|zom_test
-condition|)
-block|{
-name|outFileName
-operator|=
-name|nulmark
-expr_stmt|;
-name|FIO_setRemoveSrcFile
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* test mode */
 name|FIO_setMemLimit
 argument_list|(
 name|memLimit

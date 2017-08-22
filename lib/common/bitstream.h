@@ -103,7 +103,7 @@ directive|define
 name|STREAM_ACCUMULATOR_MIN
 value|((U32)(MEM_32bits() ? STREAM_ACCUMULATOR_MIN_32 : STREAM_ACCUMULATOR_MIN_64))
 comment|/*-****************************************** *  bitStream encoding API (write forward) ********************************************/
-comment|/* bitStream can mix input from multiple sources. *  A critical property of these streams is that they encode and decode in **reverse** direction. *  So the first bit sequence you add will be the last to be read, like a LIFO stack. */
+comment|/* bitStream can mix input from multiple sources.  * A critical property of these streams is that they encode and decode in **reverse** direction.  * So the first bit sequence you add will be the last to be read, like a LIFO stack.  */
 typedef|typedef
 struct|struct
 block|{
@@ -571,7 +571,7 @@ block|}
 decl_stmt|;
 comment|/* up to 26 bits */
 comment|/*-************************************************************** *  bitStream encoding ****************************************************************/
-comment|/*! BIT_initCStream() :  *  `dstCapacity` must be> sizeof(size_t)  *  @return : 0 if success,               otherwise an error code (can be tested using ERR_isError() ) */
+comment|/*! BIT_initCStream() :  *  `dstCapacity` must be> sizeof(size_t)  *  @return : 0 if success,  *            otherwise an error code (can be tested using ERR_isError()) */
 name|MEM_STATIC
 name|size_t
 name|BIT_initCStream
@@ -656,7 +656,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*! BIT_addBits() :     can add up to 26 bits into `bitC`.     Does not check for register overflow ! */
+comment|/*! BIT_addBits() :  *  can add up to 26 bits into `bitC`.  *  Note : does not check for register overflow ! */
 name|MEM_STATIC
 name|void
 name|BIT_addBits
@@ -909,7 +909,7 @@ operator|*
 literal|8
 expr_stmt|;
 block|}
-comment|/*! BIT_closeCStream() :  *  @return : size of CStream, in bytes,               or 0 if it could not fit into dstBuffer */
+comment|/*! BIT_closeCStream() :  *  @return : size of CStream, in bytes,  *            or 0 if it could not fit into dstBuffer */
 name|MEM_STATIC
 name|size_t
 name|BIT_closeCStream
@@ -968,8 +968,8 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*-******************************************************** * bitStream decoding **********************************************************/
-comment|/*! BIT_initDStream() : *   Initialize a BIT_DStream_t. *   `bitD` : a pointer to an already allocated BIT_DStream_t structure. *   `srcSize` must be the *exact* size of the bitStream, in bytes. *   @return : size of stream (== srcSize) or an errorCode if a problem is detected */
+comment|/*-******************************************************** *  bitStream decoding **********************************************************/
+comment|/*! BIT_initDStream() :  *  Initialize a BIT_DStream_t.  * `bitD` : a pointer to an already allocated BIT_DStream_t structure.  * `srcSize` must be the *exact* size of the bitStream, in bytes.  * @return : size of stream (== srcSize), or an errorCode if a problem is detected  */
 name|MEM_STATIC
 name|size_t
 name|BIT_initDStream
@@ -1418,7 +1418,7 @@ condition|)
 return|return
 name|ERROR
 argument_list|(
-name|GENERIC
+name|corruption_detected
 argument_list|)
 return|;
 comment|/* endMark not present */
@@ -1578,7 +1578,7 @@ name|nbBits
 index|]
 return|;
 block|}
-comment|/*! BIT_lookBits() :  *  Provides next n bits from local register.  *  local register is not modified.  *  On 32-bits, maxNbBits==24.  *  On 64-bits, maxNbBits==56.  *  @return : value extracted  */
+comment|/*! BIT_lookBits() :  *  Provides next n bits from local register.  *  local register is not modified.  *  On 32-bits, maxNbBits==24.  *  On 64-bits, maxNbBits==56.  * @return : value extracted */
 name|MEM_STATIC
 name|size_t
 name|BIT_lookBits
@@ -1765,7 +1765,7 @@ operator|+=
 name|nbBits
 expr_stmt|;
 block|}
-comment|/*! BIT_readBits() :  *  Read (consume) next n bits from local register and update.  *  Pay attention to not read more than nbBits contained into local register.  *  @return : extracted value.  */
+comment|/*! BIT_readBits() :  *  Read (consume) next n bits from local register and update.  *  Pay attention to not read more than nbBits contained into local register.  * @return : extracted value. */
 name|MEM_STATIC
 name|size_t
 name|BIT_readBits
@@ -1800,7 +1800,7 @@ return|return
 name|value
 return|;
 block|}
-comment|/*! BIT_readBitsFast() : *   unsafe version; only works only if nbBits>= 1 */
+comment|/*! BIT_readBitsFast() :  *  unsafe version; only works only if nbBits>= 1 */
 name|MEM_STATIC
 name|size_t
 name|BIT_readBitsFast
@@ -1842,7 +1842,7 @@ return|return
 name|value
 return|;
 block|}
-comment|/*! BIT_reloadDStream() : *   Refill `bitD` from buffer previously set in BIT_initDStream() . *   This function is safe, it guarantees it will not read beyond src buffer. *   @return : status of `BIT_DStream_t` internal register.               if status == BIT_DStream_unfinished, internal register is filled with>= (sizeof(bitD->bitContainer)*8 - 7) bits */
+comment|/*! BIT_reloadDStream() :  *  Refill `bitD` from buffer previously set in BIT_initDStream() .  *  This function is safe, it guarantees it will not read beyond src buffer.  * @return : status of `BIT_DStream_t` internal register.  *           when status == BIT_DStream_unfinished, internal register is filled with at least 25 or 57Â bits */
 name|MEM_STATIC
 name|BIT_DStream_status
 name|BIT_reloadDStream
@@ -2029,7 +2029,7 @@ name|result
 return|;
 block|}
 block|}
-comment|/*! BIT_endOfDStream() : *   @return Tells if DStream has exactly reached its end (all bits consumed). */
+comment|/*! BIT_endOfDStream() :  * @return : 1 if DStream has _exactly_ reached its end (all bits consumed).  */
 name|MEM_STATIC
 name|unsigned
 name|BIT_endOfDStream
