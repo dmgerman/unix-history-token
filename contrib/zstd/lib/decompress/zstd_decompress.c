@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_comment
@@ -151,87 +151,6 @@ include|#
 directive|include
 file|"zstd_legacy.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_M_IA64
-argument_list|)
-end_if
-
-begin_comment
-comment|/* _mm_prefetch() is not defined for ia64 */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<mmintrin.h>
-end_include
-
-begin_comment
-comment|/* https://msdn.microsoft.com/fr-fr/library/84szxsww(v=vs.90).aspx */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ZSTD_PREFETCH
-parameter_list|(
-name|ptr
-parameter_list|)
-value|_mm_prefetch((const char*)ptr, _MM_HINT_T0)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|ZSTD_PREFETCH
-parameter_list|(
-name|ptr
-parameter_list|)
-value|__builtin_prefetch(ptr, 0, 0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ZSTD_PREFETCH
-parameter_list|(
-name|ptr
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* disabled */
-end_comment
 
 begin_endif
 endif|#
@@ -400,7 +319,7 @@ name|ZSTD_REP_NUM
 index|]
 decl_stmt|;
 block|}
-name|ZSTD_entropyTables_t
+name|ZSTD_entropyDTables_t
 typedef|;
 end_typedef
 
@@ -428,7 +347,7 @@ name|HUF_DTable
 modifier|*
 name|HUFptr
 decl_stmt|;
-name|ZSTD_entropyTables_t
+name|ZSTD_entropyDTables_t
 name|entropy
 decl_stmt|;
 specifier|const
@@ -1526,11 +1445,16 @@ argument_list|)
 expr_stmt|;
 name|zfhPtr
 operator|->
+name|frameType
+operator|=
+name|ZSTD_skippableFrame
+expr_stmt|;
+name|zfhPtr
+operator|->
 name|windowSize
 operator|=
 literal|0
 expr_stmt|;
-comment|/* windowSize==0 means a frame is skippable */
 return|return
 literal|0
 return|;
@@ -1564,6 +1488,15 @@ condition|)
 return|return
 name|fhsize
 return|;
+name|zfhPtr
+operator|->
+name|headerSize
+operator|=
+operator|(
+name|U32
+operator|)
+name|fhsize
+expr_stmt|;
 block|}
 block|{
 name|BYTE
@@ -1620,15 +1553,7 @@ name|fhdByte
 operator|>>
 literal|6
 decl_stmt|;
-name|U32
-specifier|const
-name|windowSizeMax
-init|=
-literal|1U
-operator|<<
-name|ZSTD_WINDOWLOG_MAX
-decl_stmt|;
-name|U32
+name|U64
 name|windowSize
 init|=
 literal|0
@@ -1641,7 +1566,7 @@ decl_stmt|;
 name|U64
 name|frameContentSize
 init|=
-literal|0
+name|ZSTD_CONTENTSIZE_UNKNOWN
 decl_stmt|;
 if|if
 condition|(
@@ -1703,7 +1628,7 @@ return|;
 name|windowSize
 operator|=
 operator|(
-literal|1U
+literal|1ULL
 operator|<<
 name|windowLog
 operator|)
@@ -1729,6 +1654,11 @@ name|dictIDSizeCode
 condition|)
 block|{
 default|default:
+name|assert
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* impossible */
 case|case
 literal|0
@@ -1789,6 +1719,11 @@ name|fcsID
 condition|)
 block|{
 default|default:
+name|assert
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* impossible */
 case|case
 literal|0
@@ -1849,28 +1784,18 @@ break|break;
 block|}
 if|if
 condition|(
-operator|!
-name|windowSize
+name|singleSegment
 condition|)
 name|windowSize
 operator|=
-operator|(
-name|U32
-operator|)
 name|frameContentSize
 expr_stmt|;
-if|if
-condition|(
-name|windowSize
-operator|>
-name|windowSizeMax
-condition|)
-return|return
-name|ERROR
-argument_list|(
-name|frameParameter_windowTooLarge
-argument_list|)
-return|;
+name|zfhPtr
+operator|->
+name|frameType
+operator|=
+name|ZSTD_frame
+expr_stmt|;
 name|zfhPtr
 operator|->
 name|frameContentSize
@@ -1903,7 +1828,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** ZSTD_getFrameContentSize() : *   compatible with legacy mode *   @return : decompressed size of the single frame pointed to be `src` if known, otherwise *             - ZSTD_CONTENTSIZE_UNKNOWN if the size cannot be determined *             - ZSTD_CONTENTSIZE_ERROR if an error occurred (e.g. invalid magic number, srcSize too small) */
+comment|/** ZSTD_getFrameContentSize() :  *  compatible with legacy mode  * @return : decompressed size of the single frame pointed to be `src` if known, otherwise  *         - ZSTD_CONTENTSIZE_UNKNOWN if the size cannot be determined  *         - ZSTD_CONTENTSIZE_ERROR if an error occurred (e.g. invalid magic number, srcSize too small) */
 end_comment
 
 begin_function
@@ -1970,14 +1895,14 @@ endif|#
 directive|endif
 block|{
 name|ZSTD_frameHeader
-name|fParams
+name|zfh
 decl_stmt|;
 if|if
 condition|(
 name|ZSTD_getFrameHeader
 argument_list|(
 operator|&
-name|fParams
+name|zfh
 argument_list|,
 name|src
 argument_list|,
@@ -1991,38 +1916,23 @@ name|ZSTD_CONTENTSIZE_ERROR
 return|;
 if|if
 condition|(
-name|fParams
+name|zfh
 operator|.
-name|windowSize
+name|frameType
 operator|==
-literal|0
-condition|)
-block|{
-comment|/* Either skippable or empty frame, size == 0 either way */
-return|return
-literal|0
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|fParams
-operator|.
-name|frameContentSize
-operator|!=
-literal|0
+name|ZSTD_skippableFrame
 condition|)
 block|{
 return|return
-name|fParams
-operator|.
-name|frameContentSize
+literal|0
 return|;
 block|}
 else|else
 block|{
 return|return
-name|ZSTD_CONTENTSIZE_UNKNOWN
+name|zfh
+operator|.
+name|frameContentSize
 return|;
 block|}
 block|}
@@ -2238,7 +2148,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** ZSTD_getDecompressedSize() : *   compatible with legacy mode *   @return : decompressed size if known, 0 otherwise               note : 0 can mean any of the following :                    - decompressed size is not present within frame header                    - frame header unknown / not supported                    - frame header not complete (`srcSize` too small) */
+comment|/** ZSTD_getDecompressedSize() : *   compatible with legacy mode *   @return : decompressed size if known, 0 otherwise               note : 0 can mean any of the following :                    - frame content is empty                    - decompressed size field is not present in frame header                    - frame header unknown / not supported                    - frame header not complete (`srcSize` too small) */
 end_comment
 
 begin_function
@@ -2394,24 +2304,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|blockType_e
-name|blockType
-decl_stmt|;
-name|U32
-name|lastBlock
-decl_stmt|;
-name|U32
-name|origSize
-decl_stmt|;
-block|}
-name|blockProperties_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*! ZSTD_getcBlockSize() : *   Provides the size of compressed block from block header `src` */
@@ -6998,7 +6890,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|HINT_INLINE
 name|size_t
 name|ZSTD_execSequence
 parameter_list|(
@@ -8128,7 +8020,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|seq_t
 name|ZSTD_decodeSequenceLong_generic
 parameter_list|(
@@ -9045,7 +8937,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|HINT_INLINE
 name|size_t
 name|ZSTD_execSequenceLong
 parameter_list|(
@@ -10165,7 +10057,7 @@ condition|)
 return|return
 name|oneSeqSize
 return|;
-name|ZSTD_PREFETCH
+name|PREFETCH
 argument_list|(
 name|sequence
 operator|.
@@ -10805,9 +10697,11 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|srcSize
 operator|>=
 name|ZSTD_skippableHeaderSize
+operator|)
 operator|&&
 operator|(
 name|MEM_readLE32
@@ -10865,30 +10759,9 @@ init|=
 name|srcSize
 decl_stmt|;
 name|ZSTD_frameHeader
-name|fParams
+name|zfh
 decl_stmt|;
-name|size_t
-specifier|const
-name|headerSize
-init|=
-name|ZSTD_frameHeaderSize
-argument_list|(
-name|ip
-argument_list|,
-name|remainingSize
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|ZSTD_isError
-argument_list|(
-name|headerSize
-argument_list|)
-condition|)
-return|return
-name|headerSize
-return|;
-comment|/* Frame Header */
+comment|/* Extract Frame Header */
 block|{
 name|size_t
 specifier|const
@@ -10897,11 +10770,11 @@ init|=
 name|ZSTD_getFrameHeader
 argument_list|(
 operator|&
-name|fParams
+name|zfh
 argument_list|,
-name|ip
+name|src
 argument_list|,
-name|remainingSize
+name|srcSize
 argument_list|)
 decl_stmt|;
 if|if
@@ -10929,10 +10802,14 @@ return|;
 block|}
 name|ip
 operator|+=
+name|zfh
+operator|.
 name|headerSize
 expr_stmt|;
 name|remainingSize
 operator|-=
+name|zfh
+operator|.
 name|headerSize
 expr_stmt|;
 comment|/* Loop on each block */
@@ -11004,12 +10881,12 @@ break|break;
 block|}
 if|if
 condition|(
-name|fParams
+name|zfh
 operator|.
 name|checksumFlag
 condition|)
 block|{
-comment|/* Frame content checksum */
+comment|/* Final frame content checksum */
 if|if
 condition|(
 name|remainingSize
@@ -11538,24 +11415,23 @@ name|dststart
 init|=
 name|dst
 decl_stmt|;
+name|assert
+argument_list|(
+name|dict
+operator|==
+name|NULL
+operator|||
+name|ddict
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* either dict or ddict set, not both */
 if|if
 condition|(
 name|ddict
 condition|)
 block|{
-if|if
-condition|(
-name|dict
-condition|)
-block|{
-comment|/* programmer error, these two cases should be mutually exclusive */
-return|return
-name|ERROR
-argument_list|(
-name|GENERIC
-argument_list|)
-return|;
-block|}
 name|dict
 operator|=
 name|ZSTD_DDictDictContent
@@ -11627,7 +11503,7 @@ condition|)
 return|return
 name|frameSize
 return|;
-comment|/* legacy support is incompatible with static dctx */
+comment|/* legacy support is not compatible with static dctx */
 if|if
 condition|(
 name|dctx
@@ -11752,14 +11628,12 @@ name|srcSize
 operator|<
 name|skippableSize
 condition|)
-block|{
 return|return
 name|ERROR
 argument_list|(
 name|srcSize_wrong
 argument_list|)
 return|;
-block|}
 name|src
 operator|=
 operator|(
@@ -11777,15 +11651,12 @@ name|skippableSize
 expr_stmt|;
 continue|continue;
 block|}
-else|else
-block|{
 return|return
 name|ERROR
 argument_list|(
 name|prefix_unknown
 argument_list|)
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -11857,7 +11728,7 @@ condition|)
 return|return
 name|res
 return|;
-comment|/* don't need to bounds check this, ZSTD_decompressFrame will have              * already */
+comment|/* no need to bound check, ZSTD_decompressFrame already has */
 name|dst
 operator|=
 operator|(
@@ -11874,6 +11745,7 @@ name|res
 expr_stmt|;
 block|}
 block|}
+comment|/* while (srcSize>= ZSTD_frameHeaderSize_prefix) */
 if|if
 condition|(
 name|srcSize
@@ -12424,6 +12296,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* not necessary to copy more */
+comment|/* fall-through */
 case|case
 name|ZSTDds_decodeFrameHeader
 case|:
@@ -13065,7 +12938,7 @@ specifier|static
 name|size_t
 name|ZSTD_loadEntropy
 parameter_list|(
-name|ZSTD_entropyTables_t
+name|ZSTD_entropyDTables_t
 modifier|*
 name|entropy
 parameter_list|,
@@ -13745,7 +13618,7 @@ decl_stmt|;
 name|size_t
 name|dictSize
 decl_stmt|;
-name|ZSTD_entropyTables_t
+name|ZSTD_entropyDTables_t
 name|entropy
 decl_stmt|;
 name|U32
@@ -14841,6 +14714,10 @@ literal|0
 block|,
 literal|0
 block|,
+name|ZSTD_frame
+block|,
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -15300,7 +15177,7 @@ default|default :
 return|return
 name|ERROR
 argument_list|(
-name|parameter_unknown
+name|parameter_unsupported
 argument_list|)
 return|;
 case|case
@@ -15390,11 +15267,6 @@ literal|2
 operator|)
 decl_stmt|;
 return|return
-sizeof|sizeof
-argument_list|(
-name|ZSTD_DStream
-argument_list|)
-operator|+
 name|ZSTD_estimateDCtxSize
 argument_list|()
 operator|+
@@ -15419,8 +15291,16 @@ name|size_t
 name|srcSize
 parameter_list|)
 block|{
+name|U32
+specifier|const
+name|windowSizeMax
+init|=
+literal|1U
+operator|<<
+name|ZSTD_WINDOWLOG_MAX
+decl_stmt|;
 name|ZSTD_frameHeader
-name|fh
+name|zfh
 decl_stmt|;
 name|size_t
 specifier|const
@@ -15429,7 +15309,7 @@ init|=
 name|ZSTD_getFrameHeader
 argument_list|(
 operator|&
-name|fh
+name|zfh
 argument_list|,
 name|src
 argument_list|,
@@ -15458,10 +15338,27 @@ argument_list|(
 name|srcSize_wrong
 argument_list|)
 return|;
+if|if
+condition|(
+name|zfh
+operator|.
+name|windowSize
+operator|>
+name|windowSizeMax
+condition|)
+return|return
+name|ERROR
+argument_list|(
+name|frameParameter_windowTooLarge
+argument_list|)
+return|;
 return|return
 name|ZSTD_estimateDStreamSize
 argument_list|(
-name|fh
+operator|(
+name|size_t
+operator|)
+name|zfh
 operator|.
 name|windowSize
 argument_list|)
@@ -15882,8 +15779,6 @@ name|zds
 operator|->
 name|legacyContext
 argument_list|,
-name|zds
-operator|->
 name|legacyVersion
 argument_list|,
 name|output
@@ -15892,20 +15787,12 @@ name|input
 argument_list|)
 return|;
 block|}
-else|else
-block|{
+endif|#
+directive|endif
 return|return
 name|hSize
 return|;
 comment|/* error */
-block|}
-else|#
-directive|else
-return|return
-name|hSize
-return|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -16300,6 +16187,10 @@ name|size_t
 specifier|const
 name|blockSize
 init|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|MIN
 argument_list|(
 name|zds
@@ -16310,11 +16201,16 @@ name|windowSize
 argument_list|,
 name|ZSTD_BLOCKSIZE_MAX
 argument_list|)
+argument_list|)
 decl_stmt|;
 name|size_t
 specifier|const
 name|neededOutSize
 init|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|zds
 operator|->
 name|fParams
@@ -16326,6 +16222,7 @@ operator|+
 name|WILDCOPY_OVERLENGTH
 operator|*
 literal|2
+argument_list|)
 decl_stmt|;
 name|zds
 operator|->
@@ -16542,7 +16439,7 @@ name|streamStage
 operator|=
 name|zdss_read
 expr_stmt|;
-comment|/* pass-through */
+comment|/* fall-through */
 case|case
 name|zdss_read
 case|:
@@ -16717,7 +16614,7 @@ name|streamStage
 operator|=
 name|zdss_load
 expr_stmt|;
-comment|/* pass-through */
+comment|/* fall-through */
 case|case
 name|zdss_load
 case|:
@@ -16904,7 +16801,7 @@ name|streamStage
 operator|=
 name|zdss_flush
 expr_stmt|;
-comment|/* pass-through */
+comment|/* fall-through */
 case|case
 name|zdss_flush
 case|:

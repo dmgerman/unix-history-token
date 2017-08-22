@@ -4,150 +4,6 @@ comment|/* ******************************************************************   
 end_comment
 
 begin_comment
-comment|/* ************************************************************** *  Compiler specifics ****************************************************************/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
-begin_comment
-comment|/* Visual Studio */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static __forceinline
-end_define
-
-begin_include
-include|#
-directive|include
-file|<intrin.h>
-end_include
-
-begin_comment
-comment|/* For Visual 2005 */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4127
-name|)
-end_pragma
-
-begin_comment
-comment|/* disable: C4127: conditional expression is constant */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4214
-name|)
-end_pragma
-
-begin_comment
-comment|/* disable: C4214: non-int bitfields */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__STDC_VERSION__
-argument_list|)
-operator|&&
-name|__STDC_VERSION__
-operator|>=
-literal|199901L
-end_if
-
-begin_comment
-comment|/* C99 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static inline __attribute__((always_inline))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC_VERSION__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* ************************************************************** *  Includes ****************************************************************/
 end_comment
 
@@ -187,6 +43,12 @@ directive|include
 file|"bitstream.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"compiler.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -199,9 +61,22 @@ directive|include
 file|"fse.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"error_private.h"
+end_include
+
 begin_comment
 comment|/* ************************************************************** *  Error Management ****************************************************************/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FSE_isError
+value|ERR_isError
+end_define
 
 begin_define
 define|#
@@ -4782,7 +4657,7 @@ name|e
 parameter_list|,
 name|f
 parameter_list|)
-value|size_t const e = f; if (ERR_isError(e)) return f
+value|size_t const e = f; if (ERR_isError(e)) return e
 end_define
 
 begin_define

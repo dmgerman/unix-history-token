@@ -363,46 +363,14 @@ begin_comment
 comment|/* ************************************* *  Compiler Specific Options ***************************************/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
-begin_comment
-comment|/* Visual Studio */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4127
-name|)
-end_pragma
-
-begin_comment
-comment|/* disable: C4127: conditional expression is constant */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static __forceinline
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__cplusplus
@@ -422,55 +390,103 @@ begin_comment
 comment|/* C99 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INLINE_KEYWORD
+value|inline
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INLINE_KEYWORD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FORCE_INLINE_ATTR
+value|__attribute__((always_inline))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|FORCE_INLINE_ATTR
+value|__forceinline
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FORCE_INLINE_ATTR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|FORCE_INLINE_TEMPLATE
+value|static INLINE_KEYWORD FORCE_INLINE_ATTR
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|_MSC_VER
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static inline __attribute__((always_inline))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|disable
+name|:
+name|4127
+name|)
+end_pragma
 
 begin_comment
-comment|/* __STDC_VERSION__ */
+comment|/* disable: C4127: conditional expression is constant */
 end_comment
 
 begin_endif
@@ -1237,7 +1253,7 @@ typedef|;
 end_typedef
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|U32
 name|XXH_readLE32_align
 parameter_list|(
@@ -1306,7 +1322,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|U32
 name|XXH_readLE32
 parameter_list|(
@@ -1363,7 +1379,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|U64
 name|XXH_readLE64_align
 parameter_list|(
@@ -1432,7 +1448,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|U64
 name|XXH_readLE64
 parameter_list|(
@@ -1736,7 +1752,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|U32
 name|XXH32_endian_align
 parameter_list|(
@@ -2303,7 +2319,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|U64
 name|XXH64_endian_align
 parameter_list|(
@@ -3160,7 +3176,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|XXH_errorcode
 name|XXH32_update_endian
 parameter_list|(
@@ -3696,7 +3712,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|U32
 name|XXH32_digest_endian
 parameter_list|(
@@ -3965,7 +3981,7 @@ comment|/* **** XXH64 **** */
 end_comment
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|XXH_errorcode
 name|XXH64_update_endian
 parameter_list|(
@@ -4473,7 +4489,7 @@ block|}
 end_function
 
 begin_function
-name|FORCE_INLINE
+name|FORCE_INLINE_TEMPLATE
 name|U64
 name|XXH64_digest_endian
 parameter_list|(

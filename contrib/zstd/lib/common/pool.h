@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016-present, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|struct
 name|POOL_ctx_s
 name|POOL_ctx
 typedef|;
-comment|/*! POOL_create() :     Create a thread pool with at most `numThreads` threads.     `numThreads` must be at least 1.     The maximum number of queued jobs before blocking is `queueSize`.     `queueSize` must be at least 1.     @return : The POOL_ctx pointer on success else NULL. */
+comment|/*! POOL_create() :  *  Create a thread pool with at most `numThreads` threads.  * `numThreads` must be at least 1.  *  The maximum number of queued jobs before blocking is `queueSize`.  * @return : POOL_ctx pointer on success, else NULL. */
 name|POOL_ctx
 modifier|*
 name|POOL_create

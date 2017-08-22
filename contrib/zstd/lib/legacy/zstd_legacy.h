@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_ifndef
@@ -522,6 +522,27 @@ argument_list|,
 name|compressedSize
 argument_list|)
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|dst
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dstCapacity
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dict
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dictSize
+expr_stmt|;
+comment|/* unused when ZSTD_LEGACY_SUPPORT>= 8 */
 switch|switch
 condition|(
 name|version
@@ -1029,6 +1050,11 @@ case|:
 case|case
 literal|3
 case|:
+operator|(
+name|void
+operator|)
+name|legacyContext
+expr_stmt|;
 return|return
 name|ERROR
 argument_list|(
@@ -1178,6 +1204,16 @@ case|:
 case|case
 literal|3
 case|:
+operator|(
+name|void
+operator|)
+name|dict
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dictSize
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1475,6 +1511,21 @@ case|:
 case|case
 literal|3
 case|:
+operator|(
+name|void
+operator|)
+name|legacyContext
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|output
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|input
+expr_stmt|;
 return|return
 name|ERROR
 argument_list|(

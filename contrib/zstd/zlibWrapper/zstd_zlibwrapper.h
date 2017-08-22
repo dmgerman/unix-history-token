@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016-present, Przemyslaw Skibinski, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_ifndef
@@ -65,7 +65,7 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/*** COMPRESSION ***/
-comment|/* ZWRAP_useZSTDcompression() enables/disables zstd compression during runtime.    By default zstd compression is disabled. To enable zstd compression please use one of the methods:    - compilation with the additional option -DZWRAP_USE_ZSTD=1     - using '#define ZWRAP_USE_ZSTD 1' in source code before '#include "zstd_zlibwrapper.h"'    - calling ZWRAP_useZSTDcompression(1)    All above-mentioned methods will enable zstd compression for all threads.    Be aware that ZWRAP_useZSTDcompression() is not thread-safe and may lead to a race condition. */
+comment|/* ZWRAP_useZSTDcompression() enables/disables zstd compression during runtime.    By default zstd compression is disabled. To enable zstd compression please use one of the methods:    - compilation with the additional option -DZWRAP_USE_ZSTD=1    - using '#define ZWRAP_USE_ZSTD 1' in source code before '#include "zstd_zlibwrapper.h"'    - calling ZWRAP_useZSTDcompression(1)    All above-mentioned methods will enable zstd compression for all threads.    Be aware that ZWRAP_useZSTDcompression() is not thread-safe and may lead to a race condition. */
 name|void
 name|ZWRAP_useZSTDcompression
 parameter_list|(
@@ -80,7 +80,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* Changes a pledged source size for a given compression stream.    It will change ZSTD compression parameters what may improve compression speed and/or ratio.    The function should be called just after deflateInit() or deflateReset() and before deflate() or deflateSetDictionary().    It's only helpful when data is compressed in blocks.     There will be no change in case of deflateInit() or deflateReset() immediately followed by deflate(strm, Z_FINISH)     as this case is automatically detected.  */
+comment|/* Changes a pledged source size for a given compression stream.    It will change ZSTD compression parameters what may improve compression speed and/or ratio.    The function should be called just after deflateInit() or deflateReset() and before deflate() or deflateSetDictionary().    It's only helpful when data is compressed in blocks.    There will be no change in case of deflateInit() or deflateReset() immediately followed by deflate(strm, Z_FINISH)    as this case is automatically detected.  */
 name|int
 name|ZWRAP_setPledgedSrcSize
 parameter_list|(
@@ -93,7 +93,7 @@ name|long
 name|pledgedSrcSize
 parameter_list|)
 function_decl|;
-comment|/* Similar to deflateReset but preserves dictionary set using deflateSetDictionary.    It should improve compression speed because there will be less calls to deflateSetDictionary     When using zlib compression this method redirects to deflateReset. */
+comment|/* Similar to deflateReset but preserves dictionary set using deflateSetDictionary.    It should improve compression speed because there will be less calls to deflateSetDictionary    When using zlib compression this method redirects to deflateReset. */
 name|int
 name|ZWRAP_deflateReset_keepDict
 parameter_list|(
