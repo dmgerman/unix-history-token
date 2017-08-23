@@ -21358,7 +21358,7 @@ argument_list|)
 operator|&
 name|IFCAP_VLAN_HWFILTER
 condition|)
-name|iflib_init_locked
+name|iflib_if_init_locked
 argument_list|(
 name|ctx
 argument_list|)
@@ -21443,7 +21443,7 @@ argument_list|)
 operator|&
 name|IFCAP_VLAN_HWFILTER
 condition|)
-name|iflib_init_locked
+name|iflib_if_init_locked
 argument_list|(
 name|ctx
 argument_list|)
