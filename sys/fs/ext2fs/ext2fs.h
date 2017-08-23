@@ -1417,7 +1417,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* EXT2FS metadatas are stored in little-endian byte order. These macros  * helps reading these metadatas  */
+comment|/* EXT2FS metadata is stored in little-endian byte order. These macros  * help reading it.  */
 end_comment
 
 begin_define

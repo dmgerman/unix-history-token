@@ -758,7 +758,6 @@ name|e2di_gid_high
 operator|<<
 literal|16
 expr_stmt|;
-comment|/* XXX use memcpy */
 for|for
 control|(
 name|i
@@ -1165,7 +1164,6 @@ literal|16
 operator|&
 literal|0xffff
 expr_stmt|;
-comment|/* XXX use memcpy */
 for|for
 control|(
 name|i
