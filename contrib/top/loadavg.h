@@ -12,14 +12,14 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|mips
+name|__mips__
 argument_list|)
 operator|&&
 operator|!
 operator|(
 name|defined
 argument_list|(
-name|NetBSD
+name|__NetBSD__
 argument_list|)
 operator|||
 name|defined
