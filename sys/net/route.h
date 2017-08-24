@@ -111,28 +111,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RT_CACHING_CONTEXT
-value|0x1
-end_define
-
-begin_comment
-comment|/* XXX: not used anywhere */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RT_NORTREF
-value|0x2
-end_define
-
-begin_comment
-comment|/* doesn't hold reference on ro_rt */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|RT_L2_ME
 value|(1<< RT_L2_ME_BIT)
 end_define
@@ -1857,7 +1835,7 @@ name|RO_RTFREE
 parameter_list|(
 name|_ro
 parameter_list|)
-value|do {					\ 	if ((_ro)->ro_rt) {					\ 		if ((_ro)->ro_flags& RT_NORTREF) {		\ 			(_ro)->ro_flags&= ~RT_NORTREF;		\ 			(_ro)->ro_rt = NULL;			\ 			(_ro)->ro_lle = NULL;			\ 		} else {					\ 			RT_LOCK((_ro)->ro_rt);			\ 			RTFREE_LOCKED((_ro)->ro_rt);		\ 		}						\ 	}							\ } while (0)
+value|do {					\ 	if ((_ro)->ro_rt) {					\ 		RT_LOCK((_ro)->ro_rt);				\ 		RTFREE_LOCKED((_ro)->ro_rt);			\ 	}							\ } while (0)
 end_define
 
 begin_comment
