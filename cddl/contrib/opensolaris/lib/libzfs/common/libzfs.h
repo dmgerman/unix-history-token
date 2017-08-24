@@ -3440,6 +3440,17 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|zpool_read_all_labels
+parameter_list|(
+name|int
+parameter_list|,
+name|nvlist_t
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|zpool_clear_label
 parameter_list|(
 name|int
