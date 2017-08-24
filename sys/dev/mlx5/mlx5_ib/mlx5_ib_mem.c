@@ -21,6 +21,23 @@ directive|include
 file|"mlx5_ib.h"
 end_include
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|uintptr_t
+argument_list|)
+operator|==
+expr|sizeof
+operator|(
+name|unsigned
+name|long
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* @umem: umem object to scan  * @addr: ib virtual address requested by the user  * @count: number of PAGE_SIZE pages covered by umem  * @shift: page shift for the compound pages found in the region  * @ncont: number of compund pages  * @order: log2 of the number of compound pages  */
 end_comment
@@ -54,7 +71,8 @@ modifier|*
 name|order
 parameter_list|)
 block|{
-name|uintptr_t
+name|unsigned
+name|long
 name|tmp
 decl_stmt|;
 name|unsigned

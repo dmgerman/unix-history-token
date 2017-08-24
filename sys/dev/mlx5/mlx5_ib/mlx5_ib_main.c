@@ -4326,6 +4326,9 @@ name|dev
 argument_list|,
 literal|"request malformed, reqlen: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|reqlen
 argument_list|)
 expr_stmt|;
