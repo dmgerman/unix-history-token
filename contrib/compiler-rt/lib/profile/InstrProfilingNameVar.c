@@ -1,34 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- InstrProfilingNameVar.c - profile name variable setup --------------===//
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//                     The LLVM Compiler Infrastructure
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// This file is distributed under the University of Illinois Open Source
-end_comment
-
-begin_comment
-comment|// License. See LICENSE.TXT for details.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
+comment|/*===- InstrProfilingNameVar.c - profile name variable setup  -------------===*\ |* |*                     The LLVM Compiler Infrastructure |* |* This file is distributed under the University of Illinois Open Source |* License. See LICENSE.TXT for details. |* \*===----------------------------------------------------------------------===*/
 end_comment
 
 begin_include

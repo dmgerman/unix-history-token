@@ -4818,21 +4818,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief After parser warm-up, initialize the conditional stack from
-end_comment
-
-begin_comment
-comment|/// the preamble.
-end_comment
-
-begin_function_decl
-name|void
-name|replayPreambleConditionalStack
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Inform the preprocessor callbacks that processing is complete.
 end_comment
 
@@ -9685,6 +9670,21 @@ begin_label
 name|private
 label|:
 end_label
+
+begin_comment
+comment|/// \brief After processing predefined file, initialize the conditional stack from
+end_comment
+
+begin_comment
+comment|/// the preamble.
+end_comment
+
+begin_function_decl
+name|void
+name|replayPreambleConditionalStack
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// Macro handling.
