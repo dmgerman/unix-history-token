@@ -95,6 +95,10 @@ name|struct
 name|sockaddr_in
 name|sin
 decl_stmt|;
+name|struct
+name|linger
+name|linger
+decl_stmt|;
 name|socklen_t
 name|len
 decl_stmt|;
@@ -1069,15 +1073,34 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|close
+argument_list|(
+name|so
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 11 - close(): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ok 11 - accept\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* 	 * XXXGL: this doesn't belong to the test itself, but is known 	 * to examine rarely examined paths in the kernel.  Intentionally 	 * leave a socket on the incomplete queue, before the program 	 * exits. 	 */
+comment|/* 	 * Step 12: reset connection before accept filter allows it. 	 * In this case the connection must make it to the listen 	 * queue, but with ECONNABORTED code. 	 */
 name|so
 operator|=
 name|socket
@@ -1144,9 +1167,190 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|linger
+operator|.
+name|l_onoff
+operator|=
+literal|1
+expr_stmt|;
+name|linger
+operator|.
+name|l_linger
+operator|=
+literal|0
+expr_stmt|;
+name|ret
+operator|=
+name|setsockopt
+argument_list|(
+name|so
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_LINGER
+argument_list|,
+operator|&
+name|linger
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|linger
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 12 - setsockopt(SO_LINGER) failed with %d "
+literal|"(%s)"
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|close
+argument_list|(
+name|so
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 12 - close(): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|accept
+argument_list|(
+name|lso
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|!=
+name|ECONNABORTED
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 12 - accept #3 %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 12 - accept\n"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|1
+comment|/* 	 * XXXGL: this doesn't belong to the test itself, but is known 	 * to examine rarely examined paths in the kernel.  Intentionally 	 * leave a socket on the incomplete queue, before the program 	 * exits. 	 */
+name|so
+operator|=
+name|socket
+argument_list|(
+name|PF_INET
+argument_list|,
+name|SOCK_STREAM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|so
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 13 - socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|connect
+argument_list|(
+name|so
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|sin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 13 - connect %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Step 11: Remove accept filter.  After removing the accept filter 	 * getsockopt() should fail with EINVAL. 	 */
+comment|/* 	 * Step 12: Remove accept filter.  After removing the accept filter 	 * getsockopt() should fail with EINVAL. 	 */
 name|ret
 operator|=
 name|setsockopt
@@ -1173,7 +1377,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 12 - setsockopt() after listen() "
+literal|"not ok 13 - setsockopt() after listen() "
 literal|"failed with %d (%s)"
 argument_list|,
 name|errno
@@ -1230,7 +1434,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 12 - getsockopt() after removing "
+literal|"not ok 13 - getsockopt() after removing "
 literal|"the accept filter returns valid accept filter %s"
 argument_list|,
 name|afa
@@ -1249,7 +1453,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 12 - getsockopt() after removing the accept"
+literal|"not ok 13 - getsockopt() after removing the accept"
 literal|"filter failed with %d (%s)"
 argument_list|,
 name|errno
@@ -1260,14 +1464,31 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 12 - setsockopt\n"
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
 name|close
 argument_list|(
 name|lso
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"not ok 13 - close() of listening socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 13 - setsockopt\n"
 argument_list|)
 expr_stmt|;
 return|return
