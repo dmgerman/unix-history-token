@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
 end_include
 
 begin_include
@@ -1238,7 +1250,12 @@ index|[
 name|vcpuid
 index|]
 decl_stmt|;
-comment|/* Save host MSRs (if any) and restore guest MSRs */
+comment|/* Save host MSRs (in particular, KGSBASE) and restore guest MSRs */
+name|update_pcb_bases
+argument_list|(
+name|curpcb
+argument_list|)
+expr_stmt|;
 name|wrmsr
 argument_list|(
 name|MSR_LSTAR
