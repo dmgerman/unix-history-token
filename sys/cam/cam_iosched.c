@@ -668,8 +668,8 @@ value|1u
 define|#
 directive|define
 name|LAT_BUCKETS
-value|12
-comment|/*< 1ms< 2ms ... 512ms< 1024ms> 1024ms */
+value|15
+comment|/*< 1ms< 2ms ...< 2^(n-1)ms>= 2^(n-1)ms*/
 name|uint64_t
 name|latencies
 index|[
@@ -6208,7 +6208,11 @@ begin_decl_stmt
 specifier|static
 name|sbintime_t
 name|latencies
-index|[]
+index|[
+name|LAT_BUCKETS
+operator|-
+literal|1
+index|]
 init|=
 block|{
 name|SBT_1MS
@@ -6254,6 +6258,19 @@ block|,
 name|SBT_1MS
 operator|<<
 literal|10
+block|,
+name|SBT_1MS
+operator|<<
+literal|11
+block|,
+name|SBT_1MS
+operator|<<
+literal|12
+block|,
+name|SBT_1MS
+operator|<<
+literal|13
+comment|/* 8.192s */
 block|}
 decl_stmt|;
 end_decl_stmt
