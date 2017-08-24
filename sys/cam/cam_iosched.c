@@ -5958,13 +5958,16 @@ name|cam_iosched_io_metric_update
 argument_list|(
 name|isc
 argument_list|,
+name|cam_iosched_sbintime_t
+argument_list|(
 name|done_ccb
 operator|->
 name|ccb_h
 operator|.
 name|qos
 operator|.
-name|sim_data
+name|periph_data
+argument_list|)
 argument_list|,
 name|bp
 operator|->
