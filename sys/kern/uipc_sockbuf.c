@@ -1396,15 +1396,6 @@ condition|(
 name|ret
 operator|==
 name|SU_ISCONNECTED
-operator|&&
-operator|!
-operator|(
-name|so
-operator|->
-name|so_state
-operator|&
-name|SS_ISDISCONNECTED
-operator|)
 condition|)
 name|soisconnected
 argument_list|(

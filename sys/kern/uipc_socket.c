@@ -17085,6 +17085,11 @@ name|so
 argument_list|)
 condition|)
 block|{
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -17128,6 +17133,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 name|SOCK_UNLOCK
 argument_list|(
 name|so
