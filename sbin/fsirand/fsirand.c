@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/resource.h>
 end_include
 
@@ -432,10 +426,6 @@ name|bsize
 init|=
 name|DEV_BSIZE
 decl_stmt|;
-name|struct
-name|disklabel
-name|label
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -468,42 +458,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-comment|/* Get block size (usually 512) from disklabel if possible */
-if|if
-condition|(
-operator|!
-name|ignorelabel
-condition|)
-block|{
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|devfd
-argument_list|,
-name|DIOCGDINFO
-argument_list|,
-operator|&
-name|label
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|warn
-argument_list|(
-literal|"can't read disklabel, using sector size of %d"
-argument_list|,
-name|bsize
-argument_list|)
-expr_stmt|;
-else|else
-name|bsize
-operator|=
-name|label
-operator|.
-name|d_secsize
-expr_stmt|;
 block|}
 name|dp1
 operator|=
