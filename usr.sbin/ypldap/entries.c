@@ -325,6 +325,11 @@ name|sc_user_lines
 operator|=
 name|linep
 expr_stmt|;
+name|log_debug
+argument_list|(
+literal|"done pushing users"
+argument_list|)
+expr_stmt|;
 name|wrlen
 operator|=
 name|env
@@ -456,6 +461,11 @@ operator|->
 name|sc_group_lines
 operator|=
 name|linep
+expr_stmt|;
+name|log_debug
+argument_list|(
+literal|"done pushing groups"
+argument_list|)
 expr_stmt|;
 block|}
 end_function
