@@ -470,10 +470,10 @@ name|struct
 name|sigevent
 name|sev
 decl_stmt|;
-name|atf_tc_expect_fail
+name|atf_tc_expect_timeout
 argument_list|(
-literal|"Bug 220459 - lio_listio(2) doesn't support"
-literal|" SIGEV_THREAD"
+literal|"Bug 220398 - lio_listio(2) never sends"
+literal|"asynchronous notification if nent==0"
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_EQ
