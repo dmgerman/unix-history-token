@@ -3651,6 +3651,40 @@ literal|"\t{:no-signature-provided/%ju} "
 literal|"{N:/time%s no signature provided by segment}\n"
 argument_list|)
 expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"tcp-signature"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"pmtud"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_pmtud_blackhole_activated
+argument_list|,
+literal|"\t{:pmtud-activated/%ju} "
+literal|"{N:/Path MTU discovery black hole detection activation%s}\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_pmtud_blackhole_activated_min_mss
+argument_list|,
+literal|"\t{:pmtud-activated-min-mss/%ju} "
+literal|"{N:/Path MTU discovery black hole detection min MSS activation%s}\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_pmtud_blackhole_failed
+argument_list|,
+literal|"\t{:pmtud-failed/%ju} "
+literal|"{N:/Path MTU discovery black hole detection failure%s}\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
@@ -3668,7 +3702,7 @@ directive|undef
 name|p3
 name|xo_close_container
 argument_list|(
-literal|"tcp-signature"
+literal|"pmtud"
 argument_list|)
 expr_stmt|;
 name|xo_open_container

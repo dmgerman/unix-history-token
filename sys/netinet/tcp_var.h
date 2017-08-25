@@ -2212,6 +2212,19 @@ name|uint64_t
 name|tcps_sig_err_nosigopt
 decl_stmt|;
 comment|/* No signature provided by segment */
+comment|/* Path MTU Discovery Black Hole Detection related stats */
+name|uint64_t
+name|tcps_pmtud_blackhole_activated
+decl_stmt|;
+comment|/* Black Hole Count */
+name|uint64_t
+name|tcps_pmtud_blackhole_activated_min_mss
+decl_stmt|;
+comment|/* BH at min MSS Count */
+name|uint64_t
+name|tcps_pmtud_blackhole_failed
+decl_stmt|;
+comment|/* Black Hole Failure Count */
 name|uint64_t
 name|_pad
 index|[
