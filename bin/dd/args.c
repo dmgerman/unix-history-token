@@ -989,6 +989,9 @@ literal|1
 argument_list|,
 literal|"bs must be between 1 and %zd"
 argument_list|,
+operator|(
+name|ssize_t
+operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
@@ -1044,6 +1047,9 @@ literal|1
 argument_list|,
 literal|"cbs must be between 1 and %zd"
 argument_list|,
+operator|(
+name|ssize_t
+operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
@@ -1229,6 +1235,9 @@ literal|1
 argument_list|,
 literal|"ibs must be between 1 and %zd"
 argument_list|,
+operator|(
+name|ssize_t
+operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
@@ -1310,6 +1319,9 @@ literal|1
 argument_list|,
 literal|"obs must be between 1 and %zd"
 argument_list|,
+operator|(
+name|ssize_t
+operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
