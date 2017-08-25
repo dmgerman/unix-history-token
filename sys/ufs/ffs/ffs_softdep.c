@@ -64637,13 +64637,9 @@ operator|==
 name|VCHR
 condition|)
 block|{
-name|VOP_LOCK
+name|VI_LOCK
 argument_list|(
 name|vp
-argument_list|,
-name|LK_RETRY
-operator||
-name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 name|mp
@@ -64662,11 +64658,9 @@ name|si_mountpt
 else|:
 name|NULL
 expr_stmt|;
-name|VOP_UNLOCK
+name|VI_UNLOCK
 argument_list|(
 name|vp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
