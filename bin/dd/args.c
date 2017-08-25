@@ -53,6 +53,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -981,11 +987,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"bs must be between 1 and %jd"
+literal|"bs must be between 1 and %zd"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
@@ -1039,11 +1042,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"cbs must be between 1 and %jd"
+literal|"cbs must be between 1 and %zd"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
@@ -1067,14 +1067,11 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|intmax_t
+name|uintmax_t
 name|res
 decl_stmt|;
 name|res
 operator|=
-operator|(
-name|intmax_t
-operator|)
 name|get_num
 argument_list|(
 name|arg
@@ -1083,14 +1080,18 @@ expr_stmt|;
 if|if
 condition|(
 name|res
-operator|<
-literal|0
+operator|==
+name|UINTMAX_MAX
 condition|)
-name|errx
+name|errc
 argument_list|(
 literal|1
 argument_list|,
-literal|"count cannot be negative"
+name|ERANGE
+argument_list|,
+literal|"%s"
+argument_list|,
+name|oper
 argument_list|)
 expr_stmt|;
 if|if
@@ -1101,18 +1102,11 @@ literal|0
 condition|)
 name|cpy_cnt
 operator|=
-operator|(
-name|uintmax_t
-operator|)
-operator|-
-literal|1
+name|UINTMAX_MAX
 expr_stmt|;
 else|else
 name|cpy_cnt
 operator|=
-operator|(
-name|uintmax_t
-operator|)
 name|res
 expr_stmt|;
 block|}
@@ -1145,13 +1139,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"files must be between 1 and %jd"
+literal|"files must be between 1 and %zu"
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-operator|-
-literal|1
+name|SIZE_MAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -1237,11 +1227,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"ibs must be between 1 and %jd"
+literal|"ibs must be between 1 and %zd"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
@@ -1321,11 +1308,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"obs must be between 1 and %jd"
+literal|"obs must be between 1 and %zd"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
