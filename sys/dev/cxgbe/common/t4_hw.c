@@ -999,8 +999,8 @@ name|CH_ERR
 argument_list|(
 name|adap
 argument_list|,
-literal|"found VALID command in mbox %u: "
-literal|"%llx %llx %llx %llx %llx %llx %llx %llx\n"
+literal|"found VALID command in mbox %u: %016llx %016llx "
+literal|"%016llx %016llx %016llx %016llx %016llx %016llx\n"
 argument_list|,
 name|mbox
 argument_list|,
