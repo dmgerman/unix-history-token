@@ -135,8 +135,8 @@ name|__packed
 union|;
 end_union
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -145,9 +145,11 @@ name|cap_lo_register
 argument_list|)
 operator|==
 literal|4
+argument_list|,
+literal|"bad size for cap_lo_register"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_union
 union|union
@@ -211,8 +213,8 @@ name|__packed
 union|;
 end_union
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -221,9 +223,11 @@ name|cap_hi_register
 argument_list|)
 operator|==
 literal|4
+argument_list|,
+literal|"bad size of cap_hi_register"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_union
 union|union
@@ -295,8 +299,8 @@ name|__packed
 union|;
 end_union
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -305,9 +309,11 @@ name|cc_register
 argument_list|)
 operator|==
 literal|4
+argument_list|,
+literal|"bad size for cc_register"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_enum
 enum|enum
@@ -365,8 +371,8 @@ name|__packed
 union|;
 end_union
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -375,9 +381,11 @@ name|csts_register
 argument_list|)
 operator|==
 literal|4
+argument_list|,
+literal|"bad size for csts_register"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_enum
 enum|enum
@@ -438,8 +446,8 @@ name|__packed
 union|;
 end_union
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -448,9 +456,11 @@ name|aqa_register
 argument_list|)
 operator|==
 literal|4
+argument_list|,
+literal|"bad size for aqa_resgister"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -534,8 +544,8 @@ name|__packed
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -544,9 +554,11 @@ name|nvme_registers
 argument_list|)
 operator|==
 literal|0x1008
+argument_list|,
+literal|"bad size for nvme_registers"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -631,8 +643,8 @@ name|__packed
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -643,9 +655,11 @@ operator|==
 literal|16
 operator|*
 literal|4
+argument_list|,
+literal|"bad size for nvme_command"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -691,8 +705,8 @@ name|__packed
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -701,9 +715,11 @@ name|nvme_status
 argument_list|)
 operator|==
 literal|2
+argument_list|,
+literal|"bad size for nvme_status"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -741,8 +757,8 @@ name|__packed
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -753,9 +769,11 @@ operator|==
 literal|4
 operator|*
 literal|4
+argument_list|,
+literal|"bad size for nvme_completion"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -775,8 +793,8 @@ name|__packed
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -785,9 +803,11 @@ name|nvme_dsm_range
 argument_list|)
 operator|==
 literal|16
+argument_list|,
+literal|"bad size for nvme_dsm_ranage"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_comment
 comment|/* status code types */
@@ -1348,8 +1368,8 @@ name|__packed
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1358,9 +1378,11 @@ name|nvme_power_state
 argument_list|)
 operator|==
 literal|32
+argument_list|,
+literal|"bad size for nvme_power_state"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_define
 define|#
@@ -1726,8 +1748,8 @@ argument_list|)
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1736,9 +1758,11 @@ name|nvme_controller_data
 argument_list|)
 operator|==
 literal|4096
+argument_list|,
+literal|"bad size for nvme_controller_data"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -1946,8 +1970,8 @@ argument_list|)
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1956,9 +1980,11 @@ name|nvme_namespace_data
 argument_list|)
 operator|==
 literal|4096
+argument_list|,
+literal|"bad size for nvme_namepsace_data"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_enum
 enum|enum
@@ -2065,8 +2091,8 @@ argument_list|)
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2075,9 +2101,11 @@ name|nvme_error_information_entry
 argument_list|)
 operator|==
 literal|64
+argument_list|,
+literal|"bad size for nvme_error_information_entry"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_union
 union|union
@@ -2127,8 +2155,8 @@ name|__packed
 union|;
 end_union
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2137,9 +2165,11 @@ name|nvme_critical_warning_state
 argument_list|)
 operator|==
 literal|1
+argument_list|,
+literal|"bad size for nvme_critical_warning_state"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -2259,8 +2289,8 @@ argument_list|)
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2269,9 +2299,11 @@ name|nvme_health_information_page
 argument_list|)
 operator|==
 literal|512
+argument_list|,
+literal|"bad size for nvme_health_information_page"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -2322,8 +2354,8 @@ argument_list|)
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2332,9 +2364,11 @@ name|nvme_firmware_page
 argument_list|)
 operator|==
 literal|512
+argument_list|,
+literal|"bad size for nvme_firmware_page"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -2379,8 +2413,8 @@ argument_list|)
 struct|;
 end_struct
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2391,9 +2425,11 @@ operator|==
 literal|13
 operator|*
 literal|8
+argument_list|,
+literal|"bad size for intel_log_temp_stats"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+assert|;
+end_assert
 
 begin_define
 define|#
