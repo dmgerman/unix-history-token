@@ -1188,7 +1188,32 @@ name|NVME_FEAT_ASYNC_EVENT_CONFIGURATION
 init|=
 literal|0x0B
 block|,
-comment|/* 0x0C-0x7F - reserved */
+name|NVME_FEAT_AUTONOMOUS_POWER_STATE_TRANSITION
+init|=
+literal|0x0C
+block|,
+name|NVME_FEAT_HOST_MEMORY_BUFFER
+init|=
+literal|0x0D
+block|,
+name|NVME_FEAT_TIMESTAMP
+init|=
+literal|0x0E
+block|,
+name|NVME_FEAT_KEEP_ALIVE_TIMER
+init|=
+literal|0x0F
+block|,
+name|NVME_FEAT_HOST_CONTROLLED_THERMAL_MGMT
+init|=
+literal|0x10
+block|,
+name|NVME_FEAT_NON_OP_POWER_STATE_CONFIG
+init|=
+literal|0x11
+block|,
+comment|/* 0x12-0x77 - reserved */
+comment|/* 0x78-0x7f - NVMe Management Interface */
 name|NVME_FEAT_SOFTWARE_PROGRESS_MARKER
 init|=
 literal|0x80
