@@ -3459,14 +3459,14 @@ operator|.
 name|isc_nrxd_max
 operator|=
 block|{
-name|EM_MAX_RXD
+name|IGB_MAX_RXD
 block|}
 block|,
 operator|.
 name|isc_ntxd_max
 operator|=
 block|{
-name|EM_MAX_TXD
+name|IGB_MAX_TXD
 block|}
 block|,
 operator|.
