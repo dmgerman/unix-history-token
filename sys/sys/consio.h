@@ -622,6 +622,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|CONS_CHARCURSOR_COLORS
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_MOUSECURSOR_COLORS
+value|(1<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CONS_DEFAULT_CURSOR
 value|(1<< 28)
 end_define
