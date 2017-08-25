@@ -416,10 +416,19 @@ begin_decl_stmt
 specifier|static
 name|void
 modifier|*
-name|kernel_console_ts
+name|sc_kts
 index|[
 name|MAXCPU
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sc_term_sw
+modifier|*
+name|sc_ktsw
 decl_stmt|;
 end_decl_stmt
 
@@ -3471,6 +3480,12 @@ operator|>
 literal|0
 condition|)
 block|{
+name|sc_ktsw
+operator|=
+name|sc_console
+operator|->
+name|tsw
+expr_stmt|;
 comment|/* assert(sc_console->ts != NULL); */
 name|oldts
 operator|=
@@ -3551,7 +3566,7 @@ argument_list|,
 name|SC_KERNEL_CONS_REV_ATTR
 argument_list|)
 expr_stmt|;
-name|kernel_console_ts
+name|sc_kts
 index|[
 name|i
 index|]
@@ -9854,6 +9869,13 @@ comment|/* XXX */
 block|sc_clear_screen(sc_console);     sccnupdate(sc_console);
 endif|#
 directive|endif
+if|if
+condition|(
+name|sc_ktsw
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -9870,12 +9892,12 @@ control|)
 block|{
 name|ts
 operator|=
-name|kernel_console_ts
+name|sc_kts
 index|[
 name|i
 index|]
 expr_stmt|;
-name|kernel_console_ts
+name|sc_kts
 index|[
 name|i
 index|]
@@ -9884,9 +9906,7 @@ name|NULL
 expr_stmt|;
 call|(
 modifier|*
-name|sc_console
-operator|->
-name|tsw
+name|sc_ktsw
 operator|->
 name|te_term
 call|)
@@ -9903,6 +9923,11 @@ name|ts
 argument_list|,
 name|M_DEVBUF
 argument_list|)
+expr_stmt|;
+block|}
+name|sc_ktsw
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 name|scterm
@@ -11025,6 +11050,12 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* Console output has a per-CPU "input" state.  Switch for it. */
+name|oldtsw
+operator|=
+name|scp
+operator|->
+name|tsw
+expr_stmt|;
 name|oldts
 operator|=
 name|scp
@@ -11033,7 +11064,7 @@ name|ts
 expr_stmt|;
 name|ts
 operator|=
-name|kernel_console_ts
+name|sc_kts
 index|[
 name|PCPU_GET
 argument_list|(
@@ -11048,6 +11079,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|scp
+operator|->
+name|tsw
+operator|=
+name|sc_ktsw
+expr_stmt|;
 name|scp
 operator|->
 name|ts
@@ -11075,6 +11112,12 @@ name|buf
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|scp
+operator|->
+name|tsw
+operator|=
+name|oldtsw
 expr_stmt|;
 name|scp
 operator|->
