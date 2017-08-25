@@ -10843,6 +10843,11 @@ decl_stmt|,
 modifier|*
 name|ts
 decl_stmt|;
+name|struct
+name|sc_term_sw
+modifier|*
+name|oldtsw
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|SC_NO_HISTORY
