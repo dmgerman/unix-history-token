@@ -1933,7 +1933,7 @@ name|nvme_namespace
 modifier|*
 name|ns
 decl_stmt|;
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 for|for

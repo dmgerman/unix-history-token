@@ -685,10 +685,10 @@ name|struct
 name|nvme_namespace_data
 name|data
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|id
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|flags
 decl_stmt|;
 name|struct
@@ -1057,7 +1057,7 @@ name|nvme_controller
 modifier|*
 name|ctrlr
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|,
 name|void
@@ -1702,7 +1702,7 @@ name|nvme_namespace
 modifier|*
 name|ns
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|id
 parameter_list|,
 name|struct
