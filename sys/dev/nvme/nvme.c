@@ -1021,6 +1021,12 @@ name|status
 operator|)
 return|;
 block|}
+comment|/* 	 * Enable busmastering so the completion status messages can 	 * be busmastered back to the host. 	 */
+name|pci_enable_busmaster
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Reset controller twice to ensure we do a transition from cc.en==1 	 *  to cc.en==0.  This is because we don't really know what status 	 *  the controller was left in when boot handed off to OS. 	 */
 name|status
 operator|=
@@ -1076,11 +1082,6 @@ name|status
 operator|)
 return|;
 block|}
-name|pci_enable_busmaster
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|ctrlr
 operator|->
 name|config_hook
