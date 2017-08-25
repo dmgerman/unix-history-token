@@ -911,12 +911,12 @@ index|[]
 parameter_list|)
 block|{
 name|char
-name|c
-decl_stmt|,
 modifier|*
 name|prog
 decl_stmt|;
 name|int
+name|c
+decl_stmt|,
 name|sleep_type
 decl_stmt|;
 name|prog
