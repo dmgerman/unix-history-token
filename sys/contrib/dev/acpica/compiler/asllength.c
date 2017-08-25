@@ -410,7 +410,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 condition|)
 block|{
 name|Op
@@ -708,7 +708,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_NAME_INTERNALIZED
+name|OP_NAME_INTERNALIZED
 condition|)
 block|{
 break|break;
@@ -786,7 +786,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_NAME_INTERNALIZED
+name|OP_NAME_INTERNALIZED
 expr_stmt|;
 name|Op
 operator|->

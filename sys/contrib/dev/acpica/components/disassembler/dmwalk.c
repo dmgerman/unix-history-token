@@ -57,13 +57,6 @@ literal|"dmwalk"
 argument_list|)
 end_macro
 
-begin_define
-define|#
-directive|define
-name|DB_FULL_OP_INFO
-value|"[%4.4s] @%5.5X #%4.4X:  "
-end_define
-
 begin_comment
 comment|/* Stub for non-compiler code */
 end_comment
@@ -1126,21 +1119,6 @@ return|;
 block|}
 if|if
 condition|(
-name|AcpiDmIsTempName
-argument_list|(
-name|Op
-argument_list|)
-condition|)
-block|{
-comment|/* Ignore compiler generated temporary names */
-return|return
-operator|(
-name|AE_CTRL_DEPTH
-operator|)
-return|;
-block|}
-if|if
-condition|(
 name|Op
 operator|->
 name|Common
@@ -1294,29 +1272,14 @@ condition|(
 name|AcpiGbl_DmOpt_Verbose
 condition|)
 block|{
+if|if
+condition|(
+name|AcpiGbl_CmSingleStep
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-name|DB_FULL_OP_INFO
-argument_list|,
-operator|(
-name|Info
-operator|->
-name|WalkState
-operator|->
-name|MethodNode
-condition|?
-name|Info
-operator|->
-name|WalkState
-operator|->
-name|MethodNode
-operator|->
-name|Name
-operator|.
-name|Ascii
-else|:
-literal|"   "
-operator|)
+literal|"%5.5X/%4.4X: "
 argument_list|,
 name|AmlOffset
 argument_list|,
@@ -1330,6 +1293,26 @@ operator|.
 name|AmlOpcode
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"AML Offset %5.5X, Opcode %4.4X: "
+argument_list|,
+name|AmlOffset
+argument_list|,
+operator|(
+name|UINT32
+operator|)
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -1761,10 +1744,6 @@ condition|)
 block|{
 name|AcpiDmNamestring
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|Op
 operator|->
 name|Named

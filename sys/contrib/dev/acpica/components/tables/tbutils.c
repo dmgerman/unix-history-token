@@ -262,7 +262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbCopyDsdt  *  * PARAMETERS:  TableDesc           - Installed table to copy  *  * RETURN:      None  *  * DESCRIPTION: Implements a subsystem option to copy the DSDT to local memory.  *              Some very bad BIOSs are known to either corrupt the DSDT or  *              install a new, bad DSDT. This copy works around the problem.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbCopyDsdt  *  * PARAMETERS:  TableIndex          - Index of installed table to copy  *  * RETURN:      The copied DSDT  *  * DESCRIPTION: Implements a subsystem option to copy the DSDT to local memory.  *              Some very bad BIOSs are known to either corrupt the DSDT or  *              install a new, bad DSDT. This copy works around the problem.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -486,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseRootTable  *  * PARAMETERS:  Rsdp                    - Pointer to the RSDP  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to parse the Root System Description  *              Table (RSDT or XSDT)  *  * NOTE:        Tables are mapped (not copied) for efficiency. The FACS must  *              be mapped and cannot be copied because it contains the actual  *              memory location of the ACPI Global Lock.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseRootTable  *  * PARAMETERS:  RsdpAddress         - Pointer to the RSDP  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to parse the Root System Description  *              Table (RSDT or XSDT)  *  * NOTE:        Tables are mapped (not copied) for efficiency. The FACS must  *              be mapped and cannot be copied because it contains the actual  *              memory location of the ACPI Global Lock.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -965,41 +965,42 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|TableDesc
-operator|->
-name|ValidationCount
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|TableDesc
 operator|->
 name|ValidationCount
-operator|==
-literal|0
+operator|<
+name|ACPI_MAX_TABLE_VALIDATIONS
 condition|)
 block|{
-name|ACPI_ERROR
+name|TableDesc
+operator|->
+name|ValidationCount
+operator|++
+expr_stmt|;
+comment|/*          * Detect ValidationCount overflows to ensure that the warning          * message will only be printed once.          */
+if|if
+condition|(
+name|TableDesc
+operator|->
+name|ValidationCount
+operator|>=
+name|ACPI_MAX_TABLE_VALIDATIONS
+condition|)
+block|{
+name|ACPI_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Table %p, Validation count is zero after increment\n"
+literal|"Table %p, Validation count overflows\n"
 operator|,
 name|TableDesc
 operator|)
 argument_list|)
 expr_stmt|;
-name|TableDesc
-operator|->
-name|ValidationCount
-operator|--
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_LIMIT
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 operator|*
 name|OutTable
@@ -1039,8 +1040,23 @@ condition|(
 name|TableDesc
 operator|->
 name|ValidationCount
-operator|==
-literal|0
+operator|<
+name|ACPI_MAX_TABLE_VALIDATIONS
+condition|)
+block|{
+name|TableDesc
+operator|->
+name|ValidationCount
+operator|--
+expr_stmt|;
+comment|/*          * Detect ValidationCount underflows to ensure that the warning          * message will only be printed once.          */
+if|if
+condition|(
+name|TableDesc
+operator|->
+name|ValidationCount
+operator|>=
+name|ACPI_MAX_TABLE_VALIDATIONS
 condition|)
 block|{
 name|ACPI_WARNING
@@ -1048,7 +1064,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Table %p, Validation count is zero before decrement\n"
+literal|"Table %p, Validation count underflows\n"
 operator|,
 name|TableDesc
 operator|)
@@ -1057,11 +1073,7 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-name|TableDesc
-operator|->
-name|ValidationCount
-operator|--
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|TableDesc

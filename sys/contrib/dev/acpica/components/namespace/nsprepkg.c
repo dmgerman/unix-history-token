@@ -1655,6 +1655,21 @@ block|}
 break|break;
 default|default:
 comment|/* Should not get here, type was validated by caller */
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid Package type: %X"
+operator|,
+name|Package
+operator|->
+name|RetInfo
+operator|.
+name|Type
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_AML_INTERNAL

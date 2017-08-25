@@ -1118,7 +1118,7 @@ block|}
 comment|/* Running compiler or disassembler? */
 if|if
 condition|(
-name|Gbl_DisasmFlag
+name|AcpiGbl_DisasmFlag
 condition|)
 block|{
 name|UtilityName
@@ -1583,6 +1583,9 @@ name|DeleteAmlFile
 init|=
 name|FALSE
 decl_stmt|;
+name|AslCheckExpectedExceptions
+argument_list|()
+expr_stmt|;
 name|AePrintErrorLog
 argument_list|(
 name|ASL_FILE_STDERR

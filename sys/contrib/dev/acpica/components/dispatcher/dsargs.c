@@ -120,9 +120,11 @@ name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 name|DsExecuteArguments
+argument_list|,
+name|AmlStart
 argument_list|)
 expr_stmt|;
 comment|/* Allocate a new parser op to be the root of the parsed tree */
@@ -831,7 +833,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Package Arg Init\n"
+literal|"Package Argument Init, AML Ptr: %p\n"
+operator|,
+name|ObjDesc
+operator|->
+name|Package
+operator|.
+name|AmlStart
 operator|)
 argument_list|)
 expr_stmt|;

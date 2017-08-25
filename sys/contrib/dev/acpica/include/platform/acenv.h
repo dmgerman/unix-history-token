@@ -993,6 +993,33 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Use ordered initialization if compiler doesn't support designated. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_STRUCT_INIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_STRUCT_INIT
+parameter_list|(
+name|field
+parameter_list|,
+name|value
+parameter_list|)
+value|value
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Configurable calling conventions:  *  * ACPI_SYSTEM_XFACE        - Interfaces to host OS (handlers, threads)  * ACPI_EXTERNAL_XFACE      - External ACPI interfaces  * ACPI_INTERNAL_XFACE      - Internal ACPI interfaces  * ACPI_INTERNAL_VAR_XFACE  - Internal variable-parameter list interfaces  */
 end_comment
 

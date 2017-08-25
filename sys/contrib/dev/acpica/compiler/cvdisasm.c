@@ -37,6 +37,10 @@ directive|include
 file|<contrib/dev/acpica/include/acconvert.h>
 end_include
 
+begin_comment
+comment|/* Local prototypes */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -145,7 +149,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvListIsSingleton  *  * PARAMETERS:  CommentList -- check to see if this is a single item list.  *  * RETURN:      BOOLEAN  *  * DESCRIPTION: Returns TRUE if CommentList only contains 1 node.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvListIsSingleton  *  * PARAMETERS:  CommentList     - check to see if this is a single item list.  *  * RETURN:      BOOLEAN  *  * DESCRIPTION: Returns TRUE if CommentList only contains 1 node.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -165,7 +169,9 @@ name|CommentList
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 elseif|else
@@ -177,11 +183,15 @@ name|Next
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -380,6 +390,10 @@ operator|*
 name|CommentToPrint
 condition|)
 block|{
+name|CommentExists
+operator|=
+name|TRUE
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"%s"
@@ -413,7 +427,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvCloseBraceWriteComment  *  * PARAMETERS:  Op  *              Level  *  * RETURN:      none  *  * DESCRIPTION: Print a close brace } and any open brace comments associated  *              with this parse object.  *              This is referred as ASL_CV_CLOSE_BRACE.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvCloseBraceWriteComment  *  * PARAMETERS:  Op  *              Level  *  * RETURN:      None  *  * DESCRIPTION: Print a close brace } and any open brace comments associated  *              with this parse object.  *              This is referred as ASL_CV_CLOSE_BRACE.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -472,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvCloseParenWriteComment  *  * PARAMETERS:  Op  *              Level  *  * RETURN:      none  *  * DESCRIPTION: Print a closing paren ) and any end node comments associated  *              with this parse object.  *              This is referred as ASL_CV_CLOSE_PAREN.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvCloseParenWriteComment  *  * PARAMETERS:  Op  *              Level  *  * RETURN:      None  *  * DESCRIPTION: Print a closing paren ) and any end node comments associated  *              with this parse object.  *              This is referred as ASL_CV_CLOSE_PAREN.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -632,11 +646,15 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 end_function
@@ -736,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvSwitchFiles  *  * PARAMETERS:  Level - indentation level  *              Op  *  * RETURN:      None  *  * DESCRIPTION: Switch the outputfile and write ASL Include statement. Note,  *              this function emits actual ASL code rather than comments.  *              This is referred as ASL_CV_SWITCH_FILES.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvSwitchFiles  *  * PARAMETERS:  Level                   - indentation level  *              Op  *  * RETURN:      None  *  * DESCRIPTION: Switch the outputfile and write ASL Include statement. Note,  *              this function emits actual ASL code rather than comments.  *              This is referred as ASL_CV_SWITCH_FILES.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -764,6 +782,10 @@ decl_stmt|;
 name|ACPI_FILE_NODE
 modifier|*
 name|FNode
+decl_stmt|;
+name|ACPI_FILE_NODE
+modifier|*
+name|Current
 decl_stmt|;
 name|CvDbgPrint
 argument_list|(
@@ -832,18 +854,22 @@ name|AslAbort
 argument_list|()
 expr_stmt|;
 block|}
+name|Current
+operator|=
+name|FNode
+expr_stmt|;
 comment|/*      * If the previous file is a descendent of the current file,      * make sure that Include statements from the current file      * to the previous have been emitted.      */
 while|while
 condition|(
-name|FNode
+name|Current
 operator|&&
-name|FNode
+name|Current
 operator|->
 name|Parent
 operator|&&
 name|AcpiUtStricmp
 argument_list|(
-name|FNode
+name|Current
 operator|->
 name|Filename
 argument_list|,
@@ -853,28 +879,19 @@ condition|)
 block|{
 name|CvPrintInclude
 argument_list|(
-name|FNode
+name|Current
 argument_list|,
 name|Level
 argument_list|)
 expr_stmt|;
-name|FNode
+name|Current
 operator|=
-name|FNode
+name|Current
 operator|->
 name|Parent
 expr_stmt|;
 block|}
-comment|/* Redirect output to the Op->Common.CvFilename */
-name|FNode
-operator|=
-name|CvFilenameExists
-argument_list|(
-name|Filename
-argument_list|,
-name|AcpiGbl_FileTreeRoot
-argument_list|)
-expr_stmt|;
+comment|/* Redirect output to Op->Common.CvFilename */
 name|AcpiOsRedirectOutput
 argument_list|(
 name|FNode

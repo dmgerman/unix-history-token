@@ -1186,7 +1186,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_COMPILER_EMITTED
+name|OP_COMPILER_EMITTED
 condition|)
 block|{
 return|return

@@ -150,7 +150,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%s] (Node %p)"
+literal|"%s"
 argument_list|,
 operator|(
 name|char
@@ -159,8 +159,6 @@ operator|)
 name|Buffer
 operator|.
 name|Pointer
-argument_list|,
-name|Node
 argument_list|)
 expr_stmt|;
 name|ACPI_FREE

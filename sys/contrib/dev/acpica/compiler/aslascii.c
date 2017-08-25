@@ -94,7 +94,7 @@ block|{
 name|UINT8
 name|Byte
 decl_stmt|;
-name|ACPI_SIZE
+name|UINT32
 name|BadBytes
 init|=
 literal|0
@@ -352,6 +352,15 @@ condition|(
 name|BadBytes
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"File appears to be binary: found %u non-ASCII characters, disassembling\n"
+argument_list|,
+name|BadBytes
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|DisplayErrors

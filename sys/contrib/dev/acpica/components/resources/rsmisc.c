@@ -1908,17 +1908,6 @@ name|Value
 argument_list|)
 expr_stmt|;
 comment|/* Set vendor offset only if there is vendor data */
-if|if
-condition|(
-name|Resource
-operator|->
-name|Data
-operator|.
-name|Gpio
-operator|.
-name|VendorLength
-condition|)
-block|{
 name|ACPI_SET16
 argument_list|(
 name|Target
@@ -1926,7 +1915,6 @@ argument_list|,
 name|AmlLength
 argument_list|)
 expr_stmt|;
-block|}
 name|AcpiRsSetResourceLength
 argument_list|(
 name|AmlLength

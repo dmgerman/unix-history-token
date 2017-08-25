@@ -212,7 +212,7 @@ literal|0x03FFFFFF
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"[ACPI Debug T=0x%8.8X] %*s"
+literal|"ACPI Debug: T=0x%8.8X %*s"
 argument_list|,
 name|Timer
 argument_list|,
@@ -226,7 +226,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[ACPI Debug] %*s"
+literal|"ACPI Debug: %*s"
 argument_list|,
 name|Level
 argument_list|,

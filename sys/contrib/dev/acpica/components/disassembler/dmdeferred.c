@@ -107,8 +107,10 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|DmParseDeferredOps
+argument_list|)
 expr_stmt|;
 comment|/* Traverse the entire parse tree */
 while|while
@@ -199,11 +201,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 comment|/* We don't need to do anything for these deferred opcodes */
@@ -263,11 +265,11 @@ name|Op
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

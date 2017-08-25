@@ -840,6 +840,21 @@ name|ObjDesc
 argument_list|)
 expr_stmt|;
 block|}
+switch|switch
+condition|(
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_DEVICE
+case|:
+case|case
+name|ACPI_TYPE_THERMAL
+case|:
+comment|/* These types have no attached subobject */
+break|break;
+default|default:
+comment|/* All other types require a subobject */
 if|if
 condition|(
 operator|!
@@ -865,6 +880,8 @@ argument_list|(
 name|AE_AML_UNINITIALIZED_NODE
 argument_list|)
 expr_stmt|;
+block|}
+break|break;
 block|}
 break|break;
 default|default:

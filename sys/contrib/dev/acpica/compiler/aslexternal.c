@@ -158,7 +158,7 @@ expr_stmt|;
 comment|/* Create new list node of arbitrary type */
 name|ListOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_DEFAULT_ARG
 argument_list|)
@@ -316,7 +316,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_VISITED
+name|OP_VISITED
 condition|)
 block|{
 name|Next
@@ -389,7 +389,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_VISITED
+name|OP_VISITED
 expr_stmt|;
 comment|/*          * Since we will reposition Externals to the Root, set Namepath          * to the fully qualified name and recalculate the aml length          */
 name|Status
@@ -726,6 +726,9 @@ decl_stmt|;
 name|ACPI_OBJECT_TYPE
 name|ObjType
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
@@ -855,6 +858,8 @@ name|ExternalName
 operator|=
 name|ExternalName
 expr_stmt|;
+name|Status
+operator|=
 name|UtInternalizeName
 argument_list|(
 name|ExternalName
@@ -869,6 +874,27 @@ operator|.
 name|String
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_COMPILER_INTERNAL
+argument_list|,
+name|Next
+argument_list|,
+literal|"Could not internalize namestring"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|Next
 operator|->
 name|Asl
@@ -1136,7 +1162,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_VISITED
+name|OP_VISITED
 operator|)
 condition|)
 block|{
@@ -1263,7 +1289,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|=
-name|NODE_AML_PACKAGE
+name|OP_AML_PACKAGE
 expr_stmt|;
 name|UtSetParseOpName
 argument_list|(
@@ -1273,7 +1299,7 @@ expr_stmt|;
 comment|/* Create a Zero op for the If predicate */
 name|PredicateOp
 operator|=
-name|TrAllocateNode
+name|TrAllocateOp
 argument_list|(
 name|PARSEOP_ZERO
 argument_list|)

@@ -1093,6 +1093,26 @@ index|]
 expr_stmt|;
 break|break;
 default|default:
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid object type: %X"
+operator|,
+operator|(
+name|Operand
+index|[
+literal|0
+index|]
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_INTERNAL

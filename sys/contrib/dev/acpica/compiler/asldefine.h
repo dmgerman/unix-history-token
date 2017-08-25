@@ -61,8 +61,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASL_PREFIX
+value|"iASL: "
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASL_COMPLIANCE
-value|"Supports ACPI Specification Revision 6.1"
+value|"Supports ACPI Specification Revision 6.2"
 end_define
 
 begin_comment
@@ -601,7 +608,7 @@ define|#
 directive|define
 name|ASL_PARSE_TREE_DEBUG2
 define|\
-value|" %08X %04X %04X %01X     %04X  %04X %05X  %05X   "\     "%08X %08X %08X %08X %08X %08X %04X  %02d  %5d %5d %5d %5d\n"
+value|" %08X %04X %04X %01X     %04X  %04X %05X  %05X   "\     "%08X %08X %08X %08X %08X %08X %04X  %02d  %5d %5d %5d %5d"
 end_define
 
 begin_comment

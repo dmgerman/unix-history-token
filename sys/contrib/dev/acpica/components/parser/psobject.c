@@ -252,6 +252,15 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Aborting disassembly, AML byte code is corrupt"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Dump the context surrounding the invalid opcode */
 name|AcpiUtDumpBuffer
 argument_list|(
@@ -288,6 +297,12 @@ expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|" */\n"
+argument_list|)
+expr_stmt|;
+comment|/*              * Just abort the disassembly, cannot continue because the              * parser is essentially lost. The disassembler can then              * randomly fail because an ill-constructed parse tree              * can result.              */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_BAD_OPCODE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1006,6 +1021,20 @@ name|AE_CTRL_PARSE_CONTINUE
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Create Op structure and append to parent's argument list */
 name|WalkState
 operator|->
@@ -1071,6 +1100,60 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+if|if
+condition|(
+name|AcpiGbl_DisasmFlag
+operator|&&
+name|WalkState
+operator|->
+name|Opcode
+operator|==
+name|AML_EXTERNAL_OP
+operator|&&
+name|Status
+operator|==
+name|AE_NOT_FOUND
+condition|)
+block|{
+comment|/*              * If parsing of AML_EXTERNAL_OP's name path fails, then skip              * past this opcode and keep parsing. This is a much better              * alternative than to abort the entire disassembler. At this              * point, the ParserState is at the end of the namepath of the              * external declaration opcode. Setting WalkState->Aml to              * WalkState->ParserState.Aml + 2 moves increments the              * WalkState->Aml past the object type and the paramcount of the              * external opcode. For the error message, only print the AML              * offset. We could attempt to print the name but this may cause              * a segmentation fault when printing the namepath because the              * AML may be incorrect.              */
+name|AcpiOsPrintf
+argument_list|(
+literal|"// Invalid external declaration at AML offset 0x%x.\n"
+argument_list|,
+name|WalkState
+operator|->
+name|Aml
+operator|-
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|AmlStart
+argument_list|)
+expr_stmt|;
+name|WalkState
+operator|->
+name|Aml
+operator|=
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|Aml
+operator|+
+literal|2
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_CTRL_PARSE_CONTINUE
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ACPI_FAILURE

@@ -420,13 +420,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|i
-index|]
-operator|.
+name|Table
+operator|->
 name|Address
 operator|||
 operator|(

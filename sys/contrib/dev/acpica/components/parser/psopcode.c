@@ -2716,12 +2716,19 @@ name|ARGI_EXTERNAL_OP
 argument_list|,
 name|ACPI_TYPE_ANY
 argument_list|,
-name|AML_CLASS_EXECUTE
+name|AML_CLASS_NAMED_OBJECT
 argument_list|,
-comment|/* ? */
-name|AML_TYPE_EXEC_3A_0T_0R
+name|AML_TYPE_NAMED_SIMPLE
 argument_list|,
-name|AML_FLAGS_EXEC_3A_0T_0R
+name|AML_HAS_ARGS
+operator||
+name|AML_NSOBJECT
+operator||
+name|AML_NSOPCODE
+operator||
+name|AML_NSNODE
+operator||
+name|AML_NAMED
 argument_list|)
 block|,
 comment|/* 82 */

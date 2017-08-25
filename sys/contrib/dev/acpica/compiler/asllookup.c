@@ -742,7 +742,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_NAME_DECLARATION
+name|OP_IS_NAME_DECLARATION
 operator|)
 condition|)
 block|{

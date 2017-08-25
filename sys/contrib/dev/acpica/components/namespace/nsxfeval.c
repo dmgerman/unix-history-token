@@ -101,6 +101,13 @@ name|FreeBufferOnError
 init|=
 name|FALSE
 decl_stmt|;
+name|ACPI_HANDLE
+name|TargetHandle
+decl_stmt|;
+name|char
+modifier|*
+name|FullPathname
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|AcpiEvaluateObjectTyped
@@ -133,18 +140,16 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* Evaluate the object */
 name|Status
 operator|=
-name|AcpiEvaluateObject
+name|AcpiGetHandle
 argument_list|(
 name|Handle
 argument_list|,
 name|Pathname
 argument_list|,
-name|ExternalParams
-argument_list|,
-name|ReturnBuffer
+operator|&
+name|TargetHandle
 argument_list|)
 expr_stmt|;
 if|if
@@ -161,7 +166,52 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Type ANY means "don't care" */
+name|FullPathname
+operator|=
+name|AcpiNsGetExternalPathname
+argument_list|(
+name|TargetHandle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|FullPathname
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Evaluate the object */
+name|Status
+operator|=
+name|AcpiEvaluateObject
+argument_list|(
+name|TargetHandle
+argument_list|,
+name|NULL
+argument_list|,
+name|ExternalParams
+argument_list|,
+name|ReturnBuffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|Exit
+goto|;
+block|}
+comment|/* Type ANY means "don't care about return value type" */
 if|if
 condition|(
 name|ReturnType
@@ -169,11 +219,9 @@ operator|==
 name|ACPI_TYPE_ANY
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
+goto|goto
+name|Exit
+goto|;
 block|}
 if|if
 condition|(
@@ -190,15 +238,19 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No return value"
+literal|"%s did not return any object"
+operator|,
+name|FullPathname
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NULL_OBJECT
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Exit
+goto|;
 block|}
 comment|/* Examine the object type returned from EvaluateObject */
 if|if
@@ -218,11 +270,9 @@ operator|==
 name|ReturnType
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
+goto|goto
+name|Exit
+goto|;
 block|}
 comment|/* Return object type does not match requested type */
 name|ACPI_ERROR
@@ -230,7 +280,9 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Incorrect return type [%s] requested [%s]"
+literal|"Incorrect return type from %s - received [%s], requested [%s]"
+operator|,
+name|FullPathname
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -280,9 +332,20 @@ name|Length
 operator|=
 literal|0
 expr_stmt|;
+name|Status
+operator|=
+name|AE_TYPE
+expr_stmt|;
+name|Exit
+label|:
+name|ACPI_FREE
+argument_list|(
+name|FullPathname
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_TYPE
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

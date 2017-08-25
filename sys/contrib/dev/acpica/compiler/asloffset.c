@@ -140,7 +140,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_RESOURCE_DATA
+name|OP_IS_RESOURCE_DATA
 condition|)
 block|{
 return|return
@@ -197,7 +197,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_RESOURCE_DESC
+name|OP_IS_RESOURCE_DESC
 operator|)
 condition|)
 block|{
@@ -287,12 +287,6 @@ operator|->
 name|Asl
 operator|.
 name|FinalAmlLength
-expr_stmt|;
-name|NamepathOffset
-operator|=
-name|Gbl_CurrentAmlOffset
-operator|+
-name|Length
 expr_stmt|;
 comment|/* Get to the NameSeg/NamePath Op (and length of the name) */
 name|Op

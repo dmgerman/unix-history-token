@@ -255,6 +255,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|AcDeleteTableList
+parameter_list|(
+name|ACPI_NEW_TABLE_DESC
+modifier|*
+name|ListHead
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|BOOLEAN
 name|AcIsFileBinary
 parameter_list|(
@@ -442,7 +453,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDmConvertResourceIndexes
+name|AcpiDmConvertParseObjects
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*

@@ -717,6 +717,11 @@ name|Table
 argument_list|)
 expr_stmt|;
 block|}
+name|AcDeleteTableList
+argument_list|(
+name|ListHead
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|File
@@ -989,7 +994,7 @@ expr_stmt|;
 comment|/*      * If we found any external control methods, we must reparse      * the entire tree with the new information (namely, the      * number of arguments per method)      */
 if|if
 condition|(
-name|AcpiDmGetExternalMethodCount
+name|AcpiDmGetUnresolvedExternalMethodCount
 argument_list|()
 condition|)
 block|{
@@ -1020,7 +1025,7 @@ return|;
 block|}
 block|}
 comment|/*      * Now that the namespace is finalized, we can perform namespace      * transforms.      *      * 1) Convert fixed-offset references to resource descriptors      *    to symbolic references (Note: modifies namespace)      */
-name|AcpiDmConvertResourceIndexes
+name|AcpiDmConvertParseObjects
 argument_list|(
 name|AcpiGbl_ParseOpRoot
 argument_list|,
@@ -1150,7 +1155,7 @@ argument_list|,
 literal|"\nFound %u external control methods, "
 literal|"reparsing with new information\n"
 argument_list|,
-name|AcpiDmGetExternalMethodCount
+name|AcpiDmGetUnresolvedExternalMethodCount
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -1243,7 +1248,7 @@ operator|)
 return|;
 block|}
 comment|/* New namespace, add the external definitions first */
-name|AcpiDmAddExternalsToNamespace
+name|AcpiDmAddExternalListToNamespace
 argument_list|()
 expr_stmt|;
 comment|/* For -ca option: clear the list of comment addresses. */
@@ -1495,6 +1500,11 @@ name|AE_OK
 expr_stmt|;
 continue|continue;
 block|}
+name|AcDeleteTableList
+argument_list|(
+name|ExternalListHead
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status
@@ -1541,6 +1551,11 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AcDeleteTableList
+argument_list|(
+name|ExternalListHead
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status
@@ -1577,6 +1592,11 @@ operator|->
 name|Next
 expr_stmt|;
 block|}
+name|AcDeleteTableList
+argument_list|(
+name|ExternalListHead
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE

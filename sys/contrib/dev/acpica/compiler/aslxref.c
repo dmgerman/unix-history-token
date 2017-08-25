@@ -878,7 +878,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_NAME_DECLARATION
+name|OP_IS_NAME_DECLARATION
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -962,7 +962,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_TARGET
+name|OP_IS_TARGET
 condition|)
 block|{
 comment|/* Local is being initialized */
@@ -1099,7 +1099,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_TARGET
+name|OP_IS_TARGET
 condition|)
 block|{
 comment|/* Arg is being initialized */
@@ -1172,6 +1172,16 @@ operator|.
 name|ParseOpcode
 operator|!=
 name|PARSEOP_METHODCALL
+operator|)
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|!=
+name|PARSEOP_EXTERNAL
 operator|)
 condition|)
 block|{
@@ -1248,6 +1258,16 @@ operator|.
 name|ParseOpcode
 operator|==
 name|PARSEOP_METHODCALL
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_EXTERNAL
 operator|)
 condition|)
 block|{
@@ -1343,7 +1363,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator|&
-name|NODE_IS_NAME_DECLARATION
+name|OP_IS_NAME_DECLARATION
 operator|)
 condition|)
 block|{
@@ -1960,7 +1980,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_IS_RESOURCE_FIELD
+name|OP_IS_RESOURCE_FIELD
 expr_stmt|;
 name|OpcGenerateAmlOpcode
 argument_list|(
@@ -2824,6 +2844,16 @@ operator|.
 name|ParseOpcode
 operator|==
 name|PARSEOP_METHODCALL
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_EXTERNAL
 operator|)
 condition|)
 block|{

@@ -38,7 +38,7 @@ file|<contrib/dev/acpica/include/acconvert.h>
 end_include
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvProcessComment  *  * PARAMETERS:  CurrentState      Current comment parse state  *              StringBuffer      Buffer containing the comment being processed  *              c1                Current input  *  * RETURN:      none  *  * DESCRIPTION: Process a single line comment of a c Style comment. This  *              function captures a line of a c style comment in a char* and  *              places the comment in the approperiate global buffer.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvProcessComment  *  * PARAMETERS:  CurrentState      Current comment parse state  *              StringBuffer      Buffer containing the comment being processed  *              c1                Current input  *  * RETURN:      None  *  * DESCRIPTION: Process a single line comment of a c Style comment. This  *              function captures a line of a c style comment in a char* and  *              places the comment in the approperiate global buffer.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -134,20 +134,7 @@ argument_list|,
 name|CommentString
 argument_list|)
 expr_stmt|;
-comment|/*          * Determine whether if this comment spans multiple lines.          * If so, break apart the comment by line so that it can be          * properly indented.          */
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|CommentString
-argument_list|,
-literal|'\n'
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/*              * Get the first token. The for loop pads subsequent lines              * for comments similar to the style of this comment.              */
+comment|/*          * Determine whether if this comment spans multiple lines. If so,          * break apart the comment by storing each line in a different node          * within the comment list. This allows the disassembler to          * properly indent a multi-line comment.          */
 name|LineToken
 operator|=
 name|strtok
@@ -157,6 +144,11 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LineToken
+condition|)
+block|{
 name|FinalLineToken
 operator|=
 name|UtStringCacheCalloc
@@ -226,7 +218,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/*                  * It is assumed that each line has some sort of indentation.                  * This means that we need to find the first character that is not                  * a white space within each line.                  */
+comment|/*                  * It is assumed that each line has some sort of indentation.                  * This means that we need to find the first character that                  * is not a white space within each line.                  */
 name|CharStart
 operator|=
 name|FALSE
@@ -358,10 +350,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * If this only spans a single line, check to see whether if this comment          * appears on the same line as a line of code. If does, retain it's          * position for stylistic reasons. If it doesn't, add it to the comment          * List so that it can be associated with the next node that's created.          */
+comment|/*          * If this only spans a single line, check to see whether if this          * comment appears on the same line as a line of code. If does,          * retain it's position for stylistic reasons. If it doesn't,          * add it to the comment list so that it can be associated with          * the next node that's created.          */
 else|else
 block|{
-comment|/*             * if this is not a regular comment, pad with extra spaces that appeared             * in the original source input to retain the original spacing.             */
+comment|/*             * If this is not a regular comment, pad with extra spaces that             * appeared in the original source input to retain the original             * spacing.             */
 name|FinalCommentString
 operator|=
 name|UtStringCacheCalloc
@@ -400,8 +392,8 @@ operator|.
 name|SpacesBefore
 operator|)
 condition|;
-operator|++
 name|i
+operator|++
 control|)
 block|{
 name|FinalCommentString
@@ -499,7 +491,7 @@ argument_list|,
 name|MsgBuffer
 argument_list|)
 expr_stmt|;
-comment|/* If this comment lies on the same line as the latest parse node,          * assign it to that node's CommentAfter field. Saving in this field          * will allow us to support comments that come after code on the same          * line as the code itself. For example,          * Name(A,"") //comment          *          * will be retained rather than transformed into          *          * Name(A,"")          * //comment          *          * For this case, we only need to add one comment since          *          * Name(A,"") //comment1 //comment2 ... more comments here.          *          * would be lexically analyzed as a single comment.          *          * Create a new string with the approperiate spaces. Since we need          * to account for the proper spacing, the actual comment,          * extra 2 spaces so that this comment can be converted to the "/ *"          * style and the null terminator, the string would look something like          *          * [ (spaces) (comment)  ( * /) ('\0') ]          *          */
+comment|/* If this comment lies on the same line as the latest parse op,          * assign it to that op's CommentAfter field. Saving in this field          * will allow us to support comments that come after code on the          * same line as the code itself. For example,          * Name(A,"") //comment          *          * will be retained rather than transformed into          *          * Name(A,"")          * //comment          *          * For this case, we only need to add one comment since          *          * Name(A,"") //comment1 //comment2 ... more comments here.          *          * would be lexically analyzed as a single comment.          *          * Create a new string with the approperiate spaces. Since we need          * to account for the proper spacing, the actual comment,          * extra 2 spaces so that this comment can be converted to the "/ *"          * style and the null terminator, the string would look something          * like:          *          * [ (spaces) (comment)  ( * /) ('\0') ]          *          */
 name|FinalCommentString
 operator|=
 name|UtStringCacheCalloc
@@ -540,8 +532,8 @@ operator|.
 name|SpacesBefore
 operator|)
 condition|;
-operator|++
 name|i
+operator|++
 control|)
 block|{
 name|FinalCommentString
@@ -626,7 +618,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CgCalculateCommentLengths  *  * PARAMETERS:  Op                 - Calculate all comments of this Op  *  * RETURN:      TotalCommentLength - Length of all comments within this node.  *  * DESCRIPTION: calculate the length that the each comment takes up within Op.  *              Comments look like the follwoing: [0xA9 OptionBtye comment 0x00]  *              therefore, we add 1 + 1 + strlen (comment) + 1 to get the actual  *              length of this comment.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CgCalculateCommentLengths  *  * PARAMETERS:  Op                 - Calculate all comments of this Op  *  * RETURN:      TotalCommentLength - Length of all comments within this op.  *  * DESCRIPTION: Calculate the length that the each comment takes up within Op.  *              Comments look like the follwoing: [0xA9 OptionBtye comment 0x00]  *              therefore, we add 1 + 1 + strlen (comment) + 1 to get the actual  *              length of this comment.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1001,7 +993,9 @@ literal|"\n\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|TotalCommentLength
+operator|)
 return|;
 block|}
 end_function
@@ -1061,7 +1055,7 @@ argument_list|(
 literal|"Printing comments for a definition block..\n"
 argument_list|)
 expr_stmt|;
-comment|/* first, print the file name comment after changing .asl to .dsl */
+comment|/* First, print the file name comment after changing .asl to .dsl */
 name|NewFilename
 operator|=
 name|UtStringCacheCalloc
@@ -1216,7 +1210,7 @@ name|CommentList
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* print any Inline comments associated with this node */
+comment|/* Print any Inline comments associated with this node */
 if|if
 condition|(
 name|Op
@@ -1288,6 +1282,14 @@ name|UINT8
 operator|)
 name|AML_COMMENT_OP
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|CommentToPrint
+condition|)
+block|{
+return|return;
+block|}
 name|CgLocalWriteAmlData
 argument_list|(
 name|Op
@@ -1327,7 +1329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CgWriteAmlComment  *  * PARAMETERS:  Op              - Current parse op  *  * RETURN:      None  *  * DESCRIPTION: write all comments pertaining to the  *              current parse op  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CgWriteAmlComment  *  * PARAMETERS:  Op              - Current parse op  *  * RETURN:      None  *  * DESCRIPTION: Write all comments pertaining to the current parse op  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1382,7 +1384,7 @@ operator|.
 name|FileChanged
 condition|)
 block|{
-comment|/* first, print the file name comment after changing .asl to .dsl */
+comment|/* First, print the file name comment after changing .asl to .dsl */
 name|NewFilename
 operator|=
 name|FlGenerateFilename
@@ -1396,6 +1398,11 @@ argument_list|,
 name|FILE_SUFFIX_DISASSEMBLY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NewFilename
+condition|)
+block|{
 name|CvDbgPrint
 argument_list|(
 literal|"Writing file comment, \"%s\" for %s\n"
@@ -1409,6 +1416,7 @@ operator|.
 name|ParseOpName
 argument_list|)
 expr_stmt|;
+block|}
 name|CgWriteOneAmlComment
 argument_list|(
 name|Op
@@ -1465,7 +1473,7 @@ name|PARENTFILENAME_COMMENT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* prevent multiple writes of the same comment */
+comment|/* Prevent multiple writes of the same comment */
 name|Op
 operator|->
 name|Asl
@@ -1581,7 +1589,7 @@ name|EndBlkComment
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* print any Inline comments associated with this node */
+comment|/* Print any Inline comments associated with this node */
 if|if
 condition|(
 name|Op
@@ -1691,7 +1699,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvCommentNodeCalloc  *  * PARAMETERS:  none  *  * RETURN:      Pointer to the comment node. Aborts on allocation failure  *  * DESCRIPTION: Allocate a string node buffer.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvCommentNodeCalloc  *  * PARAMETERS:  None  *  * RETURN:      Pointer to the comment node. Aborts on allocation failure  *  * DESCRIPTION: Allocate a string node buffer.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1708,10 +1716,6 @@ name|NewCommentNode
 decl_stmt|;
 name|NewCommentNode
 operator|=
-operator|(
-name|ACPI_COMMENT_NODE
-operator|*
-operator|)
 name|UtLocalCalloc
 argument_list|(
 sizeof|sizeof
@@ -1727,7 +1731,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|NewCommentNode
+operator|)
 return|;
 block|}
 end_function
@@ -1766,7 +1772,7 @@ operator|.
 name|ParseOpcode
 condition|)
 block|{
-comment|/* from aslprimaries.y */
+comment|/* From aslprimaries.y */
 case|case
 name|PARSEOP_VAR_PACKAGE
 case|:
@@ -1824,7 +1830,7 @@ case|:
 case|case
 name|PARSEOP_WHILE
 case|:
-comment|/* from aslresources.y */
+comment|/* From aslresources.y */
 case|case
 name|PARSEOP_RESOURCETEMPLATE
 case|:
@@ -1853,7 +1859,7 @@ case|:
 case|case
 name|PARSEOP_DMA
 case|:
-comment|/*from aslrules.y */
+comment|/* From aslrules.y */
 case|case
 name|PARSEOP_DEFINITION_BLOCK
 case|:
@@ -1875,7 +1881,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvProcessCommentState  *  * PARAMETERS:  char  *  * RETURN:      None  *  * DESCRIPTION: Take the given input. If this character is  *              defined as a comment table entry, then update the state  *              accordingly.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvProcessCommentState  *  * PARAMETERS:  Input           - Input character  *  * RETURN:      None  *  * DESCRIPTION: Take the given input. If this character is  *              defined as a comment table entry, then update the state  *              accordingly.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1883,12 +1889,12 @@ name|void
 name|CvProcessCommentState
 parameter_list|(
 name|char
-name|input
+name|Input
 parameter_list|)
 block|{
 if|if
 condition|(
-name|input
+name|Input
 operator|!=
 literal|' '
 condition|)
@@ -1902,7 +1908,7 @@ expr_stmt|;
 block|}
 switch|switch
 condition|(
-name|input
+name|Input
 condition|)
 block|{
 case|case
@@ -1999,7 +2005,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvAddToCommentList  *  * PARAMETERS:  toAdd              - Contains the comment to be inserted  *  * RETURN:      None  *  * DESCRIPTION: Add the given char* to a list of comments in the global list  *              of comments.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvAddToCommentList  *  * PARAMETERS:  ToAdd              - Contains the comment to be inserted  *  * RETURN:      None  *  * DESCRIPTION: Add the given char* to a list of comments in the global list  *              of comments.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2013,42 +2019,41 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|Gbl_Comment_List_Head
+name|Gbl_CommentListHead
 condition|)
 block|{
-name|Gbl_Comment_List_Tail
+name|Gbl_CommentListTail
 operator|->
 name|Next
 operator|=
 name|CvCommentNodeCalloc
 argument_list|()
 expr_stmt|;
-name|Gbl_Comment_List_Tail
+name|Gbl_CommentListTail
 operator|=
-name|Gbl_Comment_List_Tail
+name|Gbl_CommentListTail
 operator|->
 name|Next
 expr_stmt|;
 block|}
 else|else
 block|{
-name|Gbl_Comment_List_Head
+name|Gbl_CommentListHead
 operator|=
 name|CvCommentNodeCalloc
 argument_list|()
 expr_stmt|;
-name|Gbl_Comment_List_Tail
+name|Gbl_CommentListTail
 operator|=
-name|Gbl_Comment_List_Head
+name|Gbl_CommentListHead
 expr_stmt|;
 block|}
-name|Gbl_Comment_List_Tail
+name|Gbl_CommentListTail
 operator|->
 name|Comment
 operator|=
 name|ToAdd
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2086,14 +2091,23 @@ name|InlineComment
 condition|)
 block|{
 return|return
+operator|(
 name|ToAdd
+operator|)
 return|;
 block|}
 if|if
 condition|(
+operator|!
 name|ToAdd
 condition|)
 block|{
+return|return
+operator|(
+name|InlineComment
+operator|)
+return|;
+block|}
 name|Size
 operator|=
 name|strlen
@@ -2101,7 +2115,6 @@ argument_list|(
 name|ToAdd
 argument_list|)
 expr_stmt|;
-block|}
 name|Size
 operator|+=
 name|strlen
@@ -2142,13 +2155,15 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|Str
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CvPlaceComment  *  * PARAMETERS:  Int           - Type  *              char*         - CommentString  *  * RETURN:      None  *  * DESCRIPTION: Given type and CommentString, this function places the  *              CommentString in the approperiate global comment list or char*  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CvPlaceComment  *  * PARAMETERS:  UINT8               - Type  *              char *              - CommentString  *  * RETURN:      None  *  * DESCRIPTION: Given type and CommentString, this function places the  *              CommentString in the approperiate global comment list or char*  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2175,7 +2190,7 @@ name|LatestParseNode
 operator|=
 name|Gbl_CommentState
 operator|.
-name|Latest_Parse_Node
+name|LatestParseOp
 expr_stmt|;
 name|ParenBraceNode
 operator|=
@@ -2230,11 +2245,11 @@ break|break;
 case|case
 name|ASL_COMMENT_OPEN_PAREN
 case|:
-name|Gbl_Inline_Comment_Buffer
+name|Gbl_InlineCommentBuffer
 operator|=
 name|CvAppendInlineComment
 argument_list|(
-name|Gbl_Inline_Comment_Buffer
+name|Gbl_InlineCommentBuffer
 argument_list|,
 name|CommentString
 argument_list|)

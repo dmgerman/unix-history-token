@@ -606,6 +606,10 @@ modifier|*
 name|Op
 parameter_list|)
 block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|MethodOp
+decl_stmt|;
 if|if
 condition|(
 name|Op
@@ -671,6 +675,92 @@ name|Op
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|PARSEOP___METHOD__
+case|:
+comment|/* Transform to a string op containing the parent method name */
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|=
+name|PARSEOP_STRING_LITERAL
+expr_stmt|;
+name|UtSetParseOpName
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+comment|/* Find the parent control method op */
+name|MethodOp
+operator|=
+name|Op
+expr_stmt|;
+while|while
+condition|(
+name|MethodOp
+condition|)
+block|{
+if|if
+condition|(
+name|MethodOp
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_METHOD
+condition|)
+block|{
+comment|/* First child contains the method name */
+name|MethodOp
+operator|=
+name|MethodOp
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|String
+operator|=
+name|MethodOp
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|String
+expr_stmt|;
+return|return;
+block|}
+name|MethodOp
+operator|=
+name|MethodOp
+operator|->
+name|Asl
+operator|.
+name|Parent
+expr_stmt|;
+block|}
+comment|/* At the root, invocation not within a control method */
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|String
+operator|=
+literal|"\\"
+expr_stmt|;
 break|break;
 default|default:
 comment|/* Nothing to do here for other opcodes */
@@ -1002,7 +1092,7 @@ block|{
 comment|/* Add an ELSE to complete the previous CASE */
 name|NewOp
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_ELSE
 argument_list|)
@@ -1109,7 +1199,7 @@ block|{
 comment|/*                  * Convert the package declaration to this form:                  *                  * If (LNotEqual (Match (Package(<size>){<data>},                  *                       MEQ, _T_x, MTR, Zero, Zero), Ones))                  */
 name|NewOp2
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_MATCHTYPE_MEQ
 argument_list|)
@@ -1135,7 +1225,7 @@ name|NewOp2
 expr_stmt|;
 name|NewOp2
 operator|=
-name|TrCreateValuedLeafNode
+name|TrCreateValuedLeafOp
 argument_list|(
 name|PARSEOP_NAMESTRING
 argument_list|,
@@ -1169,7 +1259,7 @@ name|NewOp2
 expr_stmt|;
 name|NewOp2
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_MATCHTYPE_MTR
 argument_list|)
@@ -1195,7 +1285,7 @@ name|NewOp2
 expr_stmt|;
 name|NewOp2
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_ZERO
 argument_list|)
@@ -1221,7 +1311,7 @@ name|NewOp2
 expr_stmt|;
 name|NewOp2
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_ZERO
 argument_list|)
@@ -1243,7 +1333,7 @@ argument_list|)
 expr_stmt|;
 name|NewOp2
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_MATCH
 argument_list|)
@@ -1277,7 +1367,7 @@ name|NewOp2
 expr_stmt|;
 name|NewOp2
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_ONES
 argument_list|)
@@ -1299,7 +1389,7 @@ argument_list|)
 expr_stmt|;
 name|NewOp2
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_LEQUAL
 argument_list|)
@@ -1340,7 +1430,7 @@ name|NewOp2
 expr_stmt|;
 name|NewOp2
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_LNOT
 argument_list|)
@@ -1398,7 +1488,7 @@ block|{
 comment|/*                  * Integer and Buffer case.                  *                  * Change CaseOp() to:  If (LEqual (SwitchValue, CaseValue)) {...}                  * Note: SwitchValue is first to allow the CaseValue to be implicitly                  * converted to the type of SwitchValue if necessary.                  *                  * CaseOp->Child is the case value                  * CaseOp->Child->Peer is the beginning of the case block                  */
 name|NewOp
 operator|=
-name|TrCreateValuedLeafNode
+name|TrCreateValuedLeafOp
 argument_list|(
 name|PARSEOP_NAMESTRING
 argument_list|,
@@ -1428,7 +1518,7 @@ argument_list|)
 expr_stmt|;
 name|NewOp2
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_LEQUAL
 argument_list|)
@@ -1678,7 +1768,7 @@ name|Child
 expr_stmt|;
 name|NewOp
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_NAME
 argument_list|)
@@ -1737,7 +1827,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_COMPILER_EMITTED
+name|OP_COMPILER_EMITTED
 expr_stmt|;
 name|NewOp
 operator|->
@@ -1851,7 +1941,7 @@ expr_stmt|;
 comment|/* Create the NameSeg child for the Name node */
 name|NewOp2
 operator|=
-name|TrCreateValuedLeafNode
+name|TrCreateValuedLeafOp
 argument_list|(
 name|PARSEOP_NAMESEG
 argument_list|,
@@ -1877,7 +1967,7 @@ name|Asl
 operator|.
 name|CompileFlags
 operator||=
-name|NODE_IS_NAME_DECLARATION
+name|OP_IS_NAME_DECLARATION
 expr_stmt|;
 name|NewOp
 operator|->
@@ -1902,7 +1992,7 @@ name|Asl
 operator|.
 name|Next
 operator|=
-name|TrCreateValuedLeafNode
+name|TrCreateValuedLeafOp
 argument_list|(
 name|PARSEOP_ZERO
 argument_list|,
@@ -1933,7 +2023,7 @@ name|Asl
 operator|.
 name|Next
 operator|=
-name|TrCreateValuedLeafNode
+name|TrCreateValuedLeafOp
 argument_list|(
 name|PARSEOP_STRING_LITERAL
 argument_list|,
@@ -1964,11 +2054,11 @@ case|:
 operator|(
 name|void
 operator|)
-name|TrLinkPeerNode
+name|TrLinkPeerOp
 argument_list|(
 name|NewOp2
 argument_list|,
-name|TrCreateValuedLeafNode
+name|TrCreateValuedLeafOp
 argument_list|(
 name|PARSEOP_BUFFER
 argument_list|,
@@ -1997,13 +2087,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|TrLinkChildren
+name|TrLinkOpChildren
 argument_list|(
 name|Next
 argument_list|,
 literal|1
 argument_list|,
-name|TrCreateValuedLeafNode
+name|TrCreateValuedLeafOp
 argument_list|(
 name|PARSEOP_ZERO
 argument_list|,
@@ -2027,7 +2117,7 @@ argument_list|)
 expr_stmt|;
 name|BufferOp
 operator|=
-name|TrCreateValuedLeafNode
+name|TrCreateValuedLeafOp
 argument_list|(
 name|PARSEOP_DEFAULT_ARG
 argument_list|,
@@ -2051,7 +2141,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|TrLinkPeerNode
+name|TrLinkPeerOp
 argument_list|(
 name|Next
 operator|->
@@ -2094,7 +2184,7 @@ argument_list|)
 expr_stmt|;
 name|NewOp
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_ONE
 argument_list|)
@@ -2137,7 +2227,7 @@ expr_stmt|;
 comment|/* Create a Store() node */
 name|StoreOp
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_STORE
 argument_list|)
@@ -2183,7 +2273,7 @@ name|StoreOp
 expr_stmt|;
 name|NewOp
 operator|=
-name|TrCreateValuedLeafNode
+name|TrCreateValuedLeafOp
 argument_list|(
 name|PARSEOP_NAMESEG
 argument_list|,
@@ -2248,7 +2338,7 @@ expr_stmt|;
 block|}
 name|BreakOp
 operator|=
-name|TrCreateLeafNode
+name|TrCreateLeafOp
 argument_list|(
 name|PARSEOP_BREAK
 argument_list|)

@@ -508,7 +508,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n[AmlDebug] Next AML Opcode to execute:\n"
+literal|"\nAML Debug: Next AML Opcode to execute:\n"
 argument_list|)
 expr_stmt|;
 block|}

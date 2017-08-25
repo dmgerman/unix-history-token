@@ -1711,6 +1711,139 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Subtype tables for PinFunction descriptor */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|ACPI_RESOURCE_TAG
+name|AcpiDmPinFunctionTags
+index|[]
+init|=
+block|{
+block|{
+operator|(
+literal|4
+operator|*
+literal|8
+operator|)
+block|,
+name|ACPI_RESTAG_INTERRUPTSHARE
+block|}
+block|,
+block|{
+operator|(
+literal|6
+operator|*
+literal|8
+operator|)
+block|,
+name|ACPI_RESTAG_PINCONFIG
+block|}
+block|,
+block|{
+operator|(
+literal|7
+operator|*
+literal|8
+operator|)
+block|,
+name|ACPI_RESTAG_FUNCTION
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Subtype tables for PinConfig descriptor */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|ACPI_RESOURCE_TAG
+name|AcpiDmPinConfigTags
+index|[]
+init|=
+block|{
+block|{
+operator|(
+literal|4
+operator|*
+literal|8
+operator|)
+block|,
+name|ACPI_RESTAG_INTERRUPTSHARE
+block|}
+block|,
+block|{
+operator|(
+literal|6
+operator|*
+literal|8
+operator|)
+block|,
+name|ACPI_RESTAG_PINCONFIG_TYPE
+block|}
+block|,
+block|{
+operator|(
+literal|7
+operator|*
+literal|8
+operator|)
+block|,
+name|ACPI_RESTAG_PINCONFIG_VALUE
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Subtype tables for PinGroupFunction descriptor */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|ACPI_RESOURCE_TAG
+name|AcpiDmPinGroupFunctionTags
+index|[]
+init|=
+block|{
+block|{
+operator|(
+literal|6
+operator|*
+literal|8
+operator|)
+block|,
+name|ACPI_RESTAG_FUNCTION
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Subtype tables for Address descriptor type-specific flags */
 end_comment
 
@@ -1934,11 +2067,24 @@ comment|/* 0x0B, ACPI_RESOURCE_NAME_EXTENDED_ADDRESS_SPACE */
 name|NULL
 block|,
 comment|/* 0x0C, ACPI_RESOURCE_NAME_GPIO - Use Subtype table below */
+name|AcpiDmPinFunctionTags
+block|,
+comment|/* 0x0D, ACPI_RESOURCE_NAME_PIN_FUNCTION */
 name|NULL
 block|,
-comment|/* 0x0D, Reserved */
-name|NULL
 comment|/* 0x0E, ACPI_RESOURCE_NAME_SERIAL_BUS - Use Subtype table below */
+name|AcpiDmPinConfigTags
+block|,
+comment|/* 0x0F, ACPI_RESOURCE_NAME_PIN_CONFIG */
+name|NULL
+block|,
+comment|/* 0x10, ACPI_RESOURCE_NAME_PIN_GROUP */
+name|AcpiDmPinGroupFunctionTags
+block|,
+comment|/* 0x11, ACPI_RESOURCE_NAME_PIN_GROUP_FUNCTION */
+name|AcpiDmPinConfigTags
+block|,
+comment|/* 0x12, ACPI_RESOURCE_NAME_PIN_GROUP_CONFIG - Same as PinConfig */
 block|}
 decl_stmt|;
 end_decl_stmt

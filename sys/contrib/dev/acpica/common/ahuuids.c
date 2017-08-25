@@ -171,6 +171,24 @@ name|UUID_PERSISTENT_VIRTUAL_CD
 block|}
 block|,
 block|{
+literal|"[Processor Properties]"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"Cache Properties"
+block|,
+name|UUID_CACHE_PROPERTIES
+block|}
+block|,
+block|{
+literal|"Physical Package Property"
+block|,
+name|UUID_PHYSICAL_PROPERTY
+block|}
+block|,
+block|{
 literal|"[Miscellaneous]"
 block|,
 name|NULL

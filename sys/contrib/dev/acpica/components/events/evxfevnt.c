@@ -319,6 +319,18 @@ argument_list|(
 name|AcpiEnableEvent
 argument_list|)
 expr_stmt|;
+comment|/* If Hardware Reduced flag is set, there are no fixed events */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Decode the Fixed Event */
 if|if
 condition|(
@@ -462,6 +474,18 @@ argument_list|(
 name|AcpiDisableEvent
 argument_list|)
 expr_stmt|;
+comment|/* If Hardware Reduced flag is set, there are no fixed events */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Decode the Fixed Event */
 if|if
 condition|(
@@ -598,6 +622,18 @@ argument_list|(
 name|AcpiClearEvent
 argument_list|)
 expr_stmt|;
+comment|/* If Hardware Reduced flag is set, there are no fixed events */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Decode the Fixed Event */
 if|if
 condition|(
