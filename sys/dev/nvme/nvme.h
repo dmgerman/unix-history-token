@@ -1487,10 +1487,45 @@ comment|/** Controller ID */
 name|uint16_t
 name|ctrlr_id
 decl_stmt|;
+comment|/** Version */
+name|uint32_t
+name|ver
+decl_stmt|;
+comment|/** RTD3 Resume Latency */
+name|uint32_t
+name|rtd3r
+decl_stmt|;
+comment|/** RTD3 Enter Latency */
+name|uint32_t
+name|rtd3e
+decl_stmt|;
+comment|/** Optional Asynchronous Events Supported */
+name|uint32_t
+name|oaes
+decl_stmt|;
+comment|/* bitfield really */
+comment|/** Controller Attributes */
+name|uint32_t
+name|ctratt
+decl_stmt|;
+comment|/* bitfield really */
 name|uint8_t
 name|reserved1
 index|[
-literal|176
+literal|12
+index|]
+decl_stmt|;
+comment|/** FRU Globally Unique Identifier */
+name|uint8_t
+name|fguid
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|uint8_t
+name|reserved2
+index|[
+literal|128
 index|]
 decl_stmt|;
 comment|/* bytes 256-511: admin command set attributes */
@@ -1606,11 +1641,43 @@ block|}
 name|__packed
 name|avscc
 struct|;
+comment|/** Autonomous Power State Transition Attributes */
+struct|struct
+block|{
+comment|/* Autonmous Power State Transitions supported */
 name|uint8_t
-name|reserved2
-index|[
-literal|15
-index|]
+name|apst_supp
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|apsta_rsvd
+range|:
+literal|7
+decl_stmt|;
+block|}
+name|__packed
+name|apsta
+struct|;
+comment|/** Warning Composite Temperature Threshold */
+name|uint16_t
+name|wctemp
+decl_stmt|;
+comment|/** Critical Composite Temperature Threshold */
+name|uint16_t
+name|cctemp
+decl_stmt|;
+comment|/** Maximum Time for Firmware Activation */
+name|uint16_t
+name|mtfa
+decl_stmt|;
+comment|/** Host Memory Buffer Preferred Size */
+name|uint32_t
+name|hmpre
+decl_stmt|;
+comment|/** Host Memory Buffer Minimum Size */
+name|uint32_t
+name|hmmin
 decl_stmt|;
 comment|/** Name space capabilities  */
 struct|struct
@@ -1632,10 +1699,50 @@ block|}
 name|__packed
 name|untncap
 struct|;
+comment|/** Replay Protected Memory Block Support */
+name|uint32_t
+name|rpmbs
+decl_stmt|;
+comment|/* Really a bitfield */
+comment|/** Extended Device Self-test Time */
+name|uint16_t
+name|edstt
+decl_stmt|;
+comment|/** Device Self-test Options */
+name|uint8_t
+name|dsto
+decl_stmt|;
+comment|/* Really a bitfield */
+comment|/** Firmware Update Granularity */
+name|uint8_t
+name|fwug
+decl_stmt|;
+comment|/** Keep Alive Support */
+name|uint16_t
+name|kas
+decl_stmt|;
+comment|/** Host Controlled Thermal Management Attributes */
+name|uint16_t
+name|hctma
+decl_stmt|;
+comment|/* Really a bitfield */
+comment|/** Minimum Thermal Management Temperature */
+name|uint16_t
+name|mntmt
+decl_stmt|;
+comment|/** Maximum Thermal Management Temperature */
+name|uint16_t
+name|mxtmt
+decl_stmt|;
+comment|/** Sanitize Capabilities */
+name|uint32_t
+name|sanicap
+decl_stmt|;
+comment|/* Really a bitfield */
 name|uint8_t
 name|reserved3
 index|[
-literal|200
+literal|180
 index|]
 decl_stmt|;
 comment|/* bytes 512-703: nvm command set attributes */
@@ -1673,11 +1780,9 @@ block|}
 name|__packed
 name|cqes
 struct|;
-name|uint8_t
-name|reserved4
-index|[
-literal|2
-index|]
+comment|/** Maximum Outstanding Commands */
+name|uint16_t
+name|maxcmd
 decl_stmt|;
 comment|/** number of namespaces */
 name|uint32_t
