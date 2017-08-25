@@ -227,6 +227,13 @@ name|NFSSVC_NEWSTRUCT
 value|0x20000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSSVC_FORCEDISM
+value|0x40000000
+end_define
+
 begin_comment
 comment|/* Argument structure for NFSSVC_DUMPMNTOPTS. */
 end_comment

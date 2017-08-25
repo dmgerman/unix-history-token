@@ -103,7 +103,7 @@ name|NFSCL_FORCEDISM
 parameter_list|(
 name|m
 parameter_list|)
-value|(((m)->mnt_kern_flag& MNTK_UNMOUNTF) != 0)
+value|(((m)->mnt_kern_flag& MNTK_UNMOUNTF) != 0 || \     (VFSTONFS(m)->nm_privflag& NFSMNTP_FORCEDISM) != 0)
 end_define
 
 begin_comment
