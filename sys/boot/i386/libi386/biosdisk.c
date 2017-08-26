@@ -603,7 +603,6 @@ name|LOADER_GELI_SUPPORT
 end_ifdef
 
 begin_enum
-specifier|static
 enum|enum
 name|isgeli
 block|{
