@@ -111,20 +111,6 @@ name|NUM_HANDLES_INIT
 value|24
 end_define
 
-begin_function_decl
-name|EFI_STATUS
-name|efi_main
-parameter_list|(
-name|EFI_HANDLE
-name|Ximage
-parameter_list|,
-name|EFI_SYSTEM_TABLE
-modifier|*
-name|Xsystab
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|EFI_SYSTEM_TABLE
 modifier|*

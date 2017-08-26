@@ -199,22 +199,8 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-name|void
-name|efi_main
-parameter_list|(
-name|EFI_HANDLE
-name|image_handle
-parameter_list|,
-name|EFI_SYSTEM_TABLE
-modifier|*
-name|system_table
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
-name|void
+name|EFI_STATUS
 name|efi_main
 parameter_list|(
 name|EFI_HANDLE
@@ -790,6 +776,11 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|status
+operator|)
+return|;
 block|}
 end_function
 
