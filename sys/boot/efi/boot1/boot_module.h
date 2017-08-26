@@ -65,7 +65,7 @@ name|DSTALL
 parameter_list|(
 name|d
 parameter_list|)
-value|bs->Stall(d)
+value|BS->Stall(d)
 end_define
 
 begin_else
@@ -311,22 +311,6 @@ name|ap
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|EFI_SYSTEM_TABLE
-modifier|*
-name|systab
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|EFI_BOOT_SERVICES
-modifier|*
-name|bs
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|extern

@@ -407,7 +407,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|AllocatePool
 argument_list|(
@@ -478,7 +478,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bs
+name|BS
 operator|->
 name|FreePool
 argument_list|(

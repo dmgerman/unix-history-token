@@ -112,24 +112,29 @@ value|24
 end_define
 
 begin_decl_stmt
+name|EFI_HANDLE
+name|IH
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|EFI_SYSTEM_TABLE
 modifier|*
-name|systab
+name|ST
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|EFI_BOOT_SERVICES
 modifier|*
-name|bs
+name|BS
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|EFI_HANDLE
+name|EFI_RUNTIME_SERVICES
 modifier|*
-name|image
+name|RS
 decl_stmt|;
 end_decl_stmt
 
@@ -198,7 +203,7 @@ name|out
 decl_stmt|;
 if|if
 condition|(
-name|bs
+name|BS
 operator|->
 name|AllocatePool
 argument_list|(
@@ -253,7 +258,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|bs
+name|BS
 operator|->
 name|FreePool
 argument_list|(
@@ -1655,13 +1660,13 @@ condition|(
 operator|(
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|LoadImage
 argument_list|(
 name|TRUE
 argument_list|,
-name|image
+name|IH
 argument_list|,
 name|devpath_last
 argument_list|(
@@ -1707,7 +1712,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|HandleProtocol
 argument_list|(
@@ -1842,7 +1847,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|StartImage
 argument_list|(
@@ -1969,7 +1974,7 @@ decl_stmt|;
 comment|/* Figure out if we're dealing with an actual partition. */
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|HandleProtocol
 argument_list|(
@@ -2033,7 +2038,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|HandleProtocol
 argument_list|(
@@ -2129,7 +2134,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|AllocatePool
 argument_list|(
@@ -2229,7 +2234,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|bs
+name|BS
 operator|->
 name|FreePool
 argument_list|(
@@ -2426,24 +2431,30 @@ decl_stmt|,
 name|nhandles
 decl_stmt|;
 comment|/* Basic initialization*/
-name|systab
+name|ST
 operator|=
 name|Xsystab
 expr_stmt|;
-name|image
+name|IH
 operator|=
 name|Ximage
 expr_stmt|;
-name|bs
+name|BS
 operator|=
-name|Xsystab
+name|ST
 operator|->
 name|BootServices
+expr_stmt|;
+name|RS
+operator|=
+name|ST
+operator|->
+name|RuntimeServices
 expr_stmt|;
 comment|/* Set up the console, so printf works. */
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|LocateProtocol
 argument_list|(
@@ -2482,7 +2493,7 @@ expr_stmt|;
 comment|/* 	 * Reset the console and find the best text mode. 	 */
 name|conout
 operator|=
-name|systab
+name|ST
 operator|->
 name|ConOut
 expr_stmt|;
@@ -2675,7 +2686,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|AllocatePool
 argument_list|(
@@ -2709,7 +2720,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|LocateHandle
 argument_list|(
@@ -2741,7 +2752,7 @@ case|:
 operator|(
 name|void
 operator|)
-name|bs
+name|BS
 operator|->
 name|FreePool
 argument_list|(
@@ -2753,7 +2764,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|AllocatePool
 argument_list|(
@@ -2795,7 +2806,7 @@ expr_stmt|;
 block|}
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|LocateHandle
 argument_list|(
@@ -2867,11 +2878,11 @@ expr_stmt|;
 comment|/* Determine the devpath of our image so we can prefer it. */
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|HandleProtocol
 argument_list|(
-name|image
+name|IH
 argument_list|,
 operator|&
 name|LoadedImageGUID
@@ -2898,7 +2909,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|HandleProtocol
 argument_list|(
@@ -3167,13 +3178,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|systab
+name|ST
 operator|->
 name|ConOut
 operator|->
 name|OutputString
 argument_list|(
-name|systab
+name|ST
 operator|->
 name|ConOut
 argument_list|,
@@ -3195,13 +3206,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|systab
+name|ST
 operator|->
 name|ConOut
 operator|->
 name|OutputString
 argument_list|(
-name|systab
+name|ST
 operator|->
 name|ConOut
 argument_list|,
