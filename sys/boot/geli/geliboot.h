@@ -112,6 +112,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|dsk
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|geli_init
