@@ -217,6 +217,7 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 name|XLOCALE_CTYPE
 argument_list|(
 name|__get_locale
@@ -224,6 +225,7 @@ argument_list|()
 argument_list|)
 operator|->
 name|runes
+operator|)
 return|;
 block|}
 end_function
@@ -955,11 +957,15 @@ name|l
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|l
+operator|)
 return|;
 block|}
 end_function
