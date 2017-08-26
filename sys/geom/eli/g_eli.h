@@ -337,6 +337,17 @@ value|0x00000080
 end_define
 
 begin_comment
+comment|/* Hide passphrase length in GELIboot. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_ELI_FLAG_GELIDISPLAYPASS
+value|0x00000100
+end_define
+
+begin_comment
 comment|/* RUNTIME FLAGS. */
 end_comment
 
