@@ -141,7 +141,7 @@ name|DevicePathNodeLength
 parameter_list|(
 name|a
 parameter_list|)
-value|( ((a)->Length[0]) | ((a)->Length[1]<< 8) )
+value|((size_t)(((a)->Length[0]) | ((a)->Length[1]<< 8)))
 end_define
 
 begin_define

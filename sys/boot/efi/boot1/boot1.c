@@ -295,7 +295,7 @@ modifier|*
 name|devpath
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 if|if
