@@ -361,6 +361,11 @@ operator|||
 expr|\
 name|defined
 argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__mips_n64
 argument_list|)
 operator|||
@@ -369,6 +374,7 @@ argument_list|(
 name|__mips_o64
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|__riscv
@@ -414,7 +420,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FreeBSD&& (sparc64 || mips_n64 || mips_o64) */
+comment|/* FreeBSD&& (sparc64 || mips_n32 || mips_n64 || mips_o64 || riscv) */
 end_comment
 
 begin_function_decl
