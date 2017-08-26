@@ -675,21 +675,18 @@ name|regs
 decl_stmt|;
 endif|#
 directive|endif
+name|ksiginfo_t
+name|ksi
+decl_stmt|;
 name|struct
 name|thread
 modifier|*
 name|td
-init|=
-name|curthread
 decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|td
-operator|->
-name|td_proc
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -700,27 +697,18 @@ decl_stmt|;
 endif|#
 directive|endif
 name|int
-name|i
-init|=
-literal|0
+name|signo
 decl_stmt|,
 name|ucode
-init|=
-literal|0
 decl_stmt|;
 name|u_int
 name|type
 decl_stmt|;
 name|register_t
 name|addr
-init|=
-literal|0
 decl_stmt|;
 name|vm_offset_t
 name|eva
-decl_stmt|;
-name|ksiginfo_t
-name|ksi
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -733,6 +721,28 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
+name|signo
+operator|=
+literal|0
+expr_stmt|;
+name|ucode
+operator|=
+literal|0
+expr_stmt|;
+name|addr
+operator|=
+literal|0
+expr_stmt|;
 name|VM_CNT_INC
 argument_list|(
 name|v_trap
@@ -753,19 +763,13 @@ condition|(
 name|type
 operator|==
 name|T_NMI
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|ipi_nmi_handler
 argument_list|()
 operator|==
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
-block|}
+return|return;
 endif|#
 directive|endif
 comment|/* SMP */
@@ -780,9 +784,7 @@ block|{
 name|kdb_reenter
 argument_list|()
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 endif|#
 directive|endif
@@ -800,9 +802,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -836,9 +836,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
 ifdef|#
@@ -853,9 +851,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
 block|}
@@ -869,9 +865,7 @@ block|{
 name|mca_intr
 argument_list|()
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 ifdef|#
 directive|ifdef
@@ -903,9 +897,7 @@ argument_list|,
 name|type
 argument_list|)
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
 if|if
@@ -1102,7 +1094,7 @@ case|case
 name|T_PRIVINFLT
 case|:
 comment|/* privileged instruction fault */
-name|i
+name|signo
 operator|=
 name|SIGILL
 expr_stmt|;
@@ -1154,9 +1146,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 endif|#
 directive|endif
@@ -1169,7 +1159,7 @@ operator|&=
 operator|~
 name|PSL_T
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGTRAP
 expr_stmt|;
@@ -1202,15 +1192,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-goto|goto
-name|userout
-goto|;
-name|i
+return|return;
+name|signo
 operator|=
 name|SIGFPE
 expr_stmt|;
 break|break;
-comment|/* 			 * The following two traps can happen in 			 * vm86 mode, and, if so, we want to handle 			 * them specially. 			 */
+comment|/* 		 * The following two traps can happen in vm86 mode, 		 * and, if so, we want to handle them specially. 		 */
 case|case
 name|T_PROTFLT
 case|:
@@ -1228,7 +1216,7 @@ operator|&
 name|PSL_VM
 condition|)
 block|{
-name|i
+name|signo
 operator|=
 name|vm86_emulate
 argument_list|(
@@ -1242,7 +1230,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|signo
 operator|==
 name|SIGTRAP
 condition|)
@@ -1265,7 +1253,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|i
+name|signo
 operator|==
 literal|0
 condition|)
@@ -1274,7 +1262,7 @@ name|user
 goto|;
 break|break;
 block|}
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1295,7 +1283,7 @@ case|case
 name|T_SEGNPFLT
 case|:
 comment|/* segment not present fault */
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1308,7 +1296,7 @@ case|case
 name|T_TSSFLT
 case|:
 comment|/* invalid TSS fault */
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1320,7 +1308,7 @@ break|break;
 case|case
 name|T_ALIGNFLT
 case|:
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1334,7 +1322,7 @@ name|T_DOUBLEFLT
 case|:
 comment|/* double fault */
 default|default:
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1347,7 +1335,7 @@ case|case
 name|T_PAGEFLT
 case|:
 comment|/* page fault */
-name|i
+name|signo
 operator|=
 name|trap_pfault
 argument_list|(
@@ -1372,7 +1360,7 @@ name|NO_F00F_HACK
 argument_list|)
 if|if
 condition|(
-name|i
+name|signo
 operator|==
 operator|-
 literal|2
@@ -1392,7 +1380,7 @@ name|ucode
 operator|=
 name|ILL_PRVOPC
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGILL
 expr_stmt|;
@@ -1402,17 +1390,15 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|i
+name|signo
 operator|==
 operator|-
 literal|1
 condition|)
-goto|goto
-name|userout
-goto|;
+return|return;
 if|if
 condition|(
-name|i
+name|signo
 operator|==
 literal|0
 condition|)
@@ -1421,7 +1407,7 @@ name|user
 goto|;
 if|if
 condition|(
-name|i
+name|signo
 operator|==
 name|SIGSEGV
 condition|)
@@ -1429,8 +1415,7 @@ name|ucode
 operator|=
 name|SEGV_MAPERR
 expr_stmt|;
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|prot_fault_translation
@@ -1438,7 +1423,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 					 * Autodetect. 					 * This check also covers the images 					 * without the ABI-tag ELF note. 					 */
+comment|/* 				 * Autodetect.  This check also covers 				 * the images without the ABI-tag ELF 				 * note. 				 */
 if|if
 condition|(
 name|SV_CURPROC_ABI
@@ -1453,7 +1438,7 @@ operator|>=
 name|P_OSREL_SIGSEGV
 condition|)
 block|{
-name|i
+name|signo
 operator|=
 name|SIGSEGV
 expr_stmt|;
@@ -1464,7 +1449,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1482,8 +1467,8 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 					 * Always compat mode. 					 */
-name|i
+comment|/* 				 * Always compat mode. 				 */
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1494,8 +1479,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * Always SIGSEGV mode. 					 */
-name|i
+comment|/* 				 * Always SIGSEGV mode. 				 */
+name|signo
 operator|=
 name|SIGSEGV
 expr_stmt|;
@@ -1503,7 +1488,6 @@ name|ucode
 operator|=
 name|SEGV_ACCERR
 expr_stmt|;
-block|}
 block|}
 name|addr
 operator|=
@@ -1518,7 +1502,7 @@ name|ucode
 operator|=
 name|FPE_INTDIV
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGFPE
 expr_stmt|;
@@ -1569,9 +1553,7 @@ operator|=
 name|time_second
 expr_stmt|;
 block|}
-goto|goto
-name|userout
-goto|;
+return|return;
 else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
@@ -1582,9 +1564,7 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
 comment|/* POWERFAIL_NMI */
@@ -1599,7 +1579,7 @@ name|ucode
 operator|=
 name|FPE_INTOVF
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGFPE
 expr_stmt|;
@@ -1612,7 +1592,7 @@ name|ucode
 operator|=
 name|FPE_FLTSUB
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGFPE
 expr_stmt|;
@@ -1640,9 +1620,7 @@ condition|(
 name|npxdna
 argument_list|()
 condition|)
-goto|goto
-name|userout
-goto|;
+return|return;
 name|uprintf
 argument_list|(
 literal|"pid %d killed due to lack of floating point\n"
@@ -1652,7 +1630,7 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGKILL
 expr_stmt|;
@@ -1669,7 +1647,7 @@ name|ucode
 operator|=
 name|ILL_COPROC
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGILL
 expr_stmt|;
@@ -1690,10 +1668,8 @@ operator|==
 operator|-
 literal|1
 condition|)
-goto|goto
-name|userout
-goto|;
-name|i
+return|return;
+name|signo
 operator|=
 name|SIGFPE
 expr_stmt|;
@@ -1720,21 +1696,14 @@ condition|(
 name|dtrace_return_probe_ptr
 operator|!=
 name|NULL
-operator|&&
+condition|)
 name|dtrace_return_probe_ptr
 argument_list|(
 operator|&
 name|regs
 argument_list|)
-operator|==
-literal|0
-condition|)
-goto|goto
-name|out
-goto|;
-goto|goto
-name|userout
-goto|;
+expr_stmt|;
+return|return;
 endif|#
 directive|endif
 block|}
@@ -1778,9 +1747,7 @@ argument_list|,
 name|eva
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 case|case
 name|T_DNA
 case|:
@@ -1803,9 +1770,7 @@ condition|(
 name|npxdna
 argument_list|()
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 break|break;
 case|case
 name|T_ARITHTRAP
@@ -1827,9 +1792,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 comment|/* 			 * The following two traps can happen in 			 * vm86 mode, and, if so, we want to handle 			 * them specially. 			 */
 case|case
 name|T_PROTFLT
@@ -1848,7 +1811,7 @@ operator|&
 name|PSL_VM
 condition|)
 block|{
-name|i
+name|signo
 operator|=
 name|vm86_emulate
 argument_list|(
@@ -1862,7 +1825,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|signo
 operator|==
 name|SIGTRAP
 condition|)
@@ -1885,7 +1848,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|i
+name|signo
 operator|!=
 literal|0
 condition|)
@@ -1900,9 +1863,7 @@ operator|)
 name|frame
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 comment|/* FALL THROUGH */
 case|case
@@ -1943,9 +1904,7 @@ literal|0
 block|PROC_LOCK(p); 				kern_psignal(p, SIGBUS); 				PROC_UNLOCK(p);
 endif|#
 directive|endif
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -1978,9 +1937,7 @@ name|int
 operator|)
 name|doreti_iret_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -2010,9 +1967,7 @@ name|int
 operator|)
 name|doreti_popl_ds_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -2035,9 +1990,7 @@ name|int
 operator|)
 name|doreti_popl_es_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -2060,9 +2013,7 @@ name|int
 operator|)
 name|doreti_popl_fs_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -2084,9 +2035,7 @@ name|curpcb
 operator|->
 name|pcb_onfault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 break|break;
 case|case
@@ -2109,9 +2058,7 @@ operator|&=
 operator|~
 name|PSL_NT
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 break|break;
 case|case
@@ -2136,9 +2083,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 				 * We've just entered system mode via the 				 * syscall lcall.  Continue single stepping 				 * silently until the syscall handler has 				 * saved the flags. 				 */
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -2165,9 +2110,7 @@ operator|&=
 operator|~
 name|PSL_T
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 comment|/* 			 * Ignore debug register trace traps due to 			 * accesses in the user's address space, which 			 * can happen under several conditions such as 			 * if a user sets a watchpoint on a buffer and 			 * then passes that buffer to a system call. 			 * We still want to get TRCTRAPS for addresses 			 * in kernel space because that is useful when 			 * debugging the kernel. 			 */
 if|if
@@ -2195,9 +2138,7 @@ operator|~
 literal|0xf
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 comment|/* 			 * FALLTHROUGH (TRCTRAP kernel mode, kernel address) 			 */
 case|case
@@ -2232,9 +2173,7 @@ argument_list|,
 name|frame
 argument_list|)
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
 break|break;
@@ -2275,9 +2214,7 @@ operator|=
 name|time_second
 expr_stmt|;
 block|}
-goto|goto
-name|out
-goto|;
+return|return;
 else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
@@ -2288,9 +2225,7 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
 comment|/* POWERFAIL_NMI */
@@ -2305,9 +2240,7 @@ argument_list|,
 name|eva
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 comment|/* Translate fault for emulators (e.g. Linux) */
 if|if
@@ -2318,8 +2251,10 @@ operator|->
 name|p_sysent
 operator|->
 name|sv_transtrap
+operator|!=
+name|NULL
 condition|)
-name|i
+name|signo
 operator|=
 call|(
 modifier|*
@@ -2330,7 +2265,7 @@ operator|->
 name|sv_transtrap
 call|)
 argument_list|(
-name|i
+name|signo
 argument_list|,
 name|type
 argument_list|)
@@ -2345,7 +2280,7 @@ name|ksi
 operator|.
 name|ksi_signo
 operator|=
-name|i
+name|signo
 expr_stmt|;
 name|ksi
 operator|.
@@ -2388,7 +2323,7 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
-name|i
+name|signo
 argument_list|,
 name|frame
 operator|->
@@ -2577,11 +2512,6 @@ literal|"Return from trap with kernel FPU ctx leaked"
 operator|)
 argument_list|)
 expr_stmt|;
-name|userout
-label|:
-name|out
-label|:
-return|return;
 block|}
 end_function
 
