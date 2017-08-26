@@ -300,6 +300,9 @@ name|enc_xform_aes_xts
 operator|.
 name|reinit
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|ctxp
 argument_list|,
 name|iv
@@ -333,6 +336,9 @@ name|enc_xform_aes_xts
 operator|.
 name|decrypt
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|ctxp
 argument_list|,
 name|data
@@ -365,6 +371,9 @@ name|enc_xform_aes_xts
 operator|.
 name|encrypt
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|ctxp
 argument_list|,
 name|data
