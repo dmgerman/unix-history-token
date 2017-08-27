@@ -851,7 +851,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|r92c_write_txpower
 parameter_list|(

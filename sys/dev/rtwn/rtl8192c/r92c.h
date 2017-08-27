@@ -209,6 +209,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|r92c_write_txpower
+parameter_list|(
+name|struct
+name|rtwn_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|uint8_t
+name|power
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|r92c_set_bw20
 parameter_list|(
 name|struct
