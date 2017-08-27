@@ -331,7 +331,6 @@ directive|endif
 end_endif
 
 begin_function_decl
-specifier|extern
 name|void
 name|__noinline
 name|trap
@@ -345,22 +344,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|trap_check
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-name|frame
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|syscall
 parameter_list|(
 name|struct
 name|trapframe
