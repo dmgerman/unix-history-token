@@ -617,7 +617,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|int
-name|i
+name|signo
 decl_stmt|,
 name|ucode
 decl_stmt|;
@@ -634,7 +634,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|i
+name|signo
 operator|=
 literal|0
 expr_stmt|;
@@ -668,22 +668,15 @@ condition|(
 name|type
 operator|==
 name|T_NMI
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|ipi_nmi_handler
 argument_list|()
 operator|==
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
-block|}
+return|return;
 endif|#
 directive|endif
-comment|/* SMP */
 ifdef|#
 directive|ifdef
 name|KDB
@@ -695,9 +688,7 @@ block|{
 name|kdb_reenter
 argument_list|()
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 endif|#
 directive|endif
@@ -715,9 +706,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -751,9 +740,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
 ifdef|#
@@ -768,9 +755,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
 block|}
@@ -784,9 +769,7 @@ block|{
 name|mca_intr
 argument_list|()
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -918,7 +901,7 @@ case|case
 name|T_PRIVINFLT
 case|:
 comment|/* privileged instruction fault */
-name|i
+name|signo
 operator|=
 name|SIGILL
 expr_stmt|;
@@ -970,9 +953,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 endif|#
 directive|endif
@@ -983,7 +964,7 @@ operator|&=
 operator|~
 name|PSL_T
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGTRAP
 expr_stmt|;
@@ -1016,10 +997,8 @@ operator|==
 operator|-
 literal|1
 condition|)
-goto|goto
-name|userout
-goto|;
-name|i
+return|return;
+name|signo
 operator|=
 name|SIGFPE
 expr_stmt|;
@@ -1028,7 +1007,7 @@ case|case
 name|T_PROTFLT
 case|:
 comment|/* general protection fault */
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1045,7 +1024,7 @@ case|case
 name|T_SEGNPFLT
 case|:
 comment|/* segment not present fault */
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1058,7 +1037,7 @@ case|case
 name|T_TSSFLT
 case|:
 comment|/* invalid TSS fault */
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1070,7 +1049,7 @@ break|break;
 case|case
 name|T_ALIGNFLT
 case|:
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1084,7 +1063,7 @@ name|T_DOUBLEFLT
 case|:
 comment|/* double fault */
 default|default:
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1123,16 +1102,14 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|userout
-goto|;
+return|return;
 name|addr
 operator|=
 name|frame
 operator|->
 name|tf_addr
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|trap_pfault
 argument_list|(
@@ -1143,35 +1120,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|signo
 operator|==
 operator|-
 literal|1
 condition|)
-goto|goto
-name|userout
-goto|;
+return|return;
 if|if
 condition|(
-name|i
+name|signo
 operator|==
 literal|0
 condition|)
 goto|goto
-name|user
+name|userret
 goto|;
 if|if
 condition|(
-name|i
+name|signo
 operator|==
 name|SIGSEGV
 condition|)
+block|{
 name|ucode
 operator|=
 name|SEGV_MAPERR
 expr_stmt|;
-else|else
-block|{
+block|}
+elseif|else
 if|if
 condition|(
 name|prot_fault_translation
@@ -1179,7 +1155,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 					 * Autodetect. 					 * This check also covers the images 					 * without the ABI-tag ELF note. 					 */
+comment|/* 				 * Autodetect.  This check also covers 				 * the images without the ABI-tag ELF 				 * note. 				 */
 if|if
 condition|(
 name|SV_CURPROC_ABI
@@ -1194,7 +1170,7 @@ operator|>=
 name|P_OSREL_SIGSEGV
 condition|)
 block|{
-name|i
+name|signo
 operator|=
 name|SIGSEGV
 expr_stmt|;
@@ -1205,7 +1181,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|i
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1223,8 +1199,8 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 					 * Always compat mode. 					 */
-name|i
+comment|/* 				 * Always compat mode. 				 */
+name|signo
 operator|=
 name|SIGBUS
 expr_stmt|;
@@ -1235,8 +1211,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * Always SIGSEGV mode. 					 */
-name|i
+comment|/* 				 * Always SIGSEGV mode. 				 */
+name|signo
 operator|=
 name|SIGSEGV
 expr_stmt|;
@@ -1244,7 +1220,6 @@ name|ucode
 operator|=
 name|SEGV_ACCERR
 expr_stmt|;
-block|}
 block|}
 break|break;
 case|case
@@ -1255,7 +1230,7 @@ name|ucode
 operator|=
 name|FPE_INTDIV
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGFPE
 expr_stmt|;
@@ -1273,12 +1248,9 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
-comment|/* DEV_ISA */
 case|case
 name|T_OFLOW
 case|:
@@ -1287,7 +1259,7 @@ name|ucode
 operator|=
 name|FPE_INTOVF
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGFPE
 expr_stmt|;
@@ -1300,7 +1272,7 @@ name|ucode
 operator|=
 name|FPE_FLTSUB
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGFPE
 expr_stmt|;
@@ -1326,9 +1298,7 @@ expr_stmt|;
 name|fpudna
 argument_list|()
 expr_stmt|;
-goto|goto
-name|userout
-goto|;
+return|return;
 case|case
 name|T_FPOPFLT
 case|:
@@ -1337,7 +1307,7 @@ name|ucode
 operator|=
 name|ILL_COPROC
 expr_stmt|;
-name|i
+name|signo
 operator|=
 name|SIGILL
 expr_stmt|;
@@ -1358,10 +1328,8 @@ operator|==
 operator|-
 literal|1
 condition|)
-goto|goto
-name|userout
-goto|;
-name|i
+return|return;
+name|signo
 operator|=
 name|SIGFPE
 expr_stmt|;
@@ -1388,21 +1356,14 @@ condition|(
 name|dtrace_return_probe_ptr
 operator|!=
 name|NULL
-operator|&&
+condition|)
 name|dtrace_return_probe_ptr
 argument_list|(
 operator|&
 name|regs
 argument_list|)
-operator|==
-literal|0
-condition|)
-goto|goto
-name|out
-goto|;
-goto|goto
-name|userout
-goto|;
+expr_stmt|;
+return|return;
 endif|#
 directive|endif
 block|}
@@ -1444,9 +1405,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 case|case
 name|T_DNA
 case|:
@@ -1467,9 +1426,7 @@ expr_stmt|;
 name|fpudna
 argument_list|()
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 case|case
 name|T_ARITHTRAP
 case|:
@@ -1490,9 +1447,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 case|case
 name|T_STKFLT
 case|:
@@ -1536,9 +1491,7 @@ name|long
 operator|)
 name|doreti_iret_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -1561,9 +1514,7 @@ name|long
 operator|)
 name|ds_load_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -1586,9 +1537,7 @@ name|long
 operator|)
 name|es_load_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -1611,9 +1560,7 @@ name|long
 operator|)
 name|fs_load_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -1636,9 +1583,7 @@ name|long
 operator|)
 name|gs_load_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -1661,9 +1606,7 @@ name|long
 operator|)
 name|gsbase_load_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -1686,9 +1629,7 @@ name|long
 operator|)
 name|fsbase_load_fault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -1710,9 +1651,7 @@ name|curpcb
 operator|->
 name|pcb_onfault
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 break|break;
 case|case
@@ -1735,9 +1674,7 @@ operator|&=
 operator|~
 name|PSL_NT
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 break|break;
 case|case
@@ -1761,9 +1698,7 @@ operator|~
 literal|0xf
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 comment|/* 			 * FALLTHROUGH (TRCTRAP kernel mode, kernel address) 			 */
 case|case
@@ -1798,9 +1733,7 @@ argument_list|,
 name|frame
 argument_list|)
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
 break|break;
@@ -1817,12 +1750,9 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 endif|#
 directive|endif
-comment|/* DEV_ISA */
 block|}
 name|trap_fatal
 argument_list|(
@@ -1831,9 +1761,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 comment|/* Translate fault for emulators (e.g. Linux) */
 if|if
@@ -1844,8 +1772,10 @@ operator|->
 name|p_sysent
 operator|->
 name|sv_transtrap
+operator|!=
+name|NULL
 condition|)
-name|i
+name|signo
 operator|=
 call|(
 modifier|*
@@ -1856,7 +1786,7 @@ operator|->
 name|sv_transtrap
 call|)
 argument_list|(
-name|i
+name|signo
 argument_list|,
 name|type
 argument_list|)
@@ -1871,7 +1801,7 @@ name|ksi
 operator|.
 name|ksi_signo
 operator|=
-name|i
+name|signo
 expr_stmt|;
 name|ksi
 operator|.
@@ -1914,7 +1844,7 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
-name|i
+name|signo
 argument_list|,
 name|frame
 operator|->
@@ -2080,7 +2010,7 @@ operator|&
 name|ksi
 argument_list|)
 expr_stmt|;
-name|user
+name|userret
 label|:
 name|userret
 argument_list|(
@@ -2103,11 +2033,6 @@ literal|"Return from trap with kernel FPU ctx leaked"
 operator|)
 argument_list|)
 expr_stmt|;
-name|userout
-label|:
-name|out
-label|:
-return|return;
 block|}
 end_function
 
