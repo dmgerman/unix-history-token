@@ -3161,6 +3161,17 @@ name|MAX_JUMBO_FRAME_SIZE
 value|0x3F00
 end_define
 
+begin_comment
+comment|/* The datasheet maximum supported RX size is 9.5KB (9728 bytes) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_RX_JUMBO_FRAME_SIZE
+value|0x2600
+end_define
+
 begin_define
 define|#
 directive|define
