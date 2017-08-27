@@ -324,7 +324,7 @@ name|ieee80211_channel
 modifier|*
 name|c
 parameter_list|,
-name|uint16_t
+name|uint8_t
 name|power
 index|[
 name|RTWN_RIDX_COUNT
@@ -863,7 +863,7 @@ parameter_list|,
 name|int
 name|chain
 parameter_list|,
-name|uint16_t
+name|uint8_t
 name|power
 index|[
 name|RTWN_RIDX_COUNT
@@ -1448,7 +1448,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|uint16_t
+name|uint8_t
 name|power
 index|[
 name|RTWN_RIDX_COUNT

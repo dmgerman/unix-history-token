@@ -353,7 +353,7 @@ name|ieee80211_channel
 modifier|*
 name|c
 parameter_list|,
-name|uint16_t
+name|uint8_t
 name|power
 index|[
 name|RTWN_RIDX_COUNT
