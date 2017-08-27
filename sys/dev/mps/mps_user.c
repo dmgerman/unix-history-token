@@ -6438,14 +6438,13 @@ name|fw_diag_dmat
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mps_dprint
 argument_list|(
 name|sc
-operator|->
-name|mps_dev
 argument_list|,
-literal|"Cannot allocate FW diag buffer DMA "
-literal|"tag\n"
+name|MPS_ERROR
+argument_list|,
+literal|"Cannot allocate FW diag buffer DMA tag\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6481,14 +6480,13 @@ name|fw_diag_map
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mps_dprint
 argument_list|(
 name|sc
-operator|->
-name|mps_dev
 argument_list|,
-literal|"Cannot allocate FW diag buffer "
-literal|"memory\n"
+name|MPS_ERROR
+argument_list|,
+literal|"Cannot allocate FW diag buffer memory\n"
 argument_list|)
 expr_stmt|;
 return|return

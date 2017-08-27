@@ -630,7 +630,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Added this union to smoothly convert le64toh cm->cm_desc.Words.  * Compiler only supports uint64_t to be passed as an argument.  * Otherwise it will through this error:  * "aggregate value used where an integer was expected"  */
+comment|/*   * Added this union to smoothly convert le64toh cm->cm_desc.Words.  * Compiler only supports uint64_t to be passed as an argument.  * Otherwise it will throw this error:  * "aggregate value used where an integer was expected"  */
 end_comment
 
 begin_typedef
@@ -716,9 +716,9 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_TRACE
+name|MPR_INIT
 argument_list|,
-literal|"%s\n"
+literal|"%s entered\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -762,6 +762,17 @@ comment|//__FreeBSD_version>= 1000029
 name|sleep_flag
 operator|=
 name|NO_SLEEP
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"sequence start, sleep_flag=%d\n"
+argument_list|,
+name|sleep_flag
+argument_list|)
 expr_stmt|;
 comment|/* Push the magic sequence */
 name|error
@@ -891,12 +902,40 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"sequence failed, error=%d, exit\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* Send the actual reset.  XXX need to refresh the reg? */
+name|reg
+operator||=
+name|MPI2_DIAG_RESET_ADAPTER
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"sequence success, sending reset, reg= 0x%x\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
 name|mpr_regwrite
 argument_list|(
 name|sc
@@ -904,8 +943,6 @@ argument_list|,
 name|MPI2_HOST_DIAGNOSTIC_OFFSET
 argument_list|,
 name|reg
-operator||
-name|MPI2_DIAG_RESET_ADAPTER
 argument_list|)
 expr_stmt|;
 comment|/* Wait up to 300 seconds in 50ms intervals */
@@ -1057,11 +1094,24 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"reset failed, error= %d, exit\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|mpr_regwrite
 argument_list|(
 name|sc
@@ -1069,6 +1119,15 @@ argument_list|,
 name|MPI2_WRITE_SEQUENCE_OFFSET
 argument_list|,
 literal|0x0
+argument_list|)
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"diag reset success, exit\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1093,10 +1152,28 @@ name|int
 name|sleep_flag
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|MPR_FUNCTRACE
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s entered\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|mpr_regwrite
 argument_list|(
@@ -1127,22 +1204,32 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_FAULT
 argument_list|,
-literal|"Doorbell handshake failed :<%s>\n"
+literal|"Doorbell handshake failed\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ETIMEDOUT
+expr_stmt|;
+block|}
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit\n"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ETIMEDOUT
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -1198,6 +1285,19 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s entered, sleep_flags= %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sleep_flags
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|tries
@@ -1221,7 +1321,7 @@ name|sc
 argument_list|,
 name|MPR_INIT
 argument_list|,
-literal|"Doorbell= 0x%x\n"
+literal|"  Doorbell= 0x%x\n"
 argument_list|,
 name|reg
 argument_list|)
@@ -1234,6 +1334,16 @@ operator|&
 name|MPI2_DOORBELL_USED
 condition|)
 block|{
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"  Not ready, sending diag "
+literal|"reset\n"
+argument_list|)
+expr_stmt|;
 name|mpr_diag_reset
 argument_list|(
 name|sc
@@ -1264,21 +1374,24 @@ name|MPI2_DOORBELL_WHO_INIT_SHIFT
 operator|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
 argument_list|,
-literal|"IOC is under the control "
-literal|"of another peer host, aborting initialization.\n"
+name|MPR_INIT
+operator||
+name|MPR_FAULT
+argument_list|,
+literal|"IOC is under the "
+literal|"control of another peer host, aborting "
+literal|"initialization.\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ENXIO
-operator|)
-return|;
+expr_stmt|;
+break|break;
 block|}
 name|state
 operator|=
@@ -1312,9 +1425,12 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_FAULT
 argument_list|,
-literal|"IOC in fault state 0x%x\n"
+literal|"IOC in fault "
+literal|"state 0x%x, resetting\n"
 argument_list|,
 name|state
 operator|&
@@ -1359,6 +1475,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_FAULT
 argument_list|,
 literal|"IOC in unexpected reset state\n"
@@ -1371,6 +1489,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_FAULT
 argument_list|,
 literal|"IOC in unknown state 0x%x\n"
@@ -1395,13 +1515,26 @@ if|if
 condition|(
 name|error
 condition|)
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_INIT
+operator||
+name|MPR_FAULT
 argument_list|,
 literal|"Cannot transition IOC to ready\n"
+argument_list|)
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1455,7 +1588,9 @@ name|sc
 argument_list|,
 name|MPR_INIT
 argument_list|,
-literal|"Doorbell= 0x%x\n"
+literal|"%s entered, Doorbell= 0x%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|reg
 argument_list|)
@@ -1473,6 +1608,15 @@ operator|!=
 name|MPI2_IOC_STATE_READY
 condition|)
 block|{
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"IOC not ready\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1491,11 +1635,11 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_FAULT
 argument_list|,
-literal|"%s failed to transition ready\n"
-argument_list|,
-name|__func__
+literal|"failed to transition ready, exit\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1510,6 +1654,17 @@ operator|=
 name|mpr_send_iocinit
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1553,9 +1708,11 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_TRACE
 argument_list|,
-literal|"%s\n"
+literal|"%s entered\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1611,12 +1768,12 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_FAULT
 argument_list|,
-literal|"%s failed to get IOC Facts "
-literal|"with error %d\n"
-argument_list|,
-name|__func__
+literal|"Failed to get "
+literal|"IOC Facts with error %d, exit\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1709,9 +1866,11 @@ operator|.
 name|Dev
 argument_list|)
 expr_stmt|;
-name|mpr_printf
+name|mpr_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPR_INFO
 argument_list|,
 literal|"Firmware: %s, Driver: %s\n"
 argument_list|,
@@ -1722,9 +1881,11 @@ argument_list|,
 name|MPR_DRIVER_VERSION
 argument_list|)
 expr_stmt|;
-name|mpr_printf
+name|mpr_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPR_INFO
 argument_list|,
 literal|"IOCCapabilities: %b\n"
 argument_list|,
@@ -1758,10 +1919,8 @@ comment|/* 	 * If the chip doesn't support event replay then a hard reset will b
 if|if
 condition|(
 name|attaching
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 operator|(
 name|sc
 operator|->
@@ -1773,8 +1932,18 @@ name|MPI2_IOCFACTS_CAPABILITY_EVENT_REPLAY
 operator|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"No event replay, resetting\n"
+argument_list|)
+expr_stmt|;
 name|mpr_diag_reset
 argument_list|(
 name|sc
@@ -1800,12 +1969,12 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_FAULT
 argument_list|,
-literal|"%s failed to "
-literal|"transition to ready with error %d\n"
-argument_list|,
-name|__func__
+literal|"Failed to "
+literal|"transition to ready with error %d, exit\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1815,7 +1984,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 block|}
 comment|/* 	 * Set flag if IR Firmware is loaded.  If the RAID Capability has 	 * changed from the previous IOC Facts, log a warning, but only if 	 * checking this after a Diag Reset and not during attach. 	 */
@@ -1860,12 +2028,12 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_FAULT
 argument_list|,
-literal|"%s new IR/IT mode in IOC "
-literal|"Facts does not match previous mode\n"
-argument_list|,
-name|__func__
+literal|"new IR/IT mode "
+literal|"in IOC Facts does not match previous mode\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2378,12 +2546,11 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_FAULT
+name|MPR_INIT
+operator||
+name|MPR_ERROR
 argument_list|,
-literal|"%s failed to alloc "
-literal|"queues with error %d\n"
-argument_list|,
-name|__func__
+literal|"Failed to alloc queues with error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -2453,14 +2620,16 @@ condition|(
 name|attaching
 condition|)
 block|{
-name|mpr_printf
+name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-literal|"%s failed to transition to operational "
-literal|"with error %d\n"
+name|MPR_INIT
+operator||
+name|MPR_FAULT
 argument_list|,
-name|__func__
+literal|"Failed to "
+literal|"transition to operational with error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -2524,6 +2693,15 @@ condition|(
 name|attaching
 condition|)
 block|{
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"Attaching subsystems\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2566,14 +2744,15 @@ literal|0
 operator|)
 condition|)
 block|{
-name|mpr_printf
+name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-literal|"%s failed to attach all subsystems: "
-literal|"error %d\n"
+name|MPR_INIT
+operator||
+name|MPR_ERROR
 argument_list|,
-name|__func__
+literal|"Failed to attach all subsystems: error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -2603,13 +2782,15 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mpr_printf
+name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-literal|"%s failed to setup interrupts\n"
+name|MPR_INIT
+operator||
+name|MPR_ERROR
 argument_list|,
-name|__func__
+literal|"Failed to setup interrupts\n"
 argument_list|)
 expr_stmt|;
 name|mpr_free
@@ -3160,6 +3341,17 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+operator||
+name|MPR_INFO
+argument_list|,
+literal|"Reinitializing controller\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -3175,25 +3367,14 @@ name|sc
 argument_list|,
 name|MPR_INIT
 argument_list|,
-literal|"%s reset already in progress\n"
-argument_list|,
-name|__func__
+literal|"Reset already in progress\n"
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-name|mpr_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MPR_INFO
-argument_list|,
-literal|"Reinitializing controller,\n"
-argument_list|)
-expr_stmt|;
-comment|/* make sure the completion callbacks can recognize they're getting 	 * a NULL cm_reply due to a reset. 	 */
+comment|/* 	 * Make sure the completion callbacks can recognize they're getting 	 * a NULL cm_reply due to a reset. 	 */
 name|sc
 operator|->
 name|mpr_flags
@@ -3207,9 +3388,7 @@ name|sc
 argument_list|,
 name|MPR_INIT
 argument_list|,
-literal|"%s mask interrupts\n"
-argument_list|,
-name|__func__
+literal|"Masking interrupts and resetting\n"
 argument_list|)
 expr_stmt|;
 name|mpr_mask_intr
@@ -3323,11 +3502,11 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_INFO
+name|MPR_INIT
+operator||
+name|MPR_XINFO
 argument_list|,
-literal|"%s finished sc %p post %u free %u\n"
-argument_list|,
-name|__func__
+literal|"Finished sc %p post %u free %u\n"
 argument_list|,
 name|sc
 argument_list|,
@@ -3343,6 +3522,19 @@ expr_stmt|;
 name|mprsas_release_simq_reinit
 argument_list|(
 name|sassc
+argument_list|)
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit error= %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -3428,7 +3620,7 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_INIT
+name|MPR_TRACE
 argument_list|,
 literal|"%s: successful count(%d), "
 literal|"timeout(%d)\n"
@@ -4521,6 +4713,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s entered\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|req_sz
 operator|=
 sizeof|sizeof
@@ -4575,6 +4778,19 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit, error= %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4617,6 +4833,17 @@ decl_stmt|;
 name|MPR_FUNCTRACE
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s entered\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|req_sz
@@ -4905,6 +5132,17 @@ operator|.
 name|IOCStatus
 argument_list|)
 expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5080,11 +5318,11 @@ name|queues_dmat
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate queues DMA tag\n"
 argument_list|)
@@ -5120,11 +5358,11 @@ name|queues_map
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate queues memory\n"
 argument_list|)
@@ -5301,11 +5539,11 @@ name|reply_dmat
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate replies DMA tag\n"
 argument_list|)
@@ -5343,11 +5581,11 @@ name|reply_map
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate replies memory\n"
 argument_list|)
@@ -5492,11 +5730,11 @@ name|req_dmat
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate request DMA tag\n"
 argument_list|)
@@ -5534,11 +5772,11 @@ name|req_map
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate request memory\n"
 argument_list|)
@@ -5715,11 +5953,11 @@ name|chain_dmat
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate chain DMA tag\n"
 argument_list|)
@@ -5757,11 +5995,11 @@ name|chain_map
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate chain memory\n"
 argument_list|)
@@ -5864,11 +6102,11 @@ name|sense_dmat
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate sense DMA tag\n"
 argument_list|)
@@ -5906,11 +6144,11 @@ name|sense_map
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate sense memory\n"
 argument_list|)
@@ -5987,17 +6225,13 @@ operator|->
 name|chains
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
 argument_list|,
-literal|"Cannot allocate memory %s %d\n"
+name|MPR_ERROR
 argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
+literal|"Cannot allocate chain memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6182,11 +6416,11 @@ name|buffer_dmat
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate buffer DMA tag\n"
 argument_list|)
@@ -6229,17 +6463,13 @@ operator|->
 name|commands
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
 argument_list|,
-literal|"Cannot allocate memory %s %d\n"
+name|MPR_ERROR
 argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
+literal|"Cannot allocate command memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6579,11 +6809,11 @@ name|prp_page_dmat
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate NVMe PRP DMA "
 literal|"tag\n"
@@ -6622,11 +6852,11 @@ name|prp_page_map
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate NVMe PRP memory\n"
 argument_list|)
@@ -7957,6 +8187,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s entered\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -8031,13 +8272,15 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mpr_printf
+name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-literal|"%s failed to transition ready\n"
+name|MPR_INIT
+operator||
+name|MPR_FAULT
 argument_list|,
-name|__func__
+literal|"Failed to transition ready\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8072,17 +8315,15 @@ operator|->
 name|facts
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
 argument_list|,
-literal|"Cannot allocate memory %s %d\n"
+name|MPR_INIT
+operator||
+name|MPR_FAULT
 argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
+literal|"Cannot allocate memory, exit\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8112,12 +8353,12 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_FAULT
 argument_list|,
-literal|"%s IOC Facts based allocation "
+literal|"IOC Facts allocation "
 literal|"failed with error %d\n"
-argument_list|,
-name|__func__
 argument_list|,
 name|error
 argument_list|)
@@ -8168,6 +8409,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_ERROR
 argument_list|,
 literal|"Cannot establish MPR config hook\n"
@@ -8206,10 +8449,11 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_ERROR
 argument_list|,
-literal|"shutdown event registration "
-literal|"failed\n"
+literal|"shutdown event registration failed\n"
 argument_list|)
 expr_stmt|;
 name|mpr_setup_sysctl
@@ -8222,6 +8466,19 @@ operator|->
 name|mpr_flags
 operator||=
 name|MPR_FLAGS_ATTACH_DONE
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit error= %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -8259,6 +8516,17 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s entered\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|mpr_lock
 argument_list|(
 name|sc
@@ -8288,6 +8556,17 @@ expr_stmt|;
 name|mpr_unlock
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -8634,6 +8913,17 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s entered\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Turn off the watchdog */
 name|mpr_lock
 argument_list|(
@@ -8696,11 +8986,27 @@ operator|!=
 literal|0
 operator|)
 condition|)
+block|{
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+operator||
+name|MPR_FAULT
+argument_list|,
+literal|"failed to detach "
+literal|"subsystems, error= %d, exit\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|mpr_detach_user
 argument_list|(
 name|sc
@@ -8805,6 +9111,17 @@ operator|&
 name|sc
 operator|->
 name|mpr_mtx
+argument_list|)
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -10144,17 +10461,15 @@ operator|!
 name|eh
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
 argument_list|,
-literal|"Cannot allocate memory %s %d\n"
+name|MPR_EVENT
+operator||
+name|MPR_ERROR
 argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
+literal|"Cannot allocate event memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11930,17 +12245,24 @@ expr_stmt|;
 comment|/* 		 * Check whether a given SGE buffer lies on a non-PAGED 		 * boundary if this is not the first page. If so, this is not 		 * expected so have FW build the SGL. 		 */
 if|if
 condition|(
+operator|(
 name|i
-condition|)
-block|{
-if|if
-condition|(
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
 operator|(
 name|uint32_t
 operator|)
 name|paddr
 operator|&
 name|page_mask
+operator|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|mpr_dprint
@@ -11961,7 +12283,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-block|}
 block|}
 comment|/* Apart from last SGE, if any other SGE boundary is not page 		 * aligned then it means that hole exists. Existence of hole 		 * leads to data corruption. So fallback to IEEE SGEs. 		 */
 if|if

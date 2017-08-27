@@ -3984,6 +3984,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s entered\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|sassc
 operator|=
 name|malloc
@@ -4007,17 +4018,15 @@ operator|!
 name|sassc
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
 argument_list|,
-literal|"Cannot allocate memory %s %d\n"
+name|MPR_INIT
+operator||
+name|MPR_ERROR
 argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
+literal|"Cannot allocate SAS subsystem memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4074,17 +4083,15 @@ operator|->
 name|targets
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
 argument_list|,
-literal|"Cannot allocate memory %s %d\n"
+name|MPR_INIT
+operator||
+name|MPR_ERROR
 argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
+literal|"Cannot allocate SAS target memory\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -4134,6 +4141,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate SIMQ\n"
@@ -4203,6 +4212,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate SIM\n"
@@ -4312,6 +4323,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_ERROR
 argument_list|,
 literal|"Error %d registering SCSI bus\n"
@@ -4395,9 +4408,13 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|mpr_printf
+name|mpr_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPR_INIT
+operator||
+name|MPR_ERROR
 argument_list|,
 literal|"Error %#x creating sim path\n"
 argument_list|,
@@ -4586,6 +4603,19 @@ condition|)
 name|mpr_detach_sas
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit, error= %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return

@@ -3242,8 +3242,14 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|mpr_dprint
 argument_list|(
+name|sc
+argument_list|,
+name|MPR_MAPPING
+operator||
+name|MPR_FAULT
+argument_list|,
 literal|"%s: error reading SAS device %#x page0\n"
 argument_list|,
 name|__func__
@@ -3319,9 +3325,12 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_INFO
+name|MPR_MAPPING
 argument_list|,
-literal|"SAS Address from SAS device page0 = %jx\n"
+literal|"Handle 0x%04x SAS Address from SAS device "
+literal|"page0 = %jx\n"
+argument_list|,
+name|handle
 argument_list|,
 name|sas_address
 argument_list|)
@@ -3360,10 +3369,12 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_MAPPING
+operator||
 name|MPR_ERROR
 argument_list|,
-literal|"%s: failed to get disk type "
-literal|"(SSD or HDD) for SATA device with handle 0x%04x\n"
+literal|"%s: failed to get disk type (SSD or HDD) for SATA "
+literal|"device with handle 0x%04x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3377,10 +3388,12 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_INFO
+name|MPR_MAPPING
 argument_list|,
-literal|"SAS Address from SATA "
-literal|"device = %jx\n"
+literal|"Handle 0x%04x SAS Address "
+literal|"from SATA device = %jx\n"
+argument_list|,
+name|handle
 argument_list|,
 name|sas_address
 argument_list|)
@@ -3519,11 +3532,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_MAPPING
+operator||
+name|MPR_INFO
 argument_list|,
 literal|"Excluding target id %d\n"
 argument_list|,
@@ -3572,17 +3587,6 @@ name|out
 goto|;
 block|}
 block|}
-name|mpr_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MPR_MAPPING
-argument_list|,
-literal|"SAS Address from SAS device page0 = %jx\n"
-argument_list|,
-name|sas_address
-argument_list|)
-expr_stmt|;
 name|targ
 operator|->
 name|devinfo
@@ -5835,11 +5839,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
+argument_list|,
+name|MPR_MAPPING
+operator||
+name|MPR_INFO
 argument_list|,
 literal|"Excluding target id %d\n"
 argument_list|,

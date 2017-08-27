@@ -4410,21 +4410,6 @@ name|dev_handle
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|mps_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"SAS Address for SATA "
-literal|"device = %jx\n"
-argument_list|,
-name|sas_address
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|phy_change
 operator|->
