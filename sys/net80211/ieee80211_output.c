@@ -10551,7 +10551,7 @@ name|capinfo
 operator||=
 name|IEEE80211_CAPINFO_PRIVACY
 expr_stmt|;
-comment|/* 		 * NB: Some 11a AP's reject the request when 		 *     short premable is set. 		 */
+comment|/* 		 * NB: Some 11a AP's reject the request when 		 *     short preamble is set. 		 */
 if|if
 condition|(
 operator|(
