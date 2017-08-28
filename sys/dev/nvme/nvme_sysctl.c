@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_nvme.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -41,11 +47,29 @@ directive|include
 file|"nvme_private.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NVME_USE_NVD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NVME_USE_NVD
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|nvme_use_nvd
 init|=
-literal|1
+name|NVME_USE_NVD
 decl_stmt|;
 end_decl_stmt
 
