@@ -6548,7 +6548,7 @@ decl_stmt|;
 name|bool
 name|empty
 decl_stmt|;
-name|VM_OBJECT_ASSERT_LOCKED
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
 argument_list|)
@@ -6901,12 +6901,32 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|SWM_FREE
+operator||
+name|SWM_POP
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|VM_OBJECT_ASSERT_WLOCKED
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+else|else
 name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The meta data only exists of the object is OBJT_SWAP 	 * and even then might not be allocated yet. 	 */
+comment|/* 	 * The meta data only exists if the object is OBJT_SWAP 	 * and even then might not be allocated yet. 	 */
 if|if
 condition|(
 name|object
