@@ -2984,6 +2984,9 @@ name|inp
 parameter_list|,
 name|u_int
 name|dir
+parameter_list|,
+name|int
+name|needport
 parameter_list|)
 block|{
 name|struct
@@ -3025,7 +3028,6 @@ operator|&
 name|spidx
 argument_list|)
 expr_stmt|;
-comment|/* Fill ports in spidx if we have inpcb. */
 name|ipsec4_get_ulp
 argument_list|(
 name|m
@@ -3033,9 +3035,7 @@ argument_list|,
 operator|&
 name|spidx
 argument_list|,
-name|inp
-operator|!=
-name|NULL
+name|needport
 argument_list|)
 expr_stmt|;
 name|spidx
@@ -3099,6 +3099,9 @@ parameter_list|,
 name|int
 modifier|*
 name|error
+parameter_list|,
+name|int
+name|needport
 parameter_list|)
 block|{
 name|struct
@@ -3120,6 +3123,8 @@ argument_list|,
 name|inp
 argument_list|,
 name|IPSEC_DIR_OUTBOUND
+argument_list|,
+name|needport
 argument_list|)
 expr_stmt|;
 if|if
@@ -3253,6 +3258,8 @@ argument_list|,
 name|inp
 argument_list|,
 name|IPSEC_DIR_INBOUND
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|result
@@ -3852,6 +3859,9 @@ name|inp
 parameter_list|,
 name|u_int
 name|dir
+parameter_list|,
+name|int
+name|needport
 parameter_list|)
 block|{
 name|struct
@@ -3893,7 +3903,6 @@ operator|&
 name|spidx
 argument_list|)
 expr_stmt|;
-comment|/* Fill ports in spidx if we have inpcb. */
 name|ipsec6_get_ulp
 argument_list|(
 name|m
@@ -3901,9 +3910,7 @@ argument_list|,
 operator|&
 name|spidx
 argument_list|,
-name|inp
-operator|!=
-name|NULL
+name|needport
 argument_list|)
 expr_stmt|;
 name|spidx
@@ -3967,6 +3974,9 @@ parameter_list|,
 name|int
 modifier|*
 name|error
+parameter_list|,
+name|int
+name|needport
 parameter_list|)
 block|{
 name|struct
@@ -3988,6 +3998,8 @@ argument_list|,
 name|inp
 argument_list|,
 name|IPSEC_DIR_OUTBOUND
+argument_list|,
+name|needport
 argument_list|)
 expr_stmt|;
 if|if
@@ -4121,6 +4133,8 @@ argument_list|,
 name|inp
 argument_list|,
 name|IPSEC_DIR_INBOUND
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|result
