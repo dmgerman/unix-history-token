@@ -7280,6 +7280,13 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* 	 * Ensure thread-safe mailbox access (in debug builds). 	 * 	 * So far this was the only thread accessing the mailbox but various 	 * ifnets and sysctls are about to be created and their handlers/ioctls 	 * will access the mailbox from different threads. 	 */
+name|sc
+operator|->
+name|flags
+operator||=
+name|CHK_MBOX_ACCESS
+expr_stmt|;
 name|rc
 operator|=
 name|bus_generic_attach
@@ -7790,6 +7797,13 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|CHK_MBOX_ACCESS
 expr_stmt|;
 if|if
 condition|(

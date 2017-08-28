@@ -539,7 +539,14 @@ operator|<<
 literal|1
 operator|)
 block|,
-comment|/* INTR_DIRECT	= (1<< 2),	No longer used. */
+name|CHK_MBOX_ACCESS
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
 name|MASTER_PF
 init|=
 operator|(
