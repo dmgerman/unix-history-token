@@ -3360,6 +3360,12 @@ operator|&&
 name|tp
 operator|->
 name|t_rxtshift
+operator|<
+literal|6
+operator|&&
+name|tp
+operator|->
+name|t_rxtshift
 operator|%
 literal|2
 operator|==
@@ -3368,6 +3374,19 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * Enter Path MTU Black-hole Detection mechanism: 			 * - Disable Path MTU Discovery (IP "DF" bit). 			 * - Reduce MTU to lower value than what we 			 *   negotiated with peer. 			 */
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|t_flags2
+operator|&
+name|TF2_PLPMTU_BLACKHOLE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Record that we may have found a black hole. */
 name|tp
 operator|->
@@ -3384,6 +3403,7 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
+block|}
 comment|/*  			 * Reduce the MSS to blackhole value or to the default 			 * in an attempt to retransmit. 			 */
 ifdef|#
 directive|ifdef
@@ -3563,7 +3583,7 @@ operator|(
 name|tp
 operator|->
 name|t_rxtshift
-operator|>
+operator|>=
 literal|6
 operator|)
 condition|)
