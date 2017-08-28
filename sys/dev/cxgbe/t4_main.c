@@ -2498,7 +2498,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Functions used by extra VIs to obtain unique MAC addresses for each VI. */
+comment|/* Functions used by VIs to obtain unique MAC addresses for each VI. */
 end_comment
 
 begin_decl_stmt
@@ -2508,6 +2508,8 @@ name|vi_mac_funcs
 index|[]
 init|=
 block|{
+name|FW_VI_FUNC_ETH
+block|,
 name|FW_VI_FUNC_OFLD
 block|,
 name|FW_VI_FUNC_IWARP
@@ -11886,6 +11888,14 @@ name|pi
 operator|->
 name|vi
 expr_stmt|;
+name|MPASS
+argument_list|(
+name|index
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* This function deals with _extra_ VIs only */
 name|KASSERT
 argument_list|(
 name|index
