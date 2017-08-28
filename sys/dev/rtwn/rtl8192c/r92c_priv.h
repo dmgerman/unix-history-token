@@ -1997,7 +1997,7 @@ index|[
 literal|28
 index|]
 decl_stmt|;
-comment|/* RTWN_RIDX_MCS(15) + 1 */
+comment|/* RTWN_RIDX_HT_MCS(15) + 1 */
 block|}
 struct|;
 end_struct

@@ -404,7 +404,7 @@ return|return;
 block|}
 name|max_mcs
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 name|sc
 operator|->
@@ -557,7 +557,7 @@ index|]
 expr_stmt|;
 name|min_mcs
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 name|i
 operator|*

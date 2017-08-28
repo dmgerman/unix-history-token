@@ -410,7 +410,7 @@ block|}
 comment|/* XXX net80211 regulatory */
 name|max_mcs
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 name|sc
 operator|->
@@ -796,7 +796,7 @@ for|for
 control|(
 name|ridx
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|0
 argument_list|)
@@ -1185,7 +1185,7 @@ name|R92C_TXAGC_MCS00
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|0
 argument_list|)
@@ -1198,7 +1198,7 @@ name|R92C_TXAGC_MCS01
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|1
 argument_list|)
@@ -1211,7 +1211,7 @@ name|R92C_TXAGC_MCS02
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|2
 argument_list|)
@@ -1224,7 +1224,7 @@ name|R92C_TXAGC_MCS03
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|3
 argument_list|)
@@ -1247,7 +1247,7 @@ name|R92C_TXAGC_MCS04
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|4
 argument_list|)
@@ -1260,7 +1260,7 @@ name|R92C_TXAGC_MCS05
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|5
 argument_list|)
@@ -1273,7 +1273,7 @@ name|R92C_TXAGC_MCS06
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|6
 argument_list|)
@@ -1286,7 +1286,7 @@ name|R92C_TXAGC_MCS07
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|7
 argument_list|)
@@ -1318,7 +1318,7 @@ name|R92C_TXAGC_MCS08
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|8
 argument_list|)
@@ -1331,7 +1331,7 @@ name|R92C_TXAGC_MCS09
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|9
 argument_list|)
@@ -1344,7 +1344,7 @@ name|R92C_TXAGC_MCS10
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|10
 argument_list|)
@@ -1357,7 +1357,7 @@ name|R92C_TXAGC_MCS11
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|11
 argument_list|)
@@ -1380,7 +1380,7 @@ name|R92C_TXAGC_MCS12
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|12
 argument_list|)
@@ -1393,7 +1393,7 @@ name|R92C_TXAGC_MCS13
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|13
 argument_list|)
@@ -1406,7 +1406,7 @@ name|R92C_TXAGC_MCS14
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|14
 argument_list|)
@@ -1419,7 +1419,7 @@ name|R92C_TXAGC_MCS15
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|15
 argument_list|)
@@ -1503,7 +1503,7 @@ name|ridx
 decl_stmt|;
 name|max_mcs
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 name|sc
 operator|->

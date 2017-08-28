@@ -381,7 +381,7 @@ name|R12A_TXAGC_MCS0
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|0
 argument_list|)
@@ -394,7 +394,7 @@ name|R12A_TXAGC_MCS1
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|1
 argument_list|)
@@ -407,7 +407,7 @@ name|R12A_TXAGC_MCS2
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|2
 argument_list|)
@@ -420,7 +420,7 @@ name|R12A_TXAGC_MCS3
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|3
 argument_list|)
@@ -443,7 +443,7 @@ name|R12A_TXAGC_MCS4
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|4
 argument_list|)
@@ -456,7 +456,7 @@ name|R12A_TXAGC_MCS5
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|5
 argument_list|)
@@ -469,7 +469,7 @@ name|R12A_TXAGC_MCS6
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|6
 argument_list|)
@@ -482,7 +482,7 @@ name|R12A_TXAGC_MCS7
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|7
 argument_list|)
@@ -514,7 +514,7 @@ name|R12A_TXAGC_MCS8
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|8
 argument_list|)
@@ -527,7 +527,7 @@ name|R12A_TXAGC_MCS9
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|9
 argument_list|)
@@ -540,7 +540,7 @@ name|R12A_TXAGC_MCS10
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|10
 argument_list|)
@@ -553,7 +553,7 @@ name|R12A_TXAGC_MCS11
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|11
 argument_list|)
@@ -576,7 +576,7 @@ name|R12A_TXAGC_MCS12
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|12
 argument_list|)
@@ -589,7 +589,7 @@ name|R12A_TXAGC_MCS13
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|13
 argument_list|)
@@ -602,7 +602,7 @@ name|R12A_TXAGC_MCS14
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|14
 argument_list|)
@@ -615,7 +615,7 @@ name|R12A_TXAGC_MCS15
 argument_list|,
 name|power
 index|[
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|15
 argument_list|)
@@ -1043,7 +1043,7 @@ block|}
 comment|/* TODO: VHT rates. */
 name|max_mcs
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 name|sc
 operator|->
@@ -1232,7 +1232,7 @@ index|]
 expr_stmt|;
 name|min_mcs
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 name|i
 operator|*
@@ -1404,7 +1404,7 @@ index|]
 expr_stmt|;
 name|min_mcs
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 name|i
 operator|*
