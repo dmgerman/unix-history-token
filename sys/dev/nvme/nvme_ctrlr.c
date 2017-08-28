@@ -469,6 +469,19 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Our best estimate for the maximum number of I/Os that we should 	 * noramlly have in flight at one time. This should be viewed as a hint, 	 * not a hard limit and will need to be revisitted when the upper layers 	 * of the storage system grows multi-queue support. 	 */
+name|ctrlr
+operator|->
+name|max_hw_pend_io
+operator|=
+name|num_trackers
+operator|*
+name|ctrlr
+operator|->
+name|num_io_queues
+operator|/
+literal|4
+expr_stmt|;
 comment|/* 	 * This was calculated previously when setting up interrupts, but 	 *  a controller could theoretically support fewer I/O queues than 	 *  MSI-X vectors.  So calculate again here just to be safe. 	 */
 name|ctrlr
 operator|->

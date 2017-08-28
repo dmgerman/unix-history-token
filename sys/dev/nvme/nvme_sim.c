@@ -1038,7 +1038,7 @@ name|max_trans
 operator|=
 name|ctrlr
 operator|->
-name|num_io_queues
+name|max_hw_pend_io
 expr_stmt|;
 name|unit
 operator|=
