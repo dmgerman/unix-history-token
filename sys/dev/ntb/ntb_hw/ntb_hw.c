@@ -741,7 +741,11 @@ name|uint64_t
 name|db_mask
 decl_stmt|;
 name|uint64_t
-name|fake_db_bell
+name|fake_db
+decl_stmt|;
+comment|/* NTB_SB01BASE_LOCKUP*/
+name|uint64_t
+name|force_db
 decl_stmt|;
 comment|/* NTB_SB01BASE_LOCKUP*/
 name|int
@@ -5981,7 +5985,7 @@ name|ibits
 operator|=
 name|ntb
 operator|->
-name|fake_db_bell
+name|fake_db
 operator|&
 name|ntb
 operator|->
@@ -6007,6 +6011,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* Simulate fake interrupts if unmasked DB bits are set. */
+name|ntb
+operator|->
+name|force_db
+operator||=
+name|ibits
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -6110,7 +6120,7 @@ return|return
 operator|(
 name|ntb
 operator|->
-name|fake_db_bell
+name|fake_db
 operator|)
 return|;
 return|return
@@ -6208,7 +6218,7 @@ argument_list|)
 expr_stmt|;
 name|ntb
 operator|->
-name|fake_db_bell
+name|fake_db
 operator|&=
 operator|~
 name|bits
@@ -6411,18 +6421,29 @@ argument_list|(
 name|ntb
 argument_list|)
 expr_stmt|;
-comment|/* Do not report same DB events again if not cleared yet. */
+comment|/* 		 * Do not report same DB events again if not cleared yet, 		 * unless the mask was just cleared for them and this 		 * interrupt handler call can be the consequence of it. 		 */
 name|vec_mask
 operator|&=
 operator|~
 name|ntb
 operator|->
-name|fake_db_bell
+name|fake_db
+operator||
+name|ntb
+operator|->
+name|force_db
+expr_stmt|;
+name|ntb
+operator|->
+name|force_db
+operator|&=
+operator|~
+name|vec_mask
 expr_stmt|;
 comment|/* Update our internal doorbell register. */
 name|ntb
 operator|->
-name|fake_db_bell
+name|fake_db
 operator||=
 name|vec_mask
 expr_stmt|;
@@ -7359,7 +7380,11 @@ condition|)
 block|{
 name|ntb
 operator|->
-name|fake_db_bell
+name|force_db
+operator|=
+name|ntb
+operator|->
+name|fake_db
 operator|=
 literal|0
 expr_stmt|;
