@@ -727,10 +727,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|struct
-name|ifmedia
-name|media
-decl_stmt|;
 name|unsigned
 name|long
 name|flags
@@ -1038,6 +1034,10 @@ decl_stmt|;
 name|struct
 name|link_config
 name|old_link_cfg
+decl_stmt|;
+name|struct
+name|ifmedia
+name|media
 decl_stmt|;
 name|struct
 name|timeval
