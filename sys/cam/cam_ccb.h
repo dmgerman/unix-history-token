@@ -1241,17 +1241,12 @@ decl_stmt|;
 name|u_int8_t
 name|serial_num_len
 decl_stmt|;
-specifier|const
-name|struct
-name|nvme_controller_data
+name|void
 modifier|*
-name|nvme_cdata
-decl_stmt|;
-specifier|const
-name|struct
-name|nvme_namespace_data
-modifier|*
-name|nvme_data
+name|padding
+index|[
+literal|2
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -4295,6 +4290,16 @@ define|#
 directive|define
 name|CDAI_TYPE_EXT_INQ
 value|5
+define|#
+directive|define
+name|CDAI_TYPE_NVME_CNTRL
+value|6
+comment|/* NVMe Identify Controller data */
+define|#
+directive|define
+name|CDAI_TYPE_NVME_NS
+value|7
+comment|/* NVMe Identify Namespace data */
 name|off_t
 name|bufsiz
 decl_stmt|;
