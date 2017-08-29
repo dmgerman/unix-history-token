@@ -107,6 +107,25 @@ parameter_list|)
 value|(__builtin_signbitl(x))
 end_define
 
+begin_if
+if|#
+directive|if
+name|LDBL_MAX_EXP
+operator|!=
+literal|0x4000
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Unsupported long double format"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -125,6 +144,10 @@ init|=
 literal|0x1p
 operator|-
 literal|8189L
+decl_stmt|,
+name|HALF_MAX
+init|=
+literal|0x1p16383L
 decl_stmt|,
 name|QUARTER_SQRT_MAX
 init|=
@@ -1860,9 +1883,7 @@ if|if
 condition|(
 name|ax
 operator|>
-name|LDBL_MAX
-operator|/
-literal|2
+name|HALF_MAX
 condition|)
 return|return
 operator|(

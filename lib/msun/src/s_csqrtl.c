@@ -54,15 +54,39 @@ name|ON
 end_pragma
 
 begin_comment
-comment|/* We risk spurious overflow for components>= LDBL_MAX / (1 + sqrt(2)). */
+comment|/*  * We risk spurious overflow for components>= LDBL_MAX / (1 + sqrt(2)).  * Rather than determining the fully precise value at which we might  * overflow, just use a threshold of approximately LDBL_MAX / 4.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|LDBL_MAX_EXP
+operator|!=
+literal|0x4000
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Unsupported long double format"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
 name|THRESH
-value|(LDBL_MAX / 2.414213562373095048801688724209698L)
+value|0x1p16382L
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|long
