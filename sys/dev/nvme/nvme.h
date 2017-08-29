@@ -3345,7 +3345,7 @@ name|nvme_command
 modifier|*
 name|cmd
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|)
 block|{
@@ -3378,7 +3378,7 @@ parameter_list|,
 name|uint32_t
 name|rwcmd
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|,
 name|uint64_t
@@ -3456,7 +3456,7 @@ name|nvme_command
 modifier|*
 name|cmd
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|,
 name|uint64_t
@@ -3493,7 +3493,7 @@ name|nvme_command
 modifier|*
 name|cmd
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|,
 name|uint64_t
@@ -3530,7 +3530,7 @@ name|nvme_command
 modifier|*
 name|cmd
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|,
 name|uint32_t

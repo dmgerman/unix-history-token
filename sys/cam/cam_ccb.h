@@ -2126,7 +2126,7 @@ begin_struct
 struct|struct
 name|ccb_pathinq_settings_nvme
 block|{
-name|uint16_t
+name|uint32_t
 name|nsid
 decl_stmt|;
 comment|/* Namespace ID for this path */
