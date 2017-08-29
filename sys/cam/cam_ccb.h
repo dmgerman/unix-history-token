@@ -2819,10 +2819,14 @@ name|uint32_t
 name|dxfer_len
 decl_stmt|;
 comment|/* Data transfer length */
-name|uint32_t
-name|resid
+name|uint16_t
+name|sglist_cnt
 decl_stmt|;
-comment|/* Transfer residual length: 2's comp unused ?*/
+comment|/* Number of SG list entries */
+name|uint16_t
+name|unused
+decl_stmt|;
+comment|/* padding for removed uint32_t */
 block|}
 struct|;
 end_struct

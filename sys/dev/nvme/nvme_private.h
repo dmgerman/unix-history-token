@@ -413,6 +413,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|NVME_REQUEST_CCB
+value|5
+end_define
+
 begin_struct
 struct|struct
 name|nvme_request
@@ -2102,7 +2109,68 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|nvme_request
+operator|*
+name|nvme_allocate_request_ccb
+argument_list|(
+argument|union ccb *ccb
+argument_list|,
+argument|nvme_cb_fn_t cb_fn
+argument_list|,
+argument|void *cb_arg
+argument_list|)
+block|{ 	struct
+name|nvme_request
+operator|*
+name|req
+block|;
+name|req
+operator|=
+name|_nvme_allocate_request
+argument_list|(
+name|cb_fn
+argument_list|,
+name|cb_arg
+argument_list|)
+block|;
+if|if
+condition|(
+name|req
+operator|!=
+name|NULL
+condition|)
+block|{
+name|req
+operator|->
+name|type
+operator|=
+name|NVME_REQUEST_CCB
+expr_stmt|;
+name|req
+operator|->
+name|u
+operator|.
+name|payload
+operator|=
+name|ccb
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|req
+operator|)
+return|;
+end_return
+
 begin_define
+unit|}
 define|#
 directive|define
 name|nvme_free_request
@@ -2112,33 +2180,25 @@ parameter_list|)
 value|uma_zfree(nvme_request_zone, req)
 end_define
 
-begin_function_decl
-name|void
+begin_macro
+unit|void
 name|nvme_notify_async_consumers
-parameter_list|(
-name|struct
-name|nvme_controller
-modifier|*
-name|ctrlr
-parameter_list|,
-specifier|const
-name|struct
-name|nvme_completion
-modifier|*
-name|async_cpl
-parameter_list|,
-name|uint32_t
-name|log_page_id
-parameter_list|,
-name|void
-modifier|*
-name|log_page_buffer
-parameter_list|,
-name|uint32_t
-name|log_page_size
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|struct nvme_controller *ctrlr
+argument_list|,
+argument|const struct nvme_completion *async_cpl
+argument_list|,
+argument|uint32_t log_page_id
+argument_list|,
+argument|void *log_page_buffer
+argument_list|,
+argument|uint32_t log_page_size
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
