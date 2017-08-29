@@ -2729,7 +2729,7 @@ name|wqe
 operator|->
 name|write
 operator|.
-name|r2
+name|immd_data
 operator|=
 literal|0
 expr_stmt|;
