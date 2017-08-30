@@ -67,19 +67,5 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ioctlname
-parameter_list|(
-name|unsigned
-name|long
-name|val
-parameter_list|)
-function_decl|;
-end_function_decl
-
 end_unit
 
