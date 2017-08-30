@@ -197,6 +197,10 @@ name|Schedpolicy
 block|,
 name|Schedparam
 block|,
+name|PSig
+block|,
+name|Siginfo
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
