@@ -1215,6 +1215,7 @@ comment|/* pop out			*/
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|swap_pager_full
 init|=
