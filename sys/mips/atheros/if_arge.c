@@ -9400,6 +9400,7 @@ name|arge_tx_ring
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|rd
 operator|->
 name|arge_tx_ring
@@ -9680,6 +9681,7 @@ name|arge_rx_ring
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|rd
 operator|->
 name|arge_rx_ring
