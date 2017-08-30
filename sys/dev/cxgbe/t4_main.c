@@ -51848,6 +51848,7 @@ operator|(
 name|rc
 operator|)
 return|;
+comment|/* 	 * The firmware, with the sole exception of the memory parity error 	 * handler, runs from memory and not flash.  It is almost always safe to 	 * install a new firmware on a running system.  Just set bit 1 in 	 * hw.cxgbe.dflags or dev.<nexus>.<n>.dflags first. 	 */
 if|if
 condition|(
 name|sc
@@ -51855,6 +51856,16 @@ operator|->
 name|flags
 operator|&
 name|FULL_INIT_DONE
+operator|&&
+operator|(
+name|sc
+operator|->
+name|debug_flags
+operator|&
+name|DF_LOAD_FW_ANYTIME
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|rc

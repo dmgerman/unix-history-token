@@ -656,7 +656,27 @@ literal|1
 operator|<<
 literal|0
 operator|)
-block|, }
+block|,
+comment|/* Log all mbox cmd/rpl. */
+name|DF_LOAD_FW_ANYTIME
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+comment|/* Allow LOAD_FW after init */
+name|DF_DISABLE_TCB_CACHE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|/* Disable TCB cache (T6+) */
+block|}
 enum|;
 end_enum
 
