@@ -2062,14 +2062,30 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* 	 * If we're running o32 or n32 programs but have 64-bit registers, 	 * GCC may use stack-relative addressing near the top of user 	 * address space that, due to sign extension, will yield an 	 * invalid address.  For instance, if sp is 0x7fffff00 then GCC 	 * might do something like this to load a word from 0x7ffffff0: 	 * 	 * 	addu	sp, sp, 32768 	 * 	lw	t0, -32528(sp) 	 * 	 * On systems with 64-bit registers, sp is sign-extended to 	 * 0xffffffff80007f00 and the load is instead done from 	 * 0xffffffff7ffffff0. 	 * 	 * To prevent this, we subtract 64K from the stack pointer here. 	 * 	 * For consistency, we should just always do this unless we're 	 * running n64 programs.  For now, since we don't support 	 * COMPAT_FREEBSD32 on n64 kernels, we just do it unless we're 	 * running n64 kernels. 	 */
+comment|/* 	 * If we're running o32 or n32 programs but have 64-bit registers, 	 * GCC may use stack-relative addressing near the top of user 	 * address space that, due to sign extension, will yield an 	 * invalid address.  For instance, if sp is 0x7fffff00 then GCC 	 * might do something like this to load a word from 0x7ffffff0: 	 * 	 * 	addu	sp, sp, 32768 	 * 	lw	t0, -32528(sp) 	 * 	 * On systems with 64-bit registers, sp is sign-extended to 	 * 0xffffffff80007f00 and the load is instead done from 	 * 0xffffffff7ffffff0. 	 * 	 * To prevent this, we subtract 64K from the stack pointer here 	 * for processes with 32-bit pointers. 	 */
 if|#
 directive|if
-operator|!
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__mips_n64
 argument_list|)
+if|if
+condition|(
+operator|!
+name|SV_PROC_FLAG
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|SV_LP64
+argument_list|)
+condition|)
 name|td
 operator|->
 name|td_frame
