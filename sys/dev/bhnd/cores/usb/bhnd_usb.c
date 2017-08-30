@@ -767,6 +767,11 @@ condition|)
 block|{
 name|uint32_t
 name|rev
+init|=
+name|bhnd_get_hwrev
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|BHND_INFO_DEV
 argument_list|(
@@ -775,13 +780,6 @@ argument_list|,
 literal|"USB HOST 2.0 setup for rev %d"
 argument_list|,
 name|rev
-argument_list|)
-expr_stmt|;
-name|rev
-operator|=
-name|bhnd_get_hwrev
-argument_list|(
-name|dev
 argument_list|)
 expr_stmt|;
 if|if
