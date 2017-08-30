@@ -2212,6 +2212,12 @@ argument_list|,
 literal|"setgid"
 argument_list|)
 expr_stmt|;
+comment|/* Load all necessary kvm symbols */
+name|kresolve_list
+argument_list|(
+name|nl
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2224,12 +2230,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"-x and -T are incompatible, pick one."
-argument_list|)
-expr_stmt|;
-comment|/* Load all necessary kvm symbols */
-name|kresolve_list
-argument_list|(
-name|nl
 argument_list|)
 expr_stmt|;
 if|if
