@@ -1551,7 +1551,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|sx
+name|mtx
 modifier|*
 name|iflib_ctx_lock_get
 parameter_list|(
