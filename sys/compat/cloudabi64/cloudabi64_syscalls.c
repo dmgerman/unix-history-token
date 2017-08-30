@@ -143,30 +143,24 @@ comment|/* 42 = cloudabi_sys_proc_raise */
 literal|"cloudabi_sys_random_get"
 block|,
 comment|/* 43 = cloudabi_sys_random_get */
-literal|"cloudabi_sys_sock_accept"
-block|,
-comment|/* 44 = cloudabi_sys_sock_accept */
 literal|"cloudabi64_sys_sock_recv"
 block|,
-comment|/* 45 = cloudabi64_sys_sock_recv */
+comment|/* 44 = cloudabi64_sys_sock_recv */
 literal|"cloudabi64_sys_sock_send"
 block|,
-comment|/* 46 = cloudabi64_sys_sock_send */
+comment|/* 45 = cloudabi64_sys_sock_send */
 literal|"cloudabi_sys_sock_shutdown"
 block|,
-comment|/* 47 = cloudabi_sys_sock_shutdown */
-literal|"cloudabi_sys_sock_stat_get"
-block|,
-comment|/* 48 = cloudabi_sys_sock_stat_get */
+comment|/* 46 = cloudabi_sys_sock_shutdown */
 literal|"cloudabi64_sys_thread_create"
 block|,
-comment|/* 49 = cloudabi64_sys_thread_create */
+comment|/* 47 = cloudabi64_sys_thread_create */
 literal|"cloudabi_sys_thread_exit"
 block|,
-comment|/* 50 = cloudabi_sys_thread_exit */
+comment|/* 48 = cloudabi_sys_thread_exit */
 literal|"cloudabi_sys_thread_yield"
 block|,
-comment|/* 51 = cloudabi_sys_thread_yield */
+comment|/* 49 = cloudabi_sys_thread_yield */
 block|}
 decl_stmt|;
 end_decl_stmt

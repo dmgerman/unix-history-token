@@ -1192,32 +1192,6 @@ comment|/* 43 = cloudabi_sys_random_get */
 block|{
 name|AS
 argument_list|(
-name|cloudabi_sys_sock_accept_args
-argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|cloudabi_sys_sock_accept
-block|,
-name|AUE_NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|SYF_CAPENABLED
-block|,
-name|SY_THR_STATIC
-block|}
-block|,
-comment|/* 44 = cloudabi_sys_sock_accept */
-block|{
-name|AS
-argument_list|(
 name|cloudabi32_sys_sock_recv_args
 argument_list|)
 block|,
@@ -1240,7 +1214,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 45 = cloudabi32_sys_sock_recv */
+comment|/* 44 = cloudabi32_sys_sock_recv */
 block|{
 name|AS
 argument_list|(
@@ -1266,7 +1240,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 46 = cloudabi32_sys_sock_send */
+comment|/* 45 = cloudabi32_sys_sock_send */
 block|{
 name|AS
 argument_list|(
@@ -1292,33 +1266,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 47 = cloudabi_sys_sock_shutdown */
-block|{
-name|AS
-argument_list|(
-name|cloudabi_sys_sock_stat_get_args
-argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|cloudabi_sys_sock_stat_get
-block|,
-name|AUE_NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|SYF_CAPENABLED
-block|,
-name|SY_THR_STATIC
-block|}
-block|,
-comment|/* 48 = cloudabi_sys_sock_stat_get */
+comment|/* 46 = cloudabi_sys_sock_shutdown */
 block|{
 name|AS
 argument_list|(
@@ -1344,7 +1292,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 49 = cloudabi32_sys_thread_create */
+comment|/* 47 = cloudabi32_sys_thread_create */
 block|{
 name|AS
 argument_list|(
@@ -1370,7 +1318,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 50 = cloudabi_sys_thread_exit */
+comment|/* 48 = cloudabi_sys_thread_exit */
 block|{
 literal|0
 block|,
@@ -1393,7 +1341,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 51 = cloudabi_sys_thread_yield */
+comment|/* 49 = cloudabi_sys_thread_yield */
 block|}
 decl_stmt|;
 end_decl_stmt
