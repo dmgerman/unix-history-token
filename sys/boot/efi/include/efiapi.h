@@ -752,6 +752,7 @@ name|EFI_SET_VARIABLE
 function_decl|)
 parameter_list|(
 name|IN
+specifier|const
 name|CHAR16
 modifier|*
 name|VariableName
