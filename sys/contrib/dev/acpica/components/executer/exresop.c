@@ -853,7 +853,7 @@ name|ObjDesc
 argument_list|,
 name|StackPtr
 argument_list|,
-name|ACPI_STRTOUL_BASE16
+name|ACPI_IMPLICIT_CONVERSION
 argument_list|)
 expr_stmt|;
 if|if

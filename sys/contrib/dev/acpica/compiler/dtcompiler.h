@@ -1107,6 +1107,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|UINT64
+name|DtDoConstant
+parameter_list|(
+name|char
+modifier|*
+name|String
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|DtGetFieldValue

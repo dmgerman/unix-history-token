@@ -477,14 +477,14 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRead  *  * PARAMETERS:  Value               - Where the value is returned  *              Reg                 - GAS register structure  *  * RETURN:      Status  *  * DESCRIPTION: Read from either memory or IO space. This is a 32-bit max  *              version of AcpiRead, used internally since the overhead of  *              64-bit values is not needed.  *  * LIMITATIONS:<These limitations also apply to AcpiHwWrite>  *      SpaceID must be SystemMemory or SystemIO.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwRead  *  * PARAMETERS:  Value               - Where the value is returned  *              Reg                 - GAS register structure  *  * RETURN:      Status  *  * DESCRIPTION: Read from either memory or IO space. This is a 64-bit max  *              version of AcpiRead.  *  * LIMITATIONS:<These limitations also apply to AcpiHwWrite>  *      SpaceID must be SystemMemory or SystemIO.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiHwRead
 parameter_list|(
-name|UINT32
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -529,7 +529,7 @@ name|AcpiHwValidateRegister
 argument_list|(
 name|Reg
 argument_list|,
-literal|32
+literal|64
 argument_list|,
 operator|&
 name|Address
@@ -549,7 +549,7 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/*      * Initialize entire 32-bit return value to zero, convert AccessWidth      * into number of bits based      */
+comment|/*      * Initialize entire 64-bit return value to zero, convert AccessWidth      * into number of bits based      */
 operator|*
 name|Value
 operator|=
@@ -563,7 +563,7 @@ name|Address
 argument_list|,
 name|Reg
 argument_list|,
-literal|32
+literal|64
 argument_list|)
 expr_stmt|;
 name|BitWidth
@@ -599,7 +599,7 @@ operator|>=
 name|AccessWidth
 condition|)
 block|{
-name|Value32
+name|Value64
 operator|=
 literal|0
 expr_stmt|;
@@ -641,13 +641,6 @@ argument_list|,
 name|AccessWidth
 argument_list|)
 expr_stmt|;
-name|Value32
-operator|=
-operator|(
-name|UINT32
-operator|)
-name|Value64
-expr_stmt|;
 block|}
 else|else
 comment|/* ACPI_ADR_SPACE_SYSTEM_IO, validated earlier */
@@ -674,9 +667,16 @@ argument_list|,
 name|AccessWidth
 argument_list|)
 expr_stmt|;
+name|Value64
+operator|=
+operator|(
+name|UINT64
+operator|)
+name|Value32
+expr_stmt|;
 block|}
 block|}
-comment|/*          * Use offset style bit writes because "Index * AccessWidth" is          * ensured to be less than 32-bits by AcpiHwValidateRegister().          */
+comment|/*          * Use offset style bit writes because "Index * AccessWidth" is          * ensured to be less than 64-bits by AcpiHwValidateRegister().          */
 name|ACPI_SET_BITS
 argument_list|(
 name|Value
@@ -685,12 +685,12 @@ name|Index
 operator|*
 name|AccessWidth
 argument_list|,
-name|ACPI_MASK_BITS_ABOVE_32
+name|ACPI_MASK_BITS_ABOVE_64
 argument_list|(
 name|AccessWidth
 argument_list|)
 argument_list|,
-name|Value32
+name|Value64
 argument_list|)
 expr_stmt|;
 name|BitWidth
@@ -712,10 +712,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"Read:  %8.8X width %2d from %8.8X%8.8X (%s)\n"
+literal|"Read:  %8.8X%8.8X width %2d from %8.8X%8.8X (%s)\n"
 operator|,
+name|ACPI_FORMAT_UINT64
+argument_list|(
 operator|*
 name|Value
+argument_list|)
 operator|,
 name|AccessWidth
 operator|,
@@ -742,14 +745,14 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwWrite  *  * PARAMETERS:  Value               - Value to be written  *              Reg                 - GAS register structure  *  * RETURN:      Status  *  * DESCRIPTION: Write to either memory or IO space. This is a 32-bit max  *              version of AcpiWrite, used internally since the overhead of  *              64-bit values is not needed.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwWrite  *  * PARAMETERS:  Value               - Value to be written  *              Reg                 - GAS register structure  *  * RETURN:      Status  *  * DESCRIPTION: Write to either memory or IO space. This is a 64-bit max  *              version of AcpiWrite.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiHwWrite
 parameter_list|(
-name|UINT32
+name|UINT64
 name|Value
 parameter_list|,
 name|ACPI_GENERIC_ADDRESS
@@ -772,9 +775,6 @@ decl_stmt|;
 name|UINT64
 name|Value64
 decl_stmt|;
-name|UINT32
-name|Value32
-decl_stmt|;
 name|UINT8
 name|Index
 decl_stmt|;
@@ -793,7 +793,7 @@ name|AcpiHwValidateRegister
 argument_list|(
 name|Reg
 argument_list|,
-literal|32
+literal|64
 argument_list|,
 operator|&
 name|Address
@@ -822,7 +822,7 @@ name|Address
 argument_list|,
 name|Reg
 argument_list|,
-literal|32
+literal|64
 argument_list|)
 expr_stmt|;
 name|BitWidth
@@ -851,8 +851,8 @@ condition|(
 name|BitWidth
 condition|)
 block|{
-comment|/*          * Use offset style bit reads because "Index * AccessWidth" is          * ensured to be less than 32-bits by AcpiHwValidateRegister().          */
-name|Value32
+comment|/*          * Use offset style bit reads because "Index * AccessWidth" is          * ensured to be less than 64-bits by AcpiHwValidateRegister().          */
+name|Value64
 operator|=
 name|ACPI_GET_BITS
 argument_list|(
@@ -863,7 +863,7 @@ name|Index
 operator|*
 name|AccessWidth
 argument_list|,
-name|ACPI_MASK_BITS_ABOVE_32
+name|ACPI_MASK_BITS_ABOVE_64
 argument_list|(
 name|AccessWidth
 argument_list|)
@@ -892,13 +892,6 @@ operator|==
 name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 condition|)
 block|{
-name|Value64
-operator|=
-operator|(
-name|UINT64
-operator|)
-name|Value32
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiOsWriteMemory
@@ -940,7 +933,10 @@ argument_list|(
 name|AccessWidth
 argument_list|)
 argument_list|,
-name|Value32
+operator|(
+name|UINT32
+operator|)
+name|Value64
 argument_list|,
 name|AccessWidth
 argument_list|)
@@ -967,9 +963,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"Wrote: %8.8X width %2d   to %8.8X%8.8X (%s)\n"
+literal|"Wrote: %8.8X%8.8X width %2d   to %8.8X%8.8X (%s)\n"
 operator|,
+name|ACPI_FORMAT_UINT64
+argument_list|(
 name|Value
+argument_list|)
 operator|,
 name|AccessWidth
 operator|,
@@ -1254,6 +1253,9 @@ name|Value
 init|=
 literal|0
 decl_stmt|;
+name|UINT64
+name|Value64
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -1343,13 +1345,20 @@ operator|=
 name|AcpiHwRead
 argument_list|(
 operator|&
-name|Value
+name|Value64
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
 operator|.
 name|XPm2ControlBlock
 argument_list|)
+expr_stmt|;
+name|Value
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|Value64
 expr_stmt|;
 break|break;
 case|case
@@ -1361,13 +1370,20 @@ operator|=
 name|AcpiHwRead
 argument_list|(
 operator|&
-name|Value
+name|Value64
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
 operator|.
 name|XPmTimerBlock
 argument_list|)
+expr_stmt|;
+name|Value
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|Value64
 expr_stmt|;
 break|break;
 case|case
@@ -1418,6 +1434,9 @@ block|{
 operator|*
 name|ReturnValue
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|Value
 expr_stmt|;
 block|}
@@ -1449,6 +1468,9 @@ name|Status
 decl_stmt|;
 name|UINT32
 name|ReadValue
+decl_stmt|;
+name|UINT64
+name|ReadValue64
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -1576,7 +1598,7 @@ operator|=
 name|AcpiHwRead
 argument_list|(
 operator|&
-name|ReadValue
+name|ReadValue64
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -1596,6 +1618,13 @@ goto|goto
 name|Exit
 goto|;
 block|}
+name|ReadValue
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ReadValue64
+expr_stmt|;
 comment|/* Insert the bits to be preserved */
 name|ACPI_INSERT_BITS
 argument_list|(
@@ -1715,6 +1744,9 @@ name|ValueB
 init|=
 literal|0
 decl_stmt|;
+name|UINT64
+name|Value64
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -1724,7 +1756,7 @@ operator|=
 name|AcpiHwRead
 argument_list|(
 operator|&
-name|ValueA
+name|Value64
 argument_list|,
 name|RegisterA
 argument_list|)
@@ -1743,6 +1775,13 @@ name|Status
 operator|)
 return|;
 block|}
+name|ValueA
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|Value64
+expr_stmt|;
 comment|/* Second register is optional */
 if|if
 condition|(
@@ -1756,7 +1795,7 @@ operator|=
 name|AcpiHwRead
 argument_list|(
 operator|&
-name|ValueB
+name|Value64
 argument_list|,
 name|RegisterB
 argument_list|)
@@ -1775,6 +1814,13 @@ name|Status
 operator|)
 return|;
 block|}
+name|ValueB
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|Value64
+expr_stmt|;
 block|}
 comment|/*      * OR the two return values together. No shifting or masking is necessary,      * because of how the PM1 registers are defined in the ACPI specification:      *      * "Although the bits can be split between the two register blocks (each      * register block has a unique pointer within the FADT), the bit positions      * are maintained. The register block with unimplemented bits (that is,      * those implemented in the other register block) always returns zeros,      * and writes have no side effects"      */
 operator|*

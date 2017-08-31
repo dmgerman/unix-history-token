@@ -216,7 +216,7 @@ comment|/*    ASL_MSG_INPUT_FILE_OPEN */
 literal|"Could not open input file"
 block|,
 comment|/*    ASL_MSG_INTEGER_LENGTH */
-literal|"64-bit integer in 32-bit table, truncating (DSDT or SSDT version< 2)"
+literal|"Truncating 64-bit constant found in 32-bit table"
 block|,
 comment|/*    ASL_MSG_INTEGER_OPTIMIZATION */
 literal|"Integer optimized to single-byte AML opcode"
@@ -550,6 +550,9 @@ literal|"Illegal open scope on external object from within DSDT"
 block|,
 comment|/*    ASL_MSG_EXCEPTION_NOT_RECEIVED */
 literal|"Expected remark, warning, or error did not occur. Message ID:"
+block|,
+comment|/*    ASL_MSG_NULL_RESOURCE_TEMPLATE */
+literal|"Empty Resource Template (END_TAG only)"
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1428,6 +1428,18 @@ name|ASL_ERROR_MSG
 modifier|*
 name|Enode
 decl_stmt|;
+if|if
+condition|(
+name|AslIsExceptionIgnored
+argument_list|(
+name|Level
+argument_list|,
+name|MessageId
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 name|Enode
 operator|=
 name|UtLocalCalloc
@@ -1876,13 +1888,13 @@ operator|||
 operator|(
 name|MessageId
 operator|>
-literal|5999
+literal|6999
 operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\"%s\" is not a valid warning/remark ID\n"
+literal|"\"%s\" is not a valid warning/remark/error ID\n"
 argument_list|,
 name|MessageIdString
 argument_list|)
@@ -2067,7 +2079,10 @@ case|:
 case|case
 name|ASL_REMARK
 case|:
-comment|/*          * Ignore this warning/remark if it has been disabled by          * the user (-vw option)          */
+case|case
+name|ASL_ERROR
+case|:
+comment|/*          * Ignore this error/warning/remark if it has been disabled by          * the user (-vw option)          */
 name|EncodedMessageId
 operator|=
 name|AeBuildFullExceptionCode
@@ -2144,19 +2159,6 @@ modifier|*
 name|ExtraMessage
 parameter_list|)
 block|{
-comment|/* Check if user wants to ignore this exception */
-if|if
-condition|(
-name|AslIsExceptionIgnored
-argument_list|(
-name|Level
-argument_list|,
-name|MessageId
-argument_list|)
-condition|)
-block|{
-return|return;
-block|}
 if|if
 condition|(
 name|Op
