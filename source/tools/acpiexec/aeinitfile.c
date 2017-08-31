@@ -401,12 +401,6 @@ name|AcpiUtStrtoul64
 argument_list|(
 name|ValueString
 argument_list|,
-operator|(
-name|ACPI_STRTOUL_BASE16
-operator||
-name|ACPI_STRTOUL_64BIT
-operator|)
-argument_list|,
 operator|&
 name|Value
 argument_list|)

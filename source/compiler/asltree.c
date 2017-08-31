@@ -461,6 +461,56 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    TrSetOpIntegerWidth  *  * PARAMETERS:  Op                  - An existing parse op  *  * RETURN:      None  *  * DESCRIPTION:  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|TrSetOpIntegerWidth
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|TableSignatureOp
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|RevisionOp
+parameter_list|)
+block|{
+comment|/* TBD: Check table sig? (DSDT vs. SSDT) */
+comment|/* Handle command-line version override */
+if|if
+condition|(
+name|Gbl_RevisionOverride
+condition|)
+block|{
+name|AcpiUtSetIntegerWidth
+argument_list|(
+name|Gbl_RevisionOverride
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiUtSetIntegerWidth
+argument_list|(
+operator|(
+name|UINT8
+operator|)
+name|RevisionOp
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    TrSetOpEndLineNumber  *  * PARAMETERS:  Op                - An existing parse op  *  * RETURN:      None.  *  * DESCRIPTION: Set the ending line numbers (file line and logical line) of a  *              parse op to the current line numbers.  *  ******************************************************************************/
 end_comment
 

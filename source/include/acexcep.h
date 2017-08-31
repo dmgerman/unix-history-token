@@ -465,8 +465,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_NUMERIC_OVERFLOW
+value|EXCEP_ENV (0x001F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_HEX_OVERFLOW
+value|EXCEP_ENV (0x0020)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_DECIMAL_OVERFLOW
+value|EXCEP_ENV (0x0021)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_OCTAL_OVERFLOW
+value|EXCEP_ENV (0x0022)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_ENV_MAX
-value|0x001E
+value|0x0022
 end_define
 
 begin_comment
@@ -1177,6 +1205,34 @@ argument_list|(
 literal|"AE_IO_ERROR"
 argument_list|,
 literal|"An I/O error occurred"
+argument_list|)
+block|,
+name|EXCEP_TXT
+argument_list|(
+literal|"AE_NUMERIC_OVERFLOW"
+argument_list|,
+literal|"Overflow during string-to-integer conversion"
+argument_list|)
+block|,
+name|EXCEP_TXT
+argument_list|(
+literal|"AE_HEX_OVERFLOW"
+argument_list|,
+literal|"Overflow during ASCII hex-to-binary conversion"
+argument_list|)
+block|,
+name|EXCEP_TXT
+argument_list|(
+literal|"AE_DECIMAL_OVERFLOW"
+argument_list|,
+literal|"Overflow during ASCII decimal-to-binary conversion"
+argument_list|)
+block|,
+name|EXCEP_TXT
+argument_list|(
+literal|"AE_OCTAL_OVERFLOW"
+argument_list|,
+literal|"Overflow during ASCII octal-to-binary conversion"
 argument_list|)
 block|}
 decl_stmt|;

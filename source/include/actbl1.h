@@ -129,6 +129,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_SIG_PDTT
+value|"PDTT"
+end_define
+
+begin_comment
+comment|/* Processor Debug Trigger Table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_SIG_PPTT
 value|"PPTT"
 end_define
@@ -4076,6 +4087,78 @@ block|}
 name|ACPI_NFIT_FLUSH_ADDRESS
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*******************************************************************************  *  * PDTT - Processor Debug Trigger Table (ACPI 6.2)  *        Version 0  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_pdtt
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+name|UINT8
+name|TriggerCount
+decl_stmt|;
+name|UINT8
+name|Reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|UINT32
+name|ArrayOffset
+decl_stmt|;
+block|}
+name|ACPI_TABLE_PDTT
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * PDTT Communication Channel Identifier Structure.  * The number of these structures is defined by TriggerCount above,  * starting at ArrayOffset.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_pdtt_channel
+block|{
+name|UINT16
+name|SubChannelId
+decl_stmt|;
+block|}
+name|ACPI_PDTT_CHANNEL
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Mask and Flags for above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PDTT_SUBCHANNEL_ID_MASK
+value|0x00FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PDTT_RUNTIME_TRIGGER
+value|(1<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_WAIT_COMPLETION
+value|(1<<9)
+end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * PPTT - Processor Properties Topology Table (ACPI 6.2)  *        Version 1  *  ******************************************************************************/

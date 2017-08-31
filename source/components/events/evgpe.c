@@ -861,10 +861,10 @@ decl_stmt|;
 name|UINT8
 name|EnabledStatusByte
 decl_stmt|;
-name|UINT32
+name|UINT64
 name|StatusReg
 decl_stmt|;
-name|UINT32
+name|UINT64
 name|EnableReg
 decl_stmt|;
 name|ACPI_CPU_FLAGS
@@ -1071,8 +1071,14 @@ operator|-
 literal|1
 operator|)
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|StatusReg
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|EnableReg
 operator|,
 name|GpeRegisterInfo

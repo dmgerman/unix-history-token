@@ -1471,6 +1471,13 @@ argument_list|,
 name|Status
 argument_list|)
 expr_stmt|;
+comment|/*      * The following code is prepared to test the deferred table      * verification mechanism. When AcpiGbl_EnableTableValidation is set      * to FALSE by default, AcpiReallocateRootTable() sets it back to TRUE      * and triggers the deferred table verification mechanism accordingly.      */
+operator|(
+name|void
+operator|)
+name|AcpiReallocateRootTable
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|AcpiGbl_LoadTestTables

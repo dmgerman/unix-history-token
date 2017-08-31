@@ -321,6 +321,38 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    DtDoConstant  *  * PARAMETERS:  String              - Only hex constants are supported,  *                                    regardless of whether the 0x prefix  *                                    is used  *  * RETURN:      Converted Integer  *  * DESCRIPTION: Convert a string to an integer, with overflow/error checking.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|UINT64
+name|DtDoConstant
+parameter_list|(
+name|char
+modifier|*
+name|String
+parameter_list|)
+block|{
+name|UINT64
+name|ConvertedInteger
+decl_stmt|;
+comment|/*      * TBD: The ImplicitStrtoul64 function does not report overflow      * conditions. The input string is simply truncated. If it is      * desired to report overflow to the table compiler, this should      * somehow be added here. Note: integers that are prefixed with 0x      * or not are both hex integers.      */
+name|ConvertedInteger
+operator|=
+name|AcpiUtImplicitStrtoul64
+argument_list|(
+name|String
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ConvertedInteger
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    DtGetFieldValue  *  * PARAMETERS:  Field               - Current field list pointer  *  * RETURN:      Field value  *  * DESCRIPTION: Get field value  *  *****************************************************************************/
 end_comment
 

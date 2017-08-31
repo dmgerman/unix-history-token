@@ -140,6 +140,9 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|UINT64
+name|TimerValue
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|AcpiGetTimer
@@ -178,7 +181,8 @@ name|Status
 operator|=
 name|AcpiHwRead
 argument_list|(
-name|Ticks
+operator|&
+name|TimerValue
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -186,6 +190,24 @@ operator|.
 name|XPmTimerBlock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* ACPI PM Timer is defined to be 32 bits (PM_TMR_LEN) */
+operator|*
+name|Ticks
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|TimerValue
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

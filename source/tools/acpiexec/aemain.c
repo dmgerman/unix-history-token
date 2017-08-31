@@ -1229,11 +1229,6 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-comment|/* ACPICA runtime configuration */
-name|AcpiGbl_MaxLoopIterations
-operator|=
-literal|400
-expr_stmt|;
 comment|/* Initialize the AML debugger */
 name|Status
 operator|=

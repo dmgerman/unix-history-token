@@ -473,18 +473,18 @@ name|AcpiGbl_DmOpt_Verbose
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* Default integer width is 64 bits */
+comment|/* Default integer width is 32 bits */
 name|AcpiGbl_IntegerBitWidth
 operator|=
-literal|64
+literal|32
 expr_stmt|;
 name|AcpiGbl_IntegerNybbleWidth
 operator|=
-literal|16
+literal|8
 expr_stmt|;
 name|AcpiGbl_IntegerByteWidth
 operator|=
-literal|8
+literal|4
 expr_stmt|;
 for|for
 control|(

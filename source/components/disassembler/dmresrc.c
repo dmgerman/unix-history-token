@@ -865,6 +865,20 @@ name|Value
 operator|.
 name|Size
 expr_stmt|;
+comment|/*      * Any buffer smaller than one byte cannot possibly be a resource      * template. Two bytes could possibly be a "NULL" resource template      * with a lone end tag descriptor (as generated via      * "ResourceTemplate(){}"), but this would be an extremely unusual      * case, as the template would be essentially useless. The disassembler      * therefore does not recognize any two-byte buffer as a resource      * template.      */
+if|if
+condition|(
+name|BufferLength
+operator|<=
+literal|2
+condition|)
+block|{
+return|return
+operator|(
+name|AE_TYPE
+operator|)
+return|;
+block|}
 comment|/*      * Not a template if declared buffer length != actual length of the      * intialization byte list. Because the resource macros will create      * a buffer of the exact required length (buffer length will be equal      * to the actual length).      *      * NOTE (April 2017): Resource templates with this issue have been      * seen in the field. We still don't want to attempt to disassemble      * a buffer like this to a resource template because this output      * would not match the original input buffer (it would be shorter      * than the original when the disassembled code is recompiled).      * Basically, a buffer like this appears to be hand crafted in the      * first place, so just emitting a buffer object instead of a      * resource template more closely resembles the original ASL code.      */
 if|if
 condition|(

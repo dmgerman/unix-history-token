@@ -446,8 +446,6 @@ name|AcpiUtStrtoul64
 argument_list|(
 name|AcpiGbl_Optarg
 argument_list|,
-name|ACPI_STRTOUL_64BIT
-argument_list|,
 operator|&
 name|Gbl_RsdpBase
 argument_list|)

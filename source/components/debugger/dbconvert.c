@@ -745,12 +745,6 @@ name|AcpiUtStrtoul64
 argument_list|(
 name|String
 argument_list|,
-operator|(
-name|AcpiGbl_IntegerByteWidth
-operator||
-name|ACPI_STRTOUL_BASE16
-operator|)
-argument_list|,
 operator|&
 name|Object
 operator|->

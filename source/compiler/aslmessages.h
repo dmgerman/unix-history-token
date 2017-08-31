@@ -426,6 +426,8 @@ name|ASL_MSG_CROSS_TABLE_SCOPE
 block|,
 name|ASL_MSG_EXCEPTION_NOT_RECEIVED
 block|,
+name|ASL_MSG_NULL_RESOURCE_TEMPLATE
+block|,
 comment|/* These messages are used by the Data Table compiler only */
 name|ASL_MSG_BUFFER_ELEMENT
 init|=

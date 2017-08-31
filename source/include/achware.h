@@ -107,7 +107,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiHwRead
 parameter_list|(
-name|UINT32
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -122,7 +122,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiHwWrite
 parameter_list|(
-name|UINT32
+name|UINT64
 name|Value
 parameter_list|,
 name|ACPI_GENERIC_ADDRESS

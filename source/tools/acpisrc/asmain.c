@@ -195,6 +195,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|BOOLEAN
+name|Gbl_CheckAscii
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|BOOLEAN
 name|Gbl_VerboseMode
 init|=
 name|FALSE
@@ -292,7 +300,7 @@ begin_define
 define|#
 directive|define
 name|AS_SUPPORTED_OPTIONS
-value|"cdhilqsuv^y"
+value|"acdhilqsuv^y"
 end_define
 
 begin_comment
@@ -729,6 +737,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-a<file>"
+argument_list|,
+literal|"Check entire file for non-printable characters"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-c"
 argument_list|,
 literal|"Generate cleaned version of the source"
@@ -1069,6 +1084,14 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+literal|'a'
+case|:
+name|Gbl_CheckAscii
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
 name|AsDisplayUsage
 argument_list|()
@@ -1105,6 +1128,33 @@ return|return
 operator|(
 operator|-
 literal|1
+operator|)
+return|;
+block|}
+comment|/* This option checks the entire file for printable ascii chars */
+if|if
+condition|(
+name|Gbl_CheckAscii
+condition|)
+block|{
+name|AsProcessOneFile
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|SourcePath
+argument_list|,
+name|FILE_TYPE_SOURCE
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -1208,6 +1258,32 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|Gbl_CheckAscii
+condition|)
+block|{
+name|AsProcessOneFile
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|SourcePath
+argument_list|,
+name|FILE_TYPE_SOURCE
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* Process a single file */
 comment|/* Differentiate between source and header files */
 if|if

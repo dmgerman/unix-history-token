@@ -259,14 +259,18 @@ argument_list|(
 name|AcpiReallocateRootTable
 argument_list|)
 expr_stmt|;
-comment|/*      * Only reallocate the root table if the host provided a static buffer      * for the table array in the call to AcpiInitializeTables.      */
+comment|/*      * If there are tables unverified, it is required to reallocate the      * root table list to clean up invalid table entries. Otherwise only      * reallocate the root table list if the host provided a static buffer      * for the table array in the call to AcpiInitializeTables().      */
 if|if
 condition|(
+operator|(
 name|AcpiGbl_RootTableList
 operator|.
 name|Flags
 operator|&
 name|ACPI_ROOT_ORIGIN_ALLOCATED
+operator|)
+operator|&&
+name|AcpiGbl_EnableTableValidation
 condition|)
 block|{
 name|return_ACPI_STATUS

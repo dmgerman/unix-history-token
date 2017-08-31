@@ -17949,7 +17949,7 @@ literal|0
 block|}
 block|,
 block|{
-name|ACPI_DMT_FLAG5
+name|ACPI_DMT_FLAG6
 block|,
 name|ACPI_PPTT1_FLAG_OFFSET
 argument_list|(

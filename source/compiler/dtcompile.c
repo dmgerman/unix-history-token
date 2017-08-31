@@ -380,6 +380,12 @@ name|Status
 operator|)
 return|;
 block|}
+name|AcpiUtSetIntegerWidth
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* Set width to 64 bits */
 name|Gbl_FieldList
 operator|=
 name|NULL

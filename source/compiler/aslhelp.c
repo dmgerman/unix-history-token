@@ -227,7 +227,7 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-vw<messageid>"
 argument_list|,
-literal|"Disable specific warning or remark"
+literal|"Ignore specific error, warning or remark"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION

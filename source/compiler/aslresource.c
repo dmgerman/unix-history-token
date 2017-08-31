@@ -2077,6 +2077,36 @@ argument_list|(
 name|BufferOp
 argument_list|)
 expr_stmt|;
+comment|/* DEFAULT_ARG indicates null template - ResourceTemplate(){} */
+if|if
+condition|(
+name|DescriptorTypeOp
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_DEFAULT_ARG
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_WARNING
+argument_list|,
+name|ASL_MSG_NULL_RESOURCE_TEMPLATE
+argument_list|,
+name|DescriptorTypeOp
+argument_list|,
+name|DescriptorTypeOp
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|String
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Process all resource descriptors in the list      * Note: It is assumed that the EndTag node has been automatically      * inserted at the end of the template by the parser.      */
 name|State
 operator|=

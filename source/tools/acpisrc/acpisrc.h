@@ -496,6 +496,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|BOOLEAN
+name|Gbl_CheckAscii
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 modifier|*
 name|Gbl_StructDefs
