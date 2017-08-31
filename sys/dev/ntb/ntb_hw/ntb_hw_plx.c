@@ -331,7 +331,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PLX_NTX_OUR
+name|PLX_NTX_OUR_BASE
 parameter_list|(
 name|sc
 parameter_list|)
@@ -342,7 +342,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PLX_NTX_PEER
+name|PLX_NTX_PEER_BASE
 parameter_list|(
 name|sc
 parameter_list|)
@@ -364,7 +364,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_read_4((sc)->conf_res, PLX_NTX_OUR(sc) + (reg))
+value|bus_read_4((sc)->conf_res, PLX_NTX_OUR_BASE(sc) + (reg))
 end_define
 
 begin_define
@@ -379,7 +379,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_write_4((sc)->conf_res, PLX_NTX_OUR(sc) + (reg), (val))
+value|bus_write_4((sc)->conf_res, PLX_NTX_OUR_BASE(sc) + (reg), (val))
 end_define
 
 begin_comment
@@ -396,7 +396,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_read_4((sc)->conf_res, PLX_NTX_PEER(sc) + (reg))
+value|bus_read_4((sc)->conf_res, PLX_NTX_PEER_BASE(sc) + (reg))
 end_define
 
 begin_define
@@ -411,7 +411,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_write_4((sc)->conf_res, PLX_NTX_PEER(sc) + (reg), (val))
+value|bus_write_4((sc)->conf_res, PLX_NTX_PEER_BASE(sc) + (reg), (val))
 end_define
 
 begin_comment
@@ -444,6 +444,36 @@ name|val
 parameter_list|)
 define|\
 value|bus_write_4((sc)->mw_info[(sc)->b2b_mw].mw_res,	\     PLX_NTX_BASE(sc) + (reg), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PLX_PORT_BASE
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PLX_STATION_PORT_BASE
+parameter_list|(
+name|sc
+parameter_list|)
+value|PLX_PORT_BASE((sc)->port& ~7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PLX_PORT_CONTROL
+parameter_list|(
+name|sc
+parameter_list|)
+value|(PLX_STATION_PORT_BASE(sc) + 0x208)
 end_define
 
 begin_function_decl
@@ -1820,6 +1850,40 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Use Physical Layer User Test Pattern as additional scratchpad. 	 * Make sure they are present and enabled by writing to them. 	 * XXX: Its a hack, but standard 8 registers are not enough. 	 */
+name|sc
+operator|->
+name|spad_offp1
+operator|=
+name|sc
+operator|->
+name|spad_off1
+operator|=
+name|PLX_NTX_OUR_BASE
+argument_list|(
+name|sc
+argument_list|)
+operator|+
+literal|0xc6c
+expr_stmt|;
+name|sc
+operator|->
+name|spad_offp2
+operator|=
+name|sc
+operator|->
+name|spad_off2
+operator|=
+name|PLX_PORT_BASE
+argument_list|(
+name|sc
+operator|->
+name|ntx
+operator|*
+literal|8
+argument_list|)
+operator|+
+literal|0x20c
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1829,54 +1893,12 @@ operator|>=
 literal|0
 condition|)
 block|{
+comment|/* In NTB-to-NTB mode each side has own scratchpads. */
 name|sc
 operator|->
 name|spad_count1
 operator|=
 name|PLX_NUM_SPAD
-expr_stmt|;
-name|sc
-operator|->
-name|spad_off1
-operator|=
-name|PLX_NTX_OUR
-argument_list|(
-name|sc
-argument_list|)
-operator|+
-literal|0xc6c
-expr_stmt|;
-name|sc
-operator|->
-name|spad_off2
-operator|=
-operator|(
-name|sc
-operator|->
-name|ntx
-operator|==
-literal|0
-operator|)
-condition|?
-literal|0x0020c
-else|:
-literal|0x0820c
-expr_stmt|;
-name|sc
-operator|->
-name|spad_offp1
-operator|=
-name|sc
-operator|->
-name|spad_off1
-expr_stmt|;
-name|sc
-operator|->
-name|spad_offp2
-operator|=
-name|sc
-operator|->
-name|spad_off2
 expr_stmt|;
 name|bus_write_4
 argument_list|(
@@ -1915,57 +1937,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sc
-operator|->
-name|spad_count1
-operator|=
-name|PLX_NUM_SPAD
-operator|/
-literal|2
-expr_stmt|;
-name|sc
-operator|->
-name|spad_off1
-operator|=
-name|PLX_NTX_OUR
-argument_list|(
-name|sc
-argument_list|)
-operator|+
-literal|0xc6c
-expr_stmt|;
-name|sc
-operator|->
-name|spad_off2
-operator|=
-operator|(
-name|sc
-operator|->
-name|ntx
-operator|==
-literal|0
-operator|)
-condition|?
-literal|0x0020c
-else|:
-literal|0x0820c
-expr_stmt|;
-name|sc
-operator|->
-name|spad_offp1
-operator|=
-name|sc
-operator|->
-name|spad_off1
-expr_stmt|;
-name|sc
-operator|->
-name|spad_offp2
-operator|=
-name|sc
-operator|->
-name|spad_off2
-expr_stmt|;
+comment|/* Otherwise we have share scratchpads with the peer. */
 if|if
 condition|(
 name|sc
@@ -2017,6 +1989,14 @@ operator|*
 literal|4
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|spad_count1
+operator|=
+name|PLX_NUM_SPAD
+operator|/
+literal|2
+expr_stmt|;
 name|bus_write_4
 argument_list|(
 name|sc
@@ -2343,20 +2323,10 @@ return|;
 block|}
 name|reg
 operator|=
-operator|(
-operator|(
+name|PLX_PORT_CONTROL
+argument_list|(
 name|sc
-operator|->
-name|port
-operator|&
-operator|~
-literal|7
-operator|)
-operator|<<
-literal|12
-operator|)
-operator||
-literal|0x208
+argument_list|)
 expr_stmt|;
 name|val
 operator|=
@@ -2474,20 +2444,10 @@ operator|)
 return|;
 name|reg
 operator|=
-operator|(
-operator|(
+name|PLX_PORT_CONTROL
+argument_list|(
 name|sc
-operator|->
-name|port
-operator|&
-operator|~
-literal|7
-operator|)
-operator|<<
-literal|12
-operator|)
-operator||
-literal|0x208
+argument_list|)
 expr_stmt|;
 name|val
 operator|=
@@ -2571,20 +2531,10 @@ operator|)
 return|;
 name|reg
 operator|=
-operator|(
-operator|(
+name|PLX_PORT_CONTROL
+argument_list|(
 name|sc
-operator|->
-name|port
-operator|&
-operator|~
-literal|7
-operator|)
-operator|<<
-literal|12
-operator|)
-operator||
-literal|0x208
+argument_list|)
 expr_stmt|;
 name|val
 operator|=
