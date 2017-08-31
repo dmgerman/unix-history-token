@@ -303,6 +303,7 @@ name|badv
 decl_stmt|;
 name|struct
 name|tm
+modifier|*
 name|lt
 decl_stmt|;
 name|struct
@@ -721,11 +722,23 @@ literal|1
 expr_stmt|;
 name|lt
 operator|=
-operator|*
 name|localtime
 argument_list|(
 operator|&
 name|tval
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lt
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"invalid time"
 argument_list|)
 expr_stmt|;
 name|badv
@@ -734,7 +747,6 @@ name|vary_apply
 argument_list|(
 name|v
 argument_list|,
-operator|&
 name|lt
 argument_list|)
 expr_stmt|;
@@ -796,7 +808,6 @@ argument_list|)
 argument_list|,
 name|format
 argument_list|,
-operator|&
 name|lt
 argument_list|)
 expr_stmt|;
@@ -894,6 +905,19 @@ name|localtime
 argument_list|(
 operator|&
 name|tval
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lt
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"invalid time"
 argument_list|)
 expr_stmt|;
 name|lt
