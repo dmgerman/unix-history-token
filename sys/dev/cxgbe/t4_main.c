@@ -29489,6 +29489,41 @@ name|sc
 operator|->
 name|tt
 operator|.
+name|cong_algorithm
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"cong_algorithm"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tt
+operator|.
+name|cong_algorithm
+argument_list|,
+literal|0
+argument_list|,
+literal|"congestion control "
+literal|"(-1 = default, 0 = reno, 1 = tahoe, 2 = newreno, "
+literal|"3 = highspeed)"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|tt
+operator|.
 name|sndbuf
 operator|=
 literal|256

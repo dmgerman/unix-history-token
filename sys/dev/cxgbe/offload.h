@@ -399,6 +399,9 @@ struct|struct
 name|tom_tunables
 block|{
 name|int
+name|cong_algorithm
+decl_stmt|;
+name|int
 name|sndbuf
 decl_stmt|;
 name|int
