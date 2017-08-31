@@ -875,7 +875,7 @@ begin_define
 define|#
 directive|define
 name|M_TOOBIG
-value|M_UNUSED_8
+value|M_PROTO1
 end_define
 
 begin_typedef
