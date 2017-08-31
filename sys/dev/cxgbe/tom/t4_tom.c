@@ -2018,6 +2018,15 @@ block|{
 case|case
 name|TCP_NODELAY
 case|:
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|!=
+name|TCPS_ESTABLISHED
+condition|)
+break|break;
 name|t4_set_tcb_field
 argument_list|(
 name|sc
