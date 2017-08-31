@@ -1482,6 +1482,22 @@ name|ctx_ops
 operator|=
 name|ctx_ops
 expr_stmt|;
+comment|/* 	 * If applicaiton driver asks for link events, generate fake one now 	 * to let it update link state without races while we hold the lock. 	 */
+if|if
+condition|(
+name|ctx_ops
+operator|->
+name|link_event
+operator|!=
+name|NULL
+condition|)
+name|ctx_ops
+operator|->
+name|link_event
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 name|rm_wunlock
 argument_list|(
 operator|&
