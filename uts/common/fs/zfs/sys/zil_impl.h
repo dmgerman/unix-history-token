@@ -340,11 +340,6 @@ name|avl_tree_t
 name|zl_vdev_tree
 decl_stmt|;
 comment|/* vdevs to flush in zil_commit() */
-name|taskq_t
-modifier|*
-name|zl_clean_taskq
-decl_stmt|;
-comment|/* runs lwb and itx clean tasks */
 name|avl_tree_t
 name|zl_bp_tree
 decl_stmt|;
