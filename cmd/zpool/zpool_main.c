@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2013 by Prasad Joshi (sTec). All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  * Copyright 2016 Nexenta Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2013 by Prasad Joshi (sTec). All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  * Copyright 2016 Nexenta Systems, Inc.  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_include
@@ -1137,7 +1137,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tscrub [-s]<pool> ...\n"
+literal|"\tscrub [-s | -p]<pool> ...\n"
 argument_list|)
 operator|)
 return|;
@@ -17047,6 +17047,9 @@ modifier|*
 modifier|*
 name|cb_argv
 decl_stmt|;
+name|pool_scrub_cmd_t
+name|cb_scrub_cmd
+decl_stmt|;
 block|}
 name|scrub_cbdata_t
 typedef|;
@@ -17119,6 +17122,10 @@ argument_list|,
 name|cb
 operator|->
 name|cb_type
+argument_list|,
+name|cb
+operator|->
+name|cb_scrub_cmd
 argument_list|)
 expr_stmt|;
 return|return
@@ -17132,7 +17139,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zpool scrub [-s]<pool> ...  *  *	-s	Stop.  Stops any in-progress scrub.  */
+comment|/*  * zpool scrub [-s | -p]<pool> ...  *  *	-s	Stop.  Stops any in-progress scrub.  *	-p	Pause. Pause in-progress scrub.  */
 end_comment
 
 begin_function
@@ -17160,6 +17167,12 @@ name|cb_type
 operator|=
 name|POOL_SCAN_SCRUB
 expr_stmt|;
+name|cb
+operator|.
+name|cb_scrub_cmd
+operator|=
+name|POOL_SCRUB_NORMAL
+expr_stmt|;
 comment|/* check options */
 while|while
 condition|(
@@ -17172,7 +17185,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"s"
+literal|"sp"
 argument_list|)
 operator|)
 operator|!=
@@ -17193,6 +17206,16 @@ operator|.
 name|cb_type
 operator|=
 name|POOL_SCAN_NONE
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|cb
+operator|.
+name|cb_scrub_cmd
+operator|=
+name|POOL_SCRUB_PAUSE
 expr_stmt|;
 break|break;
 case|case
@@ -17219,6 +17242,41 @@ name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|cb
+operator|.
+name|cb_type
+operator|==
+name|POOL_SCAN_NONE
+operator|&&
+name|cb
+operator|.
+name|cb_scrub_cmd
+operator|==
+name|POOL_SCRUB_PAUSE
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"invalid option combination: "
+literal|"-s and -p are mutually exclusive\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
 block|}
 name|cb
 operator|.
@@ -17333,6 +17391,8 @@ name|time_t
 name|start
 decl_stmt|,
 name|end
+decl_stmt|,
+name|pause
 decl_stmt|;
 name|uint64_t
 name|elapsed
@@ -17430,6 +17490,12 @@ operator|=
 name|ps
 operator|->
 name|pss_end_time
+expr_stmt|;
+name|pause
+operator|=
+name|ps
+operator|->
+name|pss_pass_scrub_pause
 expr_stmt|;
 name|zfs_nicenum
 argument_list|(
@@ -17658,6 +17724,13 @@ operator|==
 name|POOL_SCAN_SCRUB
 condition|)
 block|{
+if|if
+condition|(
+name|pause
+operator|==
+literal|0
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -17675,6 +17748,74 @@ name|start
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|char
+name|buf
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|struct
+name|tm
+modifier|*
+name|p
+init|=
+name|localtime
+argument_list|(
+operator|&
+name|pause
+argument_list|)
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|strftime
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%a %b %e %T %Y"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"scrub paused since %s\n"
+argument_list|)
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"\tscrub started on   %s"
+argument_list|)
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|start
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -17744,6 +17885,12 @@ operator|->
 name|pss_pass_start
 expr_stmt|;
 name|elapsed
+operator|-=
+name|ps
+operator|->
+name|pss_pass_scrub_spent_paused
+expr_stmt|;
+name|elapsed
 operator|=
 name|elapsed
 condition|?
@@ -17821,6 +17968,14 @@ name|total_buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * do not print estimated time if hours_left is more than 30 days 	 * or we have a paused scrub 	 */
+if|if
+condition|(
+name|pause
+operator|==
+literal|0
+condition|)
+block|{
 name|zfs_nicenum
 argument_list|(
 name|rate
@@ -17833,7 +17988,6 @@ name|rate_buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * do not print estimated time if hours_left is more than 30 days 	 */
 operator|(
 name|void
 operator|)
@@ -17841,7 +17995,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"    %s scanned out of %s at %s/s"
+literal|"\t%s scanned out of %s at %s/s"
 argument_list|)
 argument_list|,
 name|examined_buf
@@ -17899,6 +18053,25 @@ name|gettext
 argument_list|(
 literal|", (scan is slow, no estimated time)\n"
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"\t%s scanned out of %s\n"
+argument_list|)
+argument_list|,
+name|examined_buf
+argument_list|,
+name|total_buf
 argument_list|)
 expr_stmt|;
 block|}

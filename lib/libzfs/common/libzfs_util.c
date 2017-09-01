@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_comment
@@ -1060,6 +1060,20 @@ name|TEXT_DOMAIN
 argument_list|,
 literal|"disk was split from this pool "
 literal|"into a new one"
+argument_list|)
+operator|)
+return|;
+case|case
+name|EZFS_SCRUB_PAUSED
+case|:
+return|return
+operator|(
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"scrub is paused; "
+literal|"use 'zpool scrub' to resume"
 argument_list|)
 operator|)
 return|;
