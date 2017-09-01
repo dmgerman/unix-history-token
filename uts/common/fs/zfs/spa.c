@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright (c) 2015, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  * Copyright 2017 Joyent, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright (c) 2015, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  * Copyright 2017 Joyent, Inc.  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_comment
@@ -25910,6 +25910,64 @@ end_function
 begin_comment
 comment|/*  * ==========================================================================  * SPA Scanning  * ==========================================================================  */
 end_comment
+
+begin_function
+name|int
+name|spa_scrub_pause_resume
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|pool_scrub_cmd_t
+name|cmd
+parameter_list|)
+block|{
+name|ASSERT
+argument_list|(
+name|spa_config_held
+argument_list|(
+name|spa
+argument_list|,
+name|SCL_ALL
+argument_list|,
+name|RW_WRITER
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dsl_scan_resilvering
+argument_list|(
+name|spa
+operator|->
+name|spa_dsl_pool
+argument_list|)
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EBUSY
+argument_list|)
+operator|)
+return|;
+return|return
+operator|(
+name|dsl_scrub_set_pause_resume
+argument_list|(
+name|spa
+operator|->
+name|spa_dsl_pool
+argument_list|,
+name|cmd
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|int

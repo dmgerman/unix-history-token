@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 Joyent, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 Joyent, Inc.  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_comment
@@ -1818,6 +1818,21 @@ name|POOL_SCAN_FUNCS
 block|}
 name|pool_scan_func_t
 typedef|;
+comment|/*  * Used to control scrub pause and resume.  */
+typedef|typedef
+enum|enum
+name|pool_scrub_cmd
+block|{
+name|POOL_SCRUB_NORMAL
+init|=
+literal|0
+block|,
+name|POOL_SCRUB_PAUSE
+block|,
+name|POOL_SCRUB_FLAGS_END
+block|}
+name|pool_scrub_cmd_t
+typedef|;
 comment|/*  * ZIO types.  Needed to interpret vdev statistics below.  */
 typedef|typedef
 enum|enum
@@ -1892,6 +1907,14 @@ name|uint64_t
 name|pss_pass_start
 decl_stmt|;
 comment|/* start time of a scan pass */
+name|uint64_t
+name|pss_pass_scrub_pause
+decl_stmt|;
+comment|/* pause time of a scurb pass */
+comment|/* cumulative time scrub spent paused, needed for rate calculation */
+name|uint64_t
+name|pss_pass_scrub_spent_paused
+decl_stmt|;
 block|}
 name|pool_scan_stat_t
 typedef|;
