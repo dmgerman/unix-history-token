@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.h,v 1.57 2016/07/15 00:24:30 djm Exp $ */
+comment|/* $OpenBSD: misc.h,v 1.54 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -66,23 +66,6 @@ comment|/* Handle for dynamic listen ports */
 block|}
 struct|;
 end_struct
-
-begin_function_decl
-name|int
-name|forward_equals
-parameter_list|(
-specifier|const
-name|struct
-name|Forward
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|Forward
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* Common server and client forwarding options. */
@@ -236,28 +219,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|parse_user_host_port
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|long
 name|convtime
 parameter_list|(
@@ -356,15 +317,6 @@ end_function_decl
 begin_function_decl
 name|time_t
 name|monotime
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|double
-name|monotime_double
 parameter_list|(
 name|void
 parameter_list|)

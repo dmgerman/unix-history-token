@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-ecdsa.c,v 1.13 2016/04/21 06:08:02 djm Exp $ */
+comment|/* $OpenBSD: ssh-ecdsa.c,v 1.12 2015/12/11 04:21:12 mmcc Exp $ */
 end_comment
 
 begin_comment
@@ -594,14 +594,6 @@ name|type
 argument_list|)
 operator|!=
 name|KEY_ECDSA
-operator|||
-name|signature
-operator|==
-name|NULL
-operator|||
-name|signaturelen
-operator|==
-literal|0
 condition|)
 return|return
 name|SSH_ERR_INVALID_ARGUMENT

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.h,v 1.88 2016/05/04 14:04:40 markus Exp $ */
+comment|/* $OpenBSD: auth.h,v 1.86 2015/12/04 16:41:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -507,11 +507,9 @@ name|struct
 name|passwd
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1273,21 +1271,6 @@ name|auth_key_is_revoked
 parameter_list|(
 name|Key
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|auth_get_canonical_hostname
-parameter_list|(
-name|struct
-name|ssh
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

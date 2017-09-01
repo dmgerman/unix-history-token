@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.71 2016/03/07 19:02:43 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.70 2015/12/10 17:08:40 mmcc Exp $ */
 end_comment
 
 begin_comment
@@ -103,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"canohost.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"packet.h"
 end_include
 
 begin_include
@@ -517,14 +511,6 @@ name|u_long
 name|linenum
 parameter_list|)
 block|{
-name|struct
-name|ssh
-modifier|*
-name|ssh
-init|=
-name|active_state
-decl_stmt|;
-comment|/* XXX */
 specifier|const
 name|char
 modifier|*
@@ -1368,20 +1354,16 @@ name|char
 modifier|*
 name|remote_ip
 init|=
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
+name|get_remote_ipaddr
+argument_list|()
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|remote_host
 init|=
-name|auth_get_canonical_hostname
+name|get_canonical_hostname
 argument_list|(
-name|ssh
-argument_list|,
 name|options
 operator|.
 name|use_dns
@@ -2223,14 +2205,6 @@ modifier|*
 name|cert_source_address_done
 parameter_list|)
 block|{
-name|struct
-name|ssh
-modifier|*
-name|ssh
-init|=
-name|active_state
-decl_stmt|;
-comment|/* XXX */
 name|char
 modifier|*
 name|command
@@ -2675,10 +2649,8 @@ goto|;
 block|}
 name|remote_ip
 operator|=
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
+name|get_remote_ipaddr
+argument_list|()
 expr_stmt|;
 name|result
 operator|=

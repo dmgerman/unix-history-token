@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.213 2016/05/02 08:49:03 djm Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.212 2016/02/15 09:47:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -284,6 +284,12 @@ directive|include
 file|"ssherr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"match.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -295,6 +301,48 @@ include|#
 directive|include
 file|"ssh-pkcs11.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEFAULT_PKCS11_WHITELIST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PKCS11_WHITELIST
+value|"/usr/lib/*,/usr/local/lib/*"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SYS_PRCTL_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/prctl.h>
+end_include
+
+begin_comment
+comment|/* For prctl() and PR_SET_DUMPABLE */
+end_comment
 
 begin_endif
 endif|#
@@ -494,6 +542,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* PKCS#11 path whitelist */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pkcs11_whitelist
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* locking */
 end_comment
 
@@ -527,8 +587,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_char
-name|lock_pwhash
+name|char
+name|lock_passwd
 index|[
 name|LOCK_SIZE
 index|]
@@ -536,7 +596,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_char
+name|char
 name|lock_salt
 index|[
 name|LOCK_SALT_SIZE
@@ -3787,8 +3847,7 @@ decl_stmt|;
 name|char
 modifier|*
 name|passwd
-decl_stmt|;
-name|u_char
+decl_stmt|,
 name|passwdhash
 index|[
 name|LOCK_SIZE
@@ -3896,7 +3955,7 @@ name|timingsafe_bcmp
 argument_list|(
 name|passwdhash
 argument_list|,
-name|lock_pwhash
+name|lock_passwd
 argument_list|,
 name|LOCK_SIZE
 argument_list|)
@@ -3919,11 +3978,11 @@ literal|0
 expr_stmt|;
 name|explicit_bzero
 argument_list|(
-name|lock_pwhash
+name|lock_passwd
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|lock_pwhash
+name|lock_passwd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4022,11 +4081,11 @@ argument_list|(
 name|lock_salt
 argument_list|)
 argument_list|,
-name|lock_pwhash
+name|lock_passwd
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|lock_pwhash
+name|lock_passwd
 argument_list|)
 argument_list|,
 name|LOCK_ROUNDS
@@ -4200,6 +4259,11 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|pin
+decl_stmt|,
+name|canonical_provider
+index|[
+name|PATH_MAX
+index|]
 decl_stmt|;
 name|int
 name|r
@@ -4410,6 +4474,69 @@ block|}
 block|}
 if|if
 condition|(
+name|realpath
+argument_list|(
+name|provider
+argument_list|,
+name|canonical_provider
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"failed PKCS#11 add of \"%.100s\": realpath: %s"
+argument_list|,
+name|provider
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|send
+goto|;
+block|}
+if|if
+condition|(
+name|match_pattern_list
+argument_list|(
+name|canonical_provider
+argument_list|,
+name|pkcs11_whitelist
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"refusing PKCS#11 add of \"%.100s\": "
+literal|"provider not whitelisted"
+argument_list|,
+name|canonical_provider
+argument_list|)
+expr_stmt|;
+goto|goto
+name|send
+goto|;
+block|}
+name|debug
+argument_list|(
+literal|"%s: add %.100s"
+argument_list|,
+name|__func__
+argument_list|,
+name|canonical_provider
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|lifetime
 operator|&&
 operator|!
@@ -4426,7 +4553,7 @@ name|count
 operator|=
 name|pkcs11_add_provider
 argument_list|(
-name|provider
+name|canonical_provider
 argument_list|,
 name|pin
 argument_list|,
@@ -4510,7 +4637,7 @@ name|provider
 operator|=
 name|xstrdup
 argument_list|(
-name|provider
+name|canonical_provider
 argument_list|)
 expr_stmt|;
 name|id
@@ -4519,7 +4646,7 @@ name|comment
 operator|=
 name|xstrdup
 argument_list|(
-name|provider
+name|canonical_provider
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -6567,8 +6694,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ssh-agent [-c | -s] [-Ddx] [-a bind_address] [-E fingerprint_hash]\n"
-literal|"                 [-t life] [command [arg ...]]\n"
+literal|"usage: ssh-agent [-c | -s] [-Dd] [-a bind_address] [-E fingerprint_hash]\n"
+literal|"                 [-P pkcs11_whitelist] [-t life] [command [arg ...]]\n"
 literal|"       ssh-agent [-c | -s] -k\n"
 argument_list|)
 expr_stmt|;
@@ -6733,12 +6860,27 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|platform_disable_tracing
+if|#
+directive|if
+name|defined
 argument_list|(
+name|HAVE_PRCTL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PR_SET_DUMPABLE
+argument_list|)
+comment|/* Disable ptrace on Linux without sgid bit */
+name|prctl
+argument_list|(
+name|PR_SET_DUMPABLE
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* strict=no */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|WITH_OPENSSL
@@ -6771,7 +6913,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"cDdksE:a:t:x"
+literal|"cDdksE:a:P:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -6828,6 +6970,28 @@ literal|'k'
 case|:
 name|k_flag
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+if|if
+condition|(
+name|pkcs11_whitelist
+operator|!=
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"-P option already specified"
+argument_list|)
+expr_stmt|;
+name|pkcs11_whitelist
+operator|=
+name|xstrdup
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -6956,6 +7120,19 @@ operator|)
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pkcs11_whitelist
+operator|==
+name|NULL
+condition|)
+name|pkcs11_whitelist
+operator|=
+name|xstrdup
+argument_list|(
+name|DEFAULT_PKCS11_WHITELIST
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7746,7 +7923,7 @@ if|if
 condition|(
 name|pledge
 argument_list|(
-literal|"stdio cpath unix id proc exec"
+literal|"stdio rpath cpath unix id proc exec"
 argument_list|,
 name|NULL
 argument_list|)

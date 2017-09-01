@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-hostbased.c,v 1.26 2016/03/07 19:02:43 djm Exp $ */
+comment|/* $OpenBSD: auth2-hostbased.c,v 1.25 2015/05/04 06:10:48 djm Exp $ */
 end_comment
 
 begin_comment
@@ -734,14 +734,6 @@ modifier|*
 name|key
 parameter_list|)
 block|{
-name|struct
-name|ssh
-modifier|*
-name|ssh
-init|=
-name|active_state
-decl_stmt|;
-comment|/* XXX */
 specifier|const
 name|char
 modifier|*
@@ -778,10 +770,8 @@ literal|0
 return|;
 name|resolvedname
 operator|=
-name|auth_get_canonical_hostname
+name|get_canonical_hostname
 argument_list|(
-name|ssh
-argument_list|,
 name|options
 operator|.
 name|use_dns
@@ -789,10 +779,8 @@ argument_list|)
 expr_stmt|;
 name|ipaddr
 operator|=
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
+name|get_remote_ipaddr
+argument_list|()
 expr_stmt|;
 name|debug2
 argument_list|(

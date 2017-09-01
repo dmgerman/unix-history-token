@@ -187,24 +187,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sshpam_get_maxtries_reached
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sshpam_set_maxtries_reached
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|is_pam_session_open
 parameter_list|(
 name|void

@@ -58,12 +58,6 @@ directive|include
 file|"canohost.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"packet.h"
-end_include
-
 begin_function_decl
 specifier|const
 name|char
@@ -113,14 +107,14 @@ name|rc
 decl_stmt|,
 name|saved_errno
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|audit_fd
 operator|=
 name|audit_open
 argument_list|()
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|audit_fd
 operator|<
 literal|0
 condition|)
@@ -220,9 +214,11 @@ operator|=
 name|saved_errno
 expr_stmt|;
 return|return
+operator|(
 name|rc
 operator|>=
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -243,10 +239,12 @@ parameter_list|,
 name|int
 name|port
 parameter_list|)
-block|{
-comment|/* not implemented */
-block|}
+block|{ }
 end_function
+
+begin_comment
+comment|/* not implemented */
+end_comment
 
 begin_function
 name|void
@@ -332,14 +330,6 @@ name|ssh_audit_event_t
 name|event
 parameter_list|)
 block|{
-name|struct
-name|ssh
-modifier|*
-name|ssh
-init|=
-name|active_state
-decl_stmt|;
-comment|/* XXX */
 switch|switch
 condition|(
 name|event
@@ -392,10 +382,8 @@ argument_list|()
 argument_list|,
 name|NULL
 argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
+name|get_remote_ipaddr
+argument_list|()
 argument_list|,
 literal|"sshd"
 argument_list|,
@@ -413,7 +401,6 @@ argument_list|,
 name|event
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 end_function

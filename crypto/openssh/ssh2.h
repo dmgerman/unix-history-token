@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh2.h,v 1.18 2016/05/04 14:22:33 markus Exp $ */
+comment|/* $OpenBSD: ssh2.h,v 1.17 2016/01/14 16:17:40 markus Exp $ */
 end_comment
 
 begin_comment
@@ -10,17 +10,6 @@ end_comment
 begin_comment
 comment|/*  * draft-ietf-secsh-architecture-05.txt  *  *   Transport layer protocol:  *  *     1-19     Transport layer generic (e.g. disconnect, ignore, debug,  *              etc)  *     20-29    Algorithm negotiation  *     30-49    Key exchange method specific (numbers can be reused for  *              different authentication methods)  *  *   User authentication protocol:  *  *     50-59    User authentication generic  *     60-79    User authentication method specific (numbers can be reused  *              for different authentication methods)  *  *   Connection protocol:  *  *     80-89    Connection protocol generic  *     90-127   Channel related messages  *  *   Reserved for client protocols:  *  *     128-191  Reserved  *  *   Local extensions:  *  *     192-255  Local extensions  */
 end_comment
-
-begin_comment
-comment|/* special marker for no message */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSH_MSG_NONE
-value|0
-end_define
 
 begin_comment
 comment|/* ranges */

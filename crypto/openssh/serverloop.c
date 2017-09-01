@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.184 2016/03/07 19:02:43 djm Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.182 2016/02/08 10:57:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1214,7 +1214,7 @@ modifier|*
 name|nallocp
 parameter_list|,
 name|u_int64_t
-name|max_time_ms
+name|max_time_milliseconds
 parameter_list|)
 block|{
 name|struct
@@ -1259,18 +1259,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* XXX need proper deadline system for rekey/client alive */
 if|if
 condition|(
 name|minwait_secs
 operator|!=
 literal|0
 condition|)
-name|max_time_ms
+name|max_time_milliseconds
 operator|=
 name|MIN
 argument_list|(
-name|max_time_ms
+name|max_time_milliseconds
 argument_list|,
 operator|(
 name|u_int
@@ -1285,40 +1284,29 @@ if|if
 condition|(
 name|compat20
 operator|&&
+name|max_time_milliseconds
+operator|==
+literal|0
+operator|&&
 name|options
 operator|.
 name|client_alive_interval
 condition|)
 block|{
-name|uint64_t
-name|keepalive_ms
-init|=
+name|client_alive_scheduled
+operator|=
+literal|1
+expr_stmt|;
+name|max_time_milliseconds
+operator|=
 operator|(
-name|uint64_t
+name|u_int64_t
 operator|)
 name|options
 operator|.
 name|client_alive_interval
 operator|*
 literal|1000
-decl_stmt|;
-name|client_alive_scheduled
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|max_time_ms
-operator|==
-literal|0
-operator|||
-name|max_time_ms
-operator|>
-name|keepalive_ms
-condition|)
-name|max_time_ms
-operator|=
-name|keepalive_ms
 expr_stmt|;
 block|}
 if|if
@@ -1459,19 +1447,19 @@ argument_list|()
 condition|)
 if|if
 condition|(
-name|max_time_ms
+name|max_time_milliseconds
 operator|==
 literal|0
 operator|||
 name|client_alive_scheduled
 condition|)
-name|max_time_ms
+name|max_time_milliseconds
 operator|=
 literal|100
 expr_stmt|;
 if|if
 condition|(
-name|max_time_ms
+name|max_time_milliseconds
 operator|==
 literal|0
 condition|)
@@ -1485,7 +1473,7 @@ name|tv
 operator|.
 name|tv_sec
 operator|=
-name|max_time_ms
+name|max_time_milliseconds
 operator|/
 literal|1000
 expr_stmt|;
@@ -1496,7 +1484,7 @@ operator|=
 literal|1000
 operator|*
 operator|(
-name|max_time_ms
+name|max_time_milliseconds
 operator|%
 literal|1000
 operator|)
@@ -1651,14 +1639,6 @@ modifier|*
 name|readset
 parameter_list|)
 block|{
-name|struct
-name|ssh
-modifier|*
-name|ssh
-init|=
-name|active_state
-decl_stmt|;
-comment|/* XXX */
 name|int
 name|len
 decl_stmt|;
@@ -1702,17 +1682,10 @@ condition|)
 block|{
 name|verbose
 argument_list|(
-literal|"Connection closed by %.100s port %d"
+literal|"Connection closed by %.100s"
 argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
-argument_list|,
-name|ssh_remote_port
-argument_list|(
-name|ssh
-argument_list|)
+name|get_remote_ipaddr
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|connection_closed
@@ -1756,17 +1729,10 @@ block|{
 name|verbose
 argument_list|(
 literal|"Read error from remote host "
-literal|"%.100s port %d: %.100s"
+literal|"%.100s: %.100s"
 argument_list|,
-name|ssh_remote_ipaddr
-argument_list|(
-name|ssh
-argument_list|)
-argument_list|,
-name|ssh_remote_port
-argument_list|(
-name|ssh
-argument_list|)
+name|get_remote_ipaddr
+argument_list|()
 argument_list|,
 name|strerror
 argument_list|(
@@ -4060,6 +4026,8 @@ literal|0
 operator|&&
 operator|!
 name|no_port_forwarding_flag
+operator|&&
+name|use_privsep
 condition|)
 block|{
 name|c
@@ -5314,6 +5282,9 @@ name|listen_port
 operator|==
 literal|0
 operator|)
+ifndef|#
+directive|ifndef
+name|NO_IPPORT_RESERVED_CONCEPT
 operator|||
 operator|(
 name|fwd
@@ -5334,6 +5305,8 @@ name|pw_uid
 operator|!=
 literal|0
 operator|)
+endif|#
+directive|endif
 condition|)
 block|{
 name|success
@@ -5565,6 +5538,9 @@ operator|==
 literal|0
 operator|||
 name|no_port_forwarding_flag
+operator|||
+operator|!
+name|use_privsep
 condition|)
 block|{
 name|success

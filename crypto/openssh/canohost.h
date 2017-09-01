@@ -1,23 +1,46 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.h,v 1.12 2016/03/07 19:02:43 djm Exp $ */
+comment|/* $OpenBSD: canohost.h,v 1.11 2009/05/27 06:31:25 andreas Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_CANOHOST_H
-end_ifndef
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|get_canonical_hostname
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
-name|_CANOHOST_H
-end_define
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|get_remote_ipaddr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|get_remote_name_or_ip
+parameter_list|(
+name|u_int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|char
@@ -60,21 +83,41 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|get_remote_port
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|get_local_port
 parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|get_sock_port
+parameter_list|(
+name|int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _CANOHOST_H */
-end_comment
+begin_function_decl
+name|void
+name|clear_cached_addr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

@@ -251,9 +251,6 @@ block|,
 name|evp_ssh1_3des
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_BF
 block|{
 literal|"blowfish"
 block|,
@@ -274,9 +271,6 @@ block|,
 name|evp_ssh1_bf
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* OPENSSL_NO_BF */
 endif|#
 directive|endif
 comment|/* WITH_SSH1 */
@@ -323,9 +317,6 @@ block|,
 name|EVP_des_ede3_cbc
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_BF
 block|{
 literal|"blowfish-cbc"
 block|,
@@ -346,12 +337,6 @@ block|,
 name|EVP_bf_cbc
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* OPENSSL_NO_BF */
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_CAST
 block|{
 literal|"cast128-cbc"
 block|,
@@ -372,12 +357,6 @@ block|,
 name|EVP_cast5_cbc
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* OPENSSL_NO_CAST */
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_RC4
 block|{
 literal|"arcfour"
 block|,
@@ -438,9 +417,6 @@ block|,
 name|EVP_rc4
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* OPENSSL_NO_RC4 */
 block|{
 literal|"aes128-cbc"
 block|,
@@ -3425,18 +3401,9 @@ modifier|*
 name|dat
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|WITH_OPENSSL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_RC4
-argument_list|)
 specifier|const
 name|struct
 name|sshcipher
@@ -3526,18 +3493,9 @@ modifier|*
 name|dat
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|WITH_OPENSSL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_RC4
-argument_list|)
 specifier|const
 name|struct
 name|sshcipher

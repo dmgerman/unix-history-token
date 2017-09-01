@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: log.c,v 1.48 2016/07/15 05:01:58 dtucker Exp $ */
+comment|/* $OpenBSD: log.c,v 1.46 2015/07/08 19:04:21 markus Exp $ */
 end_comment
 
 begin_comment
@@ -707,50 +707,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|logdie
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|args
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-name|do_log
-argument_list|(
-name|SYSLOG_LEVEL_INFO
-argument_list|,
-name|fmt
-argument_list|,
-name|args
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|cleanup_exit
-argument_list|(
-literal|255
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/* Log this message (information that usually should go to the log). */
 end_comment
@@ -1294,10 +1250,6 @@ parameter_list|)
 block|{
 return|return
 name|log_on_stderr
-operator|&&
-name|log_stderr_fd
-operator|==
-name|STDERR_FILENO
 return|;
 block|}
 end_function

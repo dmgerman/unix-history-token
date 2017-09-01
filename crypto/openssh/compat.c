@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.c,v 1.99 2016/05/24 02:31:57 dtucker Exp $ */
+comment|/* $OpenBSD: compat.c,v 1.97 2015/08/19 23:21:42 djm Exp $ */
 end_comment
 
 begin_comment

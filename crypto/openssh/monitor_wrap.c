@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.88 2016/03/07 19:02:43 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.87 2016/01/14 16:17:40 markus Exp $ */
 end_comment
 
 begin_comment
@@ -189,12 +189,6 @@ begin_include
 include|#
 directive|include
 file|"log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"auth-pam.h"
 end_include
 
 begin_ifdef
@@ -1778,20 +1772,6 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_PAM
-name|sshpam_set_maxtries_reached
-argument_list|(
-name|buffer_get_int
-argument_list|(
-operator|&
-name|m
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|buffer_free
 argument_list|(
 operator|&
@@ -1864,12 +1844,10 @@ name|passwd
 modifier|*
 name|pw
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|user
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|host
@@ -1907,12 +1885,10 @@ name|passwd
 modifier|*
 name|pw
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|user
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|host
@@ -1969,12 +1945,10 @@ name|enum
 name|mm_keytype
 name|type
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|user
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|host
@@ -3253,15 +3227,6 @@ operator|&
 name|m
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-name|sshpam_set_maxtries_reached
-argument_list|(
-name|buffer_get_int
-argument_list|(
-operator|&
-name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*

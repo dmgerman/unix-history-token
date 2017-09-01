@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_fdpass.c,v 1.21 2016/02/29 20:22:36 jca Exp $ */
+comment|/* $OpenBSD: monitor_fdpass.c,v 1.20 2015/02/25 23:05:47 djm Exp $ */
 end_comment
 
 begin_comment
@@ -449,10 +449,13 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"%s: sendmsg: expected sent 1 got %zd"
+literal|"%s: sendmsg: expected sent 1 got %ld"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|long
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -761,10 +764,13 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"%s: recvmsg: expected received 1 got %zd"
+literal|"%s: recvmsg: expected received 1 got %ld"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|long
+operator|)
 name|n
 argument_list|)
 expr_stmt|;

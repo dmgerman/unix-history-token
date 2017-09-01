@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ttymodes.h,v 1.15 2016/05/03 09:03:49 dtucker Exp $ */
+comment|/* $OpenBSD: ttymodes.h,v 1.14 2006/03/25 22:22:43 djm Exp $ */
 end_comment
 
 begin_comment
@@ -559,32 +559,6 @@ end_endif
 
 begin_comment
 comment|/* IMAXBEL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IUTF8
-end_ifdef
-
-begin_macro
-name|TTYMODE
-argument_list|(
-argument|IUTF8
-argument_list|,
-argument|c_iflag
-argument_list|,
-literal|42
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IUTF8 */
 end_comment
 
 begin_macro

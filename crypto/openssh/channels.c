@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.351 2016/07/19 11:38:53 dtucker Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.349 2016/02/05 13:28:19 naddy Exp $ */
 end_comment
 
 begin_comment
@@ -403,17 +403,6 @@ define|#
 directive|define
 name|FWD_PERMIT_ANY_PORT
 value|0
-end_define
-
-begin_comment
-comment|/* special-case wildcard meaning allow any host */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FWD_PERMIT_ANY_HOST
-value|"*"
 end_define
 
 begin_comment
@@ -6972,11 +6961,13 @@ literal|1
 condition|?
 literal|65536
 else|:
-name|get_local_port
+name|get_sock_port
 argument_list|(
 name|c
 operator|->
 name|sock
+argument_list|,
+literal|1
 argument_list|)
 decl_stmt|;
 name|char
@@ -14562,9 +14553,11 @@ block|{
 operator|*
 name|allocated_listen_port
 operator|=
-name|get_local_port
+name|get_sock_port
 argument_list|(
 name|sock
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|debug
@@ -16255,17 +16248,6 @@ literal|0
 return|;
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|allowed_open
-operator|->
-name|host_to_connect
-argument_list|,
-name|FWD_PERMIT_ANY_HOST
-argument_list|)
-operator|!=
-literal|0
-operator|&&
 name|strcmp
 argument_list|(
 name|allowed_open

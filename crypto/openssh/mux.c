@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mux.c,v 1.60 2016/06/03 03:14:41 dtucker Exp $ */
+comment|/* $OpenBSD: mux.c,v 1.58 2016/01/13 23:04:47 djm Exp $ */
 end_comment
 
 begin_comment
@@ -334,6 +334,21 @@ specifier|extern
 specifier|volatile
 name|sig_atomic_t
 name|quit_pending
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|stdio_forward_host
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|stdio_forward_port
 decl_stmt|;
 end_decl_stmt
 
@@ -10815,8 +10830,6 @@ argument_list|(
 operator|&
 name|m
 argument_list|,
-name|options
-operator|.
 name|stdio_forward_host
 argument_list|)
 expr_stmt|;
@@ -10825,8 +10838,6 @@ argument_list|(
 operator|&
 name|m
 argument_list|,
-name|options
-operator|.
 name|stdio_forward_port
 argument_list|)
 expr_stmt|;
@@ -11436,8 +11447,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|options
-operator|.
 name|stdio_forward_host
 operator|!=
 name|NULL

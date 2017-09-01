@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rh-rsa.c,v 1.45 2016/03/07 19:02:43 djm Exp $ */
+comment|/* $OpenBSD: auth-rh-rsa.c,v 1.44 2014/07/15 15:54:14 millert Exp $ */
 end_comment
 
 begin_comment
@@ -146,12 +146,10 @@ name|passwd
 modifier|*
 name|pw
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|cuser
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|chost
@@ -240,15 +238,6 @@ modifier|*
 name|client_host_key
 parameter_list|)
 block|{
-name|struct
-name|ssh
-modifier|*
-name|ssh
-init|=
-name|active_state
-decl_stmt|;
-comment|/* XXX */
-specifier|const
 name|char
 modifier|*
 name|chost
@@ -291,10 +280,12 @@ literal|0
 return|;
 name|chost
 operator|=
-name|auth_get_canonical_hostname
+operator|(
+name|char
+operator|*
+operator|)
+name|get_canonical_hostname
 argument_list|(
-name|ssh
-argument_list|,
 name|options
 operator|.
 name|use_dns

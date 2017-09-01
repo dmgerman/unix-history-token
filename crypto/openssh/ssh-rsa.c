@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-rsa.c,v 1.59 2016/04/21 06:08:02 djm Exp $ */
+comment|/* $OpenBSD: ssh-rsa.c,v 1.58 2015/12/11 04:21:12 mmcc Exp $ */
 end_comment
 
 begin_comment
@@ -865,14 +865,6 @@ name|n
 argument_list|)
 operator|<
 name|SSH_RSA_MINIMUM_MODULUS_SIZE
-operator|||
-name|sig
-operator|==
-name|NULL
-operator|||
-name|siglen
-operator|==
-literal|0
 condition|)
 return|return
 name|SSH_ERR_INVALID_ARGUMENT

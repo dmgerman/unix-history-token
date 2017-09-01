@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: pathnames.h,v 1.25 2016/03/31 05:24:06 dtucker Exp $ */
+comment|/* $OpenBSD: pathnames.h,v 1.24 2013/12/06 13:39:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -134,6 +134,17 @@ define|#
 directive|define
 name|_PATH_DH_MODULI
 value|SSHDIR "/moduli"
+end_define
+
+begin_comment
+comment|/* Backwards compatibility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_DH_PRIMES
+value|SSHDIR "/primes"
 end_define
 
 begin_ifndef

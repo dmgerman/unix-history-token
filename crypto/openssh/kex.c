@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.c,v 1.118 2016/05/02 10:26:04 djm Exp $ */
+comment|/* $OpenBSD: kex.c,v 1.117 2016/02/08 10:57:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -63,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/crypto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/dh.h>
 end_include
 
 begin_endif
@@ -326,43 +320,13 @@ name|SSH_DIGEST_SHA1
 block|}
 block|,
 block|{
-name|KEX_DH14_SHA1
+name|KEX_DH14
 block|,
 name|KEX_DH_GRP14_SHA1
 block|,
 literal|0
 block|,
 name|SSH_DIGEST_SHA1
-block|}
-block|,
-block|{
-name|KEX_DH14_SHA256
-block|,
-name|KEX_DH_GRP14_SHA256
-block|,
-literal|0
-block|,
-name|SSH_DIGEST_SHA256
-block|}
-block|,
-block|{
-name|KEX_DH16_SHA512
-block|,
-name|KEX_DH_GRP16_SHA512
-block|,
-literal|0
-block|,
-name|SSH_DIGEST_SHA512
-block|}
-block|,
-block|{
-name|KEX_DH18_SHA512
-block|,
-name|KEX_DH_GRP18_SHA512
-block|,
-literal|0
-block|,
-name|SSH_DIGEST_SHA512
 block|}
 block|,
 block|{
@@ -2492,6 +2456,15 @@ condition|)
 return|return
 name|SSH_ERR_INVALID_ARGUMENT
 return|;
+name|ssh_dispatch_set
+argument_list|(
+name|ssh
+argument_list|,
+name|SSH2_MSG_KEXINIT
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ptr
 operator|=
 name|sshpkt_ptr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.h,v 1.30 2016/03/07 19:02:43 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.h,v 1.29 2015/12/04 16:41:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -194,11 +194,9 @@ parameter_list|(
 name|enum
 name|mm_keytype
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -234,11 +232,9 @@ name|struct
 name|passwd
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -256,11 +252,9 @@ name|struct
 name|passwd
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,

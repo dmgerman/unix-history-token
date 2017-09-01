@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexc25519.c,v 1.10 2016/05/02 08:49:03 djm Exp $ */
+comment|/* $OpenBSD: kexc25519.c,v 1.9 2015/03/26 07:00:04 djm Exp $ */
 end_comment
 
 begin_comment
@@ -329,7 +329,7 @@ modifier|*
 name|server_version_string
 parameter_list|,
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|ckexinit
 parameter_list|,
@@ -337,7 +337,7 @@ name|size_t
 name|ckexinitlen
 parameter_list|,
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|skexinit
 parameter_list|,

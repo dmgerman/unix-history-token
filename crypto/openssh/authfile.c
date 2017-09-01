@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.c,v 1.121 2016/04/09 12:39:30 djm Exp $ */
+comment|/* $OpenBSD: authfile.c,v 1.120 2015/12/11 04:21:11 mmcc Exp $ */
 end_comment
 
 begin_comment
@@ -656,12 +656,6 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|keyp
 operator|=
@@ -920,12 +914,6 @@ name|fd
 decl_stmt|,
 name|r
 decl_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|keyp
 operator|=
@@ -1082,17 +1070,6 @@ name|r
 decl_stmt|;
 if|if
 condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|keyp
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
 operator|(
 name|buffer
 operator|=
@@ -1208,12 +1185,6 @@ name|r
 decl_stmt|,
 name|fd
 decl_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|keyp
 operator|=
@@ -1990,12 +1961,6 @@ name|r
 init|=
 name|SSH_ERR_INTERNAL_ERROR
 decl_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|keyp
 operator|=
@@ -2057,14 +2022,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* success */
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
-block|{
 operator|*
 name|keyp
 operator|=
@@ -2074,7 +2031,6 @@ name|pub
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|r
 operator|=
 literal|0
@@ -2144,12 +2100,6 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|keyp
 operator|=
@@ -2282,13 +2232,6 @@ name|r
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
-block|{
 operator|*
 name|keyp
 operator|=
@@ -2298,7 +2241,6 @@ name|key
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|out
 label|:
 name|sshkey_free

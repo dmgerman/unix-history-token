@@ -487,12 +487,8 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"Couldn't obtain random bytes (error 0x%lx)"
+literal|"Couldn't obtain random bytes (error %ld)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|ERR_get_error
 argument_list|()
 argument_list|)

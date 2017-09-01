@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshkey.h,v 1.13 2016/05/02 09:36:42 djm Exp $ */
+comment|/* $OpenBSD: sshkey.h,v 1.12 2015/12/04 16:41:28 markus Exp $ */
 end_comment
 
 begin_comment
@@ -684,10 +684,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|sshkey
-modifier|*
-parameter_list|,
-specifier|const
-name|char
 modifier|*
 parameter_list|)
 function_decl|;

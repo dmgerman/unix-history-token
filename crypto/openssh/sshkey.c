@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshkey.c,v 1.35 2016/06/19 07:48:02 djm Exp $ */
+comment|/* $OpenBSD: sshkey.c,v 1.31 2015/12/11 04:21:12 mmcc Exp $ */
 end_comment
 
 begin_comment
@@ -10449,12 +10449,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|keyp
 operator|=
@@ -11238,13 +11232,6 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
-block|{
 operator|*
 name|keyp
 operator|=
@@ -11254,7 +11241,6 @@ name|key
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|out
 label|:
 name|sshbuf_free
@@ -12510,11 +12496,6 @@ name|struct
 name|sshkey
 modifier|*
 name|ca
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|alg
 parameter_list|)
 block|{
 name|struct
@@ -13190,7 +13171,7 @@ argument_list|(
 name|cert
 argument_list|)
 argument_list|,
-name|alg
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -20262,17 +20243,21 @@ name|keyp
 operator|!=
 name|NULL
 condition|)
-block|{
 operator|*
 name|keyp
 operator|=
 name|pub
 expr_stmt|;
+else|else
+name|sshkey_free
+argument_list|(
+name|pub
+argument_list|)
+expr_stmt|;
 name|pub
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|out
 label|:
 name|sshbuf_free
@@ -20368,12 +20353,6 @@ name|prv
 init|=
 name|NULL
 decl_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|keyp
 operator|=
@@ -20907,13 +20886,6 @@ name|r
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
-block|{
 operator|*
 name|keyp
 operator|=
@@ -20923,7 +20895,6 @@ name|prv
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|commentp
@@ -21042,12 +21013,6 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|keyp
 operator|=
@@ -21480,13 +21445,6 @@ name|r
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
-block|{
 operator|*
 name|keyp
 operator|=
@@ -21496,7 +21454,6 @@ name|prv
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|out
 label|:
 name|BIO_free
@@ -21564,12 +21521,6 @@ modifier|*
 name|commentp
 parameter_list|)
 block|{
-if|if
-condition|(
-name|keyp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|keyp
 operator|=

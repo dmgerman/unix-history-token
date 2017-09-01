@@ -80,28 +80,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Cygwin doesn't really have a notion of reserved ports.  It is still  * is useful on the client side so for compatibility it defines as 1024 via  * netinet/in.h inside an enum.  We * don't actually want that restriction  * so we want to set that to zero, but we can't do it direct in config.h  * because it'll cause a conflicting definition the first time we include  * netinet/in.h.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CYGWIN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IPPORT_RESERVED
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Definitions for IP type of service (ip_tos)  */
 end_comment
 
