@@ -1013,6 +1013,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|link
+condition|)
+comment|/* Link Interface has no Link Error registers. */
+return|return;
 name|val
 operator|=
 name|NTX_READ
@@ -1218,6 +1226,15 @@ name|error
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|link
+condition|)
+block|{
+comment|/* Link Interface has no Link Error registers. */
 name|NTX_WRITE
 argument_list|(
 name|sc
@@ -1238,6 +1255,7 @@ literal|0x0
 argument_list|)
 expr_stmt|;
 comment|/* Unmask link interrupts. */
+block|}
 return|return
 operator|(
 literal|0
@@ -1265,6 +1283,14 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|link
+condition|)
+comment|/* Link Interface has no Link Error registers. */
 name|NTX_WRITE
 argument_list|(
 name|sc
