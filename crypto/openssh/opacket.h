@@ -959,26 +959,6 @@ define|\
 value|ssh_packet_set_state(active_state, m)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|get_remote_ipaddr
-parameter_list|()
-define|\
-value|ssh_remote_ipaddr(active_state)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define

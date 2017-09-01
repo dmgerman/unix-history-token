@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.h,v 1.76 2016/02/08 10:57:07 djm Exp $ */
+comment|/* $OpenBSD: kex.h,v 1.78 2016/05/02 10:26:04 djm Exp $ */
 end_comment
 
 begin_comment
@@ -175,8 +175,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|KEX_DH14
+name|KEX_DH14_SHA1
 value|"diffie-hellman-group14-sha1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_DH14_SHA256
+value|"diffie-hellman-group14-sha256"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_DH16_SHA512
+value|"diffie-hellman-group16-sha512"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_DH18_SHA512
+value|"diffie-hellman-group18-sha512"
 end_define
 
 begin_define
@@ -298,6 +319,12 @@ block|{
 name|KEX_DH_GRP1_SHA1
 block|,
 name|KEX_DH_GRP14_SHA1
+block|,
+name|KEX_DH_GRP14_SHA256
+block|,
+name|KEX_DH_GRP16_SHA512
+block|,
+name|KEX_DH_GRP18_SHA512
 block|,
 name|KEX_DH_GEX_SHA1
 block|,
@@ -998,6 +1025,8 @@ begin_function_decl
 name|int
 name|kex_dh_hash
 parameter_list|(
+name|int
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1184,13 +1213,13 @@ name|char
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|u_char
 modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
 specifier|const
-name|char
+name|u_char
 modifier|*
 parameter_list|,
 name|size_t

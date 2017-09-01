@@ -163,6 +163,13 @@ operator|)
 operator|&
 name|myaddr
 expr_stmt|;
+name|salen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|myaddr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getsockname

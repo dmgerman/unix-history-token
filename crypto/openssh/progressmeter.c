@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: progressmeter.c,v 1.41 2015/01/14 13:54:13 djm Exp $ */
+comment|/* $OpenBSD: progressmeter.c,v 1.45 2016/06/30 05:17:05 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -233,7 +233,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|time_t
+name|double
 name|start
 decl_stmt|;
 end_decl_stmt
@@ -244,7 +244,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|time_t
+name|double
 name|last_update
 decl_stmt|;
 end_decl_stmt
@@ -612,14 +612,13 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|time_t
-name|now
-decl_stmt|;
 name|off_t
 name|transferred
 decl_stmt|;
 name|double
 name|elapsed
+decl_stmt|,
+name|now
 decl_stmt|;
 name|int
 name|percent
@@ -665,7 +664,7 @@ name|counter
 expr_stmt|;
 name|now
 operator|=
-name|monotime
+name|monotime_double
 argument_list|()
 expr_stmt|;
 name|bytes_left
@@ -851,9 +850,18 @@ comment|/* percent of transfer done */
 if|if
 condition|(
 name|end_pos
-operator|!=
+operator|==
 literal|0
+operator|||
+name|cur_pos
+operator|==
+name|end_pos
 condition|)
+name|percent
+operator|=
+literal|100
+expr_stmt|;
+else|else
 name|percent
 operator|=
 operator|(
@@ -865,11 +873,6 @@ operator|/
 name|end_pos
 operator|)
 operator|*
-literal|100
-expr_stmt|;
-else|else
-name|percent
-operator|=
 literal|100
 expr_stmt|;
 name|snprintf
@@ -1227,7 +1230,7 @@ name|start
 operator|=
 name|last_update
 operator|=
-name|monotime
+name|monotime_double
 argument_list|()
 expr_stmt|;
 name|file

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rhosts.c,v 1.46 2014/12/23 22:42:48 djm Exp $ */
+comment|/* $OpenBSD: auth-rhosts.c,v 1.47 2016/03/07 19:02:43 djm Exp $ */
 end_comment
 
 begin_comment
@@ -87,12 +87,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"uidswap.h"
 end_include
 
@@ -117,6 +111,26 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buffer.h"
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"key.h"
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
 end_include
 
@@ -129,7 +143,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"key.h"
+file|"sshkey.h"
 end_include
 
 begin_include
@@ -753,6 +767,14 @@ modifier|*
 name|client_user
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 specifier|const
 name|char
 modifier|*
@@ -763,8 +785,10 @@ name|ipaddr
 decl_stmt|;
 name|hostname
 operator|=
-name|get_canonical_hostname
+name|auth_get_canonical_hostname
 argument_list|(
+name|ssh
+argument_list|,
 name|options
 operator|.
 name|use_dns
@@ -772,8 +796,10 @@ argument_list|)
 expr_stmt|;
 name|ipaddr
 operator|=
-name|get_remote_ipaddr
-argument_list|()
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
 expr_stmt|;
 return|return
 name|auth_rhosts2

@@ -70,6 +70,12 @@ directive|ifdef
 name|USE_SOLARIS_PRIVS
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<priv.h>
+end_include
+
 begin_function_decl
 name|priv_set_t
 modifier|*

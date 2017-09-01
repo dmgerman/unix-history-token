@@ -1644,13 +1644,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|clear_cached_addr
-value|Fssh_clear_cached_addr
-end_define
-
-begin_define
-define|#
-directive|define
 name|colon
 value|Fssh_colon
 end_define
@@ -2120,6 +2113,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|dh_new_group16
+value|Fssh_dh_new_group16
+end_define
+
+begin_define
+define|#
+directive|define
+name|dh_new_group18
+value|Fssh_dh_new_group18
+end_define
+
+begin_define
+define|#
+directive|define
 name|dh_new_group_asc
 value|Fssh_dh_new_group_asc
 end_define
@@ -2267,6 +2274,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|forward_equals
+value|Fssh_forward_equals
+end_define
+
+begin_define
+define|#
+directive|define
 name|free_hostkeys
 value|Fssh_free_hostkeys
 end_define
@@ -2290,13 +2304,6 @@ define|#
 directive|define
 name|gen_candidates
 value|Fssh_gen_candidates
-end_define
-
-begin_define
-define|#
-directive|define
-name|get_canonical_hostname
-value|Fssh_get_canonical_hostname
 end_define
 
 begin_define
@@ -2332,27 +2339,6 @@ define|#
 directive|define
 name|get_peer_port
 value|Fssh_get_peer_port
-end_define
-
-begin_define
-define|#
-directive|define
-name|get_remote_ipaddr
-value|Fssh_get_remote_ipaddr
-end_define
-
-begin_define
-define|#
-directive|define
-name|get_remote_name_or_ip
-value|Fssh_get_remote_name_or_ip
-end_define
-
-begin_define
-define|#
-directive|define
-name|get_remote_port
-value|Fssh_get_remote_port
 end_define
 
 begin_define
@@ -3079,6 +3065,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|logdie
+value|Fssh_logdie
+end_define
+
+begin_define
+define|#
+directive|define
 name|logit
 value|Fssh_logit
 end_define
@@ -3102,6 +3095,13 @@ define|#
 directive|define
 name|mac_alg_list
 value|Fssh_mac_alg_list
+end_define
+
+begin_define
+define|#
+directive|define
+name|mac_check
+value|Fssh_mac_check
 end_define
 
 begin_define
@@ -3235,6 +3235,13 @@ define|#
 directive|define
 name|monotime
 value|Fssh_monotime
+end_define
+
+begin_define
+define|#
+directive|define
+name|monotime_double
+value|Fssh_monotime_double
 end_define
 
 begin_define
@@ -3396,6 +3403,13 @@ define|#
 directive|define
 name|parse_prime
 value|Fssh_parse_prime
+end_define
+
+begin_define
+define|#
+directive|define
+name|parse_user_host_port
+value|Fssh_parse_user_host_port
 end_define
 
 begin_define
@@ -4325,6 +4339,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ssh_local_ipaddr
+value|Fssh_ssh_local_ipaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|ssh_local_port
+value|Fssh_ssh_local_port
+end_define
+
+begin_define
+define|#
+directive|define
 name|ssh_lock_agent
 value|Fssh_ssh_lock_agent
 end_define
@@ -5041,6 +5069,13 @@ define|#
 directive|define
 name|sshbuf_dump_data
 value|Fssh_sshbuf_dump_data
+end_define
+
+begin_define
+define|#
+directive|define
+name|sshbuf_dup_string
+value|Fssh_sshbuf_dup_string
 end_define
 
 begin_define
@@ -6091,6 +6126,13 @@ define|#
 directive|define
 name|stop_progress_meter
 value|Fssh_stop_progress_meter
+end_define
+
+begin_define
+define|#
+directive|define
+name|stravis
+value|Fssh_stravis
 end_define
 
 begin_define

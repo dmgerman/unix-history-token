@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.113 2016/01/14 16:17:40 markus Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.117 2016/07/15 00:24:30 djm Exp $ */
 end_comment
 
 begin_comment
@@ -350,6 +350,11 @@ decl_stmt|;
 name|int
 name|add_keys_to_agent
 decl_stmt|;
+name|char
+modifier|*
+name|identity_agent
+decl_stmt|;
+comment|/* Optional path to ssh-agent socket */
 comment|/* Local TCP/IP forward requests. */
 name|int
 name|num_local_forwards
@@ -370,6 +375,14 @@ name|remote_forwards
 decl_stmt|;
 name|int
 name|clear_forwardings
+decl_stmt|;
+comment|/* stdio forwarding (-W) host and port */
+name|char
+modifier|*
+name|stdio_forward_host
+decl_stmt|;
+name|int
+name|stdio_forward_port
 decl_stmt|;
 name|int
 name|enable_ssh_keysign
@@ -503,6 +516,21 @@ decl_stmt|;
 comment|/* Appended to SSH banner */
 name|char
 modifier|*
+name|jump_user
+decl_stmt|;
+name|char
+modifier|*
+name|jump_host
+decl_stmt|;
+name|int
+name|jump_port
+decl_stmt|;
+name|char
+modifier|*
+name|jump_extra
+decl_stmt|;
+name|char
+modifier|*
 name|ignored_unknown
 decl_stmt|;
 comment|/* Pattern list of unknown tokens to ignore */
@@ -626,6 +654,17 @@ end_define
 
 begin_comment
 comment|/* After hostname canonicalisation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHCONF_NEVERMATCH
+value|8
+end_define
+
+begin_comment
+comment|/* Match/Host never matches; internal only */
 end_comment
 
 begin_define
@@ -756,6 +795,22 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|parse_jump
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|Options
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)

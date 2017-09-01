@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.105 2016/02/15 09:47:49 dtucker Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.106 2016/05/02 10:26:04 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1446,6 +1446,45 @@ operator|->
 name|kex
 index|[
 name|KEX_DH_GRP14_SHA1
+index|]
+operator|=
+name|kexdh_client
+expr_stmt|;
+name|c
+operator|->
+name|c_ssh
+operator|->
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP14_SHA256
+index|]
+operator|=
+name|kexdh_client
+expr_stmt|;
+name|c
+operator|->
+name|c_ssh
+operator|->
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP16_SHA512
+index|]
+operator|=
+name|kexdh_client
+expr_stmt|;
+name|c
+operator|->
+name|c_ssh
+operator|->
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP18_SHA512
 index|]
 operator|=
 name|kexdh_client

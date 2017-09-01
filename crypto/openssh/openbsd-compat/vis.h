@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: vis.h,v 1.11 2005/08/09 19:38:31 millert Exp $	*/
+comment|/*	$OpenBSD: vis.h,v 1.15 2015/07/20 01:52:27 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -141,6 +141,28 @@ begin_comment
 comment|/* only encode "unsafe" characters */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VIS_DQ
+value|0x200
+end_define
+
+begin_comment
+comment|/* backslash-escape double quotes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIS_ALL
+value|0x400
+end_define
+
+begin_comment
+comment|/* encode all characters */
+end_comment
+
 begin_comment
 comment|/*  * other  */
 end_comment
@@ -263,6 +285,23 @@ name|int
 name|strvis
 parameter_list|(
 name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|stravis
+parameter_list|(
+name|char
+modifier|*
 modifier|*
 parameter_list|,
 specifier|const
