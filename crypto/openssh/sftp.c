@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.172 2016/02/15 09:47:49 dtucker Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.175 2016/07/22 03:47:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -194,6 +194,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -260,6 +266,12 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"utf8.h"
 end_include
 
 begin_include
@@ -1532,10 +1544,12 @@ name|char
 modifier|*
 name|path_strip
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|strip
@@ -1632,6 +1646,7 @@ name|char
 modifier|*
 name|p
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|pwd
@@ -2474,6 +2489,7 @@ specifier|static
 name|int
 name|is_dir
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
@@ -2525,6 +2541,7 @@ name|sftp_conn
 modifier|*
 name|conn
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -2595,6 +2612,7 @@ specifier|static
 name|int
 name|pathname_is_dir
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pathname
@@ -2635,14 +2653,17 @@ name|sftp_conn
 modifier|*
 name|conn
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|src
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|dst
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|pwd
@@ -2977,7 +2998,7 @@ name|quiet
 operator|&&
 name|resume
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Resuming %s to %s\n"
 argument_list|,
@@ -3000,7 +3021,7 @@ operator|&&
 operator|!
 name|resume
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Fetching %s to %s\n"
 argument_list|,
@@ -3152,14 +3173,17 @@ name|sftp_conn
 modifier|*
 name|conn
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|src
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|dst
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|pwd
@@ -3538,7 +3562,7 @@ name|quiet
 operator|&&
 name|resume
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Resuming upload of %s to %s\n"
 argument_list|,
@@ -3561,7 +3585,7 @@ operator|&&
 operator|!
 name|resume
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Uploading %s to %s\n"
 argument_list|,
@@ -3854,10 +3878,12 @@ name|sftp_conn
 modifier|*
 name|conn
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|strip_path
@@ -4273,7 +4299,7 @@ name|LS_SI_UNITS
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|mprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -4287,7 +4313,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|mprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -4302,7 +4328,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|mprintf
 argument_list|(
 literal|"%-*s"
 argument_list|,
@@ -4386,10 +4412,12 @@ name|sftp_conn
 modifier|*
 name|conn
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|strip_path
@@ -4781,7 +4809,7 @@ name|LS_SI_UNITS
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|mprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -4796,7 +4824,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|mprintf
 argument_list|(
 literal|"%-*s"
 argument_list|,
@@ -4883,6 +4911,7 @@ name|sftp_conn
 modifier|*
 name|conn
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -7800,7 +7829,7 @@ condition|(
 operator|!
 name|quiet
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Removing %s\n"
 argument_list|,
@@ -8338,7 +8367,7 @@ condition|(
 operator|!
 name|quiet
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Changing mode on %s\n"
 argument_list|,
@@ -8523,7 +8552,7 @@ condition|(
 operator|!
 name|quiet
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Changing owner on %s\n"
 argument_list|,
@@ -8549,7 +8578,7 @@ condition|(
 operator|!
 name|quiet
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Changing group on %s\n"
 argument_list|,
@@ -8598,7 +8627,7 @@ break|break;
 case|case
 name|I_PWD
 case|:
-name|printf
+name|mprintf
 argument_list|(
 literal|"Remote working directory: %s\n"
 argument_list|,
@@ -8641,7 +8670,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|mprintf
 argument_list|(
 literal|"Local working directory: %s\n"
 argument_list|,
@@ -8986,7 +9015,7 @@ name|len
 else|:
 literal|""
 expr_stmt|;
-name|printf
+name|mprintf
 argument_list|(
 literal|"%-*s"
 argument_list|,
@@ -11255,7 +11284,7 @@ condition|(
 operator|!
 name|quiet
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Changing to: %s\n"
 argument_list|,
@@ -11496,7 +11525,7 @@ name|interactive
 condition|)
 block|{
 comment|/* Echo command */
-name|printf
+name|mprintf
 argument_list|(
 literal|"sftp> %s"
 argument_list|,

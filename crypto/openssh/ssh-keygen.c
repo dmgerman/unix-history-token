@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.288 2016/02/15 09:47:49 dtucker Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.290 2016/05/02 09:36:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -4942,8 +4942,7 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
-name|long
-name|int
+name|u_long
 name|lnum
 init|=
 literal|0
@@ -5276,7 +5275,7 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"%s:%ld: not a public key"
+literal|"%s:%lu: not a public key"
 argument_list|,
 name|path
 argument_list|,
@@ -9002,6 +9001,35 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|key_type_name
+operator|!=
+name|NULL
+operator|&&
+name|sshkey_type_from_name
+argument_list|(
+name|key_type_name
+argument_list|)
+operator|!=
+name|ca
+operator|->
+name|type
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"CA key type %s doesn't match specified %s"
+argument_list|,
+name|sshkey_ssh_name
+argument_list|(
+name|ca
+argument_list|)
+argument_list|,
+name|key_type_name
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -9337,20 +9365,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|r
+operator|=
 name|sshkey_certify
 argument_list|(
 name|public
 argument_list|,
 name|ca
+argument_list|,
+name|key_type_name
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"Couldn't not certify key %s"
+literal|"Couldn't certify key %s: %s"
 argument_list|,
 name|tmp
+argument_list|,
+name|ssh_err
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11064,8 +11103,7 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
-name|long
-name|int
+name|u_long
 name|lnum
 init|=
 literal|0

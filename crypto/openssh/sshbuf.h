@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf.h,v 1.6 2015/12/10 07:01:35 mmcc Exp $	*/
+comment|/*	$OpenBSD: sshbuf.h,v 1.7 2016/05/02 08:49:03 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -1246,6 +1246,23 @@ specifier|const
 name|char
 modifier|*
 name|b64
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Duplicate the contents of a buffer to a string (caller to free).  * Returns NULL on buffer error, or if the buffer contains a premature  * nul character.  */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|sshbuf_dup_string
+parameter_list|(
+name|struct
+name|sshbuf
+modifier|*
+name|buf
 parameter_list|)
 function_decl|;
 end_function_decl

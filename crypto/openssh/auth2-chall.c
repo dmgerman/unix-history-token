@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-chall.c,v 1.43 2015/07/18 07:57:14 djm Exp $ */
+comment|/* $OpenBSD: auth2-chall.c,v 1.44 2016/05/02 08:49:03 djm Exp $ */
 end_comment
 
 begin_comment
@@ -504,27 +504,27 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|buffer_append
-argument_list|(
-operator|&
-name|b
-argument_list|,
-literal|"\0"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|(
 name|kbdintctxt
 operator|->
 name|devices
 operator|=
-name|xstrdup
-argument_list|(
-name|buffer_ptr
+name|sshbuf_dup_string
 argument_list|(
 operator|&
 name|b
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: sshbuf_dup_string failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|buffer_free
