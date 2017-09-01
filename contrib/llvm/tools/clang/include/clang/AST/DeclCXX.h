@@ -7918,7 +7918,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Should only be called for instance (i.e., non-static) methods.
+comment|/// Should only be called for instance (i.e., non-static) methods. Note
+end_comment
+
+begin_comment
+comment|/// that for the call operator of a lambda closure type, this returns the
+end_comment
+
+begin_comment
+comment|/// desugared 'this' type (a pointer to the closure type), not the captured
+end_comment
+
+begin_comment
+comment|/// 'this' type.
 end_comment
 
 begin_decl_stmt

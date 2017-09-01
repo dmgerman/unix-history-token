@@ -388,7 +388,7 @@ decl_stmt|;
 name|int
 name|IndentationOffset
 decl_stmt|;
-comment|// A combination of nesting level and indent level, which are used in
+comment|// A combination of indent level and nesting level, which are used in
 comment|// tandem to compute lexical scope, for the purposes of deciding
 comment|// when to stop consecutive alignment runs.
 name|std
@@ -399,7 +399,7 @@ name|unsigned
 operator|,
 name|unsigned
 operator|>
-name|nestingAndIndentLevel
+name|indentAndNestingLevel
 argument_list|()
 specifier|const
 block|{
@@ -410,11 +410,11 @@ name|make_pair
 argument_list|(
 name|Tok
 operator|->
-name|NestingLevel
+name|IndentLevel
 argument_list|,
 name|Tok
 operator|->
-name|IndentLevel
+name|NestingLevel
 argument_list|)
 return|;
 block|}
