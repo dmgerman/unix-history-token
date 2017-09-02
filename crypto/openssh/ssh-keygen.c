@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.292 2016/09/12 03:29:16 dtucker Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.299 2017/03/10 04:26:06 djm Exp $ */
 end_comment
 
 begin_comment
@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xmalloc.h"
 end_include
 
@@ -249,6 +255,12 @@ begin_include
 include|#
 directive|include
 file|"digest.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"utf8.h"
 end_include
 
 begin_ifdef
@@ -4692,7 +4704,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|printf
+name|mprintf
 argument_list|(
 literal|"%u %s %s (%s)\n"
 argument_list|,
@@ -6035,6 +6047,22 @@ operator|->
 name|hosts
 argument_list|)
 decl_stmt|;
+name|int
+name|was_hashed
+init|=
+name|l
+operator|->
+name|hosts
+operator|&&
+name|l
+operator|->
+name|hosts
+index|[
+literal|0
+index|]
+operator|==
+name|HASH_DELIM
+decl_stmt|;
 switch|switch
 condition|(
 name|l
@@ -6051,15 +6079,7 @@ case|:
 comment|/* 		 * Don't hash hosts already already hashed, with wildcard 		 * characters or a CA/revocation marker. 		 */
 if|if
 condition|(
-operator|(
-name|l
-operator|->
-name|match
-operator|&
-name|HKF_MATCH_HOST_HASHED
-operator|)
-operator|!=
-literal|0
+name|was_hashed
 operator|||
 name|has_wild
 operator|||
@@ -6093,7 +6113,7 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"%s:%ld: ignoring host name "
+literal|"%s:%lu: ignoring host name "
 literal|"with wildcard: %.64s"
 argument_list|,
 name|l
@@ -6148,6 +6168,11 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+name|lowercase
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6212,7 +6237,7 @@ literal|1
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"%s:%ld: invalid line"
+literal|"%s:%lu: invalid line"
 argument_list|,
 name|l
 operator|->
@@ -6358,7 +6383,7 @@ name|quiet
 condition|)
 name|printf
 argument_list|(
-literal|"# Host %s found: line %ld\n"
+literal|"# Host %s found: line %lu\n"
 argument_list|,
 name|ctx
 operator|->
@@ -6394,7 +6419,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"# Host %s found: line %ld %s\n"
+literal|"# Host %s found: line %lu %s\n"
 argument_list|,
 name|ctx
 operator|->
@@ -6456,7 +6481,7 @@ argument_list|,
 name|rep
 argument_list|)
 expr_stmt|;
-name|printf
+name|mprintf
 argument_list|(
 literal|"%s %s %s %s\n"
 argument_list|,
@@ -6527,7 +6552,7 @@ literal|1
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"%s:%ld: invalid line"
+literal|"%s:%lu: invalid line"
 argument_list|,
 name|l
 operator|->
@@ -7329,7 +7354,7 @@ if|if
 condition|(
 name|comment
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Key has comment '%s'\n"
 argument_list|,
@@ -7968,11 +7993,21 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|comment
+condition|)
 name|printf
 argument_list|(
 literal|"Key now has comment '%s'\n"
 argument_list|,
 name|comment
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Key now has no comment\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -12958,6 +12993,36 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RSA1_USAGE
+value|" | rsa1"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RSA1_USAGE
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -12970,7 +13035,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ssh-keygen [-q] [-b bits] [-t dsa | ecdsa | ed25519 | rsa | rsa1]\n"
+literal|"usage: ssh-keygen [-q] [-b bits] [-t dsa | ecdsa | ed25519 | rsa%s]\n"
 literal|"                  [-N new_passphrase] [-C comment] [-f output_keyfile]\n"
 literal|"       ssh-keygen -p [-P old_passphrase] [-N new_passphrase] [-f keyfile]\n"
 literal|"       ssh-keygen -i [-m key_format] [-f input_keyfile]\n"
@@ -12979,6 +13044,8 @@ literal|"       ssh-keygen -y [-f input_keyfile]\n"
 literal|"       ssh-keygen -c [-P passphrase] [-C comment] [-f keyfile]\n"
 literal|"       ssh-keygen -l [-v] [-E fingerprint_hash] [-f input_keyfile]\n"
 literal|"       ssh-keygen -B [-f input_keyfile]\n"
+argument_list|,
+name|RSA1_USAGE
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -13228,6 +13295,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 name|seed_rng
+argument_list|()
+expr_stmt|;
+name|msetlocale
 argument_list|()
 expr_stmt|;
 comment|/* we need this for the home * directory.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.107 2016/11/30 00:28:31 dtucker Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.109 2017/03/14 00:55:37 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1340,6 +1340,10 @@ name|long
 name|total
 decl_stmt|,
 name|secs
+decl_stmt|,
+name|multiplier
+init|=
+literal|1
 decl_stmt|;
 specifier|const
 name|char
@@ -1452,8 +1456,8 @@ case|:
 case|case
 literal|'M'
 case|:
-name|secs
-operator|*=
+name|multiplier
+operator|=
 name|MINUTES
 expr_stmt|;
 break|break;
@@ -1463,8 +1467,8 @@ case|:
 case|case
 literal|'H'
 case|:
-name|secs
-operator|*=
+name|multiplier
+operator|=
 name|HOURS
 expr_stmt|;
 break|break;
@@ -1474,8 +1478,8 @@ case|:
 case|case
 literal|'D'
 case|:
-name|secs
-operator|*=
+name|multiplier
+operator|=
 name|DAYS
 expr_stmt|;
 break|break;
@@ -1485,8 +1489,8 @@ case|:
 case|case
 literal|'W'
 case|:
-name|secs
-operator|*=
+name|multiplier
+operator|=
 name|WEEKS
 expr_stmt|;
 break|break;
@@ -1496,6 +1500,34 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|secs
+operator|>=
+name|LONG_MAX
+operator|/
+name|multiplier
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|secs
+operator|*=
+name|multiplier
+expr_stmt|;
+if|if
+condition|(
+name|total
+operator|>=
+name|LONG_MAX
+operator|-
+name|secs
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|total
 operator|+=
 name|secs

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: fmt_scaled.c,v 1.9 2007/03/20 03:42:52 tedu Exp $	*/
+comment|/*	$OpenBSD: fmt_scaled.c,v 1.13 2017/03/11 23:37:23 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -211,7 +211,7 @@ comment|/* XXX strlen(sprintf("%lld", -1)? */
 end_comment
 
 begin_comment
-comment|/** Convert the given input string "scaled" into numeric in "result".  * Return 0 on success, -1 and errno set on error.  */
+comment|/* Convert the given input string "scaled" into numeric in "result".  * Return 0 on success, -1 and errno set on error.  */
 end_comment
 
 begin_function
@@ -270,12 +270,20 @@ while|while
 condition|(
 name|isascii
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -367,6 +375,10 @@ control|(
 init|;
 name|isascii
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -374,6 +386,10 @@ operator|&&
 operator|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -450,6 +466,24 @@ name|fract_digits
 operator|++
 expr_stmt|;
 comment|/* for later scaling */
+if|if
+condition|(
+name|fpart
+operator|>=
+name|LLONG_MAX
+operator|/
+literal|10
+condition|)
+block|{
+name|errno
+operator|=
+name|ERANGE
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|fpart
 operator|*=
 literal|10
@@ -468,6 +502,24 @@ operator|++
 name|ndigits
 operator|>=
 name|MAX_DIGITS
+condition|)
+block|{
+name|errno
+operator|=
+name|ERANGE
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|whole
+operator|>=
+name|LLONG_MAX
+operator|/
+literal|10
 condition|)
 block|{
 name|errno
@@ -535,7 +587,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/** Are we there yet? */
+comment|/* Are we there yet? */
 if|if
 condition|(
 operator|*
@@ -551,6 +603,10 @@ name|p
 operator|==
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|scale_chars
 index|[
 name|i
@@ -563,6 +619,10 @@ if|if
 condition|(
 name|isalnum
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|p
@@ -588,6 +648,24 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|whole
+operator|>=
+name|LLONG_MAX
+operator|/
+name|scale_fact
+condition|)
+block|{
+name|errno
+operator|=
+name|ERANGE
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* scale whole part */
 name|whole
 operator|*=
@@ -656,9 +734,10 @@ literal|0
 return|;
 block|}
 block|}
+comment|/* Invalid unit or character */
 name|errno
 operator|=
-name|ERANGE
+name|EINVAL
 expr_stmt|;
 return|return
 operator|-
@@ -703,18 +782,11 @@ name|NONE
 decl_stmt|;
 name|abval
 operator|=
-operator|(
+name|llabs
+argument_list|(
 name|number
-operator|<
-literal|0LL
-operator|)
-condition|?
-operator|-
-name|number
-else|:
-name|number
+argument_list|)
 expr_stmt|;
-comment|/* no long long_abs yet */
 comment|/* Not every negative long long has a positive representation. 	 * Also check for numbers that are just too darned big to format 	 */
 if|if
 condition|(

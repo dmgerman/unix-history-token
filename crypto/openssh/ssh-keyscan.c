@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.106 2016/05/02 10:26:04 djm Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.109 2017/03/10 04:26:06 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1584,6 +1584,7 @@ specifier|static
 name|void
 name|keyprint_one
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host
@@ -1598,12 +1599,34 @@ name|char
 modifier|*
 name|hostport
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|known_host
+decl_stmt|,
+modifier|*
+name|hashed
+decl_stmt|;
+name|hostport
+operator|=
+name|put_host_port
+argument_list|(
+name|host
+argument_list|,
+name|ssh_port
+argument_list|)
+expr_stmt|;
+name|lowercase
+argument_list|(
+name|hostport
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hash_hosts
 operator|&&
 operator|(
-name|host
+name|hashed
 operator|=
 name|host_hash
 argument_list|(
@@ -1622,14 +1645,13 @@ argument_list|(
 literal|"host_hash failed"
 argument_list|)
 expr_stmt|;
-name|hostport
+name|known_host
 operator|=
-name|put_host_port
-argument_list|(
-name|host
-argument_list|,
-name|ssh_port
-argument_list|)
+name|hash_hosts
+condition|?
+name|hashed
+else|:
+name|hostport
 expr_stmt|;
 if|if
 condition|(
@@ -1642,7 +1664,7 @@ name|stdout
 argument_list|,
 literal|"%s "
 argument_list|,
-name|hostport
+name|known_host
 argument_list|)
 expr_stmt|;
 name|sshkey_write
@@ -4128,6 +4150,9 @@ condition|(
 name|type
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
 case|case
 name|KEY_RSA1
 case|:
@@ -4136,6 +4161,8 @@ operator||=
 name|KT_RSA1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|KEY_DSA
 case|:
@@ -4171,9 +4198,10 @@ break|break;
 case|case
 name|KEY_UNSPEC
 case|:
+default|default:
 name|fatal
 argument_list|(
-literal|"unknown key type %s"
+literal|"Unknown key type \"%s\""
 argument_list|,
 name|tname
 argument_list|)

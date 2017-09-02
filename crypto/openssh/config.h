@@ -2263,6 +2263,17 @@ comment|/* #undef HAVE_LINUX_SECCOMP_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `llabs' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LLABS
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<locale.h> header file. */
 end_comment
 
@@ -4601,12 +4612,9 @@ begin_comment
 comment|/* Define if you want TCP Wrappers support */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LIBWRAP
-value|1
-end_define
+begin_comment
+comment|/* #undef LIBWRAP */
+end_comment
 
 begin_comment
 comment|/* Define to whatever link() returns for "not supported" if it doesn't return    EOPNOTSUPP. */

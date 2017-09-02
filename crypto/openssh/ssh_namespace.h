@@ -1686,8 +1686,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|connect_to
-value|Fssh_connect_to
+name|connect_to_reason
+value|Fssh_connect_to_reason
 end_define
 
 begin_define
@@ -2192,13 +2192,6 @@ define|#
 directive|define
 name|fatal
 value|Fssh_fatal
-end_define
-
-begin_define
-define|#
-directive|define
-name|filter_proposal
-value|Fssh_filter_proposal
 end_define
 
 begin_define
@@ -3109,6 +3102,13 @@ define|#
 directive|define
 name|match
 value|Fssh_match
+end_define
+
+begin_define
+define|#
+directive|define
+name|match_filter_list
+value|Fssh_match_filter_list
 end_define
 
 begin_define
@@ -4747,6 +4747,13 @@ define|#
 directive|define
 name|ssh_packet_set_interactive
 value|Fssh_ssh_packet_set_interactive
+end_define
+
+begin_define
+define|#
+directive|define
+name|ssh_packet_set_log_preamble
+value|Fssh_ssh_packet_set_log_preamble
 end_define
 
 begin_define

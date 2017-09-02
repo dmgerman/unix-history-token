@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.c,v 1.448 2016/12/06 07:48:01 djm Exp $ */
+comment|/* $OpenBSD: ssh.c,v 1.451 2017/03/10 04:07:20 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3067,6 +3067,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|'\n'
 argument_list|)
 expr_stmt|;
@@ -3087,6 +3089,8 @@ operator|=
 name|sshkey_alg_list
 argument_list|(
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3112,6 +3116,8 @@ argument_list|(
 literal|0
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 literal|'\n'
 argument_list|)
@@ -4934,7 +4940,7 @@ name|options
 operator|.
 name|proxy_command
 argument_list|,
-literal|"ssh%s%s%s%s%s%s%s%s%s%.*s -W %%h:%%p %s"
+literal|"ssh%s%s%s%s%s%s%s%s%s%.*s -W '[%%h]:%%p' %s"
 argument_list|,
 comment|/* Optional "-l user" argument if jump_user set */
 name|options

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: digest-openssl.c,v 1.5 2014/12/21 22:27:56 djm Exp $ */
+comment|/* $OpenBSD: digest-openssl.c,v 1.6 2017/03/10 02:59:51 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -754,6 +754,10 @@ name|dlen
 decl_stmt|;
 if|if
 condition|(
+name|digest
+operator|==
+name|NULL
+operator|||
 name|dlen
 operator|>
 name|UINT_MAX

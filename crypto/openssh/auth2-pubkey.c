@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-pubkey.c,v 1.60 2016/11/30 02:57:40 djm Exp $ */
+comment|/* $OpenBSD: auth2-pubkey.c,v 1.62 2017/01/30 01:03:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3146,6 +3146,10 @@ literal|0
 decl_stmt|;
 name|u_int
 name|i
+decl_stmt|,
+name|found_principal
+init|=
+literal|0
 decl_stmt|;
 while|while
 condition|(
@@ -3170,6 +3174,12 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/* Always consume entire input */
+if|if
+condition|(
+name|found_principal
+condition|)
+continue|continue;
 comment|/* Skip leading whitespace. */
 for|for
 control|(
@@ -3396,14 +3406,16 @@ operator|!=
 literal|1
 condition|)
 continue|continue;
-return|return
+name|found_principal
+operator|=
 literal|1
-return|;
+expr_stmt|;
+continue|continue;
 block|}
 block|}
 block|}
 return|return
-literal|0
+name|found_principal
 return|;
 block|}
 end_function
@@ -4088,6 +4100,15 @@ argument_list|,
 name|cert
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+name|f
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|exited_cleanly
@@ -4297,6 +4318,12 @@ name|reason
 init|=
 name|NULL
 decl_stmt|;
+comment|/* Always consume entrire file */
+if|if
+condition|(
+name|found_key
+condition|)
+continue|continue;
 if|if
 condition|(
 name|found
@@ -4788,7 +4815,7 @@ name|found_key
 operator|=
 literal|1
 expr_stmt|;
-break|break;
+continue|continue;
 block|}
 block|}
 if|if
@@ -5757,6 +5784,15 @@ name|key
 argument_list|,
 name|pw
 argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+name|f
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
