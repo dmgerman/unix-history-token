@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-rsa.c,v 1.59 2016/04/21 06:08:02 djm Exp $ */
+comment|/* $OpenBSD: ssh-rsa.c,v 1.60 2016/09/12 23:39:34 djm Exp $ */
 end_comment
 
 begin_comment
@@ -167,6 +167,15 @@ argument_list|(
 name|ident
 argument_list|,
 literal|"ssh-rsa"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|ident
+argument_list|,
+literal|"ssh-rsa-cert-v01@openssh.com"
 argument_list|)
 operator|==
 literal|0
@@ -353,20 +362,6 @@ operator|||
 name|strlen
 argument_list|(
 name|alg_ident
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strncmp
-argument_list|(
-name|alg_ident
-argument_list|,
-literal|"ssh-rsa-cert"
-argument_list|,
-name|strlen
-argument_list|(
-literal|"ssh-rsa-cert"
-argument_list|)
 argument_list|)
 operator|==
 literal|0

@@ -181,13 +181,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|addr_pton
-value|Fssh_addr_pton
-end_define
-
-begin_define
-define|#
-directive|define
 name|addr_pton_cidr
 value|Fssh_addr_pton_cidr
 end_define
@@ -272,8 +265,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|bf_ssh1_cipher
-value|Fssh_bf_ssh1_cipher
+name|bind_permitted
+value|Fssh_bind_permitted
 end_define
 
 begin_define
@@ -671,13 +664,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|cert_new
-value|Fssh_cert_new
-end_define
-
-begin_define
-define|#
-directive|define
 name|chacha_encrypt_bytes
 value|Fssh_chacha_encrypt_bytes
 end_define
@@ -783,13 +769,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|chan_send_ieof1
-value|Fssh_chan_send_ieof1
-end_define
-
-begin_define
-define|#
-directive|define
 name|chan_send_oclose1
 value|Fssh_chan_send_oclose1
 end_define
@@ -841,6 +820,13 @@ define|#
 directive|define
 name|channel_by_id
 value|Fssh_channel_by_id
+end_define
+
+begin_define
+define|#
+directive|define
+name|channel_by_remote_id
+value|Fssh_channel_by_remote_id
 end_define
 
 begin_define
@@ -1030,13 +1016,6 @@ define|#
 directive|define
 name|channel_input_open_failure
 value|Fssh_channel_input_open_failure
-end_define
-
-begin_define
-define|#
-directive|define
-name|channel_input_port_forward_request
-value|Fssh_channel_input_port_forward_request
 end_define
 
 begin_define
@@ -1240,6 +1219,20 @@ define|#
 directive|define
 name|channel_print_adm_permitted_opens
 value|Fssh_channel_print_adm_permitted_opens
+end_define
+
+begin_define
+define|#
+directive|define
+name|channel_proxy_downstream
+value|Fssh_channel_proxy_downstream
+end_define
+
+begin_define
+define|#
+directive|define
+name|channel_proxy_upstream
+value|Fssh_channel_proxy_upstream
 end_define
 
 begin_define
@@ -1462,15 +1455,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|cipher_cleanup
-value|Fssh_cipher_cleanup
+name|cipher_crypt
+value|Fssh_cipher_crypt
 end_define
 
 begin_define
 define|#
 directive|define
-name|cipher_crypt
-value|Fssh_cipher_crypt
+name|cipher_ctx_get_number
+value|Fssh_cipher_ctx_get_number
+end_define
+
+begin_define
+define|#
+directive|define
+name|cipher_ctx_is_plaintext
+value|Fssh_cipher_ctx_is_plaintext
+end_define
+
+begin_define
+define|#
+directive|define
+name|cipher_free
+value|Fssh_cipher_free
 end_define
 
 begin_define
@@ -1994,6 +2001,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|daemonized
+value|Fssh_daemonized
+end_define
+
+begin_define
+define|#
+directive|define
 name|dbl_p1p1
 value|Fssh_dbl_p1p1
 end_define
@@ -2127,13 +2141,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|dns_read_key
-value|Fssh_dns_read_key
-end_define
-
-begin_define
-define|#
-directive|define
 name|do_log
 value|Fssh_do_log
 end_define
@@ -2171,20 +2178,6 @@ define|#
 directive|define
 name|error
 value|Fssh_error
-end_define
-
-begin_define
-define|#
-directive|define
-name|evp_ssh1_3des
-value|Fssh_evp_ssh1_3des
-end_define
-
-begin_define
-define|#
-directive|define
-name|evp_ssh1_bf
-value|Fssh_evp_ssh1_bf
 end_define
 
 begin_define
@@ -2785,13 +2778,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|key_alg_list
-value|Fssh_key_alg_list
-end_define
-
-begin_define
-define|#
-directive|define
 name|key_cert_check_authority
 value|Fssh_key_cert_check_authority
 end_define
@@ -3149,13 +3135,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|match_maybe_hashed
-value|Fssh_match_maybe_hashed
-end_define
-
-begin_define
-define|#
-directive|define
 name|match_pattern
 value|Fssh_match_pattern
 end_define
@@ -3242,6 +3221,13 @@ define|#
 directive|define
 name|ms_to_timeval
 value|Fssh_ms_to_timeval
+end_define
+
+begin_define
+define|#
+directive|define
+name|msetlocale
+value|Fssh_msetlocale
 end_define
 
 begin_define
@@ -3464,13 +3450,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|pkcs11_provider_unref
-value|Fssh_pkcs11_provider_unref
-end_define
-
-begin_define
-define|#
-directive|define
 name|pkcs11_rsa_finish
 value|Fssh_pkcs11_rsa_finish
 end_define
@@ -3548,13 +3527,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|poly64
-value|Fssh_poly64
-end_define
-
-begin_define
-define|#
-directive|define
 name|poly_hash
 value|Fssh_poly_hash
 end_define
@@ -3578,13 +3550,6 @@ define|#
 directive|define
 name|proto_spec
 value|Fssh_proto_spec
-end_define
-
-begin_define
-define|#
-directive|define
-name|put_bitmap
-value|Fssh_put_bitmap
 end_define
 
 begin_define
@@ -3849,29 +3814,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ssh1_3des_cbc
-value|Fssh_ssh1_3des_cbc
-end_define
-
-begin_define
-define|#
-directive|define
-name|ssh1_3des_cleanup
-value|Fssh_ssh1_3des_cleanup
-end_define
-
-begin_define
-define|#
-directive|define
-name|ssh1_3des_init
-value|Fssh_ssh1_3des_init
-end_define
-
-begin_define
-define|#
-directive|define
-name|ssh1_3des_iv
-value|Fssh_ssh1_3des_iv
+name|squeeze
+value|Fssh_squeeze
 end_define
 
 begin_define
@@ -4493,6 +4437,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ssh_packet_get_mux
+value|Fssh_ssh_packet_get_mux
+end_define
+
+begin_define
+define|#
+directive|define
 name|ssh_packet_get_output
 value|Fssh_ssh_packet_get_output
 end_define
@@ -4558,6 +4509,13 @@ define|#
 directive|define
 name|ssh_packet_is_rekeying
 value|Fssh_ssh_packet_is_rekeying
+end_define
+
+begin_define
+define|#
+directive|define
+name|ssh_packet_log_type
+value|Fssh_ssh_packet_log_type
 end_define
 
 begin_define
@@ -4766,13 +4724,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ssh_packet_set_compress_hooks
-value|Fssh_ssh_packet_set_compress_hooks
-end_define
-
-begin_define
-define|#
-directive|define
 name|ssh_packet_set_connection
 value|Fssh_ssh_packet_set_connection
 end_define
@@ -4787,6 +4738,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ssh_packet_set_input_hook
+value|Fssh_ssh_packet_set_input_hook
+end_define
+
+begin_define
+define|#
+directive|define
 name|ssh_packet_set_interactive
 value|Fssh_ssh_packet_set_interactive
 end_define
@@ -4796,6 +4754,13 @@ define|#
 directive|define
 name|ssh_packet_set_maxsize
 value|Fssh_ssh_packet_set_maxsize
+end_define
+
+begin_define
+define|#
+directive|define
+name|ssh_packet_set_mux
+value|Fssh_ssh_packet_set_mux
 end_define
 
 begin_define
@@ -4971,6 +4936,13 @@ define|#
 directive|define
 name|sshbuf_alloc
 value|Fssh_sshbuf_alloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|sshbuf_allocate
+value|Fssh_sshbuf_allocate
 end_define
 
 begin_define
@@ -5377,6 +5349,13 @@ define|#
 directive|define
 name|sshkey_add_private
 value|Fssh_sshkey_add_private
+end_define
+
+begin_define
+define|#
+directive|define
+name|sshkey_alg_list
+value|Fssh_sshkey_alg_list
 end_define
 
 begin_define
@@ -6371,13 +6350,6 @@ define|#
 directive|define
 name|xmalloc
 value|Fssh_xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|xmmap
-value|Fssh_xmmap
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-common.c,v 1.28 2015/01/20 23:14:00 deraadt Exp $ */
+comment|/* $OpenBSD: sftp-common.c,v 1.29 2016/09/12 01:22:38 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -20,16 +20,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* MAX */
-end_comment
 
 begin_include
 include|#
@@ -124,6 +114,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_include
@@ -1334,7 +1330,7 @@ literal|'\0'
 expr_stmt|;
 name|ulen
 operator|=
-name|MAX
+name|MAXIMUM
 argument_list|(
 name|strlen
 argument_list|(
@@ -1346,7 +1342,7 @@ argument_list|)
 expr_stmt|;
 name|glen
 operator|=
-name|MAX
+name|MAXIMUM
 argument_list|(
 name|strlen
 argument_list|(

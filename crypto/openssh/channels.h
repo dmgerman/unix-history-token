@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.118 2015/07/01 02:26:31 djm Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.120 2016/10/18 17:32:54 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -231,8 +231,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_CHANNEL_MAX_TYPE
+name|SSH_CHANNEL_MUX_PROXY
 value|20
+end_define
+
+begin_comment
+comment|/* proxy channel for mux-slave */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CHANNEL_MAX_TYPE
+value|21
 end_define
 
 begin_define
@@ -647,6 +658,9 @@ decl_stmt|;
 name|int
 name|mux_pause
 decl_stmt|;
+name|int
+name|mux_downstream_id
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -867,6 +881,16 @@ end_function_decl
 begin_function_decl
 name|Channel
 modifier|*
+name|channel_by_remote_id
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Channel
+modifier|*
 name|channel_lookup
 parameter_list|(
 name|int
@@ -1070,6 +1094,38 @@ name|void
 name|channel_send_window_changes
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* mux proxy support */
+end_comment
+
+begin_function_decl
+name|int
+name|channel_proxy_downstream
+parameter_list|(
+name|Channel
+modifier|*
+name|mc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|channel_proxy_upstream
+parameter_list|(
+name|Channel
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1432,19 +1488,6 @@ name|void
 name|channel_print_adm_permitted_opens
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|channel_input_port_forward_request
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|ForwardOptions
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

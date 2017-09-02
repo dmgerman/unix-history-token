@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: audit-bsm.c,v 1.8 2012/02/23 23:40:43 dtucker Exp $ */
-end_comment
-
-begin_comment
 comment|/*  * TODO  *  * - deal with overlap between this and sys_auth_allowed_user  *   sys_auth_record_login and record_failed_login.  */
 end_comment
 

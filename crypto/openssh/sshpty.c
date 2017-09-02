@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshpty.c,v 1.30 2015/07/30 23:09:15 djm Exp $ */
+comment|/* $OpenBSD: sshpty.c,v 1.31 2016/11/29 03:54:50 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -734,7 +734,6 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
 name|error
 argument_list|(
 literal|"%.100s: %.100s"
@@ -747,15 +746,12 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Verify that we now have a controlling tty. */
 name|fd
 operator|=
@@ -1160,6 +1156,65 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Disconnect from the controlling tty. */
+end_comment
+
+begin_function
+name|void
+name|disconnect_controlling_tty
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|TIOCNOTTY
+name|int
+name|fd
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|_PATH_TTY
+argument_list|,
+name|O_RDWR
+operator||
+name|O_NOCTTY
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|TIOCNOTTY
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* TIOCNOTTY */
 block|}
 end_function
 

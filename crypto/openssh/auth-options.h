@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.h,v 1.21 2015/01/14 10:30:34 markus Exp $ */
+comment|/* $OpenBSD: auth-options.h,v 1.22 2016/11/30 02:57:40 djm Exp $ */
 end_comment
 
 begin_comment
@@ -156,6 +156,11 @@ modifier|*
 parameter_list|,
 name|struct
 name|passwd
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;

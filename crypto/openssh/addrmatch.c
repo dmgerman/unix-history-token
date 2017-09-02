@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: addrmatch.c,v 1.10 2015/07/08 19:04:21 markus Exp $ */
+comment|/*	$OpenBSD: addrmatch.c,v 1.13 2016/09/21 16:55:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1907,10 +1907,12 @@ operator|-
 literal|2
 condition|)
 block|{
-name|error
+name|debug2
 argument_list|(
-literal|"Inconsistent mask length for "
-literal|"network \"%.100s\""
+literal|"%s: inconsistent mask length for "
+literal|"match network \"%.100s\""
+argument_list|,
+name|__func__
 argument_list|,
 name|cp
 argument_list|)

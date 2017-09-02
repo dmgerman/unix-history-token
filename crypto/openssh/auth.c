@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.c,v 1.115 2016/06/15 00:40:40 dtucker Exp $ */
+comment|/* $OpenBSD: auth.c,v 1.119 2016/12/15 21:29:05 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -405,6 +405,9 @@ name|NULL
 decl_stmt|;
 name|u_int
 name|i
+decl_stmt|;
+name|int
+name|r
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -840,8 +843,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|r
+operator|=
 name|match_user
 argument_list|(
 name|pw
@@ -859,6 +863,33 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|<
+literal|0
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"Invalid DenyUsers pattern \"%.100s\""
+argument_list|,
+name|options
+operator|.
+name|deny_users
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|r
+operator|!=
+literal|0
 condition|)
 block|{
 name|logit
@@ -876,6 +907,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 block|}
 block|}
 comment|/* Return false if AllowUsers isn't empty and user isn't listed there */
@@ -903,8 +935,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|r
+operator|=
 name|match_user
 argument_list|(
 name|pw
@@ -922,8 +955,36 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|<
+literal|0
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"Invalid AllowUsers pattern \"%.100s\""
+argument_list|,
+name|options
+operator|.
+name|allow_users
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|r
+operator|==
+literal|1
 condition|)
 break|break;
+block|}
 comment|/* i< options.num_allow_users iff we break for loop */
 if|if
 condition|(
@@ -1341,7 +1402,7 @@ expr_stmt|;
 block|}
 name|authlog
 argument_list|(
-literal|"%s %s%s%s for %s%.100s from %.200s port %d %s%s%s"
+literal|"%s %s%s%s for %s%.100s from %.200s port %d ssh2%s%s"
 argument_list|,
 name|authmsg
 argument_list|,
@@ -1384,12 +1445,6 @@ name|ssh_remote_port
 argument_list|(
 name|ssh
 argument_list|)
-argument_list|,
-name|compat20
-condition|?
-literal|"ssh2"
-else|:
-literal|"ssh1"
 argument_list|,
 name|authctxt
 operator|->
@@ -1569,7 +1624,7 @@ comment|/* XXX */
 name|error
 argument_list|(
 literal|"maximum authentication attempts exceeded for "
-literal|"%s%.100s from %.200s port %d %s"
+literal|"%s%.100s from %.200s port %d ssh2"
 argument_list|,
 name|authctxt
 operator|->
@@ -1592,12 +1647,6 @@ name|ssh_remote_port
 argument_list|(
 name|ssh
 argument_list|)
-argument_list|,
-name|compat20
-condition|?
-literal|"ssh2"
-else|:
-literal|"ssh1"
 argument_list|)
 expr_stmt|;
 name|packet_disconnect

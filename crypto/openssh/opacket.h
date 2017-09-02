@@ -905,21 +905,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|packet_set_compress_hooks
-parameter_list|(
-name|ctx
-parameter_list|,
-name|allocfunc
-parameter_list|,
-name|freefunc
-parameter_list|)
-define|\
-value|ssh_packet_set_compress_hooks(active_state, ctx, \ 	    allocfunc, freefunc);
-end_define
-
-begin_define
-define|#
-directive|define
 name|packet_check_eom
 parameter_list|()
 define|\
@@ -1029,6 +1014,24 @@ name|y
 parameter_list|)
 define|\
 value|ssh_packet_get_bytes(active_state, x, y)
+end_define
+
+begin_define
+define|#
+directive|define
+name|packet_set_mux
+parameter_list|()
+define|\
+value|ssh_packet_set_mux(active_state)
+end_define
+
+begin_define
+define|#
+directive|define
+name|packet_get_mux
+parameter_list|()
+define|\
+value|ssh_packet_get_mux(active_state)
 end_define
 
 begin_endif

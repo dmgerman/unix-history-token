@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.h,v 1.19 2015/01/19 19:52:16 markus Exp $ */
+comment|/* $OpenBSD: monitor.h,v 1.20 2016/09/28 16:33:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -266,12 +266,6 @@ block|,  }
 enum|;
 end_enum
 
-begin_struct_decl
-struct_decl|struct
-name|mm_master
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|monitor
@@ -287,16 +281,6 @@ name|m_log_recvfd
 decl_stmt|;
 name|int
 name|m_log_sendfd
-decl_stmt|;
-name|struct
-name|mm_master
-modifier|*
-name|m_zback
-decl_stmt|;
-name|struct
-name|mm_master
-modifier|*
-name|m_zlib
 decl_stmt|;
 name|struct
 name|kex
@@ -325,17 +309,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|monitor_reinit
-parameter_list|(
-name|struct
-name|monitor
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|monitor_sync
 parameter_list|(
 name|struct
 name|monitor

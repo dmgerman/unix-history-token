@@ -42,6 +42,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_SYS_PTRACE_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptrace.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_PRIV_H
 end_ifdef
 
@@ -140,6 +157,35 @@ condition|)
 name|fatal
 argument_list|(
 literal|"unable to make the process untraceable"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PT_DENY_ATTACH
+comment|/* Mac OS X */
+if|if
+condition|(
+name|ptrace
+argument_list|(
+name|PT_DENY_ATTACH
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|strict
+condition|)
+name|fatal
+argument_list|(
+literal|"unable to set PT_DENY_ATTACH"
 argument_list|)
 expr_stmt|;
 endif|#

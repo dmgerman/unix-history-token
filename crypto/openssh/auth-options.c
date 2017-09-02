@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.71 2016/03/07 19:02:43 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.72 2016/11/30 02:57:40 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2896,6 +2896,12 @@ name|struct
 name|passwd
 modifier|*
 name|pw
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|reason
 parameter_list|)
 block|{
 name|int
@@ -2934,6 +2940,11 @@ name|cert_source_address_done
 init|=
 literal|0
 decl_stmt|;
+operator|*
+name|reason
+operator|=
+literal|"invalid certificate options"
+expr_stmt|;
 comment|/* Separate options and extensions for v01 certs */
 if|if
 condition|(
@@ -3038,12 +3049,28 @@ name|no_user_rc
 operator||=
 name|cert_no_user_rc
 expr_stmt|;
-comment|/* CA-specified forced command supersedes key option */
+comment|/* 	 * Only permit both CA and key option forced-command if they match. 	 * Otherwise refuse the certificate. 	 */
 if|if
 condition|(
 name|cert_forced_command
 operator|!=
 name|NULL
+operator|&&
+name|forced_command
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|forced_command
+argument_list|,
+name|cert_forced_command
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|free
@@ -3056,6 +3083,42 @@ operator|=
 name|cert_forced_command
 expr_stmt|;
 block|}
+else|else
+block|{
+operator|*
+name|reason
+operator|=
+literal|"certificate and key options forced command "
+literal|"do not match"
+expr_stmt|;
+name|free
+argument_list|(
+name|cert_forced_command
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|cert_forced_command
+operator|!=
+name|NULL
+condition|)
+name|forced_command
+operator|=
+name|cert_forced_command
+expr_stmt|;
+comment|/* success */
+operator|*
+name|reason
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 literal|0
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.h,v 1.57 2016/07/15 00:24:30 djm Exp $ */
+comment|/* $OpenBSD: misc.h,v 1.61 2016/11/30 00:28:31 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -18,6 +18,12 @@ define|#
 directive|define
 name|_MISC_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_comment
 comment|/* Data structure for representing a forwarding request. */
@@ -80,6 +86,26 @@ specifier|const
 name|struct
 name|Forward
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bind_permitted
+parameter_list|(
+name|int
+parameter_list|,
+name|uid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|daemonized
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -990,6 +1016,42 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MINIMUM
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)< (b)) ? (a) : (b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXIMUM
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)> (b)) ? (a) : (b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ROUNDUP
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((((x)+((y)-1))/(y))*(y))
+end_define
 
 begin_endif
 endif|#

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"monitor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xmalloc.h"
 end_include
 

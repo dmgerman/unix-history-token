@@ -32,19 +32,6 @@ name|BROKEN_STRNVIS
 argument_list|)
 end_if
 
-begin_comment
-comment|/*  * We want these to override in the BROKEN_STRNVIS case.  TO avoid future sync  * problems no-op out the weak symbol definition rather than remove it.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEF_WEAK
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
 begin_include
 include|#
 directive|include

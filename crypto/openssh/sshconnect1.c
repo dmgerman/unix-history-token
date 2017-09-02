@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect1.c,v 1.78 2015/11/15 22:26:49 jcs Exp $ */
+comment|/* $OpenBSD: sshconnect1.c,v 1.79 2016/09/19 07:52:42 natano Exp $ */
 end_comment
 
 begin_comment
@@ -2086,11 +2086,6 @@ name|server_flags
 decl_stmt|,
 name|client_flags
 decl_stmt|;
-name|u_int32_t
-name|rnd
-init|=
-literal|0
-decl_stmt|;
 name|debug
 argument_list|(
 literal|"Waiting for server public key."
@@ -2346,47 +2341,16 @@ name|session_id
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Generate an encryption key for the session.   The key is a 256 bit 	 * random number, interpreted as a 32-byte key, with the least 	 * significant 8 bits being the first byte of the key. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|32
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|i
-operator|%
-literal|4
-operator|==
-literal|0
-condition|)
-name|rnd
-operator|=
-name|arc4random
-argument_list|()
-expr_stmt|;
+name|arc4random_buf
+argument_list|(
 name|session_key
-index|[
-name|i
-index|]
-operator|=
-name|rnd
-operator|&
-literal|0xff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|session_key
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|rnd
-operator|>>=
-literal|8
-expr_stmt|;
-block|}
 comment|/* 	 * According to the protocol spec, the first byte of the session key 	 * is the highest byte of the integer.  The session key is xored with 	 * the first 16 bytes of the session id. 	 */
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.h,v 1.32 2016/03/07 19:02:43 djm Exp $ */
+comment|/* $OpenBSD: session.h,v 1.33 2016/08/13 17:47:41 markus Exp $ */
 end_comment
 
 begin_comment
@@ -112,7 +112,6 @@ decl_stmt|;
 name|int
 name|single_connection
 decl_stmt|;
-comment|/* proto 2 */
 name|int
 name|chanid
 decl_stmt|;

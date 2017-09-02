@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.186 2016/05/25 23:48:45 schwarze Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.187 2016/09/12 01:22:38 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_ifdef
@@ -1682,19 +1676,15 @@ comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
 name|sanitise_stdfd
 argument_list|()
 expr_stmt|;
-name|setlocale
-argument_list|(
-name|LC_CTYPE
-argument_list|,
-literal|""
-argument_list|)
+name|msetlocale
+argument_list|()
 expr_stmt|;
 comment|/* Copy argv, because we modify it */
 name|newargv
 operator|=
 name|xcalloc
 argument_list|(
-name|MAX
+name|MAXIMUM
 argument_list|(
 name|argc
 operator|+
@@ -7377,7 +7367,7 @@ return|;
 block|}
 name|size
 operator|=
-name|roundup
+name|ROUNDUP
 argument_list|(
 name|stb
 operator|.

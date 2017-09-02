@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.h,v 1.78 2016/05/02 10:26:04 djm Exp $ */
+comment|/* $OpenBSD: kex.h,v 1.81 2016/09/28 21:44:52 djm Exp $ */
 end_comment
 
 begin_comment
@@ -239,6 +239,13 @@ begin_define
 define|#
 directive|define
 name|KEX_CURVE25519_SHA256
+value|"curve25519-sha256"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_CURVE25519_SHA256_OLD
 value|"curve25519-sha256@libssh.org"
 end_define
 

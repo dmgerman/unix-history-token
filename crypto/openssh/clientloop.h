@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.h,v 1.32 2016/01/13 23:04:47 djm Exp $ */
+comment|/* $OpenBSD: clientloop.h,v 1.33 2016/09/30 09:19:13 markus Exp $ */
 end_comment
 
 begin_comment
@@ -328,6 +328,17 @@ begin_comment
 comment|/* Cancel forwarding(s) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SSHMUX_COMMAND_PROXY
+value|8
+end_define
+
+begin_comment
+comment|/* Open new connection */
+end_comment
+
 begin_function_decl
 name|void
 name|muxserver_listen
@@ -338,7 +349,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|muxclient
 parameter_list|(
 specifier|const

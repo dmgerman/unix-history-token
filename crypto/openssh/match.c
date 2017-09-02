@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: match.c,v 1.30 2015/05/04 06:10:48 djm Exp $ */
+comment|/* $OpenBSD: match.c,v 1.33 2016/11/06 05:46:37 djm Exp $ */
 end_comment
 
 begin_comment
@@ -518,7 +518,6 @@ name|mhost
 decl_stmt|,
 name|mip
 decl_stmt|;
-comment|/* error in ipaddr match */
 if|if
 condition|(
 operator|(
@@ -539,18 +538,27 @@ return|return
 operator|-
 literal|1
 return|;
+comment|/* error in ipaddr match */
 elseif|else
 if|if
 condition|(
+name|host
+operator|==
+name|NULL
+operator|||
+name|ipaddr
+operator|==
+name|NULL
+operator|||
 name|mip
 operator|==
 operator|-
 literal|1
 condition|)
-comment|/* negative ip address match */
 return|return
 literal|0
 return|;
+comment|/* negative ip address match, or testing pattern */
 comment|/* negative hostname match */
 if|if
 condition|(
@@ -592,7 +600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * match user, user@host_or_ip, user@host_or_ip_list against pattern  */
+comment|/*  * Match user, user@host_or_ip, user@host_or_ip_list against pattern.  * If user, host and ipaddr are all NULL then validate pattern/  * Returns -1 on invalid pattern, 0 on no match, 1 on match.  */
 end_comment
 
 begin_function
@@ -630,6 +638,58 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+comment|/* test mode */
+if|if
+condition|(
+name|user
+operator|==
+name|NULL
+operator|&&
+name|host
+operator|==
+name|NULL
+operator|&&
+name|ipaddr
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|pattern
+argument_list|,
+literal|'@'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+name|match_host_and_ip
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|p
+operator|+
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 operator|(

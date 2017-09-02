@@ -253,6 +253,9 @@ block|,
 literal|0
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|HAVE_EVP_RIPEMD160
 block|{
 literal|"hmac-ripemd160"
 block|,
@@ -285,6 +288,8 @@ block|,
 literal|0
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"umac-64@openssh.com"
 block|,
@@ -419,6 +424,9 @@ block|,
 literal|1
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|HAVE_EVP_RIPEMD160
 block|{
 literal|"hmac-ripemd160-etm@openssh.com"
 block|,
@@ -435,6 +443,8 @@ block|,
 literal|1
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"umac-64-etm@openssh.com"
 block|,

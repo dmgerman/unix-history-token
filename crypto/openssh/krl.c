@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.c,v 1.37 2015/12/31 00:33:52 djm Exp $ */
+comment|/* $OpenBSD: krl.c,v 1.38 2016/09/12 01:22:38 deraadt Exp $ */
 end_comment
 
 begin_include
@@ -12,16 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* MIN */
-end_comment
 
 begin_include
 include|#
@@ -578,7 +568,7 @@ name|b
 operator|->
 name|blob
 argument_list|,
-name|MIN
+name|MINIMUM
 argument_list|(
 name|a
 operator|->
@@ -2456,7 +2446,7 @@ decl_stmt|;
 comment|/* 	 * Avoid unsigned overflows. 	 * The limits are high enough to avoid confusing the calculations. 	 */
 name|contig
 operator|=
-name|MIN
+name|MINIMUM
 argument_list|(
 name|contig
 argument_list|,
@@ -2467,7 +2457,7 @@ argument_list|)
 expr_stmt|;
 name|last_gap
 operator|=
-name|MIN
+name|MINIMUM
 argument_list|(
 name|last_gap
 argument_list|,
@@ -2478,7 +2468,7 @@ argument_list|)
 expr_stmt|;
 name|next_gap
 operator|=
-name|MIN
+name|MINIMUM
 argument_list|(
 name|next_gap
 argument_list|,
@@ -2596,7 +2586,7 @@ name|final
 condition|?
 literal|0
 else|:
-name|MIN
+name|MINIMUM
 argument_list|(
 name|next_gap
 argument_list|,
@@ -2615,7 +2605,7 @@ name|final
 condition|?
 literal|0
 else|:
-name|MIN
+name|MINIMUM
 argument_list|(
 name|next_gap
 argument_list|,
