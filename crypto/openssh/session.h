@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.h,v 1.31 2013/10/14 21:20:52 djm Exp $ */
+comment|/* $OpenBSD: session.h,v 1.32 2016/03/07 19:02:43 djm Exp $ */
 end_comment
 
 begin_comment
@@ -317,6 +317,23 @@ specifier|const
 name|char
 modifier|*
 name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|session_get_remote_name_or_ip
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

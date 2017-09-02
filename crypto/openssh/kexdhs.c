@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexdhs.c,v 1.23 2015/12/04 16:41:28 markus Exp $ */
+comment|/* $OpenBSD: kexdhs.c,v 1.24 2016/05/02 10:26:04 djm Exp $ */
 end_comment
 
 begin_comment
@@ -180,11 +180,36 @@ break|break;
 case|case
 name|KEX_DH_GRP14_SHA1
 case|:
+case|case
+name|KEX_DH_GRP14_SHA256
+case|:
 name|kex
 operator|->
 name|dh
 operator|=
 name|dh_new_group14
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|KEX_DH_GRP16_SHA512
+case|:
+name|kex
+operator|->
+name|dh
+operator|=
+name|dh_new_group16
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|KEX_DH_GRP18_SHA512
+case|:
+name|kex
+operator|->
+name|dh
+operator|=
+name|dh_new_group18
 argument_list|()
 expr_stmt|;
 break|break;
@@ -709,6 +734,10 @@ name|r
 operator|=
 name|kex_dh_hash
 argument_list|(
+name|kex
+operator|->
+name|hash_alg
+argument_list|,
 name|kex
 operator|->
 name|client_version_string

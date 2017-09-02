@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.h,v 1.70 2016/02/08 10:57:07 djm Exp $ */
+comment|/* $OpenBSD: packet.h,v 1.71 2016/03/07 19:02:43 djm Exp $ */
 end_comment
 
 begin_comment
@@ -219,13 +219,20 @@ name|kex
 modifier|*
 name|kex
 decl_stmt|;
-comment|/* cached remote ip address and port*/
+comment|/* cached local and remote ip addresses and ports */
 name|char
 modifier|*
 name|remote_ipaddr
 decl_stmt|;
 name|int
 name|remote_port
+decl_stmt|;
+name|char
+modifier|*
+name|local_ipaddr
+decl_stmt|;
+name|int
+name|local_port
 decl_stmt|;
 comment|/* Dispatcher table */
 name|dispatch_fn
@@ -1030,6 +1037,30 @@ end_function_decl
 begin_function_decl
 name|int
 name|ssh_remote_port
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|ssh_local_ipaddr
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ssh_local_port
 parameter_list|(
 name|struct
 name|ssh

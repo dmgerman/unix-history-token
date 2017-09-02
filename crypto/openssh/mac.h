@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mac.h,v 1.9 2015/01/13 19:31:40 markus Exp $ */
+comment|/* $OpenBSD: mac.h,v 1.10 2016/07/08 03:44:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -129,6 +129,31 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mac_check
+parameter_list|(
+name|struct
+name|sshmac
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,

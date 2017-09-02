@@ -214,7 +214,7 @@ comment|/* #undef BROKEN_SNPRINTF */
 end_comment
 
 begin_comment
-comment|/* FreeBSD strnvis argument order is swapped compared to OpenBSD */
+comment|/* missing VIS_ALL */
 end_comment
 
 begin_define
@@ -1177,6 +1177,39 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `err' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ERR
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `errx' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ERRX
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<err.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ERR_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if your system has /etc/default/login */
 end_comment
 
@@ -2060,6 +2093,17 @@ comment|/* #undef HAVE_KRB5_GET_ERROR_MESSAGE */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<langinfo.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LANGINFO_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<lastlog.h> header file. */
 end_comment
 
@@ -2333,6 +2377,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `mbtowc' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MBTOWC
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `md5_crypt' function. */
 end_comment
 
@@ -2475,6 +2530,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_NGETADDRINFO */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `nl_langinfo' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NL_LANGINFO
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `nsleep' function. */
@@ -2991,6 +3057,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_SETPCRED */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `setpflags' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SETPFLAGS */
 end_comment
 
 begin_comment
@@ -3973,9 +4047,12 @@ begin_comment
 comment|/* Define to 1 if you have the `timingsafe_bcmp' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_TIMINGSAFE_BCMP */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_TIMINGSAFE_BCMP
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<tmpdir.h> header file. */
@@ -4319,6 +4396,39 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `warn' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WARN
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<wchar.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCHAR_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `wcwidth' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCWIDTH
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `_getlong' function. */
 end_comment
 
@@ -4605,14 +4715,6 @@ end_comment
 
 begin_comment
 comment|/* #undef NO_ATTRIBUTE_ON_RETURN_TYPE */
-end_comment
-
-begin_comment
-comment|/* Define if the concept of ports only accessible to superusers isn't known */
-end_comment
-
-begin_comment
-comment|/* #undef NO_IPPORT_RESERVED_CONCEPT */
 end_comment
 
 begin_comment

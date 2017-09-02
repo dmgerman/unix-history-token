@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.229 2016/02/17 22:20:14 djm Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.234 2016/07/18 11:35:33 markus Exp $ */
 end_comment
 
 begin_comment
@@ -88,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -522,6 +528,9 @@ decl_stmt|;
 comment|/* XXX discard incoming data after MAC error */
 name|u_int
 name|packet_discard
+decl_stmt|;
+name|size_t
+name|packet_discard_mac_already
 decl_stmt|;
 name|struct
 name|sshmac
@@ -1041,6 +1050,7 @@ argument_list|(
 name|ssh
 argument_list|)
 expr_stmt|;
+comment|/* XXX need ssh_free_session_state? */
 return|return
 name|NULL
 return|;
@@ -1196,6 +1206,25 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+name|size_t
+name|dlen
+init|=
+name|PACKET_MAX_SIZE
+decl_stmt|;
+if|if
+condition|(
+name|dlen
+operator|>
+name|state
+operator|->
+name|packet_discard_mac_already
+condition|)
+name|dlen
+operator|-=
+name|state
+operator|->
+name|packet_discard_mac_already
+expr_stmt|;
 name|memset
 argument_list|(
 name|buf
@@ -1217,7 +1246,7 @@ operator|->
 name|incoming_packet
 argument_list|)
 operator|<
-name|PACKET_MAX_SIZE
+name|dlen
 condition|)
 if|if
 condition|(
@@ -1266,7 +1295,7 @@ operator|->
 name|incoming_packet
 argument_list|)
 argument_list|,
-name|PACKET_MAX_SIZE
+name|dlen
 argument_list|,
 name|NULL
 argument_list|,
@@ -1315,8 +1344,8 @@ name|sshmac
 modifier|*
 name|mac
 parameter_list|,
-name|u_int
-name|packet_length
+name|size_t
+name|mac_already
 parameter_list|,
 name|u_int
 name|discard
@@ -1379,24 +1408,29 @@ return|return
 name|SSH_ERR_MAC_INVALID
 return|;
 block|}
+comment|/* 	 * Record number of bytes over which the mac has already 	 * been computed in order to minimize timing attacks. 	 */
 if|if
 condition|(
-name|packet_length
-operator|!=
-name|PACKET_MAX_SIZE
-operator|&&
 name|mac
 operator|&&
 name|mac
 operator|->
 name|enabled
 condition|)
+block|{
 name|state
 operator|->
 name|packet_discard_mac
 operator|=
 name|mac
 expr_stmt|;
+name|state
+operator|->
+name|packet_discard_mac_already
+operator|=
+name|mac_already
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sshbuf_len
@@ -1407,20 +1441,12 @@ name|input
 argument_list|)
 operator|>=
 name|discard
-operator|&&
-operator|(
-name|r
-operator|=
+condition|)
+return|return
 name|ssh_packet_stop_discard
 argument_list|(
 name|ssh
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-name|r
 return|;
 name|state
 operator|->
@@ -1475,6 +1501,25 @@ name|fromlen
 decl_stmt|,
 name|tolen
 decl_stmt|;
+if|if
+condition|(
+name|state
+operator|->
+name|connection_in
+operator|==
+operator|-
+literal|1
+operator|||
+name|state
+operator|->
+name|connection_out
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+literal|0
+return|;
 comment|/* filedescriptors in and out are the same, so it's a socket */
 if|if
 condition|(
@@ -1932,11 +1977,27 @@ name|ssh
 operator|->
 name|remote_port
 operator|=
-name|get_sock_port
+name|get_peer_port
 argument_list|(
 name|sock
-argument_list|,
-literal|0
+argument_list|)
+expr_stmt|;
+name|ssh
+operator|->
+name|local_ipaddr
+operator|=
+name|get_local_ipaddr
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|ssh
+operator|->
+name|local_port
+operator|=
+name|get_local_port
+argument_list|(
+name|sock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1955,7 +2016,22 @@ name|ssh
 operator|->
 name|remote_port
 operator|=
-literal|0
+literal|65535
+expr_stmt|;
+name|ssh
+operator|->
+name|local_ipaddr
+operator|=
+name|strdup
+argument_list|(
+literal|"UNKNOWN"
+argument_list|)
+expr_stmt|;
+name|ssh
+operator|->
+name|local_port
+operator|=
+literal|65535
 expr_stmt|;
 block|}
 block|}
@@ -1994,6 +2070,70 @@ return|return
 name|ssh
 operator|->
 name|remote_port
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns the IP-address of the local host as a string.  The returned  * string must not be freed.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|ssh_local_ipaddr
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
+name|ssh
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
+expr_stmt|;
+comment|/* Will lookup and cache. */
+return|return
+name|ssh
+operator|->
+name|local_ipaddr
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Returns the port number of the local host. */
+end_comment
+
+begin_function
+name|int
+name|ssh_local_port
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
+name|ssh
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
+expr_stmt|;
+comment|/* Will lookup and cache. */
+return|return
+name|ssh
+operator|->
+name|local_port
 return|;
 block|}
 end_function
@@ -5590,6 +5730,8 @@ name|SSH_DIGEST_MAX_LENGTH
 index|]
 decl_stmt|;
 name|u_char
+name|tmp
+decl_stmt|,
 name|padlen
 decl_stmt|,
 name|pad
@@ -5959,7 +6101,12 @@ operator|->
 name|extra_pad
 condition|)
 block|{
-comment|/* will wrap if extra_pad+padlen> 255 */
+name|tmp
+operator|=
+name|state
+operator|->
+name|extra_pad
+expr_stmt|;
 name|state
 operator|->
 name|extra_pad
@@ -5973,13 +6120,20 @@ argument_list|,
 name|block_size
 argument_list|)
 expr_stmt|;
-name|pad
-operator|=
+comment|/* check if roundup overflowed */
+if|if
+condition|(
 name|state
 operator|->
 name|extra_pad
-operator|-
-operator|(
+operator|<
+name|tmp
+condition|)
+return|return
+name|SSH_ERR_INVALID_ARGUMENT
+return|;
+name|tmp
+operator|=
 operator|(
 name|len
 operator|+
@@ -5989,7 +6143,26 @@ operator|%
 name|state
 operator|->
 name|extra_pad
-operator|)
+expr_stmt|;
+comment|/* Check whether pad calculation below will underflow */
+if|if
+condition|(
+name|tmp
+operator|>
+name|state
+operator|->
+name|extra_pad
+condition|)
+return|return
+name|SSH_ERR_INVALID_ARGUMENT
+return|;
+name|pad
+operator|=
+name|state
+operator|->
+name|extra_pad
+operator|-
+name|tmp
 expr_stmt|;
 name|DBG
 argument_list|(
@@ -6011,10 +6184,25 @@ name|extra_pad
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tmp
+operator|=
+name|padlen
+expr_stmt|;
 name|padlen
 operator|+=
 name|pad
 expr_stmt|;
+comment|/* Check whether padlen calculation overflowed */
+if|if
+condition|(
+name|padlen
+operator|<
+name|tmp
+condition|)
+return|return
+name|SSH_ERR_INVALID_ARGUMENT
+return|;
+comment|/* overflow */
 name|state
 operator|->
 name|extra_pad
@@ -8297,11 +8485,6 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|cp
-decl_stmt|,
-name|macbuf
-index|[
-name|SSH_DIGEST_MAX_LENGTH
-index|]
 decl_stmt|;
 name|u_int
 name|maclen
@@ -8769,9 +8952,7 @@ name|enc
 argument_list|,
 name|mac
 argument_list|,
-name|state
-operator|->
-name|packlen
+literal|0
 argument_list|,
 name|PACKET_MAX_SIZE
 argument_list|)
@@ -8889,9 +9070,7 @@ name|enc
 argument_list|,
 name|mac
 argument_list|,
-name|state
-operator|->
-name|packlen
+literal|0
 argument_list|,
 name|PACKET_MAX_SIZE
 operator|-
@@ -8920,6 +9099,7 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* packet is incomplete */
 ifdef|#
 directive|ifdef
 name|PACKET_DEBUG
@@ -8941,7 +9121,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EtM: compute mac over encrypted input */
+comment|/* EtM: check mac over encrypted input */
 if|if
 condition|(
 name|mac
@@ -8960,7 +9140,7 @@ condition|(
 operator|(
 name|r
 operator|=
-name|mac_compute
+name|mac_check
 argument_list|(
 name|mac
 argument_list|,
@@ -8981,20 +9161,41 @@ name|aadlen
 operator|+
 name|need
 argument_list|,
-name|macbuf
-argument_list|,
-sizeof|sizeof
+name|sshbuf_ptr
 argument_list|(
-name|macbuf
+name|state
+operator|->
+name|input
 argument_list|)
+operator|+
+name|aadlen
+operator|+
+name|need
+operator|+
+name|authlen
+argument_list|,
+name|maclen
 argument_list|)
 operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|r
+operator|==
+name|SSH_ERR_MAC_INVALID
+condition|)
+name|logit
+argument_list|(
+literal|"Corrupted MAC on input."
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -9085,7 +9286,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * compute MAC over seqnr and packet, 	 * increment sequence number for incoming packet 	 */
 if|if
 condition|(
 name|mac
@@ -9095,19 +9295,18 @@ operator|->
 name|enabled
 condition|)
 block|{
+comment|/* Not EtM: check MAC over cleartext */
 if|if
 condition|(
 operator|!
 name|mac
 operator|->
 name|etm
-condition|)
-if|if
-condition|(
+operator|&&
 operator|(
 name|r
 operator|=
-name|mac_compute
+name|mac_check
 argument_list|(
 name|mac
 argument_list|,
@@ -9131,26 +9330,6 @@ operator|->
 name|incoming_packet
 argument_list|)
 argument_list|,
-name|macbuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|macbuf
-argument_list|)
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|out
-goto|;
-if|if
-condition|(
-name|timingsafe_bcmp
-argument_list|(
-name|macbuf
-argument_list|,
 name|sshbuf_ptr
 argument_list|(
 name|state
@@ -9158,14 +9337,22 @@ operator|->
 name|input
 argument_list|)
 argument_list|,
-name|mac
-operator|->
-name|mac_len
+name|maclen
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|r
+operator|!=
+name|SSH_ERR_MAC_INVALID
+condition|)
+goto|goto
+name|out
+goto|;
 name|logit
 argument_list|(
 literal|"Corrupted MAC on input."
@@ -9189,9 +9376,12 @@ name|enc
 argument_list|,
 name|mac
 argument_list|,
+name|sshbuf_len
+argument_list|(
 name|state
 operator|->
-name|packlen
+name|incoming_packet
+argument_list|)
 argument_list|,
 name|PACKET_MAX_SIZE
 operator|-
@@ -9199,6 +9389,7 @@ name|need
 argument_list|)
 return|;
 block|}
+comment|/* Remove MAC from input buffer */
 name|DBG
 argument_list|(
 name|debug
@@ -10568,7 +10759,7 @@ block|{
 case|case
 name|SSH_ERR_CONN_CLOSED
 case|:
-name|logit
+name|logdie
 argument_list|(
 literal|"Connection closed by %.200s port %d"
 argument_list|,
@@ -10583,15 +10774,10 @@ name|ssh
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cleanup_exit
-argument_list|(
-literal|255
-argument_list|)
-expr_stmt|;
 case|case
 name|SSH_ERR_CONN_TIMEOUT
 case|:
-name|logit
+name|logdie
 argument_list|(
 literal|"Connection %s %.200s port %d timed out"
 argument_list|,
@@ -10616,15 +10802,10 @@ name|ssh
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cleanup_exit
-argument_list|(
-literal|255
-argument_list|)
-expr_stmt|;
 case|case
 name|SSH_ERR_DISCONNECTED
 case|:
-name|logit
+name|logdie
 argument_list|(
 literal|"Disconnected from %.200s port %d"
 argument_list|,
@@ -10639,11 +10820,6 @@ name|ssh
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cleanup_exit
-argument_list|(
-literal|255
-argument_list|)
-expr_stmt|;
 case|case
 name|SSH_ERR_SYSTEM_ERROR
 case|:
@@ -10653,8 +10829,7 @@ name|errno
 operator|==
 name|ECONNRESET
 condition|)
-block|{
-name|logit
+name|logdie
 argument_list|(
 literal|"Connection reset by %.200s port %d"
 argument_list|,
@@ -10669,12 +10844,6 @@ name|ssh
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cleanup_exit
-argument_list|(
-literal|255
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* FALLTHROUGH */
 case|case
 name|SSH_ERR_NO_CIPHER_ALG_MATCH
@@ -10713,7 +10882,7 @@ argument_list|,
 literal|"ssh"
 argument_list|)
 expr_stmt|;
-name|fatal
+name|logdie
 argument_list|(
 literal|"Unable to negotiate with %.200s port %d: %s. "
 literal|"Their offer: %s"
@@ -10743,7 +10912,7 @@ expr_stmt|;
 block|}
 comment|/* FALLTHROUGH */
 default|default:
-name|fatal
+name|logdie
 argument_list|(
 literal|"%s%sConnection %s %.200s port %d: %s"
 argument_list|,

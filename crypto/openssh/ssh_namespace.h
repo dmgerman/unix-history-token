@@ -454,13 +454,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|buffer_get_bignum
-value|Fssh_buffer_get_bignum
-end_define
-
-begin_define
-define|#
-directive|define
 name|buffer_get_bignum2
 value|Fssh_buffer_get_bignum2
 end_define
@@ -470,13 +463,6 @@ define|#
 directive|define
 name|buffer_get_bignum2_ret
 value|Fssh_buffer_get_bignum2_ret
-end_define
-
-begin_define
-define|#
-directive|define
-name|buffer_get_bignum_ret
-value|Fssh_buffer_get_bignum_ret
 end_define
 
 begin_define
@@ -601,13 +587,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|buffer_put_bignum
-value|Fssh_buffer_put_bignum
-end_define
-
-begin_define
-define|#
-directive|define
 name|buffer_put_bignum2
 value|Fssh_buffer_put_bignum2
 end_define
@@ -624,13 +603,6 @@ define|#
 directive|define
 name|buffer_put_bignum2_ret
 value|Fssh_buffer_put_bignum2_ret
-end_define
-
-begin_define
-define|#
-directive|define
-name|buffer_put_bignum_ret
-value|Fssh_buffer_put_bignum_ret
 end_define
 
 begin_define
@@ -1644,13 +1616,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|clear_cached_addr
-value|Fssh_clear_cached_addr
-end_define
-
-begin_define
-define|#
-directive|define
 name|colon
 value|Fssh_colon
 end_define
@@ -2071,13 +2036,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|derive_ssh1_session_id
-value|Fssh_derive_ssh1_session_id
-end_define
-
-begin_define
-define|#
-directive|define
 name|detect_attack
 value|Fssh_detect_attack
 end_define
@@ -2115,6 +2073,20 @@ define|#
 directive|define
 name|dh_new_group14
 value|Fssh_dh_new_group14
+end_define
+
+begin_define
+define|#
+directive|define
+name|dh_new_group16
+value|Fssh_dh_new_group16
+end_define
+
+begin_define
+define|#
+directive|define
+name|dh_new_group18
+value|Fssh_dh_new_group18
 end_define
 
 begin_define
@@ -2253,8 +2225,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|fmprintf
+value|Fssh_fmprintf
+end_define
+
+begin_define
+define|#
+directive|define
 name|fmt_scaled
 value|Fssh_fmt_scaled
+end_define
+
+begin_define
+define|#
+directive|define
+name|forward_equals
+value|Fssh_forward_equals
 end_define
 
 begin_define
@@ -2288,8 +2274,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|get_canonical_hostname
-value|Fssh_get_canonical_hostname
+name|get_hram
+value|Fssh_get_hram
 end_define
 
 begin_define
@@ -2325,27 +2311,6 @@ define|#
 directive|define
 name|get_peer_port
 value|Fssh_get_peer_port
-end_define
-
-begin_define
-define|#
-directive|define
-name|get_remote_ipaddr
-value|Fssh_get_remote_ipaddr
-end_define
-
-begin_define
-define|#
-directive|define
-name|get_remote_name_or_ip
-value|Fssh_get_remote_name_or_ip
-end_define
-
-begin_define
-define|#
-directive|define
-name|get_remote_port
-value|Fssh_get_remote_port
 end_define
 
 begin_define
@@ -3079,6 +3044,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|logdie
+value|Fssh_logdie
+end_define
+
+begin_define
+define|#
+directive|define
 name|logit
 value|Fssh_logit
 end_define
@@ -3102,6 +3074,13 @@ define|#
 directive|define
 name|mac_alg_list
 value|Fssh_mac_alg_list
+end_define
+
+begin_define
+define|#
+directive|define
+name|mac_check
+value|Fssh_mac_check
 end_define
 
 begin_define
@@ -3235,6 +3214,20 @@ define|#
 directive|define
 name|monotime
 value|Fssh_monotime
+end_define
+
+begin_define
+define|#
+directive|define
+name|monotime_double
+value|Fssh_monotime_double
+end_define
+
+begin_define
+define|#
+directive|define
+name|mprintf
+value|Fssh_mprintf
 end_define
 
 begin_define
@@ -3394,6 +3387,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|parse_user_host_port
+value|Fssh_parse_user_host_port
+end_define
+
+begin_define
+define|#
+directive|define
 name|percent_expand
 value|Fssh_percent_expand
 end_define
@@ -3501,6 +3501,13 @@ define|#
 directive|define
 name|plain_key_blob
 value|Fssh_plain_key_blob
+end_define
+
+begin_define
+define|#
+directive|define
+name|platform_disable_tracing
+value|Fssh_platform_disable_tracing
 end_define
 
 begin_define
@@ -3821,6 +3828,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|snmprintf
+value|Fssh_snmprintf
+end_define
+
+begin_define
+define|#
+directive|define
 name|sock_set_v6only
 value|Fssh_sock_set_v6only
 end_define
@@ -3914,13 +3928,6 @@ define|#
 directive|define
 name|ssh_crc32
 value|Fssh_ssh_crc32
-end_define
-
-begin_define
-define|#
-directive|define
-name|ssh_decrypt_challenge
-value|Fssh_ssh_decrypt_challenge
 end_define
 
 begin_define
@@ -4311,6 +4318,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ssh_local_ipaddr
+value|Fssh_ssh_local_ipaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|ssh_local_port
+value|Fssh_ssh_local_port
+end_define
+
+begin_define
+define|#
+directive|define
 name|ssh_lock_agent
 value|Fssh_ssh_lock_agent
 end_define
@@ -4390,13 +4411,6 @@ define|#
 directive|define
 name|ssh_packet_enable_delayed_compress
 value|Fssh_ssh_packet_enable_delayed_compress
-end_define
-
-begin_define
-define|#
-directive|define
-name|ssh_packet_get_bignum
-value|Fssh_ssh_packet_get_bignum
 end_define
 
 begin_define
@@ -4586,13 +4600,6 @@ define|#
 directive|define
 name|ssh_packet_put
 value|Fssh_ssh_packet_put
-end_define
-
-begin_define
-define|#
-directive|define
-name|ssh_packet_put_bignum
-value|Fssh_ssh_packet_put_bignum
 end_define
 
 begin_define
@@ -5027,6 +5034,13 @@ define|#
 directive|define
 name|sshbuf_dump_data
 value|Fssh_sshbuf_dump_data
+end_define
+
+begin_define
+define|#
+directive|define
+name|sshbuf_dup_string
+value|Fssh_sshbuf_dup_string
 end_define
 
 begin_define
@@ -5690,13 +5704,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|sshkey_parse_public_rsa1_fileblob
-value|Fssh_sshkey_parse_public_rsa1_fileblob
-end_define
-
-begin_define
-define|#
-directive|define
 name|sshkey_perm_ok
 value|Fssh_sshkey_perm_ok
 end_define
@@ -5900,13 +5907,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|sshpkt_get_bignum1
-value|Fssh_sshpkt_get_bignum1
-end_define
-
-begin_define
-define|#
-directive|define
 name|sshpkt_get_bignum2
 value|Fssh_sshpkt_get_bignum2
 end_define
@@ -5979,13 +5979,6 @@ define|#
 directive|define
 name|sshpkt_put
 value|Fssh_sshpkt_put
-end_define
-
-begin_define
-define|#
-directive|define
-name|sshpkt_put_bignum1
-value|Fssh_sshpkt_put_bignum1
 end_define
 
 begin_define
@@ -6082,6 +6075,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|stravis
+value|Fssh_stravis
+end_define
+
+begin_define
+define|#
+directive|define
 name|strdelim
 value|Fssh_strdelim
 end_define
@@ -6126,13 +6126,6 @@ define|#
 directive|define
 name|tilde_expand_filename
 value|Fssh_tilde_expand_filename
-end_define
-
-begin_define
-define|#
-directive|define
-name|timingsafe_bcmp
-value|Fssh_timingsafe_bcmp
 end_define
 
 begin_define
@@ -6278,6 +6271,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|vasnmprintf
+value|Fssh_vasnmprintf
+end_define
+
+begin_define
+define|#
+directive|define
 name|verbose
 value|Fssh_verbose
 end_define
@@ -6287,6 +6287,13 @@ define|#
 directive|define
 name|verify_host_key_dns
 value|Fssh_verify_host_key_dns
+end_define
+
+begin_define
+define|#
+directive|define
+name|vfmprintf
+value|Fssh_vfmprintf
 end_define
 
 begin_define

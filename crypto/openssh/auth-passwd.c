@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-passwd.c,v 1.44 2014/07/15 15:54:14 millert Exp $ */
+comment|/* $OpenBSD: auth-passwd.c,v 1.45 2016/07/21 01:39:35 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -822,6 +822,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|encrypted_password
+decl_stmt|,
+modifier|*
+name|salt
+init|=
+name|NULL
 decl_stmt|;
 comment|/* Just use the supplied fake password if authctxt is invalid */
 name|char
@@ -867,14 +872,13 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* Encrypt the candidate password using the proper salt. */
-name|encrypted_password
-operator|=
-name|xcrypt
-argument_list|(
-name|password
-argument_list|,
-operator|(
+comment|/* 	 * Encrypt the candidate password using the proper salt, or pass a 	 * NULL and let xcrypt pick one. 	 */
+if|if
+condition|(
+name|authctxt
+operator|->
+name|valid
+operator|&&
 name|pw_password
 index|[
 literal|0
@@ -884,11 +888,18 @@ name|pw_password
 index|[
 literal|1
 index|]
-operator|)
-condition|?
+condition|)
+name|salt
+operator|=
 name|pw_password
-else|:
-literal|"xx"
+expr_stmt|;
+name|encrypted_password
+operator|=
+name|xcrypt
+argument_list|(
+name|password
+argument_list|,
+name|salt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Authentication is accepted if the encrypted passwords 	 * are identical. 	 */
