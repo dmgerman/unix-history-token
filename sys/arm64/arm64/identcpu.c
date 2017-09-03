@@ -365,6 +365,12 @@ block|,
 literal|"Cortex-A57"
 block|}
 block|,
+block|{
+name|CPU_PART_CORTEX_A72
+block|,
+literal|"Cortex-A72"
+block|}
+block|,
 name|CPU_PART_NONE
 block|, }
 decl_stmt|;

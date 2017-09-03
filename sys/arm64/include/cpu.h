@@ -280,6 +280,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_PART_CORTEX_A72
+value|0xD08
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_REV_THUNDER_1_0
 value|0x00
 end_define
