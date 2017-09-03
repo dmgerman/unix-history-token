@@ -6669,6 +6669,8 @@ operator||
 name|V_CLEANONLY
 operator||
 name|V_VMIO
+operator||
+name|V_ALLOWCLEAN
 operator|)
 operator|)
 operator|==
@@ -6695,6 +6697,37 @@ condition|)
 name|panic
 argument_list|(
 literal|"vinvalbuf: flush failed"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|V_ALT
+operator||
+name|V_NORMAL
+operator||
+name|V_CLEANONLY
+operator||
+name|V_VMIO
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+name|bo
+operator|->
+name|bo_dirty
+operator|.
+name|bv_cnt
+operator|>
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vinvalbuf: flush dirty failed"
 argument_list|)
 expr_stmt|;
 name|BO_UNLOCK

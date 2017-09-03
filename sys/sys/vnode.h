@@ -1564,6 +1564,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|V_ALLOWCLEAN
+value|0x0020
+end_define
+
+begin_comment
+comment|/* vinvalbuf: allow clean buffers after flush */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|REVOKEALL
 value|0x0001
 end_define
