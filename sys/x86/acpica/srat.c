@@ -1977,6 +1977,13 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|cpus
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make a pass over the table to populate the cpus[] and 	 * mem_info[] tables. 	 */
 name|srat
 operator|=
