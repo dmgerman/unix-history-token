@@ -565,7 +565,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|mv_rtc
+name|a38x_rtc
 argument_list|,
 name|simplebus
 argument_list|,
