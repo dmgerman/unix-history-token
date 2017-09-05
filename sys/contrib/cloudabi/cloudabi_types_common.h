@@ -1146,13 +1146,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLOUDABI_FILETYPE_FIFO
-value|48
-end_define
-
-begin_define
-define|#
-directive|define
 name|CLOUDABI_FILETYPE_POLL
 value|64
 end_define
@@ -1540,13 +1533,6 @@ define|#
 directive|define
 name|CLOUDABI_RIGHT_FILE_CREATE_FILE
 value|0x0000000000000400
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLOUDABI_RIGHT_FILE_CREATE_FIFO
-value|0x0000000000000800
 end_define
 
 begin_define
