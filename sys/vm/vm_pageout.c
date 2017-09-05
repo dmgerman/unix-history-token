@@ -1742,6 +1742,11 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
+name|pmap_remove_write
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_unlock
 argument_list|(
 name|m
@@ -1878,6 +1883,11 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+name|pmap_remove_write
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|vm_page_unlock
 argument_list|(
 name|p
@@ -1994,6 +2004,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|pmap_remove_write
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|vm_page_unlock
 argument_list|(
 name|p
@@ -2117,7 +2132,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initiate I/O.  Bump the vm_page_t->busy counter and 	 * mark the pages read-only. 	 * 	 * We do not have to fixup the clean/dirty bits here... we can 	 * allow the pager to do it after the I/O completes. 	 * 	 * NOTE! mc[i]->dirty may be partial or fragmented due to an 	 * edge case with file fragments. 	 */
+comment|/* 	 * Initiate I/O.  Mark the pages busy and verify that they're valid 	 * and read-only. 	 * 	 * We do not have to fixup the clean/dirty bits here... we can 	 * allow the pager to do it after the I/O completes. 	 * 	 * NOTE! mc[i]->dirty may be partial or fragmented due to an 	 * edge case with file fragments. 	 */
 for|for
 control|(
 name|i
@@ -2157,15 +2172,32 @@ name|count
 operator|)
 argument_list|)
 expr_stmt|;
-name|vm_page_sbusy
+name|KASSERT
 argument_list|(
+operator|(
 name|mc
 index|[
 name|i
 index|]
+operator|->
+name|aflags
+operator|&
+name|PGA_WRITEABLE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_pageout_flush: writeable page %p"
+operator|,
+name|mc
+index|[
+name|i
+index|]
+operator|)
 argument_list|)
 expr_stmt|;
-name|pmap_remove_write
+name|vm_page_sbusy
 argument_list|(
 name|mc
 index|[
