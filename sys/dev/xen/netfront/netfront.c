@@ -242,14 +242,14 @@ begin_define
 define|#
 directive|define
 name|NET_TX_RING_SIZE
-value|__RING_SIZE((netif_tx_sring_t *)0, PAGE_SIZE)
+value|__CONST_RING_SIZE(netif_tx, PAGE_SIZE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NET_RX_RING_SIZE
-value|__RING_SIZE((netif_rx_sring_t *)0, PAGE_SIZE)
+value|__CONST_RING_SIZE(netif_rx, PAGE_SIZE)
 end_define
 
 begin_define
