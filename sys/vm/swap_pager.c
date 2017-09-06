@@ -7617,23 +7617,29 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check that the total amount of swap currently configured does not  * exceed half the theoretical maximum.  If it does, print a warning  * message and return -1; otherwise, return 0.  */
+comment|/*  * Check that the total amount of swap currently configured does not  * exceed half the theoretical maximum.  If it does, print a warning  * message.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|swapon_check_swzone
 parameter_list|(
-name|unsigned
-name|long
-name|npages
+name|void
 parameter_list|)
 block|{
 name|unsigned
 name|long
 name|maxpages
+decl_stmt|,
+name|npages
 decl_stmt|;
+name|npages
+operator|=
+name|swap_total
+operator|/
+name|PAGE_SIZE
+expr_stmt|;
 comment|/* absolute maximum we can handle assuming 100% efficiency */
 name|maxpages
 operator|=
@@ -7672,18 +7678,7 @@ literal|"warning: increase kern.maxswzone "
 literal|"or reduce amount of swap.\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -7961,11 +7956,7 @@ operator|*
 name|PAGE_SIZE
 expr_stmt|;
 name|swapon_check_swzone
-argument_list|(
-name|swap_total
-operator|/
-name|PAGE_SIZE
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|swp_sizecheck
 argument_list|()
