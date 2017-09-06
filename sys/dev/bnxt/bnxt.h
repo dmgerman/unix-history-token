@@ -1687,6 +1687,26 @@ end_struct
 
 begin_struct
 struct|struct
+name|bnxt_func_qcfg
+block|{
+name|uint16_t
+name|alloc_completion_rings
+decl_stmt|;
+name|uint16_t
+name|alloc_tx_rings
+decl_stmt|;
+name|uint16_t
+name|alloc_rx_rings
+decl_stmt|;
+name|uint16_t
+name|alloc_vnics
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|bnxt_softc
 block|{
 name|device_t
@@ -1735,6 +1755,10 @@ decl_stmt|;
 name|struct
 name|bnxt_func_info
 name|func
+decl_stmt|;
+name|struct
+name|bnxt_func_qcfg
+name|fn_qcfg
 decl_stmt|;
 name|struct
 name|bnxt_pf_info

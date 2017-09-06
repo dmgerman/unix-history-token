@@ -151,6 +151,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|bnxt_hwrm_func_qcfg
+parameter_list|(
+name|struct
+name|bnxt_softc
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|bnxt_hwrm_func_reset
 parameter_list|(
 name|struct
