@@ -150,6 +150,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|systrace_probe_func_t
+name|__read_frequently
 name|systrace_probe_func
 decl_stmt|;
 end_decl_stmt

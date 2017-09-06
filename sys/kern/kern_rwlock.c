@@ -366,6 +366,7 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|int
+name|__read_frequently
 name|rowner_retries
 init|=
 literal|10
@@ -375,6 +376,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|__read_frequently
 name|rowner_loops
 init|=
 literal|10000
@@ -446,7 +448,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|lock_delay_config
-name|__read_mostly
+name|__read_frequently
 name|rw_delay
 decl_stmt|;
 end_decl_stmt
