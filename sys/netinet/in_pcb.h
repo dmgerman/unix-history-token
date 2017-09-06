@@ -3574,6 +3574,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|in_pcbquery_txrlevel
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|in_pcboutput_txrtlmt
 parameter_list|(
