@@ -116,53 +116,9 @@ name|BHND_DEVICE
 argument_list|(
 name|BCM
 argument_list|,
-name|USB
-argument_list|,
-literal|"USB1.1 Host/Device core"
-argument_list|,
-name|NULL
-argument_list|)
-block|,
-name|BHND_DEVICE
-argument_list|(
-name|BCM
-argument_list|,
 name|USB20H
 argument_list|,
 literal|"USB2.0 Host core"
-argument_list|,
-name|NULL
-argument_list|)
-block|,
-name|BHND_DEVICE
-argument_list|(
-name|BCM
-argument_list|,
-name|USB20D
-argument_list|,
-literal|"USB2.0 Device core"
-argument_list|,
-name|NULL
-argument_list|)
-block|,
-name|BHND_DEVICE
-argument_list|(
-name|BCM
-argument_list|,
-name|USB11H
-argument_list|,
-literal|"USB1.1 Host core"
-argument_list|,
-name|NULL
-argument_list|)
-block|,
-name|BHND_DEVICE
-argument_list|(
-name|BCM
-argument_list|,
-name|USB11D
-argument_list|,
-literal|"USB1.1 Device core"
 argument_list|,
 name|NULL
 argument_list|)
