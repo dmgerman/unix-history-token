@@ -6067,6 +6067,8 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPS_RECOVERY
+operator||
 name|MPS_ERROR
 argument_list|,
 literal|"%s: cm_flags = %#x for LUN reset! "
@@ -6095,9 +6097,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 argument_list|,
@@ -6120,6 +6122,16 @@ literal|0
 condition|)
 block|{
 comment|/* this completion was due to a reset, just cleanup */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_RECOVERY
+argument_list|,
+literal|"Hardware undergoing "
+literal|"reset, ignoring NULL LUN reset reply\n"
+argument_list|)
+expr_stmt|;
 name|targ
 operator|->
 name|tm
@@ -6137,6 +6149,18 @@ block|}
 else|else
 block|{
 comment|/* we should have gotten a reply. */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_INFO
+operator||
+name|MPS_RECOVERY
+argument_list|,
+literal|"NULL reply on "
+literal|"LUN reset attempt, resetting controller\n"
+argument_list|)
+expr_stmt|;
 name|mps_reinit
 argument_list|(
 name|sc
@@ -6145,9 +6169,9 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 argument_list|,
@@ -6175,7 +6199,7 @@ name|TerminationCount
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* See if there are any outstanding commands for this LUN. 	 * This could be made more efficient by using a per-LU data 	 * structure of some sort. 	 */
+comment|/* 	 * See if there are any outstanding commands for this LUN. 	 * This could be made more efficient by using a per-LU data 	 * structure of some sort. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|cm
@@ -6206,21 +6230,19 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 operator||
 name|MPS_INFO
 argument_list|,
-literal|"logical unit %u finished recovery after reset\n"
+literal|"Finished recovery after LUN reset for target %u\n"
 argument_list|,
-name|tm
+name|targ
 operator|->
-name|cm_lun
-argument_list|,
-name|tm
+name|tid
 argument_list|)
 expr_stmt|;
 name|mpssas_announce_reset
@@ -6229,9 +6251,7 @@ name|sc
 argument_list|,
 name|AC_SENT_BDR
 argument_list|,
-name|tm
-operator|->
-name|cm_targ
+name|targ
 operator|->
 name|tid
 argument_list|,
@@ -6240,7 +6260,7 @@ operator|->
 name|cm_lun
 argument_list|)
 expr_stmt|;
-comment|/* we've finished recovery for this logical unit.  check and 		 * see if some other logical unit has a timedout command 		 * that needs to be processed. 		 */
+comment|/* 		 * We've finished recovery for this logical unit.  check and 		 * see if some other logical unit has a timedout command 		 * that needs to be processed. 		 */
 name|cm
 operator|=
 name|TAILQ_FIRST
@@ -6256,6 +6276,21 @@ condition|(
 name|cm
 condition|)
 block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_INFO
+operator||
+name|MPS_RECOVERY
+argument_list|,
+literal|"More commands to abort for target %u\n"
+argument_list|,
+name|targ
+operator|->
+name|tid
+argument_list|)
+expr_stmt|;
 name|mpssas_send_abort
 argument_list|(
 name|sc
@@ -6285,16 +6320,21 @@ block|}
 block|}
 else|else
 block|{
-comment|/* if we still have commands for this LUN, the reset 		 * effectively failed, regardless of the status reported. 		 * Escalate to a target reset. 		 */
-name|mpssas_log_command
+comment|/* 		 * If we still have commands for this LUN, the reset 		 * effectively failed, regardless of the status reported. 		 * Escalate to a target reset. 		 */
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPS_INFO
+operator||
 name|MPS_RECOVERY
 argument_list|,
-literal|"logical unit reset complete for tm %p, but still have %u command(s)\n"
+literal|"logical unit reset complete for target %u, but still "
+literal|"have %u command(s), sending target reset\n"
 argument_list|,
-name|tm
+name|targ
+operator|->
+name|tid
 argument_list|,
 name|cm_count
 argument_list|)
@@ -6421,15 +6461,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 argument_list|,
-literal|"NULL reset reply for tm %p\n"
+literal|"NULL target reset reply for tm %pi TaskMID %u\n"
 argument_list|,
 name|tm
+argument_list|,
+name|le16toh
+argument_list|(
+name|req
+operator|->
+name|TaskMID
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6446,6 +6493,16 @@ literal|0
 condition|)
 block|{
 comment|/* this completion was due to a reset, just cleanup */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_RECOVERY
+argument_list|,
+literal|"Hardware undergoing "
+literal|"reset, ignoring NULL target reset reply\n"
+argument_list|)
+expr_stmt|;
 name|targ
 operator|->
 name|tm
@@ -6463,6 +6520,18 @@ block|}
 else|else
 block|{
 comment|/* we should have gotten a reply. */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_INFO
+operator||
+name|MPS_RECOVERY
+argument_list|,
+literal|"NULL reply on "
+literal|"target reset attempt, resetting controller\n"
+argument_list|)
+expr_stmt|;
 name|mps_reinit
 argument_list|(
 name|sc
@@ -6471,9 +6540,9 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 argument_list|,
@@ -6511,15 +6580,19 @@ literal|0
 condition|)
 block|{
 comment|/* we've finished recovery for this target and all 		 * of its logical units. 		 */
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 operator||
 name|MPS_INFO
 argument_list|,
-literal|"recovery finished after target reset\n"
+literal|"Finished reset recovery for target %u\n"
+argument_list|,
+name|targ
+operator|->
+name|tid
 argument_list|)
 expr_stmt|;
 name|mpssas_announce_reset
@@ -6553,16 +6626,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* after a target reset, if this target still has 		 * outstanding commands, the reset effectively failed, 		 * regardless of the status reported.  escalate. 		 */
-name|mpssas_log_command
+comment|/* 		 * After a target reset, if this target still has 		 * outstanding commands, the reset effectively failed, 		 * regardless of the status reported.  escalate. 		 */
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPS_INFO
+operator||
 name|MPS_RECOVERY
 argument_list|,
-literal|"target reset complete for tm %p, but still have %u command(s)\n"
+literal|"Target reset complete for target %u, but still have %u "
+literal|"command(s), resetting controller\n"
 argument_list|,
-name|tm
+name|targ
+operator|->
+name|tid
 argument_list|,
 name|targ
 operator|->
@@ -6709,15 +6787,23 @@ operator|->
 name|logical_unit_resets
 operator|++
 expr_stmt|;
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 operator||
 name|MPS_INFO
 argument_list|,
-literal|"sending logical unit reset\n"
+literal|"Sending logical unit reset to target %u lun %d\n"
+argument_list|,
+name|target
+operator|->
+name|tid
+argument_list|,
+name|tm
+operator|->
+name|cm_lun
 argument_list|)
 expr_stmt|;
 name|tm
@@ -6762,15 +6848,19 @@ operator|->
 name|target_resets
 operator|++
 expr_stmt|;
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 operator||
 name|MPS_INFO
 argument_list|,
-literal|"sending target reset\n"
+literal|"Sending target reset to target %u\n"
+argument_list|,
+name|target
+operator|->
+name|tid
 argument_list|)
 expr_stmt|;
 name|tm
@@ -6864,10 +6954,12 @@ if|if
 condition|(
 name|err
 condition|)
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPS_ERROR
+operator||
 name|MPS_RECOVERY
 argument_list|,
 literal|"error %d sending reset type %u\n"
@@ -6965,9 +7057,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 argument_list|,
@@ -7003,9 +7095,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 argument_list|,
@@ -7035,6 +7127,16 @@ literal|0
 condition|)
 block|{
 comment|/* this completion was due to a reset, just cleanup */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_RECOVERY
+argument_list|,
+literal|"Hardware undergoing "
+literal|"reset, ignoring NULL abort reply\n"
+argument_list|)
+expr_stmt|;
 name|targ
 operator|->
 name|tm
@@ -7052,6 +7154,18 @@ block|}
 else|else
 block|{
 comment|/* we should have gotten a reply. */
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_INFO
+operator||
+name|MPS_RECOVERY
+argument_list|,
+literal|"NULL reply on "
+literal|"abort attempt, resetting controller\n"
+argument_list|)
+expr_stmt|;
 name|mps_reinit
 argument_list|(
 name|sc
@@ -7060,9 +7174,9 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 argument_list|,
@@ -7116,21 +7230,20 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* if there are no more timedout commands, we're done with 		 * error recovery for this target. 		 */
-name|mpssas_log_command
+comment|/* 		 * If there are no more timedout commands, we're done with 		 * error recovery for this target. 		 */
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPS_INFO
+operator||
 name|MPS_RECOVERY
 argument_list|,
-literal|"finished recovery after aborting TaskMID %u\n"
+literal|"Finished abort recovery for target %u\n"
 argument_list|,
-name|le16toh
-argument_list|(
-name|req
+name|targ
 operator|->
-name|TaskMID
-argument_list|)
+name|tid
 argument_list|)
 expr_stmt|;
 name|targ
@@ -7167,20 +7280,19 @@ name|SMID
 condition|)
 block|{
 comment|/* abort success, but we have more timedout commands to abort */
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPS_INFO
+operator||
 name|MPS_RECOVERY
 argument_list|,
-literal|"continuing recovery after aborting TaskMID %u\n"
+literal|"Continuing abort recovery for target %u\n"
 argument_list|,
-name|le16toh
-argument_list|(
-name|req
+name|targ
 operator|->
-name|TaskMID
-argument_list|)
+name|tid
 argument_list|)
 expr_stmt|;
 name|mpssas_send_abort
@@ -7196,22 +7308,17 @@ block|}
 else|else
 block|{
 comment|/* we didn't get a command completion, so the abort 		 * failed as far as we're concerned.  escalate. 		 */
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPS_RECOVERY
 argument_list|,
-literal|"abort failed for TaskMID %u tm %p\n"
+literal|"Abort failed for target %u, sending logical unit reset\n"
 argument_list|,
-name|le16toh
-argument_list|(
-name|req
+name|targ
 operator|->
-name|TaskMID
-argument_list|)
-argument_list|,
-name|tm
+name|tid
 argument_list|)
 expr_stmt|;
 name|mpssas_send_reset
@@ -7287,6 +7394,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|MPS_ERROR
+operator||
+name|MPS_RECOVERY
 argument_list|,
 literal|"%s null devhandle for target_id %d\n"
 argument_list|,
@@ -7452,21 +7561,6 @@ operator|->
 name|aborts
 operator|++
 expr_stmt|;
-name|mps_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"Sending reset from %s for target ID %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|targ
-operator|->
-name|tid
-argument_list|)
-expr_stmt|;
 name|mpssas_prepare_for_tm
 argument_list|(
 name|sc
@@ -7497,6 +7591,8 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPS_ERROR
+operator||
 name|MPS_RECOVERY
 argument_list|,
 literal|"error %d sending abort for cm %p SMID %u\n"
@@ -7526,6 +7622,16 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|sbintime_t
+name|elapsed
+decl_stmt|,
+name|now
+decl_stmt|;
+name|union
+name|ccb
+modifier|*
+name|ccb
+decl_stmt|;
 name|struct
 name|mps_softc
 modifier|*
@@ -7556,6 +7662,17 @@ name|cm
 operator|->
 name|cm_sc
 expr_stmt|;
+name|ccb
+operator|=
+name|cm
+operator|->
+name|cm_ccb
+expr_stmt|;
+name|now
+operator|=
+name|sbinuptime
+argument_list|()
+expr_stmt|;
 name|MPS_FUNCTRACE
 argument_list|(
 name|sc
@@ -7576,6 +7693,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|MPS_XINFO
+operator||
+name|MPS_RECOVERY
 argument_list|,
 literal|"Timeout checking cm %p\n"
 argument_list|,
@@ -7641,24 +7760,27 @@ operator|->
 name|timeouts
 operator|++
 expr_stmt|;
+name|elapsed
+operator|=
+name|now
+operator|-
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|qos
+operator|.
+name|sim_data
+expr_stmt|;
 name|mpssas_log_command
 argument_list|(
 name|cm
 argument_list|,
-name|MPS_ERROR
+name|MPS_INFO
+operator||
+name|MPS_RECOVERY
 argument_list|,
-literal|"command timeout %d cm %p target "
-literal|"%u, handle(0x%04x)\n"
-argument_list|,
-name|cm
-operator|->
-name|cm_ccb
-operator|->
-name|ccb_h
-operator|.
-name|timeout
-argument_list|,
-name|cm
+literal|"Command timeout on target %u(0x%04x) %d set, %d.%d elapsed\n"
 argument_list|,
 name|targ
 operator|->
@@ -7667,6 +7789,21 @@ argument_list|,
 name|targ
 operator|->
 name|handle
+argument_list|,
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|timeout
+argument_list|,
+name|sbintime_getsec
+argument_list|(
+name|elapsed
+argument_list|)
+argument_list|,
+name|elapsed
+operator|&
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 comment|/* XXX first, check the firmware state, to see if it's still 	 * operational.  if not, do a diag reset. 	 */
@@ -7745,6 +7882,29 @@ argument_list|(
 name|sc
 argument_list|,
 name|MPS_RECOVERY
+operator||
+name|MPS_INFO
+argument_list|,
+literal|"Sending abort to target %u for SMID %d\n"
+argument_list|,
+name|targ
+operator|->
+name|tid
+argument_list|,
+name|cm
+operator|->
+name|cm_desc
+operator|.
+name|Default
+operator|.
+name|SMID
+argument_list|)
+expr_stmt|;
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"timedout cm %p allocated tm %p\n"
 argument_list|,
@@ -7775,6 +7935,8 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPS_ERROR
+operator||
 name|MPS_RECOVERY
 argument_list|,
 literal|"timedout cm %p failed to allocate a tm\n"
@@ -9098,6 +9260,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|qos
+operator|.
+name|sim_data
+operator|=
+name|sbinuptime
+argument_list|()
+expr_stmt|;
 name|callout_reset_sbt
 argument_list|(
 operator|&
@@ -11388,20 +11561,40 @@ argument_list|,
 name|CAM_REQ_CMP_ERR
 argument_list|)
 expr_stmt|;
-name|mpssas_log_command
+name|mps_dprint
 argument_list|(
-name|cm
+name|sc
 argument_list|,
 name|MPS_INFO
 argument_list|,
-literal|"terminated ioc %x loginfo %x scsi %x state %x xfer %u\n"
+literal|"Controller reported %s status for target %u SMID %u, "
+literal|"loginfo %x\n"
 argument_list|,
-name|le16toh
-argument_list|(
+operator|(
+operator|(
 name|rep
 operator|->
 name|IOCStatus
-argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+operator|)
+operator|==
+name|MPI2_IOCSTATUS_SCSI_IOC_TERMINATED
+operator|)
+condition|?
+literal|"IOC_TERMINATED"
+else|:
+literal|"EXT_TERMINATED"
+argument_list|,
+name|target_id
+argument_list|,
+name|cm
+operator|->
+name|cm_desc
+operator|.
+name|Default
+operator|.
+name|SMID
 argument_list|,
 name|le32toh
 argument_list|(
@@ -11409,6 +11602,15 @@ name|rep
 operator|->
 name|IOCLogInfo
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_XINFO
+argument_list|,
+literal|"SCSIStatus %x SCSIState %x xfercount %u\n"
 argument_list|,
 name|rep
 operator|->
