@@ -244,6 +244,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|mtx_padalign
+name|__exclusive_cache_line
 name|vm_page_queue_free_mtx
 decl_stmt|;
 end_decl_stmt
@@ -251,6 +252,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|mtx_padalign
+name|__exclusive_cache_line
 name|pa_lock
 index|[
 name|PA_LOCK_COUNT

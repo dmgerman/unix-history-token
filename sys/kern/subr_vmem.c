@@ -668,6 +668,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx_padalign
+name|__exclusive_cache_line
 name|vmem_list_lock
 decl_stmt|;
 end_decl_stmt
@@ -2469,6 +2470,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx_padalign
+name|__exclusive_cache_line
 name|vmem_bt_lock
 decl_stmt|;
 end_decl_stmt

@@ -1787,6 +1787,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx_padalign
+name|__exclusive_cache_line
 name|bdlock
 decl_stmt|;
 end_decl_stmt
@@ -1799,6 +1800,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx_padalign
+name|__exclusive_cache_line
 name|rbreqlock
 decl_stmt|;
 end_decl_stmt
@@ -1811,6 +1813,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|rwlock_padalign
+name|__exclusive_cache_line
 name|nblock
 decl_stmt|;
 end_decl_stmt
@@ -1823,6 +1826,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx_padalign
+name|__exclusive_cache_line
 name|bdirtylock
 decl_stmt|;
 end_decl_stmt
@@ -2040,6 +2044,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx_padalign
+name|__exclusive_cache_line
 name|bqlocks
 index|[
 name|BUFFER_QUEUES

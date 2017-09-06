@@ -410,6 +410,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|rwlock_padalign
+name|__exclusive_cache_line
 name|uma_rwlock
 decl_stmt|;
 end_decl_stmt
