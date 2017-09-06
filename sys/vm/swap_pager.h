@@ -152,13 +152,6 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|int
-name|swap_pager_full
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|swap_pager_avail
 decl_stmt|;
 end_decl_stmt
