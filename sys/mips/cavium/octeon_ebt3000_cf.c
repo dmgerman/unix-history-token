@@ -2811,6 +2811,8 @@ name|cf_priv
 operator|->
 name|cf_geom
 argument_list|,
+literal|"%s"
+argument_list|,
 name|cf_priv
 operator|->
 name|cf_geom
