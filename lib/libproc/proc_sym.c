@@ -2838,8 +2838,15 @@ name|p
 argument_list|,
 name|p
 operator|->
-name|exec_map
+name|mappings
+index|[
+name|p
 operator|->
+name|exec_map
+index|]
+operator|.
+name|map
+operator|.
 name|pr_vaddr
 argument_list|)
 operator|)

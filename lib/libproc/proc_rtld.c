@@ -210,10 +210,9 @@ name|phdl
 operator|->
 name|exec_map
 operator|=
-operator|&
-name|mapping
+name|phdl
 operator|->
-name|map
+name|nmappings
 expr_stmt|;
 name|file
 operator|=
