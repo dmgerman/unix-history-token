@@ -489,6 +489,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|__read_frequently
+value|__section(".data.read_frequently")
+end_define
+
+begin_define
+define|#
+directive|define
 name|__exclusive_cache_line
 value|__aligned(CACHE_LINE_SIZE) \ 				    __section(".data.exclusive_cache_line")
 end_define
