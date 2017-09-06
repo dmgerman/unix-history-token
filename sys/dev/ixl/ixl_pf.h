@@ -342,33 +342,13 @@ define|#
 directive|define
 name|IXL_SYSCTL_HELP_LINK_STATUS
 define|\
-value|"\nExecutes a \"Get Link Status\" command on the Admin Queue, and displays" \ " the response."			\  static char *ixl_fc_string[6] = {
+value|"\nExecutes a \"Get Link Status\" command on the Admin Queue, and displays" \ " the response."			\  extern const char * const ixl_fc_string[6];
 end_define
 
 begin_expr_stmt
-literal|"None"
-operator|,
-literal|"Rx"
-operator|,
-literal|"Tx"
-operator|,
-literal|"Full"
-operator|,
-literal|"Priority"
-operator|,
-literal|"Default"
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
-specifier|static
-name|MALLOC_DEFINE
+name|MALLOC_DECLARE
 argument_list|(
 name|M_IXL
-argument_list|,
-literal|"ixl"
-argument_list|,
-literal|"ixl driver allocations"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1439,6 +1419,7 @@ name|struct
 name|ixl_vsi
 modifier|*
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 parameter_list|,
@@ -1456,6 +1437,7 @@ name|struct
 name|ixl_vsi
 modifier|*
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 parameter_list|,
@@ -1814,6 +1796,7 @@ name|struct
 name|ixl_vsi
 modifier|*
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 parameter_list|,

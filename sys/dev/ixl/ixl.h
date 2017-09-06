@@ -2709,26 +2709,13 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|static
+specifier|extern
+specifier|const
 name|uint8_t
 name|ixl_bcast_addr
 index|[
 name|ETHER_ADDR_LEN
 index|]
-init|=
-block|{
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|}
 decl_stmt|;
 end_decl_stmt
 

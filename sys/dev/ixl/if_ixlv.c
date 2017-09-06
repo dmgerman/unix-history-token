@@ -5010,7 +5010,8 @@ condition|)
 block|{
 comment|/* Resend message, one more time */
 name|send_api_ver_retried
-operator|++
+operator|=
+name|true
 expr_stmt|;
 name|device_printf
 argument_list|(
