@@ -5331,7 +5331,7 @@ name|bnxt_hwrm_ring_alloc
 argument_list|(
 name|softc
 argument_list|,
-name|HWRM_RING_ALLOC_INPUT_RING_TYPE_CMPL
+name|HWRM_RING_ALLOC_INPUT_RING_TYPE_L2_CMPL
 argument_list|,
 operator|&
 name|softc
@@ -5478,7 +5478,7 @@ name|bnxt_hwrm_ring_alloc
 argument_list|(
 name|softc
 argument_list|,
-name|HWRM_RING_ALLOC_INPUT_RING_TYPE_CMPL
+name|HWRM_RING_ALLOC_INPUT_RING_TYPE_L2_CMPL
 argument_list|,
 operator|&
 name|softc
@@ -6052,7 +6052,7 @@ name|bnxt_hwrm_ring_alloc
 argument_list|(
 name|softc
 argument_list|,
-name|HWRM_RING_ALLOC_INPUT_RING_TYPE_CMPL
+name|HWRM_RING_ALLOC_INPUT_RING_TYPE_L2_CMPL
 argument_list|,
 operator|&
 name|softc
@@ -6548,7 +6548,7 @@ name|link_info
 operator|->
 name|duplex
 operator|==
-name|HWRM_PORT_PHY_QCFG_OUTPUT_DUPLEX_FULL
+name|HWRM_PORT_PHY_QCFG_OUTPUT_DUPLEX_CFG_FULL
 condition|)
 name|ifmr
 operator|->
@@ -11776,7 +11776,7 @@ name|link_info
 operator|.
 name|duplex
 operator|==
-name|HWRM_PORT_PHY_QCFG_OUTPUT_DUPLEX_FULL
+name|HWRM_PORT_PHY_QCFG_OUTPUT_DUPLEX_CFG_FULL
 condition|)
 name|duplex
 operator|=

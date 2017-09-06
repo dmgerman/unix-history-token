@@ -7644,7 +7644,7 @@ name|duplex
 operator|=
 name|resp
 operator|->
-name|duplex
+name|duplex_cfg
 expr_stmt|;
 name|link_info
 operator|->
@@ -7684,7 +7684,7 @@ name|duplex_setting
 operator|=
 name|resp
 operator|->
-name|duplex
+name|duplex_cfg
 expr_stmt|;
 if|if
 condition|(
