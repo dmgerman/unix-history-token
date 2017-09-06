@@ -198,14 +198,14 @@ begin_define
 define|#
 directive|define
 name|ARRAY_VDEV_SIZE
-value|((UINT)(ULONG_PTR)&((PVDevice)0)->u+sizeof(RaidArray))
+value|(offsetof(VDevice, u) + sizeof(RaidArray))
 end_define
 
 begin_define
 define|#
 directive|define
 name|DISK_VDEV_SIZE
-value|((UINT)(ULONG_PTR)&((PVDevice)0)->u+sizeof(Device))
+value|(offsetof(VDevice, u) + sizeof(Device))
 end_define
 
 begin_define
