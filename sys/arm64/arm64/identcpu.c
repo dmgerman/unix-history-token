@@ -270,7 +270,7 @@ begin_define
 define|#
 directive|define
 name|PRINT_ID_AA64_MMFR2
-value|0x00000100
+value|0x00004000
 end_define
 
 begin_define
