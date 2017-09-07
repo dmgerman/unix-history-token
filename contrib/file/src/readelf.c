@@ -2105,7 +2105,7 @@ operator|(
 name|descsz
 operator|>=
 literal|4
-operator|||
+operator|&&
 name|descsz
 operator|<=
 literal|20
