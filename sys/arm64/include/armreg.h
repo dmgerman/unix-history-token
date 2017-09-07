@@ -2713,7 +2713,7 @@ begin_define
 define|#
 directive|define
 name|ID_AA64PFR0_SVE_SHIFT
-value|28
+value|32
 end_define
 
 begin_define
