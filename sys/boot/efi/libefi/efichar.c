@@ -120,7 +120,9 @@ name|i
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|i
+operator|)
 return|;
 block|}
 end_function
