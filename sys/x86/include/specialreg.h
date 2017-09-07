@@ -1570,6 +1570,45 @@ value|0x00000008
 end_define
 
 begin_comment
+comment|/*  * AMD extended function 8000_0007h ebx info  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AMDRAS_MCA_OF_RECOV
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDRAS_SUCCOR
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDRAS_HW_ASSERT
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDRAS_SCALABLE_MCA
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDRAS_PFEH_SUPPORT
+value|0x00000010
+end_define
+
+begin_comment
 comment|/*  * AMD extended function 8000_0007h edx info  */
 end_comment
 

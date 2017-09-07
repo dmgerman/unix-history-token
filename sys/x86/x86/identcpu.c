@@ -345,6 +345,16 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|amd_rascap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* AMD RAS capabilities */
+end_comment
+
+begin_decl_stmt
+name|u_int
 name|amd_pminfo
 decl_stmt|;
 end_decl_stmt
@@ -5298,6 +5308,13 @@ literal|0x80000007
 argument_list|,
 name|regs
 argument_list|)
+expr_stmt|;
+name|amd_rascap
+operator|=
+name|regs
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|amd_pminfo
 operator|=
