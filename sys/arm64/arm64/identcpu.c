@@ -2262,6 +2262,17 @@ name|SEP_STR
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ID_AA64MMFR1_PAN_ATS1E1
+case|:
+name|printf
+argument_list|(
+literal|"%sPAN+AT"
+argument_list|,
+name|SEP_STR
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
