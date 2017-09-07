@@ -4261,6 +4261,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MC_MISC_AMDNB_INTP
+value|0x1000000000000000
+end_define
+
+begin_comment
+comment|/* Int. type can generate interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MC_MISC_AMDNB_LVT_MASK
 value|0x00f0000000000000
 end_define
