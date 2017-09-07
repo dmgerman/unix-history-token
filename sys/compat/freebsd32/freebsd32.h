@@ -217,6 +217,37 @@ end_define
 
 begin_struct
 struct|struct
+name|bintime32
+block|{
+name|uint32_t
+name|sec
+decl_stmt|;
+name|uint32_t
+name|frac
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BT_CP
+parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|fld
+parameter_list|)
+value|do {				\ 	CP((src).fld, (dst).fld, sec);				\ 	*(uint64_t *)&(dst).fld.frac[0] = (src).fld.frac;	\ } while (0)
+end_define
+
+begin_struct
+struct|struct
 name|rusage32
 block|{
 name|struct
