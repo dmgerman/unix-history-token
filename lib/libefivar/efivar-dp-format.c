@@ -7526,5 +7526,28 @@ return|;
 block|}
 end_function
 
+begin_function
+name|size_t
+name|efidp_size
+parameter_list|(
+name|const_efidp
+name|dp
+parameter_list|)
+block|{
+return|return
+name|GetDevicePathSize
+argument_list|(
+name|__DECONST
+argument_list|(
+name|EFI_DEVICE_PATH_PROTOCOL
+operator|*
+argument_list|,
+name|dp
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 
