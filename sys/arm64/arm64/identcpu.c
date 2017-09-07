@@ -2851,7 +2851,7 @@ name|id_aa64dfr0
 operator|=
 name|READ_SPECIALREG
 argument_list|(
-name|id_aa64dfr0_el1
+name|ID_AA64DFR0_EL1
 argument_list|)
 expr_stmt|;
 name|cpu_desc
@@ -2863,7 +2863,7 @@ name|id_aa64dfr1
 operator|=
 name|READ_SPECIALREG
 argument_list|(
-name|id_aa64dfr1_el1
+name|ID_AA64DFR1_EL1
 argument_list|)
 expr_stmt|;
 name|cpu_desc
@@ -2875,7 +2875,7 @@ name|id_aa64isar0
 operator|=
 name|READ_SPECIALREG
 argument_list|(
-name|id_aa64isar0_el1
+name|ID_AA64ISAR0_EL1
 argument_list|)
 expr_stmt|;
 name|cpu_desc
@@ -2887,7 +2887,7 @@ name|id_aa64isar1
 operator|=
 name|READ_SPECIALREG
 argument_list|(
-name|id_aa64isar1_el1
+name|ID_AA64ISAR1_EL1
 argument_list|)
 expr_stmt|;
 name|cpu_desc
@@ -2899,7 +2899,7 @@ name|id_aa64mmfr0
 operator|=
 name|READ_SPECIALREG
 argument_list|(
-name|id_aa64mmfr0_el1
+name|ID_AA64MMFR0_EL1
 argument_list|)
 expr_stmt|;
 name|cpu_desc
@@ -2911,7 +2911,7 @@ name|id_aa64mmfr1
 operator|=
 name|READ_SPECIALREG
 argument_list|(
-name|id_aa64mmfr1_el1
+name|ID_AA64MMFR1_EL1
 argument_list|)
 expr_stmt|;
 name|cpu_desc
@@ -2923,7 +2923,7 @@ name|id_aa64pfr0
 operator|=
 name|READ_SPECIALREG
 argument_list|(
-name|id_aa64pfr0_el1
+name|ID_AA64PFR0_EL1
 argument_list|)
 expr_stmt|;
 name|cpu_desc
@@ -2935,7 +2935,7 @@ name|id_aa64pfr1
 operator|=
 name|READ_SPECIALREG
 argument_list|(
-name|id_aa64pfr1_el1
+name|ID_AA64PFR1_EL1
 argument_list|)
 expr_stmt|;
 if|if
