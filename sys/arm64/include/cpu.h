@@ -266,8 +266,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_PART_CORTEX_A35
+value|0xD04
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_PART_CORTEX_A53
 value|0xD03
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PART_CORTEX_A55
+value|0xD05
 end_define
 
 begin_define
@@ -282,6 +296,20 @@ define|#
 directive|define
 name|CPU_PART_CORTEX_A72
 value|0xD08
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PART_CORTEX_A73
+value|0xD09
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PART_CORTEX_A75
+value|0xD0A
 end_define
 
 begin_define
