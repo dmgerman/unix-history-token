@@ -394,6 +394,11 @@ block|}
 block|,
 comment|/* format for strftime() */
 block|{
+literal|"iM"
+block|}
+block|,
+comment|/* initial message program */
+block|{
 literal|0
 block|}
 block|}
