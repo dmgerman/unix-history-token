@@ -1427,7 +1427,7 @@ begin_define
 define|#
 directive|define
 name|ID_AA64ISAR1_DPB_SHIFT
-value|4
+value|0
 end_define
 
 begin_define
