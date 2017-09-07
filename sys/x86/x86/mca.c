@@ -4295,7 +4295,18 @@ operator||
 name|MC_MISC_AMDNB_CNTP
 operator|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: 0x%lx: !valid | !present\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|misc
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* The register should not be locked. */
 if|if
 condition|(
@@ -4307,7 +4318,18 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: 0x%lx: locked\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|misc
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * If counter is enabled then either the firmware or another CPU 	 * has already claimed it. 	 */
 if|if
 condition|(
@@ -4319,7 +4341,18 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: 0x%lx: count already enabled\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|misc
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * Configure an Extended Interrupt LVT register for reporting 	 * counter overflows if that feature is supported and the first 	 * extended register is available. 	 */
 name|amd_elvt
 operator|=
@@ -4332,8 +4365,30 @@ name|amd_elvt
 operator|<
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: lapic enable mca elvt failed: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|amd_elvt
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* Re-use Intel CMC support infrastructure. */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Starting AMD thresholding\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|cc
 operator|=
 operator|&
