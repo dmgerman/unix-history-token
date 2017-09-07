@@ -2775,7 +2775,7 @@ operator|.
 name|id_aa64mmfr2
 operator|&
 operator|~
-name|ID_AA64MMFR1_MASK
+name|ID_AA64MMFR2_MASK
 argument_list|)
 expr_stmt|;
 name|printf
