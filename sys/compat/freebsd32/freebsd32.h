@@ -219,7 +219,7 @@ begin_struct
 struct|struct
 name|bintime32
 block|{
-name|uint32_t
+name|time32_t
 name|sec
 decl_stmt|;
 name|uint32_t
