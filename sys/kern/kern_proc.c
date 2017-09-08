@@ -785,6 +785,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|sx
+name|__exclusive_cache_line
 name|allproc_lock
 decl_stmt|;
 end_decl_stmt
@@ -792,6 +793,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|sx
+name|__exclusive_cache_line
 name|proctree_lock
 decl_stmt|;
 end_decl_stmt
@@ -799,6 +801,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|mtx
+name|__exclusive_cache_line
 name|ppeers_lock
 decl_stmt|;
 end_decl_stmt
