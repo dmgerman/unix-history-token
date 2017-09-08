@@ -6555,7 +6555,12 @@ expr_stmt|;
 else|else
 name|name
 operator|=
+name|pw_checkname
+argument_list|(
 name|arg1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 while|while
@@ -6603,7 +6608,12 @@ literal|'n'
 case|:
 name|name
 operator|=
+name|pw_checkname
+argument_list|(
 name|optarg
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
