@@ -4298,10 +4298,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: 0x%lx: !valid | !present\n"
+literal|"%s: 0x%jx: !valid | !present\n"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|misc
 argument_list|)
 expr_stmt|;
@@ -4321,10 +4324,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: 0x%lx: locked\n"
+literal|"%s: 0x%jx: locked\n"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|misc
 argument_list|)
 expr_stmt|;
@@ -4344,10 +4350,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: 0x%lx: count already enabled\n"
+literal|"%s: 0x%jx: count already enabled\n"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|misc
 argument_list|)
 expr_stmt|;
