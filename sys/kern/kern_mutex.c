@@ -730,6 +730,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|mtx
+name|__exclusive_cache_line
 name|Giant
 decl_stmt|;
 end_decl_stmt
