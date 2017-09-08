@@ -2399,15 +2399,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* disconnect ourselves from the intrhook chain */
-name|config_intrhook_disestablish
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|aac_ich
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2498,6 +2489,14 @@ operator|->
 name|aac_io_lock
 argument_list|)
 expr_stmt|;
+comment|/* mark the controller up */
+name|sc
+operator|->
+name|aac_state
+operator|&=
+operator|~
+name|AAC_STATE_SUSPEND
+expr_stmt|;
 comment|/* poke the bus to actually attach the child devices */
 if|if
 condition|(
@@ -2517,13 +2516,14 @@ argument_list|,
 literal|"bus_generic_attach failed\n"
 argument_list|)
 expr_stmt|;
-comment|/* mark the controller up */
+comment|/* disconnect ourselves from the intrhook chain */
+name|config_intrhook_disestablish
+argument_list|(
+operator|&
 name|sc
 operator|->
-name|aac_state
-operator|&=
-operator|~
-name|AAC_STATE_SUSPEND
+name|aac_ich
+argument_list|)
 expr_stmt|;
 comment|/* enable interrupts now */
 name|AAC_UNMASK_INTERRUPTS
