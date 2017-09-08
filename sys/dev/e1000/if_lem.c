@@ -10929,6 +10929,7 @@ comment|/*********************************************************************  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|lem_allocate_irq
 parameter_list|(

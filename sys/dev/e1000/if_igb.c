@@ -17734,11 +17734,13 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|panic
+name|device_printf
 argument_list|(
-literal|"%s: CSUM_TSO but no supported IP version (0x%04x)"
+name|adapter
+operator|->
+name|dev
 argument_list|,
-name|__func__
+literal|"CSUM_TSO but no supported IP version (0x%04x)"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -17746,7 +17748,11 @@ name|eh_type
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 name|ctxd
 operator|=
