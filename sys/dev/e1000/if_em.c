@@ -2710,28 +2710,6 @@ name|DEFAULT_ITR
 value|(1000000000/(MAX_INTS_PER_SEC * 256))
 end_define
 
-begin_comment
-comment|/* Allow common code without TSO */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CSUM_TSO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CSUM_TSO
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -7069,11 +7047,6 @@ name|ETHERTYPE_VLAN
 argument_list|)
 expr_stmt|;
 comment|/* Set hardware offload abilities */
-name|if_clearhwassist
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|if_getcapenable
@@ -7094,35 +7067,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  	** There have proven to be problems with TSO when not 	** at full gigabit speed, so disable the assist automatically 	** when at lower speeds.  -jfv 	*/
-if|if
-condition|(
-name|if_getcapenable
-argument_list|(
-name|ifp
-argument_list|)
-operator|&
-name|IFCAP_TSO4
-condition|)
-block|{
-if|if
-condition|(
-name|adapter
-operator|->
-name|link_speed
-operator|==
-name|SPEED_1000
-condition|)
+else|else
 name|if_sethwassistbits
 argument_list|(
 name|ifp
 argument_list|,
-name|CSUM_TSO
-argument_list|,
 literal|0
+argument_list|,
+name|CSUM_TCP
+operator||
+name|CSUM_UDP
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Configure for OS presence */
 name|em_init_manageability
 argument_list|(
@@ -9313,15 +9269,13 @@ name|m_headp
 expr_stmt|;
 name|do_tso
 operator|=
-operator|(
 name|m_head
 operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|CSUM_TSO
-operator|)
+name|CSUM_IP_TSO
 expr_stmt|;
 name|tso_desc
 operator|=
@@ -10177,7 +10131,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|CSUM_TSO
+name|CSUM_IP_TSO
 condition|)
 block|{
 name|em_tso_setup
@@ -11659,6 +11613,45 @@ operator|->
 name|link_duplex
 argument_list|)
 expr_stmt|;
+comment|/* 		** There have proven to be problems with TSO when not at full 		** gigabit speed, so disable the assist automatically when at 		** lower speeds.  -jfv 		*/
+if|if
+condition|(
+name|if_getcapenable
+argument_list|(
+name|ifp
+argument_list|)
+operator|&
+name|IFCAP_TSO4
+condition|)
+block|{
+if|if
+condition|(
+name|adapter
+operator|->
+name|link_speed
+operator|==
+name|SPEED_1000
+condition|)
+name|if_sethwassistbits
+argument_list|(
+name|ifp
+argument_list|,
+name|CSUM_IP_TSO
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|if_sethwassistbits
+argument_list|(
+name|ifp
+argument_list|,
+literal|0
+argument_list|,
+name|CSUM_IP_TSO
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Check if we must disable SPEED_MODE bit on PCI-E */
 if|if
 condition|(
@@ -12309,6 +12302,7 @@ comment|/*********************************************************************  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|em_allocate_legacy
 parameter_list|(
@@ -12604,6 +12598,7 @@ comment|/*********************************************************************  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|em_allocate_msix
 parameter_list|(
@@ -15388,27 +15383,19 @@ name|if_setcapabilities
 argument_list|(
 name|ifp
 argument_list|,
-literal|0
+name|IFCAP_HWCSUM
+operator||
+name|IFCAP_VLAN_HWCSUM
 argument_list|)
 expr_stmt|;
 name|if_setcapenable
 argument_list|(
 name|ifp
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|if_setcapabilitiesbit
+name|if_getcapabilities
 argument_list|(
 name|ifp
-argument_list|,
-name|IFCAP_HWCSUM
-operator||
-name|IFCAP_VLAN_HWCSUM
-operator||
-name|IFCAP_TSO4
-argument_list|,
-literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Tell the upper layer(s) we 	 * support full VLAN capability 	 */
@@ -15436,14 +15423,27 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|if_setcapenable
+name|if_setcapenablebit
 argument_list|(
 name|ifp
 argument_list|,
-name|if_getcapabilities
+name|IFCAP_VLAN_HWTAGGING
+operator||
+name|IFCAP_VLAN_MTU
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We don't enable IFCAP_{TSO4,VLAN_HWTSO} by default because: 	 * - Although the silicon bug of TSO only working at gigabit speed is 	 *   worked around in em_update_link_status() by selectively setting 	 *   CSUM_IP_TSO, we cannot atomically flush already queued TSO-using 	 *   descriptors.  Thus, such descriptors may still cause the MAC to 	 *   hang and, consequently, TSO is only safe to be used in setups 	 *   where the link isn't expected to switch from gigabit to lower 	 *   speeds. 	 * - Similarly, there's currently no way to trigger a reconfiguration 	 *   of vlan(4) when the state of IFCAP_VLAN_HWTSO support changes at 	 *   runtime.  Therefore, IFCAP_VLAN_HWTSO also only is safe to use 	 *   when link speed changes are not to be expected. 	 * - Despite all the workarounds for TSO-related silicon bugs, at 	 *   least 82579 still may hang at gigabit speed with IFCAP_TSO4. 	 */
+name|if_setcapabilitiesbit
 argument_list|(
 name|ifp
-argument_list|)
+argument_list|,
+name|IFCAP_TSO4
+operator||
+name|IFCAP_VLAN_HWTSO
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	** Don't turn this on by default, if vlans are 	** created on another pseudo device (eg. lagg) 	** then vlan events are not passed thru, breaking 	** operation, but with HW FILTER off it works. If 	** using vlans directly on the em driver you can 	** enable this and get full hardware tag filtering. 	*/
