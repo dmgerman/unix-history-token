@@ -257,6 +257,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|bnxt_hwrm_port_qstats
+parameter_list|(
+name|struct
+name|bnxt_softc
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|bnxt_hwrm_ring_grp_alloc
 parameter_list|(
 name|struct

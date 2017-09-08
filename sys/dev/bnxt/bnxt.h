@@ -1805,6 +1805,9 @@ index|[
 name|BNXT_MAX_QUEUE
 index|]
 decl_stmt|;
+name|uint64_t
+name|admin_ticks
+decl_stmt|;
 name|struct
 name|iflib_dma_info
 name|hw_rx_port_stats
