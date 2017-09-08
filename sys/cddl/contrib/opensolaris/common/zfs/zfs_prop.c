@@ -917,8 +917,7 @@ name|ZFS_TYPE_FILESYSTEM
 operator||
 name|ZFS_TYPE_VOLUME
 argument_list|,
-literal|"on | off | fletcher2 | fletcher4 | sha256 | sha512 | "
-literal|"skein | edonr"
+literal|"on | off | fletcher2 | fletcher4 | sha256"
 argument_list|,
 literal|"CHECKSUM"
 argument_list|,
@@ -939,8 +938,7 @@ name|ZFS_TYPE_FILESYSTEM
 operator||
 name|ZFS_TYPE_VOLUME
 argument_list|,
-literal|"on | off | verify | sha256[,verify], sha512[,verify], "
-literal|"skein[,verify], edonr,verify"
+literal|"on | off | verify | sha256[,verify]"
 argument_list|,
 literal|"DEDUP"
 argument_list|,
