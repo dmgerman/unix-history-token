@@ -765,6 +765,17 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|sector
+operator|+
+name|size
+argument_list|,
+name|sectorsize
+operator|-
+name|size
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pwrite
