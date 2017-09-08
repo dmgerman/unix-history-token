@@ -1762,6 +1762,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|bzero
+parameter_list|(
+name|buf
+parameter_list|,
+name|len
+parameter_list|)
+value|({				\ 	if (__builtin_constant_p(len)&& (len)<= 64)	\ 		__builtin_memset((buf), 0, (len));	\ 	else						\ 		bzero((buf), (len));			\ })
+end_define
+
 begin_function_decl
 name|void
 name|explicit_bzero
