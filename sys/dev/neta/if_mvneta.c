@@ -253,13 +253,23 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/mv/mvreg.h>
+file|<arm/mv/mvvar.h>
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
-file|<arm/mv/mvvar.h>
+file|<arm/mv/mvreg.h>
 end_include
 
 begin_include
@@ -267,6 +277,11 @@ include|#
 directive|include
 file|<arm/mv/mvwin.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -334,6 +349,43 @@ name|x
 parameter_list|)
 value|KASSERT((x), (#x))
 end_define
+
+begin_define
+define|#
+directive|define
+name|A3700_TCLK_250MHZ
+value|250000000
+end_define
+
+begin_function
+name|STATIC
+name|uint32_t
+name|mvneta_get_clk
+parameter_list|()
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+return|return
+operator|(
+name|A3700_TCLK_250MHZ
+operator|)
+return|;
+else|#
+directive|else
+return|return
+operator|(
+name|get_tclk
+argument_list|()
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_comment
 comment|/* Device Register Initialization */
@@ -2733,7 +2785,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Failed to allocate DMA safe memory for TxQ: %d\n"
+literal|"Failed to allocate DMA safe memory for TxQ: %zu\n"
 argument_list|,
 name|q
 argument_list|)
@@ -2933,7 +2985,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Failed to allocate DMA safe memory for RxQ: %d\n"
+literal|"Failed to allocate DMA safe memory for RxQ: %zu\n"
 argument_list|,
 name|q
 argument_list|)
@@ -2998,9 +3050,18 @@ name|q
 decl_stmt|,
 name|error
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
 name|uint32_t
 name|reg
 decl_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|=
 name|device_get_softc
@@ -3110,6 +3171,13 @@ argument_list|,
 literal|0x00000001
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
 comment|/* 	 * Disable port snoop for buffers and descriptors 	 * to avoid L2 caching of both without DRAM copy. 	 * Obtain coherency settings from the first MBUS 	 * window attribute. 	 */
 if|if
 condition|(
@@ -3159,6 +3227,8 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * MAC address 	 */
 if|if
 condition|(
@@ -6982,7 +7052,7 @@ operator|->
 name|queue_th_time
 operator|=
 operator|(
-name|get_tclk
+name|mvneta_get_clk
 argument_list|()
 operator|/
 literal|1000
@@ -16542,7 +16612,7 @@ operator|*
 literal|1000ULL
 operator|)
 operator|/
-name|get_tclk
+name|mvneta_get_clk
 argument_list|()
 expr_stmt|;
 name|mvneta_rx_unlockq
@@ -16639,7 +16709,7 @@ operator|=
 operator|(
 name|uint64_t
 operator|)
-name|get_tclk
+name|mvneta_get_clk
 argument_list|()
 operator|*
 operator|(
