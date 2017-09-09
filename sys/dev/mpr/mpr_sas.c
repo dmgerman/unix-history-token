@@ -10746,116 +10746,6 @@ return|return;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|mpr_response_code
-parameter_list|(
-name|struct
-name|mpr_softc
-modifier|*
-name|sc
-parameter_list|,
-name|u8
-name|response_code
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|desc
-decl_stmt|;
-switch|switch
-condition|(
-name|response_code
-condition|)
-block|{
-case|case
-name|MPI2_SCSITASKMGMT_RSP_TM_COMPLETE
-case|:
-name|desc
-operator|=
-literal|"task management request completed"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_INVALID_FRAME
-case|:
-name|desc
-operator|=
-literal|"invalid frame"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_TM_NOT_SUPPORTED
-case|:
-name|desc
-operator|=
-literal|"task management request not supported"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_TM_FAILED
-case|:
-name|desc
-operator|=
-literal|"task management request failed"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_TM_SUCCEEDED
-case|:
-name|desc
-operator|=
-literal|"task management request succeeded"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_TM_INVALID_LUN
-case|:
-name|desc
-operator|=
-literal|"invalid lun"
-expr_stmt|;
-break|break;
-case|case
-literal|0xA
-case|:
-name|desc
-operator|=
-literal|"overlapped tag attempted"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_IO_QUEUED_ON_IOC
-case|:
-name|desc
-operator|=
-literal|"task queued, however not sent to target"
-expr_stmt|;
-break|break;
-default|default:
-name|desc
-operator|=
-literal|"unknown"
-expr_stmt|;
-break|break;
-block|}
-name|mpr_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MPR_XINFO
-argument_list|,
-literal|"response_code(0x%01x): %s\n"
-argument_list|,
-name|response_code
-argument_list|,
-name|desc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/**  * mpr_sc_failed_io_info - translated non-succesfull SCSI_IO request  */
 end_comment
@@ -10930,12 +10820,6 @@ name|desc_scsi_status
 init|=
 name|NULL
 decl_stmt|;
-name|char
-modifier|*
-name|desc_scsi_state
-init|=
-name|NULL
-decl_stmt|;
 name|u32
 name|log_info
 init|=
@@ -10953,324 +10837,23 @@ operator|==
 literal|0x31170000
 condition|)
 return|return;
-switch|switch
-condition|(
+name|desc_ioc_state
+operator|=
+name|mpr_describe_table
+argument_list|(
+name|mpr_iocstatus_string
+argument_list|,
 name|ioc_status
-condition|)
-block|{
-case|case
-name|MPI2_IOCSTATUS_SUCCESS
-case|:
-name|desc_ioc_state
-operator|=
-literal|"success"
+argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_INVALID_FUNCTION
-case|:
-name|desc_ioc_state
+name|desc_scsi_status
 operator|=
-literal|"invalid function"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_RECOVERED_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi recovered error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_INVALID_DEVHANDLE
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi invalid dev handle"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_DEVICE_NOT_THERE
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi device not there"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_DATA_OVERRUN
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi data overrun"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_DATA_UNDERRUN
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi data underrun"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_IO_DATA_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi io data error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_PROTOCOL_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi protocol error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_TASK_TERMINATED
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi task terminated"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_RESIDUAL_MISMATCH
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi residual mismatch"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_TASK_MGMT_FAILED
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi task mgmt failed"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_IOC_TERMINATED
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi ioc terminated"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_EXT_TERMINATED
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi ext terminated"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_EEDP_GUARD_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"eedp guard error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_EEDP_REF_TAG_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"eedp ref tag error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_EEDP_APP_TAG_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"eedp app tag error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_INSUFFICIENT_POWER
-case|:
-name|desc_ioc_state
-operator|=
-literal|"insufficient power"
-expr_stmt|;
-break|break;
-default|default:
-name|desc_ioc_state
-operator|=
-literal|"unknown"
-expr_stmt|;
-break|break;
-block|}
-switch|switch
-condition|(
+name|mpr_describe_table
+argument_list|(
+name|mpr_scsi_status_string
+argument_list|,
 name|scsi_status
-condition|)
-block|{
-case|case
-name|MPI2_SCSI_STATUS_GOOD
-case|:
-name|desc_scsi_status
-operator|=
-literal|"good"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_CHECK_CONDITION
-case|:
-name|desc_scsi_status
-operator|=
-literal|"check condition"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_CONDITION_MET
-case|:
-name|desc_scsi_status
-operator|=
-literal|"condition met"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_BUSY
-case|:
-name|desc_scsi_status
-operator|=
-literal|"busy"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_INTERMEDIATE
-case|:
-name|desc_scsi_status
-operator|=
-literal|"intermediate"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_INTERMEDIATE_CONDMET
-case|:
-name|desc_scsi_status
-operator|=
-literal|"intermediate condmet"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_RESERVATION_CONFLICT
-case|:
-name|desc_scsi_status
-operator|=
-literal|"reservation conflict"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_COMMAND_TERMINATED
-case|:
-name|desc_scsi_status
-operator|=
-literal|"command terminated"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_TASK_SET_FULL
-case|:
-name|desc_scsi_status
-operator|=
-literal|"task set full"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_ACA_ACTIVE
-case|:
-name|desc_scsi_status
-operator|=
-literal|"aca active"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_TASK_ABORTED
-case|:
-name|desc_scsi_status
-operator|=
-literal|"task aborted"
-expr_stmt|;
-break|break;
-default|default:
-name|desc_scsi_status
-operator|=
-literal|"unknown"
-expr_stmt|;
-break|break;
-block|}
-name|desc_scsi_state
-operator|=
-literal|"\0"
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|scsi_state
-condition|)
-name|desc_scsi_state
-operator|=
-literal|" "
-expr_stmt|;
-if|if
-condition|(
-name|scsi_state
-operator|&
-name|MPI2_SCSI_STATE_RESPONSE_INFO_VALID
-condition|)
-name|desc_scsi_state
-operator|=
-literal|"response info "
-expr_stmt|;
-if|if
-condition|(
-name|scsi_state
-operator|&
-name|MPI2_SCSI_STATE_TERMINATED
-condition|)
-name|desc_scsi_state
-operator|=
-literal|"state terminated "
-expr_stmt|;
-if|if
-condition|(
-name|scsi_state
-operator|&
-name|MPI2_SCSI_STATE_NO_SCSI_STATUS
-condition|)
-name|desc_scsi_state
-operator|=
-literal|"no status "
-expr_stmt|;
-if|if
-condition|(
-name|scsi_state
-operator|&
-name|MPI2_SCSI_STATE_AUTOSENSE_FAILED
-condition|)
-name|desc_scsi_state
-operator|=
-literal|"autosense failed "
-expr_stmt|;
-if|if
-condition|(
-name|scsi_state
-operator|&
-name|MPI2_SCSI_STATE_AUTOSENSE_VALID
-condition|)
-name|desc_scsi_state
-operator|=
-literal|"autosense valid "
+argument_list|)
 expr_stmt|;
 name|mpr_dprint
 argument_list|(
@@ -11322,7 +10905,7 @@ name|connector_name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We can add more detail about underflow data here 	 * TO-DO 	 * */
+comment|/* 	 * We can add more detail about underflow data here 	 * TO-DO 	 */
 name|mpr_dprint
 argument_list|(
 name|sc
@@ -11330,15 +10913,20 @@ argument_list|,
 name|MPR_XINFO
 argument_list|,
 literal|"\tscsi_status(%s)(0x%02x), "
-literal|"scsi_state(%s)(0x%02x)\n"
+literal|"scsi_state %b\n"
 argument_list|,
 name|desc_scsi_status
 argument_list|,
 name|scsi_status
 argument_list|,
-name|desc_scsi_state
-argument_list|,
 name|scsi_state
+argument_list|,
+literal|"\20"
+literal|"\1AutosenseValid"
+literal|"\2AutosenseFailed"
+literal|"\3NoScsiStatus"
+literal|"\4Terminated"
+literal|"\5Response InfoValid"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11403,14 +10991,28 @@ operator|)
 operator|&
 name|response_info
 expr_stmt|;
-name|mpr_response_code
+name|mpr_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPR_XINFO
+argument_list|,
+literal|"response code(0x%01x): %s\n"
 argument_list|,
 name|response_bytes
 index|[
 literal|0
 index|]
+argument_list|,
+name|mpr_describe_table
+argument_list|(
+name|mpr_scsi_taskmgmt_string
+argument_list|,
+name|response_bytes
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -13627,23 +13229,21 @@ name|sc
 argument_list|,
 name|MPR_INFO
 argument_list|,
-literal|"Controller reported %s target %u SMID %u, loginfo %x\n"
+literal|"Controller reported %s tgt %u SMID %u loginfo %x\n"
 argument_list|,
-operator|(
-operator|(
+name|mpr_describe_table
+argument_list|(
+name|mpr_iocstatus_string
+argument_list|,
+name|le16toh
+argument_list|(
 name|rep
 operator|->
 name|IOCStatus
+argument_list|)
 operator|&
 name|MPI2_IOCSTATUS_MASK
-operator|)
-operator|==
-name|MPI2_IOCSTATUS_SCSI_IOC_TERMINATED
-operator|)
-condition|?
-literal|"IOC_TERMINATED"
-else|:
-literal|"EXT_TERMINATED"
+argument_list|)
 argument_list|,
 name|target_id
 argument_list|,

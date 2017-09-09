@@ -860,6 +860,288 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mps_table_lookup
+name|mps_iocstatus_string
+index|[]
+init|=
+block|{
+block|{
+literal|"success"
+block|,
+name|MPI2_IOCSTATUS_SUCCESS
+block|}
+block|,
+block|{
+literal|"invalid function"
+block|,
+name|MPI2_IOCSTATUS_INVALID_FUNCTION
+block|}
+block|,
+block|{
+literal|"scsi recovered error"
+block|,
+name|MPI2_IOCSTATUS_SCSI_RECOVERED_ERROR
+block|}
+block|,
+block|{
+literal|"scsi invalid dev handle"
+block|,
+name|MPI2_IOCSTATUS_SCSI_INVALID_DEVHANDLE
+block|}
+block|,
+block|{
+literal|"scsi device not there"
+block|,
+name|MPI2_IOCSTATUS_SCSI_DEVICE_NOT_THERE
+block|}
+block|,
+block|{
+literal|"scsi data overrun"
+block|,
+name|MPI2_IOCSTATUS_SCSI_DATA_OVERRUN
+block|}
+block|,
+block|{
+literal|"scsi data underrun"
+block|,
+name|MPI2_IOCSTATUS_SCSI_DATA_UNDERRUN
+block|}
+block|,
+block|{
+literal|"scsi io data error"
+block|,
+name|MPI2_IOCSTATUS_SCSI_IO_DATA_ERROR
+block|}
+block|,
+block|{
+literal|"scsi protocol error"
+block|,
+name|MPI2_IOCSTATUS_SCSI_PROTOCOL_ERROR
+block|}
+block|,
+block|{
+literal|"scsi task terminated"
+block|,
+name|MPI2_IOCSTATUS_SCSI_TASK_TERMINATED
+block|}
+block|,
+block|{
+literal|"scsi residual mismatch"
+block|,
+name|MPI2_IOCSTATUS_SCSI_RESIDUAL_MISMATCH
+block|}
+block|,
+block|{
+literal|"scsi task mgmt failed"
+block|,
+name|MPI2_IOCSTATUS_SCSI_TASK_MGMT_FAILED
+block|}
+block|,
+block|{
+literal|"scsi ioc terminated"
+block|,
+name|MPI2_IOCSTATUS_SCSI_IOC_TERMINATED
+block|}
+block|,
+block|{
+literal|"scsi ext terminated"
+block|,
+name|MPI2_IOCSTATUS_SCSI_EXT_TERMINATED
+block|}
+block|,
+block|{
+literal|"eedp guard error"
+block|,
+name|MPI2_IOCSTATUS_EEDP_GUARD_ERROR
+block|}
+block|,
+block|{
+literal|"eedp ref tag error"
+block|,
+name|MPI2_IOCSTATUS_EEDP_REF_TAG_ERROR
+block|}
+block|,
+block|{
+literal|"eedp app tag error"
+block|,
+name|MPI2_IOCSTATUS_EEDP_APP_TAG_ERROR
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"unknown"
+block|,
+literal|0x00
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mps_table_lookup
+name|mps_scsi_status_string
+index|[]
+init|=
+block|{
+block|{
+literal|"good"
+block|,
+name|MPI2_SCSI_STATUS_GOOD
+block|}
+block|,
+block|{
+literal|"check condition"
+block|,
+name|MPI2_SCSI_STATUS_CHECK_CONDITION
+block|}
+block|,
+block|{
+literal|"condition met"
+block|,
+name|MPI2_SCSI_STATUS_CONDITION_MET
+block|}
+block|,
+block|{
+literal|"busy"
+block|,
+name|MPI2_SCSI_STATUS_BUSY
+block|}
+block|,
+block|{
+literal|"intermediate"
+block|,
+name|MPI2_SCSI_STATUS_INTERMEDIATE
+block|}
+block|,
+block|{
+literal|"intermediate condmet"
+block|,
+name|MPI2_SCSI_STATUS_INTERMEDIATE_CONDMET
+block|}
+block|,
+block|{
+literal|"reservation conflict"
+block|,
+name|MPI2_SCSI_STATUS_RESERVATION_CONFLICT
+block|}
+block|,
+block|{
+literal|"command terminated"
+block|,
+name|MPI2_SCSI_STATUS_COMMAND_TERMINATED
+block|}
+block|,
+block|{
+literal|"task set full"
+block|,
+name|MPI2_SCSI_STATUS_TASK_SET_FULL
+block|}
+block|,
+block|{
+literal|"aca active"
+block|,
+name|MPI2_SCSI_STATUS_ACA_ACTIVE
+block|}
+block|,
+block|{
+literal|"task aborted"
+block|,
+name|MPI2_SCSI_STATUS_TASK_ABORTED
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"unknown"
+block|,
+literal|0x00
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mps_table_lookup
+name|mps_scsi_taskmgmt_string
+index|[]
+init|=
+block|{
+block|{
+literal|"task mgmt request completed"
+block|,
+name|MPI2_SCSITASKMGMT_RSP_TM_COMPLETE
+block|}
+block|,
+block|{
+literal|"invalid frame"
+block|,
+name|MPI2_SCSITASKMGMT_RSP_INVALID_FRAME
+block|}
+block|,
+block|{
+literal|"task mgmt request not supp"
+block|,
+name|MPI2_SCSITASKMGMT_RSP_TM_NOT_SUPPORTED
+block|}
+block|,
+block|{
+literal|"task mgmt request failed"
+block|,
+name|MPI2_SCSITASKMGMT_RSP_TM_FAILED
+block|}
+block|,
+block|{
+literal|"task mgmt request_succeeded"
+block|,
+name|MPI2_SCSITASKMGMT_RSP_TM_SUCCEEDED
+block|}
+block|,
+block|{
+literal|"invalid lun"
+block|,
+name|MPI2_SCSITASKMGMT_RSP_TM_INVALID_LUN
+block|}
+block|,
+block|{
+literal|"overlapped tag attempt"
+block|,
+literal|0xA
+block|}
+block|,
+block|{
+literal|"task queued on IOC"
+block|,
+name|MPI2_SCSITASKMGMT_RSP_IO_QUEUED_ON_IOC
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"unknown"
+block|,
+literal|0x00
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|mps_describe_devinfo
