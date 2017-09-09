@@ -10934,9 +10934,7 @@ name|char
 modifier|*
 name|desc_scsi_state
 init|=
-name|sc
-operator|->
-name|tmp_string
+name|NULL
 decl_stmt|;
 name|u32
 name|log_info
@@ -11212,11 +11210,8 @@ expr_stmt|;
 break|break;
 block|}
 name|desc_scsi_state
-index|[
-literal|0
-index|]
 operator|=
-literal|'\0'
+literal|"\0"
 expr_stmt|;
 if|if
 condition|(
@@ -11233,12 +11228,9 @@ name|scsi_state
 operator|&
 name|MPI2_SCSI_STATE_RESPONSE_INFO_VALID
 condition|)
-name|strcat
-argument_list|(
 name|desc_scsi_state
-argument_list|,
+operator|=
 literal|"response info "
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11246,12 +11238,9 @@ name|scsi_state
 operator|&
 name|MPI2_SCSI_STATE_TERMINATED
 condition|)
-name|strcat
-argument_list|(
 name|desc_scsi_state
-argument_list|,
+operator|=
 literal|"state terminated "
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11259,12 +11248,9 @@ name|scsi_state
 operator|&
 name|MPI2_SCSI_STATE_NO_SCSI_STATUS
 condition|)
-name|strcat
-argument_list|(
 name|desc_scsi_state
-argument_list|,
+operator|=
 literal|"no status "
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11272,12 +11258,9 @@ name|scsi_state
 operator|&
 name|MPI2_SCSI_STATE_AUTOSENSE_FAILED
 condition|)
-name|strcat
-argument_list|(
 name|desc_scsi_state
-argument_list|,
+operator|=
 literal|"autosense failed "
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11285,12 +11268,9 @@ name|scsi_state
 operator|&
 name|MPI2_SCSI_STATE_AUTOSENSE_VALID
 condition|)
-name|strcat
-argument_list|(
 name|desc_scsi_state
-argument_list|,
+operator|=
 literal|"autosense valid "
-argument_list|)
 expr_stmt|;
 name|mpr_dprint
 argument_list|(
@@ -13647,8 +13627,7 @@ name|sc
 argument_list|,
 name|MPR_INFO
 argument_list|,
-literal|"Controller reported %s status for target %u SMID %u, "
-literal|"loginfo %x\n"
+literal|"Controller reported %s target %u SMID %u, loginfo %x\n"
 argument_list|,
 operator|(
 operator|(

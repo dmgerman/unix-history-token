@@ -156,13 +156,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MPS_STRING_LENGTH
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEFAULT_SPINUP_WAIT
 value|3
 end_define
@@ -1058,12 +1051,6 @@ name|struct
 name|mpssas_softc
 modifier|*
 name|sassc
-decl_stmt|;
-name|char
-name|tmp_string
-index|[
-name|MPS_STRING_LENGTH
-index|]
 decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
