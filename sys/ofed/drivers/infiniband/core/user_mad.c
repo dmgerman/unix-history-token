@@ -981,16 +981,6 @@ operator|->
 name|recv_list
 argument_list|)
 expr_stmt|;
-name|selwakeup
-argument_list|(
-operator|&
-name|file
-operator|->
-name|filp
-operator|->
-name|f_selinfo
-argument_list|)
-expr_stmt|;
 name|wake_up_interruptible
 argument_list|(
 operator|&
