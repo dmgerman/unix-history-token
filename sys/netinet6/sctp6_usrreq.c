@@ -4291,7 +4291,7 @@ condition|(
 name|stcb
 condition|)
 block|{
-name|SCTP_TCB_UNLOCK
+name|SCTP_TCB_LOCK
 argument_list|(
 name|stcb
 argument_list|)
