@@ -895,51 +895,7 @@ argument|return (((uintptr_t)thread0.td_pcb - 	    (sizeof(struct callframe) -
 literal|3
 argument|*sizeof(register_t)))& ~
 literal|15UL
-argument|); }  void bzero(void *buf, size_t len) { 	caddr_t	p;  	p = buf;  	while (((vm_offset_t) p& (sizeof(u_long) -
-literal|1
-argument|))&& len) { 		*p++ =
-literal|0
-argument|; 		len--; 	}  	while (len>= sizeof(u_long) *
-literal|8
-argument|) { 		*(u_long*) p =
-literal|0
-argument|; 		*((u_long*) p +
-literal|1
-argument|) =
-literal|0
-argument|; 		*((u_long*) p +
-literal|2
-argument|) =
-literal|0
-argument|; 		*((u_long*) p +
-literal|3
-argument|) =
-literal|0
-argument|; 		len -= sizeof(u_long) *
-literal|8
-argument|; 		*((u_long*) p +
-literal|4
-argument|) =
-literal|0
-argument|; 		*((u_long*) p +
-literal|5
-argument|) =
-literal|0
-argument|; 		*((u_long*) p +
-literal|6
-argument|) =
-literal|0
-argument|; 		*((u_long*) p +
-literal|7
-argument|) =
-literal|0
-argument|; 		p += sizeof(u_long) *
-literal|8
-argument|; 	}  	while (len>= sizeof(u_long)) { 		*(u_long*) p =
-literal|0
-argument|; 		len -= sizeof(u_long); 		p += sizeof(u_long); 	}  	while (len) { 		*p++ =
-literal|0
-argument|; 		len--; 	} }
+argument|); }
 comment|/*  * Flush the D-cache for non-DMA I/O so that the I-cache can  * be made coherent later.  */
 argument|void cpu_flush_dcache(void *ptr, size_t len) { 	register_t addr
 argument_list|,
@@ -989,12 +945,57 @@ literal|11
 argument|); 	__syncicache(get_spr, cacheline_size); 	spr = get_spr(sprno);  	db_printf(
 literal|"SPR %d(%x): %lx\n"
 argument|, saved_sprno, saved_sprno, 	    (unsigned long)spr); }
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+undef|#
+directive|undef
+name|bzero
+argument|void bzero(void *buf, size_t len) { 	caddr_t	p;  	p = buf;  	while (((vm_offset_t) p& (sizeof(u_long) -
+literal|1
+argument|))&& len) { 		*p++ =
+literal|0
+argument|; 		len--; 	}  	while (len>= sizeof(u_long) *
+literal|8
+argument|) { 		*(u_long*) p =
+literal|0
+argument|; 		*((u_long*) p +
+literal|1
+argument|) =
+literal|0
+argument|; 		*((u_long*) p +
+literal|2
+argument|) =
+literal|0
+argument|; 		*((u_long*) p +
+literal|3
+argument|) =
+literal|0
+argument|; 		len -= sizeof(u_long) *
+literal|8
+argument|; 		*((u_long*) p +
+literal|4
+argument|) =
+literal|0
+argument|; 		*((u_long*) p +
+literal|5
+argument|) =
+literal|0
+argument|; 		*((u_long*) p +
+literal|6
+argument|) =
+literal|0
+argument|; 		*((u_long*) p +
+literal|7
+argument|) =
+literal|0
+argument|; 		p += sizeof(u_long) *
+literal|8
+argument|; 	}  	while (len>= sizeof(u_long)) { 		*(u_long*) p =
+literal|0
+argument|; 		len -= sizeof(u_long); 		p += sizeof(u_long); 	}  	while (len) { 		*p++ =
+literal|0
+argument|; 		len--; 	} }
+end_function
 
 end_unit
 
