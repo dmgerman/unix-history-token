@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_ifndef
@@ -151,10 +151,16 @@ init|=
 literal|1
 operator|<<
 literal|0
+block|,
+name|DSF_SCRUB_PAUSED
+init|=
+literal|1
+operator|<<
+literal|1
 block|, }
 name|dsl_scan_flags_t
 typedef|;
-comment|/*  * Every pool will have one dsl_scan_t and this structure will contain  * in-memory information about the scan and a pointer to the on-disk  * representation (i.e. dsl_scan_phys_t). Most of the state of the scan  * is contained on-disk to allow the scan to resume in the event of a reboot  * or panic. This structure maintains information about the behavior of a  * running scan, some caching information, and how it should traverse the pool.  *  * The following members of this structure direct the behavior of the scan:  *  * scn_pausing -	a scan that cannot be completed in a single txg or  *			has exceeded its allotted time will need to pause.  *			When this flag is set the scanner will stop traversing  *			the pool and write out the current state to disk.  *  * scn_restart_txg -	directs the scanner to either restart or start a  *			a scan at the specified txg value.  *  * scn_done_txg -	when a scan completes its traversal it will set  *			the completion txg to the next txg. This is necessary  *			to ensure that any blocks that were freed during  *			the scan but have not yet been processed (i.e deferred  *			frees) are accounted for.  *  * This structure also maintains information about deferred frees which are  * a special kind of traversal. Deferred free can exist in either a bptree or  * a bpobj structure. The scn_is_bptree flag will indicate the type of  * deferred free that is in progress. If the deferred free is part of an  * asynchronous destroy then the scn_async_destroying flag will be set.  */
+comment|/*  * Every pool will have one dsl_scan_t and this structure will contain  * in-memory information about the scan and a pointer to the on-disk  * representation (i.e. dsl_scan_phys_t). Most of the state of the scan  * is contained on-disk to allow the scan to resume in the event of a reboot  * or panic. This structure maintains information about the behavior of a  * running scan, some caching information, and how it should traverse the pool.  *  * The following members of this structure direct the behavior of the scan:  *  * scn_suspending -	a scan that cannot be completed in a single txg or  *			has exceeded its allotted time will need to suspend.  *			When this flag is set the scanner will stop traversing  *			the pool and write out the current state to disk.  *  * scn_restart_txg -	directs the scanner to either restart or start a  *			a scan at the specified txg value.  *  * scn_done_txg -	when a scan completes its traversal it will set  *			the completion txg to the next txg. This is necessary  *			to ensure that any blocks that were freed during  *			the scan but have not yet been processed (i.e deferred  *			frees) are accounted for.  *  * This structure also maintains information about deferred frees which are  * a special kind of traversal. Deferred free can exist in either a bptree or  * a bpobj structure. The scn_is_bptree flag will indicate the type of  * deferred free that is in progress. If the deferred free is part of an  * asynchronous destroy then the scn_async_destroying flag will be set.  */
 typedef|typedef
 struct|struct
 name|dsl_scan
@@ -165,7 +171,7 @@ modifier|*
 name|scn_dp
 decl_stmt|;
 name|boolean_t
-name|scn_pausing
+name|scn_suspending
 decl_stmt|;
 name|uint64_t
 name|scn_restart_txg
@@ -190,7 +196,6 @@ decl_stmt|;
 name|boolean_t
 name|scn_async_stalled
 decl_stmt|;
-comment|/* for debugging / information */
 name|uint64_t
 name|scn_visited_this_txg
 decl_stmt|;
@@ -248,6 +253,29 @@ name|dsl_pool
 modifier|*
 parameter_list|,
 name|pool_scan_func_t
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|dsl_scan_scrubbing
+parameter_list|(
+specifier|const
+name|struct
+name|dsl_pool
+modifier|*
+name|dp
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_scrub_set_pause_resume
+parameter_list|(
+specifier|const
+name|struct
+name|dsl_pool
+modifier|*
+name|dp
+parameter_list|,
+name|pool_scrub_cmd_t
+name|cmd
 parameter_list|)
 function_decl|;
 name|void
@@ -349,6 +377,15 @@ function_decl|;
 name|boolean_t
 name|dsl_scan_active
 parameter_list|(
+name|dsl_scan_t
+modifier|*
+name|scn
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|dsl_scan_is_paused_scrub
+parameter_list|(
+specifier|const
 name|dsl_scan_t
 modifier|*
 name|scn

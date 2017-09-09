@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_ifndef
@@ -583,6 +583,14 @@ name|uint64_t
 name|spa_scan_pass_start
 decl_stmt|;
 comment|/* start time per pass/reboot */
+name|uint64_t
+name|spa_scan_pass_scrub_pause
+decl_stmt|;
+comment|/* scrub pause time */
+name|uint64_t
+name|spa_scan_pass_scrub_spent_paused
+decl_stmt|;
+comment|/* total paused */
 name|uint64_t
 name|spa_scan_pass_exam
 decl_stmt|;

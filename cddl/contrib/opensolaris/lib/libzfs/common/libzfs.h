@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Nexenta Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Nexenta Systems, Inc.  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_ifndef
@@ -322,6 +322,9 @@ comment|/* bad zfs diff data */
 name|EZFS_POOLREADONLY
 block|,
 comment|/* pool is in read-only mode */
+name|EZFS_SCRUB_PAUSED
+block|,
+comment|/* scrub currently paused */
 name|EZFS_UNKNOWN
 block|}
 name|zfs_error_t
@@ -818,6 +821,8 @@ name|zpool_handle_t
 modifier|*
 parameter_list|,
 name|pool_scan_func_t
+parameter_list|,
+name|pool_scrub_cmd_t
 parameter_list|)
 function_decl|;
 specifier|extern
