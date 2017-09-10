@@ -114,6 +114,35 @@ directive|include
 file|<sys/counter.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VMMETER_ALIGNED
+value|__aligned(CACHE_LINE_SIZE)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VMMETER_ALIGNED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * System wide statistics counters.  * Locking:  *      a - locked by atomic operations  *      c - constant after initialization  *      f - locked by vm_page_queue_free_mtx  *      p - uses counter(9)  *      q - changes are synchronized by the corresponding vm_pagequeue lock  */
 end_comment
@@ -296,25 +325,9 @@ name|v_free_count
 decl_stmt|;
 comment|/* (f) pages free */
 name|u_int
-name|v_wire_count
-decl_stmt|;
-comment|/* (a) pages wired down */
-name|u_int
-name|v_active_count
-decl_stmt|;
-comment|/* (q) pages active */
-name|u_int
 name|v_inactive_target
 decl_stmt|;
 comment|/* (c) pages desired inactive */
-name|u_int
-name|v_inactive_count
-decl_stmt|;
-comment|/* (q) pages inactive */
-name|u_int
-name|v_laundry_count
-decl_stmt|;
-comment|/* (q) pages eligible for laundering */
 name|u_int
 name|v_pageout_free_min
 decl_stmt|;
@@ -327,6 +340,26 @@ name|u_int
 name|v_free_severe
 decl_stmt|;
 comment|/* (c) severe page depletion point */
+name|u_int
+name|v_wire_count
+name|VMMETER_ALIGNED
+decl_stmt|;
+comment|/* (a) pages wired down */
+name|u_int
+name|v_active_count
+name|VMMETER_ALIGNED
+decl_stmt|;
+comment|/* (a) pages active */
+name|u_int
+name|v_inactive_count
+name|VMMETER_ALIGNED
+decl_stmt|;
+comment|/* (a) pages inactive */
+name|u_int
+name|v_laundry_count
+name|VMMETER_ALIGNED
+decl_stmt|;
+comment|/* (a) pages eligible for 						  laundering */
 block|}
 struct|;
 end_struct
