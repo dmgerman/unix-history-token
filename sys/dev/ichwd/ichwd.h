@@ -2128,7 +2128,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TC0_OS_POLICY_BOOT
+name|TCO_OS_POLICY_BOOT
 value|0x0000
 end_define
 
