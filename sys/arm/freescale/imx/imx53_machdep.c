@@ -116,17 +116,6 @@ name|platform_t
 name|plat
 parameter_list|)
 block|{
-comment|/* XXX - Get rid of this stuff soon. */
-name|boothowto
-operator||=
-name|RB_VERBOSE
-operator||
-name|RB_MULTIPLE
-expr_stmt|;
-name|bootverbose
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 literal|0
