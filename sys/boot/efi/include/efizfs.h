@@ -89,6 +89,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|EFI_HANDLE
+name|efizfs_get_handle_by_guid
+parameter_list|(
+name|uint64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

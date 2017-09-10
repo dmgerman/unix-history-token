@@ -176,6 +176,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|pdinfo_t
+modifier|*
+name|efiblk_get_pdinfo
+parameter_list|(
+name|struct
+name|devdesc
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|efi_get_table
