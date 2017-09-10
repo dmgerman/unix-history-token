@@ -8093,6 +8093,31 @@ name|sc
 argument_list|,
 name|MPS_INIT
 argument_list|,
+literal|"disestablish config intrhook\n"
+argument_list|)
+expr_stmt|;
+name|config_intrhook_disestablish
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mps_ich
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|mps_ich
+operator|.
+name|ich_arg
+operator|=
+name|NULL
+expr_stmt|;
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_INIT
+argument_list|,
 literal|"%s exit\n"
 argument_list|,
 name|__func__
