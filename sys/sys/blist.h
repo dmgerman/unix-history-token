@@ -136,6 +136,12 @@ name|BLIST_MAX_ALLOC
 value|BLIST_BMAP_RADIX
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|daddr_t
 name|blist_alloc
@@ -240,6 +246,21 @@ name|freenew
 parameter_list|,
 name|int
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|blist_stats
+parameter_list|(
+name|blist_t
+name|blist
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|s
 parameter_list|)
 function_decl|;
 end_function_decl
