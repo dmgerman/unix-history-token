@@ -375,6 +375,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|mps_alloc_hw_queues
+parameter_list|(
+name|struct
+name|mps_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|mps_alloc_replies
 parameter_list|(
 name|struct
@@ -2406,7 +2419,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Any deallocation has been completed.  Now start reallocating 	 * if needed.  Will only need to reallocate if attaching or if the new 	 * IOC Facts are different from the previous IOC Facts after a Diag 	 * Reset. Targets have already been allocated above if needed. 	 */
-if|if
+name|error
+operator|=
+literal|0
+expr_stmt|;
+while|while
 condition|(
 name|attaching
 operator|||
@@ -2416,19 +2433,19 @@ block|{
 if|if
 condition|(
 operator|(
-operator|(
 name|error
 operator|=
-name|mps_alloc_queues
+name|mps_alloc_hw_queues
 argument_list|(
 name|sc
 argument_list|)
 operator|)
 operator|!=
 literal|0
-operator|)
-operator|||
-operator|(
+condition|)
+break|break;
+if|if
+condition|(
 operator|(
 name|error
 operator|=
@@ -2439,9 +2456,10 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-operator|)
-operator|||
-operator|(
+condition|)
+break|break;
+if|if
+condition|(
 operator|(
 name|error
 operator|=
@@ -2452,12 +2470,27 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
-block|{
+break|break;
 if|if
 condition|(
-name|attaching
+operator|(
+name|error
+operator|=
+name|mps_alloc_queues
+argument_list|(
+name|sc
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
+break|break;
+block|}
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|mps_dprint
@@ -2483,21 +2516,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
-else|else
-block|{
-name|panic
-argument_list|(
-literal|"%s failed to alloc queues with error "
-literal|"%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 block|}
 comment|/* Always initialize the queues */
 name|bzero
@@ -2533,11 +2551,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|attaching
-condition|)
-block|{
 name|mps_dprint
 argument_list|(
 name|sc
@@ -2562,20 +2575,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
-else|else
-block|{
-name|panic
-argument_list|(
-literal|"%s failed to transition to operational with "
-literal|"error %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Finish the queue initialization. 	 * These are set here instead of in mps_init_queues() because the 	 * IOC resets these values during the state transition in 	 * mps_transition_operational().  The free index is set to 1 	 * because the corresponding index in the IOC is set to 0, and the 	 * IOC treats the queues as full if both are set to the same value. 	 * Hence the reason that the queue can't hold all of the possible 	 * replies. 	 */
 name|sc
@@ -2604,9 +2603,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attach the subsystems so they can prepare their event masks. 	 */
-comment|/* XXX Should be dynamic so that IM/IR and user modules can attach */
-if|if
+comment|/* 	 * Attach the subsystems so they can prepare their event masks. 	 * XXX Should be dynamic so that IM/IR and user modules can attach 	 */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+while|while
 condition|(
 name|attaching
 condition|)
@@ -2623,7 +2625,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
 name|error
 operator|=
 name|mps_attach_log
@@ -2633,9 +2634,10 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-operator|)
-operator|||
-operator|(
+condition|)
+break|break;
+if|if
+condition|(
 operator|(
 name|error
 operator|=
@@ -2646,9 +2648,10 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-operator|)
-operator|||
-operator|(
+condition|)
+break|break;
+if|if
+condition|(
 operator|(
 name|error
 operator|=
@@ -2659,7 +2662,13 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-operator|)
+condition|)
+break|break;
+break|break;
+block|}
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|mps_dprint
@@ -2670,8 +2679,8 @@ name|MPS_INIT
 operator||
 name|MPS_FAULT
 argument_list|,
-literal|"Failed to attach "
-literal|"all subsystems: error %d\n"
+literal|"Failed to attach all "
+literal|"subsystems: error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -2723,7 +2732,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 comment|/* 	 * Set flag if this is a WD controller.  This shouldn't ever change, but 	 * reset it after a Diag Reset, just in case. 	 */
 name|sc
@@ -5030,25 +5038,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|bus_addr_t
-name|queues_busaddr
-decl_stmt|;
 name|struct
 name|mps_queue
 modifier|*
 name|q
 decl_stmt|;
-name|uint8_t
-modifier|*
-name|queues
-decl_stmt|;
 name|int
-name|qsize
-decl_stmt|,
-name|fqsize
-decl_stmt|,
-name|pqsize
-decl_stmt|,
 name|nq
 decl_stmt|,
 name|i
@@ -5167,6 +5162,39 @@ operator|=
 name|i
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|mps_alloc_hw_queues
+parameter_list|(
+name|struct
+name|mps_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|bus_addr_t
+name|queues_busaddr
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|queues
+decl_stmt|;
+name|int
+name|qsize
+decl_stmt|,
+name|fqsize
+decl_stmt|,
+name|pqsize
+decl_stmt|;
 comment|/* 	 * The reply free queue contains 4 byte entries in multiples of 16 and 	 * aligned on a 16 byte boundary. There must always be an unused entry. 	 * This queue supplies fresh reply frames for the firmware to use. 	 * 	 * The reply descriptor post queue contains 8 byte entries in 	 * multiples of 16 and aligned on a 16 byte boundary.  This queue 	 * contains filled-in reply frames sent from the firmware to the host. 	 * 	 * These two queues are allocated together for simplicity. 	 */
 name|sc
 operator|->
