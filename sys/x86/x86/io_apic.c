@@ -4848,7 +4848,7 @@ if|if
 condition|(
 name|io
 operator|->
-name|io_id
+name|io_apic_id
 operator|==
 name|apic_id
 condition|)
@@ -4960,7 +4960,7 @@ argument_list|)
 operator|||
 name|io
 operator|->
-name|io_id
+name|io_apic_id
 operator|!=
 name|apic_id
 operator|)
@@ -5005,7 +5005,7 @@ name|apic_id
 argument_list|,
 name|io
 operator|->
-name|io_id
+name|io_apic_id
 argument_list|,
 operator|(
 name|uintmax_t
@@ -5142,7 +5142,7 @@ if|if
 condition|(
 name|io
 operator|->
-name|io_id
+name|io_apic_id
 operator|==
 name|apic_id
 condition|)
