@@ -5133,22 +5133,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* 		 * Some hypervisors fail to filter out unsupported 		 * extended features.  For now, disable the 		 * extensions, activation of which requires setting a 		 * bit in CR4, and which VM monitors do not support. 		 */
-if|if
-condition|(
-name|cpu_feature2
-operator|&
-name|CPUID2_HV
-condition|)
-block|{
-name|cpu_stdext_disable
-operator|=
-name|CPUID_STDEXT_FSGSBASE
-operator||
-name|CPUID_STDEXT_SMEP
-expr_stmt|;
-block|}
-else|else
+comment|/* 		 * Some hypervisors failed to filter out unsupported 		 * extended features.  Allow to disable the 		 * extensions, activation of which requires setting a 		 * bit in CR4, and which VM monitors do not support. 		 */
 name|cpu_stdext_disable
 operator|=
 literal|0

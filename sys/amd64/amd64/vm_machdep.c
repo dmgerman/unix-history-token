@@ -706,6 +706,13 @@ argument_list|(
 name|td1
 argument_list|)
 expr_stmt|;
+name|update_pcb_bases
+argument_list|(
+name|td1
+operator|->
+name|td_pcb
+argument_list|)
+expr_stmt|;
 comment|/* Point the pcb to the top of the stack */
 name|pcb2
 operator|=
@@ -958,7 +965,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* New segment registers. */
-name|set_pcb_flags
+name|set_pcb_flags_raw
 argument_list|(
 name|pcb2
 argument_list|,
@@ -1629,6 +1636,13 @@ operator|->
 name|td_pcb
 expr_stmt|;
 comment|/* 	 * Copy the upcall pcb.  This loads kernel regs. 	 * Those not loaded individually below get their default 	 * values here. 	 */
+name|update_pcb_bases
+argument_list|(
+name|td0
+operator|->
+name|td_pcb
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|td0
@@ -1678,7 +1692,7 @@ argument_list|,
 name|cpu_max_ext_state_size
 argument_list|)
 expr_stmt|;
-name|set_pcb_flags
+name|set_pcb_flags_raw
 argument_list|(
 name|pcb2
 argument_list|,

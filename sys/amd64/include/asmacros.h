@@ -409,7 +409,11 @@ value|\ 	testb	$SEL_RPL_MASK,TF_CS(%rsp) ;
 comment|/* come from kernel? */
 value|\ 	jz	1f ;
 comment|/* Yes, dont swapgs again */
-value|\ 	swapgs ;							\ 1:	movq	%rdi,TF_RDI(%rsp) ;					\ 	movq	%rsi,TF_RSI(%rsp) ;					\ 	movq	%rdx,TF_RDX(%rsp) ;					\ 	movq	%rcx,TF_RCX(%rsp) ;					\ 	movq	%r8,TF_R8(%rsp) ;					\ 	movq	%r9,TF_R9(%rsp) ;					\ 	movq	%rax,TF_RAX(%rsp) ;					\ 	movq	%rbx,TF_RBX(%rsp) ;					\ 	movq	%rbp,TF_RBP(%rsp) ;					\ 	movq	%r10,TF_R10(%rsp) ;					\ 	movq	%r11,TF_R11(%rsp) ;					\ 	movq	%r12,TF_R12(%rsp) ;					\ 	movq	%r13,TF_R13(%rsp) ;					\ 	movq	%r14,TF_R14(%rsp) ;					\ 	movq	%r15,TF_R15(%rsp) ;					\ 	movw	%fs,TF_FS(%rsp) ;					\ 	movw	%gs,TF_GS(%rsp) ;					\ 	movw	%es,TF_ES(%rsp) ;					\ 	movw	%ds,TF_DS(%rsp) ;					\ 	movl	$TF_HASSEGS,TF_FLAGS(%rsp) ;				\ 	cld
+value|\ 	swapgs ;							\ 1:	movq	%rdi,TF_RDI(%rsp) ;					\ 	movq	%rsi,TF_RSI(%rsp) ;					\ 	movq	%rdx,TF_RDX(%rsp) ;					\ 	movq	%rcx,TF_RCX(%rsp) ;					\ 	movq	%r8,TF_R8(%rsp) ;					\ 	movq	%r9,TF_R9(%rsp) ;					\ 	movq	%rax,TF_RAX(%rsp) ;					\ 	movq	%rbx,TF_RBX(%rsp) ;					\ 	movq	%rbp,TF_RBP(%rsp) ;					\ 	movq	%r10,TF_R10(%rsp) ;					\ 	movq	%r11,TF_R11(%rsp) ;					\ 	movq	%r12,TF_R12(%rsp) ;					\ 	movq	%r13,TF_R13(%rsp) ;					\ 	movq	%r14,TF_R14(%rsp) ;					\ 	movq	%r15,TF_R15(%rsp) ;					\ 	movw	%fs,TF_FS(%rsp) ;					\ 	movw	%gs,TF_GS(%rsp) ;					\ 	movw	%es,TF_ES(%rsp) ;					\ 	movw	%ds,TF_DS(%rsp) ;					\ 	movl	$TF_HASSEGS,TF_FLAGS(%rsp) ;				\ 	cld ;								\ 	testb	$SEL_RPL_MASK,TF_CS(%rsp) ;
+comment|/* come from kernel ? */
+value|\ 	jz	2f ;
+comment|/* yes, leave PCB_FULL_IRET alone */
+value|\ 	movq	PCPU(CURPCB),%r8 ;					\ 	andl	$~PCB_FULL_IRET,PCB_FLAGS(%r8) ;			\ 2:
 end_define
 
 begin_define
