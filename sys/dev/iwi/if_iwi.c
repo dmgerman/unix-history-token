@@ -2011,6 +2011,12 @@ name|sc_dev
 operator|=
 name|dev
 expr_stmt|;
+name|sc
+operator|->
+name|sc_ledevent
+operator|=
+name|ticks
+expr_stmt|;
 name|IWI_LOCK_INIT
 argument_list|(
 name|sc

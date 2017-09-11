@@ -538,6 +538,14 @@ name|sc_dev
 operator|=
 name|dev
 expr_stmt|;
+name|sc
+operator|->
+name|sc_lastupdate
+operator|=
+name|ticks
+operator|-
+name|hz
+expr_stmt|;
 name|sx_init
 argument_list|(
 operator|&
