@@ -3685,6 +3685,7 @@ break|break;
 case|case
 name|GREP_FIXED
 case|:
+comment|/* 		 * regex(3) implementations that support fixed-string searches generally 		 * define either REG_NOSPEC or REG_LITERAL. Set the appropriate flag 		 * here. If neither are defined, GREP_FIXED later implies that the 		 * internal literal matcher should be used. Other cflags that have 		 * the same interpretation as REG_NOSPEC and REG_LITERAL should be 		 * similarly added here, and grep.h should be amended to take this into 		 * consideration when defining WITH_INTERNAL_NOSPEC. 		 */
 if|#
 directive|if
 name|defined
@@ -3704,15 +3705,6 @@ argument_list|)
 name|cflags
 operator||=
 name|REG_LITERAL
-expr_stmt|;
-else|#
-directive|else
-name|errx
-argument_list|(
-literal|2
-argument_list|,
-literal|"literal expressions not supported at compile time"
-argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -3763,12 +3755,29 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Don't process any patterns if we have a blank one */
+ifdef|#
+directive|ifdef
+name|WITH_INTERNAL_NOSPEC
+if|if
+condition|(
+operator|!
+name|matchall
+operator|&&
+name|grepbehave
+operator|!=
+name|GREP_FIXED
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 operator|!
 name|matchall
 condition|)
 block|{
+endif|#
+directive|endif
 comment|/* Check if cheating is allowed (always is for fgrep). */
 for|for
 control|(
