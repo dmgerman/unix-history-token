@@ -606,8 +606,12 @@ name|usbphy_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * This driver needs to start before the ehci driver, but later than the usual  * "special" drivers like clocks and cpu.  Ehci starts at DEFAULT so  * DEFAULT-1000 seems good.  */
+end_comment
+
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|usbphy
 argument_list|,
@@ -620,6 +624,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_DEFAULT
+operator|-
+literal|1000
 argument_list|)
 expr_stmt|;
 end_expr_stmt
