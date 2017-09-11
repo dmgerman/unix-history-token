@@ -4265,11 +4265,16 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|EFI_ZFS_BOOT
 name|struct
 name|zfs_devdesc
 modifier|*
 name|z_dev
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|disk_devdesc
 modifier|*
@@ -4289,6 +4294,9 @@ operator|->
 name|d_type
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|EFI_ZFS_BOOT
 case|case
 name|DEVT_ZFS
 case|:
@@ -4313,6 +4321,8 @@ name|pool_guid
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|DEVT_NET
 case|:
