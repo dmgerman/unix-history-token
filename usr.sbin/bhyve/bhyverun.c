@@ -4542,6 +4542,9 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|WITHOUT_CAPSICUM
+name|bhyve_caph_cache_catpages
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|bhyve_caph_limit_stdoe
