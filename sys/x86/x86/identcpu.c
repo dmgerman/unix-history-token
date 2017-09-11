@@ -8149,11 +8149,29 @@ literal|"\011<b8>"
 literal|"\012<b9>"
 literal|"\013PauseFilter"
 comment|/* PAUSE intercept filter */
-literal|"\014<b11>"
+literal|"\014EncryptedMcodePatch"
 literal|"\015PauseFilterThreshold"
 comment|/* PAUSE filter threshold */
 literal|"\016AVIC"
 comment|/* virtual interrupt controller */
+literal|"\017<b14>"
+literal|"\020V_VMSAVE_VMLOAD"
+literal|"\021vGIF"
+literal|"\022<b17>"
+literal|"\023<b18>"
+literal|"\024<b19>"
+literal|"\025<b20>"
+literal|"\026<b21>"
+literal|"\027<b22>"
+literal|"\030<b23>"
+literal|"\031<b24>"
+literal|"\032<b25>"
+literal|"\033<b26>"
+literal|"\034<b27>"
+literal|"\035<b28>"
+literal|"\036<b29>"
+literal|"\037<b30>"
+literal|"\040<b31>"
 argument_list|)
 expr_stmt|;
 name|printf
