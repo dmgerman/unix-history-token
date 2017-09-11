@@ -427,7 +427,11 @@ name|mpentry
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|wmb
+comment|/* Firmware put cores in WFE state, need SEV to wake up. */
+name|dsb
+argument_list|()
+expr_stmt|;
+name|sev
 argument_list|()
 expr_stmt|;
 comment|/* wait for bootup */
