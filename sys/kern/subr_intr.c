@@ -4208,7 +4208,9 @@ name|debugf
 argument_list|(
 literal|"irq %u setup filter error %d on %s\n"
 argument_list|,
-name|irq
+name|isrc
+operator|->
+name|isrc_irq
 argument_list|,
 name|error
 argument_list|,
@@ -4243,7 +4245,9 @@ name|debugf
 argument_list|(
 literal|"irq %u add handler error %d on %s\n"
 argument_list|,
-name|irq
+name|isrc
+operator|->
+name|isrc_irq
 argument_list|,
 name|error
 argument_list|,
