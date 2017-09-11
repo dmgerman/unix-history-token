@@ -260,10 +260,12 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* gpt, enet */
+comment|/* enet, epit, gpt */
 name|reg
 operator|=
 name|CCGR1_ENET
+operator||
+name|CCGR1_EPIT1
 operator||
 name|CCGR1_GPT
 expr_stmt|;
