@@ -1708,7 +1708,7 @@ operator|-
 name|__bss_start
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialise the heap as early as possible.  Once this is done, 	 * alloc() is usable. The stack is buried inside us, so this is safe. 	 */
+comment|/* 	 * Initialise the heap as early as possible.  Once this is done, 	 * alloc() is usable.  We are using the stack u-boot set up near the top 	 * of physical ram; hopefully there is sufficient space between the end 	 * of our bss and the bottom of the u-boot stack to avoid overlap. 	 */
 name|uboot_heap_start
 operator|=
 name|round_page
