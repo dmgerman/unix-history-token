@@ -5027,6 +5027,7 @@ name|vec_mask
 operator|!=
 literal|0
 condition|)
+block|{
 name|ntb_db_set_mask
 argument_list|(
 name|nt
@@ -5036,6 +5037,16 @@ argument_list|,
 name|vec_mask
 argument_list|)
 expr_stmt|;
+name|ntb_db_clear
+argument_list|(
+name|nt
+operator|->
+name|dev
+argument_list|,
+name|vec_mask
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|vec_mask
