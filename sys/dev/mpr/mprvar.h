@@ -33,7 +33,14 @@ begin_define
 define|#
 directive|define
 name|MPR_REQ_FRAMES
-value|1024
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPR_PRI_REQ_FRAMES
+value|128
 end_define
 
 begin_define
@@ -74,8 +81,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MPR_MSI_COUNT
+name|MPR_MSI_MAX
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPR_MSIX_MAX
+value|96
 end_define
 
 begin_define
@@ -979,12 +993,6 @@ value|(1<< 7)
 name|u_int
 name|mpr_debug
 decl_stmt|;
-name|u_int
-name|disable_msix
-decl_stmt|;
-name|u_int
-name|disable_msi
-decl_stmt|;
 name|int
 name|msi_msgs
 decl_stmt|;
@@ -1422,6 +1430,28 @@ name|SSU_refcount
 decl_stmt|;
 name|uint8_t
 name|SSU_started
+decl_stmt|;
+comment|/* Configuration tunables */
+name|u_int
+name|disable_msix
+decl_stmt|;
+name|u_int
+name|disable_msi
+decl_stmt|;
+name|u_int
+name|max_msix
+decl_stmt|;
+name|u_int
+name|max_reqframes
+decl_stmt|;
+name|u_int
+name|max_prireqframes
+decl_stmt|;
+name|u_int
+name|max_replyframes
+decl_stmt|;
+name|u_int
+name|max_evtframes
 decl_stmt|;
 name|char
 name|exclude_ids

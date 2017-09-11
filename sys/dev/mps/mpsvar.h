@@ -33,7 +33,14 @@ begin_define
 define|#
 directive|define
 name|MPS_REQ_FRAMES
-value|1024
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPS_PRI_REQ_FRAMES
+value|128
 end_define
 
 begin_define
@@ -74,8 +81,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MPS_MSI_COUNT
+name|MPS_MSI_MAX
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPS_MSIX_MAX
+value|16
 end_define
 
 begin_define
@@ -968,12 +982,6 @@ name|u_int
 name|mps_debug
 decl_stmt|;
 name|u_int
-name|disable_msix
-decl_stmt|;
-name|u_int
-name|disable_msi
-decl_stmt|;
-name|u_int
 name|msi_msgs
 decl_stmt|;
 name|int
@@ -1391,6 +1399,35 @@ index|[
 name|MPS_MAX_DISKS_IN_VOL
 index|]
 decl_stmt|;
+comment|/* StartStopUnit command handling at shutdown */
+name|uint32_t
+name|SSU_refcount
+decl_stmt|;
+name|uint8_t
+name|SSU_started
+decl_stmt|;
+comment|/* Configuration tunables */
+name|u_int
+name|disable_msix
+decl_stmt|;
+name|u_int
+name|disable_msi
+decl_stmt|;
+name|u_int
+name|max_msix
+decl_stmt|;
+name|u_int
+name|max_reqframes
+decl_stmt|;
+name|u_int
+name|max_prireqframes
+decl_stmt|;
+name|u_int
+name|max_replyframes
+decl_stmt|;
+name|u_int
+name|max_evtframes
+decl_stmt|;
 name|char
 name|exclude_ids
 index|[
@@ -1400,13 +1437,6 @@ decl_stmt|;
 name|struct
 name|timeval
 name|lastfail
-decl_stmt|;
-comment|/* StartStopUnit command handling at shutdown */
-name|uint32_t
-name|SSU_refcount
-decl_stmt|;
-name|uint8_t
-name|SSU_started
 decl_stmt|;
 block|}
 struct|;

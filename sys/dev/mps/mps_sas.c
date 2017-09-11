@@ -4459,6 +4459,19 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|sassc
+operator|->
+name|startup_refcount
+operator|!=
+literal|0
+condition|)
+name|mpssas_startup_decrement
+argument_list|(
+name|sassc
+argument_list|)
+expr_stmt|;
 comment|/* Deregister our async handler */
 if|if
 condition|(
