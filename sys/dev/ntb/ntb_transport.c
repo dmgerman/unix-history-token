@@ -764,7 +764,7 @@ begin_define
 define|#
 directive|define
 name|NTB_LINK_DOWN_TIMEOUT
-value|10
+value|100
 end_define
 
 begin_function_decl

@@ -13677,7 +13677,7 @@ else|:
 literal|1
 operator|)
 operator|/
-literal|100
+literal|10
 argument_list|,
 name|intel_ntb_exchange_msix
 argument_list|,
