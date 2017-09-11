@@ -59,6 +59,10 @@ name|device_t
 name|owner
 decl_stmt|;
 comment|/* iicbus owner device structure */
+name|u_int
+name|owncount
+decl_stmt|;
+comment|/* iicbus ownership nesting count */
 name|u_char
 name|started
 decl_stmt|;
