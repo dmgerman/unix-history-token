@@ -663,6 +663,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|mtx
+name|atrtc_time_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|atrtcclock_disable
 decl_stmt|;

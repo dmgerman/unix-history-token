@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isa/rtc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/fpu.h>
 end_include
 
@@ -1912,7 +1918,7 @@ decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
-name|resettodr_lock
+name|atrtc_time_lock
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1989,7 +1995,7 @@ return|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|resettodr_lock
+name|atrtc_time_lock
 argument_list|)
 expr_stmt|;
 name|error
@@ -2002,7 +2008,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|resettodr_lock
+name|atrtc_time_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2082,7 +2088,7 @@ decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
-name|resettodr_lock
+name|atrtc_time_lock
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -2157,7 +2163,7 @@ return|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|resettodr_lock
+name|atrtc_time_lock
 argument_list|)
 expr_stmt|;
 name|error
@@ -2170,7 +2176,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|resettodr_lock
+name|atrtc_time_lock
 argument_list|)
 expr_stmt|;
 return|return
