@@ -4661,6 +4661,21 @@ argument_list|,
 name|ntb_plx_detach
 argument_list|)
 block|,
+comment|/* Bus interface */
+name|DEVMETHOD
+argument_list|(
+name|bus_child_location_str
+argument_list|,
+name|ntb_child_location_str
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_print_child
+argument_list|,
+name|ntb_print_child
+argument_list|)
+block|,
 comment|/* NTB interface */
 name|DEVMETHOD
 argument_list|(
