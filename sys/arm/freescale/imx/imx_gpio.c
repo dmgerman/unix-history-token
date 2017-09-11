@@ -2902,7 +2902,7 @@ name|READ4
 argument_list|(
 name|sc
 argument_list|,
-name|IMX_GPIO_DR_REG
+name|IMX_GPIO_PSR_REG
 argument_list|)
 operator|>>
 name|pin
