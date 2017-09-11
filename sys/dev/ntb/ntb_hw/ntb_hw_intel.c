@@ -150,7 +150,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntb_regs.h"
+file|"ntb_hw_intel.h"
 end_include
 
 begin_include
@@ -15930,7 +15930,7 @@ end_expr_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|ntb_intel
+name|ntb_hw_intel
 argument_list|,
 name|pci
 argument_list|,
@@ -15948,7 +15948,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|ntb_intel
+name|ntb_hw_intel
 argument_list|,
 name|ntb
 argument_list|,
@@ -15964,7 +15964,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|ntb_intel
+name|ntb_hw_intel
 argument_list|,
 literal|1
 argument_list|)
