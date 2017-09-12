@@ -2348,6 +2348,13 @@ expr_stmt|;
 name|free
 argument_list|(
 name|tftpfile
+operator|->
+name|pkt
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|tftpfile
 argument_list|)
 expr_stmt|;
 return|return
