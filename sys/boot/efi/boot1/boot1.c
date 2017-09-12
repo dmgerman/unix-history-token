@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|NUM_BOOT_MODULES
-value|(sizeof(boot_modules) / sizeof(boot_module_t*))
+value|nitems(boot_modules)
 end_define
 
 begin_comment
@@ -1359,16 +1359,6 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|boot_modules
-index|[
-name|i
-index|]
-operator|==
-name|NULL
-condition|)
-continue|continue;
 name|mod
 operator|=
 name|boot_modules
@@ -1457,7 +1447,9 @@ begin_function
 specifier|static
 name|EFI_STATUS
 name|try_boot
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|bufsize
@@ -2142,16 +2134,6 @@ control|)
 block|{
 if|if
 condition|(
-name|boot_modules
-index|[
-name|i
-index|]
-operator|==
-name|NULL
-condition|)
-continue|continue;
-if|if
-condition|(
 operator|(
 name|status
 operator|=
@@ -2642,16 +2624,6 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|boot_modules
-index|[
-name|i
-index|]
-operator|==
-name|NULL
-condition|)
-continue|continue;
 name|printf
 argument_list|(
 literal|" %s"
@@ -3020,16 +2992,6 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|boot_modules
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"    "
@@ -3043,7 +3005,6 @@ operator|->
 name|status
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 name|try_boot
 argument_list|()

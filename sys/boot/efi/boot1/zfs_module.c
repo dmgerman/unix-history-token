@@ -913,7 +913,9 @@ begin_function
 specifier|static
 name|void
 name|status
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|spa_t
 modifier|*
@@ -983,7 +985,9 @@ begin_function
 specifier|static
 name|void
 name|init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|zfs_init
 argument_list|()
@@ -996,7 +1000,9 @@ specifier|static
 name|dev_info_t
 modifier|*
 name|_devices
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
