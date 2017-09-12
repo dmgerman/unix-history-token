@@ -3540,7 +3540,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lookup entry point for the 'snapshot' directory.  Try to open the  * snapshot if it exist, creating the pseudo filesystem vnode as necessary.  * Perform a mount of the associated dataset on top of the vnode.  */
+comment|/*  * Lookup entry point for the 'snapshot' directory.  Try to open the  * snapshot if it exist, creating the pseudo filesystem vnode as necessary.  * Perform a mount of the associated dataset on top of the vnode.  * There are four possibilities:  * - the snapshot node and vnode do not exist  * - the snapshot vnode is covered by the mounted snapshot  * - the snapshot vnode is not covered yet, the mount operation is in progress  * - the snapshot vnode is not covered, because the snapshot has been unmounted  * The last two states are transient and should be relatively short-lived.  */
 end_comment
 
 begin_function
@@ -3878,7 +3878,7 @@ operator|==
 name|LK_EXCLUSIVE
 condition|)
 break|break;
-comment|/* 		 * The vnode must be referenced at least by this thread and 		 * the mounted snapshot or the thread doing the mounting. 		 * There can be more references from concurrent lookups. 		 */
+comment|/* 		 * The vnode must be referenced at least by this thread and 		 * the mount point or the thread doing the mounting. 		 * There can be more references from concurrent lookups. 		 */
 name|KASSERT
 argument_list|(
 name|vrefcnt
@@ -3915,18 +3915,15 @@ operator|(
 name|err
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-comment|/* 		 * If the vnode not covered yet, then the mount operation 		 * must be in progress. 		 */
+comment|/* 		 * If the vnode is not covered, then either the mount operation 		 * is in progress or the snapshot has already been unmounted 		 * but the vnode hasn't been inactivated and reclaimed yet. 		 * We can try to re-use the vnode in the latter case. 		 */
 name|VI_LOCK
 argument_list|(
 operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 operator|(
 operator|(
 operator|*
@@ -3937,29 +3934,47 @@ name|v_iflag
 operator|&
 name|VI_MOUNT
 operator|)
-operator|!=
+operator|==
 literal|0
+condition|)
+block|{
+comment|/* Upgrade to exclusive lock in order to: 			 * - avoid race conditions 			 * - satisfy the contract of mount_snapshot() 			 */
+name|err
+operator|=
+name|VOP_LOCK
+argument_list|(
+operator|*
+name|vpp
 argument_list|,
-operator|(
-literal|"snapshot vnode not covered"
-operator|)
+name|LK_TRYUPGRADE
+operator||
+name|LK_INTERLOCK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+else|else
+block|{
 name|VI_UNLOCK
 argument_list|(
 operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
+comment|/* 		 * In this state we can loop on uncontested locks and starve 		 * the thread doing the lengthy, non-trivial mount operation. 		 * So, yield to prevent that from happening. 		 */
 name|vput
 argument_list|(
 operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * In this situation we can loop on uncontested locks and starve 		 * the thread doing the lengthy, non-trivial mount operation. 		 */
 name|kern_yield
 argument_list|(
 name|PRI_USER
