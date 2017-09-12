@@ -2482,7 +2482,7 @@ index|[
 name|TCP_FUNCTION_NAME_LEN_MAX
 index|]
 decl_stmt|;
-comment|/* (n) */
+comment|/* (s) */
 name|int64_t
 name|spare64
 index|[
