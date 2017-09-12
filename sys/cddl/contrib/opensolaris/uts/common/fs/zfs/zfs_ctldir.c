@@ -1780,10 +1780,6 @@ begin_comment
 comment|/*  * Common open routine.  Disallow any write access.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1853,10 +1849,6 @@ end_function
 
 begin_comment
 comment|/*  * Common access routine.  Disallow writes.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -2036,10 +2028,6 @@ literal|2
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 specifier|static
@@ -2256,10 +2244,6 @@ end_function
 
 begin_comment
 comment|/*  * Get root directory attributes.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -3559,10 +3543,6 @@ begin_comment
 comment|/*  * Lookup entry point for the 'snapshot' directory.  Try to open the  * snapshot if it exist, creating the pseudo filesystem vnode as necessary.  * Perform a mount of the associated dataset on top of the vnode.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|zfsctl_snapdir_lookup
@@ -4461,10 +4441,6 @@ block|}
 comment|/* NOTREACHED */
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
