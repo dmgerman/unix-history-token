@@ -720,6 +720,11 @@ name|Elf_Word
 name|gotsym
 decl_stmt|;
 comment|/* First dynamic symbol in GOT */
+name|Elf_Addr
+modifier|*
+name|mips_pltgot
+decl_stmt|;
+comment|/* Second PLT GOT */
 endif|#
 directive|endif
 ifdef|#
