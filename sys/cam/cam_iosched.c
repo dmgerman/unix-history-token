@@ -4218,7 +4218,12 @@ operator|)
 operator|->
 name|quanta
 operator|=
+name|min
+argument_list|(
+name|hz
+argument_list|,
 literal|200
+argument_list|)
 expr_stmt|;
 name|cam_iosched_iop_stats_init
 argument_list|(
