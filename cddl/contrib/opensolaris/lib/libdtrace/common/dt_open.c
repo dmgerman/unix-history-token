@@ -7503,6 +7503,8 @@ argument_list|(
 literal|"/dev/dtrace/dtrace"
 argument_list|,
 name|O_RDWR
+operator||
+name|O_CLOEXEC
 argument_list|)
 expr_stmt|;
 name|err
