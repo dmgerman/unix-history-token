@@ -28,6 +28,12 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|Struct_Obj_Entry
@@ -247,6 +253,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARM_FP
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -262,6 +274,25 @@ define|#
 directive|define
 name|RTLD_VARIANT_ENV_NAMES
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|md_abi_variant_hook
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
