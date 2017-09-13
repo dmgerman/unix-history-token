@@ -59,6 +59,33 @@ begin_comment
 comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  * List of locks  *	(c)	const until freed  *	(o)	per-object lock   *	(f)	free pages queue mutex  *  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_PAGE_HAVE_PGLIST
+end_ifndef
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|pglist
+argument_list|,
+name|vm_page
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|VM_PAGE_HAVE_PGLIST
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|vm_object
@@ -89,14 +116,10 @@ argument_list|)
 name|shadow_list
 expr_stmt|;
 comment|/* chain of shadow objects */
-name|TAILQ_HEAD
-argument_list|(
-argument|respgs
-argument_list|,
-argument|vm_page
-argument_list|)
+name|struct
+name|pglist
 name|memq
-expr_stmt|;
+decl_stmt|;
 comment|/* list of resident pages */
 name|struct
 name|vm_radix
