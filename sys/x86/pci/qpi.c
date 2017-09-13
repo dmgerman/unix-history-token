@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2010 Hudson River Trading LLC  * Written by: John H
 end_comment
 
 begin_comment
-comment|/*  * This driver provides a psuedo-bus to enumerate the PCI buses  * present on a sytem using a QPI chipset.  It creates a qpi0 bus that  * is a child of nexus0 and then creates two Host-PCI bridges as a  * child of that.  */
+comment|/*  * This driver provides a pseudo-bus to enumerate the PCI buses  * present on a system using a QPI chipset.  It creates a qpi0 bus that  * is a child of nexus0 and then creates Host-PCI bridges as a  * child of that.  */
 end_comment
 
 begin_include
