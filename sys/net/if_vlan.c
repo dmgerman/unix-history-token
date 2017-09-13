@@ -5934,7 +5934,9 @@ expr_stmt|;
 comment|/* Pass it back through the parent's input routine. */
 call|(
 modifier|*
-name|ifp
+name|ifv
+operator|->
+name|ifv_ifp
 operator|->
 name|if_input
 call|)
