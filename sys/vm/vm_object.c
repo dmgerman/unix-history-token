@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pctrie.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -735,6 +741,12 @@ name|shadow_count
 operator|=
 literal|0
 expr_stmt|;
+name|object
+operator|->
+name|flags
+operator|=
+name|OBJ_DEAD
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -801,6 +813,28 @@ operator|->
 name|type
 operator|=
 name|type
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|OBJT_SWAP
+condition|)
+name|pctrie_init
+argument_list|(
+operator|&
+name|object
+operator|->
+name|un_pager
+operator|.
+name|swp
+operator|.
+name|swp_blks
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Ensure that swap_pager_swapoff() iteration over object_list 	 * sees up to date type and pctrie head if it observed 	 * non-dead object. 	 */
+name|atomic_thread_fence_rel
+argument_list|()
 expr_stmt|;
 switch|switch
 condition|(

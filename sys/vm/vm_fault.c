@@ -692,7 +692,7 @@ operator|~
 name|VPO_NOSYNC
 expr_stmt|;
 block|}
-comment|/* 	 * If the fault is a write, we know that this page is being 	 * written NOW so dirty it explicitly to save on 	 * pmap_is_modified() calls later. 	 * 	 * Also tell the backing pager, if any, that it should remove 	 * any swap backing since the page is now dirty. 	 */
+comment|/* 	 * If the fault is a write, we know that this page is being 	 * written NOW so dirty it explicitly to save on 	 * pmap_is_modified() calls later. 	 * 	 * Also, since the page is now dirty, we can possibly tell 	 * the pager to release any swap backing the page.  Calling 	 * the pager requires a write lock on the object. 	 */
 if|if
 condition|(
 name|need_dirty
@@ -712,6 +712,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|need_dirty

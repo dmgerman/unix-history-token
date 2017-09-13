@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_pctrie.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_rwlock.h>
 end_include
 
@@ -216,15 +222,16 @@ expr_stmt|;
 block|}
 name|sgp
 struct|;
-comment|/* 		 * Swap pager 		 * 		 *	swp_tmpfs - back-pointer to the tmpfs vnode, 		 *		     if any, which uses the vm object 		 *		     as backing store.  The handle 		 *		     cannot be reused for linking, 		 *		     because the vnode can be 		 *		     reclaimed and recreated, making 		 *		     the handle changed and hash-chain 		 *		     invalid. 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
+comment|/* 		 * Swap pager 		 * 		 *	swp_tmpfs - back-pointer to the tmpfs vnode, 		 *		     if any, which uses the vm object 		 *		     as backing store.  The handle 		 *		     cannot be reused for linking, 		 *		     because the vnode can be 		 *		     reclaimed and recreated, making 		 *		     the handle changed and hash-chain 		 *		     invalid. 		 * 		 *	swp_blks -   pc-trie of the allocated swap blocks. 		 * 		 */
 struct|struct
 block|{
 name|void
 modifier|*
 name|swp_tmpfs
 decl_stmt|;
-name|int
-name|swp_bcount
+name|struct
+name|pctrie
+name|swp_blks
 decl_stmt|;
 block|}
 name|swp
