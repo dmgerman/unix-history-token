@@ -215,6 +215,9 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|boolean_t
+name|libzfs_prop_debug
+decl_stmt|;
 block|}
 struct|;
 struct|struct

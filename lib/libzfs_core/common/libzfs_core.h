@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 RackTop Systems.  */
+comment|/*  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 RackTop Systems.  */
 end_comment
 
 begin_ifndef
@@ -404,6 +404,29 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|lzc_channel_program
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|nvlist_t
+modifier|*
+parameter_list|,
+name|nvlist_t
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
