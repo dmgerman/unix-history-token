@@ -248,13 +248,6 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|cold
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 specifier|inline
