@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 Joyent, Inc.  * Copyright (c) 2017 Datto Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 Joyent, Inc.  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_comment
@@ -478,6 +478,11 @@ define|#
 directive|define
 name|ZPOOL_ROOTFS_PROPS
 value|"root-props-nvl"
+comment|/*  * Length of 'written@' and 'written#'  */
+define|#
+directive|define
+name|ZFS_WRITTEN_PROP_PREFIX_LEN
+value|8
 comment|/*  * Dataset property functions shared between libzfs and kernel.  */
 specifier|const
 name|char
@@ -497,6 +502,13 @@ name|boolean_t
 name|zfs_prop_readonly
 parameter_list|(
 name|zfs_prop_t
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|zfs_prop_visible
+parameter_list|(
+name|zfs_prop_t
+name|prop
 parameter_list|)
 function_decl|;
 name|boolean_t
@@ -2303,6 +2315,8 @@ name|ZFS_IOC_GET_BOOKMARKS
 block|,
 name|ZFS_IOC_DESTROY_BOOKMARKS
 block|,
+name|ZFS_IOC_CHANNEL_PROGRAM
+block|,
 name|ZFS_IOC_LAST
 block|}
 name|zfs_ioc_t
@@ -2412,6 +2426,10 @@ define|#
 directive|define
 name|ZPOOL_HIST_DSID
 value|"dsid"
+define|#
+directive|define
+name|ZPOOL_HIST_ERRNO
+value|"errno"
 comment|/*  * Flags for ZFS_IOC_VDEV_SET_STATE  */
 define|#
 directive|define
@@ -2454,6 +2472,51 @@ define|#
 directive|define
 name|ZFS_IMPORT_ONLY
 value|0x8
+comment|/*  * Channel program argument/return nvlist keys and defaults.  */
+define|#
+directive|define
+name|ZCP_ARG_PROGRAM
+value|"program"
+define|#
+directive|define
+name|ZCP_ARG_ARGLIST
+value|"arg"
+define|#
+directive|define
+name|ZCP_ARG_INSTRLIMIT
+value|"instrlimit"
+define|#
+directive|define
+name|ZCP_ARG_MEMLIMIT
+value|"memlimit"
+define|#
+directive|define
+name|ZCP_ARG_CLIARGV
+value|"argv"
+define|#
+directive|define
+name|ZCP_RET_ERROR
+value|"error"
+define|#
+directive|define
+name|ZCP_RET_RETURN
+value|"return"
+define|#
+directive|define
+name|ZCP_DEFAULT_INSTRLIMIT
+value|(10 * 1000 * 1000)
+define|#
+directive|define
+name|ZCP_MAX_INSTRLIMIT
+value|(10 * ZCP_DEFAULT_INSTRLIMIT)
+define|#
+directive|define
+name|ZCP_DEFAULT_MEMLIMIT
+value|(10 * 1024 * 1024)
+define|#
+directive|define
+name|ZCP_MAX_MEMLIMIT
+value|(10 * ZCP_DEFAULT_MEMLIMIT)
 comment|/*  * Sysevent payload members.  ZFS will generate the following sysevents with the  * given payloads:  *  *	ESC_ZFS_RESILVER_START  *	ESC_ZFS_RESILVER_END  *	ESC_ZFS_POOL_DESTROY  *	ESC_ZFS_POOL_REGUID  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *  *	ESC_ZFS_VDEV_REMOVE  *	ESC_ZFS_VDEV_CLEAR  *	ESC_ZFS_VDEV_CHECK  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *		ZFS_EV_VDEV_PATH	DATA_TYPE_STRING	(optional)  *		ZFS_EV_VDEV_GUID	DATA_TYPE_UINT64  *  *	ESC_ZFS_HISTORY_EVENT  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *		ZFS_EV_HIST_TIME	DATA_TYPE_UINT64	(optional)  *		ZFS_EV_HIST_CMD		DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_WHO		DATA_TYPE_UINT64	(optional)  *		ZFS_EV_HIST_ZONE	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_HOST	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_TXG		DATA_TYPE_UINT64	(optional)  *		ZFS_EV_HIST_INT_EVENT	DATA_TYPE_UINT64	(optional)  *		ZFS_EV_HIST_INT_STR	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_INT_NAME	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_IOCTL	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_DSNAME	DATA_TYPE_STRING	(optional)  *		ZFS_EV_HIST_DSID	DATA_TYPE_UINT64	(optional)  *  * The ZFS_EV_HIST_* members will correspond to the ZPOOL_HIST_* members in the  * history log nvlist.  The keynames will be free of any spaces or other  * characters that could be potentially unexpected to consumers of the  * sysevents.  */
 define|#
 directive|define

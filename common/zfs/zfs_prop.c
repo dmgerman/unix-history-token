@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -1765,7 +1765,9 @@ literal|0
 argument_list|,
 name|PROP_READONLY
 argument_list|,
-name|ZFS_TYPE_DATASET
+name|ZFS_TYPE_FILESYSTEM
+operator||
+name|ZFS_TYPE_VOLUME
 argument_list|,
 literal|"<size>"
 argument_list|,
@@ -2680,6 +2682,31 @@ operator|.
 name|pd_attr
 operator|==
 name|PROP_ONETIME
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns TRUE if the property is visible (not hidden).  */
+end_comment
+
+begin_function
+name|boolean_t
+name|zfs_prop_visible
+parameter_list|(
+name|zfs_prop_t
+name|prop
+parameter_list|)
+block|{
+return|return
+operator|(
+name|zfs_prop_table
+index|[
+name|prop
+index|]
+operator|.
+name|pd_visible
 operator|)
 return|;
 block|}
