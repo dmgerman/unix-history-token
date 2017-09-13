@@ -1472,6 +1472,10 @@ name|struct
 name|tx_ring
 name|txr
 decl_stmt|;
+name|struct
+name|if_irq
+name|que_irq
+decl_stmt|;
 block|}
 struct|;
 end_struct

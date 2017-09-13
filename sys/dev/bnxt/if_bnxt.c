@@ -8380,12 +8380,12 @@ condition|;
 name|i
 operator|++
 control|)
+comment|/* TODO: Benchmark and see if tying to the RX irqs helps */
 name|iflib_softirq_alloc_generic
 argument_list|(
 name|ctx
 argument_list|,
-name|i
-operator|+
+operator|-
 literal|1
 argument_list|,
 name|IFLIB_INTR_TX

@@ -3960,9 +3960,6 @@ decl_stmt|;
 name|u32
 name|smb_counter
 decl_stmt|;
-name|E1000_MUTEX
-name|swflag_mutex
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -4029,12 +4026,6 @@ name|shadow_ram
 index|[
 name|E1000_SHADOW_RAM_WORDS
 index|]
-decl_stmt|;
-name|E1000_MUTEX
-name|nvm_mutex
-decl_stmt|;
-name|E1000_MUTEX
-name|swflag_mutex
 decl_stmt|;
 name|bool
 name|nvm_k1_enabled
