@@ -4483,6 +4483,12 @@ operator|<=
 name|readstart
 condition|)
 block|{
+if|if
+condition|(
+name|rsize
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|rsize
 operator|=
