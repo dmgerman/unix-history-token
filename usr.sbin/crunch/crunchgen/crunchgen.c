@@ -5727,6 +5727,7 @@ argument_list|(
 name|outmk
 argument_list|,
 literal|"\techo \""
+literal|"extern int main(int argc, char **argv, char **envp); "
 literal|"int _crunched_%s_stub(int argc, char **argv, char **envp)"
 literal|"{return main(argc,argv,envp);}\">%s_stub.c\n"
 argument_list|,

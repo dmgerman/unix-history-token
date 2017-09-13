@@ -71,7 +71,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExConvertToInteger  *  * PARAMETERS:  ObjDesc         - Object to be converted. Must be an  *                                Integer, Buffer, or String  *              ResultDesc      - Where the new Integer object is returned  *              Flags           - Used for string conversion  *  * RETURN:      Status  *  * DESCRIPTION: Convert an ACPI Object to an integer.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExConvertToInteger  *  * PARAMETERS:  ObjDesc             - Object to be converted. Must be an  *                                    Integer, Buffer, or String  *              ResultDesc          - Where the new Integer object is returned  *              ImplicitConversion  - Used for string conversion  *  * RETURN:      Status  *  * DESCRIPTION: Convert an ACPI Object to an integer.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -88,7 +88,7 @@ modifier|*
 name|ResultDesc
 parameter_list|,
 name|UINT32
-name|Flags
+name|ImplicitConversion
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
@@ -107,9 +107,6 @@ name|i
 decl_stmt|;
 name|UINT32
 name|Count
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
@@ -190,10 +187,15 @@ block|{
 case|case
 name|ACPI_TYPE_STRING
 case|:
-comment|/*          * Convert string to an integer - for most cases, the string must be          * hexadecimal as per the ACPI specification. The only exception (as          * of ACPI 3.0) is that the ToInteger() operator allows both decimal          * and hexadecimal strings (hex prefixed with "0x").          */
-name|Status
+comment|/*          * Convert string to an integer - for most cases, the string must be          * hexadecimal as per the ACPI specification. The only exception (as          * of ACPI 3.0) is that the ToInteger() operator allows both decimal          * and hexadecimal strings (hex prefixed with "0x").          *          * Explicit conversion is used only by ToInteger.          * All other string-to-integer conversions are implicit conversions.          */
+if|if
+condition|(
+name|ImplicitConversion
+condition|)
+block|{
+name|Result
 operator|=
-name|AcpiUtStrtoul64
+name|AcpiUtImplicitStrtoul64
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(
@@ -201,28 +203,21 @@ name|char
 argument_list|,
 name|Pointer
 argument_list|)
-argument_list|,
-operator|(
-name|AcpiGbl_IntegerByteWidth
-operator||
-name|Flags
-operator|)
-argument_list|,
-operator|&
-name|Result
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
+block|}
+else|else
 block|{
-name|return_ACPI_STATUS
+name|Result
+operator|=
+name|AcpiUtExplicitStrtoul64
 argument_list|(
-name|Status
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
+name|Pointer
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1425,7 +1420,7 @@ name|SourceDesc
 argument_list|,
 name|ResultDesc
 argument_list|,
-name|ACPI_STRTOUL_BASE16
+name|ACPI_IMPLICIT_CONVERSION
 argument_list|)
 expr_stmt|;
 break|break;

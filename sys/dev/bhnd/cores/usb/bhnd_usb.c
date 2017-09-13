@@ -116,53 +116,9 @@ name|BHND_DEVICE
 argument_list|(
 name|BCM
 argument_list|,
-name|USB
-argument_list|,
-literal|"USB1.1 Host/Device core"
-argument_list|,
-name|NULL
-argument_list|)
-block|,
-name|BHND_DEVICE
-argument_list|(
-name|BCM
-argument_list|,
 name|USB20H
 argument_list|,
 literal|"USB2.0 Host core"
-argument_list|,
-name|NULL
-argument_list|)
-block|,
-name|BHND_DEVICE
-argument_list|(
-name|BCM
-argument_list|,
-name|USB20D
-argument_list|,
-literal|"USB2.0 Device core"
-argument_list|,
-name|NULL
-argument_list|)
-block|,
-name|BHND_DEVICE
-argument_list|(
-name|BCM
-argument_list|,
-name|USB11H
-argument_list|,
-literal|"USB1.1 Host core"
-argument_list|,
-name|NULL
-argument_list|)
-block|,
-name|BHND_DEVICE
-argument_list|(
-name|BCM
-argument_list|,
-name|USB11D
-argument_list|,
-literal|"USB1.1 Device core"
 argument_list|,
 name|NULL
 argument_list|)
@@ -767,6 +723,11 @@ condition|)
 block|{
 name|uint32_t
 name|rev
+init|=
+name|bhnd_get_hwrev
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|BHND_INFO_DEV
 argument_list|(
@@ -775,13 +736,6 @@ argument_list|,
 literal|"USB HOST 2.0 setup for rev %d"
 argument_list|,
 name|rev
-argument_list|)
-expr_stmt|;
-name|rev
-operator|=
-name|bhnd_get_hwrev
-argument_list|(
-name|dev
 argument_list|)
 expr_stmt|;
 if|if

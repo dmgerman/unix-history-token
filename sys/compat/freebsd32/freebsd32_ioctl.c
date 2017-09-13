@@ -149,10 +149,6 @@ directive|include
 file|<compat/freebsd32/freebsd32_proto.h>
 end_include
 
-begin_comment
-comment|/* Cannot get exact size in 64-bit due to alignment issue of entire struct. */
-end_comment
-
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
@@ -162,8 +158,6 @@ argument_list|(
 expr|struct
 name|md_ioctl32
 argument_list|)
-operator|+
-literal|4
 operator|)
 operator|==
 literal|436
@@ -407,6 +401,15 @@ argument_list|,
 name|md_fwsectors
 argument_list|)
 expr_stmt|;
+name|PTRIN_CP
+argument_list|(
+name|md32
+argument_list|,
+name|mdv
+argument_list|,
+name|md_label
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -603,6 +606,15 @@ argument_list|,
 name|md32
 argument_list|,
 name|md_fwsectors
+argument_list|)
+expr_stmt|;
+name|PTROUT_CP
+argument_list|(
+name|mdv
+argument_list|,
+name|md32
+argument_list|,
+name|md_label
 argument_list|)
 expr_stmt|;
 if|if

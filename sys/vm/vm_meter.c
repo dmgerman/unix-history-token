@@ -146,6 +146,7 @@ end_include
 begin_decl_stmt
 name|struct
 name|vmmeter
+name|__exclusive_cache_line
 name|vm_cnt
 init|=
 block|{

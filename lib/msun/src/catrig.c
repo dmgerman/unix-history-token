@@ -1813,7 +1813,7 @@ operator|=
 name|t
 expr_stmt|;
 block|}
-comment|/* 	 * Avoid overflow in hypot() when x and y are both very large. 	 * Divide x and y by E, and then add 1 to the logarithm.  This depends 	 * on E being larger than sqrt(2). 	 * Dividing by E causes an insignificant loss of accuracy; however 	 * this method is still poor since it is uneccessarily slow. 	 */
+comment|/* 	 * Avoid overflow in hypot() when x and y are both very large. 	 * Divide x and y by E, and then add 1 to the logarithm.  This 	 * depends on E being larger than sqrt(2), since the return value of 	 * hypot cannot overflow if neither argument is greater in magnitude 	 * than 1/sqrt(2) of the maximum value of the return type.  Likewise 	 * this determines the necessary threshold for using this method 	 * (however, actually use 1/2 instead as it is simpler). 	 * 	 * Dividing by E causes an insignificant loss of accuracy; however 	 * this method is still poor since it is uneccessarily slow. 	 */
 if|if
 condition|(
 name|ax

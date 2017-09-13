@@ -117,6 +117,12 @@ directive|include
 file|"ti_scm.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ti_cpuid.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -194,6 +200,17 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ti_soc_is_supported
+argument_list|()
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 operator|!

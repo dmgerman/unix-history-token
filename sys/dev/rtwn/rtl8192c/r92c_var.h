@@ -141,7 +141,7 @@ name|struct
 name|ieee80211_channel
 modifier|*
 parameter_list|,
-name|uint16_t
+name|uint8_t
 index|[]
 parameter_list|)
 function_decl|;

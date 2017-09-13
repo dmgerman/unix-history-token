@@ -29,6 +29,23 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBEFI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stand.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -53,6 +70,11 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -70,6 +92,40 @@ include|#
 directive|include
 file|"efichar.h"
 end_include
+
+begin_function
+name|int
+name|ucs2len
+parameter_list|(
+specifier|const
+name|efi_char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|str
+operator|++
+condition|)
+name|i
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|i
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * If nm were converted to utf8, what what would strlen  * return on the resulting string?  */

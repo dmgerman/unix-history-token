@@ -78,6 +78,16 @@ parameter_list|)
 value|(sx_xholder(&(m)->sx) == curthread)
 end_define
 
+begin_define
+define|#
+directive|define
+name|might_lock
+parameter_list|(
+name|m
+parameter_list|)
+value|do { } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

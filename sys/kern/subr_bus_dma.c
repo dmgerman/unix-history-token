@@ -1007,7 +1007,9 @@ name|dxfer_len
 expr_stmt|;
 name|sglist_cnt
 operator|=
-literal|0
+name|nvmeio
+operator|->
+name|sglist_cnt
 expr_stmt|;
 break|break;
 block|}

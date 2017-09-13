@@ -4240,6 +4240,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|ScalarizeVecOp_VSETCC
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|ScalarizeVecOp_STORE
 parameter_list|(
 name|StoreSDNode

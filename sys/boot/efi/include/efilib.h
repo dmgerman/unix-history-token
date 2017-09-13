@@ -176,6 +176,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|pdinfo_t
+modifier|*
+name|efiblk_get_pdinfo
+parameter_list|(
+name|struct
+name|devdesc
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|efi_get_table
@@ -436,6 +449,20 @@ end_function_decl
 
 begin_function_decl
 name|EFI_STATUS
+name|efi_main
+parameter_list|(
+name|EFI_HANDLE
+name|Ximage
+parameter_list|,
+name|EFI_SYSTEM_TABLE
+modifier|*
+name|Xsystab
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|EFI_STATUS
 name|main
 parameter_list|(
 name|int
@@ -449,15 +476,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|exit
-parameter_list|(
+argument_list|(
 name|EFI_STATUS
 name|status
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

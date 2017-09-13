@@ -12924,8 +12924,13 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|p
+operator|!=
+name|NULL
+operator|)
 operator|&&
+operator|(
 operator|(
 name|error
 operator|=
@@ -12935,6 +12940,9 @@ name|p
 argument_list|,
 name|PRIV_NETINET_RESERVEDPORT
 argument_list|)
+operator|)
+operator|!=
+literal|0
 operator|)
 condition|)
 block|{

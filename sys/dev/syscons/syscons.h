@@ -653,21 +653,33 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* text cursor attributes */
+comment|/* text and some mouse cursor attributes */
 end_comment
 
 begin_struct
 struct|struct
 name|cursor_attr
 block|{
-name|int
+name|u_char
 name|flags
 decl_stmt|;
-name|int
+name|u_char
 name|base
 decl_stmt|;
-name|int
+name|u_char
 name|height
+decl_stmt|;
+name|u_char
+name|bg
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_char
+name|mouse_ba
+decl_stmt|;
+name|u_char
+name|mouse_ia
 decl_stmt|;
 block|}
 struct|;

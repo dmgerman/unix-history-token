@@ -40,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|MDNPAD
-value|97
+value|96
 end_define
 
 begin_struct
@@ -89,6 +89,11 @@ name|int
 name|md_fwsectors
 decl_stmt|;
 comment|/* firmware sectors */
+name|char
+modifier|*
+name|md_label
+decl_stmt|;
+comment|/* label of the device */
 name|int
 name|md_pad
 index|[

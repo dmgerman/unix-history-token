@@ -915,7 +915,7 @@ begin_define
 define|#
 directive|define
 name|ID_AA64DFR0_MASK
-value|0xf0f0ffff
+value|0x0000000ff0f0fffful
 end_define
 
 begin_define
@@ -954,6 +954,13 @@ define|#
 directive|define
 name|ID_AA64DFR0_DEBUG_VER_8_VHE
 value|(0x7<< ID_AA64DFR0_DEBUG_VER_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64DFR0_DEBUG_VER_8_2
+value|(0x8<< ID_AA64DFR0_DEBUG_VER_SHIFT)
 end_define
 
 begin_define
@@ -1119,6 +1126,44 @@ name|x
 parameter_list|)
 define|\
 value|((((x)>> ID_AA64DFR0_CTX_CMPS_SHIFT)& 0xf) + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64DFR0_PMS_VER_SHIFT
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64DFR0_PMS_VER_MASK
+value|(0xful<< ID_AA64DFR0_PMS_VER_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64DFR0_PMS_VER
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64DFR0_PMS_VER_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64DFR0_PMS_VER_NONE
+value|(0x0ul<< ID_AA64DFR0_PMS_VER_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64DFR0_PMS_VER_V1
+value|(0x1ul<< ID_AA64DFR0_PMS_VER_SHIFT)
 end_define
 
 begin_comment
@@ -1368,6 +1413,55 @@ value|(0x1<< ID_AA64ISAR0_RDM_SHIFT)
 end_define
 
 begin_comment
+comment|/* ID_AA64ISAR1_EL1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR1_MASK
+value|0x0000000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR1_DPB_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR1_DPB_MASK
+value|(0xf<< ID_AA64ISAR1_DPB_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR1_DPB
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64ISAR1_DPB_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR1_DPB_NONE
+value|(0x0<< ID_AA64ISAR1_DPB_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR1_DPB_IMPL
+value|(0x1<< ID_AA64ISAR1_DPB_SHIFT)
+end_define
+
+begin_comment
 comment|/* ID_AA64MMFR0_EL1 */
 end_comment
 
@@ -1442,6 +1536,13 @@ define|#
 directive|define
 name|ID_AA64MMFR0_PA_RANGE_256T
 value|(0x5<< ID_AA64MMFR0_PA_RANGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR0_PA_RANGE_4P
+value|(0x6<< ID_AA64MMFR0_PA_RANGE_SHIFT)
 end_define
 
 begin_define
@@ -1718,7 +1819,7 @@ begin_define
 define|#
 directive|define
 name|ID_AA64MMFR1_MASK
-value|0x00ffffff
+value|0xffffffff
 end_define
 
 begin_define
@@ -1876,8 +1977,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ID_AA64MMFR1_HPDS_IMPL
+name|ID_AA64MMFR1_HPDS_HPD
 value|(0x1<< ID_AA64MMFR1_HPDS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS_TTPBHA
+value|(0x2<< ID_AA64MMFR1_HPDS_SHIFT)
 end_define
 
 begin_define
@@ -1963,6 +2071,290 @@ name|ID_AA64MMFR1_PAN_ATS1E1
 value|(0x2<< ID_AA64MMFR1_PAN_SHIFT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_SPEC_SEI_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_SPEC_SEI_MASK
+value|(0xf<< ID_AA64MMFR1_SPEC_SEI_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_SPEC_SEI
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_SPEC_SEI_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_SPEC_SEI_NONE
+value|(0x0<< ID_AA64MMFR1_SPEC_SEI_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_SPEC_SEI_IMPL
+value|(0x1<< ID_AA64MMFR1_SPEC_SEI_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_XNX_SHIFT
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_XNX_MASK
+value|(0xf<< ID_AA64MMFR1_XNX_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_XNX
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_XNX_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_XNX_NONE
+value|(0x0<< ID_AA64MMFR1_XNX_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_XNX_IMPL
+value|(0x1<< ID_AA64MMFR1_XNX_SHIFT)
+end_define
+
+begin_comment
+comment|/* ID_AA64MMFR2_EL1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_EL1
+value|S3_0_C0_C7_2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_MASK
+value|0x000fffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_CNP_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_CNP_MASK
+value|(0xf<< ID_AA64MMFR2_CNP_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_CNP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR2_CNP_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_CNP_NONE
+value|(0x0<< ID_AA64MMFR2_CNP_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_CNP_IMPL
+value|(0x1<< ID_AA64MMFR2_CNP_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_UAO_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_UAO_MASK
+value|(0xf<< ID_AA64MMFR2_UAO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_UAO
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR2_UAO_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_UAO_NONE
+value|(0x0<< ID_AA64MMFR2_UAO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_UAO_IMPL
+value|(0x1<< ID_AA64MMFR2_UAO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_LSM_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_LSM_MASK
+value|(0xf<< ID_AA64MMFR2_LSM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_LSM
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR2_LSM_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_LSM_NONE
+value|(0x0<< ID_AA64MMFR2_LSM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_LSM_IMPL
+value|(0x1<< ID_AA64MMFR2_LSM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_IESB_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_IESB_MASK
+value|(0xf<< ID_AA64MMFR2_IESB_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_IESB
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR2_IESB_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_IESB_NONE
+value|(0x0<< ID_AA64MMFR2_IESB_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_IESB_IMPL
+value|(0x1<< ID_AA64MMFR2_IESB_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_VA_RANGE_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_VA_RANGE_MASK
+value|(0xf<< ID_AA64MMFR2_VA_RANGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_VA_RANGE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR2_VA_RANGE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_VA_RANGE_48
+value|(0x0<< ID_AA64MMFR2_VA_RANGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR2_VA_RANGE_52
+value|(0x1<< ID_AA64MMFR2_VA_RANGE_SHIFT)
+end_define
+
 begin_comment
 comment|/* ID_AA64PFR0_EL1 */
 end_comment
@@ -1971,7 +2363,7 @@ begin_define
 define|#
 directive|define
 name|ID_AA64PFR0_MASK
-value|0x0fffffff
+value|0x0000000ffffffffful
 end_define
 
 begin_define
@@ -2174,6 +2566,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_AA64PFR0_FP_HP
+value|(0x1<< ID_AA64PFR0_FP_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_AA64PFR0_FP_NONE
 value|(0xf<< ID_AA64PFR0_FP_SHIFT)
 end_define
@@ -2207,6 +2606,13 @@ define|#
 directive|define
 name|ID_AA64PFR0_ADV_SIMD_IMPL
 value|(0x0<< ID_AA64PFR0_ADV_SIMD_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_ADV_SIMD_HP
+value|(0x1<< ID_AA64PFR0_ADV_SIMD_SHIFT)
 end_define
 
 begin_define
@@ -2263,6 +2669,82 @@ define|#
 directive|define
 name|ID_AA64PFR0_GIC_CPUIF_EN
 value|(0x1<< ID_AA64PFR0_GIC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_RAS_SHIFT
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_RAS_MASK
+value|(0xf<< ID_AA64PFR0_RAS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_RAS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64PFR0_RAS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_RAS_NONE
+value|(0x0<< ID_AA64PFR0_RAS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_RAS_V1
+value|(0x1<< ID_AA64PFR0_RAS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_SVE_SHIFT
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_SVE_MASK
+value|(0xful<< ID_AA64PFR0_SVE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_SVE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64PFR0_SVE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_SVE_NONE
+value|(0x0ul<< ID_AA64PFR0_SVE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_SVE_IMPL
+value|(0x1ul<< ID_AA64PFR0_SVE_SHIFT)
 end_define
 
 begin_comment

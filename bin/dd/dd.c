@@ -994,6 +994,9 @@ name|db
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|out
 operator|.
 name|dbsz
@@ -1036,6 +1039,9 @@ name|malloc
 argument_list|(
 name|MAX
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|in
 operator|.
 name|dbsz
@@ -2100,6 +2106,9 @@ name|size_t
 operator|)
 name|n
 operator|==
+operator|(
+name|size_t
+operator|)
 name|in
 operator|.
 name|dbsz
@@ -2748,6 +2757,9 @@ name|n
 operator|&&
 name|n
 operator|==
+operator|(
+name|size_t
+operator|)
 name|out
 operator|.
 name|dbsz

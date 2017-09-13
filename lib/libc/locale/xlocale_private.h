@@ -57,6 +57,10 @@ directive|include
 file|"setlocale.h"
 end_include
 
+begin_comment
+comment|/**  * The XLC_ values are indexes into the components array.  They are defined in  * the same order as the LC_ values in locale.h, but without the LC_ALL zero  * value.  Translating from LC_X to XLC_X is done by subtracting one.  *  * Any reordering of this enum should ensure that these invariants are not  * violated.  */
+end_comment
+
 begin_enum
 enum|enum
 block|{
@@ -78,6 +82,104 @@ name|XLC_LAST
 block|}
 enum|;
 end_enum
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|XLC_LAST
+operator|-
+name|XLC_COLLATE
+operator|==
+literal|6
+argument_list|,
+literal|"XLC values should be contiguous"
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|XLC_COLLATE
+operator|==
+name|LC_COLLATE
+operator|-
+literal|1
+argument_list|,
+literal|"XLC_COLLATE doesn't match the LC_COLLATE value."
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|XLC_CTYPE
+operator|==
+name|LC_CTYPE
+operator|-
+literal|1
+argument_list|,
+literal|"XLC_CTYPE doesn't match the LC_CTYPE value."
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|XLC_MONETARY
+operator|==
+name|LC_MONETARY
+operator|-
+literal|1
+argument_list|,
+literal|"XLC_MONETARY doesn't match the LC_MONETARY value."
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|XLC_NUMERIC
+operator|==
+name|LC_NUMERIC
+operator|-
+literal|1
+argument_list|,
+literal|"XLC_NUMERIC doesn't match the LC_NUMERIC value."
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|XLC_TIME
+operator|==
+name|LC_TIME
+operator|-
+literal|1
+argument_list|,
+literal|"XLC_TIME doesn't match the LC_TIME value."
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|XLC_MESSAGES
+operator|==
+name|LC_MESSAGES
+operator|-
+literal|1
+argument_list|,
+literal|"XLC_MESSAGES doesn't match the LC_MESSAGES value."
+argument_list|)
+assert|;
+end_assert
 
 begin_comment
 comment|/**  * Header used for objects that are reference counted.  Objects may optionally  * have a destructor associated, which is responsible for destroying the  * structure.  Global / static versions of the structure should have no  * destructor set - they can then have their reference counts manipulated as  * normal, but will not do anything with them.  *  * The header stores a retain count - objects are assumed to have a reference  * count of 1 when they are created, but the retain count is 0.  When the  * retain count is less than 0, they are freed.  */

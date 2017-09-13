@@ -1918,6 +1918,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|TrSetOpIntegerWidth
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|TableSignature
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Revision
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|TrLinkOpChildren

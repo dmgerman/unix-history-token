@@ -340,7 +340,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|volatile
 name|int
-name|__read_mostly
+name|__read_frequently
 name|lockstat_enabled
 decl_stmt|;
 end_decl_stmt

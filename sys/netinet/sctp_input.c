@@ -15710,6 +15710,9 @@ name|struct
 name|sctp_tmit_chunk
 modifier|*
 name|chk
+decl_stmt|,
+modifier|*
+name|nchk
 decl_stmt|;
 name|struct
 name|sctp_ecne_chunk
@@ -15741,13 +15744,15 @@ name|chunk_flags
 operator|&
 name|SCTP_CWR_REDUCE_OVERRIDE
 expr_stmt|;
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|chk
 argument_list|,
 argument|&stcb->asoc.control_send_queue
 argument_list|,
 argument|sctp_next
+argument_list|,
+argument|nchk
 argument_list|)
 block|{
 if|if

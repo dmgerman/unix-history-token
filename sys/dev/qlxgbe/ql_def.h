@@ -415,6 +415,9 @@ decl_stmt|;
 name|uint64_t
 name|count
 decl_stmt|;
+name|uint64_t
+name|iscsi_pkt_count
+decl_stmt|;
 block|}
 name|qla_tx_ring_t
 typedef|;
@@ -462,7 +465,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Adapter structure contains the hardware independent information of the  * pci function.  */
+comment|/*  * Adapter structure contains the hardware independant information of the  * pci function.  */
 end_comment
 
 begin_struct
@@ -474,27 +477,11 @@ struct|struct
 block|{
 specifier|volatile
 name|uint32_t
-name|qla_interface_up
-range|:
-literal|1
-decl_stmt|,
 name|qla_callout_init
 range|:
 literal|1
 decl_stmt|,
 name|qla_watchdog_active
-range|:
-literal|1
-decl_stmt|,
-name|qla_watchdog_exit
-range|:
-literal|1
-decl_stmt|,
-name|qla_watchdog_pause
-range|:
-literal|1
-decl_stmt|,
-name|stop_rcv
 range|:
 literal|1
 decl_stmt|,
@@ -511,7 +498,23 @@ name|flags
 struct|;
 specifier|volatile
 name|uint32_t
+name|qla_interface_up
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|stop_rcv
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|qla_watchdog_exit
+decl_stmt|;
+specifier|volatile
+name|uint32_t
 name|qla_watchdog_exited
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|qla_watchdog_pause
 decl_stmt|;
 specifier|volatile
 name|uint32_t
@@ -520,6 +523,10 @@ decl_stmt|;
 specifier|volatile
 name|uint32_t
 name|qla_initiate_recovery
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|qla_detach_active
 decl_stmt|;
 name|device_t
 name|pci_dev
@@ -609,6 +616,9 @@ decl_stmt|;
 specifier|volatile
 name|uint32_t
 name|hw_lock_held
+decl_stmt|;
+name|uint64_t
+name|hw_lock_failed
 decl_stmt|;
 comment|/* transmit and receive buffers */
 name|uint32_t
@@ -702,6 +712,15 @@ name|tx_tso_frames
 decl_stmt|;
 name|uint64_t
 name|hw_vlan_tx_frames
+decl_stmt|;
+name|struct
+name|task
+name|stats_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|stats_tq
 decl_stmt|;
 name|uint32_t
 name|fw_ver_major
@@ -830,8 +849,7 @@ name|QL_RUNNING
 parameter_list|(
 name|ifp
 parameter_list|)
-define|\
-value|((ifp->if_drv_flags& (IFF_DRV_RUNNING | IFF_DRV_OACTIVE)) == \ 			IFF_DRV_RUNNING)
+value|(ifp->if_drv_flags& IFF_DRV_RUNNING)
 end_define
 
 begin_comment

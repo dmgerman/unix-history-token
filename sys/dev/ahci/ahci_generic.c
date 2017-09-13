@@ -187,6 +187,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"marvell,armada-3700-ahci"
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

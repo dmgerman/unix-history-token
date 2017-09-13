@@ -49,6 +49,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|bnxt_create_port_stats_sysctls
+parameter_list|(
+name|struct
+name|bnxt_softc
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|bnxt_create_tx_sysctls
 parameter_list|(
 name|struct

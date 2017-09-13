@@ -342,6 +342,7 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|__read_frequently
 name|audit_enabled
 decl_stmt|;
 end_decl_stmt

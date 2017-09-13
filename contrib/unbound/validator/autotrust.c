@@ -8763,44 +8763,21 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-name|dnskey_verify_rrset
-argument_list|(
-name|env
-argument_list|,
-name|ve
-argument_list|,
-name|dnskey_rrset
-argument_list|,
-name|dnskey_rrset
-argument_list|,
-name|key_idx
-argument_list|,
-operator|&
+comment|/* match of hash is sufficient for bootstrap of trust point */
+operator|(
+name|void
+operator|)
 name|reason
-argument_list|)
-operator|==
-name|sec_status_secure
-condition|)
-block|{
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ve
+expr_stmt|;
 return|return
 literal|1
 return|;
-block|}
-else|else
-block|{
-name|verbose
-argument_list|(
-name|VERB_ALGO
-argument_list|,
-literal|"DS match failed because the key "
-literal|"does not verify the keyset: %s"
-argument_list|,
-name|reason
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* no need to check RRSIG, DS hash already matched with source 		if(dnskey_verify_rrset(env, ve, dnskey_rrset,  			dnskey_rrset, key_idx,&reason) == sec_status_secure) { 			return 1; 		} else { 			verbose(VERB_ALGO, "DS match failed because the key " 				"does not verify the keyset: %s", reason); 		} 		*/
 block|}
 return|return
 literal|0

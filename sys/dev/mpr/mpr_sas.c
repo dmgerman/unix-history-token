@@ -3984,6 +3984,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s entered\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|sassc
 operator|=
 name|malloc
@@ -4007,17 +4018,15 @@ operator|!
 name|sassc
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
 argument_list|,
-literal|"Cannot allocate memory %s %d\n"
+name|MPR_INIT
+operator||
+name|MPR_ERROR
 argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
+literal|"Cannot allocate SAS subsystem memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4074,17 +4083,15 @@ operator|->
 name|targets
 condition|)
 block|{
-name|device_printf
+name|mpr_dprint
 argument_list|(
 name|sc
-operator|->
-name|mpr_dev
 argument_list|,
-literal|"Cannot allocate memory %s %d\n"
+name|MPR_INIT
+operator||
+name|MPR_ERROR
 argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
+literal|"Cannot allocate SAS target memory\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -4134,6 +4141,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate SIMQ\n"
@@ -4203,6 +4212,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_ERROR
 argument_list|,
 literal|"Cannot allocate SIM\n"
@@ -4312,6 +4323,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_INIT
+operator||
 name|MPR_ERROR
 argument_list|,
 literal|"Error %d registering SCSI bus\n"
@@ -4395,9 +4408,13 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|mpr_printf
+name|mpr_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPR_INIT
+operator||
+name|MPR_ERROR
 argument_list|,
 literal|"Error %#x creating sim path\n"
 argument_list|,
@@ -4588,6 +4605,19 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INIT
+argument_list|,
+literal|"%s exit, error= %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4680,6 +4710,19 @@ comment|/* Make sure CAM doesn't wedge if we had to bail out early. */
 name|mpr_lock
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|sassc
+operator|->
+name|startup_refcount
+operator|!=
+literal|0
+condition|)
+name|mprsas_startup_decrement
+argument_list|(
+name|sassc
 argument_list|)
 expr_stmt|;
 comment|/* Deregister our async handler */
@@ -6323,6 +6366,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_RECOVERY
+operator||
 name|MPR_ERROR
 argument_list|,
 literal|"%s: cm_flags = %#x for LUN reset! "
@@ -6351,14 +6396,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
-literal|"NULL reset reply for tm "
-literal|"%p\n"
+literal|"NULL reset reply for tm %p\n"
 argument_list|,
 name|tm
 argument_list|)
@@ -6377,6 +6421,16 @@ literal|0
 condition|)
 block|{
 comment|/* this completion was due to a reset, just cleanup */
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_RECOVERY
+argument_list|,
+literal|"Hardware undergoing "
+literal|"reset, ignoring NULL LUN reset reply\n"
+argument_list|)
+expr_stmt|;
 name|targ
 operator|->
 name|tm
@@ -6394,6 +6448,18 @@ block|}
 else|else
 block|{
 comment|/* we should have gotten a reply. */
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INFO
+operator||
+name|MPR_RECOVERY
+argument_list|,
+literal|"NULL reply on "
+literal|"LUN reset attempt, resetting controller\n"
+argument_list|)
+expr_stmt|;
 name|mpr_reinit
 argument_list|(
 name|sc
@@ -6402,9 +6468,9 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
@@ -6432,7 +6498,7 @@ name|TerminationCount
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* See if there are any outstanding commands for this LUN. 	 * This could be made more efficient by using a per-LU data 	 * structure of some sort. 	 */
+comment|/* 	 * See if there are any outstanding commands for this LUN. 	 * This could be made more efficient by using a per-LU data 	 * structure of some sort. 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|cm
@@ -6463,21 +6529,19 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 operator||
 name|MPR_INFO
 argument_list|,
-literal|"logical unit %u finished recovery after reset\n"
+literal|"Finished recovery after LUN reset for target %u\n"
 argument_list|,
-name|tm
+name|targ
 operator|->
-name|cm_lun
-argument_list|,
-name|tm
+name|tid
 argument_list|)
 expr_stmt|;
 name|mprsas_announce_reset
@@ -6486,9 +6550,7 @@ name|sc
 argument_list|,
 name|AC_SENT_BDR
 argument_list|,
-name|tm
-operator|->
-name|cm_targ
+name|targ
 operator|->
 name|tid
 argument_list|,
@@ -6497,7 +6559,7 @@ operator|->
 name|cm_lun
 argument_list|)
 expr_stmt|;
-comment|/* we've finished recovery for this logical unit.  check and 		 * see if some other logical unit has a timedout command 		 * that needs to be processed. 		 */
+comment|/* 		 * We've finished recovery for this logical unit.  check and 		 * see if some other logical unit has a timedout command 		 * that needs to be processed. 		 */
 name|cm
 operator|=
 name|TAILQ_FIRST
@@ -6513,6 +6575,21 @@ condition|(
 name|cm
 condition|)
 block|{
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INFO
+operator||
+name|MPR_RECOVERY
+argument_list|,
+literal|"More commands to abort for target %u\n"
+argument_list|,
+name|targ
+operator|->
+name|tid
+argument_list|)
+expr_stmt|;
 name|mprsas_send_abort
 argument_list|(
 name|sc
@@ -6543,16 +6620,20 @@ block|}
 else|else
 block|{
 comment|/* if we still have commands for this LUN, the reset 		 * effectively failed, regardless of the status reported. 		 * Escalate to a target reset. 		 */
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPR_INFO
+operator||
 name|MPR_RECOVERY
 argument_list|,
-literal|"logical unit reset complete for tm %p, but still have %u "
-literal|"command(s)\n"
+literal|"logical unit reset complete for target %u, but still "
+literal|"have %u command(s), sending target reset\n"
 argument_list|,
-name|tm
+name|targ
+operator|->
+name|tid
 argument_list|,
 name|cm_count
 argument_list|)
@@ -6679,16 +6760,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
-literal|"NULL reset reply for tm "
-literal|"%p\n"
+literal|"NULL target reset reply for tm %p TaskMID %u\n"
 argument_list|,
 name|tm
+argument_list|,
+name|le16toh
+argument_list|(
+name|req
+operator|->
+name|TaskMID
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6705,6 +6792,16 @@ literal|0
 condition|)
 block|{
 comment|/* this completion was due to a reset, just cleanup */
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_RECOVERY
+argument_list|,
+literal|"Hardware undergoing "
+literal|"reset, ignoring NULL target reset reply\n"
+argument_list|)
+expr_stmt|;
 name|targ
 operator|->
 name|tm
@@ -6722,6 +6819,18 @@ block|}
 else|else
 block|{
 comment|/* we should have gotten a reply. */
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INFO
+operator||
+name|MPR_RECOVERY
+argument_list|,
+literal|"NULL reply on "
+literal|"target reset attempt, resetting controller\n"
+argument_list|)
+expr_stmt|;
 name|mpr_reinit
 argument_list|(
 name|sc
@@ -6730,9 +6839,9 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
@@ -6769,16 +6878,20 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* we've finished recovery for this target and all 		 * of its logical units. 		 */
-name|mprsas_log_command
+comment|/* 		 * We've finished recovery for this target and all 		 * of its logical units. 		 */
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 operator||
 name|MPR_INFO
 argument_list|,
-literal|"recovery finished after target reset\n"
+literal|"Finished reset recovery for target %u\n"
+argument_list|,
+name|targ
+operator|->
+name|tid
 argument_list|)
 expr_stmt|;
 name|mprsas_announce_reset
@@ -6812,17 +6925,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* after a target reset, if this target still has 		 * outstanding commands, the reset effectively failed, 		 * regardless of the status reported.  escalate. 		 */
-name|mprsas_log_command
+comment|/* 		 * After a target reset, if this target still has 		 * outstanding commands, the reset effectively failed, 		 * regardless of the status reported.  escalate. 		 */
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPR_INFO
+operator||
 name|MPR_RECOVERY
 argument_list|,
-literal|"target reset complete for tm %p, but still have %u "
-literal|"command(s)\n"
+literal|"Target reset complete for target %u, but still have %u "
+literal|"command(s), resetting controller\n"
 argument_list|,
-name|tm
+name|targ
+operator|->
+name|tid
 argument_list|,
 name|targ
 operator|->
@@ -6970,15 +7087,23 @@ operator|->
 name|logical_unit_resets
 operator|++
 expr_stmt|;
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 operator||
 name|MPR_INFO
 argument_list|,
-literal|"sending logical unit reset\n"
+literal|"Sending logical unit reset to target %u lun %d\n"
+argument_list|,
+name|target
+operator|->
+name|tid
+argument_list|,
+name|tm
+operator|->
+name|cm_lun
 argument_list|)
 expr_stmt|;
 name|tm
@@ -7023,15 +7148,19 @@ operator|->
 name|target_resets
 operator|++
 expr_stmt|;
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 operator||
 name|MPR_INFO
 argument_list|,
-literal|"sending target reset\n"
+literal|"Sending target reset to target %u\n"
+argument_list|,
+name|target
+operator|->
+name|tid
 argument_list|)
 expr_stmt|;
 name|tm
@@ -7070,23 +7199,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|mpr_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MPR_INFO
-argument_list|,
-literal|"to target %u handle 0x%04x\n"
-argument_list|,
-name|target
-operator|->
-name|tid
-argument_list|,
-name|target
-operator|->
-name|handle
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|target
@@ -7098,10 +7210,11 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_RECOVERY
+operator||
 name|MPR_INFO
 argument_list|,
-literal|"At enclosure level %d, slot %d, "
-literal|"connector name (%4s)\n"
+literal|"At enclosure level %d, slot %d, connector name (%4s)\n"
 argument_list|,
 name|target
 operator|->
@@ -7172,10 +7285,12 @@ if|if
 condition|(
 name|err
 condition|)
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPR_ERROR
+operator||
 name|MPR_RECOVERY
 argument_list|,
 literal|"error %d sending reset type %u\n"
@@ -7273,11 +7388,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
+operator||
+name|MPR_ERROR
 argument_list|,
 literal|"cm_flags = %#x for abort %p TaskMID %u!\n"
 argument_list|,
@@ -7311,9 +7428,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
@@ -7343,6 +7460,16 @@ literal|0
 condition|)
 block|{
 comment|/* this completion was due to a reset, just cleanup */
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_RECOVERY
+argument_list|,
+literal|"Hardware undergoing "
+literal|"reset, ignoring NULL abort reply\n"
+argument_list|)
+expr_stmt|;
 name|targ
 operator|->
 name|tm
@@ -7360,6 +7487,18 @@ block|}
 else|else
 block|{
 comment|/* we should have gotten a reply. */
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_INFO
+operator||
+name|MPR_RECOVERY
+argument_list|,
+literal|"NULL reply on "
+literal|"abort attempt, resetting controller\n"
+argument_list|)
+expr_stmt|;
 name|mpr_reinit
 argument_list|(
 name|sc
@@ -7368,9 +7507,9 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
 name|MPR_RECOVERY
 argument_list|,
@@ -7424,21 +7563,20 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* if there are no more timedout commands, we're done with 		 * error recovery for this target. 		 */
-name|mprsas_log_command
+comment|/* 		 * if there are no more timedout commands, we're done with 		 * error recovery for this target. 		 */
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPR_INFO
+operator||
 name|MPR_RECOVERY
 argument_list|,
-literal|"finished recovery after aborting TaskMID %u\n"
+literal|"Finished abort recovery for target %u\n"
 argument_list|,
-name|le16toh
-argument_list|(
-name|req
+name|targ
 operator|->
-name|TaskMID
-argument_list|)
+name|tid
 argument_list|)
 expr_stmt|;
 name|targ
@@ -7475,20 +7613,19 @@ name|SMID
 condition|)
 block|{
 comment|/* abort success, but we have more timedout commands to abort */
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPR_INFO
+operator||
 name|MPR_RECOVERY
 argument_list|,
-literal|"continuing recovery after aborting TaskMID %u\n"
+literal|"Continuing abort recovery for target %u\n"
 argument_list|,
-name|le16toh
-argument_list|(
-name|req
+name|targ
 operator|->
-name|TaskMID
-argument_list|)
+name|tid
 argument_list|)
 expr_stmt|;
 name|mprsas_send_abort
@@ -7503,23 +7640,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* we didn't get a command completion, so the abort 		 * failed as far as we're concerned.  escalate. 		 */
-name|mprsas_log_command
+comment|/* 		 * we didn't get a command completion, so the abort 		 * failed as far as we're concerned.  escalate. 		 */
+name|mpr_dprint
 argument_list|(
-name|tm
+name|sc
 argument_list|,
+name|MPR_INFO
+operator||
 name|MPR_RECOVERY
 argument_list|,
-literal|"abort failed for TaskMID %u tm %p\n"
+literal|"Abort failed for target %u, sending logical unit reset\n"
 argument_list|,
-name|le16toh
-argument_list|(
-name|req
+name|targ
 operator|->
-name|TaskMID
-argument_list|)
-argument_list|,
-name|tm
+name|tid
 argument_list|)
 expr_stmt|;
 name|mprsas_send_reset
@@ -7595,6 +7729,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|MPR_ERROR
+operator||
+name|MPR_RECOVERY
 argument_list|,
 literal|"%s null devhandle for target_id %d\n"
 argument_list|,
@@ -7760,21 +7896,6 @@ operator|->
 name|aborts
 operator|++
 expr_stmt|;
-name|mpr_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MPR_INFO
-argument_list|,
-literal|"Sending reset from %s for target ID %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|targ
-operator|->
-name|tid
-argument_list|)
-expr_stmt|;
 name|mprsas_prepare_for_tm
 argument_list|(
 name|sc
@@ -7805,6 +7926,8 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_ERROR
+operator||
 name|MPR_RECOVERY
 argument_list|,
 literal|"error %d sending abort for cm %p SMID %u\n"
@@ -7834,6 +7957,16 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|sbintime_t
+name|elapsed
+decl_stmt|,
+name|now
+decl_stmt|;
+name|union
+name|ccb
+modifier|*
+name|ccb
+decl_stmt|;
 name|struct
 name|mpr_softc
 modifier|*
@@ -7864,6 +7997,17 @@ name|cm
 operator|->
 name|cm_sc
 expr_stmt|;
+name|ccb
+operator|=
+name|cm
+operator|->
+name|cm_ccb
+expr_stmt|;
+name|now
+operator|=
+name|sbinuptime
+argument_list|()
+expr_stmt|;
 name|MPR_FUNCTRACE
 argument_list|(
 name|sc
@@ -7884,6 +8028,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|MPR_XINFO
+operator||
+name|MPR_RECOVERY
 argument_list|,
 literal|"Timeout checking cm %p\n"
 argument_list|,
@@ -7949,24 +8095,27 @@ operator|->
 name|timeouts
 operator|++
 expr_stmt|;
+name|elapsed
+operator|=
+name|now
+operator|-
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|qos
+operator|.
+name|sim_data
+expr_stmt|;
 name|mprsas_log_command
 argument_list|(
 name|cm
 argument_list|,
-name|MPR_ERROR
+name|MPR_INFO
+operator||
+name|MPR_RECOVERY
 argument_list|,
-literal|"command timeout %d cm %p target "
-literal|"%u, handle(0x%04x)\n"
-argument_list|,
-name|cm
-operator|->
-name|cm_ccb
-operator|->
-name|ccb_h
-operator|.
-name|timeout
-argument_list|,
-name|cm
+literal|"Command timeout on target %u(0x%04x), %d set, %d.%d elapsed\n"
 argument_list|,
 name|targ
 operator|->
@@ -7975,6 +8124,21 @@ argument_list|,
 name|targ
 operator|->
 name|handle
+argument_list|,
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|timeout
+argument_list|,
+name|sbintime_getsec
+argument_list|(
+name|elapsed
+argument_list|)
+argument_list|,
+name|elapsed
+operator|&
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 if|if
@@ -7988,10 +8152,11 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPR_ERROR
+name|MPR_INFO
+operator||
+name|MPR_RECOVERY
 argument_list|,
-literal|"At enclosure level %d, slot %d, "
-literal|"connector name (%4s)\n"
+literal|"At enclosure level %d, slot %d, connector name (%4s)\n"
 argument_list|,
 name|targ
 operator|->
@@ -8079,6 +8244,30 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* start recovery by aborting the first timedout command */
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_RECOVERY
+operator||
+name|MPR_INFO
+argument_list|,
+literal|"Sending abort to target %u for SMID %d\n"
+argument_list|,
+name|targ
+operator|->
+name|tid
+argument_list|,
+name|cm
+operator|->
+name|cm_desc
+operator|.
+name|Default
+operator|.
+name|SMID
+argument_list|)
+expr_stmt|;
 name|mpr_dprint
 argument_list|(
 name|sc
@@ -8094,7 +8283,6 @@ operator|->
 name|tm
 argument_list|)
 expr_stmt|;
-comment|/* start recovery by aborting the first timedout command */
 name|mprsas_send_abort
 argument_list|(
 name|sc
@@ -8114,10 +8302,11 @@ name|mpr_dprint
 argument_list|(
 name|sc
 argument_list|,
+name|MPR_ERROR
+operator||
 name|MPR_RECOVERY
 argument_list|,
-literal|"timedout cm %p failed to "
-literal|"allocate a tm\n"
+literal|"timedout cm %p failed to allocate a tm\n"
 argument_list|,
 name|cm
 argument_list|)
@@ -8814,6 +9003,17 @@ operator|.
 name|RequestFlags
 operator|=
 name|MPI26_REQ_DESCRIPT_FLAGS_PCIE_ENCAPSULATED
+expr_stmt|;
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|qos
+operator|.
+name|sim_data
+operator|=
+name|sbinuptime
+argument_list|()
 expr_stmt|;
 if|#
 directive|if
@@ -10429,6 +10629,17 @@ name|handle
 argument_list|)
 expr_stmt|;
 block|}
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|qos
+operator|.
+name|sim_data
+operator|=
+name|sbinuptime
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -10548,116 +10759,6 @@ return|return;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|mpr_response_code
-parameter_list|(
-name|struct
-name|mpr_softc
-modifier|*
-name|sc
-parameter_list|,
-name|u8
-name|response_code
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|desc
-decl_stmt|;
-switch|switch
-condition|(
-name|response_code
-condition|)
-block|{
-case|case
-name|MPI2_SCSITASKMGMT_RSP_TM_COMPLETE
-case|:
-name|desc
-operator|=
-literal|"task management request completed"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_INVALID_FRAME
-case|:
-name|desc
-operator|=
-literal|"invalid frame"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_TM_NOT_SUPPORTED
-case|:
-name|desc
-operator|=
-literal|"task management request not supported"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_TM_FAILED
-case|:
-name|desc
-operator|=
-literal|"task management request failed"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_TM_SUCCEEDED
-case|:
-name|desc
-operator|=
-literal|"task management request succeeded"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_TM_INVALID_LUN
-case|:
-name|desc
-operator|=
-literal|"invalid lun"
-expr_stmt|;
-break|break;
-case|case
-literal|0xA
-case|:
-name|desc
-operator|=
-literal|"overlapped tag attempted"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSITASKMGMT_RSP_IO_QUEUED_ON_IOC
-case|:
-name|desc
-operator|=
-literal|"task queued, however not sent to target"
-expr_stmt|;
-break|break;
-default|default:
-name|desc
-operator|=
-literal|"unknown"
-expr_stmt|;
-break|break;
-block|}
-name|mpr_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MPR_XINFO
-argument_list|,
-literal|"response_code(0x%01x): %s\n"
-argument_list|,
-name|response_code
-argument_list|,
-name|desc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/**  * mpr_sc_failed_io_info - translated non-succesfull SCSI_IO request  */
 end_comment
@@ -10732,14 +10833,6 @@ name|desc_scsi_status
 init|=
 name|NULL
 decl_stmt|;
-name|char
-modifier|*
-name|desc_scsi_state
-init|=
-name|sc
-operator|->
-name|tmp_string
-decl_stmt|;
 name|u32
 name|log_info
 init|=
@@ -10757,341 +10850,22 @@ operator|==
 literal|0x31170000
 condition|)
 return|return;
-switch|switch
-condition|(
+name|desc_ioc_state
+operator|=
+name|mpr_describe_table
+argument_list|(
+name|mpr_iocstatus_string
+argument_list|,
 name|ioc_status
-condition|)
-block|{
-case|case
-name|MPI2_IOCSTATUS_SUCCESS
-case|:
-name|desc_ioc_state
-operator|=
-literal|"success"
+argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_INVALID_FUNCTION
-case|:
-name|desc_ioc_state
+name|desc_scsi_status
 operator|=
-literal|"invalid function"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_RECOVERED_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi recovered error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_INVALID_DEVHANDLE
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi invalid dev handle"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_DEVICE_NOT_THERE
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi device not there"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_DATA_OVERRUN
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi data overrun"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_DATA_UNDERRUN
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi data underrun"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_IO_DATA_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi io data error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_PROTOCOL_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi protocol error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_TASK_TERMINATED
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi task terminated"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_RESIDUAL_MISMATCH
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi residual mismatch"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_TASK_MGMT_FAILED
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi task mgmt failed"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_IOC_TERMINATED
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi ioc terminated"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_SCSI_EXT_TERMINATED
-case|:
-name|desc_ioc_state
-operator|=
-literal|"scsi ext terminated"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_EEDP_GUARD_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"eedp guard error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_EEDP_REF_TAG_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"eedp ref tag error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_EEDP_APP_TAG_ERROR
-case|:
-name|desc_ioc_state
-operator|=
-literal|"eedp app tag error"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_IOCSTATUS_INSUFFICIENT_POWER
-case|:
-name|desc_ioc_state
-operator|=
-literal|"insufficient power"
-expr_stmt|;
-break|break;
-default|default:
-name|desc_ioc_state
-operator|=
-literal|"unknown"
-expr_stmt|;
-break|break;
-block|}
-switch|switch
-condition|(
+name|mpr_describe_table
+argument_list|(
+name|mpr_scsi_status_string
+argument_list|,
 name|scsi_status
-condition|)
-block|{
-case|case
-name|MPI2_SCSI_STATUS_GOOD
-case|:
-name|desc_scsi_status
-operator|=
-literal|"good"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_CHECK_CONDITION
-case|:
-name|desc_scsi_status
-operator|=
-literal|"check condition"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_CONDITION_MET
-case|:
-name|desc_scsi_status
-operator|=
-literal|"condition met"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_BUSY
-case|:
-name|desc_scsi_status
-operator|=
-literal|"busy"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_INTERMEDIATE
-case|:
-name|desc_scsi_status
-operator|=
-literal|"intermediate"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_INTERMEDIATE_CONDMET
-case|:
-name|desc_scsi_status
-operator|=
-literal|"intermediate condmet"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_RESERVATION_CONFLICT
-case|:
-name|desc_scsi_status
-operator|=
-literal|"reservation conflict"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_COMMAND_TERMINATED
-case|:
-name|desc_scsi_status
-operator|=
-literal|"command terminated"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_TASK_SET_FULL
-case|:
-name|desc_scsi_status
-operator|=
-literal|"task set full"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_ACA_ACTIVE
-case|:
-name|desc_scsi_status
-operator|=
-literal|"aca active"
-expr_stmt|;
-break|break;
-case|case
-name|MPI2_SCSI_STATUS_TASK_ABORTED
-case|:
-name|desc_scsi_status
-operator|=
-literal|"task aborted"
-expr_stmt|;
-break|break;
-default|default:
-name|desc_scsi_status
-operator|=
-literal|"unknown"
-expr_stmt|;
-break|break;
-block|}
-name|desc_scsi_state
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|scsi_state
-condition|)
-name|desc_scsi_state
-operator|=
-literal|" "
-expr_stmt|;
-if|if
-condition|(
-name|scsi_state
-operator|&
-name|MPI2_SCSI_STATE_RESPONSE_INFO_VALID
-condition|)
-name|strcat
-argument_list|(
-name|desc_scsi_state
-argument_list|,
-literal|"response info "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|scsi_state
-operator|&
-name|MPI2_SCSI_STATE_TERMINATED
-condition|)
-name|strcat
-argument_list|(
-name|desc_scsi_state
-argument_list|,
-literal|"state terminated "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|scsi_state
-operator|&
-name|MPI2_SCSI_STATE_NO_SCSI_STATUS
-condition|)
-name|strcat
-argument_list|(
-name|desc_scsi_state
-argument_list|,
-literal|"no status "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|scsi_state
-operator|&
-name|MPI2_SCSI_STATE_AUTOSENSE_FAILED
-condition|)
-name|strcat
-argument_list|(
-name|desc_scsi_state
-argument_list|,
-literal|"autosense failed "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|scsi_state
-operator|&
-name|MPI2_SCSI_STATE_AUTOSENSE_VALID
-condition|)
-name|strcat
-argument_list|(
-name|desc_scsi_state
-argument_list|,
-literal|"autosense valid "
 argument_list|)
 expr_stmt|;
 name|mpr_dprint
@@ -11144,7 +10918,7 @@ name|connector_name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We can add more detail about underflow data here 	 * TO-DO 	 * */
+comment|/* 	 * We can add more detail about underflow data here 	 * TO-DO 	 */
 name|mpr_dprint
 argument_list|(
 name|sc
@@ -11152,15 +10926,20 @@ argument_list|,
 name|MPR_XINFO
 argument_list|,
 literal|"\tscsi_status(%s)(0x%02x), "
-literal|"scsi_state(%s)(0x%02x)\n"
+literal|"scsi_state %b\n"
 argument_list|,
 name|desc_scsi_status
 argument_list|,
 name|scsi_status
 argument_list|,
-name|desc_scsi_state
-argument_list|,
 name|scsi_state
+argument_list|,
+literal|"\20"
+literal|"\1AutosenseValid"
+literal|"\2AutosenseFailed"
+literal|"\3NoScsiStatus"
+literal|"\4Terminated"
+literal|"\5Response InfoValid"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11225,14 +11004,28 @@ operator|)
 operator|&
 name|response_info
 expr_stmt|;
-name|mpr_response_code
+name|mpr_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPR_XINFO
+argument_list|,
+literal|"response code(0x%01x): %s\n"
 argument_list|,
 name|response_bytes
 index|[
 literal|0
 index|]
+argument_list|,
+name|mpr_describe_table
+argument_list|(
+name|mpr_scsi_taskmgmt_string
+argument_list|,
+name|response_bytes
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -13443,13 +13236,17 @@ argument_list|,
 name|CAM_REQ_CMP_ERR
 argument_list|)
 expr_stmt|;
-name|mprsas_log_command
+name|mpr_dprint
 argument_list|(
-name|cm
+name|sc
 argument_list|,
 name|MPR_INFO
 argument_list|,
-literal|"terminated ioc %x loginfo %x scsi %x state %x xfer %u\n"
+literal|"Controller reported %s tgt %u SMID %u loginfo %x\n"
+argument_list|,
+name|mpr_describe_table
+argument_list|(
+name|mpr_iocstatus_string
 argument_list|,
 name|le16toh
 argument_list|(
@@ -13457,6 +13254,19 @@ name|rep
 operator|->
 name|IOCStatus
 argument_list|)
+operator|&
+name|MPI2_IOCSTATUS_MASK
+argument_list|)
+argument_list|,
+name|target_id
+argument_list|,
+name|cm
+operator|->
+name|cm_desc
+operator|.
+name|Default
+operator|.
+name|SMID
 argument_list|,
 name|le32toh
 argument_list|(
@@ -13464,6 +13274,15 @@ name|rep
 operator|->
 name|IOCLogInfo
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mpr_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPR_XINFO
+argument_list|,
+literal|"SCSIStatus %x SCSIState %x xfercount %u\n"
 argument_list|,
 name|rep
 operator|->
@@ -17786,43 +17605,6 @@ argument_list|,
 name|cm
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|mpr_ich
-operator|.
-name|ich_arg
-operator|!=
-name|NULL
-condition|)
-block|{
-name|mpr_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MPR_XINFO
-argument_list|,
-literal|"disestablish config intrhook\n"
-argument_list|)
-expr_stmt|;
-name|config_intrhook_disestablish
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mpr_ich
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|mpr_ich
-operator|.
-name|ich_arg
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* 	 * Done waiting for port enable to complete.  Decrement the refcount. 	 * If refcount is 0, discovery is complete and a rescan of the bus can 	 * take place. 	 */
 name|sc
 operator|->

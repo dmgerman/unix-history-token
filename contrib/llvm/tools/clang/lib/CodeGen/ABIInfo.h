@@ -94,6 +94,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|CodeGenOptions
+decl_stmt|;
+name|class
 name|TargetInfo
 decl_stmt|;
 name|namespace
@@ -240,6 +243,13 @@ specifier|const
 name|TargetInfo
 operator|&
 name|getTarget
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|CodeGenOptions
+operator|&
+name|getCodeGenOpts
 argument_list|()
 specifier|const
 expr_stmt|;

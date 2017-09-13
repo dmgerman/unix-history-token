@@ -1241,17 +1241,12 @@ decl_stmt|;
 name|u_int8_t
 name|serial_num_len
 decl_stmt|;
-specifier|const
-name|struct
-name|nvme_controller_data
+name|void
 modifier|*
-name|nvme_cdata
-decl_stmt|;
-specifier|const
-name|struct
-name|nvme_namespace_data
-modifier|*
-name|nvme_data
+name|padding
+index|[
+literal|2
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -2126,7 +2121,7 @@ begin_struct
 struct|struct
 name|ccb_pathinq_settings_nvme
 block|{
-name|uint16_t
+name|uint32_t
 name|nsid
 decl_stmt|;
 comment|/* Namespace ID for this path */
@@ -2819,10 +2814,14 @@ name|uint32_t
 name|dxfer_len
 decl_stmt|;
 comment|/* Data transfer length */
-name|uint32_t
-name|resid
+name|uint16_t
+name|sglist_cnt
 decl_stmt|;
-comment|/* Transfer residual length: 2's comp unused ?*/
+comment|/* Number of SG list entries */
+name|uint16_t
+name|unused
+decl_stmt|;
+comment|/* padding for removed uint32_t */
 block|}
 struct|;
 end_struct
@@ -4291,6 +4290,16 @@ define|#
 directive|define
 name|CDAI_TYPE_EXT_INQ
 value|5
+define|#
+directive|define
+name|CDAI_TYPE_NVME_CNTRL
+value|6
+comment|/* NVMe Identify Controller data */
+define|#
+directive|define
+name|CDAI_TYPE_NVME_NS
+value|7
+comment|/* NVMe Identify Namespace data */
 name|off_t
 name|bufsiz
 decl_stmt|;

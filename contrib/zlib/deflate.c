@@ -2513,7 +2513,8 @@ name|s
 operator|->
 name|last_flush
 operator|=
-name|Z_NO_FLUSH
+operator|-
+literal|2
 expr_stmt|;
 name|_tr_init
 argument_list|(
@@ -2980,7 +2981,10 @@ operator|)
 operator|&&
 name|s
 operator|->
-name|high_water
+name|last_flush
+operator|!=
+operator|-
+literal|2
 condition|)
 block|{
 comment|/* Flush the last buffer: */
@@ -3007,9 +3011,21 @@ if|if
 condition|(
 name|strm
 operator|->
-name|avail_out
-operator|==
-literal|0
+name|avail_in
+operator|||
+operator|(
+name|s
+operator|->
+name|strstart
+operator|-
+name|s
+operator|->
+name|block_start
+operator|)
+operator|+
+name|s
+operator|->
+name|lookahead
 condition|)
 return|return
 name|Z_BUF_ERROR

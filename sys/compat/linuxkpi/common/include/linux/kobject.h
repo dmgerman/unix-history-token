@@ -519,6 +519,21 @@ end_function
 begin_function
 specifier|static
 specifier|inline
+name|void
+name|kobject_del
+parameter_list|(
+name|struct
+name|kobject
+modifier|*
+name|kobj
+name|__unused
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
 name|char
 modifier|*
 name|kobject_name

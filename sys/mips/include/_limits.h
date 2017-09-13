@@ -246,6 +246,12 @@ begin_comment
 comment|/* min for a long long */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -272,7 +278,7 @@ begin_define
 define|#
 directive|define
 name|__OFF_MAX
-value|__LLONG_MAX
+value|__LONG_MAX
 end_define
 
 begin_comment
@@ -283,22 +289,18 @@ begin_define
 define|#
 directive|define
 name|__OFF_MIN
-value|__LLONG_MIN
+value|__LONG_MIN
 end_define
 
 begin_comment
 comment|/* min value for an off_t */
 end_comment
 
-begin_comment
-comment|/* Quads and long longs are the same size.  Ensure they stay in sync. */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|__UQUAD_MAX
-value|__ULLONG_MAX
+value|__ULONG_MAX
 end_define
 
 begin_comment
@@ -309,7 +311,7 @@ begin_define
 define|#
 directive|define
 name|__QUAD_MAX
-value|__LLONG_MAX
+value|__LONG_MAX
 end_define
 
 begin_comment
@@ -320,12 +322,71 @@ begin_define
 define|#
 directive|define
 name|__QUAD_MIN
-value|__LLONG_MIN
+value|__LONG_MIN
 end_define
 
 begin_comment
 comment|/* min value for a quad_t */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__SSIZE_MAX
+value|__INT_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|__SIZE_T_MAX
+value|__UINT_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|__OFF_MAX
+value|__LLONG_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|__OFF_MIN
+value|__LLONG_MIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UQUAD_MAX
+value|__ULLONG_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|__QUAD_MAX
+value|__LLONG_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|__QUAD_MIN
+value|__LLONG_MIN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

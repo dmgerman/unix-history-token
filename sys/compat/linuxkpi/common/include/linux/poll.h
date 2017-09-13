@@ -48,29 +48,33 @@ name|poll_table
 typedef|;
 end_typedef
 
-begin_function
-specifier|static
-specifier|inline
+begin_function_decl
+specifier|extern
 name|void
-name|poll_wait
+name|linux_poll_wait
 parameter_list|(
 name|struct
 name|linux_file
 modifier|*
-name|filp
 parameter_list|,
 name|wait_queue_head_t
 modifier|*
-name|wait_address
 parameter_list|,
 name|poll_table
 modifier|*
-name|p
 parameter_list|)
-block|{
-comment|/* NOP */
-block|}
-end_function
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|poll_wait
+parameter_list|(
+modifier|...
+parameter_list|)
+value|linux_poll_wait(__VA_ARGS__)
+end_define
 
 begin_function_decl
 specifier|extern

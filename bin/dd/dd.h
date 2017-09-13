@@ -21,16 +21,15 @@ modifier|*
 name|dbp
 decl_stmt|;
 comment|/* current buffer I/O address */
-comment|/* XXX ssize_t? */
-name|size_t
+name|ssize_t
 name|dbcnt
 decl_stmt|;
 comment|/* current buffer byte count */
-name|size_t
+name|ssize_t
 name|dbrcnt
 decl_stmt|;
 comment|/* last read byte count */
-name|size_t
+name|ssize_t
 name|dbsz
 decl_stmt|;
 comment|/* block size */

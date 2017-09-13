@@ -4285,10 +4285,16 @@ decl_stmt|;
 name|uint32_t
 name|ssthresh
 decl_stmt|;
+name|uint16_t
+name|encaps_port
+decl_stmt|;
+name|uint16_t
+name|state
+decl_stmt|;
 name|uint32_t
 name|extra_padding
 index|[
-literal|30
+literal|29
 index|]
 decl_stmt|;
 comment|/* future */

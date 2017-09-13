@@ -4,125 +4,6 @@ comment|/* ******************************************************************   
 end_comment
 
 begin_comment
-comment|/* ************************************************************** *  Compiler specifics ****************************************************************/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
-begin_comment
-comment|/* Visual Studio */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static __forceinline
-end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4127
-name|)
-end_pragma
-
-begin_comment
-comment|/* disable: C4127: conditional expression is constant */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__STDC_VERSION__
-argument_list|)
-operator|&&
-name|__STDC_VERSION__
-operator|>=
-literal|199901L
-end_if
-
-begin_comment
-comment|/* C99 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static inline __attribute__((always_inline))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FORCE_INLINE
-value|static
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC_VERSION__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* ************************************************************** *  Dependencies ****************************************************************/
 end_comment
 
@@ -149,6 +30,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"fse.h"
 end_include
 
@@ -168,9 +55,22 @@ directive|include
 file|"huf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"error_private.h"
+end_include
+
 begin_comment
 comment|/* ************************************************************** *  Error Management ****************************************************************/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HUF_isError
+value|ERR_isError
+end_define
 
 begin_define
 define|#
@@ -883,7 +783,7 @@ value|if (MEM_64bits()) \         HUF_DECODE_SYMBOLX2_0(ptr, DStreamPtr)
 end_define
 
 begin_function
-name|FORCE_INLINE
+name|HINT_INLINE
 name|size_t
 name|HUF_decodeStreamX2
 parameter_list|(
@@ -4132,7 +4032,7 @@ value|if (MEM_64bits()) \         ptr += HUF_decodeSymbolX4(ptr, DStreamPtr, dt,
 end_define
 
 begin_function
-name|FORCE_INLINE
+name|HINT_INLINE
 name|size_t
 name|HUF_decodeStreamX4
 parameter_list|(
@@ -6258,7 +6158,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/** HUF_selectDecoder() : *   Tells which decoder is likely to decode faster, *   based on a set of pre-determined metrics. *   @return : 0==HUF_decompress4X2, 1==HUF_decompress4X4 . *   Assumption : 0< cSrcSize< dstSize<= 128 KB */
+comment|/** HUF_selectDecoder() : *   Tells which decoder is likely to decode faster, *   based on a set of pre-determined metrics. *   @return : 0==HUF_decompress4X2, 1==HUF_decompress4X4 . *   Assumption : 0< cSrcSize, dstSize<= 128 KB */
 end_comment
 
 begin_function
@@ -6277,6 +6177,12 @@ name|U32
 specifier|const
 name|Q
 init|=
+name|cSrcSize
+operator|>=
+name|dstSize
+condition|?
+literal|15
+else|:
 call|(
 name|U32
 call|)
@@ -6288,7 +6194,7 @@ operator|/
 name|dstSize
 argument_list|)
 decl_stmt|;
-comment|/* Q< 16 since dstSize> cSrcSize */
+comment|/* Q< 16 */
 name|U32
 specifier|const
 name|D256
@@ -6780,17 +6686,9 @@ argument_list|)
 return|;
 if|if
 condition|(
-operator|(
 name|cSrcSize
-operator|>=
-name|dstSize
-operator|)
-operator|||
-operator|(
-name|cSrcSize
-operator|<=
-literal|1
-operator|)
+operator|==
+literal|0
 condition|)
 return|return
 name|ERROR
@@ -6798,7 +6696,6 @@ argument_list|(
 name|corruption_detected
 argument_list|)
 return|;
-comment|/* invalid */
 block|{
 name|U32
 specifier|const

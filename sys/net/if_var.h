@@ -601,8 +601,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IF_SND_TAG_TYPE_MAX
+name|IF_SND_TAG_TYPE_UNLIMITED
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_SND_TAG_TYPE_MAX
+value|2
 end_define
 
 begin_struct
@@ -649,6 +656,22 @@ name|uint64_t
 name|max_rate
 decl_stmt|;
 comment|/* in bytes/s */
+name|uint32_t
+name|queue_level
+decl_stmt|;
+comment|/* 0 (empty) .. 65535 (full) */
+define|#
+directive|define
+name|IF_SND_QUEUE_LEVEL_MIN
+value|0
+define|#
+directive|define
+name|IF_SND_QUEUE_LEVEL_MAX
+value|65535
+name|uint32_t
+name|reserved
+decl_stmt|;
+comment|/* padding */
 block|}
 struct|;
 end_struct
@@ -665,6 +688,10 @@ name|struct
 name|if_snd_tag_alloc_rate_limit
 name|rate_limit
 decl_stmt|;
+name|struct
+name|if_snd_tag_alloc_rate_limit
+name|unlimited
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -677,6 +704,10 @@ name|struct
 name|if_snd_tag_rate_limit_params
 name|rate_limit
 decl_stmt|;
+name|struct
+name|if_snd_tag_rate_limit_params
+name|unlimited
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -688,6 +719,10 @@ block|{
 name|struct
 name|if_snd_tag_rate_limit_params
 name|rate_limit
+decl_stmt|;
+name|struct
+name|if_snd_tag_rate_limit_params
+name|unlimited
 decl_stmt|;
 block|}
 union|;

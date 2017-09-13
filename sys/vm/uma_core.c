@@ -410,6 +410,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|rwlock_padalign
+name|__exclusive_cache_line
 name|uma_rwlock
 decl_stmt|;
 end_decl_stmt
@@ -5391,16 +5392,6 @@ name|keg
 operator|->
 name|uk_size
 expr_stmt|;
-comment|/* We can't do OFFPAGE if we're internal, bail out here. */
-if|if
-condition|(
-name|keg
-operator|->
-name|uk_flags
-operator|&
-name|UMA_ZFLAG_INTERNAL
-condition|)
-return|return;
 comment|/* Check whether we have enough space to not do OFFPAGE. */
 if|if
 condition|(
@@ -5446,13 +5437,11 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|PAGE_SIZE
 operator|*
 name|keg
 operator|->
 name|uk_ppera
-operator|)
 operator|-
 name|keg
 operator|->
@@ -5460,12 +5449,33 @@ name|uk_rsize
 operator|<
 name|shsize
 condition|)
+block|{
+comment|/* 			 * We can't do OFFPAGE if we're internal, in which case 			 * we need an extra page per allocation to contain the 			 * slab header. 			 */
+if|if
+condition|(
+operator|(
+name|keg
+operator|->
+name|uk_flags
+operator|&
+name|UMA_ZFLAG_INTERNAL
+operator|)
+operator|==
+literal|0
+condition|)
 name|keg
 operator|->
 name|uk_flags
 operator||=
 name|UMA_ZONE_OFFPAGE
 expr_stmt|;
+else|else
+name|keg
+operator|->
+name|uk_ppera
+operator|++
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

@@ -607,7 +607,7 @@ name|i
 operator|+
 literal|1
 index|]
-operator|<
+operator|<=
 name|start
 condition|)
 continue|continue;
@@ -1973,6 +1973,13 @@ operator|)
 name|pmap_mapbios
 argument_list|(
 name|addr
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|cpus
 argument_list|,
 name|size
 argument_list|)

@@ -585,8 +585,14 @@ directive|define
 name|QLA_LOCK
 parameter_list|(
 name|ha
+parameter_list|,
+name|str
+parameter_list|,
+name|to_ms
+parameter_list|,
+name|no_sleep
 parameter_list|)
-value|mtx_lock(&ha->hw_lock)
+value|qla_lock(ha, str, to_ms, no_sleep)
 end_define
 
 begin_define
@@ -595,8 +601,10 @@ directive|define
 name|QLA_UNLOCK
 parameter_list|(
 name|ha
+parameter_list|,
+name|str
 parameter_list|)
-value|mtx_unlock(&ha->hw_lock)
+value|qla_unlock(ha, str)
 end_define
 
 begin_comment

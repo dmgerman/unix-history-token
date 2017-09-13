@@ -388,7 +388,7 @@ if|if
 condition|(
 name|ridx
 operator|>=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|0
 argument_list|)
@@ -1359,7 +1359,7 @@ if|if
 condition|(
 name|ridx
 operator|>=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|0
 argument_list|)

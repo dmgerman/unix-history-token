@@ -345,6 +345,16 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|amd_rascap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* AMD RAS capabilities */
+end_comment
+
+begin_decl_stmt
+name|u_int
 name|amd_pminfo
 decl_stmt|;
 end_decl_stmt
@@ -5133,22 +5143,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* 		 * Some hypervisors fail to filter out unsupported 		 * extended features.  For now, disable the 		 * extensions, activation of which requires setting a 		 * bit in CR4, and which VM monitors do not support. 		 */
-if|if
-condition|(
-name|cpu_feature2
-operator|&
-name|CPUID2_HV
-condition|)
-block|{
-name|cpu_stdext_disable
-operator|=
-name|CPUID_STDEXT_FSGSBASE
-operator||
-name|CPUID_STDEXT_SMEP
-expr_stmt|;
-block|}
-else|else
+comment|/* 		 * Some hypervisors failed to filter out unsupported 		 * extended features.  Allow to disable the 		 * extensions, activation of which requires setting a 		 * bit in CR4, and which VM monitors do not support. 		 */
 name|cpu_stdext_disable
 operator|=
 literal|0
@@ -5313,6 +5308,13 @@ literal|0x80000007
 argument_list|,
 name|regs
 argument_list|)
+expr_stmt|;
+name|amd_rascap
+operator|=
+name|regs
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|amd_pminfo
 operator|=
@@ -8147,11 +8149,29 @@ literal|"\011<b8>"
 literal|"\012<b9>"
 literal|"\013PauseFilter"
 comment|/* PAUSE intercept filter */
-literal|"\014<b11>"
+literal|"\014EncryptedMcodePatch"
 literal|"\015PauseFilterThreshold"
 comment|/* PAUSE filter threshold */
 literal|"\016AVIC"
 comment|/* virtual interrupt controller */
+literal|"\017<b14>"
+literal|"\020V_VMSAVE_VMLOAD"
+literal|"\021vGIF"
+literal|"\022<b17>"
+literal|"\023<b18>"
+literal|"\024<b19>"
+literal|"\025<b20>"
+literal|"\026<b21>"
+literal|"\027<b22>"
+literal|"\030<b23>"
+literal|"\031<b24>"
+literal|"\032<b25>"
+literal|"\033<b26>"
+literal|"\034<b27>"
+literal|"\035<b28>"
+literal|"\036<b29>"
+literal|"\037<b30>"
+literal|"\040<b31>"
 argument_list|)
 expr_stmt|;
 name|printf

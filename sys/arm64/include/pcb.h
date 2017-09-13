@@ -63,9 +63,6 @@ decl_stmt|;
 name|uint64_t
 name|pcb_tpidrro_el0
 decl_stmt|;
-name|vm_offset_t
-name|pcb_l0addr
-decl_stmt|;
 comment|/* Fault handler, the error value is passed in x0 */
 name|vm_offset_t
 name|pcb_onfault

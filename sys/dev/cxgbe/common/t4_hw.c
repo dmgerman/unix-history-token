@@ -852,6 +852,19 @@ name|pcie_fw
 decl_stmt|;
 if|if
 condition|(
+name|adap
+operator|->
+name|flags
+operator|&
+name|CHK_MBOX_ACCESS
+condition|)
+name|ASSERT_SYNCHRONIZED_OP
+argument_list|(
+name|adap
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|size
 operator|&
@@ -999,8 +1012,8 @@ name|CH_ERR
 argument_list|(
 name|adap
 argument_list|,
-literal|"found VALID command in mbox %u: "
-literal|"%llx %llx %llx %llx %llx %llx %llx %llx\n"
+literal|"found VALID command in mbox %u: %016llx %016llx "
+literal|"%016llx %016llx %016llx %016llx %016llx %016llx\n"
 argument_list|,
 name|mbox
 argument_list|,
@@ -36324,10 +36337,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|struct
-name|fw_port_cmd
-name|c
-decl_stmt|;
 name|u16
 name|rss_size
 decl_stmt|;
@@ -36348,19 +36357,6 @@ name|param
 decl_stmt|,
 name|val
 decl_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|c
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|c
-argument_list|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i

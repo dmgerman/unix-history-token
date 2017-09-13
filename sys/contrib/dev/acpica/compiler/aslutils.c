@@ -1859,7 +1859,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtDoConstant  *  * PARAMETERS:  String              - Hexadecimal or decimal string  *  * RETURN:      Converted Integer  *  * DESCRIPTION: Convert a string to an integer, with error checking.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtDoConstant  *  * PARAMETERS:  String              - Hex/Decimal/Octal  *  * RETURN:      Converted Integer  *  * DESCRIPTION: Convert a string to an integer, with overflow/error checking.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1875,7 +1875,7 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|UINT64
-name|Converted
+name|ConvertedInteger
 decl_stmt|;
 name|char
 name|ErrBuf
@@ -1889,10 +1889,8 @@ name|AcpiUtStrtoul64
 argument_list|(
 name|String
 argument_list|,
-name|ACPI_STRTOUL_64BIT
-argument_list|,
 operator|&
-name|Converted
+name|ConvertedInteger
 argument_list|)
 expr_stmt|;
 if|if
@@ -1907,9 +1905,7 @@ name|sprintf
 argument_list|(
 name|ErrBuf
 argument_list|,
-literal|"%s %s\n"
-argument_list|,
-literal|"Conversion error:"
+literal|"While creating 64-bit constant: %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -1917,15 +1913,34 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AslCompilererror
+name|AslCommonError
 argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_SYNTAX
+argument_list|,
+name|Gbl_CurrentLineNumber
+argument_list|,
+name|Gbl_LogicalLineNumber
+argument_list|,
+name|Gbl_CurrentLineOffset
+argument_list|,
+name|Gbl_CurrentColumn
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Filename
+argument_list|,
 name|ErrBuf
 argument_list|)
 expr_stmt|;
 block|}
 return|return
 operator|(
-name|Converted
+name|ConvertedInteger
 operator|)
 return|;
 block|}

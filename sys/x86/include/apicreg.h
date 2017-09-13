@@ -1675,6 +1675,13 @@ name|IOAPIC_EOIR
 value|0x40
 end_define
 
+begin_define
+define|#
+directive|define
+name|IOAPIC_WND_SIZE
+value|0x50
+end_define
+
 begin_comment
 comment|/* indexes into IO APIC */
 end_comment

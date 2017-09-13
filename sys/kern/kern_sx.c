@@ -476,6 +476,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__read_frequently
 name|u_int
 name|asx_retries
 init|=
@@ -485,6 +486,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__read_frequently
 name|u_int
 name|asx_loops
 init|=
@@ -557,7 +559,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|lock_delay_config
-name|__read_mostly
+name|__read_frequently
 name|sx_delay
 decl_stmt|;
 end_decl_stmt

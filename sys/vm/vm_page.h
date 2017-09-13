@@ -433,6 +433,12 @@ name|PQ_COUNT
 value|4
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_PAGE_HAVE_PGLIST
+end_ifndef
+
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
@@ -442,6 +448,17 @@ name|vm_page
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|VM_PAGE_HAVE_PGLIST
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SLIST_HEAD
@@ -1604,6 +1621,22 @@ parameter_list|(
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_change_lock
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+modifier|*
+name|mtx
 parameter_list|)
 function_decl|;
 end_function_decl

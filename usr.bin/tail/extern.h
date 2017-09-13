@@ -12,7 +12,7 @@ name|p
 parameter_list|,
 name|size
 parameter_list|)
-value|do { \ 	if (write(STDOUT_FILENO, p, size) != (ssize_t)size) \ 		oerr(); \ 	} while(0)
+value|do { \ 	ssize_t res; \ 	res = write(STDOUT_FILENO, p, size); \ 	if (res != (ssize_t)size) { \ 		if (res == -1) \ 			oerr(); \ 		else \ 			errx(1, "stdout"); \ 	} \ } while (0)
 end_define
 
 begin_define

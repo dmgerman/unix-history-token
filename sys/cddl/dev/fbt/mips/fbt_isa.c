@@ -250,13 +250,6 @@ name|retfbt
 decl_stmt|;
 name|uint32_t
 modifier|*
-name|target
-decl_stmt|,
-modifier|*
-name|start
-decl_stmt|;
-name|uint32_t
-modifier|*
 name|instr
 decl_stmt|,
 modifier|*

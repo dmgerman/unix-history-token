@@ -20687,9 +20687,6 @@ name|VXGE_HAL_VPD_LENGTH
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|vxge_os_memzero
 argument_list|(
 name|hldev
@@ -20703,9 +20700,6 @@ argument_list|,
 name|VXGE_HAL_VPD_LENGTH
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|vxge_os_memcpy
 argument_list|(
 name|hldev
@@ -20745,9 +20739,6 @@ operator|<
 name|VXGE_HAL_VPD_LENGTH
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|vxge_os_memzero
 argument_list|(
 name|hldev
@@ -20764,9 +20755,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|vxge_os_memcpy
 argument_list|(
 name|hldev

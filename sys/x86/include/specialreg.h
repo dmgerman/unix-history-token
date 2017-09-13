@@ -1570,6 +1570,45 @@ value|0x00000008
 end_define
 
 begin_comment
+comment|/*  * AMD extended function 8000_0007h ebx info  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AMDRAS_MCA_OF_RECOV
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDRAS_SUCCOR
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDRAS_HW_ASSERT
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDRAS_SCALABLE_MCA
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDRAS_PFEH_SUPPORT
+value|0x00000010
+end_define
+
+begin_comment
 comment|/*  * AMD extended function 8000_0007h edx info  */
 end_comment
 
@@ -4189,7 +4228,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_VAL
+name|MC_MISC_AMD_VAL
 value|0x8000000000000000
 end_define
 
@@ -4200,7 +4239,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_CNTP
+name|MC_MISC_AMD_CNTP
 value|0x4000000000000000
 end_define
 
@@ -4211,7 +4250,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_LOCK
+name|MC_MISC_AMD_LOCK
 value|0x2000000000000000
 end_define
 
@@ -4222,7 +4261,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_LVT_MASK
+name|MC_MISC_AMD_INTP
+value|0x1000000000000000
+end_define
+
+begin_comment
+comment|/* Int. type can generate interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_MISC_AMD_LVT_MASK
 value|0x00f0000000000000
 end_define
 
@@ -4233,14 +4283,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_LVT_SHIFT
+name|MC_MISC_AMD_LVT_SHIFT
 value|52
 end_define
 
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_CNTEN
+name|MC_MISC_AMD_CNTEN
 value|0x0008000000000000
 end_define
 
@@ -4251,7 +4301,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_INT_MASK
+name|MC_MISC_AMD_INT_MASK
 value|0x0006000000000000
 end_define
 
@@ -4262,7 +4312,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_INT_LVT
+name|MC_MISC_AMD_INT_LVT
 value|0x0002000000000000
 end_define
 
@@ -4273,7 +4323,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_INT_SMI
+name|MC_MISC_AMD_INT_SMI
 value|0x0004000000000000
 end_define
 
@@ -4284,7 +4334,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_OVERFLOW
+name|MC_MISC_AMD_OVERFLOW
 value|0x0001000000000000
 end_define
 
@@ -4295,7 +4345,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_CNT_MASK
+name|MC_MISC_AMD_CNT_MASK
 value|0x00000fff00000000
 end_define
 
@@ -4306,21 +4356,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_CNT_SHIFT
+name|MC_MISC_AMD_CNT_SHIFT
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_CNT_MAX
+name|MC_MISC_AMD_CNT_MAX
 value|0xfff
 end_define
 
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_PTR_MASK
+name|MC_MISC_AMD_PTR_MASK
 value|0x00000000ff000000
 end_define
 
@@ -4331,7 +4381,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_MISC_AMDNB_PTR_SHIFT
+name|MC_MISC_AMD_PTR_SHIFT
 value|24
 end_define
 

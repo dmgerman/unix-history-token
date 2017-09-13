@@ -10887,9 +10887,6 @@ name|struct
 name|spglist
 name|free
 decl_stmt|;
-name|int
-name|anyvalid
-decl_stmt|;
 comment|/* 	 * Perform an unsynchronized read.  This is, however, safe. 	 */
 if|if
 condition|(
@@ -10902,10 +10899,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|anyvalid
-operator|=
-literal|0
-expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -11304,15 +11297,6 @@ condition|)
 name|rw_wunlock
 argument_list|(
 name|lock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|anyvalid
-condition|)
-name|pmap_invalidate_all
-argument_list|(
-name|pmap
 argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
@@ -12294,18 +12278,12 @@ name|pmap_invalidate_page
 argument_list|(
 name|pmap
 argument_list|,
-name|va
+name|sva
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 name|PMAP_UNLOCK
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
-comment|/* TODO: Only invalidate entries we are touching */
-name|pmap_invalidate_all
 argument_list|(
 name|pmap
 argument_list|)
@@ -21487,9 +21465,11 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
-name|td_pcb
+name|td_proc
 operator|->
-name|pcb_l0addr
+name|p_md
+operator|.
+name|md_l0addr
 operator|=
 name|vtophys
 argument_list|(
@@ -21498,31 +21478,48 @@ operator|->
 name|pm_l0
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("msr ttbr0_el1, %0" : : "r"(td->td_pcb->pcb_l0addr));
+asm|__asm __volatile("msr ttbr0_el1, %0" : :
+literal|"r"
+operator|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_md
+operator|.
+name|md_l0addr
+operator|)
+block|)
+function|;
+end_function
+
+begin_expr_stmt
 name|pmap_invalidate_all
 argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|critical_exit
 argument_list|()
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
-begin_function
-name|void
+begin_macro
+unit|}  void
 name|pmap_sync_icache
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_offset_t
-name|va
-parameter_list|,
-name|vm_size_t
-name|sz
-parameter_list|)
+argument_list|(
+argument|pmap_t pmap
+argument_list|,
+argument|vm_offset_t va
+argument_list|,
+argument|vm_size_t sz
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -21622,7 +21619,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
+end_block
 
 begin_function
 name|int

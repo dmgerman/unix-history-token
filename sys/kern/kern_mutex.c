@@ -570,7 +570,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|lock_delay_config
-name|__read_mostly
+name|__read_frequently
 name|mtx_delay
 decl_stmt|;
 end_decl_stmt
@@ -657,7 +657,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|lock_delay_config
-name|__read_mostly
+name|__read_frequently
 name|mtx_spin_delay
 decl_stmt|;
 end_decl_stmt
@@ -730,6 +730,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|mtx
+name|__exclusive_cache_line
 name|Giant
 decl_stmt|;
 end_decl_stmt

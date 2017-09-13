@@ -11959,6 +11959,12 @@ case|:
 case|case
 name|SIOCGIFGENERIC
 case|:
+case|case
+name|SIOCGIFRSSKEY
+case|:
+case|case
+name|SIOCGIFRSSHASH
+case|:
 if|if
 condition|(
 name|ifp

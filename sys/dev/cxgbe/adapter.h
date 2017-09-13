@@ -539,7 +539,14 @@ operator|<<
 literal|1
 operator|)
 block|,
-comment|/* INTR_DIRECT	= (1<< 2),	No longer used. */
+name|CHK_MBOX_ACCESS
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
 name|MASTER_PF
 init|=
 operator|(
@@ -649,7 +656,27 @@ literal|1
 operator|<<
 literal|0
 operator|)
-block|, }
+block|,
+comment|/* Log all mbox cmd/rpl. */
+name|DF_LOAD_FW_ANYTIME
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+comment|/* Allow LOAD_FW after init */
+name|DF_DISABLE_TCB_CACHE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|/* Disable TCB cache (T6+) */
+block|}
 enum|;
 end_enum
 
@@ -719,10 +746,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|struct
-name|ifmedia
-name|media
 decl_stmt|;
 name|unsigned
 name|long
@@ -1031,6 +1054,10 @@ decl_stmt|;
 name|struct
 name|link_config
 name|old_link_cfg
+decl_stmt|;
+name|struct
+name|ifmedia
+name|media
 decl_stmt|;
 name|struct
 name|timeval

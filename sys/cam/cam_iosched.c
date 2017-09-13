@@ -668,8 +668,8 @@ value|1u
 define|#
 directive|define
 name|LAT_BUCKETS
-value|12
-comment|/*< 1ms< 2ms ... 512ms< 1024ms> 1024ms */
+value|15
+comment|/*< 1ms< 2ms ...< 2^(n-1)ms>= 2^(n-1)ms*/
 name|uint64_t
 name|latencies
 index|[
@@ -4218,7 +4218,12 @@ operator|)
 operator|->
 name|quanta
 operator|=
+name|min
+argument_list|(
+name|hz
+argument_list|,
 literal|200
+argument_list|)
 expr_stmt|;
 name|cam_iosched_iop_stats_init
 argument_list|(
@@ -5958,13 +5963,16 @@ name|cam_iosched_io_metric_update
 argument_list|(
 name|isc
 argument_list|,
+name|cam_iosched_sbintime_t
+argument_list|(
 name|done_ccb
 operator|->
 name|ccb_h
 operator|.
 name|qos
 operator|.
-name|sim_data
+name|periph_data
+argument_list|)
 argument_list|,
 name|bp
 operator|->
@@ -6205,7 +6213,11 @@ begin_decl_stmt
 specifier|static
 name|sbintime_t
 name|latencies
-index|[]
+index|[
+name|LAT_BUCKETS
+operator|-
+literal|1
+index|]
 init|=
 block|{
 name|SBT_1MS
@@ -6251,6 +6263,19 @@ block|,
 name|SBT_1MS
 operator|<<
 literal|10
+block|,
+name|SBT_1MS
+operator|<<
+literal|11
+block|,
+name|SBT_1MS
+operator|<<
+literal|12
+block|,
+name|SBT_1MS
+operator|<<
+literal|13
+comment|/* 8.192s */
 block|}
 decl_stmt|;
 end_decl_stmt

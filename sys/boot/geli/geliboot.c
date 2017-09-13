@@ -911,9 +911,15 @@ comment|/*  * Attempt to decrypt the device  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|geli_attach
 parameter_list|(
+name|struct
+name|geli_entry
+modifier|*
+name|ge
+parameter_list|,
 name|struct
 name|dsk
 modifier|*
@@ -979,31 +985,6 @@ name|G_ELI_DATAIVKEYLEN
 argument_list|)
 expr_stmt|;
 block|}
-name|SLIST_FOREACH_SAFE
-argument_list|(
-argument|geli_e
-argument_list|,
-argument|&geli_head
-argument_list|,
-argument|entries
-argument_list|,
-argument|geli_e_tmp
-argument_list|)
-block|{
-if|if
-condition|(
-name|geli_same_device
-argument_list|(
-name|geli_e
-argument_list|,
-name|dskp
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-continue|continue;
-block|}
 if|if
 condition|(
 name|mkeyp
@@ -1012,7 +993,7 @@ name|NULL
 operator|||
 name|geli_findkey
 argument_list|(
-name|geli_e
+name|ge
 argument_list|,
 name|dskp
 argument_list|,
@@ -1036,7 +1017,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Prepare Derived-Key from the user passphrase. 		 */
+comment|/* 	 * Prepare Derived-Key from the user passphrase. 	 */
 if|if
 condition|(
 name|geli_e
@@ -1423,7 +1404,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * The encryption key is: ekey = HMAC_SHA512(Data-Key, 0x10) 			 */
+comment|/* 		 * The encryption key is: ekey = HMAC_SHA512(Data-Key, 0x10) 		 */
 name|g_eli_crypto_hmac
 argument_list|(
 name|mkp
@@ -1509,13 +1490,6 @@ block|}
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-comment|/* Disk not found. */
-return|return
-operator|(
-literal|2
 operator|)
 return|;
 block|}
@@ -1891,6 +1865,8 @@ if|if
 condition|(
 name|geli_attach
 argument_list|(
+name|geli_e
+argument_list|,
 name|dskp
 argument_list|,
 name|NULL
@@ -1953,6 +1929,31 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|SLIST_FOREACH_SAFE
+argument_list|(
+argument|geli_e
+argument_list|,
+argument|&geli_head
+argument_list|,
+argument|entries
+argument_list|,
+argument|geli_e_tmp
+argument_list|)
+block|{
+if|if
+condition|(
+name|geli_same_device
+argument_list|(
+name|geli_e
+argument_list|,
+name|dskp
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+continue|continue;
+block|}
 comment|/* TODO: Implement GELI keyfile(s) support */
 for|for
 control|(
@@ -1987,6 +1988,8 @@ if|if
 condition|(
 name|geli_attach
 argument_list|(
+name|geli_e
+argument_list|,
 name|dskp
 argument_list|,
 name|pw
@@ -2020,6 +2023,18 @@ argument_list|(
 name|pw
 argument_list|,
 name|GELI_PW_MAXLEN
+argument_list|,
+operator|(
+name|geli_e
+operator|->
+name|md
+operator|.
+name|md_flags
+operator|&
+name|G_ELI_FLAG_GELIDISPLAYPASS
+operator|)
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2031,6 +2046,8 @@ if|if
 condition|(
 name|geli_attach
 argument_list|(
+name|geli_e
+argument_list|,
 name|dskp
 argument_list|,
 name|pw
@@ -2046,6 +2063,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 block|}
 return|return

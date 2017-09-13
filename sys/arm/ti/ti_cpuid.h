@@ -293,6 +293,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+specifier|static
+name|__inline
+name|bool
+name|ti_soc_is_supported
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|_ti_chip
+operator|!=
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

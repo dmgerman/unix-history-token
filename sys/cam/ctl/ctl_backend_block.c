@@ -12636,7 +12636,7 @@ argument_list|(
 name|tmpstr
 argument_list|)
 argument_list|,
-literal|"MYSERIAL%4d"
+literal|"MYSERIAL%04d"
 argument_list|,
 name|softc
 operator|->
@@ -12758,7 +12758,7 @@ argument_list|(
 name|tmpstr
 argument_list|)
 argument_list|,
-literal|"MYDEVID%4d"
+literal|"MYDEVID%04d"
 argument_list|,
 name|softc
 operator|->

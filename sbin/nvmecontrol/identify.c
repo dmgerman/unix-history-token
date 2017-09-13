@@ -280,6 +280,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"Controller ID:              0x%02x\n"
+argument_list|,
+name|cdata
+operator|->
+name|ctrlr_id
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;

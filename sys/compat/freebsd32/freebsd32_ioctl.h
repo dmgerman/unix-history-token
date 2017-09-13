@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|MDNPAD32
-value|MDNPAD - 1
+value|MDNPAD
 end_define
 
 begin_struct
@@ -101,6 +101,10 @@ name|int
 name|md_fwsectors
 decl_stmt|;
 comment|/* firmware sectors */
+name|caddr_t32
+name|md_label
+decl_stmt|;
+comment|/* label of the device */
 name|int
 name|md_pad
 index|[
@@ -109,6 +113,12 @@ index|]
 decl_stmt|;
 comment|/* padding for future ideas */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -302,28 +312,28 @@ begin_define
 define|#
 directive|define
 name|MDIOCATTACH_32
-value|_IOC(IOC_INOUT, 'm', 0, sizeof(struct md_ioctl32) + 4)
+value|_IOC(IOC_INOUT, 'm', 0, sizeof(struct md_ioctl32))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MDIOCDETACH_32
-value|_IOC(IOC_INOUT, 'm', 1, sizeof(struct md_ioctl32) + 4)
+value|_IOC(IOC_INOUT, 'm', 1, sizeof(struct md_ioctl32))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MDIOCQUERY_32
-value|_IOC(IOC_INOUT, 'm', 2, sizeof(struct md_ioctl32) + 4)
+value|_IOC(IOC_INOUT, 'm', 2, sizeof(struct md_ioctl32))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MDIOCLIST_32
-value|_IOC(IOC_INOUT, 'm', 3, sizeof(struct md_ioctl32) + 4)
+value|_IOC(IOC_INOUT, 'm', 3, sizeof(struct md_ioctl32))
 end_define
 
 begin_define

@@ -622,14 +622,10 @@ name|uint16_t
 name|fstat
 decl_stmt|;
 comment|// FPU Status Word (fsw)
-name|uint8_t
+name|uint16_t
 name|ftag
 decl_stmt|;
 comment|// FPU Tag Word (ftw)
-name|uint8_t
-name|reserved_1
-decl_stmt|;
-comment|// Reserved
 name|uint16_t
 name|fop
 decl_stmt|;

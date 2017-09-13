@@ -471,7 +471,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|AllocatePool
 argument_list|(
@@ -543,7 +543,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|bs
+name|BS
 operator|->
 name|FreePool
 argument_list|(
@@ -633,9 +633,24 @@ name|devinfo
 operator|->
 name|devdata
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EFI_DEBUG
+block|{
+name|CHAR16
+modifier|*
+name|text
+init|=
+name|efi_devpath_name
+argument_list|(
+name|devinfo
+operator|->
+name|devpath
+argument_list|)
+decl_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"load: '%s' spa: '%s', devpath: %s\n"
+literal|"load: '%s' spa: '%s', devpath: %S\n"
 argument_list|,
 name|filepath
 argument_list|,
@@ -643,14 +658,17 @@ name|spa
 operator|->
 name|spa_name
 argument_list|,
-name|devpath_str
-argument_list|(
-name|devinfo
-operator|->
-name|devpath
-argument_list|)
+name|text
 argument_list|)
 expr_stmt|;
+name|efi_free_devpath_name
+argument_list|(
+name|text
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -827,7 +845,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|bs
+name|BS
 operator|->
 name|AllocatePool
 argument_list|(
@@ -917,7 +935,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bs
+name|BS
 operator|->
 name|FreePool
 argument_list|(

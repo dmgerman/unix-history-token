@@ -488,6 +488,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|mtx_padalign
+name|__exclusive_cache_line
 name|pbuf_mtx
 decl_stmt|;
 end_decl_stmt

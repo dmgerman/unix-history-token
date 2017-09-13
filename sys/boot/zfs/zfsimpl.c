@@ -102,6 +102,8 @@ literal|"org.illumos:sha512"
 block|,
 literal|"org.illumos:skein"
 block|,
+literal|"org.zfsonlinux:large_dnode"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -1845,7 +1847,7 @@ operator|=
 name|size
 expr_stmt|;
 block|}
-comment|/*printf("ZFS: reading %d bytes at 0x%jx to %p\n", psize, (uintmax_t)offset, buf);*/
+comment|/*printf("ZFS: reading %zu bytes at 0x%jx to %p\n", psize, (uintmax_t)offset, buf);*/
 name|rc
 operator|=
 name|vdev
@@ -11163,10 +11165,10 @@ name|blkptr_t
 modifier|*
 name|bp
 init|=
-operator|&
+name|DN_SPILL_BLKPTR
+argument_list|(
 name|dn
-operator|->
-name|dn_spill
+argument_list|)
 decl_stmt|;
 name|int
 name|error
@@ -11447,10 +11449,10 @@ operator|)
 return|;
 name|bp
 operator|=
-operator|&
+name|DN_SPILL_BLKPTR
+argument_list|(
 name|dn
-operator|->
-name|dn_spill
+argument_list|)
 expr_stmt|;
 name|size
 operator|=

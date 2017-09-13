@@ -2722,6 +2722,9 @@ condition|(
 name|rv
 operator|&&
 name|pgrep
+operator|&&
+operator|!
+name|quiet
 condition|)
 name|putchar
 argument_list|(

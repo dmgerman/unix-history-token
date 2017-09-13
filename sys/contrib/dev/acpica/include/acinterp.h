@@ -294,7 +294,7 @@ modifier|*
 name|ResultDesc
 parameter_list|,
 name|UINT32
-name|Flags
+name|ImplicitConversion
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1563,20 +1563,6 @@ name|ImplicitConversion
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|ACPI_IMPLICIT_CONVERSION
-value|TRUE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NO_IMPLICIT_CONVERSION
-value|FALSE
-end_define
 
 begin_comment
 comment|/*  * exstoren - resolve/store object  */

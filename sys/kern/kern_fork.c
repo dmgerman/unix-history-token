@@ -922,6 +922,34 @@ block|{
 if|if
 condition|(
 name|pid
+operator|==
+literal|0
+condition|)
+name|randompid
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pid
+operator|==
+literal|1
+condition|)
+comment|/* generate a random PID modulus between 100 and 1123 */
+name|randompid
+operator|=
+literal|100
+operator|+
+name|arc4random
+argument_list|()
+operator|%
+literal|1024
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pid
 operator|<
 literal|0
 operator|||
@@ -932,7 +960,7 @@ operator|-
 literal|100
 condition|)
 comment|/* out of range */
-name|pid
+name|randompid
 operator|=
 name|pid_max
 operator|-
@@ -943,25 +971,14 @@ if|if
 condition|(
 name|pid
 operator|<
-literal|2
-condition|)
-comment|/* NOP */
-name|pid
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|pid
-operator|<
 literal|100
 condition|)
 comment|/* Make it reasonable */
-name|pid
+name|randompid
 operator|=
 literal|100
 expr_stmt|;
+else|else
 name|randompid
 operator|=
 name|pid
@@ -1002,7 +1019,7 @@ name|sysctl_kern_randompid
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Random PID modulus"
+literal|"Random PID modulus. Special values: 0: disable, 1: choose random value"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -50,7 +50,7 @@ name|unsigned
 name|int
 name|ql83xx_minidump_version_sub
 init|=
-literal|64
+literal|66
 decl_stmt|;
 end_decl_stmt
 
@@ -262153,7 +262153,7 @@ literal|0x05
 block|,
 literal|0x04
 block|,
-literal|0x40
+literal|0x42
 block|,
 literal|0x00
 block|,
@@ -262201,7 +262201,7 @@ literal|0x34
 block|,
 literal|0x39
 block|,
-literal|0x7e
+literal|0x7c
 block|,
 literal|0xbf
 block|}

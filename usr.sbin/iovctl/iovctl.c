@@ -882,6 +882,10 @@ operator|&&
 name|filename
 operator|==
 name|NULL
+operator|&&
+name|action
+operator|!=
+name|CONFIG
 condition|)
 block|{
 name|warnx
@@ -903,6 +907,22 @@ name|CONFIG
 case|:
 if|if
 condition|(
+name|device
+operator|!=
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"-d flag cannot be used with the -C flag"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|filename
 operator|==
 name|NULL
@@ -910,7 +930,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"-d flag cannot be used with the -C flag"
+literal|"The -f flag must be specified"
 argument_list|)
 expr_stmt|;
 name|usage

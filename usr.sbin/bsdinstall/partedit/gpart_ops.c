@@ -6028,6 +6028,15 @@ operator|!=
 literal|'/'
 condition|)
 block|{
+name|choice
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|interactive
+condition|)
+block|{
 name|dialog_vars
 operator|.
 name|defaultno
@@ -6056,6 +6065,7 @@ name|defaultno
 operator|=
 name|FALSE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|choice

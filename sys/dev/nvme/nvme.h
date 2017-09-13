@@ -135,6 +135,22 @@ name|__packed
 union|;
 end_union
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|union
+name|cap_lo_register
+argument_list|)
+operator|==
+literal|4
+argument_list|,
+literal|"bad size for cap_lo_register"
+argument_list|)
+assert|;
+end_assert
+
 begin_union
 union|union
 name|cap_hi_register
@@ -196,6 +212,22 @@ block|}
 name|__packed
 union|;
 end_union
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|union
+name|cap_hi_register
+argument_list|)
+operator|==
+literal|4
+argument_list|,
+literal|"bad size of cap_hi_register"
+argument_list|)
+assert|;
+end_assert
 
 begin_union
 union|union
@@ -267,6 +299,22 @@ name|__packed
 union|;
 end_union
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|union
+name|cc_register
+argument_list|)
+operator|==
+literal|4
+argument_list|,
+literal|"bad size for cc_register"
+argument_list|)
+assert|;
+end_assert
+
 begin_enum
 enum|enum
 name|shn_value
@@ -322,6 +370,22 @@ block|}
 name|__packed
 union|;
 end_union
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|union
+name|csts_register
+argument_list|)
+operator|==
+literal|4
+argument_list|,
+literal|"bad size for csts_register"
+argument_list|)
+assert|;
+end_assert
 
 begin_enum
 enum|enum
@@ -381,6 +445,22 @@ block|}
 name|__packed
 union|;
 end_union
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|union
+name|aqa_register
+argument_list|)
+operator|==
+literal|4
+argument_list|,
+literal|"bad size for aqa_resgister"
+argument_list|)
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -463,6 +543,22 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_registers
+argument_list|)
+operator|==
+literal|0x1008
+argument_list|,
+literal|"bad size for nvme_registers"
+argument_list|)
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -547,6 +643,24 @@ name|__packed
 struct|;
 end_struct
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_command
+argument_list|)
+operator|==
+literal|16
+operator|*
+literal|4
+argument_list|,
+literal|"bad size for nvme_command"
+argument_list|)
+assert|;
+end_assert
+
 begin_struct
 struct|struct
 name|nvme_status
@@ -591,6 +705,22 @@ name|__packed
 struct|;
 end_struct
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_status
+argument_list|)
+operator|==
+literal|2
+argument_list|,
+literal|"bad size for nvme_status"
+argument_list|)
+assert|;
+end_assert
+
 begin_struct
 struct|struct
 name|nvme_completion
@@ -627,6 +757,24 @@ name|__packed
 struct|;
 end_struct
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_completion
+argument_list|)
+operator|==
+literal|4
+operator|*
+literal|4
+argument_list|,
+literal|"bad size for nvme_completion"
+argument_list|)
+assert|;
+end_assert
+
 begin_struct
 struct|struct
 name|nvme_dsm_range
@@ -644,6 +792,22 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_dsm_range
+argument_list|)
+operator|==
+literal|16
+argument_list|,
+literal|"bad size for nvme_dsm_ranage"
+argument_list|)
+assert|;
+end_assert
 
 begin_comment
 comment|/* status code types */
@@ -1024,7 +1188,32 @@ name|NVME_FEAT_ASYNC_EVENT_CONFIGURATION
 init|=
 literal|0x0B
 block|,
-comment|/* 0x0C-0x7F - reserved */
+name|NVME_FEAT_AUTONOMOUS_POWER_STATE_TRANSITION
+init|=
+literal|0x0C
+block|,
+name|NVME_FEAT_HOST_MEMORY_BUFFER
+init|=
+literal|0x0D
+block|,
+name|NVME_FEAT_TIMESTAMP
+init|=
+literal|0x0E
+block|,
+name|NVME_FEAT_KEEP_ALIVE_TIMER
+init|=
+literal|0x0F
+block|,
+name|NVME_FEAT_HOST_CONTROLLED_THERMAL_MGMT
+init|=
+literal|0x10
+block|,
+name|NVME_FEAT_NON_OP_POWER_STATE_CONFIG
+init|=
+literal|0x11
+block|,
+comment|/* 0x12-0x77 - reserved */
+comment|/* 0x78-0x7f - NVMe Management Interface */
 name|NVME_FEAT_SOFTWARE_PROGRESS_MARKER
 init|=
 literal|0x80
@@ -1204,6 +1393,22 @@ name|__packed
 struct|;
 end_struct
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_power_state
+argument_list|)
+operator|==
+literal|32
+argument_list|,
+literal|"bad size for nvme_power_state"
+argument_list|)
+assert|;
+end_assert
+
 begin_define
 define|#
 directive|define
@@ -1282,10 +1487,45 @@ comment|/** Controller ID */
 name|uint16_t
 name|ctrlr_id
 decl_stmt|;
+comment|/** Version */
+name|uint32_t
+name|ver
+decl_stmt|;
+comment|/** RTD3 Resume Latency */
+name|uint32_t
+name|rtd3r
+decl_stmt|;
+comment|/** RTD3 Enter Latency */
+name|uint32_t
+name|rtd3e
+decl_stmt|;
+comment|/** Optional Asynchronous Events Supported */
+name|uint32_t
+name|oaes
+decl_stmt|;
+comment|/* bitfield really */
+comment|/** Controller Attributes */
+name|uint32_t
+name|ctratt
+decl_stmt|;
+comment|/* bitfield really */
 name|uint8_t
 name|reserved1
 index|[
-literal|176
+literal|12
+index|]
+decl_stmt|;
+comment|/** FRU Globally Unique Identifier */
+name|uint8_t
+name|fguid
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|uint8_t
+name|reserved2
+index|[
+literal|128
 index|]
 decl_stmt|;
 comment|/* bytes 256-511: admin command set attributes */
@@ -1401,11 +1641,43 @@ block|}
 name|__packed
 name|avscc
 struct|;
+comment|/** Autonomous Power State Transition Attributes */
+struct|struct
+block|{
+comment|/* Autonmous Power State Transitions supported */
 name|uint8_t
-name|reserved2
-index|[
-literal|15
-index|]
+name|apst_supp
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|apsta_rsvd
+range|:
+literal|7
+decl_stmt|;
+block|}
+name|__packed
+name|apsta
+struct|;
+comment|/** Warning Composite Temperature Threshold */
+name|uint16_t
+name|wctemp
+decl_stmt|;
+comment|/** Critical Composite Temperature Threshold */
+name|uint16_t
+name|cctemp
+decl_stmt|;
+comment|/** Maximum Time for Firmware Activation */
+name|uint16_t
+name|mtfa
+decl_stmt|;
+comment|/** Host Memory Buffer Preferred Size */
+name|uint32_t
+name|hmpre
+decl_stmt|;
+comment|/** Host Memory Buffer Minimum Size */
+name|uint32_t
+name|hmmin
 decl_stmt|;
 comment|/** Name space capabilities  */
 struct|struct
@@ -1427,10 +1699,50 @@ block|}
 name|__packed
 name|untncap
 struct|;
+comment|/** Replay Protected Memory Block Support */
+name|uint32_t
+name|rpmbs
+decl_stmt|;
+comment|/* Really a bitfield */
+comment|/** Extended Device Self-test Time */
+name|uint16_t
+name|edstt
+decl_stmt|;
+comment|/** Device Self-test Options */
+name|uint8_t
+name|dsto
+decl_stmt|;
+comment|/* Really a bitfield */
+comment|/** Firmware Update Granularity */
+name|uint8_t
+name|fwug
+decl_stmt|;
+comment|/** Keep Alive Support */
+name|uint16_t
+name|kas
+decl_stmt|;
+comment|/** Host Controlled Thermal Management Attributes */
+name|uint16_t
+name|hctma
+decl_stmt|;
+comment|/* Really a bitfield */
+comment|/** Minimum Thermal Management Temperature */
+name|uint16_t
+name|mntmt
+decl_stmt|;
+comment|/** Maximum Thermal Management Temperature */
+name|uint16_t
+name|mxtmt
+decl_stmt|;
+comment|/** Sanitize Capabilities */
+name|uint32_t
+name|sanicap
+decl_stmt|;
+comment|/* Really a bitfield */
 name|uint8_t
 name|reserved3
 index|[
-literal|200
+literal|180
 index|]
 decl_stmt|;
 comment|/* bytes 512-703: nvm command set attributes */
@@ -1468,11 +1780,9 @@ block|}
 name|__packed
 name|cqes
 struct|;
-name|uint8_t
-name|reserved4
-index|[
-literal|2
-index|]
+comment|/** Maximum Outstanding Commands */
+name|uint16_t
+name|maxcmd
 decl_stmt|;
 comment|/** number of namespaces */
 name|uint32_t
@@ -1567,6 +1877,22 @@ literal|4
 argument_list|)
 struct|;
 end_struct
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_controller_data
+argument_list|)
+operator|==
+literal|4096
+argument_list|,
+literal|"bad size for nvme_controller_data"
+argument_list|)
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -1774,6 +2100,22 @@ argument_list|)
 struct|;
 end_struct
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_namespace_data
+argument_list|)
+operator|==
+literal|4096
+argument_list|,
+literal|"bad size for nvme_namepsace_data"
+argument_list|)
+assert|;
+end_assert
+
 begin_enum
 enum|enum
 name|nvme_log_page
@@ -1879,6 +2221,22 @@ argument_list|)
 struct|;
 end_struct
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_error_information_entry
+argument_list|)
+operator|==
+literal|64
+argument_list|,
+literal|"bad size for nvme_error_information_entry"
+argument_list|)
+assert|;
+end_assert
+
 begin_union
 union|union
 name|nvme_critical_warning_state
@@ -1926,6 +2284,22 @@ block|}
 name|__packed
 union|;
 end_union
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|union
+name|nvme_critical_warning_state
+argument_list|)
+operator|==
+literal|1
+argument_list|,
+literal|"bad size for nvme_critical_warning_state"
+argument_list|)
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -2045,6 +2419,22 @@ argument_list|)
 struct|;
 end_struct
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_health_information_page
+argument_list|)
+operator|==
+literal|512
+argument_list|,
+literal|"bad size for nvme_health_information_page"
+argument_list|)
+assert|;
+end_assert
+
 begin_struct
 struct|struct
 name|nvme_firmware_page
@@ -2094,6 +2484,22 @@ argument_list|)
 struct|;
 end_struct
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nvme_firmware_page
+argument_list|)
+operator|==
+literal|512
+argument_list|,
+literal|"bad size for nvme_firmware_page"
+argument_list|)
+assert|;
+end_assert
+
 begin_struct
 struct|struct
 name|intel_log_temp_stats
@@ -2136,6 +2542,24 @@ literal|4
 argument_list|)
 struct|;
 end_struct
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|intel_log_temp_stats
+argument_list|)
+operator|==
+literal|13
+operator|*
+literal|8
+argument_list|,
+literal|"bad size for intel_log_temp_stats"
+argument_list|)
+assert|;
+end_assert
 
 begin_define
 define|#
@@ -2921,7 +3345,7 @@ name|nvme_command
 modifier|*
 name|cmd
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|)
 block|{
@@ -2954,7 +3378,7 @@ parameter_list|,
 name|uint32_t
 name|rwcmd
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|,
 name|uint64_t
@@ -3032,7 +3456,7 @@ name|nvme_command
 modifier|*
 name|cmd
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|,
 name|uint64_t
@@ -3069,7 +3493,7 @@ name|nvme_command
 modifier|*
 name|cmd
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|,
 name|uint64_t
@@ -3106,7 +3530,7 @@ name|nvme_command
 modifier|*
 name|cmd
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|,
 name|uint32_t

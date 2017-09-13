@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_pctrie.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_rwlock.h>
 end_include
 
@@ -52,6 +58,33 @@ end_include
 begin_comment
 comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  * List of locks  *	(c)	const until freed  *	(o)	per-object lock   *	(f)	free pages queue mutex  *  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_PAGE_HAVE_PGLIST
+end_ifndef
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|pglist
+argument_list|,
+name|vm_page
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|VM_PAGE_HAVE_PGLIST
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -83,14 +116,10 @@ argument_list|)
 name|shadow_list
 expr_stmt|;
 comment|/* chain of shadow objects */
-name|TAILQ_HEAD
-argument_list|(
-argument|respgs
-argument_list|,
-argument|vm_page
-argument_list|)
+name|struct
+name|pglist
 name|memq
-expr_stmt|;
+decl_stmt|;
 comment|/* list of resident pages */
 name|struct
 name|vm_radix
@@ -216,15 +245,16 @@ expr_stmt|;
 block|}
 name|sgp
 struct|;
-comment|/* 		 * Swap pager 		 * 		 *	swp_tmpfs - back-pointer to the tmpfs vnode, 		 *		     if any, which uses the vm object 		 *		     as backing store.  The handle 		 *		     cannot be reused for linking, 		 *		     because the vnode can be 		 *		     reclaimed and recreated, making 		 *		     the handle changed and hash-chain 		 *		     invalid. 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
+comment|/* 		 * Swap pager 		 * 		 *	swp_tmpfs - back-pointer to the tmpfs vnode, 		 *		     if any, which uses the vm object 		 *		     as backing store.  The handle 		 *		     cannot be reused for linking, 		 *		     because the vnode can be 		 *		     reclaimed and recreated, making 		 *		     the handle changed and hash-chain 		 *		     invalid. 		 * 		 *	swp_blks -   pc-trie of the allocated swap blocks. 		 * 		 */
 struct|struct
 block|{
 name|void
 modifier|*
 name|swp_tmpfs
 decl_stmt|;
-name|int
-name|swp_bcount
+name|struct
+name|pctrie
+name|swp_blks
 decl_stmt|;
 block|}
 name|swp

@@ -1852,6 +1852,28 @@ begin_comment
 comment|/* TCO Message 2 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TCO_WDSTATUS
+value|0x0e
+end_define
+
+begin_comment
+comment|/* TCO Watchdog status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_TMR
+value|0x12
+end_define
+
+begin_comment
+comment|/* TCP Reload value */
+end_comment
+
 begin_comment
 comment|/* bit definitions for SMI_EN and SMI_STS */
 end_comment
@@ -1888,6 +1910,13 @@ name|TCO_TIMER_MASK
 value|0x1f
 end_define
 
+begin_define
+define|#
+directive|define
+name|TCO_TIMER_MASK2
+value|0x2f
+end_define
+
 begin_comment
 comment|/* status bits for TCO1_STS */
 end_comment
@@ -1895,19 +1924,58 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCO_NEWCENTURY
-value|0x80
+name|TCO_SLVSEL
+value|0x2000
 end_define
 
 begin_comment
-comment|/* set for RTC year roll over (99 to 00) */
+comment|/* TCO Slave Select Soft Strap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_CPUSERR_STS
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_CPUSMI_STS
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_CPUSCI_STS
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_BIOSWR_STS
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_NEWCENTURY
+value|0x0080
+end_define
+
+begin_comment
+comment|/* set for RTC year roll over 					   (99 to 00) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TCO_TIMEOUT
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -1918,7 +1986,7 @@ begin_define
 define|#
 directive|define
 name|TCO_INT_STS
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -1929,12 +1997,19 @@ begin_define
 define|#
 directive|define
 name|TCO_SMI_STS
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
 comment|/* data in (DO NOT USE) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_NMI2SMI_STS
+value|0x0001
+end_define
 
 begin_comment
 comment|/* status bits for TCO2_STS */
@@ -1943,8 +2018,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCO_SMLINK_SLAVE_SMI
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCO_BOOT_STS
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -1955,15 +2037,33 @@ begin_define
 define|#
 directive|define
 name|TCO_SECOND_TO_STS
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
 comment|/* ran down twice */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TCO_INTRD_DET
+value|0x0001
+end_define
+
 begin_comment
 comment|/* control bits for TCO1_CNT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_LOCK
+value|0x1000
+end_define
+
+begin_comment
+comment|/* SMI_BASE.TCO_EN locked */
 end_comment
 
 begin_define
@@ -2011,6 +2111,81 @@ comment|/* trigger an NMI */
 end_comment
 
 begin_comment
+comment|/* control bits for TCO2_CNT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_OS_POLICY
+value|0x0030
+end_define
+
+begin_comment
+comment|/* mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_OS_POLICY_BOOT
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_OS_POLICY_SHUTD
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_OS_POLICY_NOLOAD
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_SMB_ALERT_DISABLE
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_INTRD_SEL
+value|0x0003
+end_define
+
+begin_comment
+comment|/* mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_INTRD_SEL_SILENT
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_INTRD_SEL_INTR
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_INTRD_SEL_SMI
+value|0x0002
+end_define
+
+begin_comment
 comment|/*  * Masks for the TCO timer value field in TCO_RLD.  * If the datasheets are to be believed, the minimum value actually varies  * from chipset to chipset - 4 for ICH5 and 2 for all other chipsets.  * I suspect this is a bug in the ICH5 datasheet and that the minimum is  * uniformly 2, but I'd rather err on the side of caution.  */
 end_comment
 
@@ -2036,7 +2211,7 @@ value|0x03ff
 end_define
 
 begin_comment
-comment|/* approximate length in nanoseconds of one WDT tick (about 0.6 sec) for TCO v1/v2 */
+comment|/*  * Approximate length in nanoseconds of one WDT tick (about 0.6 sec)  * for TCO v1/v2/v4  */
 end_comment
 
 begin_define
@@ -2047,7 +2222,7 @@ value|600000000
 end_define
 
 begin_comment
-comment|/* approximate length in nanoseconds of one WDT tick (about 1.0 sec) for TCO v3 */
+comment|/*  * Approximate length in nanoseconds of one WDT tick (about 1.0 sec)  * for TCO v3  */
 end_comment
 
 begin_define

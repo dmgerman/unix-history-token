@@ -2878,22 +2878,70 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DNODE_SIZE
+name|DNODE_MIN_SIZE
 value|(1<< DNODE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DN_MAX_NBLKPTR
-value|((DNODE_SIZE - DNODE_CORE_SIZE)>> SPA_BLKPTRSHIFT)
+name|DNODE_MAX_SIZE
+value|(1<< DNODE_BLOCK_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DN_MAX_BONUSLEN
-value|(DNODE_SIZE - DNODE_CORE_SIZE - (1<< SPA_BLKPTRSHIFT))
+name|DNODE_BLOCK_SIZE
+value|(1<< DNODE_BLOCK_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNODE_MIN_SLOTS
+value|(DNODE_MIN_SIZE>> DNODE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNODE_MAX_SLOTS
+value|(DNODE_MAX_SIZE>> DNODE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DN_BONUS_SIZE
+parameter_list|(
+name|dnsize
+parameter_list|)
+value|((dnsize) - DNODE_CORE_SIZE - \ 	(1<< SPA_BLKPTRSHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DN_SLOTS_TO_BONUSLEN
+parameter_list|(
+name|slots
+parameter_list|)
+value|DN_BONUS_SIZE((slots)<< DNODE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DN_OLD_MAX_BONUSLEN
+value|(DN_BONUS_SIZE(DNODE_MIN_SIZE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DN_MAX_NBLKPTR
+value|((DNODE_MIN_SIZE - DNODE_CORE_SIZE)>> \ 	SPA_BLKPTRSHIFT)
 end_define
 
 begin_define
@@ -2901,6 +2949,13 @@ define|#
 directive|define
 name|DN_MAX_OBJECT
 value|(1ULL<< DN_MAX_OBJECT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DN_ZERO_BONUSLEN
+value|(DN_BONUS_SIZE(DNODE_MAX_SIZE) + 1)
 end_define
 
 begin_define
@@ -3042,9 +3097,13 @@ name|dn_bonuslen
 decl_stmt|;
 comment|/* length of dn_bonus */
 name|uint8_t
+name|dn_extra_slots
+decl_stmt|;
+comment|/* # of subsequent slots consumed */
+name|uint8_t
 name|dn_pad2
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 comment|/* accounting is protected by dn_dirty_mtx */
@@ -3062,16 +3121,44 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+comment|/* 	 * The tail region is 448 bytes for a 512 byte dnode, and 	 * correspondingly larger for larger dnode sizes. The spill 	 * block pointer, when present, is always at the end of the tail 	 * region. There are three ways this space may be used, using 	 * a 512 byte dnode for this diagram: 	 * 	 * 0       64      128     192     256     320     384     448 (offset) 	 * +---------------+---------------+---------------+-------+ 	 * | dn_blkptr[0]  | dn_blkptr[1]  | dn_blkptr[2]  | /     | 	 * +---------------+---------------+---------------+-------+ 	 * | dn_blkptr[0]  | dn_bonus[0..319]                      | 	 * +---------------+-----------------------+---------------+ 	 * | dn_blkptr[0]  | dn_bonus[0..191]      | dn_spill      | 	 * +---------------+-----------------------+---------------+ 	 */
+union|union
+block|{
 name|blkptr_t
 name|dn_blkptr
 index|[
 literal|1
+operator|+
+name|DN_OLD_MAX_BONUSLEN
+operator|/
+sizeof|sizeof
+argument_list|(
+name|blkptr_t
+argument_list|)
 index|]
+decl_stmt|;
+struct|struct
+block|{
+name|blkptr_t
+name|__dn_ignore1
 decl_stmt|;
 name|uint8_t
 name|dn_bonus
 index|[
-name|DN_MAX_BONUSLEN
+name|DN_OLD_MAX_BONUSLEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+block|{
+name|blkptr_t
+name|__dn_ignore2
+decl_stmt|;
+name|uint8_t
+name|__dn_ignore3
+index|[
+name|DN_OLD_MAX_BONUSLEN
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -3083,9 +3170,23 @@ name|blkptr_t
 name|dn_spill
 decl_stmt|;
 block|}
+struct|;
+block|}
+union|;
+block|}
 name|dnode_phys_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|DN_SPILL_BLKPTR
+parameter_list|(
+name|dnp
+parameter_list|)
+value|(blkptr_t *)((char *)(dnp) + \ 	(((dnp)->dn_extra_slots + 1)<< DNODE_SHIFT) - (1<< SPA_BLKPTRSHIFT))
+end_define
 
 begin_typedef
 typedef|typedef

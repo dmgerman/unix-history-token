@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|MNTOPT_REMOUNT
-value|"remount"
+value|"update"
 end_define
 
 begin_comment

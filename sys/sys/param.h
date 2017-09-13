@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1200040
+value|1200044
 end_define
 
 begin_comment
@@ -137,6 +137,13 @@ define|#
 directive|define
 name|P_OSREL_MAP_GUARD
 value|1200035
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_OSREL_WRFSBASE
+value|1200041
 end_define
 
 begin_define

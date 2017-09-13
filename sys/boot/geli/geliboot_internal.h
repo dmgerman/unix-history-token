@@ -103,6 +103,7 @@ begin_define
 define|#
 directive|define
 name|_STAND
+value|1
 end_define
 
 begin_define

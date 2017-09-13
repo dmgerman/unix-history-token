@@ -208,7 +208,6 @@ specifier|extern
 name|boolean_t
 name|zfs_abd_scatter_enabled
 decl_stmt|;
-specifier|static
 specifier|inline
 name|boolean_t
 name|abd_is_linear
@@ -501,7 +500,6 @@ name|size_t
 parameter_list|)
 function_decl|;
 comment|/*  * Wrappers for calls with offsets of 0  */
-specifier|static
 specifier|inline
 name|void
 name|abd_copy
@@ -532,7 +530,6 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-specifier|static
 specifier|inline
 name|void
 name|abd_copy_from_buf
@@ -562,7 +559,6 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-specifier|static
 specifier|inline
 name|void
 name|abd_copy_to_buf
@@ -591,7 +587,6 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-specifier|static
 specifier|inline
 name|int
 name|abd_cmp_buf
@@ -624,7 +619,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-specifier|static
 specifier|inline
 name|void
 name|abd_zero

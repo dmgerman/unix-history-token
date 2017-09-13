@@ -611,6 +611,19 @@ literal|3
 expr_stmt|;
 break|break;
 case|case
+literal|0x55
+case|:
+comment|/* SDM rev 63 */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_SKYLAKE_XEON
+expr_stmt|;
+name|nclasses
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+case|case
 literal|0x3D
 case|:
 case|case
@@ -821,6 +834,9 @@ name|PMC_CPU_INTEL_BROADWELL
 case|:
 case|case
 name|PMC_CPU_INTEL_BROADWELL_XEON
+case|:
+case|case
+name|PMC_CPU_INTEL_SKYLAKE_XEON
 case|:
 case|case
 name|PMC_CPU_INTEL_SKYLAKE
@@ -1084,6 +1100,9 @@ name|PMC_CPU_INTEL_BROADWELL
 case|:
 case|case
 name|PMC_CPU_INTEL_BROADWELL_XEON
+case|:
+case|case
+name|PMC_CPU_INTEL_SKYLAKE_XEON
 case|:
 case|case
 name|PMC_CPU_INTEL_SKYLAKE

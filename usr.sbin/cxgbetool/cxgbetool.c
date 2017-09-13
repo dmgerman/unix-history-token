@@ -11161,6 +11161,10 @@ operator||
 name|O_EXCL
 operator||
 name|O_WRONLY
+argument_list|,
+name|S_IRUSR
+operator||
+name|S_IRGRP
 argument_list|)
 expr_stmt|;
 if|if

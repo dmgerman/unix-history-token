@@ -104,6 +104,7 @@ name|file
 modifier|*
 name|file
 decl_stmt|;
+comment|/* lookup file pointer by file descriptor index */
 if|if
 condition|(
 name|fget_unlocked
@@ -130,7 +131,35 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* check if file handle really belongs to us */
+if|if
+condition|(
+name|file
+operator|->
+name|f_data
+operator|==
+name|NULL
+operator|||
+name|file
+operator|->
+name|f_ops
+operator|!=
+operator|&
+name|linuxfileops
+condition|)
 block|{
+name|fdrop
+argument_list|(
+name|file
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -139,6 +168,7 @@ return|;
 block|}
 return|return
 operator|(
+operator|(
 expr|struct
 name|linux_file
 operator|*
@@ -146,6 +176,7 @@ operator|)
 name|file
 operator|->
 name|f_data
+operator|)
 return|;
 block|}
 end_function

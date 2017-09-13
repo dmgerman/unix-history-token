@@ -2103,8 +2103,14 @@ block|}
 name|no_recovery
 label|:
 comment|/* We don't do a hardware reset here because iicbus_attach() does it. */
-name|bus_generic_attach
+comment|/* Probe and attach the iicbus when interrupts are available. */
+name|config_intrhook_oneshot
 argument_list|(
+operator|(
+name|ich_func_t
+operator|)
+name|bus_generic_attach
+argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;

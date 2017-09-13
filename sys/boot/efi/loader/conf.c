@@ -187,6 +187,14 @@ name|nullconsole
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|console
+name|spinconsole
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -219,6 +227,9 @@ name|comconsole
 block|,
 operator|&
 name|nullconsole
+block|,
+operator|&
+name|spinconsole
 block|,
 endif|#
 directive|endif

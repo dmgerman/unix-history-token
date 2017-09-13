@@ -423,8 +423,6 @@ name|uint32_t
 name|spi
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|hlen
 decl_stmt|;
 comment|/* 	 * Just return if packet doesn't have enough data. 	 * We need at least [IP header + UDP header + ESP header]. 	 * NAT-Keepalive packet has only one byte of payload, so it 	 * by default will not be processed. 	 */
@@ -737,8 +735,6 @@ argument_list|(
 name|esps_input
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 call|(
 modifier|*
 name|sav
@@ -755,18 +751,6 @@ argument_list|,
 name|hlen
 argument_list|,
 name|off
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-name|key_freesav
-argument_list|(
-operator|&
-name|sav
 argument_list|)
 expr_stmt|;
 return|return

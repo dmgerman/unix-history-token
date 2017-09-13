@@ -141,6 +141,12 @@ name|files_struct
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|pfs_node
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
@@ -153,6 +159,13 @@ define|#
 directive|define
 name|i_cdev
 value|v_rdev
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_private
+value|v_data
 end_define
 
 begin_define
@@ -187,6 +200,11 @@ name|inode
 modifier|*
 name|d_inode
 decl_stmt|;
+name|struct
+name|pfs_node
+modifier|*
+name|d_pfs_node
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -196,6 +214,46 @@ struct_decl|struct
 name|file_operations
 struct_decl|;
 end_struct_decl
+
+begin_struct
+struct|struct
+name|linux_file_wait_queue
+block|{
+name|struct
+name|wait_queue
+name|wq
+decl_stmt|;
+name|struct
+name|wait_queue_head
+modifier|*
+name|wqh
+decl_stmt|;
+name|atomic_t
+name|state
+decl_stmt|;
+define|#
+directive|define
+name|LINUX_FWQ_STATE_INIT
+value|0
+define|#
+directive|define
+name|LINUX_FWQ_STATE_NOT_READY
+value|1
+define|#
+directive|define
+name|LINUX_FWQ_STATE_QUEUED
+value|2
+define|#
+directive|define
+name|LINUX_FWQ_STATE_READY
+value|3
+define|#
+directive|define
+name|LINUX_FWQ_STATE_MAX
+value|4
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -281,6 +339,10 @@ value|(1<< 3)
 comment|/* protects f_selinfo.si_note */
 name|spinlock_t
 name|f_kqlock
+decl_stmt|;
+name|struct
+name|linux_file_wait_queue
+name|f_wait_queue
 decl_stmt|;
 block|}
 struct|;

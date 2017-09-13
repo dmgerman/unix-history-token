@@ -89,6 +89,16 @@ directive|include
 file|"paths.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARM_FP
+end_ifdef
+
+begin_comment
+comment|/*  * On processors that have hard floating point supported, we also support  * running soft float binaries. If we're being built with hard float support,  * check the ELF headers to make sure that this is a hard float binary. If it is  * a soft float binary, force the dynamic linker to use the alternative soft  * float path.  */
+end_comment
+
 begin_function
 name|void
 name|arm_abi_variant_hook
@@ -101,10 +111,6 @@ parameter_list|)
 block|{
 name|Elf_Word
 name|ehdr
-decl_stmt|;
-name|struct
-name|stat
-name|sb
 decl_stmt|;
 comment|/* 	 * If we're running an old kernel that doesn't provide any data fail 	 * safe by doing nothing. 	 */
 if|if
@@ -140,28 +146,6 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/* 	 * If there's no /usr/libsoft, then we don't have a system with both 	 * hard and soft float. In that case, hope for the best and just 	 * return. Such systems are required to have all soft or all hard 	 * float ABI binaries and libraries. This is, at best, a transition 	 * compatibility hack. Once we're fully hard-float, this should 	 * be removed. 	 */
-if|if
-condition|(
-name|stat
-argument_list|(
-literal|"/usr/libsoft"
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|!=
-literal|0
-operator|||
-operator|!
-name|S_ISDIR
-argument_list|(
-name|sb
-operator|.
-name|st_mode
-argument_list|)
-condition|)
-return|return;
 comment|/* 	 * This is a soft float ABI binary. We need to use the soft float 	 * settings. 	 */
 name|ld_elf_hints_default
 operator|=
@@ -185,6 +169,11 @@ name|LD_SOFT_
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void

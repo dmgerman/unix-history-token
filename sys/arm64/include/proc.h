@@ -35,8 +35,8 @@ begin_struct
 struct|struct
 name|mdproc
 block|{
-name|int
-name|dummy
+name|vm_offset_t
+name|md_l0addr
 decl_stmt|;
 block|}
 struct|;

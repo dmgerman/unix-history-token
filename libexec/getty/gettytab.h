@@ -308,6 +308,13 @@ name|DF
 value|gettystrs[30].value
 end_define
 
+begin_define
+define|#
+directive|define
+name|IMP
+value|gettystrs[31].value
+end_define
+
 begin_comment
 comment|/*  * Numeric definitions.  */
 end_comment

@@ -116,6 +116,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|size_t
+name|efidp_size
+parameter_list|(
+name|const_efidp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

@@ -5849,6 +5849,14 @@ operator|->
 name|inots
 argument_list|)
 expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|tptr
+operator|->
+name|restart_queue
+argument_list|)
+expr_stmt|;
 name|ISP_GET_PC_ADDR
 argument_list|(
 name|isp

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 Xin Li<delphij@FreeBSD.org>. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, 2016 Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  * Copyright 2017 RackTop Systems.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 Xin Li<delphij@FreeBSD.org>. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, 2016 Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  * Copyright 2017 RackTop Systems.  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_comment
@@ -6226,6 +6226,9 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 operator|(
@@ -6259,6 +6262,22 @@ argument_list|)
 operator|)
 return|;
 block|}
+else|#
+directive|else
+comment|/* 		 * vfs_busy() ensures that the filesystem is not and 		 * can not be unmounted. 		 */
+name|ASSERT
+argument_list|(
+operator|!
+operator|(
+operator|*
+name|zfvp
+operator|)
+operator|->
+name|z_unmounted
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -7253,7 +7272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inputs:  * zc_name              name of the pool  * zc_cookie            scan func (pool_scan_func_t)  */
+comment|/*  * inputs:  * zc_name              name of the pool  * zc_cookie            scan func (pool_scan_func_t)  * zc_flags             scrub pause/resume flag (pool_scrub_cmd_t)  */
 end_comment
 
 begin_function
@@ -7298,6 +7317,40 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|zc
+operator|->
+name|zc_flags
+operator|>=
+name|POOL_SCRUB_FLAGS_END
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EINVAL
+argument_list|)
+operator|)
+return|;
+if|if
+condition|(
+name|zc
+operator|->
+name|zc_flags
+operator|==
+name|POOL_SCRUB_PAUSE
+condition|)
+name|error
+operator|=
+name|spa_scrub_pause_resume
+argument_list|(
+name|spa
+argument_list|,
+name|POOL_SCRUB_PAUSE
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|zc
@@ -12943,30 +12996,14 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|vfs_busy
+name|vfs_ref
 argument_list|(
 name|vfsp
-argument_list|,
-name|MBF_MNTLSTLOCK
 argument_list|)
-operator|!=
-literal|0
-condition|)
-name|vfsp
-operator|=
-name|NULL
 expr_stmt|;
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|vfsp
-operator|==
-name|NULL
-condition|)
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -15211,9 +15248,14 @@ name|zfsvfs_t
 modifier|*
 name|zfsvfs
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 name|int
 name|err
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|strchr
@@ -15268,6 +15310,9 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 name|err
 operator|=
 name|vn_vfswlock
@@ -15277,23 +15322,11 @@ operator|->
 name|vfs_vnodecovered
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|illumos
 name|VFS_RELE
 argument_list|(
 name|vfsp
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|vfs_unbusy
-argument_list|(
-name|vfsp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|err
@@ -15308,6 +15341,8 @@ name|err
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 comment|/* 	 * Always force the unmount for snapshots. 	 */
 ifdef|#
 directive|ifdef
@@ -15326,11 +15361,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|vfs_ref
-argument_list|(
-name|vfsp
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)

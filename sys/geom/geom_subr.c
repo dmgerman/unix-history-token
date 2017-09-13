@@ -4519,7 +4519,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s(%d): provider %s has error\n"
+literal|"%s(%d): provider %s has error %d set\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4528,6 +4528,10 @@ argument_list|,
 name|pp
 operator|->
 name|name
+argument_list|,
+name|pp
+operator|->
+name|error
 argument_list|)
 expr_stmt|;
 return|return

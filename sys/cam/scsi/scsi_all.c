@@ -23744,6 +23744,12 @@ block|{
 comment|/*  			 * bcopy the pointer to avoid unaligned access 			 * errors on finicky architectures.  We don't 			 * ensure that the sense data is pointer aligned. 			 */
 name|bcopy
 argument_list|(
+operator|(
+expr|struct
+name|scsi_sense_data
+operator|*
+operator|*
+operator|)
 operator|&
 name|csio
 operator|->
@@ -24321,6 +24327,12 @@ name|CAM_SENSE_PTR
 condition|)
 name|bcopy
 argument_list|(
+operator|(
+expr|struct
+name|scsi_sense_data
+operator|*
+operator|*
+operator|)
 operator|&
 name|ccb
 operator|->

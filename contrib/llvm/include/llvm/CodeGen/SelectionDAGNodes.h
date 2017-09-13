@@ -361,6 +361,8 @@ block|{
 comment|/// Node predicates
 comment|/// If N is a BUILD_VECTOR node whose elements are all the same constant or
 comment|/// undefined, return true and return the constant value in \p SplatValue.
+comment|/// This sets \p SplatValue to the smallest possible splat unless AllowShrink
+comment|/// is set to false.
 name|bool
 name|isConstantSplatVector
 parameter_list|(
@@ -372,6 +374,11 @@ parameter_list|,
 name|APInt
 modifier|&
 name|SplatValue
+parameter_list|,
+name|bool
+name|AllowShrink
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// Return true if the specified node is a BUILD_VECTOR where all of the
@@ -3260,6 +3267,12 @@ operator|*
 operator|>
 operator|&
 name|Worklist
+argument_list|,
+name|unsigned
+name|int
+name|MaxSteps
+operator|=
+literal|0
 argument_list|)
 block|{
 if|if
@@ -3355,6 +3368,22 @@ name|Found
 condition|)
 return|return
 name|true
+return|;
+if|if
+condition|(
+name|MaxSteps
+operator|!=
+literal|0
+operator|&&
+name|Visited
+operator|.
+name|size
+argument_list|()
+operator|>=
+name|MaxSteps
+condition|)
+return|return
+name|false
 return|;
 block|}
 return|return

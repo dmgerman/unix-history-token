@@ -843,6 +843,15 @@ name|self
 operator|=
 name|pdev
 expr_stmt|;
+name|pbus
+operator|->
+name|number
+operator|=
+name|pci_get_bus
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|pdev
 operator|->
 name|bus

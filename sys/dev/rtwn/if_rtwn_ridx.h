@@ -110,7 +110,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 parameter_list|(
 name|i
 parameter_list|)
@@ -334,7 +334,7 @@ name|KASSERT
 argument_list|(
 name|ridx
 operator|>=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|0
 argument_list|)
@@ -355,7 +355,7 @@ operator|=
 operator|(
 name|ridx
 operator|-
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|0
 argument_list|)

@@ -353,7 +353,7 @@ name|ieee80211_channel
 modifier|*
 name|c
 parameter_list|,
-name|uint16_t
+name|uint8_t
 name|power
 index|[
 name|RTWN_RIDX_COUNT
@@ -432,7 +432,7 @@ block|}
 comment|/* XXX net80211 regulatory */
 name|max_mcs
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 name|sc
 operator|->
@@ -569,7 +569,7 @@ for|for
 control|(
 name|ridx
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 literal|0
 argument_list|)

@@ -670,6 +670,13 @@ name|getContext
 argument_list|()
 return|;
 block|}
+specifier|const
+name|CodeGenOptions
+operator|&
+name|getCodeGenOpts
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// ConvertType - Convert type T into a llvm::Type.
 name|llvm
 operator|::

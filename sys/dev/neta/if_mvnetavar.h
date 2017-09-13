@@ -346,6 +346,14 @@ decl_stmt|;
 name|bus_addr_t
 name|desc_pa
 decl_stmt|;
+comment|/* Virtual address of the RX buffer */
+name|void
+modifier|*
+name|rxbuf_virt_addr
+index|[
+name|MVNETA_RX_RING_CNT
+index|]
+decl_stmt|;
 comment|/* Managment entries for each of descritors */
 name|struct
 name|mvneta_buf

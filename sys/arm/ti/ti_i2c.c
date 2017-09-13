@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2011 Ben Gray<ben.r.gray@gmail.com>.  * Copyright (
 end_comment
 
 begin_comment
-comment|/**  * Driver for the I2C module on the TI SoC.  *  * This driver is heavily based on the TWI driver for the AT91 (at91_twi.c).  *  * CAUTION: The I2Ci registers are limited to 16 bit and 8 bit data accesses,  * 32 bit data access is not allowed and can corrupt register content.  *  * This driver currently doesn't use DMA for the transfer, although I hope to  * incorporate that sometime in the future.  The idea being that for transaction  * larger than a certain size the DMA engine is used, for anything less the  * normal interrupt/fifo driven option is used.  *  *  * WARNING: This driver uses mtx_sleep and interrupts to perform transactions,  * which means you can't do a transaction during startup before the interrupts  * have been enabled.  Hint - the freebsd function config_intrhook_establish().  */
+comment|/**  * Driver for the I2C module on the TI SoC.  *  * This driver is heavily based on the TWI driver for the AT91 (at91_twi.c).  *  * CAUTION: The I2Ci registers are limited to 16 bit and 8 bit data accesses,  * 32 bit data access is not allowed and can corrupt register content.  *  * This driver currently doesn't use DMA for the transfer, although I hope to  * incorporate that sometime in the future.  The idea being that for transaction  * larger than a certain size the DMA engine is used, for anything less the  * normal interrupt/fifo driven option is used.  */
 end_comment
 
 begin_include
@@ -3048,9 +3048,14 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* Probe and attach the iicbus */
-name|bus_generic_attach
+comment|/* Probe and attach the iicbus when interrupts are available. */
+name|config_intrhook_oneshot
 argument_list|(
+operator|(
+name|ich_func_t
+operator|)
+name|bus_generic_attach
+argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;

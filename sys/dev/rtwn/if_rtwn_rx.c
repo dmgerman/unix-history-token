@@ -356,7 +356,7 @@ continue|continue;
 comment|/* 11n rates start at index 12 */
 name|ridx
 operator|=
-name|RTWN_RIDX_MCS
+name|RTWN_RIDX_HT_MCS
 argument_list|(
 operator|(
 name|rs_ht

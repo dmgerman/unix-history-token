@@ -110,7 +110,7 @@ name|nvme_controller
 modifier|*
 name|ctrlr
 parameter_list|,
-name|uint16_t
+name|uint32_t
 name|nsid
 parameter_list|,
 name|void

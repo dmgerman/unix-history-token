@@ -1037,6 +1037,7 @@ return|return
 operator|-
 literal|1
 return|;
+comment|/* 	 * Always allocate enough for an extra NUL on the end, but don't tell 	 * the IOCTL about it so we can NUL terminate the name before converting 	 * it to UTF8. 	 */
 if|if
 condition|(
 name|buf
@@ -1048,6 +1049,11 @@ operator|=
 name|malloc
 argument_list|(
 name|buflen
+operator|+
+sizeof|sizeof
+argument_list|(
+name|efi_char
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|again
@@ -1146,7 +1152,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * oops, too little space. Try again. 		 */
+comment|/* 		 * Variable name not long enough, so allocate more space for the 		 * name and try again. As above, mind the NUL we add. 		 */
 name|void
 modifier|*
 name|new
@@ -1155,15 +1161,16 @@ name|realloc
 argument_list|(
 name|buf
 argument_list|,
-name|buflen
-argument_list|)
-decl_stmt|;
-name|buflen
-operator|=
 name|var
 operator|.
 name|namesize
-expr_stmt|;
+operator|+
+sizeof|sizeof
+argument_list|(
+name|efi_char
+argument_list|)
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|new
@@ -1184,6 +1191,12 @@ goto|goto
 name|done
 goto|;
 block|}
+name|buflen
+operator|=
+name|var
+operator|.
+name|namesize
+expr_stmt|;
 name|buf
 operator|=
 name|new
@@ -1199,12 +1212,19 @@ operator|==
 literal|0
 condition|)
 block|{
+name|free
+argument_list|(
+operator|*
+name|name
+argument_list|)
+expr_stmt|;
+comment|/* Free last name, to avoid leaking */
 operator|*
 name|name
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX */
+comment|/* Force ucs2_to_utf8 to malloc new space */
 name|var
 operator|.
 name|name
@@ -1258,10 +1278,15 @@ block|}
 name|errout
 label|:
 comment|/* XXX The linux interface expects name to be a static buffer -- fix or leak memory? */
+comment|/* XXX for the moment, we free just before we'd leak, but still leak last one */
 name|done
 label|:
 if|if
 condition|(
+name|rv
+operator|!=
+literal|0
+operator|&&
 name|errno
 operator|==
 name|ENOENT
@@ -1271,6 +1296,13 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+name|free
+argument_list|(
+operator|*
+name|name
+argument_list|)
+expr_stmt|;
+comment|/* Free last name, to avoid leaking */
 return|return
 literal|0
 return|;

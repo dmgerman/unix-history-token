@@ -152,7 +152,7 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|UINT32
+name|UINT64
 name|EnableMask
 decl_stmt|;
 name|UINT32
@@ -408,7 +408,7 @@ modifier|*
 name|EventStatus
 parameter_list|)
 block|{
-name|UINT32
+name|UINT64
 name|InByte
 decl_stmt|;
 name|UINT32

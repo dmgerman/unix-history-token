@@ -16468,6 +16468,7 @@ name|flags
 operator||=
 name|DA_FLAG_WAS_OTAG
 expr_stmt|;
+comment|/* 		 * We need to call cam_iosched before we call biodone so that we 		 * don't measure any activity that happens in the completion 		 * routine, which in the case of sendfile can be quite 		 * extensive. 		 */
 name|cam_iosched_bio_complete
 argument_list|(
 name|softc

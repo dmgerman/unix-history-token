@@ -163,11 +163,10 @@ name|size_t
 name|nmappings
 decl_stmt|;
 comment|/* Number of mappings. */
-name|prmap_t
-modifier|*
+name|size_t
 name|exec_map
 decl_stmt|;
-comment|/* Executable text mapping. */
+comment|/* Executable text mapping index. */
 name|lwpstatus_t
 name|lwps
 decl_stmt|;

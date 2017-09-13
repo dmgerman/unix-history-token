@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_include
@@ -7854,6 +7854,38 @@ operator|=
 name|gethrestime_sec
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|dsl_scan_is_paused_scrub
+argument_list|(
+name|spa
+operator|->
+name|spa_dsl_pool
+operator|->
+name|dp_scan
+argument_list|)
+condition|)
+name|spa
+operator|->
+name|spa_scan_pass_scrub_pause
+operator|=
+name|spa
+operator|->
+name|spa_scan_pass_start
+expr_stmt|;
+else|else
+name|spa
+operator|->
+name|spa_scan_pass_scrub_pause
+operator|=
+literal|0
+expr_stmt|;
+name|spa
+operator|->
+name|spa_scan_pass_scrub_spent_paused
+operator|=
+literal|0
+expr_stmt|;
 name|spa
 operator|->
 name|spa_scan_pass_exam
@@ -8042,6 +8074,22 @@ operator|=
 name|spa
 operator|->
 name|spa_scan_pass_exam
+expr_stmt|;
+name|ps
+operator|->
+name|pss_pass_scrub_pause
+operator|=
+name|spa
+operator|->
+name|spa_scan_pass_scrub_pause
+expr_stmt|;
+name|ps
+operator|->
+name|pss_pass_scrub_spent_paused
+operator|=
+name|spa
+operator|->
+name|spa_scan_pass_scrub_spent_paused
 expr_stmt|;
 return|return
 operator|(
