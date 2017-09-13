@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2016 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
+comment|/*  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2016 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  * Copyright 2017 RackTop Systems.  */
 end_comment
 
 begin_comment
@@ -167,7 +167,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The share protocols table must be in the same order as the zfs_share_prot_t  * enum in libzfs_impl.h  */
+comment|/*  * The share protocols table must be in the same order as the zfs_share_proto_t  * enum in libzfs_impl.h  */
 end_comment
 
 begin_typedef
@@ -3716,7 +3716,12 @@ name|zfs_error_fmt
 argument_list|(
 name|hdl
 argument_list|,
-name|EZFS_UNSHARENFSFAILED
+name|proto_table
+index|[
+name|proto
+index|]
+operator|.
+name|p_unshare_err
 argument_list|,
 name|dgettext
 argument_list|(
@@ -3786,7 +3791,12 @@ name|zfs_error_fmt
 argument_list|(
 name|hdl
 argument_list|,
-name|EZFS_UNSHARENFSFAILED
+name|proto_table
+index|[
+name|proto
+index|]
+operator|.
+name|p_unshare_err
 argument_list|,
 name|dgettext
 argument_list|(
@@ -3814,7 +3824,12 @@ name|zfs_error_fmt
 argument_list|(
 name|hdl
 argument_list|,
-name|EZFS_UNSHARENFSFAILED
+name|proto_table
+index|[
+name|proto
+index|]
+operator|.
+name|p_unshare_err
 argument_list|,
 name|dgettext
 argument_list|(
