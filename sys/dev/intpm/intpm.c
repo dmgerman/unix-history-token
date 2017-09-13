@@ -1007,26 +1007,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|res
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"bus_alloc_resource for SMBus IO failed\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|sc
 operator|->
 name|io_res
