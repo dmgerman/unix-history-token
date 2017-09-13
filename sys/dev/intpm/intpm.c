@@ -700,7 +700,7 @@ specifier|const
 name|int
 name|AMDSB_SMBIO_WIDTH
 init|=
-literal|0x14
+literal|0x10
 decl_stmt|;
 name|struct
 name|intsmb_softc
