@@ -350,6 +350,17 @@ begin_comment
 comment|/* Verbose mode */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|opt_w
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Wide print area for addresses */
+end_comment
+
 begin_comment
 comment|/*  * Default protocols to use if no -P was defined.  */
 end_comment
@@ -5685,11 +5696,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|offset
+operator|=
+literal|36
+expr_stmt|;
 while|while
 condition|(
 name|pos
 operator|<
-literal|36
+name|offset
 condition|)
 name|pos
 operator|+=
@@ -5748,11 +5763,19 @@ literal|" "
 argument_list|)
 expr_stmt|;
 block|}
+name|offset
+operator|+=
+name|opt_w
+condition|?
+literal|46
+else|:
+literal|22
+expr_stmt|;
 while|while
 condition|(
 name|pos
 operator|<
-literal|58
+name|offset
 condition|)
 name|pos
 operator|+=
@@ -5776,6 +5799,14 @@ name|faddr
 operator|->
 name|address
 argument_list|)
+expr_stmt|;
+name|offset
+operator|+=
+name|opt_w
+condition|?
+literal|46
+else|:
+literal|22
 expr_stmt|;
 break|break;
 case|case
@@ -5867,6 +5898,14 @@ name|xprintf
 argument_list|(
 literal|"(not connected)"
 argument_list|)
+expr_stmt|;
+name|offset
+operator|+=
+name|opt_w
+condition|?
+literal|92
+else|:
+literal|44
 expr_stmt|;
 break|break;
 block|}
@@ -5969,16 +6008,20 @@ operator|->
 name|address
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+name|opt_w
+condition|?
+literal|92
+else|:
+literal|44
+expr_stmt|;
 break|break;
 default|default:
 name|abort
 argument_list|()
 expr_stmt|;
 block|}
-name|offset
-operator|=
-literal|80
-expr_stmt|;
 if|if
 condition|(
 name|opt_U
@@ -6358,7 +6401,7 @@ name|pos
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%-8s %-10s %-5s %-2s %-6s %-21s %-21s"
+literal|"%-8s %-10s %-5s %-2s %-6s %-*s %-*s"
 argument_list|,
 literal|"USER"
 argument_list|,
@@ -6370,7 +6413,19 @@ literal|"FD"
 argument_list|,
 literal|"PROTO"
 argument_list|,
+name|opt_w
+condition|?
+literal|45
+else|:
+literal|21
+argument_list|,
 literal|"LOCAL ADDRESS"
+argument_list|,
+name|opt_w
+condition|?
+literal|45
+else|:
+literal|21
 argument_list|,
 literal|"FOREIGN ADDRESS"
 argument_list|)
@@ -6864,7 +6919,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: sockstat [-46cLlSsu] [-j jid] [-p ports] [-P protocols]\n"
+literal|"usage: sockstat [-46cLlSsUuvw] [-j jid] [-p ports] [-P protocols]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6915,7 +6970,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46cj:Llp:P:SsUuv"
+literal|"46cj:Llp:P:SsUuvw"
 argument_list|)
 operator|)
 operator|!=
@@ -7035,6 +7090,14 @@ literal|'v'
 case|:
 operator|++
 name|opt_v
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+name|opt_w
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
