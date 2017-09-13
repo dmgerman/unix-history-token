@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 1988, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2017, Joyent, Inc.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -418,7 +418,7 @@ decl_stmt|;
 comment|/* array of value/key */
 block|}
 struct|;
-comment|/*  * Many of the fields in the vnode are read-only once they are initialized  * at vnode creation time.  Other fields are protected by locks.  *  * IMPORTANT: vnodes should be created ONLY by calls to vn_alloc().  They  * may not be embedded into the file-system specific node (inode).  The  * size of vnodes may change.  *  * The v_lock protects:  *   v_flag  *   v_stream  *   v_count  *   v_shrlocks  *   v_path  *   v_vsd  *   v_xattrdir  *  * A special lock (implemented by vn_vfswlock in vnode.c) protects:  *   v_vfsmountedhere  *  * The global flock_lock mutex (in flock.c) protects:  *   v_filocks  *  * IMPORTANT NOTE:  *  *   The following vnode fields are considered public and may safely be  *   accessed by file systems or other consumers:  *  *     v_lock  *     v_flag  *     v_count  *     v_data  *     v_vfsp  *     v_stream  *     v_type  *     v_rdev  *  * ALL OTHER FIELDS SHOULD BE ACCESSED ONLY BY THE OWNER OF THAT FIELD.  * In particular, file systems should not access other fields; they may  * change or even be removed.  The functionality which was once provided  * by these fields is available through vn_* functions.  */
+comment|/*  * Many of the fields in the vnode are read-only once they are initialized  * at vnode creation time.  Other fields are protected by locks.  *  * IMPORTANT: vnodes should be created ONLY by calls to vn_alloc().  They  * may not be embedded into the file-system specific node (inode).  The  * size of vnodes may change.  *  * The v_lock protects:  *   v_flag  *   v_stream  *   v_count  *   v_shrlocks  *   v_path  *   v_vsd  *   v_xattrdir  *  * A special lock (implemented by vn_vfswlock in vnode.c) protects:  *   v_vfsmountedhere  *  * The global flock_lock mutex (in flock.c) protects:  *   v_filocks  *  * IMPORTANT NOTE:  *  *   The following vnode fields are considered public and may safely be  *   accessed by file systems or other consumers:  *  *     v_lock  *     v_flag  *     v_count  *     v_data  *     v_vfsp  *     v_stream  *     v_type  *     v_rdev  *  * ALL OTHER FIELDS SHOULD BE ACCESSED ONLY BY THE OWNER OF THAT FIELD.  * In particular, file systems should not access other fields; they may  * change or even be removed.  The functionality which was once provided  * by these fields is available through vn_* functions.  *  * VNODE PATH THEORY:  * In each vnode, the v_path field holds a cached version of the canonical  * filesystem path which that node represents.  Because vnodes lack contextual  * information about their own name or position in the VFS hierarchy, this path  * must be calculated when the vnode is instantiated by operations such as  * fop_create, fop_lookup, or fop_mkdir.  During said operations, both the  * parent vnode (and its cached v_path) and future name are known, so the  * v_path of the resulting object can easily be set.  *  * The caching nature of v_path is complicated in the face of directory  * renames.  Filesystem drivers are responsible for calling vn_renamepath when  * a fop_rename operation succeeds.  While the v_path on the renamed vnode will  * be updated, existing children of the directory (direct, or at deeper levels)  * will now possess v_path caches which are stale.  *  * It is expensive (and for non-directories, impossible) to recalculate stale  * v_path entries during operations such as vnodetopath.  The best time during  * which to correct such wrongs is the same as when v_path is first  * initialized: during fop_create/fop_lookup/fop_mkdir/etc, where adequate  * context is available to generate the current path.  *  * In order to quickly detect stale v_path entries (without full lookup  * verification) to trigger a v_path update, the v_path_stamp field has been  * added to vnode_t.  As part of successful fop_create/fop_lookup/fop_mkdir  * operations, where the name and parent vnode are available, the following  * rules are used to determine updates to the child:  *  * 1. If the parent lacks a v_path, clear any existing v_path and v_path_stamp  *    on the child.  Until the parent v_path is refreshed to a valid state, the  *    child v_path must be considered invalid too.  *  * 2. If the child lacks a v_path (implying v_path_stamp == 0), it inherits the  *    v_path_stamp value from its parent and its v_path is updated.  *  * 3. If the child v_path_stamp is less than v_path_stamp in the parent, it is  *    an indication that the child v_path is stale.  The v_path is updated and  *    v_path_stamp in the child is set to the current hrtime().  *  *    It does _not_ inherit the parent v_path_stamp in order to propagate the  *    the time of v_path invalidation through the directory structure.  This  *    prevents concurrent invalidations (operating with a now-incorrect v_path)  *    at deeper levels in the tree from persisting.  *  * 4. If the child v_path_stamp is greater or equal to the parent, no action  *    needs to be taken.  *  * Note that fop_rename operations do not follow this ruleset.  They perform an  * explicit update of v_path and v_path_stamp (setting it to the current time)  *  * With these constraints in place, v_path invalidations and updates should  * proceed in a timely manner as vnodes are accessed.  While there still are  * limited cases where vnodetopath operations will fail, the risk is minimized.  */
 struct_decl|struct
 name|fem_head
 struct_decl|;
@@ -520,6 +520,10 @@ modifier|*
 name|v_path
 decl_stmt|;
 comment|/* cached path */
+name|hrtime_t
+name|v_path_stamp
+decl_stmt|;
+comment|/* timestamp for cached path */
 name|uint_t
 name|v_rdcnt
 decl_stmt|;
@@ -779,6 +783,11 @@ directive|define
 name|V_SYSATTR
 value|0x40000
 comment|/* vnode is a GFS system attribute */
+comment|/*  * Indication that VOP_LOOKUP operations on this vnode may yield results from a  * different VFS instance.  The main use of this is to suppress v_path  * calculation logic when filesystems such as procfs emit results which defy  * expectations about normal VFS behavior.  */
+define|#
+directive|define
+name|VTRAVERSE
+value|0x80000
 comment|/*  * Vnode attributes.  A bit-mask is supplied as part of the  * structure to indicate the attributes the caller wants to  * set (setattr) or extract (getattr).  */
 comment|/*  * Note that va_nodeid and va_nblocks are 64bit data type.  * We support large files over NFSV3. With Solaris client and  * Server that generates 64bit ino's and sizes these fields  * will overflow if they are 32 bit sizes.  */
 typedef|typedef
@@ -4614,6 +4623,30 @@ name|size_t
 name|len
 parameter_list|)
 function_decl|;
+comment|/* Private vnode manipulation functions */
+name|void
+name|vn_clearpath
+parameter_list|(
+name|vnode_t
+modifier|*
+parameter_list|,
+name|hrtime_t
+parameter_list|)
+function_decl|;
+name|void
+name|vn_updatepath
+parameter_list|(
+name|vnode_t
+modifier|*
+parameter_list|,
+name|vnode_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Vnode event notification */
 name|void
 name|vnevent_rename_src
@@ -4901,6 +4934,12 @@ name|vnode_t
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Empty v_path placeholder */
+specifier|extern
+name|char
+modifier|*
+name|vn_vpath_empty
+decl_stmt|;
 comment|/*  * Needed for use of IS_VMODSORT() in kernel.  */
 specifier|extern
 name|uint_t

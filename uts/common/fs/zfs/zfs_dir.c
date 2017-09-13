@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  * Copyright (c) 2015, Joyent, Inc.  */
 end_comment
 
 begin_include
@@ -3883,6 +3883,8 @@ operator|->
 name|z_vnode
 operator|->
 name|v_path
+operator|!=
+name|vn_vpath_empty
 condition|?
 name|zp
 operator|->
