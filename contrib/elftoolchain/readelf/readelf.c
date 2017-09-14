@@ -6941,10 +6941,22 @@ return|return
 literal|"NT_PROCSTAT_AUXV"
 return|;
 case|case
+literal|17
+case|:
+return|return
+literal|"NT_PTLWPINFO"
+return|;
+case|case
 literal|0x202
 case|:
 return|return
 literal|"NT_X86_XSTATE (x86 XSAVE extended state)"
+return|;
+case|case
+literal|0x400
+case|:
+return|return
+literal|"NT_ARM_VFP (arm VFP registers)"
 return|;
 default|default:
 return|return
