@@ -1580,7 +1580,6 @@ comment|/*  * Get machine VFP context.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|get_vfpcontext
 parameter_list|(
@@ -1676,7 +1675,6 @@ comment|/*  * Set machine VFP context.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|set_vfpcontext
 parameter_list|(
