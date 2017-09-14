@@ -7631,7 +7631,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|stats_pad_error
+name|stats_bad_session
 argument_list|,
 literal|0
 argument_list|,
@@ -7653,7 +7653,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|stats_pad_error
+name|stats_sglist_error
 argument_list|,
 literal|0
 argument_list|,
@@ -7675,7 +7675,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|stats_pad_error
+name|stats_process_error
 argument_list|,
 literal|0
 argument_list|,
