@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/imgact_elf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -51,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<machine/armreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/elf.h>
 end_include
 
 begin_include
@@ -303,6 +315,10 @@ name|fpsid
 argument_list|)
 expr_stmt|;
 comment|/* save the fpsid */
+name|elf_hwcap
+operator||=
+name|HWCAP_VFP
+expr_stmt|;
 name|vfp_arch
 operator|=
 operator|(
@@ -334,6 +350,10 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+name|elf_hwcap
+operator||=
+name|HWCAP_VFPv3
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -344,9 +364,20 @@ operator|)
 operator|==
 literal|2
 condition|)
+block|{
+name|elf_hwcap
+operator||=
+name|HWCAP_VFPD32
+expr_stmt|;
 name|is_d32
 operator|=
 literal|1
+expr_stmt|;
+block|}
+else|else
+name|elf_hwcap
+operator||=
+name|HWCAP_VFPv3D16
 expr_stmt|;
 name|tmp
 operator|=

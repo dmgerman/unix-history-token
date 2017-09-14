@@ -52,6 +52,13 @@ name|vm_page_dump_size
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|elf_hwcap
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|int
