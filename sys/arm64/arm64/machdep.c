@@ -296,6 +296,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/undefined.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -637,6 +643,9 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|undef_init
+argument_list|()
+expr_stmt|;
 name|identify_cpu
 argument_list|()
 expr_stmt|;
