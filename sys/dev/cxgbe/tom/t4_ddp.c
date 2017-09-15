@@ -6781,6 +6781,12 @@ if|if
 condition|(
 name|ps
 operator|->
+name|start
+operator|!=
+name|start
+operator|||
+name|ps
+operator|->
 name|npages
 operator|!=
 name|npages
@@ -7331,6 +7337,12 @@ operator|->
 name|vm
 operator|=
 name|vm
+expr_stmt|;
+name|ps
+operator|->
+name|start
+operator|=
+name|start
 expr_stmt|;
 name|CTR5
 argument_list|(
