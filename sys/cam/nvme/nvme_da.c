@@ -4203,14 +4203,7 @@ name|flags
 operator||=
 name|CAM_UNLOCKED
 expr_stmt|;
-name|cam_iosched_submit_trim
-argument_list|(
-name|softc
-operator|->
-name|cam_iosched
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
+comment|/* 			 * Note: We can have multiple TRIMs in flight, so we don't call 			 * cam_iosched_submit_trim(softc->cam_iosched); 			 * since that forces the I/O scheduler to only schedule one at a time. 			 * On NVMe drives, this is a performance disaster. 			 */
 goto|goto
 name|out
 goto|;
@@ -4630,13 +4623,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|cam_iosched_trim_done
-argument_list|(
-name|softc
-operator|->
-name|cam_iosched
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Since we can have multiple trims in flight, we don't 			 * need to call this here. 			 * cam_iosched_trim_done(softc->cam_iosched); 			 */
 name|ndaschedule
 argument_list|(
 name|periph
