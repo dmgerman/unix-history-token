@@ -14500,6 +14500,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 break|break;
 default|default:
