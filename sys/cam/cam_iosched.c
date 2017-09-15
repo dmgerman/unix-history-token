@@ -2324,7 +2324,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Trim or similar currently pending completion */
+comment|/*  * Trim or similar currently pending completion. Should only be set for  * those drivers wishing only one Trim active at a time.  */
 end_comment
 
 begin_define
@@ -5746,7 +5746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Complete a trim request  */
+comment|/*  * Complete a trim request. Mark that we no longer have one in flight.  */
 end_comment
 
 begin_function
@@ -5992,7 +5992,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Tell the io scheduler that you've pushed a trim down into the sim.  * xxx better place for this?  */
+comment|/*  * Tell the io scheduler that you've pushed a trim down into the sim.  * This also tells the I/O scheduler not to push any more trims down, so  * some periphs do not call it if they can cope with multiple trims in flight.  */
 end_comment
 
 begin_function
