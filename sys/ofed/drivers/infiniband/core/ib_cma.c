@@ -5563,6 +5563,15 @@ name|sockaddr_in6
 operator|)
 block|{
 operator|.
+name|sin6_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in6
+argument_list|)
+block|,
+operator|.
 name|sin6_family
 operator|=
 name|AF_INET6
