@@ -2194,13 +2194,6 @@ name|SCTP_PCB_FLAGS_AUTO_ASCONF
 value|0x0000000000000040
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_PCB_FLAGS_ZERO_COPY_ACTIVE
-value|0x0000000000000080
-end_define
-
 begin_comment
 comment|/* socket options */
 end_comment

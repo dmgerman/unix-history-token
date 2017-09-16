@@ -863,16 +863,6 @@ name|struct
 name|sctp_timer
 name|signature_change
 decl_stmt|;
-comment|/* Zero copy full buffer timer */
-name|struct
-name|sctp_timer
-name|zero_copy_timer
-decl_stmt|;
-comment|/* Zero copy app to transport (sendq) read repulse timer */
-name|struct
-name|sctp_timer
-name|zero_copy_sendq_timer
-decl_stmt|;
 name|uint32_t
 name|def_cookie_life
 decl_stmt|;

@@ -2512,22 +2512,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_TIMER_TYPE_ZERO_COPY
-value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_TIMER_TYPE_ZCOPY_SENDQ
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_TIMER_TYPE_PRIM_DELETED
-value|20
+value|18
 end_define
 
 begin_comment
@@ -2538,7 +2524,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_TIMER_TYPE_LAST
-value|21
+value|19
 end_define
 
 begin_define
