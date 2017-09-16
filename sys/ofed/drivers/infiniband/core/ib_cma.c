@@ -6232,9 +6232,27 @@ name|src_dev
 operator|!=
 name|net_dev
 condition|)
+block|{
+if|if
+condition|(
+name|src_dev
+operator|!=
+name|NULL
+condition|)
+name|dev_put
+argument_list|(
+name|src_dev
+argument_list|)
+expr_stmt|;
 return|return
 name|false
 return|;
+block|}
+name|dev_put
+argument_list|(
+name|src_dev
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make sure the socket address length field 	 * is set, else rtalloc1() will fail. 	 */
 name|dst_tmp
 operator|.
