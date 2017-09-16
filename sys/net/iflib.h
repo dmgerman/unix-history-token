@@ -326,10 +326,6 @@ name|ipi_new_pidx
 decl_stmt|;
 comment|/* next available pidx post-encap */
 comment|/* offload handling */
-name|caddr_t
-name|ipi_hdr_data
-decl_stmt|;
-comment|/* raw header */
 name|uint8_t
 name|ipi_ehdrlen
 decl_stmt|;
@@ -647,22 +643,6 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|ift_txd_errata
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mp
 parameter_list|)
 function_decl|;
 block|}
@@ -1033,13 +1013,13 @@ value|0x08
 end_define
 
 begin_comment
-comment|/*  *  */
+comment|/*  * Interface does checksum in place  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IFLIB_UNUSED___0
+name|IFLIB_NEED_SCRATCH
 value|0x10
 end_define
 
@@ -1063,17 +1043,6 @@ define|#
 directive|define
 name|IFLIB_DO_RX_FIXUP
 value|0x40
-end_define
-
-begin_comment
-comment|/*  * Driver needs csum zeroed for offloading  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFLIB_NEED_ZERO_CSUM
-value|0x80
 end_define
 
 begin_comment
@@ -1582,7 +1551,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|sx
+name|mtx
 modifier|*
 name|iflib_ctx_lock_get
 parameter_list|(
