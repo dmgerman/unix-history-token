@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rdma/sdp_socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sdp.h"
 end_include
 

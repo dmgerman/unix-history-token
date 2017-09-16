@@ -278,12 +278,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rdma/sdp_socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<rdma/ib_fmr_pool.h>
 end_include
 
@@ -1435,11 +1429,6 @@ name|struct
 name|ib_pd
 modifier|*
 name|pd
-decl_stmt|;
-name|struct
-name|ib_mr
-modifier|*
-name|mr
 decl_stmt|;
 name|struct
 name|ib_fmr_pool
