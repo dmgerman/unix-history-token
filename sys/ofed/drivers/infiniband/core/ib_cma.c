@@ -6396,18 +6396,6 @@ decl_stmt|;
 name|bool
 name|ret
 decl_stmt|;
-comment|/* embed scope ID */
-name|in6_addr
-operator|.
-name|s6_addr
-index|[
-literal|3
-index|]
-operator|=
-name|src_addr
-operator|->
-name|sin6_scope_id
-expr_stmt|;
 name|src_dev
 operator|=
 name|ip6_dev_find
