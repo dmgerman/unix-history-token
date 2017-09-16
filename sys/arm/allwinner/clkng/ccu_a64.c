@@ -255,7 +255,7 @@ argument|A64_RST_BUS_OHCI0
 argument_list|,
 literal|0x2c0
 argument_list|,
-literal|26
+literal|28
 argument_list|)
 name|CCU_RESET
 argument_list|(
@@ -263,7 +263,7 @@ argument|A64_RST_BUS_OHCI1
 argument_list|,
 literal|0x2c0
 argument_list|,
-literal|27
+literal|29
 argument_list|)
 name|CCU_RESET
 argument_list|(
@@ -703,7 +703,7 @@ literal|"ahb1"
 argument_list|,
 literal|0x60
 argument_list|,
-literal|26
+literal|28
 argument_list|)
 name|CCU_GATE
 argument_list|(
@@ -715,7 +715,7 @@ literal|"ahb2"
 argument_list|,
 literal|0x60
 argument_list|,
-literal|27
+literal|29
 argument_list|)
 name|CCU_GATE
 argument_list|(
