@@ -196,11 +196,6 @@ name|struct
 name|kref
 name|ref
 decl_stmt|;
-name|struct
-name|file
-modifier|*
-name|filp
-decl_stmt|;
 name|int
 name|is_async
 decl_stmt|;

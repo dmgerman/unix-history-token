@@ -1853,15 +1853,6 @@ operator|->
 name|poll_wait
 argument_list|)
 expr_stmt|;
-name|linux_poll_wakeup
-argument_list|(
-name|ctx
-operator|->
-name|file
-operator|->
-name|filp
-argument_list|)
-expr_stmt|;
 name|mutex_unlock
 argument_list|(
 operator|&
