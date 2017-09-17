@@ -2036,7 +2036,7 @@ value|0x03ff
 end_define
 
 begin_comment
-comment|/* approximate length in nanoseconds of one WDT tick (about 0.6 sec) */
+comment|/* approximate length in nanoseconds of one WDT tick (about 0.6 sec) for TCO v1/v2 */
 end_comment
 
 begin_define
@@ -2044,6 +2044,17 @@ define|#
 directive|define
 name|ICHWD_TICK
 value|600000000
+end_define
+
+begin_comment
+comment|/* approximate length in nanoseconds of one WDT tick (about 1.0 sec) for TCO v3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICHWD_TCO_V3_TICK
+value|1000000000
 end_define
 
 begin_endif
