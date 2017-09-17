@@ -2493,6 +2493,11 @@ name|BOOKE_E500
 name|register_t
 name|hid0
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|bitmask
+decl_stmt|;
 name|hid0
 operator|=
 name|mfspr
@@ -2500,6 +2505,37 @@ argument_list|(
 name|SPR_HID0
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|vers
+condition|)
+block|{
+case|case
+name|FSL_E500mc
+case|:
+name|bitmask
+operator|=
+name|HID0_E500MC_BITMASK
+expr_stmt|;
+break|break;
+case|case
+name|FSL_E5500
+case|:
+case|case
+name|FSL_E6500
+case|:
+name|bitmask
+operator|=
+name|HID0_E5500_BITMASK
+expr_stmt|;
+break|break;
+case|case
+name|FSL_E500v1
+case|:
+case|case
+name|FSL_E500v2
+case|:
+comment|/* Only e500v1/v2 support HID0 power management setup. */
 comment|/* Programe power-management mode. */
 name|hid0
 operator|&=
@@ -2523,6 +2559,13 @@ argument_list|,
 name|hid0
 argument_list|)
 expr_stmt|;
+default|default:
+name|bitmask
+operator|=
+name|HID0_E500_BITMASK
+expr_stmt|;
+break|break;
+block|}
 name|printf
 argument_list|(
 literal|"cpu%d: HID0 %b\n"
@@ -2534,7 +2577,7 @@ name|int
 operator|)
 name|hid0
 argument_list|,
-name|HID0_E500_BITMASK
+name|bitmask
 argument_list|)
 expr_stmt|;
 endif|#
