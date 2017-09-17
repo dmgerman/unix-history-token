@@ -369,7 +369,7 @@ name|register_t
 operator|)
 name|__builtin_frame_address
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|stack_capture
