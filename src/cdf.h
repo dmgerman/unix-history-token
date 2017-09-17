@@ -420,12 +420,15 @@ decl_stmt|;
 name|size_t
 name|sst_len
 decl_stmt|;
+comment|/* Number of sectors */
 name|size_t
 name|sst_dirlen
 decl_stmt|;
+comment|/* Directory sector size */
 name|size_t
 name|sst_ss
 decl_stmt|;
+comment|/* Sector size */
 block|}
 name|cdf_stream_t
 typedef|;

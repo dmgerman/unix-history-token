@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: readelf.c,v 1.128 2016/10/04 21:43:10 christos Exp $"
+literal|"@(#)$File: readelf.c,v 1.138 2017/08/27 07:55:02 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1098,71 +1098,78 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|FLAGS_CORE_STYLE
+value|0x003
+end_define
+
+begin_define
+define|#
+directive|define
 name|FLAGS_DID_CORE
-value|0x001
-end_define
-
-begin_define
-define|#
-directive|define
-name|FLAGS_DID_OS_NOTE
-value|0x002
-end_define
-
-begin_define
-define|#
-directive|define
-name|FLAGS_DID_BUILD_ID
 value|0x004
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLAGS_DID_CORE_STYLE
+name|FLAGS_DID_OS_NOTE
 value|0x008
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLAGS_DID_NETBSD_PAX
+name|FLAGS_DID_BUILD_ID
 value|0x010
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLAGS_DID_NETBSD_MARCH
+name|FLAGS_DID_CORE_STYLE
 value|0x020
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLAGS_DID_NETBSD_CMODEL
+name|FLAGS_DID_NETBSD_PAX
 value|0x040
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLAGS_DID_NETBSD_UNKNOWN
+name|FLAGS_DID_NETBSD_MARCH
 value|0x080
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLAGS_IS_CORE
+name|FLAGS_DID_NETBSD_CMODEL
 value|0x100
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLAGS_DID_AUXV
+name|FLAGS_DID_NETBSD_UNKNOWN
 value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAGS_IS_CORE
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAGS_DID_AUXV
+value|0x800
 end_define
 
 begin_function
@@ -2105,7 +2112,7 @@ operator|(
 name|descsz
 operator|>=
 literal|4
-operator|||
+operator|&&
 name|descsz
 operator|<=
 literal|20
@@ -3330,6 +3337,11 @@ name|flags
 operator||=
 name|FLAGS_DID_CORE_STYLE
 expr_stmt|;
+operator|*
+name|flags
+operator||=
+name|os_style
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -3352,17 +3364,43 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-name|uint32_t
-name|signo
+name|struct
+name|NetBSD_elfcore_procinfo
+name|pi
 decl_stmt|;
-comment|/* 			 * Extract the program name.  It is at 			 * offset 0x7c, and is up to 32-bytes, 			 * including the terminating NUL. 			 */
+name|memset
+argument_list|(
+operator|&
+name|pi
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pi
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|pi
+argument_list|,
+name|nbuf
+operator|+
+name|doff
+argument_list|,
+name|descsz
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|", from '%.31s'"
+literal|", from '%.31s', pid=%u, uid=%u, "
+literal|"gid=%u, nlwps=%u, lwp=%u (signal %u/code %u)"
 argument_list|,
 name|file_printable
 argument_list|(
@@ -3373,63 +3411,78 @@ argument_list|(
 name|sbuf
 argument_list|)
 argument_list|,
-operator|(
-specifier|const
+name|CAST
+argument_list|(
 name|char
 operator|*
-operator|)
-operator|&
-name|nbuf
-index|[
-name|doff
-operator|+
-literal|0x7c
-index|]
-argument_list|)
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-literal|1
-return|;
-comment|/* 			 * Extract the signal number.  It is at 			 * offset 0x08. 			 */
-operator|(
-name|void
-operator|)
-name|memcpy
-argument_list|(
-operator|&
-name|signo
 argument_list|,
-operator|&
-name|nbuf
-index|[
-name|doff
-operator|+
-literal|0x08
-index|]
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|signo
+name|pi
+operator|.
+name|cpi_name
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|file_printf
-argument_list|(
-name|ms
-argument_list|,
-literal|" (signal %u)"
 argument_list|,
 name|elf_getu32
 argument_list|(
 name|swap
 argument_list|,
-name|signo
+name|pi
+operator|.
+name|cpi_pid
+argument_list|)
+argument_list|,
+name|elf_getu32
+argument_list|(
+name|swap
+argument_list|,
+name|pi
+operator|.
+name|cpi_euid
+argument_list|)
+argument_list|,
+name|elf_getu32
+argument_list|(
+name|swap
+argument_list|,
+name|pi
+operator|.
+name|cpi_egid
+argument_list|)
+argument_list|,
+name|elf_getu32
+argument_list|(
+name|swap
+argument_list|,
+name|pi
+operator|.
+name|cpi_nlwps
+argument_list|)
+argument_list|,
+name|elf_getu32
+argument_list|(
+name|swap
+argument_list|,
+name|pi
+operator|.
+name|cpi_siglwp
+argument_list|)
+argument_list|,
+name|elf_getu32
+argument_list|(
+name|swap
+argument_list|,
+name|pi
+operator|.
+name|cpi_signo
+argument_list|)
+argument_list|,
+name|elf_getu32
+argument_list|(
+name|swap
+argument_list|,
+name|pi
+operator|.
+name|cpi_sigcode
 argument_list|)
 argument_list|)
 operator|==
@@ -3998,7 +4051,12 @@ name|fd
 argument_list|,
 name|buf
 argument_list|,
+name|CAST
+argument_list|(
+name|size_t
+argument_list|,
 name|buflen
+argument_list|)
 argument_list|,
 name|offset
 argument_list|)
@@ -4174,22 +4232,83 @@ name|nval
 decl_stmt|;
 if|if
 condition|(
-name|type
-operator|!=
-name|NT_AUXV
-operator|||
 operator|(
 operator|*
 name|flags
 operator|&
+operator|(
 name|FLAGS_IS_CORE
+operator||
+name|FLAGS_DID_CORE_STYLE
 operator|)
-operator|==
-literal|0
+operator|)
+operator|!=
+operator|(
+name|FLAGS_IS_CORE
+operator||
+name|FLAGS_DID_CORE_STYLE
+operator|)
 condition|)
 return|return
 literal|0
 return|;
+switch|switch
+condition|(
+operator|*
+name|flags
+operator|&
+name|FLAGS_CORE_STYLE
+condition|)
+block|{
+case|case
+name|OS_STYLE_SVR4
+case|:
+if|if
+condition|(
+name|type
+operator|!=
+name|NT_AUXV
+condition|)
+return|return
+literal|0
+return|;
+break|break;
+ifdef|#
+directive|ifdef
+name|notyet
+case|case
+name|OS_STYLE_NETBSD
+case|:
+if|if
+condition|(
+name|type
+operator|!=
+name|NT_NETBSD_CORE_AUXV
+condition|)
+return|return
+literal|0
+return|;
+break|break;
+case|case
+name|OS_STYLE_FREEBSD
+case|:
+if|if
+condition|(
+name|type
+operator|!=
+name|NT_FREEBSD_PROCSTAT_AUXV
+condition|)
+return|return
+literal|0
+return|;
+break|break;
+endif|#
+directive|endif
+default|default:
+return|return
+literal|0
+return|;
+block|}
 operator|*
 name|flags
 operator||=
@@ -4638,7 +4757,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|", bad note name size 0x%lx"
+literal|", bad note name size %#lx"
 argument_list|,
 operator|(
 name|unsigned
@@ -4665,7 +4784,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|", bad note description size 0x%lx"
+literal|", bad note description size %#lx"
 argument_list|,
 operator|(
 name|unsigned
@@ -5465,6 +5584,10 @@ name|int
 name|stripped
 init|=
 literal|1
+decl_stmt|,
+name|has_debug_info
+init|=
+literal|0
 decl_stmt|;
 name|size_t
 name|nbadcap
@@ -5487,13 +5610,13 @@ name|cap_hw1
 init|=
 literal|0
 decl_stmt|;
-comment|/* SunOS 5.x hardware capabilites */
+comment|/* SunOS 5.x hardware capabilities */
 name|uint64_t
 name|cap_sf1
 init|=
 literal|0
 decl_stmt|;
-comment|/* SunOS 5.x software capabilites */
+comment|/* SunOS 5.x software capabilities */
 name|char
 name|name
 index|[
@@ -5561,14 +5684,24 @@ operator|)
 name|xsh_sizeof
 condition|)
 block|{
-name|file_badread
+if|if
+condition|(
+name|file_printf
 argument_list|(
 name|ms
+argument_list|,
+literal|", missing section headers"
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
 return|return
 operator|-
 literal|1
+return|;
+return|return
+literal|0
 return|;
 block|}
 name|name_off
@@ -5641,10 +5774,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|has_debug_info
+operator|=
+literal|1
+expr_stmt|;
 name|stripped
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|pread
@@ -5747,12 +5886,12 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|", note offset/size 0x%"
+literal|", note offset/size %#"
 name|INTMAX_T_FORMAT
-literal|"x+0x%"
+literal|"x+%#"
 name|INTMAX_T_FORMAT
 literal|"x exceeds"
-literal|" file size 0x%"
+literal|" file size %#"
 name|INTMAX_T_FORMAT
 literal|"x"
 argument_list|,
@@ -6257,9 +6396,9 @@ argument_list|(
 name|ms
 argument_list|,
 literal|", with unknown capability "
-literal|"0x%"
+literal|"%#"
 name|INT64_T_FORMAT
-literal|"x = 0x%"
+literal|"x = %#"
 name|INT64_T_FORMAT
 literal|"x"
 argument_list|,
@@ -6305,6 +6444,28 @@ label|:
 default|default:
 break|break;
 block|}
+block|}
+if|if
+condition|(
+name|has_debug_info
+condition|)
+block|{
+if|if
+condition|(
+name|file_printf
+argument_list|(
+name|ms
+argument_list|,
+literal|", with debug_info"
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 block|}
 if|if
 condition|(
@@ -6457,7 +6618,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|" unknown hardware capability 0x%"
+literal|" unknown hardware capability %#"
 name|INT64_T_FORMAT
 literal|"x"
 argument_list|,
@@ -6485,7 +6646,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|" hardware capability 0x%"
+literal|" hardware capability %#"
 name|INT64_T_FORMAT
 literal|"x"
 argument_list|,
@@ -6558,7 +6719,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|", with unknown software capability 0x%"
+literal|", with unknown software capability %#"
 name|INT64_T_FORMAT
 literal|"x"
 argument_list|,
@@ -6799,7 +6960,7 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
-literal|", invalid note alignment 0x%lx"
+literal|", invalid note alignment %#lx"
 argument_list|,
 operator|(
 name|unsigned

@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.100 2016/10/24 18:02:17 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.105 2017/05/25 00:13:03 christos Exp $"
 argument_list|)
 end_macro
 
@@ -200,6 +200,11 @@ name|defined
 argument_list|(
 name|HAVE_ZLIB_H
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ZLIBSUPPORT
+argument_list|)
 end_if
 
 begin_define
@@ -272,7 +277,7 @@ name|ZLIBSUPPORT
 end_ifdef
 
 begin_comment
-comment|/*  * The following python code is not really used because ZLIBSUPPORT is only  * defined if we have a built-in zlib, and the built-in zlib handles that.  */
+comment|/*  * The following python code is not really used because ZLIBSUPPORT is only  * defined if we have a built-in zlib, and the built-in zlib handles that.  * That is not true for android where we have zlib.h and not -lz.  */
 end_comment
 
 begin_decl_stmt
@@ -329,13 +334,12 @@ name|char
 modifier|*
 name|s
 init|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|&
-name|x
+name|CAST
+argument_list|(
+argument|unsigned char *
+argument_list|,
+argument|CAST(void *,&x)
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -2565,7 +2569,12 @@ name|z
 operator|.
 name|avail_out
 operator|=
-name|bytes_max
+name|CAST
+argument_list|(
+argument|unsigned int
+argument_list|,
+argument|bytes_max
+argument_list|)
 expr_stmt|;
 name|z
 operator|.
@@ -3320,9 +3329,14 @@ name|ubuf
 argument_list|,
 name|p
 argument_list|,
+name|CAST
+argument_list|(
+name|size_t
+argument_list|,
 name|n
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3697,7 +3711,12 @@ operator|++
 control|)
 name|copydesc
 argument_list|(
+name|CAST
+argument_list|(
+name|int
+argument_list|,
 name|i
+argument_list|)
 argument_list|,
 name|fdp
 index|[
@@ -4120,7 +4139,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"Child not exited (0x%x)\n"
+literal|"Child not exited (%#x)\n"
 argument_list|,
 name|status
 argument_list|)
@@ -4139,7 +4158,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"Child exited (0x%d)\n"
+literal|"Child exited (%#x)\n"
 argument_list|,
 name|WEXITSTATUS
 argument_list|(
