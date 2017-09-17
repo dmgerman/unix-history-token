@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1998 Matthew Dillon.  All Rights Reserved.  * Redis
 end_comment
 
 begin_comment
-comment|/*  * BLIST.C -	Bitmap allocator/deallocator, using a radix tree with hinting  *  *	This module implements a general bitmap allocator/deallocator.  The  *	allocator eats around 2 bits per 'block'.  The module does not   *	try to interpret the meaning of a 'block' other than to return   *	SWAPBLK_NONE on an allocation failure.  *  *	A radix tree is used to maintain the bitmap.  Two radix constants are  *	involved:  One for the bitmaps contained in the leaf nodes (typically  *	32), and one for the meta nodes (typically 16).  Both meta and leaf  *	nodes have a hint field.  This field gives us a hint as to the largest  *	free contiguous range of blocks under the node.  It may contain a  *	value that is too high, but will never contain a value that is too   *	low.  When the radix tree is searched, allocation failures in subtrees  *	update the hint.   *  *	The radix tree also implements two collapsed states for meta nodes:  *	the ALL-ALLOCATED state and the ALL-FREE state.  If a meta node is  *	in either of these two states, all information contained underneath  *	the node is considered stale.  These states are used to optimize  *	allocation and freeing operations.  *  * 	The hinting greatly increases code efficiency for allocations while  *	the general radix structure optimizes both allocations and frees.  The  *	radix tree should be able to operate well no matter how much   *	fragmentation there is and no matter how large a bitmap is used.  *  *	The blist code wires all necessary memory at creation time.  Neither  *	allocations nor frees require interaction with the memory subsystem.  *	The non-blocking features of the blist code are used in the swap code  *	(vm/swap_pager.c).  *  *	LAYOUT: The radix tree is laid out recursively using a  *	linear array.  Each meta node is immediately followed (laid out  *	sequentially in memory) by BLIST_META_RADIX lower level nodes.  This  *	is a recursive structure but one that can be easily scanned through  *	a very simple 'skip' calculation.  In order to support large radixes,   *	portions of the tree may reside outside our memory allocation.  We   *	handle this with an early-termination optimization (when bighint is   *	set to -1) on the scan.  The memory allocation is only large enough   *	to cover the number of blocks requested at creation time even if it  *	must be encompassed in larger root-node radix.  *  *	NOTE: the allocator cannot currently allocate more than   *	BLIST_BMAP_RADIX blocks per call.  It will panic with 'allocation too   *	large' if you try.  This is an area that could use improvement.  The   *	radix is large enough that this restriction does not effect the swap   *	system, though.  Currently only the allocation code is effected by  *	this algorithmic unfeature.  The freeing code can handle arbitrary  *	ranges.  *  *	This code can be compiled stand-alone for debugging.  */
+comment|/*  * BLIST.C -	Bitmap allocator/deallocator, using a radix tree with hinting  *  *	This module implements a general bitmap allocator/deallocator.  The  *	allocator eats around 2 bits per 'block'.  The module does not  *	try to interpret the meaning of a 'block' other than to return  *	SWAPBLK_NONE on an allocation failure.  *  *	A radix tree is used to maintain the bitmap.  Two radix constants are  *	involved:  One for the bitmaps contained in the leaf nodes (typically  *	64), and one for the meta nodes (typically 16).  Both meta and leaf  *	nodes have a hint field.  This field gives us a hint as to the largest  *	free contiguous range of blocks under the node.  It may contain a  *	value that is too high, but will never contain a value that is too  *	low.  When the radix tree is searched, allocation failures in subtrees  *	update the hint.  *  *	The radix tree also implements two collapsed states for meta nodes:  *	the ALL-ALLOCATED state and the ALL-FREE state.  If a meta node is  *	in either of these two states, all information contained underneath  *	the node is considered stale.  These states are used to optimize  *	allocation and freeing operations.  *  * 	The hinting greatly increases code efficiency for allocations while  *	the general radix structure optimizes both allocations and frees.  The  *	radix tree should be able to operate well no matter how much  *	fragmentation there is and no matter how large a bitmap is used.  *  *	The blist code wires all necessary memory at creation time.  Neither  *	allocations nor frees require interaction with the memory subsystem.  *	The non-blocking features of the blist code are used in the swap code  *	(vm/swap_pager.c).  *  *	LAYOUT: The radix tree is laid out recursively using a  *	linear array.  Each meta node is immediately followed (laid out  *	sequentially in memory) by BLIST_META_RADIX lower level nodes.  This  *	is a recursive structure but one that can be easily scanned through  *	a very simple 'skip' calculation.  In order to support large radixes,  *	portions of the tree may reside outside our memory allocation.  We  *	handle this with an early-termination optimization (when bighint is  *	set to -1) on the scan.  The memory allocation is only large enough  *	to cover the number of blocks requested at creation time even if it  *	must be encompassed in larger root-node radix.  *  *	NOTE: the allocator cannot currently allocate more than  *	BLIST_BMAP_RADIX blocks per call.  It will panic with 'allocation too  *	large' if you try.  This is an area that could use improvement.  The  *	radix is large enough that this restriction does not effect the swap  *	system, though.  Currently only the allocation code is affected by  *	this algorithmic unfeature.  The freeing code can handle arbitrary  *	ranges.  *  *	This code can be compiled stand-alone for debugging.  */
 end_comment
 
 begin_include
@@ -450,7 +450,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * blist_create() - create a blist capable of handling up to the specified  *		    number of blocks  *  *	blocks - must be greater than 0  * 	flags  - malloc flags  *  *	The smallest blist consists of a single leaf node capable of   *	managing BLIST_BMAP_RADIX blocks.  */
+comment|/*  * blist_create() - create a blist capable of handling up to the specified  *		    number of blocks  *  *	blocks - must be greater than 0  * 	flags  - malloc flags  *  *	The smallest blist consists of a single leaf node capable of  *	managing BLIST_BMAP_RADIX blocks.  */
 end_comment
 
 begin_function
@@ -1216,7 +1216,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/************************************************************************  *			  ALLOCATION SUPPORT FUNCTIONS			*  ************************************************************************  *  *	These support functions do all the actual work.  They may seem   *	rather longish, but that's because I've commented them up.  The  *	actual code is straight forward.  *  */
+comment|/************************************************************************  *			  ALLOCATION SUPPORT FUNCTIONS			*  ************************************************************************  *  *	These support functions do all the actual work.  They may seem  *	rather longish, but that's because I've commented them up.  The  *	actual code is straight forward.  *  */
 end_comment
 
 begin_comment
@@ -1969,7 +1969,7 @@ name|bmu_bitmap
 operator||=
 name|mask
 expr_stmt|;
-comment|/* 	 * We could probably do a better job here.  We are required to make 	 * bighint at least as large as the biggest contiguous block of  	 * data.  If we just shoehorn it, a little extra overhead will 	 * be incured on the next allocation (but only that one typically). 	 */
+comment|/* 	 * We could probably do a better job here.  We are required to make 	 * bighint at least as large as the biggest contiguous block of 	 * data.  If we just shoehorn it, a little extra overhead will 	 * be incured on the next allocation (but only that one typically). 	 */
 name|scan
 operator|->
 name|bm_bighint
@@ -2018,12 +2018,6 @@ decl_stmt|;
 name|int
 name|child
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("free (%llx,%lld) FROM (%llx,%lld)\n", 	    (long long)freeBlk, (long long)count, 	    (long long)blk, (long long)radix 	);
-endif|#
-directive|endif
 name|next_skip
 operator|=
 name|skip
