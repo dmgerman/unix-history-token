@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: fsmagic.c,v 1.76 2015/04/09 20:01:41 christos Exp $"
+literal|"@(#)$File: fsmagic.c,v 1.77 2017/05/24 19:17:50 christos Exp $"
 argument_list|)
 end_macro
 
@@ -452,6 +452,19 @@ name|flags
 operator|&
 name|MAGIC_MIME
 decl_stmt|;
+name|int
+name|silent
+init|=
+name|ms
+operator|->
+name|flags
+operator|&
+operator|(
+name|MAGIC_APPLE
+operator||
+name|MAGIC_EXTENSION
+operator|)
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|S_IFLNK
@@ -472,21 +485,6 @@ name|tstatbuf
 decl_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|ms
-operator|->
-name|flags
-operator|&
-operator|(
-name|MAGIC_APPLE
-operator||
-name|MAGIC_EXTENSION
-operator|)
-condition|)
-return|return
-literal|0
-return|;
 if|if
 condition|(
 name|fn
@@ -710,6 +708,9 @@ if|if
 condition|(
 operator|!
 name|mime
+operator|&&
+operator|!
+name|silent
 condition|)
 block|{
 ifdef|#
@@ -845,6 +846,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|silent
+condition|)
+block|{ 		}
+elseif|else
+if|if
+condition|(
 name|file_printf
 argument_list|(
 name|ms
@@ -912,6 +919,12 @@ operator|-
 literal|1
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|silent
+condition|)
+block|{ 		}
 else|else
 block|{
 ifdef|#
@@ -1077,6 +1090,12 @@ operator|-
 literal|1
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|silent
+condition|)
+block|{ 		}
 else|else
 block|{
 ifdef|#
@@ -1239,6 +1258,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|silent
+condition|)
+block|{ 		}
+elseif|else
+if|if
+condition|(
 name|file_printf
 argument_list|(
 name|ms
@@ -1288,6 +1313,12 @@ operator|-
 literal|1
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|silent
+condition|)
+block|{ 		}
 elseif|else
 if|if
 condition|(
@@ -1385,6 +1416,12 @@ operator|-
 literal|1
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|silent
+condition|)
+block|{ 			}
 elseif|else
 if|if
 condition|(
@@ -1556,6 +1593,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|silent
+condition|)
+block|{ 					}
+elseif|else
+if|if
+condition|(
 name|file_printf
 argument_list|(
 name|ms
@@ -1724,6 +1767,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|silent
+condition|)
+block|{ 			}
+elseif|else
+if|if
+condition|(
 name|file_printf
 argument_list|(
 name|ms
@@ -1779,6 +1828,12 @@ operator|-
 literal|1
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|silent
+condition|)
+block|{ 		}
 elseif|else
 if|if
 condition|(
@@ -1853,6 +1908,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|silent
+condition|)
+block|{ 			}
+elseif|else
+if|if
+condition|(
 name|file_printf
 argument_list|(
 name|ms
@@ -1898,6 +1959,9 @@ comment|/*NOTREACHED*/
 block|}
 if|if
 condition|(
+operator|!
+name|silent
+operator|&&
 operator|!
 name|mime
 operator|&&

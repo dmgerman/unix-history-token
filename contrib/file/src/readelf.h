@@ -632,7 +632,7 @@ value|0x6ffffff5
 end_define
 
 begin_comment
-comment|/* SunOS 5.x hw/sw capabilites */
+comment|/* SunOS 5.x hw/sw capabilities */
 end_comment
 
 begin_comment
@@ -1017,6 +1017,122 @@ name|NT_NETBSD_CORE_PROCINFO
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|NT_NETBSD_CORE_AUXV
+value|2
+end_define
+
+begin_struct
+struct|struct
+name|NetBSD_elfcore_procinfo
+block|{
+comment|/* Version 1 fields start here. */
+name|uint32_t
+name|cpi_version
+decl_stmt|;
+comment|/* our version */
+name|uint32_t
+name|cpi_cpisize
+decl_stmt|;
+comment|/* sizeof(this struct) */
+name|uint32_t
+name|cpi_signo
+decl_stmt|;
+comment|/* killing signal */
+name|uint32_t
+name|cpi_sigcode
+decl_stmt|;
+comment|/* signal code */
+name|uint32_t
+name|cpi_sigpend
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* pending signals */
+name|uint32_t
+name|cpi_sigmask
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* blocked signals */
+name|uint32_t
+name|cpi_sigignore
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* ignored signals */
+name|uint32_t
+name|cpi_sigcatch
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* caught signals */
+name|int32_t
+name|cpi_pid
+decl_stmt|;
+comment|/* process ID */
+name|int32_t
+name|cpi_ppid
+decl_stmt|;
+comment|/* parent process ID */
+name|int32_t
+name|cpi_pgrp
+decl_stmt|;
+comment|/* process group ID */
+name|int32_t
+name|cpi_sid
+decl_stmt|;
+comment|/* session ID */
+name|uint32_t
+name|cpi_ruid
+decl_stmt|;
+comment|/* real user ID */
+name|uint32_t
+name|cpi_euid
+decl_stmt|;
+comment|/* effective user ID */
+name|uint32_t
+name|cpi_svuid
+decl_stmt|;
+comment|/* saved user ID */
+name|uint32_t
+name|cpi_rgid
+decl_stmt|;
+comment|/* real group ID */
+name|uint32_t
+name|cpi_egid
+decl_stmt|;
+comment|/* effective group ID */
+name|uint32_t
+name|cpi_svgid
+decl_stmt|;
+comment|/* saved group ID */
+name|uint32_t
+name|cpi_nlwps
+decl_stmt|;
+comment|/* number of LWPs */
+name|int8_t
+name|cpi_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* copy of p->p_comm */
+comment|/* Add version 2 fields below here. */
+name|int32_t
+name|cpi_siglwp
+decl_stmt|;
+comment|/* LWP target of killing signal */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Note header in a PT_NOTE section */
 end_comment
@@ -1326,6 +1442,17 @@ define|#
 directive|define
 name|NT_NETBSD_CMODEL
 value|6
+end_define
+
+begin_comment
+comment|/*  * FreeBSD specific notes  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_FREEBSD_PROCSTAT_AUXV
+value|16
 end_define
 
 begin_if

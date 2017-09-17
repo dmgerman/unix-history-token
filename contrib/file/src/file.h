@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.180 2016/07/20 11:27:08 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.183 2017/08/28 13:39:18 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -30,6 +30,29 @@ include|#
 directive|include
 file|<config.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDINT_H
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC_LIMIT_MACROS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__STDC_LIMIT_MACROS
+end_define
 
 begin_endif
 endif|#
@@ -120,6 +143,17 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -142,40 +176,6 @@ end_include
 begin_comment
 comment|/* For open and flags */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_STDINT_H
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC_LIMIT_MACROS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__STDC_LIMIT_MACROS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2046,6 +2046,8 @@ parameter_list|(
 name|struct
 name|magic_set
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

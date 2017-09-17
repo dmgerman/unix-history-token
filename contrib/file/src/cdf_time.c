@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: cdf_time.c,v 1.15 2014/05/14 23:15:42 christos Exp $"
+literal|"@(#)$File: cdf_time.c,v 1.16 2017/03/29 15:57:48 christos Exp $"
 argument_list|)
 end_macro
 
@@ -742,7 +742,7 @@ name|buf
 argument_list|,
 literal|26
 argument_list|,
-literal|"*Bad* 0x%16.16"
+literal|"*Bad* %#16.16"
 name|INT64_T_FORMAT
 literal|"x\n"
 argument_list|,

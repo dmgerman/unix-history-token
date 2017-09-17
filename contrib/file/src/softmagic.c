@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: softmagic.c,v 1.238 2016/10/24 18:02:17 christos Exp $"
+literal|"@(#)$File: softmagic.c,v 1.249 2017/06/19 18:30:25 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1061,6 +1061,10 @@ condition|)
 name|magindex
 operator|++
 expr_stmt|;
+name|cont_level
+operator|=
+literal|0
+expr_stmt|;
 continue|continue;
 comment|/* Skip to next top-level test*/
 block|}
@@ -1854,6 +1858,9 @@ case|:
 name|flush
 operator|=
 literal|1
+expr_stmt|;
+name|cont_level
+operator|--
 expr_stmt|;
 break|break;
 default|default:
@@ -4950,13 +4957,8 @@ name|ms
 operator|->
 name|ms_value
 decl_stmt|;
-name|uint8_t
-name|type
-decl_stmt|;
 switch|switch
 condition|(
-name|type
-operator|=
 name|cvt_flip
 argument_list|(
 name|m
@@ -5796,7 +5798,12 @@ name|nbytes
 condition|)
 name|offset
 operator|=
+name|CAST
+argument_list|(
+name|uint32_t
+argument_list|,
 name|nbytes
+argument_list|)
 expr_stmt|;
 name|ms
 operator|->
@@ -5879,6 +5886,10 @@ condition|(
 name|s
 operator|==
 name|NULL
+operator|||
+name|nbytes
+operator|<
+name|offset
 condition|)
 block|{
 name|ms
@@ -6293,6 +6304,15 @@ operator|)
 operator|!=
 literal|'\0'
 else|:
+operator|(
+operator|(
+name|src
+operator|+
+literal|1
+operator|<
+name|esrc
+operator|)
+operator|&&
 operator|*
 operator|(
 name|src
@@ -6301,6 +6321,7 @@ literal|1
 operator|)
 operator|!=
 literal|'\0'
+operator|)
 condition|)
 operator|*
 name|dst
@@ -6803,7 +6824,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mget(type=%d, flag=%x, offset=%u, o=%"
+literal|"mget(type=%d, flag=%#x, offset=%u, o=%"
 name|SIZE_T_FORMAT
 literal|"u, "
 literal|"nbytes=%"
@@ -8319,6 +8340,16 @@ operator|*
 operator|)
 name|s2
 decl_stmt|;
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|eb
+init|=
+name|b
+operator|+
+name|len
+decl_stmt|;
 name|uint64_t
 name|v
 decl_stmt|;
@@ -8371,6 +8402,19 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|b
+operator|>=
+name|eb
+condition|)
+block|{
+name|v
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 operator|(
@@ -8484,6 +8528,10 @@ argument_list|)
 condition|)
 while|while
 condition|(
+name|b
+operator|<
+name|eb
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -8524,6 +8572,10 @@ operator|++
 expr_stmt|;
 while|while
 condition|(
+name|b
+operator|<
+name|eb
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -9143,7 +9195,9 @@ name|search
 operator|.
 name|s_len
 condition|)
-break|break;
+return|return
+literal|0
+return|;
 name|v
 operator|=
 name|file_strncmp
@@ -9191,9 +9245,11 @@ name|search
 operator|.
 name|rm_len
 operator|=
-name|m
+name|ms
 operator|->
-name|str_range
+name|search
+operator|.
+name|s_len
 operator|-
 name|idx
 expr_stmt|;
@@ -9389,11 +9445,13 @@ else|else
 block|{
 name|search
 operator|=
-name|ms
-operator|->
-name|search
-operator|.
-name|s
+name|CCAST
+argument_list|(
+name|char
+operator|*
+argument_list|,
+literal|""
+argument_list|)
 expr_stmt|;
 name|copy
 operator|=

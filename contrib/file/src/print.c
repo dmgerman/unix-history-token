@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: print.c,v 1.81 2016/01/19 15:09:03 christos Exp $"
+literal|"@(#)$File: print.c,v 1.82 2017/02/10 18:14:01 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1266,7 +1266,12 @@ argument_list|(
 operator|&
 name|ts
 argument_list|,
+name|CAST
+argument_list|(
+name|cdf_timestamp_t
+argument_list|,
 name|v
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|t

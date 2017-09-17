@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: readcdf.c,v 1.63 2016/10/18 22:25:42 christos Exp $"
+literal|"@(#)$File: readcdf.c,v 1.65 2017/04/08 20:58:03 christos Exp $"
 argument_list|)
 end_macro
 
@@ -686,6 +686,9 @@ specifier|const
 name|char
 modifier|*
 name|s
+decl_stmt|,
+modifier|*
+name|e
 decl_stmt|;
 name|int
 name|len
@@ -988,12 +991,29 @@ name|pi_str
 operator|.
 name|s_buf
 expr_stmt|;
+name|e
+operator|=
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|pi_str
+operator|.
+name|s_buf
+operator|+
+name|len
+expr_stmt|;
 for|for
 control|(
 name|j
 operator|=
 literal|0
 init|;
+name|s
+operator|<
+name|e
+operator|&&
 name|j
 operator|<
 sizeof|sizeof
@@ -3239,7 +3259,11 @@ if|if
 condition|(
 name|scn
 operator|.
-name|sst_dirlen
+name|sst_len
+operator|*
+name|scn
+operator|.
+name|sst_ss
 operator|>=
 sizeof|sizeof
 argument_list|(
