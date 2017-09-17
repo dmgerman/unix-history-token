@@ -522,12 +522,13 @@ specifier|static
 name|struct
 name|amd_et_state
 modifier|*
+modifier|*
 name|amd_et_state
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Indexed by cpuid. */
+comment|/* Indexed by cpuid, bank. */
 end_comment
 
 begin_decl_stmt
@@ -2697,21 +2698,6 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|bank
-operator|==
-name|MC_AMDNB_BANK
-argument_list|,
-operator|(
-literal|"%s: unexpected bank %d"
-operator|,
-name|__func__
-operator|,
-name|bank
-operator|)
-argument_list|)
-expr_stmt|;
 name|cc
 operator|=
 operator|&
@@ -2721,6 +2707,9 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
+index|]
+index|[
+name|bank
 index|]
 expr_stmt|;
 name|misc
@@ -3593,6 +3582,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|amd_et_state
 operator|=
 name|malloc
@@ -3607,7 +3599,41 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|amd_et_state
+operator|*
 argument_list|)
+argument_list|,
+name|M_MCA
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+name|mp_maxid
+condition|;
+name|i
+operator|++
+control|)
+name|amd_et_state
+index|[
+name|i
+index|]
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|amd_et_state
+argument_list|)
+operator|*
+name|mca_banks
 argument_list|,
 name|M_MCA
 argument_list|,
@@ -4188,6 +4214,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Apply an AMD ET configuration to the corresponding MSR.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -4197,6 +4227,9 @@ name|struct
 name|amd_et_state
 modifier|*
 name|cc
+parameter_list|,
+name|int
+name|bank
 parameter_list|)
 block|{
 name|uint64_t
@@ -4219,7 +4252,7 @@ name|rdmsr
 argument_list|(
 name|MSR_MC_MISC
 argument_list|(
-name|MC_AMDNB_BANK
+name|bank
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4279,7 +4312,7 @@ name|wrmsr
 argument_list|(
 name|MSR_MC_MISC
 argument_list|(
-name|MC_AMDNB_BANK
+name|bank
 argument_list|)
 argument_list|,
 name|misc
@@ -4291,9 +4324,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|amd_thresholding_init
+name|amd_thresholding_monitor
 parameter_list|(
-name|void
+name|int
+name|i
 parameter_list|)
 block|{
 name|struct
@@ -4304,6 +4338,21 @@ decl_stmt|;
 name|uint64_t
 name|misc
 decl_stmt|;
+comment|/* 	 * Kludge: On 10h, banks after 4 are not thresholding but also may have 	 * bogus Valid bits.  Skip them.  This is definitely fixed in 15h, but 	 * I have not investigated whether it is fixed in earlier models. 	 */
+if|if
+condition|(
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|<
+literal|0x15
+operator|&&
+name|i
+operator|>=
+literal|5
+condition|)
+return|return;
 comment|/* The counter must be valid and present. */
 name|misc
 operator|=
@@ -4311,7 +4360,7 @@ name|rdmsr
 argument_list|(
 name|MSR_MC_MISC
 argument_list|(
-name|MC_AMDNB_BANK
+name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4333,21 +4382,7 @@ operator||
 name|MC_MISC_AMD_CNTP
 operator|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: 0x%jx: !valid | !present\n"
-argument_list|,
-name|__func__
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|misc
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 comment|/* The register should not be locked. */
 if|if
 condition|(
@@ -4360,9 +4395,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"%s: 0x%jx: locked\n"
+literal|"%s: 0x%jx: Bank %d: locked\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4370,6 +4409,8 @@ operator|(
 name|uintmax_t
 operator|)
 name|misc
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4386,9 +4427,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"%s: 0x%jx: count already enabled\n"
+literal|"%s: 0x%jx: Bank %d: already enabled\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4396,6 +4441,8 @@ operator|(
 name|uintmax_t
 operator|)
 name|misc
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4415,9 +4462,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: lapic enable mca elvt failed: %d\n"
+literal|"%s: Bank %d: lapic enable mca elvt failed: %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|i
 argument_list|,
 name|amd_elvt
 argument_list|)
@@ -4431,9 +4480,11 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"%s: Starting AMD thresholding\n"
+literal|"%s: Starting AMD thresholding on bank %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 name|cc
@@ -4446,6 +4497,9 @@ argument_list|(
 name|cpuid
 argument_list|)
 index|]
+index|[
+name|i
+index|]
 expr_stmt|;
 name|cc
 operator|->
@@ -4456,9 +4510,11 @@ expr_stmt|;
 name|amd_thresholding_start
 argument_list|(
 name|cc
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
-comment|/* Mark the NB bank as monitored. */
+comment|/* Mark this bank as monitored. */
 name|PCPU_SET
 argument_list|(
 name|cmci_mask
@@ -4470,7 +4526,7 @@ argument_list|)
 operator||
 literal|1
 operator|<<
-name|MC_AMDNB_BANK
+name|i
 argument_list|)
 expr_stmt|;
 block|}
@@ -4481,7 +4537,8 @@ specifier|static
 name|void
 name|amd_thresholding_resume
 parameter_list|(
-name|void
+name|int
+name|i
 parameter_list|)
 block|{
 name|struct
@@ -4489,9 +4546,26 @@ name|amd_et_state
 modifier|*
 name|cc
 decl_stmt|;
-comment|/* Nothing to do if this CPU doesn't monitor the NB bank. */
+name|KASSERT
+argument_list|(
+name|i
+operator|<
+name|mca_banks
+argument_list|,
+operator|(
+literal|"CPU %d has more MC banks"
+operator|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Ignore banks not monitored by this CPU. */
 if|if
 condition|(
+operator|!
 operator|(
 name|PCPU_GET
 argument_list|(
@@ -4500,10 +4574,8 @@ argument_list|)
 operator|&
 literal|1
 operator|<<
-name|MC_AMDNB_BANK
+name|i
 operator|)
-operator|==
-literal|0
 condition|)
 return|return;
 name|cc
@@ -4515,6 +4587,9 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
+index|]
+index|[
+name|i
 index|]
 expr_stmt|;
 name|cc
@@ -4532,6 +4607,8 @@ expr_stmt|;
 name|amd_thresholding_start
 argument_list|(
 name|cc
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 block|}
@@ -4567,7 +4644,16 @@ name|int
 name|i
 decl_stmt|,
 name|skip
+decl_stmt|,
+name|family
 decl_stmt|;
+name|family
+operator|=
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+expr_stmt|;
 comment|/* MCE is required. */
 if|if
 condition|(
@@ -4644,10 +4730,7 @@ name|cpu_vendor_id
 operator|==
 name|CPU_VENDOR_AMD
 operator|&&
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
+name|family
 operator|==
 literal|0x10
 operator|&&
@@ -4731,10 +4814,7 @@ name|i
 operator|==
 literal|0
 operator|&&
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
+name|family
 operator|==
 literal|0x6
 operator|&&
@@ -4763,12 +4843,9 @@ if|if
 condition|(
 name|i
 operator|==
-literal|4
+name|MC_AMDNB_BANK
 operator|&&
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
+name|family
 operator|>=
 literal|0xf
 condition|)
@@ -4824,6 +4901,29 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|amd_thresholding_supported
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+name|boot
+condition|)
+name|amd_thresholding_monitor
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+else|else
+name|amd_thresholding_resume
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* Clear all errors. */
@@ -4841,36 +4941,12 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEV_APIC
-comment|/* 		 * AMD Processors from families 10h - 16h provide support 		 * for Machine Check Error Thresholding. 		 * The processors support counters of MC errors and they 		 * can be configured to generate an interrupt when a counter 		 * overflows. 		 * The counters are all associated with Bank 4 and each 		 * of them covers a group of errors reported via that bank. 		 * At the moment only the DRAM Error Threshold Group is 		 * supported. 		 */
 if|if
 condition|(
+operator|!
 name|amd_thresholding_supported
 argument_list|()
 operator|&&
-operator|(
-name|mcg_cap
-operator|&
-name|MCG_CAP_COUNT
-operator|)
-operator|>=
-literal|4
-condition|)
-block|{
-if|if
-condition|(
-name|boot
-condition|)
-name|amd_thresholding_init
-argument_list|()
-expr_stmt|;
-else|else
-name|amd_thresholding_resume
-argument_list|()
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 name|PCPU_GET
 argument_list|(
 name|cmci_mask
@@ -4880,11 +4956,9 @@ literal|0
 operator|&&
 name|boot
 condition|)
-block|{
 name|lapic_enable_cmc
 argument_list|()
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
