@@ -871,11 +871,6 @@ argument_list|(
 name|page
 argument_list|)
 expr_stmt|;
-name|vm_page_hold
-argument_list|(
-name|page
-argument_list|)
-expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|page
@@ -1000,11 +995,6 @@ argument_list|(
 name|page
 argument_list|,
 name|PQ_ACTIVE
-argument_list|)
-expr_stmt|;
-name|vm_page_unhold
-argument_list|(
-name|page
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock
