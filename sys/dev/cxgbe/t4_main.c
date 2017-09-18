@@ -2401,7 +2401,8 @@ specifier|static
 name|int
 name|t4_cryptocaps_allowed
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
