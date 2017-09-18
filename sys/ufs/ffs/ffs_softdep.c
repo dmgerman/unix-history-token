@@ -54417,7 +54417,7 @@ name|inodedep
 operator|->
 name|id_savednlink
 operator|>
-name|LINK_MAX
+name|UFS_LINK_MAX
 condition|)
 name|panic
 argument_list|(

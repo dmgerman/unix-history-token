@@ -500,6 +500,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|UFS_LINK_MAX
+value|32767
+end_define
+
 begin_endif
 endif|#
 directive|endif
