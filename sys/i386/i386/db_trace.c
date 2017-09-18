@@ -1750,15 +1750,6 @@ name|strcmp
 argument_list|(
 name|name
 argument_list|,
-literal|"Xlcall_syscall"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|name
-argument_list|,
 literal|"Xint0x80_syscall"
 argument_list|)
 operator|==

@@ -434,16 +434,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|inthand_t
-name|IDTVEC
-parameter_list|(
-name|lcall_syscall
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -2067,51 +2057,6 @@ case|:
 comment|/* trace trap */
 name|kernel_trctrap
 label|:
-if|if
-condition|(
-name|frame
-operator|->
-name|tf_eip
-operator|==
-operator|(
-name|int
-operator|)
-name|IDTVEC
-argument_list|(
-name|lcall_syscall
-argument_list|)
-condition|)
-block|{
-comment|/* 				 * We've just entered system mode via the 				 * syscall lcall.  Continue single stepping 				 * silently until the syscall handler has 				 * saved the flags. 				 */
-return|return;
-block|}
-if|if
-condition|(
-name|frame
-operator|->
-name|tf_eip
-operator|==
-operator|(
-name|int
-operator|)
-name|IDTVEC
-argument_list|(
-name|lcall_syscall
-argument_list|)
-operator|+
-literal|1
-condition|)
-block|{
-comment|/* 				 * The syscall handler has now saved the 				 * flags.  Stop single stepping it. 				 */
-name|frame
-operator|->
-name|tf_eflags
-operator|&=
-operator|~
-name|PSL_T
-expr_stmt|;
-return|return;
-block|}
 comment|/* 			 * Ignore debug register trace traps due to 			 * accesses in the user's address space, which 			 * can happen under several conditions such as 			 * if a user sets a watchpoint on a buffer and 			 * then passes that buffer to a system call. 			 * We still want to get TRCTRAPS for addresses 			 * in kernel space because that is useful when 			 * debugging the kernel. 			 */
 if|if
 condition|(
