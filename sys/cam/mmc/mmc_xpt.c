@@ -211,6 +211,16 @@ directive|include
 file|"opt_cam.h"
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|mmccam
+argument_list|,
+literal|"CAM-based MMC/SD/SDIO stack"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|struct
