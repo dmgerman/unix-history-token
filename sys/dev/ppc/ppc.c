@@ -7141,6 +7141,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
