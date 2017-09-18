@@ -468,7 +468,7 @@ operator||=
 name|B_EXTMEM_E820
 expr_stmt|;
 block|}
-comment|/* 		 * Look for the largest segment in 'extended' memory beyond 		 * 1MB but below 4GB. 		 */
+comment|/* 		 * Look for the highest segment in 'extended' memory beyond 		 * 1MB but below 4GB. 		 */
 if|if
 condition|(
 operator|(
@@ -521,22 +521,33 @@ name|smap
 operator|.
 name|base
 expr_stmt|;
+comment|/* 			 * To make maximum space for the kernel and the modules, 			 * set heap to use highest HEAP_MIN bytes below 4GB. 			 */
 if|if
 condition|(
+name|high_heap_base
+operator|<
+name|smap
+operator|.
+name|base
+operator|&&
 name|size
-operator|>
-name|high_heap_size
+operator|>=
+name|HEAP_MIN
 condition|)
 block|{
-name|high_heap_size
-operator|=
-name|size
-expr_stmt|;
 name|high_heap_base
 operator|=
 name|smap
 operator|.
 name|base
+operator|+
+name|size
+operator|-
+name|HEAP_MIN
+expr_stmt|;
+name|high_heap_size
+operator|=
+name|HEAP_MIN
 expr_stmt|;
 block|}
 block|}
@@ -744,6 +755,22 @@ name|B_EXTMEM_8800
 expr_stmt|;
 block|}
 comment|/* Set memtop to actual top of memory */
+if|if
+condition|(
+name|high_heap_size
+operator|!=
+literal|0
+condition|)
+block|{
+name|memtop
+operator|=
+name|memtop_copyin
+operator|=
+name|high_heap_base
+expr_stmt|;
+block|}
+else|else
+block|{
 name|memtop
 operator|=
 name|memtop_copyin
@@ -752,6 +779,7 @@ literal|0x100000
 operator|+
 name|bios_extmem
 expr_stmt|;
+block|}
 comment|/* 	 * If we have extended memory and did not find a suitable heap 	 * region in the SMAP, use the last HEAP_MIN of 'extended' memory as a 	 * high heap candidate. 	 */
 if|if
 condition|(
@@ -773,6 +801,12 @@ operator|=
 name|memtop
 operator|-
 name|HEAP_MIN
+expr_stmt|;
+name|memtop
+operator|=
+name|memtop_copyin
+operator|=
+name|high_heap_base
 expr_stmt|;
 block|}
 block|}
