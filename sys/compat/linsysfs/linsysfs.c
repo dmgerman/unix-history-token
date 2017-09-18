@@ -549,6 +549,10 @@ name|sb
 argument_list|,
 literal|"%s"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|pn
 operator|->
 name|pn_data
