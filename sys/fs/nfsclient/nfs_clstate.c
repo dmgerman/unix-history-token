@@ -25805,10 +25805,6 @@ argument_list|,
 operator|&
 name|stateid
 argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
 name|cred
 argument_list|,
 name|p
