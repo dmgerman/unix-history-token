@@ -754,6 +754,9 @@ decl_stmt|;
 name|uint32_t
 name|dbg_level
 decl_stmt|;
+name|uint32_t
+name|enable_minidump
+decl_stmt|;
 name|uint8_t
 name|fw_ver_str
 index|[
