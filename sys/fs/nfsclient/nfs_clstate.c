@@ -25923,10 +25923,6 @@ name|nfsly_stateid
 argument_list|,
 name|NFSLAYOUT_NFSV4_1_FILES
 argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
 name|cred
 argument_list|,
 name|p

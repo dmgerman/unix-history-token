@@ -5128,11 +5128,6 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|int
-parameter_list|,
-name|uint8_t
-modifier|*
-parameter_list|,
 name|struct
 name|ucred
 modifier|*
