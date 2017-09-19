@@ -119,6 +119,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|hn_rndis_get_mtu
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint32_t
+modifier|*
+name|mtu
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* filter: NDIS_PACKET_TYPE_. */
 end_comment
