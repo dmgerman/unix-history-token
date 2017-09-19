@@ -1370,6 +1370,12 @@ end_if
 begin_define
 define|#
 directive|define
+name|CPU_XSCALE_CORE3
+end_define
+
+begin_define
+define|#
+directive|define
 name|PMAP_NEEDS_PTE_SYNC
 value|1
 end_define
