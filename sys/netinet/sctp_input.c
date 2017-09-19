@@ -13054,6 +13054,9 @@ name|UINT32_MAX
 operator|-
 name|staleness
 operator|>=
+operator|(
+name|uint32_t
+operator|)
 name|diff
 operator|.
 name|tv_usec
