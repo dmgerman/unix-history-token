@@ -10245,7 +10245,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|vm_page_free_wakeup
 parameter_list|(
