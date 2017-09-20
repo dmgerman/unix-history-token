@@ -420,7 +420,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|aensi_cleanctx
+name|aesni_cleanctx
 parameter_list|(
 name|void
 parameter_list|)
@@ -896,7 +896,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|aensi_cleanctx
+name|aesni_cleanctx
 argument_list|()
 expr_stmt|;
 return|return
