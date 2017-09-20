@@ -13783,13 +13783,11 @@ name|mc
 argument_list|)
 condition|)
 block|{
-name|error
-operator|=
+return|return
+operator|(
 name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+operator|)
+return|;
 comment|/* XXX Linux version will wait for a command */
 block|}
 comment|/* handle data size/direction */
@@ -14143,12 +14141,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mc
-operator|!=
-name|NULL
-condition|)
 name|mly_release_command
 argument_list|(
 name|mc
