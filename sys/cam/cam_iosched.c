@@ -1722,8 +1722,6 @@ operator|/
 name|isc
 operator|->
 name|quanta
-operator|-
-literal|1
 argument_list|,
 name|cam_iosched_ticker
 argument_list|,
@@ -2988,8 +2986,6 @@ operator|/
 name|isc
 operator|->
 name|quanta
-operator|-
-literal|1
 argument_list|,
 name|cam_iosched_ticker
 argument_list|,
@@ -4445,8 +4441,6 @@ name|iscp
 operator|)
 operator|->
 name|quanta
-operator|-
-literal|1
 argument_list|,
 name|cam_iosched_ticker
 argument_list|,
