@@ -3077,9 +3077,6 @@ argument_list|,
 name|sctp_nxt_addr
 argument_list|)
 expr_stmt|;
-name|SCTP_WQ_ADDR_UNLOCK
-argument_list|()
-expr_stmt|;
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ADDR_WQ
@@ -3105,6 +3102,9 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
+expr_stmt|;
+name|SCTP_WQ_ADDR_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -3518,9 +3518,6 @@ argument_list|,
 name|sctp_nxt_addr
 argument_list|)
 expr_stmt|;
-name|SCTP_WQ_ADDR_UNLOCK
-argument_list|()
-expr_stmt|;
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ADDR_WQ
@@ -3546,6 +3543,9 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
+expr_stmt|;
+name|SCTP_WQ_ADDR_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 return|return;
