@@ -2715,11 +2715,6 @@ name|limiter
 operator|=
 name|none
 expr_stmt|;
-name|cam_iosched_limiter_init
-argument_list|(
-name|ios
-argument_list|)
-expr_stmt|;
 name|ios
 operator|->
 name|in
@@ -2729,6 +2724,10 @@ expr_stmt|;
 name|ios
 operator|->
 name|max
+operator|=
+name|ios
+operator|->
+name|current
 operator|=
 literal|300000
 expr_stmt|;
@@ -2779,6 +2778,11 @@ operator|->
 name|softc
 operator|=
 name|isc
+expr_stmt|;
+name|cam_iosched_limiter_init
+argument_list|(
+name|ios
+argument_list|)
 expr_stmt|;
 block|}
 end_function
