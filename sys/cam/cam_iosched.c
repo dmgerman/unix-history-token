@@ -5521,14 +5521,8 @@ operator|(
 name|bp
 operator|->
 name|bio_cmd
-operator|==
-name|BIO_WRITE
-operator|||
-name|bp
-operator|->
-name|bio_cmd
-operator|==
-name|BIO_FLUSH
+operator|!=
+name|BIO_READ
 operator|)
 condition|)
 block|{
