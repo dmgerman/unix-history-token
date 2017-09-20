@@ -3271,7 +3271,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, read the label information and return an nvlist  * describing the configuration, if there is one.  */
+comment|/*  * Given a file descriptor, read the label information and return an nvlist  * describing the configuration, if there is one.  * Return 0 on success, or -1 on failure  */
 end_comment
 
 begin_function
@@ -3325,7 +3325,8 @@ literal|1
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 name|size
@@ -3523,7 +3524,8 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -4429,6 +4431,10 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
+operator|&&
+name|errno
+operator|==
+name|ENOMEM
 condition|)
 block|{
 operator|(
@@ -6731,6 +6737,10 @@ name|config
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|errno
+operator|==
+name|ENOMEM
 condition|)
 block|{
 operator|(
