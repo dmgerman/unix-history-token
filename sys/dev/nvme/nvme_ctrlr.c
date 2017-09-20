@@ -479,6 +479,8 @@ operator|*
 name|ctrlr
 operator|->
 name|num_io_queues
+operator|*
+literal|3
 operator|/
 literal|4
 expr_stmt|;
