@@ -1025,6 +1025,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|nm_txsync_finalize
+argument_list|(
+name|kring
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1101,9 +1106,10 @@ name|u_int
 specifier|const
 name|head
 init|=
+name|nm_rxsync_prologue
+argument_list|(
 name|kring
-operator|->
-name|rhead
+argument_list|)
 decl_stmt|;
 name|int
 name|force_update
@@ -1624,6 +1630,12 @@ name|nic_i
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* tell userspace that there might be new packets */
+name|nm_rxsync_finalize
+argument_list|(
+name|kring
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
