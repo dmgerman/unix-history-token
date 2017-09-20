@@ -13946,13 +13946,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+operator|)
+return|;
 comment|/* XXX Linux version will wait for a command */
 block|}
 name|MLY_UNLOCK
@@ -14323,13 +14321,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mc
-operator|!=
-name|NULL
-condition|)
-block|{
 name|MLY_LOCK
 argument_list|(
 name|sc
@@ -14345,7 +14336,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
