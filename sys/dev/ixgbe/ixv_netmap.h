@@ -43,15 +43,8 @@ directive|include
 file|<dev/netmap/netmap_kern.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|ixv_crcstrip
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * ixgbe_netmap.c contains functions for netmap  * support that extend the standard driver.  See additional  * comments in ixgbe_netmap.c.  */
+comment|/*  * ixv_netmap.c contains functions for netmap  * support that extend the standard driver.  See additional  * comments in ixv_netmap.c.  */
 end_comment
 
 begin_function_decl

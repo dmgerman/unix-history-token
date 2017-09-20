@@ -12,7 +12,7 @@ comment|/*  * Copyright (C) 2011-2014 Matteo Landi, Luigi Rizzo. All rights rese
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  *  * netmap support for: ixgbe  *  * This file is meant to be a reference on how to implement  * netmap support for a network driver.  * This file contains code but only static or inline functions used  * by a single driver. To avoid replication of code we just #include  * it near the beginning of the standard driver.  */
+comment|/*  * $FreeBSD$  *  * netmap support for: ixv  *  * This file is meant to be a reference on how to implement  * netmap support for a network driver.  * This file contains code but only static or inline functions used  * by a single driver. To avoid replication of code we just #include  * it near the beginning of the standard driver.  */
 end_comment
 
 begin_ifdef
@@ -32,7 +32,7 @@ file|"ixv.h"
 end_include
 
 begin_comment
-comment|/*  * device-specific sysctl variables:  *  * ixv_crcstrip: 0: keep CRC in rx frames (default), 1: strip it.  *	During regular operations the CRC is stripped, but on some  *	hardware reception of frames not multiple of 64 is slower,  *	so using crcstrip=0 helps in benchmarks.  *  * ixv_rx_miss, ixv_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
+comment|/*  * device-specific sysctl variables:  *  * ixv_rx_miss, ixv_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
 end_comment
 
 begin_expr_stmt
@@ -51,33 +51,6 @@ decl_stmt|,
 name|ixv_rx_miss_bufs
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ixv_crcstrip
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_dev_netmap
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ixv_crcstrip
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|ixv_crcstrip
-argument_list|,
-literal|0
-argument_list|,
-literal|"strip CRC on rx frames"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -120,145 +93,6 @@ literal|"potentially missed rx intr bufs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_function
-specifier|static
-name|void
-name|set_crcstrip
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|,
-name|int
-name|onoff
-parameter_list|)
-block|{
-comment|/* crc stripping is set in two places: 	 * IXGBE_HLREG0 (modified on init_locked and hw reset) 	 * IXGBE_RDRXCTL (set by the original driver in 	 *	ixgbe_setup_hw_rsc() called in init_locked. 	 *	We disable the setting when netmap is compiled in). 	 * We update the values here, but also in ixgbe.c because 	 * init_locked sometimes is called outside our control. 	 */
-name|uint32_t
-name|hl
-decl_stmt|,
-name|rxc
-decl_stmt|;
-name|hl
-operator|=
-name|IXGBE_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_HLREG0
-argument_list|)
-expr_stmt|;
-name|rxc
-operator|=
-name|IXGBE_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_RDRXCTL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|netmap_verbose
-condition|)
-name|D
-argument_list|(
-literal|"%s read  HLREG 0x%x rxc 0x%x"
-argument_list|,
-name|onoff
-condition|?
-literal|"enter"
-else|:
-literal|"exit"
-argument_list|,
-name|hl
-argument_list|,
-name|rxc
-argument_list|)
-expr_stmt|;
-comment|/* hw requirements ... */
-name|rxc
-operator|&=
-operator|~
-name|IXGBE_RDRXCTL_RSCFRSTSIZE
-expr_stmt|;
-name|rxc
-operator||=
-name|IXGBE_RDRXCTL_RSCACKC
-expr_stmt|;
-if|if
-condition|(
-name|onoff
-operator|&&
-operator|!
-name|ixv_crcstrip
-condition|)
-block|{
-comment|/* keep the crc. Fast rx */
-name|hl
-operator|&=
-operator|~
-name|IXGBE_HLREG0_RXCRCSTRP
-expr_stmt|;
-name|rxc
-operator|&=
-operator|~
-name|IXGBE_RDRXCTL_CRCSTRIP
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* reset default mode */
-name|hl
-operator||=
-name|IXGBE_HLREG0_RXCRCSTRP
-expr_stmt|;
-name|rxc
-operator||=
-name|IXGBE_RDRXCTL_CRCSTRIP
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|netmap_verbose
-condition|)
-name|D
-argument_list|(
-literal|"%s write HLREG 0x%x rxc 0x%x"
-argument_list|,
-name|onoff
-condition|?
-literal|"enter"
-else|:
-literal|"exit"
-argument_list|,
-name|hl
-argument_list|,
-name|rxc
-argument_list|)
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_HLREG0
-argument_list|,
-name|hl
-argument_list|)
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_RDRXCTL
-argument_list|,
-name|rxc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Register/unregister. We are already under netmap lock.  * Only called on the first register or the last unregister.  */
@@ -308,16 +142,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|set_crcstrip
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|onoff
-argument_list|)
-expr_stmt|;
 comment|/* enable or disable flags and callbacks in na and ifp */
 if|if
 condition|(
@@ -346,17 +170,6 @@ name|adapter
 argument_list|)
 expr_stmt|;
 comment|/* also enables intr */
-name|set_crcstrip
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|onoff
-argument_list|)
-expr_stmt|;
-comment|// XXX why twice ?
 name|IXGBE_CORE_UNLOCK
 argument_list|(
 name|adapter
@@ -967,7 +780,7 @@ name|adapter
 operator|->
 name|hw
 argument_list|,
-name|IXGBE_TDH
+name|IXGBE_VFTDH
 argument_list|(
 name|kring
 operator|->
@@ -1033,6 +846,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|nm_txsync_finalize
+argument_list|(
+name|kring
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1109,9 +927,10 @@ name|u_int
 specifier|const
 name|head
 init|=
+name|nm_rxsync_prologue
+argument_list|(
 name|kring
-operator|->
-name|rhead
+argument_list|)
 decl_stmt|;
 name|int
 name|force_update
@@ -1196,13 +1015,7 @@ block|{
 name|int
 name|crclen
 init|=
-operator|(
-name|ixv_crcstrip
-operator|)
-condition|?
 literal|0
-else|:
-literal|4
 decl_stmt|;
 name|uint16_t
 name|slot_flags
@@ -1632,6 +1445,12 @@ name|nic_i
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* tell userspace that there might be new packets */
+name|nm_rxsync_finalize
+argument_list|(
+name|kring
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
