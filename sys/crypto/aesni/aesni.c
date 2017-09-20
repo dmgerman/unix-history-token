@@ -164,7 +164,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|AQUIRE_CTX
+name|ACQUIRE_CTX
 parameter_list|(
 name|i
 parameter_list|,
@@ -2279,7 +2279,7 @@ operator|!
 name|kt
 condition|)
 block|{
-name|AQUIRE_CTX
+name|ACQUIRE_CTX
 argument_list|(
 name|ctxidx
 argument_list|,
@@ -2552,7 +2552,7 @@ operator|!
 name|kt
 condition|)
 block|{
-name|AQUIRE_CTX
+name|ACQUIRE_CTX
 argument_list|(
 name|ctxidx
 argument_list|,
