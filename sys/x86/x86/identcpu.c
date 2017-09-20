@@ -365,6 +365,12 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|amd_extended_feature_extensions
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
 name|via_feature_rng
 decl_stmt|;
 end_decl_stmt
@@ -3504,6 +3510,28 @@ block|}
 block|}
 if|if
 condition|(
+name|amd_extended_feature_extensions
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n  "
+literal|"AMD Extended Feature Extensions ID EBX="
+literal|"0x%b"
+argument_list|,
+name|amd_extended_feature_extensions
+argument_list|,
+literal|"\020"
+literal|"\001CLZERO"
+literal|"\002IRPerf"
+literal|"\003XSaveErPtr"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|via_feature_rng
 operator|!=
 literal|0
@@ -5346,6 +5374,13 @@ literal|0
 index|]
 operator|&
 literal|0xff
+expr_stmt|;
+name|amd_extended_feature_extensions
+operator|=
+name|regs
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|cpu_procinfo2
 operator|=
