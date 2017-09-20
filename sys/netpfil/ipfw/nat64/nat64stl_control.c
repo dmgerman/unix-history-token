@@ -1096,11 +1096,6 @@ literal|0
 condition|)
 block|{
 comment|/* Okay, let's link data */
-name|IPFW_WLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 name|SRV_OBJECT
 argument_list|(
 name|ch
@@ -1113,11 +1108,6 @@ name|kidx
 argument_list|)
 operator|=
 name|cfg
-expr_stmt|;
-name|IPFW_WUNLOCK
-argument_list|(
-name|ch
-argument_list|)
 expr_stmt|;
 name|IPFW_UH_WUNLOCK
 argument_list|(
@@ -1687,11 +1677,6 @@ name|EBUSY
 operator|)
 return|;
 block|}
-name|IPFW_WLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 name|SRV_OBJECT
 argument_list|(
 name|ch
@@ -1704,11 +1689,6 @@ name|kidx
 argument_list|)
 operator|=
 name|NULL
-expr_stmt|;
-name|IPFW_WUNLOCK
-argument_list|(
-name|ch
-argument_list|)
 expr_stmt|;
 name|nat64stl_detach_config
 argument_list|(
