@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Issues to be discussed:  * - Return values.  There are nonstandard return values defined and used  *   in the source code.  This is because RFC2553 is silent about which error  *   code must be returned for which situation.  * - freeaddrinfo(NULL).  RFC2553 is silent about it.  XNET 5.2 says it is  *   invalid.  current code - SEGV on freeaddrinfo(NULL)  *  * Note:  * - The code filters out AFs that are not supported by the kernel,  *   when globbing NULL hostname (to loopback, or wildcard).  Is it the right  *   thing to do?  What is the relationship with post-RFC2553 AI_ADDRCONFIG  *   in ai_flags?  * - (post-2553) semantics of AI_ADDRCONFIG itself is too vague.  *   (1) what should we do against numeric hostname (2) what should we do  *   against NULL hostname (3) what is AI_ADDRCONFIG itself.  AF not ready?  *   non-loopback address configured?  global address configured?  *  * OS specific notes for freebsd4:  * - FreeBSD supported $GAI.  The code does not.  */
+comment|/*  * Issues to be discussed:  * - Return values.  There are nonstandard return values defined and used  *   in the source code.  This is because RFC2553 is silent about which error  *   code must be returned for which situation.  * - freeaddrinfo(NULL).  RFC2553 is silent about it.  XNET 5.2 says it is  *   invalid.  Current code accepts NULL to be compatible with other OSes.  *  * Note:  * - The code filters out AFs that are not supported by the kernel,  *   when globbing NULL hostname (to loopback, or wildcard).  Is it the right  *   thing to do?  What is the relationship with post-RFC2553 AI_ADDRCONFIG  *   in ai_flags?  * - (post-2553) semantics of AI_ADDRCONFIG itself is too vague.  *   (1) what should we do against numeric hostname (2) what should we do  *   against NULL hostname (3) what is AI_ADDRCONFIG itself.  AF not ready?  *   non-loopback address configured?  global address configured?  *  * OS specific notes for freebsd4:  * - FreeBSD supported $GAI.  The code does not.  */
 end_comment
 
 begin_include
@@ -1957,7 +1957,12 @@ name|addrinfo
 modifier|*
 name|next
 decl_stmt|;
-do|do
+while|while
+condition|(
+name|ai
+operator|!=
+name|NULL
+condition|)
 block|{
 name|next
 operator|=
@@ -1965,12 +1970,6 @@ name|ai
 operator|->
 name|ai_next
 expr_stmt|;
-if|if
-condition|(
-name|ai
-operator|->
-name|ai_canonname
-condition|)
 name|free
 argument_list|(
 name|ai
@@ -1989,11 +1988,6 @@ operator|=
 name|next
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|ai
-condition|)
-do|;
 block|}
 end_function
 
