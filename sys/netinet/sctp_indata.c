@@ -7625,10 +7625,6 @@ argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
-name|do_wakeup
-operator|=
-literal|1
-expr_stmt|;
 block|}
 break|break;
 block|}
