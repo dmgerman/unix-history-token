@@ -2910,6 +2910,8 @@ name|mask
 decl_stmt|;
 name|int
 name|qid
+decl_stmt|,
+name|error
 decl_stmt|;
 name|gtask
 operator|->
@@ -3045,6 +3047,8 @@ operator|->
 name|tqg_lock
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|intr_setaffinity
 argument_list|(
 name|irq
@@ -3053,6 +3057,19 @@ name|CPU_WHICH_IRQ
 argument_list|,
 operator|&
 name|mask
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|printf
+argument_list|(
+literal|"%s: setaffinity failed: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -3091,6 +3108,8 @@ name|int
 name|qid
 decl_stmt|,
 name|cpu
+decl_stmt|,
+name|error
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -3154,6 +3173,8 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|intr_setaffinity
 argument_list|(
 name|gtask
@@ -3172,6 +3193,19 @@ operator|&
 name|qgroup
 operator|->
 name|tqg_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|printf
+argument_list|(
+literal|"%s: setaffinity failed: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -3276,6 +3310,8 @@ name|int
 name|i
 decl_stmt|,
 name|qid
+decl_stmt|,
+name|error
 decl_stmt|;
 name|qid
 operator|=
@@ -3368,6 +3404,17 @@ operator|&
 name|qgroup
 operator|->
 name|tqg_lock
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: qid not found for %s cpu=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|name
+argument_list|,
+name|cpu
 argument_list|)
 expr_stmt|;
 return|return
@@ -3464,6 +3511,9 @@ literal|1
 operator|&&
 name|tqg_smp_started
 condition|)
+block|{
+name|error
+operator|=
 name|intr_setaffinity
 argument_list|(
 name|irq
@@ -3474,6 +3524,20 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|printf
+argument_list|(
+literal|"%s: setaffinity failed: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3509,6 +3573,8 @@ decl_stmt|,
 name|irq
 decl_stmt|,
 name|cpu
+decl_stmt|,
+name|error
 decl_stmt|;
 name|qid
 operator|=
@@ -3589,6 +3655,17 @@ operator|&
 name|qgroup
 operator|->
 name|tqg_lock
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: qid not found for %s cpu=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|name
+argument_list|,
+name|cpu
 argument_list|)
 expr_stmt|;
 return|return
@@ -3680,6 +3757,9 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
+name|error
+operator|=
 name|intr_setaffinity
 argument_list|(
 name|irq
@@ -3690,6 +3770,20 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|printf
+argument_list|(
+literal|"%s: setaffinity failed: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3883,7 +3977,9 @@ name|error
 condition|)
 name|printf
 argument_list|(
-literal|"taskqgroup_binder: setaffinity failed: %d\n"
+literal|"%s: setaffinity failed: %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|error
 argument_list|)
@@ -4110,7 +4206,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"taskqgroup_adjust failed: adjusting\n"
+literal|"%s failed: adjusting\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
