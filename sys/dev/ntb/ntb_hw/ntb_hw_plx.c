@@ -858,14 +858,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Enable Link Interface LUT entry 0 for 0:0.0. */
+comment|/* Enable Link Interface LUT entries 0/1 for peer 0/1. */
 name|PNTX_WRITE
 argument_list|(
 name|sc
 argument_list|,
 literal|0xdb4
 argument_list|,
-literal|1
+literal|0x00090001
 argument_list|)
 expr_stmt|;
 block|}
@@ -3053,7 +3053,7 @@ operator|)
 expr_stmt|;
 name|val64
 operator||=
-literal|0x4
+literal|0xc
 expr_stmt|;
 name|PNTX_WRITE
 argument_list|(
@@ -3107,10 +3107,6 @@ operator|->
 name|mw_bar
 operator|+
 name|off
-expr_stmt|;
-name|val64
-operator||=
-literal|0x4
 expr_stmt|;
 name|PNTX_WRITE
 argument_list|(
