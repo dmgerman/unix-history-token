@@ -143,7 +143,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_include
@@ -1070,7 +1070,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_decl_stmt
@@ -1116,7 +1116,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_function_decl
@@ -2861,7 +2861,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 name|capdns
 operator|=
 name|capdns_setup
@@ -2919,7 +2919,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|capdns
@@ -3145,7 +3145,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|capdns
@@ -3275,7 +3275,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 comment|/* From now on we will use only reverse DNS lookups. */
 if|if
 condition|(
@@ -3925,7 +3925,7 @@ name|true
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 elseif|else
 if|if
 condition|(
@@ -8885,7 +8885,7 @@ argument_list|)
 return|;
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|capdns
@@ -9494,7 +9494,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_function
@@ -9648,7 +9648,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_LIBCASPER */
+comment|/* WITH_CASPER */
 end_comment
 
 begin_if

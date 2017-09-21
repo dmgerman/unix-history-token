@@ -23,7 +23,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_include
@@ -44,7 +44,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_CASPER */
+comment|/* WITH_CASPER */
 end_comment
 
 begin_include
@@ -887,7 +887,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_decl_stmt
@@ -1028,7 +1028,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|capdns
@@ -1362,7 +1362,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|capdns

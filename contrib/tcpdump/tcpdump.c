@@ -202,7 +202,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_include
@@ -223,7 +223,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_CASPER */
+comment|/* WITH_CASPER */
 end_comment
 
 begin_endif
@@ -733,7 +733,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_decl_stmt
@@ -3377,7 +3377,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_function
@@ -3524,7 +3524,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_CASPER */
+comment|/* WITH_CASPER */
 end_comment
 
 begin_ifdef
@@ -7698,7 +7698,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|WITH_CASPER
 if|if
 condition|(
 operator|!
@@ -7713,7 +7713,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_CASPER */
+comment|/* WITH_CASPER */
 name|init_print
 argument_list|(
 name|ndo
@@ -8663,7 +8663,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_CASPER
+name|WITH_CASPER
 name|cansandbox
 operator|=
 operator|(
@@ -8694,7 +8694,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_CASPER */
+comment|/* WITH_CASPER */
 if|if
 condition|(
 name|cansandbox

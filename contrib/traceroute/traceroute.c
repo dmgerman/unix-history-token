@@ -185,7 +185,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_include
@@ -1003,7 +1003,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_decl_stmt
@@ -1896,7 +1896,7 @@ name|sockerrno
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 specifier|const
 name|char
 modifier|*
@@ -2067,7 +2067,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 name|casper
 operator|=
 name|cap_init
@@ -2157,7 +2157,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_LIBCASPER */
+comment|/* WITH_CASPER */
 ifdef|#
 directive|ifdef
 name|IPCTL_DEFTTL
@@ -2232,7 +2232,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 name|cap_close
 argument_list|(
 name|casper
@@ -4275,7 +4275,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 name|cansandbox
 operator|=
 name|true
@@ -8982,7 +8982,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|capdns
@@ -9090,7 +9090,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|capdns
@@ -9435,7 +9435,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|capdns

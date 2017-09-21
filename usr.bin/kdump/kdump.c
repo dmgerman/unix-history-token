@@ -163,7 +163,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_include
@@ -300,7 +300,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_include
@@ -762,7 +762,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_decl_stmt
@@ -839,7 +839,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 end_ifdef
 
 begin_function
@@ -1104,7 +1104,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_LIBCASPER */
+comment|/* WITH_CASPER */
 end_comment
 
 begin_function
@@ -1990,7 +1990,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|resolv
@@ -8589,7 +8589,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|cappwd
@@ -8664,7 +8664,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBCASPER
+name|WITH_CASPER
 if|if
 condition|(
 name|capgrp
