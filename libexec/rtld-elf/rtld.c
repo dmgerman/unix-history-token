@@ -3309,7 +3309,7 @@ argument_list|()
 expr_stmt|;
 name|max_stack_flags
 operator|=
-name|obj
+name|obj_main
 operator|->
 name|stack_flags
 expr_stmt|;
