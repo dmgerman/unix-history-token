@@ -12223,18 +12223,12 @@ name|pmap_invalidate_page
 argument_list|(
 name|pmap
 argument_list|,
-name|va
+name|sva
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 name|PMAP_UNLOCK
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
-comment|/* TODO: Only invalidate entries we are touching */
-name|pmap_invalidate_all
 argument_list|(
 name|pmap
 argument_list|)
