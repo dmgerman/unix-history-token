@@ -131,9 +131,9 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_GTASKQUEUE
 argument_list|,
-literal|"taskqueue"
+literal|"gtaskqueue"
 argument_list|,
-literal|"Task Queues"
+literal|"Group Task Queues"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
