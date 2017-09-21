@@ -4611,6 +4611,8 @@ operator||
 name|MTX_DUPOK
 operator||
 name|MTX_NOPROFILE
+operator||
+name|MTX_NEW
 operator|)
 operator|)
 operator|==
@@ -4723,6 +4725,16 @@ condition|)
 name|flags
 operator||=
 name|LO_NOPROFILE
+expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
+name|MTX_NEW
+condition|)
+name|flags
+operator||=
+name|LO_NEW
 expr_stmt|;
 comment|/* Initialize mutex. */
 name|lock_init
