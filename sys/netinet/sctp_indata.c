@@ -6646,13 +6646,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* Duplicate SSN? */
-name|sctp_clean_up_control
-argument_list|(
-name|stcb
-argument_list|,
-name|control
-argument_list|)
-expr_stmt|;
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
@@ -6666,6 +6659,13 @@ argument_list|,
 name|SCTP_FROM_SCTP_INDATA
 operator|+
 name|SCTP_LOC_6
+argument_list|)
+expr_stmt|;
+name|sctp_clean_up_control
+argument_list|(
+name|stcb
+argument_list|,
+name|control
 argument_list|)
 expr_stmt|;
 return|return;
