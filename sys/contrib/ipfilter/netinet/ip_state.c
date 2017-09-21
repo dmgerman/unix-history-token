@@ -7325,7 +7325,7 @@ name|softc
 operator|->
 name|ipf_ticks
 expr_stmt|;
-comment|/* 	 * We want to check everything that is a property of this packet, 	 * but we don't (automatically) care about it's fragment status as 	 * this may change. 	 */
+comment|/* 	 * We want to check everything that is a property of this packet, 	 * but we don't (automatically) care about its fragment status as 	 * this may change. 	 */
 name|is
 operator|->
 name|is_pass
