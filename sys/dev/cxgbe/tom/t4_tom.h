@@ -401,6 +401,9 @@ name|vmspace
 modifier|*
 name|vm
 decl_stmt|;
+name|vm_offset_t
+name|start
+decl_stmt|;
 name|u_int
 name|vm_timestamp
 decl_stmt|;
