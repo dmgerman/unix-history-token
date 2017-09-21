@@ -523,7 +523,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|bool
 name|efi_devpath_match
 parameter_list|(
 name|EFI_DEVICE_PATH
@@ -550,12 +550,12 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|false
 operator|)
 return|;
 while|while
 condition|(
-literal|1
+name|true
 condition|)
 block|{
 if|if
@@ -582,7 +582,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|false
 operator|)
 return|;
 name|len
@@ -603,7 +603,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|false
 operator|)
 return|;
 if|if
@@ -624,7 +624,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|false
 operator|)
 return|;
 if|if
@@ -652,7 +652,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|1
+name|true
 operator|)
 return|;
 block|}

@@ -1179,8 +1179,8 @@ name|pd_devpath
 argument_list|,
 name|devpath
 argument_list|)
-operator|!=
-literal|0
+operator|==
+name|true
 condition|)
 block|{
 name|pd
@@ -1790,8 +1790,8 @@ name|pd_devpath
 argument_list|,
 name|disk_devpath
 argument_list|)
-operator|!=
-literal|0
+operator|==
+name|true
 condition|)
 block|{
 comment|/* Add the partition. */
