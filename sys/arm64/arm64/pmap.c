@@ -10820,9 +10820,6 @@ name|struct
 name|spglist
 name|free
 decl_stmt|;
-name|int
-name|anyvalid
-decl_stmt|;
 comment|/* 	 * Perform an unsynchronized read.  This is, however, safe. 	 */
 if|if
 condition|(
@@ -10835,10 +10832,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|anyvalid
-operator|=
-literal|0
-expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -11202,15 +11195,6 @@ condition|)
 name|rw_wunlock
 argument_list|(
 name|lock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|anyvalid
-condition|)
-name|pmap_invalidate_all
-argument_list|(
-name|pmap
 argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
