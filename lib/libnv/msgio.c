@@ -1283,10 +1283,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
