@@ -357,7 +357,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bnxt_hwrm_func_cfg
+name|bnxt_cfg_async_cr
 parameter_list|(
 name|struct
 name|bnxt_softc

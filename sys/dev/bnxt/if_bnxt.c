@@ -3864,13 +3864,12 @@ expr_stmt|;
 comment|/* TODO: Better way of detecting NPAR/VF is needed */
 switch|switch
 condition|(
+name|pci_get_device
+argument_list|(
 name|softc
 operator|->
-name|sctx
-operator|->
-name|isc_vendor_info
-operator|->
-name|pvi_device_id
+name|dev
+argument_list|)
 condition|)
 block|{
 case|case
@@ -5555,7 +5554,7 @@ goto|;
 comment|/* And now set the default CP ring as the async CP ring */
 name|rc
 operator|=
-name|bnxt_hwrm_func_cfg
+name|bnxt_cfg_async_cr
 argument_list|(
 name|softc
 argument_list|)

@@ -439,7 +439,7 @@ name|bnxt_wol_supported
 parameter_list|(
 name|softc
 parameter_list|)
-value|((softc)->flags& BNXT_FLAG_WOL_CAP)
+value|(!((softc)->flags& BNXT_FLAG_VF)&& \ 					  ((softc)->flags& BNXT_FLAG_WOL_CAP ))
 end_define
 
 begin_comment
@@ -1245,13 +1245,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|BNXT_FLAG_VF
-value|(1<<1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BNXT_PF
 parameter_list|(
 name|softc
@@ -1740,12 +1733,16 @@ name|link_info
 decl_stmt|;
 define|#
 directive|define
+name|BNXT_FLAG_VF
+value|0x0001
+define|#
+directive|define
 name|BNXT_FLAG_NPAR
-value|0x1
+value|0x0002
 define|#
 directive|define
 name|BNXT_FLAG_WOL_CAP
-value|0x2
+value|0x0004
 name|uint32_t
 name|flags
 decl_stmt|;
