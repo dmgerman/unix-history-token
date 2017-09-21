@@ -226,6 +226,10 @@ decl_stmt|;
 comment|/* Check for double-init and zero object. */
 name|KASSERT
 argument_list|(
+name|flags
+operator|&
+name|LO_NEW
+operator|||
 operator|!
 name|lock_initalized
 argument_list|(

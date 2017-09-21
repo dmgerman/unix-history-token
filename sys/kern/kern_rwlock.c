@@ -997,6 +997,8 @@ operator||
 name|RW_QUIET
 operator||
 name|RW_RECURSE
+operator||
+name|RW_NEW
 operator|)
 operator|)
 operator|==
@@ -1079,6 +1081,16 @@ condition|)
 name|flags
 operator||=
 name|LO_QUIET
+expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
+name|RW_NEW
+condition|)
+name|flags
+operator||=
+name|LO_NEW
 expr_stmt|;
 name|lock_init
 argument_list|(
