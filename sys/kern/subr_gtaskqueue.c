@@ -3659,11 +3659,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: qid not found for %s cpu=%d\n"
+literal|"%s: qid not found for cpu=%d\n"
 argument_list|,
 name|__func__
-argument_list|,
-name|name
 argument_list|,
 name|cpu
 argument_list|)
