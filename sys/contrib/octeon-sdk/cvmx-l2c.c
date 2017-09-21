@@ -1292,6 +1292,8 @@ decl_stmt|;
 specifier|volatile
 name|char
 name|dummy
+init|=
+literal|0
 decl_stmt|;
 comment|/*      * Adjust addr and length so we get all cache lines even for      * small ranges spanning two cache lines.      */
 name|len
