@@ -287,8 +287,6 @@ parameter_list|,
 name|uint32_t
 parameter_list|,
 name|uint16_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
