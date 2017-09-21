@@ -8479,12 +8479,12 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|nv_free
 argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-block|}
 name|ERRNO_RESTORE
 argument_list|()
 expr_stmt|;
