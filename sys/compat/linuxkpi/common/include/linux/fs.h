@@ -503,6 +503,23 @@ name|unsigned
 name|long
 parameter_list|)
 function_decl|;
+name|long
+function_decl|(
+modifier|*
+name|compat_ioctl
+function_decl|)
+parameter_list|(
+name|struct
+name|file
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
+function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -583,7 +600,7 @@ if|#
 directive|if
 literal|0
 comment|/* We do not support these methods.  Don't permit them to compile. */
-block|loff_t (*llseek)(struct file *, loff_t, int); 	ssize_t (*aio_read)(struct kiocb *, const struct iovec *, 	    unsigned long, loff_t); 	ssize_t (*aio_write)(struct kiocb *, const struct iovec *, 	    unsigned long, loff_t); 	int (*readdir)(struct file *, void *, filldir_t); 	int (*ioctl)(struct inode *, struct file *, unsigned int, 	    unsigned long); 	long (*compat_ioctl)(struct file *, unsigned int, unsigned long); 	int (*flush)(struct file *, fl_owner_t id); 	int (*fsync)(struct file *, struct dentry *, int datasync); 	int (*aio_fsync)(struct kiocb *, int datasync); 	int (*lock)(struct file *, int, struct file_lock *); 	ssize_t (*sendpage)(struct file *, struct page *, int, size_t, 	    loff_t *, int); 	unsigned long (*get_unmapped_area)(struct file *, unsigned long, 	    unsigned long, unsigned long, unsigned long); 	int (*check_flags)(int); 	int (*flock)(struct file *, int, struct file_lock *); 	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, 	    loff_t *, size_t, unsigned int); 	ssize_t (*splice_read)(struct file *, loff_t *, 	    struct pipe_inode_info *, size_t, unsigned int); 	int (*setlease)(struct file *, long, struct file_lock **);
+block|loff_t (*llseek)(struct file *, loff_t, int); 	ssize_t (*aio_read)(struct kiocb *, const struct iovec *, 	    unsigned long, loff_t); 	ssize_t (*aio_write)(struct kiocb *, const struct iovec *, 	    unsigned long, loff_t); 	int (*readdir)(struct file *, void *, filldir_t); 	int (*ioctl)(struct inode *, struct file *, unsigned int, 	    unsigned long); 	int (*flush)(struct file *, fl_owner_t id); 	int (*fsync)(struct file *, struct dentry *, int datasync); 	int (*aio_fsync)(struct kiocb *, int datasync); 	int (*lock)(struct file *, int, struct file_lock *); 	ssize_t (*sendpage)(struct file *, struct page *, int, size_t, 	    loff_t *, int); 	unsigned long (*get_unmapped_area)(struct file *, unsigned long, 	    unsigned long, unsigned long, unsigned long); 	int (*check_flags)(int); 	int (*flock)(struct file *, int, struct file_lock *); 	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, 	    loff_t *, size_t, unsigned int); 	ssize_t (*splice_read)(struct file *, loff_t *, 	    struct pipe_inode_info *, size_t, unsigned int); 	int (*setlease)(struct file *, long, struct file_lock **);
 endif|#
 directive|endif
 block|}
