@@ -13496,7 +13496,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"checksum failed: cg %u, cgp: 0x%x != bp: 0x%lx\n"
+literal|"checksum failed: cg %u, cgp: 0x%x != bp: 0x%jx\n"
 argument_list|,
 name|cg
 argument_list|,
@@ -13504,6 +13504,9 @@ name|cgp
 operator|->
 name|cg_ckhash
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bp
 operator|->
 name|b_ckhash
