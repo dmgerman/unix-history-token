@@ -4396,6 +4396,9 @@ name|pd
 operator|->
 name|pd_unit
 operator|==
+operator|(
+name|uint32_t
+operator|)
 name|d_dev
 operator|->
 name|d_slice

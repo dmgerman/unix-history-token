@@ -150,11 +150,11 @@ name|EFI_BLOCK_IO
 modifier|*
 name|pd_blkio
 decl_stmt|;
-name|int
+name|uint32_t
 name|pd_unit
 decl_stmt|;
 comment|/* unit number */
-name|int
+name|uint32_t
 name|pd_open
 decl_stmt|;
 comment|/* reference counter */
