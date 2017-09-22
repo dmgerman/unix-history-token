@@ -2224,6 +2224,10 @@ name|p
 operator|++
 expr_stmt|;
 comment|/* skip the colon */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|unit
 operator|=
 operator|(
@@ -2238,6 +2242,36 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Bad unit number for partition \"%s\"\n"
+argument_list|,
+name|pathname
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|pathname
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|pd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EUNIT
+operator|)
+return|;
+block|}
 comment|/* 	 * We should have disk registered, if not, we are receiving 	 * handles out of order, and this code should be reworked 	 * to create "blank" disk for partition, and to find the 	 * disk based on PathName compares. 	 */
 if|if
 condition|(
