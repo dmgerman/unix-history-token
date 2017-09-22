@@ -1880,6 +1880,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ioapic_get_rid
+parameter_list|(
+name|u_int
+name|apic_id
+parameter_list|,
+name|uint16_t
+modifier|*
+name|ridp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
