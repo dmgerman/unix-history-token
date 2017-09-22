@@ -5332,7 +5332,7 @@ block|}
 else|else
 block|{
 comment|/* indirect write */
-comment|/* 		 * Have to lock the whole block to ensure when it's 		 * written out and it's checksum is being calculated 		 * that no one can change the data. We need to re-check 		 * blocksize after we get the lock in case it's changed! 		 */
+comment|/* 		 * Have to lock the whole block to ensure when it's 		 * written out and its checksum is being calculated 		 * that no one can change the data. We need to re-check 		 * blocksize after we get the lock in case it's changed! 		 */
 for|for
 control|(
 init|;
