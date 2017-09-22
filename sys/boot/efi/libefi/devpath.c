@@ -535,7 +535,7 @@ modifier|*
 name|devpath2
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 if|if
@@ -614,9 +614,6 @@ name|devpath1
 argument_list|,
 name|devpath2
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|len
 argument_list|)
 operator|!=
