@@ -671,9 +671,14 @@ argument_list|,
 literal|"could not allocate iicbus instance\n"
 argument_list|)
 expr_stmt|;
-comment|/* probe and attach the iicbus */
-name|bus_generic_attach
+comment|/* Probe and attach the iicbus when interrupts are available. */
+name|config_intrhook_oneshot
 argument_list|(
+operator|(
+name|ich_func_t
+operator|)
+name|bus_generic_attach
+argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
