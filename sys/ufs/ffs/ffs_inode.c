@@ -331,7 +331,7 @@ name|loop
 label|:
 name|error
 operator|=
-name|breadn_flags
+name|bread_gb
 argument_list|(
 name|ITODEVVP
 argument_list|(
@@ -358,12 +358,6 @@ operator|)
 name|fs
 operator|->
 name|fs_bsize
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 name|NOCRED
 argument_list|,

@@ -920,10 +920,14 @@ comment|/* SUJ free list */
 name|int32_t
 name|fs_sparecon32
 index|[
-literal|23
+literal|22
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
+name|u_int32_t
+name|fs_metackhash
+decl_stmt|;
+comment|/* metadata check-hash, see CK_ below */
 name|int32_t
 name|fs_flags
 decl_stmt|;
@@ -1049,17 +1053,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FS_OKAY
-value|0x7c269d38
-end_define
-
-begin_comment
-comment|/* superblock checksum */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|FS_42INODEFMT
 value|-1
 end_define
@@ -1106,7 +1099,7 @@ comment|/* minimize disk fragmentation */
 end_comment
 
 begin_comment
-comment|/*  * Filesystem flags.  *  * The FS_UNCLEAN flag is set by the kernel when the filesystem was  * mounted with fs_clean set to zero. The FS_DOSOFTDEP flag indicates  * that the filesystem should be managed by the soft updates code.  * Note that the FS_NEEDSFSCK flag is set and cleared only by the  * fsck utility. It is set when background fsck finds an unexpected  * inconsistency which requires a traditional foreground fsck to be  * run. Such inconsistencies should only be found after an uncorrectable  * disk error. A foreground fsck will clear the FS_NEEDSFSCK flag when  * it has successfully cleaned up the filesystem. The kernel uses this  * flag to enforce that inconsistent filesystems be mounted read-only.  * The FS_INDEXDIRS flag when set indicates that the kernel maintains  * on-disk auxiliary indexes (such as B-trees) for speeding directory  * accesses. Kernels that do not support auxiliary indices clear the  * flag to indicate that the indices need to be rebuilt (by fsck) before  * they can be used.  *  * FS_ACLS indicates that POSIX.1e ACLs are administratively enabled  * for the file system, so they should be loaded from extended attributes,  * observed for access control purposes, and be administered by object  * owners.  FS_NFS4ACLS indicates that NFSv4 ACLs are administratively  * enabled.  This flag is mutually exclusive with FS_ACLS.  FS_MULTILABEL  * indicates that the TrustedBSD MAC Framework should attempt to back MAC  * labels into extended attributes on the file system rather than maintain  * a single mount label for all objects.  */
+comment|/*  * Filesystem flags.  *  * The FS_UNCLEAN flag is set by the kernel when the filesystem was  * mounted with fs_clean set to zero. The FS_DOSOFTDEP flag indicates  * that the filesystem should be managed by the soft updates code.  * Note that the FS_NEEDSFSCK flag is set and cleared only by the  * fsck utility. It is set when background fsck finds an unexpected  * inconsistency which requires a traditional foreground fsck to be  * run. Such inconsistencies should only be found after an uncorrectable  * disk error. A foreground fsck will clear the FS_NEEDSFSCK flag when  * it has successfully cleaned up the filesystem. The kernel uses this  * flag to enforce that inconsistent filesystems be mounted read-only.  * The FS_INDEXDIRS flag when set indicates that the kernel maintains  * on-disk auxiliary indexes (such as B-trees) for speeding directory  * accesses. Kernels that do not support auxiliary indices clear the  * flag to indicate that the indices need to be rebuilt (by fsck) before  * they can be used. When a filesystem is mounted, any flags not  * included in FS_SUPPORTED are cleared. This lets newer features  * know that the filesystem has been run on an older version of the  * filesystem and thus that data structures associated with those  * features are out-of-date and need to be rebuilt.  *  * FS_ACLS indicates that POSIX.1e ACLs are administratively enabled  * for the file system, so they should be loaded from extended attributes,  * observed for access control purposes, and be administered by object  * owners.  FS_NFS4ACLS indicates that NFSv4 ACLs are administratively  * enabled.  This flag is mutually exclusive with FS_ACLS.  FS_MULTILABEL  * indicates that the TrustedBSD MAC Framework should attempt to back MAC  * labels into extended attributes on the file system rather than maintain  * a single mount label for all objects.  */
 end_comment
 
 begin_define
@@ -1229,6 +1222,142 @@ end_define
 begin_comment
 comment|/* issue BIO_DELETE for deleted blocks */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_SUPPORTED
+value|0xFFFF
+end_define
+
+begin_comment
+comment|/* supported flags, others cleared at mount */
+end_comment
+
+begin_comment
+comment|/*  * The fs_metackhash field indicates the types of metadata check-hash  * that are maintained for a filesystem. Not all filesystems check-hash  * all metadata.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CK_SUPERBLOCK
+value|0x0001
+end_define
+
+begin_comment
+comment|/* the superblock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CK_CYLGRP
+value|0x0002
+end_define
+
+begin_comment
+comment|/* the cylinder groups */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CK_INODE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* inodes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CK_INDIR
+value|0x0008
+end_define
+
+begin_comment
+comment|/* indirect blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CK_DIR
+value|0x0010
+end_define
+
+begin_comment
+comment|/* directory contents */
+end_comment
+
+begin_comment
+comment|/*  * The BX_FSPRIV buffer b_xflags are used to track types of data in buffers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BX_SUPERBLOCK
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* superblock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BX_CYLGRP
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* cylinder groups */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BX_INODE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* inodes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BX_INDIR
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* indirect blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BX_DIR
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* directory contents */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRINT_UFS_BUF_XFLAGS
+value|"\20\25dir\24indir\23inode\22cylgrp\21superblock"
+end_define
 
 begin_comment
 comment|/*  * Macros to access bits in the fs_active array.  */
@@ -1451,10 +1580,14 @@ comment|/* number of unreferenced inodes */
 name|int32_t
 name|cg_sparecon32
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 comment|/* reserved for future use */
+name|u_int32_t
+name|cg_ckhash
+decl_stmt|;
+comment|/* check-hash of this cg */
 name|ufs_time_t
 name|cg_time
 decl_stmt|;

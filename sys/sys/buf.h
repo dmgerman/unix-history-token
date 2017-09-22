@@ -163,8 +163,7 @@ end_struct_decl
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|char
+name|uint32_t
 name|b_xflags_t
 typedef|;
 end_typedef
@@ -220,6 +219,21 @@ name|buf
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|b_ckhashcalc
+function_decl|)
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|b_ckhash
+decl_stmt|;
+comment|/* B_CKHASH requested check-hash */
 name|daddr_t
 name|b_blkno
 decl_stmt|;
@@ -539,12 +553,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_00000100
+name|B_CKHASH
 value|0x00000100
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* checksum hash calculated on read */
 end_comment
 
 begin_define
@@ -808,7 +822,7 @@ value|"\20\40remfree\37cluster\36vmio\35ram\34managed" \ 	"\33paging\32infreecnt
 end_define
 
 begin_comment
-comment|/*  * These flags are kept in b_xflags.  */
+comment|/*  * These flags are kept in b_xflags.  *  * BX_FSPRIV reserves a set of eight flags that may be used by individual  * filesystems for their own purpose. Their specific definitions are  * found in the header files for each filesystem that uses them.  */
 end_comment
 
 begin_define
@@ -864,6 +878,17 @@ end_define
 
 begin_comment
 comment|/* Holds extended data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BX_FSPRIV
+value|0x00FF0000
+end_define
+
+begin_comment
+comment|/* filesystem-specific flags mask */
 end_comment
 
 begin_define
@@ -1795,6 +1820,17 @@ begin_comment
 comment|/* But allocate KVA. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GB_CKHASH
+value|0x0020
+end_define
+
+begin_comment
+comment|/* If reading, calc checksum hash */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2094,7 +2130,7 @@ parameter_list|,
 name|bpp
 parameter_list|)
 define|\
-value|breadn_flags(vp, blkno, size, NULL, NULL, 0, cred, 0, bpp)
+value|breadn_flags(vp, blkno, size, NULL, NULL, 0, cred, 0, NULL, bpp)
 end_define
 
 begin_define
@@ -2115,7 +2151,7 @@ parameter_list|,
 name|bpp
 parameter_list|)
 define|\
-value|breadn_flags(vp, blkno, size, NULL, NULL, 0, cred, \ 		gbflags, bpp)
+value|breadn_flags(vp, blkno, size, NULL, NULL, 0, cred, \ 		gbflags, NULL, bpp)
 end_define
 
 begin_define
@@ -2140,7 +2176,7 @@ parameter_list|,
 name|bpp
 parameter_list|)
 define|\
-value|breadn_flags(vp, blkno, size, rablkno, rabsize, cnt, cred, 0, bpp)
+value|breadn_flags(vp, blkno, size, rablkno, rabsize, cnt, cred, \ 		0, NULL, bpp)
 end_define
 
 begin_function_decl
@@ -2169,32 +2205,19 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|struct
 name|buf
 modifier|*
-modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|breada
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
-name|daddr_t
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|struct
-name|ucred
+name|buf
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
