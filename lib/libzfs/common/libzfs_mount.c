@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2016 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  * Copyright 2017 RackTop Systems.  */
+comment|/*  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2016 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  * Copyright 2017 Joyent, Inc.  * Copyright 2017 RackTop Systems.  */
 end_comment
 
 begin_comment
@@ -2781,6 +2781,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+comment|/* 	 * libshare is either not installed or we're in a branded zone. The 	 * rest of the wrapper functions around the libshare calls already 	 * handle NULL function pointers, but we don't want the callers of 	 * zfs_init_libshare() to fail prematurely if libshare is not available. 	 */
 if|if
 condition|(
 name|_sa_init
@@ -2789,7 +2790,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|SA_CONFIG_ERR
+name|SA_OK
 operator|)
 return|;
 comment|/* 	 * Attempt to refresh libshare. This is necessary if there was a cache 	 * miss for a new ZFS dataset that was just created, or if state of the 	 * sharetab file has changed since libshare was last initialized. We 	 * want to make sure so check timestamps to see if a different process 	 * has updated any of the configuration. If there was some non-ZFS 	 * change, we need to re-initialize the internal cache. 	 */
