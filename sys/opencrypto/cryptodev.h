@@ -1042,6 +1042,11 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
+name|COP_F_CIPHER_FIRST
+value|0x0001
+comment|/* Cipher before MAC. */
+define|#
+directive|define
 name|COP_F_BATCH
 value|0x0008
 comment|/* Batch op if possible */
