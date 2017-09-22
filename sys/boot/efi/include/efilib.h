@@ -135,7 +135,7 @@ comment|/* link in device list */
 name|pdinfo_list_t
 name|pd_part
 decl_stmt|;
-comment|/* link of partitions */
+comment|/* list of partitions */
 name|EFI_HANDLE
 name|pd_handle
 decl_stmt|;
