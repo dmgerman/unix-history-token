@@ -7374,16 +7374,6 @@ name|lrc_reclen
 argument_list|)
 expr_stmt|;
 block|}
-name|DTRACE_PROBE1
-argument_list|(
-name|zil__cw2
-argument_list|,
-name|zilog_t
-operator|*
-argument_list|,
-name|zilog
-argument_list|)
-expr_stmt|;
 comment|/* write the last block out */
 if|if
 condition|(
