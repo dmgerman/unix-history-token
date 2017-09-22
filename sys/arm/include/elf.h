@@ -541,6 +541,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HWCAP_NEON
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
 name|HWCAP_VFPv3
 value|0x00002000
 end_define
