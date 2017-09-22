@@ -4091,7 +4091,7 @@ name|MediaPresent
 condition|)
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 name|bcd
