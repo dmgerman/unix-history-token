@@ -542,14 +542,14 @@ begin_define
 define|#
 directive|define
 name|HWCAP_VFPv3
-value|0x00000200
+value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|HWCAP_VFPv3D16
-value|0x00000400
+value|0x00004000
 end_define
 
 begin_define
