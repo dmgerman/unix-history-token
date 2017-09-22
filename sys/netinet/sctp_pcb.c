@@ -10627,7 +10627,17 @@ name|SCTP_PCB_FLAGS_UNBOUND
 operator|)
 expr_stmt|;
 comment|/* Be sure we have blocking IO by default */
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|SCTP_CLEAR_SO_NBIO
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|SOCK_UNLOCK
 argument_list|(
 name|so
 argument_list|)
