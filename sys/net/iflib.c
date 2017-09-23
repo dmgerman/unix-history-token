@@ -577,6 +577,9 @@ decl_stmt|;
 name|uint16_t
 name|ifc_sysctl_qs_eq_override
 decl_stmt|;
+name|uint16_t
+name|ifc_sysctl_rx_budget
+decl_stmt|;
 name|qidx_t
 name|ifc_sysctl_ntxds
 index|[
@@ -19401,6 +19404,9 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
+name|uint16_t
+name|budget
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IFLIB_DIAGNOSTICS
@@ -19486,6 +19492,23 @@ block|}
 block|}
 endif|#
 directive|endif
+name|budget
+operator|=
+name|ctx
+operator|->
+name|ifc_sysctl_rx_budget
+expr_stmt|;
+if|if
+condition|(
+name|budget
+operator|==
+literal|0
+condition|)
+name|budget
+operator|=
+literal|16
+expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|more
@@ -19499,8 +19522,7 @@ name|iflib_rxeof
 argument_list|(
 name|rxq
 argument_list|,
-literal|16
-comment|/* XXX */
+name|budget
 argument_list|)
 operator|)
 operator|==
@@ -29660,6 +29682,28 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"disable MSIX (default 0)"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_U16
+argument_list|(
+name|ctx_list
+argument_list|,
+name|oid_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_budget"
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|ctx
+operator|->
+name|ifc_sysctl_rx_budget
+argument_list|,
+literal|0
+argument_list|,
+literal|"set the rx budget"
 argument_list|)
 expr_stmt|;
 comment|/* XXX change for per-queue sizes */
