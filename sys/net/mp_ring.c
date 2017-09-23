@@ -2092,11 +2092,19 @@ name|pidx_tail
 operator|=
 name|pidx_stop
 expr_stmt|;
+if|if
+condition|(
+name|os
+operator|.
+name|flags
+operator|==
+name|IDLE
+condition|)
 name|ns
 operator|.
 name|flags
 operator|=
-name|BUSY
+name|ABDICATED
 expr_stmt|;
 block|}
 do|while
@@ -2130,28 +2138,6 @@ operator|->
 name|enqueues
 argument_list|,
 name|n
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Turn into a consumer if some other thread isn't active as a consumer 	 * already. 	 */
-if|if
-condition|(
-name|os
-operator|.
-name|flags
-operator|!=
-name|BUSY
-condition|)
-name|drain_ring_lockless
-argument_list|(
-name|r
-argument_list|,
-name|ns
-argument_list|,
-name|os
-operator|.
-name|flags
-argument_list|,
-name|budget
 argument_list|)
 expr_stmt|;
 return|return
@@ -2196,12 +2182,21 @@ name|state
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|os
 operator|.
 name|flags
 operator|!=
 name|STALLED
+operator|&&
+name|os
+operator|.
+name|flags
+operator|!=
+name|ABDICATED
+operator|)
 operator|||
+comment|// Only continue in STALLED and ABDICATED
 name|os
 operator|.
 name|pidx_head
@@ -2210,6 +2205,14 @@ name|os
 operator|.
 name|pidx_tail
 operator|||
+comment|// Require work to be available
+operator|(
+name|os
+operator|.
+name|flags
+operator|!=
+name|ABDICATED
+operator|&&
 name|r
 operator|->
 name|can_drain
@@ -2218,7 +2221,9 @@ name|r
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
+comment|// Can either drain, or everyone left
 return|return;
 name|MPASS
 argument_list|(
