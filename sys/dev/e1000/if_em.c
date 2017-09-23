@@ -3301,6 +3301,8 @@ operator|=
 name|IFLIB_NEED_SCRATCH
 operator||
 name|IFLIB_TSO_INIT_IP
+operator||
+name|IFLIB_NEED_ZERO_CSUM
 block|,
 operator|.
 name|isc_nrxd_min
@@ -3440,6 +3442,8 @@ operator|=
 name|IFLIB_NEED_SCRATCH
 operator||
 name|IFLIB_TSO_INIT_IP
+operator||
+name|IFLIB_NEED_ZERO_CSUM
 block|,
 operator|.
 name|isc_nrxd_min

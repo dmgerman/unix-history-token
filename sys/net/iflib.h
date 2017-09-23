@@ -1046,6 +1046,17 @@ value|0x40
 end_define
 
 begin_comment
+comment|/*  * Driver needs csum zeroed for offloading  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLIB_NEED_ZERO_CSUM
+value|0x80
+end_define
+
+begin_comment
 comment|/*  * field accessors  */
 end_comment
 
