@@ -140,9 +140,15 @@ name|void
 modifier|*
 name|gt_uniq
 decl_stmt|;
+define|#
+directive|define
+name|GROUPTASK_NAMELEN
+value|32
 name|char
-modifier|*
 name|gt_name
+index|[
+name|GROUPTASK_NAMELEN
+index|]
 decl_stmt|;
 name|int16_t
 name|gt_irq

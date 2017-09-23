@@ -2919,11 +2919,22 @@ name|gt_uniq
 operator|=
 name|uniq
 expr_stmt|;
+name|snprintf
+argument_list|(
 name|gtask
 operator|->
 name|gt_name
-operator|=
+argument_list|,
+name|GROUPTASK_NAMELEN
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
+condition|?
+name|name
+else|:
+literal|"grouptask"
+argument_list|)
 expr_stmt|;
 name|gtask
 operator|->
@@ -3201,9 +3212,13 @@ name|error
 condition|)
 name|printf
 argument_list|(
-literal|"%s: setaffinity failed: %d\n"
+literal|"%s: %s setaffinity failed: %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|gtask
+operator|->
+name|gt_name
 argument_list|,
 name|error
 argument_list|)
@@ -3324,11 +3339,22 @@ name|gt_uniq
 operator|=
 name|uniq
 expr_stmt|;
+name|snprintf
+argument_list|(
 name|gtask
 operator|->
 name|gt_name
-operator|=
+argument_list|,
+name|GROUPTASK_NAMELEN
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
+condition|?
+name|name
+else|:
+literal|"grouptask"
+argument_list|)
 expr_stmt|;
 name|gtask
 operator|->
@@ -3412,7 +3438,9 @@ literal|"%s: qid not found for %s cpu=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|name
+name|gtask
+operator|->
+name|gt_name
 argument_list|,
 name|cpu
 argument_list|)
@@ -3659,9 +3687,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: qid not found for cpu=%d\n"
+literal|"%s: qid not found for %s cpu=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|gtask
+operator|->
+name|gt_name
 argument_list|,
 name|cpu
 argument_list|)
@@ -3857,7 +3889,11 @@ name|tqg_cnt
 condition|)
 name|panic
 argument_list|(
-literal|"taskqgroup_detach: task not in group\n"
+literal|"taskqgroup_detach: task %s not in group\n"
+argument_list|,
+name|gtask
+operator|->
+name|gt_name
 argument_list|)
 expr_stmt|;
 name|qgroup
