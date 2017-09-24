@@ -345,6 +345,11 @@ literal|"out of space for $0 and fields"
 argument_list|)
 expr_stmt|;
 operator|*
+name|record
+operator|=
+literal|'\0'
+expr_stmt|;
+operator|*
 name|fldtab
 index|[
 literal|0
