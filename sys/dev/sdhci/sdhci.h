@@ -2357,33 +2357,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MMCCAM
-end_ifdef
-
-begin_comment
-comment|/* CAM-related */
-end_comment
-
-begin_function_decl
-name|void
-name|sdhci_cam_start_slot
-parameter_list|(
-name|struct
-name|sdhci_slot
-modifier|*
-name|slot
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif

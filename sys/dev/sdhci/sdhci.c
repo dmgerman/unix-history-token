@@ -5313,6 +5313,9 @@ literal|0
 operator|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|MMCCAM
 name|void
 name|sdhci_start_slot
 parameter_list|(
@@ -5330,6 +5333,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|int
 name|sdhci_cleanup_slot
 parameter_list|(
@@ -11629,7 +11634,7 @@ ifdef|#
 directive|ifdef
 name|MMCCAM
 name|void
-name|sdhci_cam_start_slot
+name|sdhci_start_slot
 parameter_list|(
 name|struct
 name|sdhci_slot
