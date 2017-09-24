@@ -6134,6 +6134,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|getfval
 argument_list|(
 name|x
