@@ -3887,6 +3887,10 @@ name|been_here
 operator|++
 operator|>
 literal|0
+operator|||
+name|ebuf
+operator|==
+name|ep
 condition|)
 return|return;
 name|p
