@@ -11491,7 +11491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_page_try_to_free()  *  *	Attempt to free the page.  If we cannot free it, we do nothing.  *	true is returned on success, false on failure.  */
+comment|/*  * Attempt to free the page.  If it cannot be freed, do nothing.  Returns true  * if the page is freed and false otherwise.  *  * The page must be managed.  The page and its containing object must be  * locked.  */
 end_comment
 
 begin_function
@@ -11507,19 +11507,30 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|object
-operator|!=
-name|NULL
-condition|)
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
 operator|->
 name|object
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|oflags
+operator|&
+name|VPO_UNMANAGED
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"page %p is unmanaged"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11542,16 +11553,6 @@ name|wire_count
 operator|!=
 literal|0
 operator|||
-operator|(
-name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_UNMANAGED
-operator|)
-operator|!=
-literal|0
-operator|||
 name|vm_page_busied
 argument_list|(
 name|m
@@ -11564,12 +11565,6 @@ operator|)
 return|;
 if|if
 condition|(
-name|m
-operator|->
-name|object
-operator|!=
-name|NULL
-operator|&&
 name|m
 operator|->
 name|object
