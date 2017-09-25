@@ -2229,6 +2229,9 @@ block|{
 comment|/* Find the entry for this routine.  */
 if|if
 condition|(
+operator|(
+name|pr_result
+operator|=
 name|get_eit_entry
 argument_list|(
 name|ucbp
@@ -2242,11 +2245,12 @@ index|[
 name|R_PC
 index|]
 argument_list|)
+operator|)
 operator|!=
 name|_URC_OK
 condition|)
 return|return
-name|_URC_FAILURE
+name|pr_result
 return|;
 comment|/* Call the pr to decide what to do.  */
 name|pr_result
