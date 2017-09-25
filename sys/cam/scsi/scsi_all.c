@@ -2310,7 +2310,6 @@ block|,
 literal|"ACCESS CONTROL OUT"
 block|}
 block|,
-comment|/* 	 * XXX READ(16)/WRITE(16) were not listed for CD/DVE in op-num.txt 	 * but we had it since r1.40.  Do we really want them? 	 */
 comment|/* 88  MM  O O   O     READ(16) */
 block|{
 literal|0x88
