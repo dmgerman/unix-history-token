@@ -2793,6 +2793,9 @@ block|{
 comment|/* Find the entry for this routine.  */
 if|if
 condition|(
+operator|(
+name|code
+operator|=
 name|get_eit_entry
 argument_list|(
 name|ucbp
@@ -2806,16 +2809,11 @@ index|[
 name|R_PC
 index|]
 argument_list|)
+operator|)
 operator|!=
 name|_URC_OK
 condition|)
-block|{
-name|code
-operator|=
-name|_URC_FAILURE
-expr_stmt|;
 break|break;
-block|}
 comment|/* The dwarf unwinder assumes the context structure holds things 	 like the function and LSDA pointers.  The ARM implementation 	 caches these in the exception header (UCB).  To avoid 	 rewriting everything we make the virtual IP register point at 	 the UCB.  */
 name|_Unwind_SetGR
 argument_list|(
