@@ -800,8 +800,6 @@ block|{
 name|ACPI_HID_DEVICE_PATH
 modifier|*
 name|acpi
-init|=
-name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -867,7 +865,7 @@ block|}
 block|}
 return|return
 operator|(
-name|acpi
+name|NULL
 operator|)
 return|;
 block|}
