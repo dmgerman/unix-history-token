@@ -3204,16 +3204,6 @@ name|double
 name|complex
 name|z
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__i386__
-name|atf_tc_expect_fail
-argument_list|(
-literal|"test fails on i386 - bug 205446"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* tanh() uses a threshold around x=22, so check both sides. */
 name|z
 operator|=

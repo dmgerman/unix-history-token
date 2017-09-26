@@ -660,6 +660,23 @@ parameter_list|)
 value|do {				\ 	__retval = (x);				\ 	if (__oprec != FP_PE)			\ 		fpsetprec(__oprec);		\ 	RETURNF(__retval);			\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ENTERV
+parameter_list|()
+define|\
+value|fp_prec_t __oprec;			\ 						\ 	if ((__oprec = fpgetprec()) != FP_PE)	\ 		fpsetprec(FP_PE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RETURNV
+parameter_list|()
+value|do {				\ 	if (__oprec != FP_PE)			\ 		fpsetprec(__oprec);		\ 	return;			\ } while (0)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -669,9 +686,7 @@ begin_define
 define|#
 directive|define
 name|ENTERI
-parameter_list|(
-name|x
-parameter_list|)
+parameter_list|()
 end_define
 
 begin_define
@@ -682,6 +697,21 @@ parameter_list|(
 name|x
 parameter_list|)
 value|RETURNF(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENTERV
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|RETURNV
+parameter_list|()
+value|return
 end_define
 
 begin_endif

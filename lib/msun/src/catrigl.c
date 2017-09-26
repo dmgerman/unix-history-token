@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012 Stephen Montgomery-Smith<stephen@FreeBSD.ORG>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2012 Stephen Montgomery-Smith<stephen@FreeBSD.ORG>  * Copyright (c) 2017 Mahdi Mokhtari<mmokhi@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * The algorithm is very close to that in "Implementing the complex arcsine  * and arccosine functions using exception handling" by T. E. Hull, Thomas F.  * Fairgrieve, and Ping Tak Peter Tang, published in ACM Transactions on  * Mathematical Software, Volume 23 Issue 3, 1997, Pages 299-335,  * http://dl.acm.org/citation.cfm?id=275324.  *  * See catrig.c for complete comments.  *  * XXX comments were removed automatically, and even short ones on the right  * of statements were removed (all of them), contrary to normal style.  Only  * a few comments on the right of declarations remain.  */
 end_comment
 
 begin_include
@@ -32,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"invtrig.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -54,7 +64,7 @@ name|isinf
 parameter_list|(
 name|x
 parameter_list|)
-value|(fabs(x) == INFINITY)
+value|(fabsl(x) == INFINITY)
 end_define
 
 begin_undef
@@ -94,96 +104,195 @@ name|signbit
 parameter_list|(
 name|x
 parameter_list|)
-value|(__builtin_signbit(x))
+value|(__builtin_signbitl(x))
 end_define
 
-begin_comment
-comment|/* We need that DBL_EPSILON^2/128 is larger than FOUR_SQRT_MIN. */
-end_comment
+begin_if
+if|#
+directive|if
+name|LDBL_MAX_EXP
+operator|!=
+literal|0x4000
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Unsupported long double format"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
 specifier|const
+name|long
 name|double
 name|A_crossover
 init|=
 literal|10
 decl_stmt|,
-comment|/* Hull et al suggest 1.5, but 10 works better */
 name|B_crossover
 init|=
 literal|0.6417
 decl_stmt|,
-comment|/* suggested by Hull et al */
 name|FOUR_SQRT_MIN
 init|=
 literal|0x1p
 operator|-
-literal|509
+literal|8189L
 decl_stmt|,
-comment|/*>= 4 * sqrt(DBL_MIN) */
+name|HALF_MAX
+init|=
+literal|0x1p16383L
+decl_stmt|,
 name|QUARTER_SQRT_MAX
 init|=
-literal|0x1p509
+literal|0x1p8189L
 decl_stmt|,
-comment|/*<= sqrt(DBL_MAX) / 4 */
-name|m_e
-init|=
-literal|2.7182818284590452e0
-decl_stmt|,
-comment|/*  0x15bf0a8b145769.0p-51 */
-name|m_ln2
-init|=
-literal|6.9314718055994531e-1
-decl_stmt|,
-comment|/*  0x162e42fefa39ef.0p-53 */
-name|pio2_hi
-init|=
-literal|1.5707963267948966e0
-decl_stmt|,
-comment|/*  0x1921fb54442d18.0p-52 */
 name|RECIP_EPSILON
 init|=
 literal|1
 operator|/
-name|DBL_EPSILON
+name|LDBL_EPSILON
 decl_stmt|,
-name|SQRT_3_EPSILON
-init|=
-literal|2.5809568279517849e-8
-decl_stmt|,
-comment|/*  0x1bb67ae8584caa.0p-78 */
-name|SQRT_6_EPSILON
-init|=
-literal|3.6500241499888571e-8
-decl_stmt|,
-comment|/*  0x13988e1409212e.0p-77 */
 name|SQRT_MIN
 init|=
 literal|0x1p
 operator|-
-literal|511
+literal|8191L
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*>= sqrt(DBL_MIN) */
-end_comment
+begin_if
+if|#
+directive|if
+name|LDBL_MANT_DIG
+operator|==
+literal|64
+end_if
 
 begin_decl_stmt
 specifier|static
 specifier|const
-specifier|volatile
-name|double
-name|pio2_lo
+name|union
+name|IEEEl2bits
+name|um_e
 init|=
-literal|6.1232339957367659e-17
+name|LD80C
+argument_list|(
+literal|0xadf85458a2bb4a9b
+argument_list|,
+literal|1
+argument_list|,
+literal|2.71828182845904523536e+0L
+argument_list|)
+decl_stmt|,
+name|um_ln2
+init|=
+name|LD80C
+argument_list|(
+literal|0xb17217f7d1cf79ac
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|6.93147180559945309417e-1L
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|m_e
+value|um_e.e
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_ln2
+value|um_ln2.e
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|long
+name|double
+comment|/* The next 2 literals for non-i386.  Misrounding them on i386 is harmless. */
+name|SQRT_3_EPSILON
+init|=
+literal|5.70316273435758915310e-10
+decl_stmt|,
+comment|/*  0x9cc470a0490973e8.0p-94 */
+name|SQRT_6_EPSILON
+init|=
+literal|8.06549008734932771664e-10
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  0x11a62633145c07.0p-106 */
+comment|/*  0xddb3d742c265539e.0p-94 */
 end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|LDBL_MANT_DIG
+operator|==
+literal|113
+end_elif
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|long
+name|double
+name|m_e
+init|=
+literal|2.71828182845904523536028747135266250e0L
+decl_stmt|,
+comment|/* 0x15bf0a8b1457695355fb8ac404e7a.0p-111 */
+name|m_ln2
+init|=
+literal|6.93147180559945309417232121458176568e-1L
+decl_stmt|,
+comment|/* 0x162e42fefa39ef35793c7673007e6.0p-113 */
+name|SQRT_3_EPSILON
+init|=
+literal|2.40370335797945490975336727199878124e-17
+decl_stmt|,
+comment|/*  0x1bb67ae8584caa73b25742d7078b8.0p-168 */
+name|SQRT_6_EPSILON
+init|=
+literal|3.39934988877629587239082586223300391e-17
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  0x13988e1409212e7d0321914321a55.0p-167 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"Unsupported long double format"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -200,10 +309,12 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
+name|long
 name|double
 name|complex
 name|clog_for_large_values
 parameter_list|(
+name|long
 name|double
 name|complex
 name|z
@@ -211,34 +322,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Testing indicates that all these functions are accurate up to 4 ULP.  * The functions casin(h) and cacos(h) are about 2.5 times slower than asinh.  * The functions catan(h) are a little under 2 times slower than atanh.  *  * The code for casinh, casin, cacos, and cacosh comes first.  The code is  * rather complicated, and the four functions are highly interdependent.  *  * The code for catanh and catan comes at the end.  It is much simpler than  * the other functions, and the code for these can be disconnected from the  * rest of the code.  */
-end_comment
-
-begin_comment
-comment|/*  *			================================  *			| casinh, casin, cacos, cacosh |  *			================================  */
-end_comment
-
-begin_comment
-comment|/*  * The algorithm is very close to that in "Implementing the complex arcsine  * and arccosine functions using exception handling" by T. E. Hull, Thomas F.  * Fairgrieve, and Ping Tak Peter Tang, published in ACM Transactions on  * Mathematical Software, Volume 23 Issue 3, 1997, Pages 299-335,  * http://dl.acm.org/citation.cfm?id=275324.  *  * Throughout we use the convention z = x + I*y.  *  * casinh(z) = sign(x)*log(A+sqrt(A*A-1)) + I*asin(B)  * where  * A = (|z+I| + |z-I|) / 2  * B = (|z+I| - |z-I|) / 2 = y/A  *  * These formulas become numerically unstable:  *   (a) for Re(casinh(z)) when z is close to the line segment [-I, I] (that  *       is, Re(casinh(z)) is close to 0);  *   (b) for Im(casinh(z)) when z is close to either of the intervals  *       [I, I*infinity) or (-I*infinity, -I] (that is, |Im(casinh(z))| is  *       close to PI/2).  *  * These numerical problems are overcome by defining  * f(a, b) = (hypot(a, b) - b) / 2 = a*a / (hypot(a, b) + b) / 2  * Then if A< A_crossover, we use  *   log(A + sqrt(A*A-1)) = log1p((A-1) + sqrt((A-1)*(A+1)))  *   A-1 = f(x, 1+y) + f(x, 1-y)  * and if B> B_crossover, we use  *   asin(B) = atan2(y, sqrt(A*A - y*y)) = atan2(y, sqrt((A+y)*(A-y)))  *   A-y = f(x, y+1) + f(x, y-1)  * where without loss of generality we have assumed that x and y are  * non-negative.  *  * Much of the difficulty comes because the intermediate computations may  * produce overflows or underflows.  This is dealt with in the paper by Hull  * et al by using exception handling.  We do this by detecting when  * computations risk underflow or overflow.  The hardest part is handling the  * underflows when computing f(a, b).  *  * Note that the function f(a, b) does not appear explicitly in the paper by  * Hull et al, but the idea may be found on pages 308 and 309.  Introducing the  * function f(a, b) allows us to concentrate many of the clever tricks in this  * paper into one function.  */
-end_comment
-
-begin_comment
-comment|/*  * Function f(a, b, hypot_a_b) = (hypot(a, b) - b) / 2.  * Pass hypot(a, b) as the third argument.  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
+name|long
 name|double
 name|f
 parameter_list|(
+name|long
 name|double
 name|a
 parameter_list|,
+name|long
 name|double
 name|b
 parameter_list|,
+name|long
 name|double
 name|hypot_a_b
 parameter_list|)
@@ -291,22 +390,21 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * All the hard work is contained in this function.  * x and y are assumed positive or zero, and less than RECIP_EPSILON.  * Upon return:  * rx = Re(casinh(z)) = -Im(cacos(y + I*x)).  * B_is_usable is set to 1 if the value of B is usable.  * If B_is_usable is set to 0, sqrt_A2my2 = sqrt(A*A - y*y), and new_y = y.  * If returning sqrt_A2my2 has potential to result in an underflow, it is  * rescaled, and new_y is similarly rescaled.  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
 name|void
 name|do_hard_work
 parameter_list|(
+name|long
 name|double
 name|x
 parameter_list|,
+name|long
 name|double
 name|y
 parameter_list|,
+name|long
 name|double
 modifier|*
 name|rx
@@ -315,19 +413,23 @@ name|int
 modifier|*
 name|B_is_usable
 parameter_list|,
+name|long
 name|double
 modifier|*
 name|B
 parameter_list|,
+name|long
 name|double
 modifier|*
 name|sqrt_A2my2
 parameter_list|,
+name|long
 name|double
 modifier|*
 name|new_y
 parameter_list|)
 block|{
+name|long
 name|double
 name|R
 decl_stmt|,
@@ -335,16 +437,15 @@ name|S
 decl_stmt|,
 name|A
 decl_stmt|;
-comment|/* A, B, R, and S are as in Hull et al. */
+name|long
 name|double
 name|Am1
 decl_stmt|,
 name|Amy
 decl_stmt|;
-comment|/* A-1, A-y. */
 name|R
 operator|=
-name|hypot
+name|hypotl
 argument_list|(
 name|x
 argument_list|,
@@ -353,10 +454,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* |z+I| */
 name|S
 operator|=
-name|hypot
+name|hypotl
 argument_list|(
 name|x
 argument_list|,
@@ -365,8 +465,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* |z-I| */
-comment|/* A = (|z+I| + |z-I|) / 2 */
 name|A
 operator|=
 operator|(
@@ -377,7 +475,6 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* 	 * Mathematically A>= 1.  There is a small chance that this will not 	 * be so because of rounding errors.  So we will make certain it is 	 * so. 	 */
 if|if
 condition|(
 name|A
@@ -395,7 +492,6 @@ operator|<
 name|A_crossover
 condition|)
 block|{
-comment|/* 		 * Am1 = fp + fm, where fp = f(x, 1+y), and fm = f(x, 1-y). 		 * rx = log1p(Am1 + sqrt(Am1*(A+1))) 		 */
 if|if
 condition|(
 name|y
@@ -404,18 +500,17 @@ literal|1
 operator|&&
 name|x
 operator|<
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|*
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|/
 literal|128
 condition|)
 block|{
-comment|/* 			 * fp is of order x^2, and fm = x/2. 			 * A = 1 (inexactly). 			 */
 operator|*
 name|rx
 operator|=
-name|sqrt
+name|sqrtl
 argument_list|(
 name|x
 argument_list|)
@@ -426,9 +521,9 @@ if|if
 condition|(
 name|x
 operator|>=
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|*
-name|fabs
+name|fabsl
 argument_list|(
 name|y
 operator|-
@@ -436,7 +531,6 @@ literal|1
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Underflow will not occur because 			 * x>= DBL_EPSILON^2/128>= FOUR_SQRT_MIN 			 */
 name|Am1
 operator|=
 name|f
@@ -464,11 +558,11 @@ expr_stmt|;
 operator|*
 name|rx
 operator|=
-name|log1p
+name|log1pl
 argument_list|(
 name|Am1
 operator|+
-name|sqrt
+name|sqrtl
 argument_list|(
 name|Am1
 operator|*
@@ -489,13 +583,12 @@ operator|<
 literal|1
 condition|)
 block|{
-comment|/* 			 * fp = x*x/(1+y)/4, fm = x*x/(1-y)/4, and 			 * A = 1 (inexactly). 			 */
 operator|*
 name|rx
 operator|=
 name|x
 operator|/
-name|sqrt
+name|sqrtl
 argument_list|(
 operator|(
 literal|1
@@ -513,12 +606,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* if (y> 1) */
-comment|/* 			 * A-1 = y-1 (inexactly). 			 */
 operator|*
 name|rx
 operator|=
-name|log1p
+name|log1pl
 argument_list|(
 operator|(
 name|y
@@ -526,7 +617,7 @@ operator|-
 literal|1
 operator|)
 operator|+
-name|sqrt
+name|sqrtl
 argument_list|(
 operator|(
 name|y
@@ -549,11 +640,11 @@ block|{
 operator|*
 name|rx
 operator|=
-name|log
+name|logl
 argument_list|(
 name|A
 operator|+
-name|sqrt
+name|sqrtl
 argument_list|(
 name|A
 operator|*
@@ -576,7 +667,6 @@ operator|<
 name|FOUR_SQRT_MIN
 condition|)
 block|{
-comment|/* 		 * Avoid a possible underflow caused by y/A.  For casinh this 		 * would be legitimate, but will be picked up by invoking atan2 		 * later on.  For cacos this would not be legitimate. 		 */
 operator|*
 name|B_is_usable
 operator|=
@@ -590,7 +680,7 @@ operator|*
 operator|(
 literal|2
 operator|/
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|)
 expr_stmt|;
 operator|*
@@ -601,12 +691,11 @@ operator|*
 operator|(
 literal|2
 operator|/
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* B = (|z+I| - |z-I|) / 2 = y/A */
 operator|*
 name|B
 operator|=
@@ -632,7 +721,6 @@ name|B_is_usable
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Amy = fp + fm, where fp = f(x, y+1), and fm = f(x, y-1). 		 * sqrt_A2my2 = sqrt(Amy*(A+y)) 		 */
 if|if
 condition|(
 name|y
@@ -641,21 +729,20 @@ literal|1
 operator|&&
 name|x
 operator|<
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|/
 literal|128
 condition|)
 block|{
-comment|/* 			 * fp is of order x^2, and fm = x/2. 			 * A = 1 (inexactly). 			 */
 operator|*
 name|sqrt_A2my2
 operator|=
-name|sqrt
+name|sqrtl
 argument_list|(
 name|x
 argument_list|)
 operator|*
-name|sqrt
+name|sqrtl
 argument_list|(
 operator|(
 name|A
@@ -672,9 +759,9 @@ if|if
 condition|(
 name|x
 operator|>=
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|*
-name|fabs
+name|fabsl
 argument_list|(
 name|y
 operator|-
@@ -682,7 +769,6 @@ literal|1
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Underflow will not occur because 			 * x>= DBL_EPSILON/128>= FOUR_SQRT_MIN 			 * and 			 * x>= DBL_EPSILON^2>= FOUR_SQRT_MIN 			 */
 name|Amy
 operator|=
 name|f
@@ -710,7 +796,7 @@ expr_stmt|;
 operator|*
 name|sqrt_A2my2
 operator|=
-name|sqrt
+name|sqrtl
 argument_list|(
 name|Amy
 operator|*
@@ -730,7 +816,6 @@ operator|>
 literal|1
 condition|)
 block|{
-comment|/* 			 * fp = x*x/(y+1)/4, fm = x*x/(y-1)/4, and 			 * A = y (inexactly). 			 * 			 * y< RECIP_EPSILON.  So the following 			 * scaling should avoid any underflow problems. 			 */
 operator|*
 name|sqrt_A2my2
 operator|=
@@ -739,14 +824,14 @@ operator|*
 operator|(
 literal|4
 operator|/
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|/
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|)
 operator|*
 name|y
 operator|/
-name|sqrt
+name|sqrtl
 argument_list|(
 operator|(
 name|y
@@ -769,20 +854,18 @@ operator|*
 operator|(
 literal|4
 operator|/
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|/
-name|DBL_EPSILON
+name|LDBL_EPSILON
 operator|)
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* if (y< 1) */
-comment|/* 			 * fm = 1-y>= DBL_EPSILON, fp is of order x^2, and 			 * A = 1 (inexactly). 			 */
 operator|*
 name|sqrt_A2my2
 operator|=
-name|sqrt
+name|sqrtl
 argument_list|(
 operator|(
 literal|1
@@ -802,20 +885,19 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * casinh(z) = z + O(z^3)   as z -> 0  *  * casinh(z) = sign(x)*clog(sign(x)*z) + O(1/z^2)   as z -> infinity  * The above formula works for the imaginary part as well, because  * Im(casinh(z)) = sign(x)*atan2(sign(x)*y, fabs(x)) + O(y/z^3)  *    as z -> infinity, uniformly in y  */
-end_comment
-
 begin_function
+name|long
 name|double
 name|complex
-name|casinh
+name|casinhl
 parameter_list|(
+name|long
 name|double
 name|complex
 name|z
 parameter_list|)
 block|{
+name|long
 name|double
 name|x
 decl_stmt|,
@@ -838,34 +920,35 @@ decl_stmt|;
 name|int
 name|B_is_usable
 decl_stmt|;
+name|long
 name|double
 name|complex
 name|w
 decl_stmt|;
 name|x
 operator|=
-name|creal
+name|creall
 argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
 name|y
 operator|=
-name|cimag
+name|cimagl
 argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
 name|ax
 operator|=
-name|fabs
+name|fabsl
 argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
 name|ay
 operator|=
-name|fabs
+name|fabsl
 argument_list|(
 name|y
 argument_list|)
@@ -883,7 +966,6 @@ name|y
 argument_list|)
 condition|)
 block|{
-comment|/* casinh(+-Inf + I*NaN) = +-Inf + I*NaN */
 if|if
 condition|(
 name|isinf
@@ -893,7 +975,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|x
 argument_list|,
@@ -903,7 +985,6 @@ name|y
 argument_list|)
 operator|)
 return|;
-comment|/* casinh(NaN + I*+-Inf) = opt(+-)Inf + I*NaN */
 if|if
 condition|(
 name|isinf
@@ -913,7 +994,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|y
 argument_list|,
@@ -923,7 +1004,6 @@ name|x
 argument_list|)
 operator|)
 return|;
-comment|/* casinh(NaN + I*0) = NaN + I*0 */
 if|if
 condition|(
 name|y
@@ -932,7 +1012,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|x
 operator|+
@@ -942,10 +1022,9 @@ name|y
 argument_list|)
 operator|)
 return|;
-comment|/* 		 * All other cases involving NaN return NaN + I*NaN. 		 * C99 leaves it optional whether to raise invalid if one of 		 * the arguments is not NaN, so we opt not to raise it. 		 */
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|x
 operator|+
@@ -981,7 +1060,6 @@ operator|>
 name|RECIP_EPSILON
 condition|)
 block|{
-comment|/* clog...() will raise inexact unless x or y is infinite. */
 if|if
 condition|(
 name|signbit
@@ -1013,11 +1091,11 @@ name|m_ln2
 expr_stmt|;
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|copysign
+name|copysignl
 argument_list|(
-name|creal
+name|creall
 argument_list|(
 name|w
 argument_list|)
@@ -1025,9 +1103,9 @@ argument_list|,
 name|x
 argument_list|)
 argument_list|,
-name|copysign
+name|copysignl
 argument_list|(
-name|cimag
+name|cimagl
 argument_list|(
 name|w
 argument_list|)
@@ -1038,7 +1116,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* Avoid spuriously raising inexact for z = 0. */
 if|if
 condition|(
 name|x
@@ -1054,7 +1131,6 @@ operator|(
 name|z
 operator|)
 return|;
-comment|/* All remaining cases are inexact. */
 name|raise_inexact
 argument_list|()
 expr_stmt|;
@@ -1105,7 +1181,7 @@ name|B_is_usable
 condition|)
 name|ry
 operator|=
-name|asin
+name|asinl
 argument_list|(
 name|B
 argument_list|)
@@ -1113,7 +1189,7 @@ expr_stmt|;
 else|else
 name|ry
 operator|=
-name|atan2
+name|atan2l
 argument_list|(
 name|new_y
 argument_list|,
@@ -1122,16 +1198,16 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|copysign
+name|copysignl
 argument_list|(
 name|rx
 argument_list|,
 name|x
 argument_list|)
 argument_list|,
-name|copysign
+name|copysignl
 argument_list|(
 name|ry
 argument_list|,
@@ -1143,50 +1219,51 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * casin(z) = reverse(casinh(reverse(z)))  * where reverse(x + I*y) = y + I*x = I*conj(z).  */
-end_comment
-
 begin_function
+name|long
 name|double
 name|complex
-name|casin
+name|casinl
 parameter_list|(
+name|long
 name|double
 name|complex
 name|z
 parameter_list|)
 block|{
+name|long
 name|double
 name|complex
 name|w
-init|=
-name|casinh
+decl_stmt|;
+name|w
+operator|=
+name|casinhl
 argument_list|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|cimag
+name|cimagl
 argument_list|(
 name|z
 argument_list|)
 argument_list|,
-name|creal
+name|creall
 argument_list|(
 name|z
 argument_list|)
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|cimag
+name|cimagl
 argument_list|(
 name|w
 argument_list|)
 argument_list|,
-name|creal
+name|creall
 argument_list|(
 name|w
 argument_list|)
@@ -1196,20 +1273,19 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * cacos(z) = PI/2 - casin(z)  * but do the computation carefully so cacos(z) is accurate when z is  * close to 1.  *  * cacos(z) = PI/2 - z + O(z^3)   as z -> 0  *  * cacos(z) = -sign(y)*I*clog(z) + O(1/z^2)   as z -> infinity  * The above formula works for the real part as well, because  * Re(cacos(z)) = atan2(fabs(y), x) + O(y/z^3)  *    as z -> infinity, uniformly in y  */
-end_comment
-
 begin_function
+name|long
 name|double
 name|complex
-name|cacos
+name|cacosl
 parameter_list|(
+name|long
 name|double
 name|complex
 name|z
 parameter_list|)
 block|{
+name|long
 name|double
 name|x
 decl_stmt|,
@@ -1237,20 +1313,21 @@ decl_stmt|;
 name|int
 name|B_is_usable
 decl_stmt|;
+name|long
 name|double
 name|complex
 name|w
 decl_stmt|;
 name|x
 operator|=
-name|creal
+name|creall
 argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
 name|y
 operator|=
-name|cimag
+name|cimagl
 argument_list|(
 name|z
 argument_list|)
@@ -1271,14 +1348,14 @@ argument_list|)
 expr_stmt|;
 name|ax
 operator|=
-name|fabs
+name|fabsl
 argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
 name|ay
 operator|=
-name|fabs
+name|fabsl
 argument_list|(
 name|y
 argument_list|)
@@ -1296,7 +1373,6 @@ name|y
 argument_list|)
 condition|)
 block|{
-comment|/* cacos(+-Inf + I*NaN) = NaN + I*opt(-)Inf */
 if|if
 condition|(
 name|isinf
@@ -1306,7 +1382,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|y
 operator|+
@@ -1317,7 +1393,6 @@ name|INFINITY
 argument_list|)
 operator|)
 return|;
-comment|/* cacos(NaN + I*+-Inf) = NaN + I*-+Inf */
 if|if
 condition|(
 name|isinf
@@ -1327,7 +1402,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|x
 operator|+
@@ -1338,7 +1413,6 @@ name|y
 argument_list|)
 operator|)
 return|;
-comment|/* cacos(0 + I*NaN) = PI/2 + I*NaN with inexact */
 if|if
 condition|(
 name|x
@@ -1347,7 +1421,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|pio2_hi
 operator|+
@@ -1359,10 +1433,9 @@ name|y
 argument_list|)
 operator|)
 return|;
-comment|/* 		 * All other cases involving NaN return NaN + I*NaN. 		 * C99 leaves it optional whether to raise invalid if one of 		 * the arguments is not NaN, so we opt not to raise it. 		 */
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|x
 operator|+
@@ -1398,7 +1471,6 @@ operator|>
 name|RECIP_EPSILON
 condition|)
 block|{
-comment|/* clog...() will raise inexact unless x or y is infinite. */
 name|w
 operator|=
 name|clog_for_large_values
@@ -1408,9 +1480,9 @@ argument_list|)
 expr_stmt|;
 name|rx
 operator|=
-name|fabs
+name|fabsl
 argument_list|(
-name|cimag
+name|cimagl
 argument_list|(
 name|w
 argument_list|)
@@ -1418,7 +1490,7 @@ argument_list|)
 expr_stmt|;
 name|ry
 operator|=
-name|creal
+name|creall
 argument_list|(
 name|w
 argument_list|)
@@ -1438,7 +1510,7 @@ name|ry
 expr_stmt|;
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|rx
 argument_list|,
@@ -1447,7 +1519,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* Avoid spuriously raising inexact for z = 1. */
 if|if
 condition|(
 name|x
@@ -1460,7 +1531,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 literal|0
 argument_list|,
@@ -1469,7 +1540,6 @@ name|y
 argument_list|)
 operator|)
 return|;
-comment|/* All remaining cases are inexact. */
 name|raise_inexact
 argument_list|()
 expr_stmt|;
@@ -1489,7 +1559,7 @@ literal|4
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|pio2_hi
 operator|-
@@ -1539,7 +1609,7 @@ literal|0
 condition|)
 name|rx
 operator|=
-name|acos
+name|acosl
 argument_list|(
 name|B
 argument_list|)
@@ -1547,7 +1617,7 @@ expr_stmt|;
 else|else
 name|rx
 operator|=
-name|acos
+name|acosl
 argument_list|(
 operator|-
 name|B
@@ -1564,7 +1634,7 @@ literal|0
 condition|)
 name|rx
 operator|=
-name|atan2
+name|atan2l
 argument_list|(
 name|sqrt_A2mx2
 argument_list|,
@@ -1574,7 +1644,7 @@ expr_stmt|;
 else|else
 name|rx
 operator|=
-name|atan2
+name|atan2l
 argument_list|(
 name|sqrt_A2mx2
 argument_list|,
@@ -1596,7 +1666,7 @@ name|ry
 expr_stmt|;
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|rx
 argument_list|,
@@ -1607,24 +1677,24 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * cacosh(z) = I*cacos(z) or -I*cacos(z)  * where the sign is chosen so Re(cacosh(z))>= 0.  */
-end_comment
-
 begin_function
+name|long
 name|double
 name|complex
-name|cacosh
+name|cacoshl
 parameter_list|(
+name|long
 name|double
 name|complex
 name|z
 parameter_list|)
 block|{
+name|long
 name|double
 name|complex
 name|w
 decl_stmt|;
+name|long
 name|double
 name|rx
 decl_stmt|,
@@ -1632,26 +1702,25 @@ name|ry
 decl_stmt|;
 name|w
 operator|=
-name|cacos
+name|cacosl
 argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
 name|rx
 operator|=
-name|creal
+name|creall
 argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
 name|ry
 operator|=
-name|cimag
+name|cimagl
 argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-comment|/* cacosh(NaN + I*NaN) = NaN + I*NaN */
 if|if
 condition|(
 name|isnan
@@ -1666,7 +1735,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|ry
 argument_list|,
@@ -1674,8 +1743,6 @@ name|rx
 argument_list|)
 operator|)
 return|;
-comment|/* cacosh(NaN + I*+-Inf) = +Inf + I*NaN */
-comment|/* cacosh(+-Inf + I*NaN) = +Inf + I*NaN */
 if|if
 condition|(
 name|isnan
@@ -1685,9 +1752,9 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|fabs
+name|fabsl
 argument_list|(
 name|ry
 argument_list|)
@@ -1696,7 +1763,6 @@ name|rx
 argument_list|)
 operator|)
 return|;
-comment|/* cacosh(0 + I*NaN) = NaN + I*NaN */
 if|if
 condition|(
 name|isnan
@@ -1706,7 +1772,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|ry
 argument_list|,
@@ -1716,18 +1782,18 @@ operator|)
 return|;
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|fabs
+name|fabsl
 argument_list|(
 name|ry
 argument_list|)
 argument_list|,
-name|copysign
+name|copysignl
 argument_list|(
 name|rx
 argument_list|,
-name|cimag
+name|cimagl
 argument_list|(
 name|z
 argument_list|)
@@ -1738,26 +1804,26 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Optimized version of clog() for |z| finite and larger than ~RECIP_EPSILON.  */
-end_comment
-
 begin_function
 specifier|static
+name|long
 name|double
 name|complex
 name|clog_for_large_values
 parameter_list|(
+name|long
 name|double
 name|complex
 name|z
 parameter_list|)
 block|{
+name|long
 name|double
 name|x
 decl_stmt|,
 name|y
 decl_stmt|;
+name|long
 name|double
 name|ax
 decl_stmt|,
@@ -1767,28 +1833,28 @@ name|t
 decl_stmt|;
 name|x
 operator|=
-name|creal
+name|creall
 argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
 name|y
 operator|=
-name|cimag
+name|cimagl
 argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
 name|ax
 operator|=
-name|fabs
+name|fabsl
 argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
 name|ay
 operator|=
-name|fabs
+name|fabsl
 argument_list|(
 name|y
 argument_list|)
@@ -1813,22 +1879,19 @@ operator|=
 name|t
 expr_stmt|;
 block|}
-comment|/* 	 * Avoid overflow in hypot() when x and y are both very large. 	 * Divide x and y by E, and then add 1 to the logarithm.  This 	 * depends on E being larger than sqrt(2), since the return value of 	 * hypot cannot overflow if neither argument is greater in magnitude 	 * than 1/sqrt(2) of the maximum value of the return type.  Likewise 	 * this determines the necessary threshold for using this method 	 * (however, actually use 1/2 instead as it is simpler). 	 * 	 * Dividing by E causes an insignificant loss of accuracy; however 	 * this method is still poor since it is uneccessarily slow. 	 */
 if|if
 condition|(
 name|ax
 operator|>
-name|DBL_MAX
-operator|/
-literal|2
+name|HALF_MAX
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|log
+name|logl
 argument_list|(
-name|hypot
+name|hypotl
 argument_list|(
 name|x
 operator|/
@@ -1842,7 +1905,7 @@ argument_list|)
 operator|+
 literal|1
 argument_list|,
-name|atan2
+name|atan2l
 argument_list|(
 name|y
 argument_list|,
@@ -1851,7 +1914,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-comment|/* 	 * Avoid overflow when x or y is large.  Avoid underflow when x or 	 * y is small. 	 */
 if|if
 condition|(
 name|ax
@@ -1864,11 +1926,11 @@ name|SQRT_MIN
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|log
+name|logl
 argument_list|(
-name|hypot
+name|hypotl
 argument_list|(
 name|x
 argument_list|,
@@ -1876,7 +1938,7 @@ name|y
 argument_list|)
 argument_list|)
 argument_list|,
-name|atan2
+name|atan2l
 argument_list|(
 name|y
 argument_list|,
@@ -1887,9 +1949,9 @@ operator|)
 return|;
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|log
+name|logl
 argument_list|(
 name|ax
 operator|*
@@ -1902,7 +1964,7 @@ argument_list|)
 operator|/
 literal|2
 argument_list|,
-name|atan2
+name|atan2l
 argument_list|(
 name|y
 argument_list|,
@@ -1914,28 +1976,22 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  *				=================  *				| catanh, catan |  *				=================  */
-end_comment
-
-begin_comment
-comment|/*  * sum_squares(x,y) = x*x + y*y (or just x*x if y*y would underflow).  * Assumes x*x and y*y will not overflow.  * Assumes x and y are finite.  * Assumes y is non-negative.  * Assumes fabs(x)>= DBL_EPSILON.  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
+name|long
 name|double
 name|sum_squares
 parameter_list|(
+name|long
 name|double
 name|x
 parameter_list|,
+name|long
 name|double
 name|y
 parameter_list|)
 block|{
-comment|/* Avoid underflow when y is small. */
 if|if
 condition|(
 name|y
@@ -1963,38 +2019,37 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * real_part_reciprocal(x, y) = Re(1/(x+I*y)) = x/(x*x + y*y).  * Assumes x and y are not NaN, and one of x and y is larger than  * RECIP_EPSILON.  We avoid unwarranted underflow.  It is important to not use  * the code creal(1/z), because the imaginary part may produce an unwanted  * underflow.  * This is only called in a context where inexact is always raised before  * the call, so no effort is made to avoid or force inexact.  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
+name|long
 name|double
 name|real_part_reciprocal
 parameter_list|(
+name|long
 name|double
 name|x
 parameter_list|,
+name|long
 name|double
 name|y
 parameter_list|)
 block|{
+name|long
 name|double
 name|scale
 decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|hx
 decl_stmt|,
 name|hy
 decl_stmt|;
-name|int32_t
+name|int16_t
 name|ix
 decl_stmt|,
 name|iy
 decl_stmt|;
-comment|/* 	 * This code is inspired by the C99 document n1124.pdf, Section G.5.1, 	 * example 2. 	 */
-name|GET_HIGH_WORD
+name|GET_LDBL_EXPSIGN
 argument_list|(
 name|hx
 argument_list|,
@@ -2005,9 +2060,9 @@ name|ix
 operator|=
 name|hx
 operator|&
-literal|0x7ff00000
+literal|0x7fff
 expr_stmt|;
-name|GET_HIGH_WORD
+name|GET_LDBL_EXPSIGN
 argument_list|(
 name|hy
 argument_list|,
@@ -2018,18 +2073,16 @@ name|iy
 operator|=
 name|hy
 operator|&
-literal|0x7ff00000
+literal|0x7fff
 expr_stmt|;
 define|#
 directive|define
 name|BIAS
-value|(DBL_MAX_EXP - 1)
-comment|/* XXX more guard digits are useful iff there is extra precision. */
+value|(LDBL_MAX_EXP - 1)
 define|#
 directive|define
 name|CUTOFF
-value|(DBL_MANT_DIG / 2 + 1)
-comment|/* just half or 1 guard digit */
+value|(LDBL_MANT_DIG / 2 + 1)
 if|if
 condition|(
 name|ix
@@ -2037,8 +2090,6 @@ operator|-
 name|iy
 operator|>=
 name|CUTOFF
-operator|<<
-literal|20
 operator|||
 name|isinf
 argument_list|(
@@ -2052,7 +2103,6 @@ operator|/
 name|x
 operator|)
 return|;
-comment|/* +-Inf -> +-0 is special */
 if|if
 condition|(
 name|iy
@@ -2060,8 +2110,6 @@ operator|-
 name|ix
 operator|>=
 name|CUTOFF
-operator|<<
-literal|20
 condition|)
 return|return
 operator|(
@@ -2072,22 +2120,17 @@ operator|/
 name|y
 operator|)
 return|;
-comment|/* should avoid double div, but hard */
 if|if
 condition|(
 name|ix
 operator|<=
-operator|(
 name|BIAS
 operator|+
-name|DBL_MAX_EXP
+name|LDBL_MAX_EXP
 operator|/
 literal|2
 operator|-
 name|CUTOFF
-operator|)
-operator|<<
-literal|20
 condition|)
 return|return
 operator|(
@@ -2108,16 +2151,15 @@ name|scale
 operator|=
 literal|1
 expr_stmt|;
-name|SET_HIGH_WORD
+name|SET_LDBL_EXPSIGN
 argument_list|(
 name|scale
 argument_list|,
-literal|0x7ff00000
+literal|0x7fff
 operator|-
 name|ix
 argument_list|)
 expr_stmt|;
-comment|/* 2**(1-ilogb(x)) */
 name|x
 operator|*=
 name|scale
@@ -2146,20 +2188,19 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * catanh(z) = log((1+z)/(1-z)) / 2  *           = log1p(4*x / |z-1|^2) / 4  *             + I * atan2(2*y, (1-x)*(1+x)-y*y) / 2  *  * catanh(z) = z + O(z^3)   as z -> 0  *  * catanh(z) = 1/z + sign(y)*I*PI/2 + O(1/z^3)   as z -> infinity  * The above formula works for the real part as well, because  * Re(catanh(z)) = x/|z|^2 + O(x/z^4)  *    as z -> infinity, uniformly in x  */
-end_comment
-
 begin_function
+name|long
 name|double
 name|complex
-name|catanh
+name|catanhl
 parameter_list|(
+name|long
 name|double
 name|complex
 name|z
 parameter_list|)
 block|{
+name|long
 name|double
 name|x
 decl_stmt|,
@@ -2175,33 +2216,32 @@ name|ry
 decl_stmt|;
 name|x
 operator|=
-name|creal
+name|creall
 argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
 name|y
 operator|=
-name|cimag
+name|cimagl
 argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
 name|ax
 operator|=
-name|fabs
+name|fabsl
 argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
 name|ay
 operator|=
-name|fabs
+name|fabsl
 argument_list|(
 name|y
 argument_list|)
 expr_stmt|;
-comment|/* This helps handle many cases. */
 if|if
 condition|(
 name|y
@@ -2214,9 +2254,9 @@ literal|1
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|atanh
+name|atanhl
 argument_list|(
 name|x
 argument_list|)
@@ -2225,7 +2265,6 @@ name|y
 argument_list|)
 operator|)
 return|;
-comment|/* To ensure the same accuracy as atan(), and to filter out z = 0. */
 if|if
 condition|(
 name|x
@@ -2234,11 +2273,11 @@ literal|0
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|x
 argument_list|,
-name|atan
+name|atanl
 argument_list|(
 name|y
 argument_list|)
@@ -2258,7 +2297,6 @@ name|y
 argument_list|)
 condition|)
 block|{
-comment|/* catanh(+-Inf + I*NaN) = +-0 + I*NaN */
 if|if
 condition|(
 name|isinf
@@ -2268,9 +2306,9 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|copysign
+name|copysignl
 argument_list|(
 literal|0
 argument_list|,
@@ -2283,7 +2321,6 @@ name|y
 argument_list|)
 operator|)
 return|;
-comment|/* catanh(NaN + I*+-Inf) = sign(NaN)0 + I*+-PI/2 */
 if|if
 condition|(
 name|isinf
@@ -2293,16 +2330,16 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|copysign
+name|copysignl
 argument_list|(
 literal|0
 argument_list|,
 name|x
 argument_list|)
 argument_list|,
-name|copysign
+name|copysignl
 argument_list|(
 name|pio2_hi
 operator|+
@@ -2313,10 +2350,9 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-comment|/* 		 * All other cases involving NaN return NaN + I*NaN. 		 * C99 leaves it optional whether to raise invalid if one of 		 * the arguments is not NaN, so we opt not to raise it. 		 */
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|x
 operator|+
@@ -2353,7 +2389,7 @@ name|RECIP_EPSILON
 condition|)
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
 name|real_part_reciprocal
 argument_list|(
@@ -2362,7 +2398,7 @@ argument_list|,
 name|y
 argument_list|)
 argument_list|,
-name|copysign
+name|copysignl
 argument_list|(
 name|pio2_hi
 operator|+
@@ -2388,7 +2424,6 @@ operator|/
 literal|2
 condition|)
 block|{
-comment|/* 		 * z = 0 was filtered out above.  All other cases must raise 		 * inexact, but this is the only only that needs to do it 		 * explicitly. 		 */
 name|raise_inexact
 argument_list|()
 expr_stmt|;
@@ -2406,14 +2441,14 @@ literal|1
 operator|&&
 name|ay
 operator|<
-name|DBL_EPSILON
+name|LDBL_EPSILON
 condition|)
 name|rx
 operator|=
 operator|(
 name|m_ln2
 operator|-
-name|log
+name|logl
 argument_list|(
 name|ay
 argument_list|)
@@ -2424,7 +2459,7 @@ expr_stmt|;
 else|else
 name|rx
 operator|=
-name|log1p
+name|log1pl
 argument_list|(
 literal|4
 operator|*
@@ -2450,7 +2485,7 @@ literal|1
 condition|)
 name|ry
 operator|=
-name|atan2
+name|atan2l
 argument_list|(
 literal|2
 argument_list|,
@@ -2465,11 +2500,11 @@ if|if
 condition|(
 name|ay
 operator|<
-name|DBL_EPSILON
+name|LDBL_EPSILON
 condition|)
 name|ry
 operator|=
-name|atan2
+name|atan2l
 argument_list|(
 literal|2
 operator|*
@@ -2493,7 +2528,7 @@ expr_stmt|;
 else|else
 name|ry
 operator|=
-name|atan2
+name|atan2l
 argument_list|(
 literal|2
 operator|*
@@ -2520,16 +2555,16 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|copysign
+name|copysignl
 argument_list|(
 name|rx
 argument_list|,
 name|x
 argument_list|)
 argument_list|,
-name|copysign
+name|copysignl
 argument_list|(
 name|ry
 argument_list|,
@@ -2541,50 +2576,51 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * catan(z) = reverse(catanh(reverse(z)))  * where reverse(x + I*y) = y + I*x = I*conj(z).  */
-end_comment
-
 begin_function
+name|long
 name|double
 name|complex
-name|catan
+name|catanl
 parameter_list|(
+name|long
 name|double
 name|complex
 name|z
 parameter_list|)
 block|{
+name|long
 name|double
 name|complex
 name|w
-init|=
-name|catanh
+decl_stmt|;
+name|w
+operator|=
+name|catanhl
 argument_list|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|cimag
+name|cimagl
 argument_list|(
 name|z
 argument_list|)
 argument_list|,
-name|creal
+name|creall
 argument_list|(
 name|z
 argument_list|)
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 return|return
 operator|(
-name|CMPLX
+name|CMPLXL
 argument_list|(
-name|cimag
+name|cimagl
 argument_list|(
 name|w
 argument_list|)
 argument_list|,
-name|creal
+name|creall
 argument_list|(
 name|w
 argument_list|)
@@ -2593,79 +2629,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|LDBL_MANT_DIG
-operator|==
-literal|53
-end_if
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|cacosh
-argument_list|,
-name|cacoshl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|cacos
-argument_list|,
-name|cacosl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|casinh
-argument_list|,
-name|casinhl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|casin
-argument_list|,
-name|casinl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|catanh
-argument_list|,
-name|catanhl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|catan
-argument_list|,
-name|catanl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
