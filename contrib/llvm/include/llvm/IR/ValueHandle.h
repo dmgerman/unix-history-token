@@ -77,21 +77,22 @@ directive|include
 file|"llvm/IR/Value.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|ValueHandleBase
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|From
-operator|>
-expr|struct
-name|simplify_type
-expr_stmt|;
 comment|/// \brief This is the common base class of value handles.
 comment|///
 comment|/// ValueHandle's are smart pointers to Value's that have special behavior when
@@ -117,9 +118,9 @@ name|Assert
 block|,
 name|Callback
 block|,
-name|Tracking
-block|,
 name|Weak
+block|,
+name|WeakTracking
 block|}
 enum|;
 name|ValueHandleBase
@@ -151,21 +152,17 @@ argument_list|,
 name|Kind
 argument_list|)
 operator|,
-name|Next
+name|Val
 argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|V
-argument_list|(
-argument|RHS.V
+argument|RHS.getValPtr()
 argument_list|)
 block|{
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|AddToExistingUseList
@@ -194,11 +191,28 @@ expr_stmt|;
 name|ValueHandleBase
 modifier|*
 name|Next
+init|=
+name|nullptr
 decl_stmt|;
 name|Value
 modifier|*
-name|V
+name|Val
+init|=
+name|nullptr
 decl_stmt|;
+name|void
+name|setValPtr
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+block|{
+name|Val
+operator|=
+name|V
+expr_stmt|;
+block|}
 name|public
 label|:
 name|explicit
@@ -209,19 +223,9 @@ argument_list|)
 block|:
 name|PrevPair
 argument_list|(
-name|nullptr
-argument_list|,
-name|Kind
-argument_list|)
-operator|,
-name|Next
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|V
-argument_list|(
 argument|nullptr
+argument_list|,
+argument|Kind
 argument_list|)
 block|{}
 name|ValueHandleBase
@@ -230,7 +234,7 @@ argument|HandleBaseKind Kind
 argument_list|,
 argument|Value *V
 argument_list|)
-operator|:
+block|:
 name|PrevPair
 argument_list|(
 name|nullptr
@@ -238,12 +242,7 @@ argument_list|,
 name|Kind
 argument_list|)
 operator|,
-name|Next
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|V
+name|Val
 argument_list|(
 argument|V
 argument_list|)
@@ -252,7 +251,8 @@ if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|AddToUseList
@@ -267,7 +267,8 @@ if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|RemoveFromUseList
@@ -286,7 +287,8 @@ operator|)
 block|{
 if|if
 condition|(
-name|V
+name|getValPtr
+argument_list|()
 operator|==
 name|RHS
 condition|)
@@ -297,21 +299,24 @@ if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
 expr_stmt|;
-name|V
-operator|=
+name|setValPtr
+argument_list|(
 name|RHS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|AddToUseList
@@ -334,38 +339,45 @@ operator|)
 block|{
 if|if
 condition|(
-name|V
+name|getValPtr
+argument_list|()
 operator|==
 name|RHS
 operator|.
-name|V
+name|getValPtr
+argument_list|()
 condition|)
 return|return
 name|RHS
 operator|.
-name|V
+name|getValPtr
+argument_list|()
 return|;
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|RemoveFromUseList
 argument_list|()
 expr_stmt|;
-name|V
-operator|=
+name|setValPtr
+argument_list|(
 name|RHS
 operator|.
-name|V
+name|getValPtr
+argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|isValid
 argument_list|(
-name|V
+name|getValPtr
+argument_list|()
 argument_list|)
 condition|)
 name|AddToExistingUseList
@@ -377,7 +389,8 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 return|return
-name|V
+name|getValPtr
+argument_list|()
 return|;
 block|}
 end_decl_stmt
@@ -395,7 +408,8 @@ unit|)
 specifier|const
 block|{
 return|return
-name|V
+name|getValPtr
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -411,7 +425,8 @@ specifier|const
 block|{
 return|return
 operator|*
-name|V
+name|getValPtr
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -429,7 +444,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|V
+name|Val
 return|;
 block|}
 end_expr_stmt
@@ -469,6 +484,46 @@ operator|::
 name|getTombstoneKey
 argument_list|()
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Remove this ValueHandle from its current use list.
+end_comment
+
+begin_function_decl
+name|void
+name|RemoveFromUseList
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Clear the underlying pointer without clearing the use list.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This should only be used if a derived class has manually removed the
+end_comment
+
+begin_comment
+comment|/// handle from the use list.
+end_comment
+
+begin_function
+name|void
+name|clearValPtr
+parameter_list|()
+block|{
+name|setValPtr
+argument_list|(
+name|nullptr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -625,19 +680,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Remove this ValueHandle from its current use list.
-end_comment
-
-begin_function_decl
-name|void
-name|RemoveFromUseList
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
 unit|};
-comment|/// \brief Value handle that is nullable, but tries to track the Value.
+comment|/// \brief A nullable Value handle that is nullable.
 end_comment
 
 begin_comment
@@ -645,23 +689,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This is a value handle that tries hard to point to a Value, even across
+comment|/// This is a value handle that points to a value, and nulls itself
 end_comment
 
 begin_comment
-comment|/// RAUW operations, but will null itself out if the value is destroyed.  this
-end_comment
-
-begin_comment
-comment|/// is useful for advisory sorts of information, but should not be used as the
-end_comment
-
-begin_comment
-comment|/// key of a map (since the map would have to rearrange itself when the pointer
-end_comment
-
-begin_comment
-comment|/// changes).
+comment|/// out if that value is deleted.
 end_comment
 
 begin_decl_stmt
@@ -789,11 +821,12 @@ operator|<
 name|WeakVH
 operator|>
 block|{
-typedef|typedef
-name|Value
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|Value
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -817,16 +850,211 @@ specifier|const
 name|WeakVH
 operator|>
 block|{
-typedef|typedef
-name|Value
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|Value
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
 argument_list|(
 argument|const WeakVH&WVH
+argument_list|)
+block|{
+return|return
+name|WVH
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Value handle that is nullable, but tries to track the Value.
+comment|///
+comment|/// This is a value handle that tries hard to point to a Value, even across
+comment|/// RAUW operations, but will null itself out if the value is destroyed.  this
+comment|/// is useful for advisory sorts of information, but should not be used as the
+comment|/// key of a map (since the map would have to rearrange itself when the pointer
+comment|/// changes).
+name|class
+name|WeakTrackingVH
+operator|:
+name|public
+name|ValueHandleBase
+block|{
+name|public
+operator|:
+name|WeakTrackingVH
+argument_list|()
+operator|:
+name|ValueHandleBase
+argument_list|(
+argument|WeakTracking
+argument_list|)
+block|{}
+name|WeakTrackingVH
+argument_list|(
+name|Value
+operator|*
+name|P
+argument_list|)
+operator|:
+name|ValueHandleBase
+argument_list|(
+argument|WeakTracking
+argument_list|,
+argument|P
+argument_list|)
+block|{}
+name|WeakTrackingVH
+argument_list|(
+specifier|const
+name|WeakTrackingVH
+operator|&
+name|RHS
+argument_list|)
+operator|:
+name|ValueHandleBase
+argument_list|(
+argument|WeakTracking
+argument_list|,
+argument|RHS
+argument_list|)
+block|{}
+name|WeakTrackingVH
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|WeakTrackingVH
+operator|&
+name|RHS
+operator|)
+operator|=
+expr|default
+block|;
+name|Value
+operator|*
+name|operator
+operator|=
+operator|(
+name|Value
+operator|*
+name|RHS
+operator|)
+block|{
+return|return
+name|ValueHandleBase
+operator|::
+name|operator
+operator|=
+operator|(
+name|RHS
+operator|)
+return|;
+block|}
+name|Value
+operator|*
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueHandleBase
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+name|ValueHandleBase
+operator|::
+name|operator
+operator|=
+operator|(
+name|RHS
+operator|)
+return|;
+block|}
+name|operator
+name|Value
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|getValPtr
+argument_list|()
+return|;
+block|}
+name|bool
+name|pointsToAliveValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ValueHandleBase
+operator|::
+name|isValid
+argument_list|(
+name|getValPtr
+argument_list|()
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|// Specialize simplify_type to allow WeakTrackingVH to participate in
+comment|// dyn_cast, isa, etc.
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+name|WeakTrackingVH
+operator|>
+block|{
+name|using
+name|SimpleType
+operator|=
+name|Value
+operator|*
+block|;
+specifier|static
+name|SimpleType
+name|getSimplifiedValue
+argument_list|(
+argument|WeakTrackingVH&WVH
+argument_list|)
+block|{
+return|return
+name|WVH
+return|;
+block|}
+expr|}
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|simplify_type
+operator|<
+specifier|const
+name|WeakTrackingVH
+operator|>
+block|{
+name|using
+name|SimpleType
+operator|=
+name|Value
+operator|*
+block|;
+specifier|static
+name|SimpleType
+name|getSimplifiedValue
+argument_list|(
+argument|const WeakTrackingVH&WVH
 argument_list|)
 block|{
 return|return
@@ -873,8 +1101,7 @@ operator|<
 name|AssertingVH
 operator|<
 name|ValueTy
-operator|>
-expr|>
+operator|>>
 block|;
 ifndef|#
 directive|ifndef
@@ -1164,8 +1391,7 @@ operator|<
 name|AssertingVH
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 block|{
 specifier|static
 specifier|inline
@@ -1299,8 +1525,7 @@ operator|<
 name|AssertingVH
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 block|{
 ifdef|#
 directive|ifdef
@@ -1331,11 +1556,16 @@ comment|/// TrackingVH is designed for situations where a client needs to hold a
 comment|/// to a Value (or subclass) across some operations which may move that value,
 comment|/// but should never destroy it or replace it with some unacceptable type.
 comment|///
-comment|/// It is an error to do anything with a TrackingVH whose value has been
-comment|/// destroyed, except to destruct it.
-comment|///
 comment|/// It is an error to attempt to replace a value with one of a type which is
 comment|/// incompatible with any of its outstanding TrackingVHs.
+comment|///
+comment|/// It is an error to read from a TrackingVH that does not point to a valid
+comment|/// value.  A TrackingVH is said to not point to a valid value if either it
+comment|/// hasn't yet been assigned a value yet or because the value it was tracking
+comment|/// has since been deleted.
+comment|///
+comment|/// Assigning a value to a TrackingVH is always allowed, even if said TrackingVH
+comment|/// no longer points to a valid value.
 name|template
 operator|<
 name|typename
@@ -1343,44 +1573,26 @@ name|ValueTy
 operator|>
 name|class
 name|TrackingVH
-operator|:
-name|public
-name|ValueHandleBase
 block|{
-name|void
-name|CheckValidity
+name|WeakTrackingVH
+name|InnerHandle
+block|;
+name|public
+operator|:
+name|ValueTy
+operator|*
+name|getValPtr
 argument_list|()
 specifier|const
 block|{
-name|Value
-operator|*
-name|VP
-operator|=
-name|ValueHandleBase
-operator|::
-name|getValPtr
-argument_list|()
-block|;
-comment|// Null is always ok.
-if|if
-condition|(
-operator|!
-name|VP
-condition|)
-return|return;
-comment|// Check that this value is valid (i.e., it hasn't been deleted). We
-comment|// explicitly delay this check until access to avoid requiring clients to be
-comment|// unnecessarily careful w.r.t. destruction.
 name|assert
 argument_list|(
-name|ValueHandleBase
-operator|::
-name|isValid
-argument_list|(
-name|VP
-argument_list|)
+name|InnerHandle
+operator|.
+name|pointsToAliveValue
+argument_list|()
 operator|&&
-literal|"Tracked Value was deleted!"
+literal|"TrackingVH must be non-null and valid on dereference!"
 argument_list|)
 block|;
 comment|// Check that the value is a member of the correct subclass. We would like
@@ -1394,30 +1606,20 @@ operator|<
 name|ValueTy
 operator|>
 operator|(
-name|VP
+name|InnerHandle
 operator|)
 operator|&&
 literal|"Tracked Value was replaced by one with an invalid type!"
 argument_list|)
-block|;   }
-name|ValueTy
-operator|*
-name|getValPtr
-argument_list|()
-specifier|const
-block|{
-name|CheckValidity
-argument_list|()
 block|;
 return|return
-operator|(
+name|cast
+operator|<
 name|ValueTy
-operator|*
+operator|>
+operator|(
+name|InnerHandle
 operator|)
-name|ValueHandleBase
-operator|::
-name|getValPtr
-argument_list|()
 return|;
 block|}
 name|void
@@ -1426,19 +1628,14 @@ argument_list|(
 argument|ValueTy *P
 argument_list|)
 block|{
-name|CheckValidity
-argument_list|()
-block|;
-name|ValueHandleBase
-operator|::
-name|operator
+comment|// Assigning to non-valid TrackingVH's are fine so we just unconditionally
+comment|// assign here.
+name|InnerHandle
 operator|=
-operator|(
 name|GetAsValue
 argument_list|(
 name|P
 argument_list|)
-operator|)
 block|;   }
 comment|// Convert a ValueTy*, which may be const, to the type the base
 comment|// class expects.
@@ -1477,26 +1674,19 @@ name|public
 operator|:
 name|TrackingVH
 argument_list|()
-operator|:
-name|ValueHandleBase
-argument_list|(
-argument|Tracking
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|TrackingVH
 argument_list|(
-name|ValueTy
-operator|*
+argument|ValueTy *P
+argument_list|)
+block|{
+name|setValPtr
+argument_list|(
 name|P
 argument_list|)
-operator|:
-name|ValueHandleBase
-argument_list|(
-argument|Tracking
-argument_list|,
-argument|GetAsValue(P)
-argument_list|)
-block|{}
+block|; }
 name|operator
 name|ValueTy
 operator|*
@@ -1659,7 +1849,8 @@ comment|/// \brief Callback for Value destruction.
 comment|///
 comment|/// Called when this->getValPtr() is destroyed, inside ~Value(), so you
 comment|/// may call any non-virtual Value method on getValPtr(), but no subclass
-comment|/// methods.  If WeakVH were implemented as a CallbackVH, it would use this
+comment|/// methods.  If WeakTrackingVH were implemented as a CallbackVH, it would use
+comment|/// this
 comment|/// method to call setValPtr(NULL).  AssertingVH would use this method to
 comment|/// cause an assertion failure.
 comment|///
@@ -1678,7 +1869,8 @@ block|; }
 comment|/// \brief Callback for Value RAUW.
 comment|///
 comment|/// Called when this->getValPtr()->replaceAllUsesWith(new_value) is called,
-comment|/// _before_ any of the uses have actually been replaced.  If WeakVH were
+comment|/// _before_ any of the uses have actually been replaced.  If WeakTrackingVH
+comment|/// were
 comment|/// implemented as a CallbackVH, it would use this method to call
 comment|/// setValPtr(new_value).  AssertingVH would do nothing in this method.
 name|virtual
@@ -1689,17 +1881,570 @@ argument|Value *
 argument_list|)
 block|{}
 expr|}
+block|;
+comment|/// Value handle that poisons itself if the Value is deleted.
+comment|///
+comment|/// This is a Value Handle that points to a value and poisons itself if the
+comment|/// value is destroyed while the handle is still live.  This is very useful for
+comment|/// catching dangling pointer bugs where an \c AssertingVH cannot be used
+comment|/// because the dangling handle needs to outlive the value without ever being
+comment|/// used.
+comment|///
+comment|/// One particularly useful place to use this is as the Key of a map. Dangling
+comment|/// pointer bugs often lead to really subtle bugs that only occur if another
+comment|/// object happens to get allocated to the same address as the old one. Using
+comment|/// a PoisoningVH ensures that an assert is triggered if looking up a new value
+comment|/// in the map finds a handle from the old value.
+comment|///
+comment|/// Note that a PoisoningVH handle does *not* follow values across RAUW
+comment|/// operations. This means that RAUW's need to explicitly update the
+comment|/// PoisoningVH's as it moves. This is required because in non-assert mode this
+comment|/// class turns into a trivial wrapper around a pointer.
+name|template
+operator|<
+name|typename
+name|ValueTy
+operator|>
+name|class
+name|PoisoningVH
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|final
+operator|:
+name|public
+name|CallbackVH
+endif|#
+directive|endif
+block|{
+name|friend
+expr|struct
+name|DenseMapInfo
+operator|<
+name|PoisoningVH
+operator|<
+name|ValueTy
+operator|>>
+block|;
+comment|// Convert a ValueTy*, which may be const, to the raw Value*.
+specifier|static
+name|Value
+operator|*
+name|GetAsValue
+argument_list|(
+argument|Value *V
+argument_list|)
+block|{
+return|return
+name|V
+return|;
+block|}
+specifier|static
+name|Value
+operator|*
+name|GetAsValue
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|V
+operator|)
+return|;
+block|}
+ifndef|#
+directive|ifndef
+name|NDEBUG
+comment|/// A flag tracking whether this value has been poisoned.
+comment|///
+comment|/// On delete and RAUW, we leave the value pointer alone so that as a raw
+comment|/// pointer it produces the same value (and we fit into the same key of
+comment|/// a hash table, etc), but we poison the handle so that any top-level usage
+comment|/// will fail.
+name|bool
+name|Poisoned
+operator|=
+name|false
+block|;
+name|Value
+operator|*
+name|getRawValPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ValueHandleBase
+operator|::
+name|getValPtr
+argument_list|()
+return|;
+block|}
+name|void
+name|setRawValPtr
+argument_list|(
+argument|Value *P
+argument_list|)
+block|{
+name|ValueHandleBase
+operator|::
+name|operator
+operator|=
+operator|(
+name|P
+operator|)
+block|; }
+comment|/// Handle deletion by poisoning the handle.
+name|void
+name|deleted
+argument_list|()
+name|override
+block|{
+name|assert
+argument_list|(
+operator|!
+name|Poisoned
+operator|&&
+literal|"Tried to delete an already poisoned handle!"
+argument_list|)
+block|;
+name|Poisoned
+operator|=
+name|true
+block|;
+name|RemoveFromUseList
+argument_list|()
+block|;   }
+comment|/// Handle RAUW by poisoning the handle.
+name|void
+name|allUsesReplacedWith
+argument_list|(
+argument|Value *
+argument_list|)
+name|override
+block|{
+name|assert
+argument_list|(
+operator|!
+name|Poisoned
+operator|&&
+literal|"Tried to RAUW an already poisoned handle!"
+argument_list|)
+block|;
+name|Poisoned
+operator|=
+name|true
+block|;
+name|RemoveFromUseList
+argument_list|()
+block|;   }
+else|#
+directive|else
+comment|// NDEBUG
+name|Value
+operator|*
+name|ThePtr
+operator|=
+name|nullptr
+block|;
+name|Value
+operator|*
+name|getRawValPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ThePtr
+return|;
+block|}
+name|void
+name|setRawValPtr
+argument_list|(
+argument|Value *P
+argument_list|)
+block|{
+name|ThePtr
+operator|=
+name|P
+block|; }
+endif|#
+directive|endif
+name|ValueTy
+operator|*
+name|getValPtr
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|Poisoned
+operator|&&
+literal|"Accessed a poisoned value handle!"
+argument_list|)
+block|;
+return|return
+name|static_cast
+operator|<
+name|ValueTy
+operator|*
+operator|>
+operator|(
+name|getRawValPtr
+argument_list|()
+operator|)
+return|;
+block|}
+name|void
+name|setValPtr
+argument_list|(
+argument|ValueTy *P
+argument_list|)
+block|{
+name|setRawValPtr
+argument_list|(
+name|GetAsValue
+argument_list|(
+name|P
+argument_list|)
+argument_list|)
+block|; }
+name|public
+operator|:
+name|PoisoningVH
+argument_list|()
+operator|=
+expr|default
+block|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|PoisoningVH
+argument_list|(
+name|ValueTy
+operator|*
+name|P
+argument_list|)
+operator|:
+name|CallbackVH
+argument_list|(
+argument|GetAsValue(P)
+argument_list|)
+block|{}
+name|PoisoningVH
+argument_list|(
+specifier|const
+name|PoisoningVH
+operator|&
+name|RHS
+argument_list|)
+operator|:
+name|CallbackVH
+argument_list|(
+name|RHS
+argument_list|)
+block|,
+name|Poisoned
+argument_list|(
+argument|RHS.Poisoned
+argument_list|)
+block|{}
+operator|~
+name|PoisoningVH
+argument_list|()
+block|{
+if|if
+condition|(
+name|Poisoned
+condition|)
+name|clearValPtr
+argument_list|()
+expr_stmt|;
+block|}
+name|PoisoningVH
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|PoisoningVH
+operator|&
+name|RHS
+operator|)
+block|{
+if|if
+condition|(
+name|Poisoned
+condition|)
+name|clearValPtr
+argument_list|()
+expr_stmt|;
+name|CallbackVH
+operator|::
+name|operator
+operator|=
+operator|(
+name|RHS
+operator|)
+block|;
+name|Poisoned
+operator|=
+name|RHS
+operator|.
+name|Poisoned
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+else|#
+directive|else
+name|PoisoningVH
+argument_list|(
+name|ValueTy
+operator|*
+name|P
+argument_list|)
+operator|:
+name|ThePtr
+argument_list|(
+argument|GetAsValue(P)
+argument_list|)
+block|{}
+endif|#
+directive|endif
+name|operator
+name|ValueTy
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|getValPtr
+argument_list|()
+return|;
+block|}
+name|ValueTy
+operator|*
+name|operator
+operator|->
+expr|(
+block|)
+specifier|const
+block|{
+return|return
+name|getValPtr
+argument_list|()
+return|;
+block|}
+name|ValueTy
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+operator|*
+name|getValPtr
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|// Specialize DenseMapInfo to allow PoisoningVH to participate in DenseMap.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|PoisoningVH
+operator|<
+name|T
+operator|>>
+block|{
+specifier|static
+specifier|inline
+name|PoisoningVH
+operator|<
+name|T
+operator|>
+name|getEmptyKey
+argument_list|()
+block|{
+name|PoisoningVH
+operator|<
+name|T
+operator|>
+name|Res
+block|;
+name|Res
+operator|.
+name|setRawValPtr
+argument_list|(
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
+operator|::
+name|getEmptyKey
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Res
+return|;
+block|}
+specifier|static
+specifier|inline
+name|PoisoningVH
+operator|<
+name|T
+operator|>
+name|getTombstoneKey
+argument_list|()
+block|{
+name|PoisoningVH
+operator|<
+name|T
+operator|>
+name|Res
+block|;
+name|Res
+operator|.
+name|setRawValPtr
+argument_list|(
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
+operator|::
+name|getTombstoneKey
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Res
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getHashValue
+argument_list|(
+argument|const PoisoningVH<T>&Val
+argument_list|)
+block|{
+return|return
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
+operator|::
+name|getHashValue
+argument_list|(
+name|Val
+operator|.
+name|getRawValPtr
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isEqual
+argument_list|(
+argument|const PoisoningVH<T>&LHS
+argument_list|,
+argument|const PoisoningVH<T>&RHS
+argument_list|)
+block|{
+return|return
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
+operator|::
+name|isEqual
+argument_list|(
+name|LHS
+operator|.
+name|getRawValPtr
+argument_list|()
+argument_list|,
+name|RHS
+operator|.
+name|getRawValPtr
+argument_list|()
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|PoisoningVH
+operator|<
+name|T
+operator|>>
+block|{
+ifdef|#
+directive|ifdef
+name|NDEBUG
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|;
+else|#
+directive|else
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|false
+block|;
+endif|#
+directive|endif
+block|}
 block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_VALUEHANDLE_H
+end_comment
 
 end_unit
 

@@ -364,8 +364,9 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
-operator|~
 name|FI
+operator|!=
+name|INT_MAX
 operator|&&
 literal|"Expected valid index"
 argument_list|)
@@ -700,6 +701,40 @@ operator|&&
 literal|"Expected an MMI entry"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|FrameIndexExprs
+operator|.
+name|size
+argument_list|()
+condition|)
+block|{
+name|auto
+operator|*
+name|Expr
+operator|=
+name|FrameIndexExprs
+operator|.
+name|back
+argument_list|()
+operator|.
+name|Expr
+expr_stmt|;
+comment|// Get rid of duplicate non-fragment entries. More than one non-fragment
+comment|// dbg.declare makes no sense so ignore all but the first.
+if|if
+condition|(
+operator|!
+name|Expr
+operator|||
+operator|!
+name|Expr
+operator|->
+name|isFragment
+argument_list|()
+condition|)
+return|return;
+block|}
 name|FrameIndexExprs
 operator|.
 name|append
@@ -1081,20 +1116,6 @@ operator|>
 name|SymSize
 block|;
 comment|/// Collection of abstract variables.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-block|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|DbgVariable
-operator|>>
-name|AbstractVariables
-block|;
 name|SmallVector
 operator|<
 name|std
@@ -1196,10 +1217,6 @@ block|,
 literal|1
 operator|>
 name|TypeUnitsUnderConstruction
-block|;
-comment|/// Whether to emit the pubnames/pubtypes sections.
-name|bool
-name|HasDwarfPubSections
 block|;
 comment|/// Whether to use the GNU TLS opcode (instead of the standard opcode).
 name|bool
@@ -1347,64 +1364,26 @@ operator|::
 name|InlinedVariable
 name|InlinedVariable
 expr_stmt|;
-comment|/// Find abstract variable associated with Var.
-name|DbgVariable
-operator|*
-name|getExistingAbstractVariable
+name|void
+name|ensureAbstractVariableIsCreated
 argument_list|(
-argument|InlinedVariable IV
+argument|DwarfCompileUnit&CU
 argument_list|,
-argument|const DILocalVariable *&Cleansed
+argument|InlinedVariable Var
+argument_list|,
+argument|const MDNode *Scope
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|DbgVariable
-modifier|*
-name|getExistingAbstractVariable
-parameter_list|(
-name|InlinedVariable
-name|IV
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|createAbstractVariable
-parameter_list|(
-specifier|const
-name|DILocalVariable
-modifier|*
-name|DV
-parameter_list|,
-name|LexicalScope
-modifier|*
-name|Scope
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ensureAbstractVariableIsCreated
-parameter_list|(
-name|InlinedVariable
-name|Var
-parameter_list|,
-specifier|const
-name|MDNode
-modifier|*
-name|Scope
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ensureAbstractVariableIsCreatedIfScoped
 parameter_list|(
+name|DwarfCompileUnit
+modifier|&
+name|CU
+parameter_list|,
 name|InlinedVariable
 name|Var
 parameter_list|,
@@ -1421,6 +1400,10 @@ name|DbgVariable
 modifier|*
 name|createConcreteVariable
 parameter_list|(
+name|DwarfCompileUnit
+modifier|&
+name|TheCU
+parameter_list|,
 name|LexicalScope
 modifier|&
 name|Scope
@@ -1439,6 +1422,10 @@ begin_function_decl
 name|void
 name|constructAbstractSubprogramScopeDIE
 parameter_list|(
+name|DwarfCompileUnit
+modifier|&
+name|SrcCU
+parameter_list|,
 name|LexicalScope
 modifier|*
 name|Scope
@@ -1873,7 +1860,7 @@ begin_decl_stmt
 name|void
 name|addGnuPubAttributes
 argument_list|(
-name|DwarfUnit
+name|DwarfCompileUnit
 operator|&
 name|U
 argument_list|,
@@ -1896,7 +1883,7 @@ end_comment
 begin_function_decl
 name|DwarfCompileUnit
 modifier|&
-name|constructDwarfCompileUnit
+name|getOrCreateDwarfCompileUnit
 parameter_list|(
 specifier|const
 name|DICompileUnit
@@ -2023,6 +2010,10 @@ begin_decl_stmt
 name|void
 name|collectVariableInfoFromMFTable
 argument_list|(
+name|DwarfCompileUnit
+operator|&
+name|TheCU
+argument_list|,
 name|DenseSet
 operator|<
 name|InlinedVariable
@@ -2032,6 +2023,53 @@ name|P
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_label
+name|protected
+label|:
+end_label
+
+begin_comment
+comment|/// Gather pre-function debug information.
+end_comment
+
+begin_decl_stmt
+name|void
+name|beginFunctionImpl
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Gather and emit post-function debug information.
+end_comment
+
+begin_decl_stmt
+name|void
+name|endFunctionImpl
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|void
+name|skippedNonDebugFunction
+argument_list|()
+name|override
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|public
@@ -2098,40 +2136,6 @@ argument_list|()
 name|override
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/// Gather pre-function debug information.
-end_comment
-
-begin_decl_stmt
-name|void
-name|beginFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Gather and emit post-function debug information.
-end_comment
-
-begin_decl_stmt
-name|void
-name|endFunction
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-name|override
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/// Process beginning of an instruction.
@@ -2364,6 +2368,14 @@ return|return
 name|HasSplitDwarf
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|shareAcrossDWOCUs
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -2627,6 +2639,17 @@ name|Scope
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|bool
+name|hasDwarfPubSections
+argument_list|(
+name|bool
+name|includeMinimalInlineScopes
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|}; }

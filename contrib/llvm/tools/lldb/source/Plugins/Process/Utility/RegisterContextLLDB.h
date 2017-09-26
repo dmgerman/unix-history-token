@@ -96,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/RegisterNumber.h"
+file|"lldb/Target/RegisterNumber.h"
 end_include
 
 begin_include

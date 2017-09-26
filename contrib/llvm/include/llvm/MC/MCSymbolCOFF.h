@@ -49,6 +49,12 @@ directive|include
 file|"llvm/MC/MCSymbol.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -63,6 +69,8 @@ comment|/// This corresponds to the e_type field of the COFF symbol.
 name|mutable
 name|uint16_t
 name|Type
+operator|=
+literal|0
 block|;    enum
 name|SymbolFlags
 operator|:
@@ -96,16 +104,11 @@ argument_list|)
 operator|:
 name|MCSymbol
 argument_list|(
-name|SymbolKindCOFF
+argument|SymbolKindCOFF
 argument_list|,
-name|Name
+argument|Name
 argument_list|,
-name|isTemporary
-argument_list|)
-block|,
-name|Type
-argument_list|(
-literal|0
+argument|isTemporary
 argument_list|)
 block|{}
 name|uint16_t
@@ -223,13 +226,21 @@ argument_list|()
 return|;
 block|}
 expr|}
-block|; }
+block|;  }
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCSYMBOLCOFF_H
+end_comment
 
 end_unit
 

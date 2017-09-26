@@ -142,17 +142,32 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_LIBCPP_MSVCRT
+name|_LIBCPP_MSVCRT_LIKE
 argument_list|)
 end_if
 
 begin_extern
 extern|extern
-literal|"C++"
+literal|"C"
 block|{
-include|#
-directive|include
-file|"support/win32/support.h"
+name|int
+name|vasprintf
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|sptr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__restrict
+name|fmt
+parameter_list|,
+name|va_list
+name|ap
+parameter_list|)
+function_decl|;
 block|}
 end_extern
 

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- StreamAsynchronousIO.h -----------------------------------*- C++
-end_comment
-
-begin_comment
-comment|//-*-===//
+comment|//===-- StreamAsynchronousIO.h -----------------------------------*- C++-*-===//
 end_comment
 
 begin_comment
@@ -50,14 +46,34 @@ end_define
 begin_include
 include|#
 directive|include
+file|"lldb/Utility/Stream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Stream.h"
+file|<stddef.h>
 end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Debugger
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

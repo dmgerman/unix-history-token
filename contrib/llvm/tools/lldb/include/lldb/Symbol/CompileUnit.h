@@ -58,18 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Stream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UserID.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Symbol/DebugMacros.h"
 end_include
 
@@ -77,6 +65,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Stream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_include

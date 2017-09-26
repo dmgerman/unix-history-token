@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFUnitIndex.h --------------------------------------------------===//
+comment|//===- DWARFUnitIndex.h -----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFUNITINDEX_H
+name|LLVM_DEBUGINFO_DWARF_DWARFUNITINDEX_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFUNITINDEX_H
+name|LLVM_DEBUGINFO_DWARF_DWARFUNITINDEX_H
 end_define
 
 begin_include
@@ -52,19 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataExtractor.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Format.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
@@ -73,10 +67,19 @@ directive|include
 file|<cstdint>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 enum|enum
 name|DWARFSectionKind
 block|{
@@ -276,13 +279,6 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-name|bool
-name|parse
-parameter_list|(
-name|DataExtractor
-name|IndexData
-parameter_list|)
-function_decl|;
 name|DWARFUnitIndex
 argument_list|(
 argument|DWARFSectionKind InfoColumnKind
@@ -293,6 +289,13 @@ argument_list|(
 argument|InfoColumnKind
 argument_list|)
 block|{}
+name|bool
+name|parse
+parameter_list|(
+name|DataExtractor
+name|IndexData
+parameter_list|)
+function_decl|;
 name|void
 name|dump
 argument_list|(
@@ -361,10 +364,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARF_DWARFUNITINDEX_H
+end_comment
 
 end_unit
 

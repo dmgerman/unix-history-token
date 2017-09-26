@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- StringRef.h - Constant String Reference Wrapper --------*- C++ -*-===//
+comment|//===- StringRef.h - Constant String Reference Wrapper ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstring>
 end_include
 
@@ -94,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -101,6 +113,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|APInt
+decl_stmt|;
+name|class
+name|hash_code
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -109,12 +127,6 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-name|class
-name|APInt
-decl_stmt|;
-name|class
-name|hash_code
-decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
@@ -195,18 +207,6 @@ name|StringRef
 block|{
 name|public
 label|:
-typedef|typedef
-specifier|const
-name|char
-modifier|*
-name|iterator
-typedef|;
-typedef|typedef
-specifier|const
-name|char
-modifier|*
-name|const_iterator
-typedef|;
 specifier|static
 specifier|const
 name|size_t
@@ -218,10 +218,25 @@ argument_list|(
 literal|0
 argument_list|)
 decl_stmt|;
-typedef|typedef
-name|size_t
+name|using
+name|iterator
+init|=
+specifier|const
+name|char
+operator|*
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
+specifier|const
+name|char
+operator|*
+decl_stmt|;
+name|using
 name|size_type
-typedef|;
+init|=
+name|size_t
+decl_stmt|;
 name|private
 label|:
 comment|/// The start of the string, in an external buffer.
@@ -2529,6 +2544,47 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Parse the current string as an IEEE double-precision floating
+end_comment
+
+begin_comment
+comment|/// point value.  The string must be a well-formed double.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If \p AllowInexact is false, the function will fail if the string
+end_comment
+
+begin_comment
+comment|/// cannot be represented exactly.  Otherwise, the function only fails
+end_comment
+
+begin_comment
+comment|/// in case of an overflow or underflow.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|getAsDouble
+argument_list|(
+name|double
+operator|&
+name|Result
+argument_list|,
+name|bool
+name|AllowInexact
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// @}
 end_comment
 
@@ -2716,7 +2772,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// Return a StringRef equal to 'this' but with only the first \p N
+comment|/// Return a StringRef equal to 'this' but with only the last \p N
 end_comment
 
 begin_comment
@@ -4280,11 +4336,19 @@ block|; }
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_STRINGREF_H
+end_comment
 
 end_unit
 

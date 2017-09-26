@@ -79,7 +79,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 name|ValuePtrs
 expr_stmt|;

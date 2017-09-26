@@ -120,16 +120,8 @@ operator|>
 name|class
 name|ObjectFile
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|OutputSection
-expr_stmt|;
-name|class
-name|OutputSectionBase
 decl_stmt|;
 name|template
 operator|<
@@ -161,11 +153,9 @@ name|SharedKind
 block|,
 name|DefinedCommonKind
 block|,
-name|DefinedSyntheticKind
-block|,
 name|DefinedLast
 init|=
-name|DefinedSyntheticKind
+name|DefinedCommonKind
 block|,
 name|UndefinedKind
 block|,
@@ -297,6 +287,10 @@ operator|&&
 operator|!
 name|isShared
 argument_list|()
+operator|&&
+operator|!
+name|isLazy
+argument_list|()
 return|;
 block|}
 name|bool
@@ -337,6 +331,14 @@ name|void
 name|parseSymbolVersion
 parameter_list|()
 function_decl|;
+name|void
+name|copy
+parameter_list|(
+name|SymbolBody
+modifier|*
+name|Other
+parameter_list|)
+function_decl|;
 name|bool
 name|isInGot
 argument_list|()
@@ -361,93 +363,37 @@ operator|-
 literal|1U
 return|;
 block|}
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|bool
-name|hasThunk
-argument_list|()
-specifier|const
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|typename
-name|ELFT
-operator|::
-name|uint
+name|uint64_t
 name|getVA
 argument_list|(
-argument|typename ELFT::uint Addend =
+name|int64_t
+name|Addend
+operator|=
 literal|0
 argument_list|)
-specifier|const
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|typename
-name|ELFT
-operator|::
-name|uint
+decl|const
+decl_stmt|;
+name|uint64_t
 name|getGotOffset
 argument_list|()
 specifier|const
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|typename
-name|ELFT
-operator|::
-name|uint
+name|uint64_t
 name|getGotVA
 argument_list|()
 specifier|const
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|typename
-name|ELFT
-operator|::
-name|uint
+name|uint64_t
 name|getGotPltOffset
 argument_list|()
 specifier|const
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|typename
-name|ELFT
-operator|::
-name|uint
+name|uint64_t
 name|getGotPltVA
 argument_list|()
 specifier|const
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|typename
-name|ELFT
-operator|::
-name|uint
+name|uint64_t
 name|getPltVA
 argument_list|()
 specifier|const
@@ -461,20 +407,13 @@ name|typename
 name|ELFT
 operator|::
 name|uint
-name|getThunkVA
+name|getSize
 argument_list|()
 specifier|const
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|getSize
+name|OutputSection
+operator|*
+name|getOutputSection
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -537,10 +476,17 @@ literal|8
 decl_stmt|;
 name|public
 label|:
-comment|// True if the linker has to generate a copy relocation for this shared
-comment|// symbol or if the symbol should point to its plt entry.
+comment|// True if the linker has to generate a copy relocation.
+comment|// For SharedSymbol only.
 name|unsigned
-name|NeedsCopyOrPltAddr
+name|NeedsCopy
+range|:
+literal|1
+decl_stmt|;
+comment|// True the symbol should point to its PLT entry.
+comment|// For SharedSymbol only.
+name|unsigned
+name|NeedsPltAddr
 range|:
 literal|1
 decl_stmt|;
@@ -571,14 +517,6 @@ decl_stmt|;
 comment|// True if this symbol is in the Igot sub-section of the .got.plt or .got.
 name|unsigned
 name|IsInIgot
-range|:
-literal|1
-decl_stmt|;
-comment|// True if this is a shared symbol in a read-only segment which requires a
-comment|// copy relocation. This causes space for the symbol to be allocated in the
-comment|// .bss.rel.ro section.
-name|unsigned
-name|CopyIsInBssRelRo
 range|:
 literal|1
 decl_stmt|;
@@ -752,7 +690,7 @@ argument|StringRef N
 argument_list|,
 argument|uint64_t Size
 argument_list|,
-argument|uint64_t Alignment
+argument|uint32_t Alignment
 argument_list|,
 argument|uint8_t StOther
 argument_list|,
@@ -785,7 +723,7 @@ name|uint64_t
 name|Offset
 block|;
 comment|// The maximum alignment we have seen for this symbol.
-name|uint64_t
+name|uint32_t
 name|Alignment
 block|;
 name|uint64_t
@@ -793,31 +731,12 @@ name|Size
 block|; }
 block|;
 comment|// Regular defined symbols read from object file symbol tables.
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|DefinedRegular
 operator|:
 name|public
 name|Defined
 block|{
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Sym
-name|Elf_Sym
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|uintX_t
-expr_stmt|;
 name|public
 operator|:
 name|DefinedRegular
@@ -830,11 +749,11 @@ argument|uint8_t StOther
 argument_list|,
 argument|uint8_t Type
 argument_list|,
-argument|uintX_t Value
+argument|uint64_t Value
 argument_list|,
-argument|uintX_t Size
+argument|uint64_t Size
 argument_list|,
-argument|InputSectionBase<ELFT> *Section
+argument|SectionBase *Section
 argument_list|,
 argument|InputFile *File
 argument_list|)
@@ -866,7 +785,7 @@ argument_list|)
 block|,
 name|Section
 argument_list|(
-argument|Section ? Section->Repl : NullInputSection
+argument|Section
 argument_list|)
 block|{
 name|this
@@ -876,145 +795,16 @@ operator|=
 name|File
 block|;   }
 comment|// Return true if the symbol is a PIC function.
-name|bool
-name|isMipsPIC
-argument_list|()
-specifier|const
-decl_stmt|;
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|SymbolBody
-modifier|*
-name|S
-parameter_list|)
-block|{
-return|return
-name|S
-operator|->
-name|kind
-argument_list|()
-operator|==
-name|SymbolBody
-operator|::
-name|DefinedRegularKind
-return|;
-block|}
-name|uintX_t
-name|Value
-decl_stmt|;
-name|uintX_t
-name|Size
-decl_stmt|;
-comment|// The input section this symbol belongs to. Notice that this is
-comment|// a reference to a pointer. We are using two levels of indirections
-comment|// because of ICF. If ICF decides two sections need to be merged, it
-comment|// manipulates this Section pointers so that they point to the same
-comment|// section. This is a bit tricky, so be careful to not be confused.
-comment|// If this is null, the symbol is an absolute symbol.
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
-operator|&
-name|Section
-expr_stmt|;
-comment|// If non-null the symbol has a Thunk that may be used as an alternative
-comment|// destination for callers of this Symbol.
-name|Thunk
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ThunkData
-operator|=
-name|nullptr
-expr_stmt|;
-name|private
-label|:
-specifier|static
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|NullInputSection
-expr_stmt|;
-block|}
-empty_stmt|;
 name|template
 operator|<
 name|class
 name|ELFT
 operator|>
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|NullInputSection
-expr_stmt|;
-comment|// DefinedSynthetic is a class to represent linker-generated ELF symbols.
-comment|// The difference from the regular symbol is that DefinedSynthetic symbols
-comment|// don't belong to any input files or sections. Thus, its constructor
-comment|// takes an output section to calculate output VA, etc.
-comment|// If Section is null, this symbol is relative to the image base.
-name|class
-name|DefinedSynthetic
-range|:
-name|public
-name|Defined
-block|{
-name|public
-operator|:
-name|DefinedSynthetic
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|uint64_t Value
-argument_list|,
-argument|const OutputSectionBase *Section
-argument_list|)
-operator|:
-name|Defined
-argument_list|(
-name|SymbolBody
-operator|::
-name|DefinedSyntheticKind
-argument_list|,
-name|Name
-argument_list|,
-comment|/*IsLocal=*/
-name|false
-argument_list|,
-name|llvm
-operator|::
-name|ELF
-operator|::
-name|STV_HIDDEN
-argument_list|,
-literal|0
-comment|/* Type */
-argument_list|)
-block|,
-name|Value
-argument_list|(
-name|Value
-argument_list|)
-block|,
-name|Section
-argument_list|(
-argument|Section
-argument_list|)
-block|{}
+name|bool
+name|isMipsPIC
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1030,23 +820,20 @@ argument_list|()
 operator|==
 name|SymbolBody
 operator|::
-name|DefinedSyntheticKind
+name|DefinedRegularKind
 return|;
 block|}
 name|uint64_t
 name|Value
 block|;
-specifier|const
-name|OutputSectionBase
+name|uint64_t
+name|Size
+block|;
+name|SectionBase
 operator|*
 name|Section
 block|; }
-decl_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
+block|;
 name|class
 name|Undefined
 operator|:
@@ -1084,76 +871,22 @@ operator|==
 name|UndefinedKind
 return|;
 block|}
-comment|// If non-null the symbol has a Thunk that may be used as an alternative
-comment|// destination for callers of this Symbol. When linking a DSO undefined
-comment|// symbols are implicitly imported, the symbol lookup will be performed by
-comment|// the dynamic loader. A call to an undefined symbol will be given a PLT
-comment|// entry and on ARM this may need a Thunk if the caller is in Thumb state.
-name|Thunk
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ThunkData
-operator|=
-name|nullptr
-block|;
-name|InputFile
-operator|*
-name|file
-argument_list|()
-block|{
-return|return
-name|this
-operator|->
-name|File
-return|;
-block|}
 expr|}
 block|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|SharedSymbol
 operator|:
 name|public
 name|Defined
 block|{
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Sym
-name|Elf_Sym
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|Verdef
-name|Elf_Verdef
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|uintX_t
-expr_stmt|;
 name|public
-label|:
+operator|:
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|SymbolBody
-modifier|*
-name|S
-parameter_list|)
+argument_list|(
+argument|const SymbolBody *S
+argument_list|)
 block|{
 return|return
 name|S
@@ -1168,15 +901,19 @@ return|;
 block|}
 name|SharedSymbol
 argument_list|(
-argument|SharedFile<ELFT> *F
+argument|InputFile *File
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|const Elf_Sym&Sym
+argument|uint8_t StOther
 argument_list|,
-argument|const Elf_Verdef *Verdef
+argument|uint8_t Type
+argument_list|,
+argument|const void *ElfSym
+argument_list|,
+argument|const void *Verdef
 argument_list|)
-block|:
+operator|:
 name|Defined
 argument_list|(
 name|SymbolBody
@@ -1188,24 +925,19 @@ argument_list|,
 comment|/*IsLocal=*/
 name|false
 argument_list|,
-name|Sym
-operator|.
-name|st_other
+name|StOther
 argument_list|,
-name|Sym
-operator|.
-name|getType
-argument_list|()
+name|Type
 argument_list|)
-operator|,
-name|Sym
-argument_list|(
-name|Sym
-argument_list|)
-operator|,
+block|,
 name|Verdef
 argument_list|(
-argument|Verdef
+name|Verdef
+argument_list|)
+block|,
+name|ElfSym
+argument_list|(
+argument|ElfSym
 argument_list|)
 block|{
 comment|// IFuncs defined in DSOs are treated as functions by the static linker.
@@ -1214,6 +946,8 @@ condition|(
 name|isGnuIFunc
 argument_list|()
 condition|)
+name|this
+operator|->
 name|Type
 operator|=
 name|llvm
@@ -1226,144 +960,139 @@ name|this
 operator|->
 name|File
 operator|=
-name|F
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
-name|SharedFile
+name|File
+block|;   }
+name|template
 operator|<
+name|class
 name|ELFT
 operator|>
-operator|*
-name|file
+name|uint64_t
+name|getShndx
 argument_list|()
+specifier|const
 block|{
 return|return
-operator|(
-name|SharedFile
+name|getSym
 operator|<
 name|ELFT
 operator|>
+operator|(
+operator|)
+operator|.
+name|st_shndx
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|uint64_t
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSym
+operator|<
+name|ELFT
+operator|>
+operator|(
+operator|)
+operator|.
+name|st_value
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|uint64_t
+name|getSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSym
+operator|<
+name|ELFT
+operator|>
+operator|(
+operator|)
+operator|.
+name|st_size
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|uint32_t
+name|getAlignment
+argument_list|()
+specifier|const
+block|;
+comment|// This field is a pointer to the symbol's version definition.
+specifier|const
+name|void
+operator|*
+name|Verdef
+block|;
+comment|// CopyRelSec and CopyRelSecOff are significant only when NeedsCopy is true.
+name|InputSection
+operator|*
+name|CopyRelSec
+block|;
+name|uint64_t
+name|CopyRelSecOff
+block|;
+name|private
+operator|:
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+specifier|const
+name|typename
+name|ELFT
+operator|::
+name|Sym
+operator|&
+name|getSym
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+operator|(
+specifier|const
+name|typename
+name|ELFT
+operator|::
+name|Sym
 operator|*
 operator|)
-name|this
-operator|->
-name|File
+name|ElfSym
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 specifier|const
-name|Elf_Sym
-modifier|&
-name|Sym
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// This field is a pointer to the symbol's version definition.
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|Elf_Verdef
-modifier|*
-name|Verdef
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// CopyOffset is significant only when needsCopy() is true.
-end_comment
-
-begin_decl_stmt
-name|uintX_t
-name|CopyOffset
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// If non-null the symbol has a Thunk that may be used as an alternative
-end_comment
-
-begin_comment
-comment|// destination for callers of this Symbol.
-end_comment
-
-begin_expr_stmt
-name|Thunk
-operator|<
-name|ELFT
-operator|>
+name|void
 operator|*
-name|ThunkData
-operator|=
-name|nullptr
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|bool
-name|needsCopy
-argument_list|()
-specifier|const
-block|{
-return|return
-name|this
-operator|->
-name|NeedsCopyOrPltAddr
-operator|&&
-operator|!
-name|this
-operator|->
-name|isFunc
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|OutputSection
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|getBssSectionForCopy
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|};
+name|ElfSym
+block|; }
+block|;
 comment|// This class represents a symbol defined in an archive file. It is
-end_comment
-
-begin_comment
 comment|// created from an archive file header, and it knows how to load an
-end_comment
-
-begin_comment
 comment|// object file from an archive to replace itself with a defined
-end_comment
-
-begin_comment
 comment|// symbol. If the resolver finds both Undefined and Lazy for
-end_comment
-
-begin_comment
 comment|// the same name, it will ask the Lazy to load a file.
-end_comment
-
-begin_decl_stmt
 name|class
 name|Lazy
-range|:
+operator|:
 name|public
 name|SymbolBody
 block|{
@@ -1416,17 +1145,11 @@ argument|Type
 argument_list|)
 block|{}
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// LazyArchive symbols represents symbols in archive files.
-end_comment
-
-begin_decl_stmt
 name|class
 name|LazyArchive
-range|:
+operator|:
 name|public
 name|Lazy
 block|{
@@ -1489,21 +1212,12 @@ operator|::
 name|Symbol
 name|Sym
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// LazyObject symbols represents symbols in object files between
-end_comment
-
-begin_comment
 comment|// --start-lib and --end-lib options.
-end_comment
-
-begin_decl_stmt
 name|class
 name|LazyObject
-range|:
+operator|:
 name|public
 name|Lazy
 block|{
@@ -1554,332 +1268,81 @@ operator|*
 name|fetch
 argument_list|()
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// Some linker-generated symbols need to be created as
-end_comment
-
-begin_comment
 comment|// DefinedRegular symbols.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-expr|struct
+block|struct
 name|ElfSym
 block|{
-comment|// The content for __ehdr_start symbol.
+comment|// __bss_start
 specifier|static
 name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
 operator|*
-name|EhdrStart
+name|Bss
 block|;
-comment|// The content for _etext and etext symbols.
+comment|// etext and _etext
 specifier|static
 name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
 operator|*
-name|Etext
+name|Etext1
 block|;
 specifier|static
 name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
 operator|*
 name|Etext2
 block|;
-comment|// The content for _edata and edata symbols.
+comment|// edata and _edata
 specifier|static
 name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
 operator|*
-name|Edata
+name|Edata1
 block|;
 specifier|static
 name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
 operator|*
 name|Edata2
 block|;
-comment|// The content for _end and end symbols.
+comment|// end and _end
 specifier|static
 name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
 operator|*
-name|End
+name|End1
 block|;
 specifier|static
 name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
 operator|*
 name|End2
 block|;
-comment|// The content for _gp_disp/__gnu_local_gp symbols for MIPS target.
+comment|// The _GLOBAL_OFFSET_TABLE_ symbol is defined by target convention to
+comment|// be at some offset from the base of the .got section, usually 0 or
+comment|// the end of the .got.
 specifier|static
 name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
+operator|*
+name|GlobalOffsetTable
+block|;
+comment|// _gp, _gp_disp and __gnu_local_gp symbols. Only for MIPS.
+specifier|static
+name|DefinedRegular
+operator|*
+name|MipsGp
+block|;
+specifier|static
+name|DefinedRegular
 operator|*
 name|MipsGpDisp
 block|;
 specifier|static
 name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
 operator|*
 name|MipsLocalGp
-block|;
-specifier|static
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|MipsGp
 block|; }
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ElfSym
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|EhdrStart
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ElfSym
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|Etext
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ElfSym
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|Etext2
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ElfSym
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|Edata
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ElfSym
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|Edata2
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ElfSym
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|End
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ElfSym
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|End2
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ElfSym
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|MipsGpDisp
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ElfSym
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|MipsLocalGp
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|ElfSym
-operator|<
-name|ELFT
-operator|>
-operator|::
-name|MipsGp
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// A real symbol object, SymbolBody, is usually stored within a Symbol. There's
-end_comment
-
-begin_comment
 comment|// always one Symbol for each symbol name. The resolver updates the SymbolBody
-end_comment
-
-begin_comment
 comment|// stored in the Body field of this object as it resolves symbols. Symbol also
-end_comment
-
-begin_comment
 comment|// holds computed properties of symbol names.
-end_comment
-
-begin_struct
-struct|struct
+block|struct
 name|Symbol
 block|{
 comment|// Symbol binding. This is on the Symbol to track changes during resolution.
@@ -1889,58 +1352,58 @@ comment|// An undefined weak will not fetch archive members, but we have to reme
 comment|// it is weak.
 name|uint8_t
 name|Binding
-decl_stmt|;
+block|;
 comment|// Version definition index.
 name|uint16_t
 name|VersionId
-decl_stmt|;
+block|;
 comment|// Symbol visibility. This is the computed minimum visibility of all
 comment|// observed non-DSO symbols.
 name|unsigned
 name|Visibility
-range|:
+operator|:
 literal|2
-decl_stmt|;
+block|;
 comment|// True if the symbol was used for linking and thus need to be added to the
 comment|// output file's symbol table. This is true for all symbols except for
 comment|// unreferenced DSO symbols and bitcode symbols that are unreferenced except
 comment|// by other bitcode objects.
 name|unsigned
 name|IsUsedInRegularObj
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|// If this flag is true and the symbol has protected or default visibility, it
 comment|// will appear in .dynsym. This flag is set by interposable DSO symbols in
 comment|// executables, by most symbols in DSOs and executables built with
 comment|// --export-dynamic, and by dynamic lists.
 name|unsigned
 name|ExportDynamic
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|// True if this symbol is specified by --trace-symbol option.
 name|unsigned
 name|Traced
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|// This symbol version was found in a version script.
 name|unsigned
 name|InVersionScript
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 name|bool
 name|includeInDynsym
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|uint8_t
 name|computeBinding
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isWeak
 argument_list|()
@@ -1958,54 +1421,29 @@ return|;
 block|}
 comment|// This field is used to store the Symbol's SymbolBody. This instantiation of
 comment|// AlignedCharArrayUnion gives us a struct with a char array field that is
-comment|// large and aligned enough to store any derived class of SymbolBody. We
-comment|// assume that the size and alignment of ELF64LE symbols is sufficient for any
-comment|// ELFT, and we verify this with the static_asserts in replaceBody.
+comment|// large and aligned enough to store any derived class of SymbolBody.
 name|llvm
 operator|::
 name|AlignedCharArrayUnion
 operator|<
 name|DefinedCommon
-operator|,
+block|,
 name|DefinedRegular
-operator|<
-name|llvm
-operator|::
-name|object
-operator|::
-name|ELF64LE
-operator|>
-operator|,
-name|DefinedSynthetic
-operator|,
+block|,
 name|Undefined
-operator|<
-name|llvm
-operator|::
-name|object
-operator|::
-name|ELF64LE
-operator|>
-operator|,
+block|,
 name|SharedSymbol
-operator|<
-name|llvm
-operator|::
-name|object
-operator|::
-name|ELF64LE
-operator|>
-operator|,
+block|,
 name|LazyArchive
-operator|,
+block|,
 name|LazyObject
 operator|>
 name|Body
-expr_stmt|;
+block|;
 name|SymbolBody
-modifier|*
+operator|*
 name|body
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|reinterpret_cast
@@ -2041,27 +1479,21 @@ name|body
 argument_list|()
 return|;
 block|}
-block|}
-struct|;
-end_struct
-
-begin_function_decl
+expr|}
+block|;
 name|void
 name|printTraceSymbol
-parameter_list|(
+argument_list|(
 name|Symbol
-modifier|*
+operator|*
 name|Sym
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
+argument_list|)
+block|;
 name|template
 operator|<
 name|typename
 name|T
-operator|,
+block|,
 name|typename
 operator|...
 name|ArgT
@@ -2166,9 +1598,6 @@ name|S
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|Symbol
 operator|*
@@ -2209,15 +1638,9 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|}
+expr|}
 comment|// namespace elf
-end_comment
-
-begin_expr_stmt
-unit|std
+name|std
 operator|::
 name|string
 name|toString
@@ -2229,11 +1652,10 @@ name|SymbolBody
 operator|&
 name|B
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+block|; }
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// namespace lld
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugMacro.h ---------------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugMacro.h ----------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -113,15 +113,13 @@ block|}
 union|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|MacroList
+init|=
 name|SmallVector
 operator|<
 name|Entry
-operator|,
-literal|4
-operator|>
-name|MacroList
-expr_stmt|;
+decl_stmt|, 4>;
 comment|/// A list of all the macro entries in the debug_macinfo section.
 name|MacroList
 name|Macros

@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/InlineAsm.h"
 end_include
 
@@ -101,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Verifier.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_include

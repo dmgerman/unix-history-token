@@ -102,6 +102,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< Preprocess include directives only.
+name|unsigned
+name|RewriteImports
+range|:
+literal|1
+decl_stmt|;
+comment|///< Include contents of transitively-imported modules.
 name|public
 label|:
 name|PreprocessorOutputOptions
@@ -136,6 +142,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|RewriteIncludes
+operator|=
+literal|0
+expr_stmt|;
+name|RewriteImports
 operator|=
 literal|0
 expr_stmt|;

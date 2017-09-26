@@ -140,7 +140,7 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// These pass removes llvm.dbg.declare intrinsics.
+comment|// This pass removes llvm.dbg.declare intrinsics.
 name|ModulePass
 modifier|*
 name|createStripDebugDeclarePass
@@ -148,7 +148,7 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// These pass removes unused symbols' debug info.
+comment|// This pass removes unused symbols' debug info.
 name|ModulePass
 modifier|*
 name|createStripDeadDebugInfoPass
@@ -256,6 +256,9 @@ name|OptLevel
 parameter_list|,
 name|unsigned
 name|SizeOptLevel
+parameter_list|,
+name|bool
+name|DisableInlineHotCallSite
 parameter_list|)
 function_decl|;
 name|Pass
@@ -439,37 +442,44 @@ modifier|*
 name|createBarrierNoopPass
 parameter_list|()
 function_decl|;
-comment|/// What to do with the summary when running the LowerTypeTests pass.
+comment|/// What to do with the summary when running passes that operate on it.
 name|enum
 name|class
-name|LowerTypeTestsSummaryAction
+name|PassSummaryAction
 block|{
 name|None
 operator|,
 comment|///< Do nothing.
 name|Import
 operator|,
-comment|///< Import typeid resolutions from summary and globals.
+comment|///< Import information from summary.
 name|Export
 operator|,
-comment|///< Export typeid resolutions to summary and globals.
+comment|///< Export information to summary.
 block|}
 empty_stmt|;
 comment|/// \brief This pass lowers type metadata and the llvm.type.test intrinsic to
 comment|/// bitsets.
-comment|/// \param Action What to do with the summary passed as Index.
-comment|/// \param Index The summary to use for importing or exporting, this can be null
-comment|///              when Action is None.
+comment|///
+comment|/// The behavior depends on the summary arguments:
+comment|/// - If ExportSummary is non-null, this pass will export type identifiers to
+comment|///   the given summary.
+comment|/// - Otherwise, if ImportSummary is non-null, this pass will import type
+comment|///   identifiers from the given summary.
+comment|/// - Otherwise it does neither.
+comment|/// It is invalid for both ExportSummary and ImportSummary to be non-null.
 name|ModulePass
 modifier|*
 name|createLowerTypeTestsPass
 parameter_list|(
-name|LowerTypeTestsSummaryAction
-name|Action
-parameter_list|,
 name|ModuleSummaryIndex
 modifier|*
-name|Index
+name|ExportSummary
+parameter_list|,
+specifier|const
+name|ModuleSummaryIndex
+modifier|*
+name|ImportSummary
 parameter_list|)
 function_decl|;
 comment|/// \brief This pass export CFI checks for use by external modules.
@@ -480,10 +490,27 @@ parameter_list|()
 function_decl|;
 comment|/// \brief This pass implements whole-program devirtualization using type
 comment|/// metadata.
+comment|///
+comment|/// The behavior depends on the summary arguments:
+comment|/// - If ExportSummary is non-null, this pass will export type identifiers to
+comment|///   the given summary.
+comment|/// - Otherwise, if ImportSummary is non-null, this pass will import type
+comment|///   identifiers from the given summary.
+comment|/// - Otherwise it does neither.
+comment|/// It is invalid for both ExportSummary and ImportSummary to be non-null.
 name|ModulePass
 modifier|*
 name|createWholeProgramDevirtPass
-parameter_list|()
+parameter_list|(
+name|ModuleSummaryIndex
+modifier|*
+name|ExportSummary
+parameter_list|,
+specifier|const
+name|ModuleSummaryIndex
+modifier|*
+name|ImportSummary
+parameter_list|)
 function_decl|;
 comment|/// This pass splits globals into pieces for the benefit of whole-program
 comment|/// devirtualization and control-flow integrity.
@@ -516,6 +543,12 @@ parameter_list|(
 name|raw_ostream
 modifier|&
 name|Str
+parameter_list|,
+name|raw_ostream
+modifier|*
+name|ThinLinkOS
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}

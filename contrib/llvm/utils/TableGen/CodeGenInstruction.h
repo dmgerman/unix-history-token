@@ -881,11 +881,9 @@ modifier|*
 name|TheDef
 decl_stmt|;
 comment|// The actual record defining this instruction.
-name|std
-operator|::
-name|string
+name|StringRef
 name|Namespace
-expr_stmt|;
+decl_stmt|;
 comment|// The namespace the instruction is in.
 comment|/// AsmString - The format string used to emit a .s file for the
 comment|/// instruction.

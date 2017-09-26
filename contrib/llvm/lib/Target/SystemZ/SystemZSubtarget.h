@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -164,6 +164,15 @@ name|bool
 name|HasPopulationCount
 block|;
 name|bool
+name|HasMessageSecurityAssist3
+block|;
+name|bool
+name|HasMessageSecurityAssist4
+block|;
+name|bool
+name|HasResetReferenceBitsMultiple
+block|;
+name|bool
 name|HasFastSerialization
 block|;
 name|bool
@@ -185,6 +194,12 @@ name|bool
 name|HasProcessorAssist
 block|;
 name|bool
+name|HasDFPZonedConversion
+block|;
+name|bool
+name|HasEnhancedDAT2
+block|;
+name|bool
 name|HasVector
 block|;
 name|bool
@@ -192,6 +207,33 @@ name|HasLoadStoreOnCond2
 block|;
 name|bool
 name|HasLoadAndZeroRightmostByte
+block|;
+name|bool
+name|HasMessageSecurityAssist5
+block|;
+name|bool
+name|HasDFPPackedConversion
+block|;
+name|bool
+name|HasMiscellaneousExtensions2
+block|;
+name|bool
+name|HasGuardedStorage
+block|;
+name|bool
+name|HasMessageSecurityAssist7
+block|;
+name|bool
+name|HasMessageSecurityAssist8
+block|;
+name|bool
+name|HasVectorEnhancements1
+block|;
+name|bool
+name|HasVectorPackedDecimal
+block|;
+name|bool
+name|HasInsertReferenceBitsMultiple
 block|;
 name|private
 operator|:
@@ -407,6 +449,38 @@ return|return
 name|HasPopulationCount
 return|;
 block|}
+comment|// Return true if the target has the message-security-assist
+comment|// extension facility 3.
+name|bool
+name|hasMessageSecurityAssist3
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMessageSecurityAssist3
+return|;
+block|}
+comment|// Return true if the target has the message-security-assist
+comment|// extension facility 4.
+name|bool
+name|hasMessageSecurityAssist4
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMessageSecurityAssist4
+return|;
+block|}
+comment|// Return true if the target has the reset-reference-bits-multiple facility.
+name|bool
+name|hasResetReferenceBitsMultiple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasResetReferenceBitsMultiple
+return|;
+block|}
 comment|// Return true if the target has the fast-serialization facility.
 name|bool
 name|hasFastSerialization
@@ -477,6 +551,26 @@ return|return
 name|HasProcessorAssist
 return|;
 block|}
+comment|// Return true if the target has the DFP zoned-conversion facility.
+name|bool
+name|hasDFPZonedConversion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDFPZonedConversion
+return|;
+block|}
+comment|// Return true if the target has the enhanced-DAT facility 2.
+name|bool
+name|hasEnhancedDAT2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasEnhancedDAT2
+return|;
+block|}
 comment|// Return true if the target has the load-and-zero-rightmost-byte facility.
 name|bool
 name|hasLoadAndZeroRightmostByte
@@ -487,6 +581,27 @@ return|return
 name|HasLoadAndZeroRightmostByte
 return|;
 block|}
+comment|// Return true if the target has the message-security-assist
+comment|// extension facility 5.
+name|bool
+name|hasMessageSecurityAssist5
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMessageSecurityAssist5
+return|;
+block|}
+comment|// Return true if the target has the DFP packed-conversion facility.
+name|bool
+name|hasDFPPackedConversion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDFPPackedConversion
+return|;
+block|}
 comment|// Return true if the target has the vector facility.
 name|bool
 name|hasVector
@@ -495,6 +610,78 @@ specifier|const
 block|{
 return|return
 name|HasVector
+return|;
+block|}
+comment|// Return true if the target has the miscellaneous-extensions facility 2.
+name|bool
+name|hasMiscellaneousExtensions2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMiscellaneousExtensions2
+return|;
+block|}
+comment|// Return true if the target has the guarded-storage facility.
+name|bool
+name|hasGuardedStorage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasGuardedStorage
+return|;
+block|}
+comment|// Return true if the target has the message-security-assist
+comment|// extension facility 7.
+name|bool
+name|hasMessageSecurityAssist7
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMessageSecurityAssist7
+return|;
+block|}
+comment|// Return true if the target has the message-security-assist
+comment|// extension facility 8.
+name|bool
+name|hasMessageSecurityAssist8
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMessageSecurityAssist8
+return|;
+block|}
+comment|// Return true if the target has the vector-enhancements facility 1.
+name|bool
+name|hasVectorEnhancements1
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVectorEnhancements1
+return|;
+block|}
+comment|// Return true if the target has the vector-packed-decimal facility.
+name|bool
+name|hasVectorPackedDecimal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVectorPackedDecimal
+return|;
+block|}
+comment|// Return true if the target has the insert-reference-bits-multiple facility.
+name|bool
+name|hasInsertReferenceBitsMultiple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasInsertReferenceBitsMultiple
 return|;
 block|}
 comment|// Return true if GV can be accessed using LARL for reloc model RM

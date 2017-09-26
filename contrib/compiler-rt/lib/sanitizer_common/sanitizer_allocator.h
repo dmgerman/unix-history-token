@@ -105,20 +105,65 @@ begin_decl_stmt
 name|namespace
 name|__sanitizer
 block|{
-comment|// Returns true if ReportAllocatorCannotReturnNull(true) was called.
-comment|// Can be use to avoid memory hungry operations.
+comment|// Since flags are immutable and allocator behavior can be changed at runtime
+comment|// (unit tests or ASan on Android are some examples), allocator_may_return_null
+comment|// flag value is cached here and can be altered later.
 name|bool
-name|IsReportingOOM
+name|AllocatorMayReturnNull
 parameter_list|()
 function_decl|;
-comment|// Prints error message and kills the program.
 name|void
-name|NORETURN
-name|ReportAllocatorCannotReturnNull
+name|SetAllocatorMayReturnNull
 parameter_list|(
 name|bool
-name|out_of_memory
+name|may_return_null
 parameter_list|)
+function_decl|;
+comment|// Allocator failure handling policies:
+comment|// Implements AllocatorMayReturnNull policy, returns null when the flag is set,
+comment|// dies otherwise.
+struct|struct
+name|ReturnNullOrDieOnFailure
+block|{
+specifier|static
+name|void
+modifier|*
+name|OnBadRequest
+parameter_list|()
+function_decl|;
+specifier|static
+name|void
+modifier|*
+name|OnOOM
+parameter_list|()
+function_decl|;
+block|}
+struct|;
+comment|// Always dies on the failure.
+struct|struct
+name|DieOnFailure
+block|{
+specifier|static
+name|void
+name|NORETURN
+modifier|*
+name|OnBadRequest
+parameter_list|()
+function_decl|;
+specifier|static
+name|void
+name|NORETURN
+modifier|*
+name|OnOOM
+parameter_list|()
+function_decl|;
+block|}
+struct|;
+comment|// Returns true if allocator detected OOM condition. Can be used to avoid memory
+comment|// hungry operations. Set when AllocatorReturnNullOrDieOnOOM() is called.
+name|bool
+name|IsAllocatorOutOfMemory
+parameter_list|()
 function_decl|;
 comment|// Allocators call these callbacks on mmap/munmap.
 struct|struct
@@ -162,17 +207,6 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
-parameter_list|)
-function_decl|;
-comment|// Returns true if calloc(size, n) should return 0 due to overflow in size*n.
-name|bool
-name|CallocShouldReturnNullDueToOverflow
-parameter_list|(
-name|uptr
-name|size
-parameter_list|,
-name|uptr
-name|n
 parameter_list|)
 function_decl|;
 include|#

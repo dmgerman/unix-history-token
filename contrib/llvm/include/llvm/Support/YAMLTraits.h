@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -367,11 +373,11 @@ comment|/// This class should be specialized by any type that needs to be conver
 comment|/// to/from a YAML sequence.  For example:
 comment|///
 comment|///    template<>
-comment|///    struct SequenceTraits< std::vector<MyType>> {
-comment|///      static size_t size(IO&io, std::vector<MyType>&seq) {
+comment|///    struct SequenceTraits<MyContainer> {
+comment|///      static size_t size(IO&io, MyContainer&seq) {
 comment|///        return seq.size();
 comment|///      }
-comment|///      static MyType& element(IO&, std::vector<MyType>&seq, size_t index) {
+comment|///      static MyType& element(IO&, MyContainer&seq, size_t index) {
 comment|///        if ( index>= seq.size() )
 comment|///          seq.resize(index+1);
 comment|///        return seq[index];
@@ -381,6 +387,11 @@ name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|EnableIf
+operator|=
+name|void
 operator|>
 expr|struct
 name|SequenceTraits
@@ -392,6 +403,25 @@ comment|//
 comment|// The following is option and will cause generated YAML to use
 comment|// a flow sequence (e.g. [a,b,c]).
 comment|// static const bool flow = true;
+block|}
+expr_stmt|;
+comment|/// This class should be specialized by any type for which vectors of that
+comment|/// type need to be converted to/from a YAML sequence.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|EnableIf
+operator|=
+name|void
+operator|>
+expr|struct
+name|SequenceElementTraits
+block|{
+comment|// Must provide:
+comment|// static const bool flow;
 block|}
 expr_stmt|;
 comment|/// This class should be specialized by any type that needs to be converted
@@ -442,21 +472,22 @@ operator|>
 expr|struct
 name|has_ScalarEnumerationTraits
 block|{
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|Signature_enumeration
-function_decl|)
-parameter_list|(
+operator|=
+name|void
+argument_list|(
+argument|*
+argument_list|)
+operator|(
 name|class
 name|IO
-modifier|&
-parameter_list|,
+operator|&
+operator|,
 name|T
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+operator|)
+block|;
 name|template
 operator|<
 name|typename
@@ -477,7 +508,7 @@ name|enumeration
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|typename
@@ -489,14 +520,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -513,9 +544,8 @@ argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-block|}
-empty_stmt|;
+block|; }
+expr_stmt|;
 comment|// Test if ScalarBitSetTraits<T> is defined on type T.
 name|template
 operator|<
@@ -525,21 +555,22 @@ operator|>
 expr|struct
 name|has_ScalarBitSetTraits
 block|{
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|Signature_bitset
-function_decl|)
-parameter_list|(
+operator|=
+name|void
+argument_list|(
+argument|*
+argument_list|)
+operator|(
 name|class
 name|IO
-modifier|&
-parameter_list|,
+operator|&
+operator|,
 name|T
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+operator|)
+block|;
 name|template
 operator|<
 name|typename
@@ -560,7 +591,7 @@ name|bitset
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|typename
@@ -572,14 +603,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -596,19 +627,9 @@ argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+block|; }
+expr_stmt|;
 comment|// Test if ScalarTraits<T> is defined on type T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -617,30 +638,29 @@ operator|>
 expr|struct
 name|has_ScalarTraits
 block|{
-typedef|typedef
-name|StringRef
-function_decl|(
-modifier|*
+name|using
 name|Signature_input
-function_decl|)
-parameter_list|(
+operator|=
 name|StringRef
-parameter_list|,
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|StringRef
+argument_list|,
 name|void
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|T
-modifier|&
-parameter_list|)
-function_decl|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+operator|&
+argument_list|)
+block|;
+name|using
+name|Signature_output
+operator|=
 name|void
 argument_list|(
 operator|*
-name|Signature_output
 argument_list|)
 argument_list|(
 specifier|const
@@ -650,28 +670,21 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|bool
-function_decl|(
-modifier|*
+block|;
+name|using
 name|Signature_mustQuote
-function_decl|)
-parameter_list|(
+operator|=
+name|bool
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
 name|StringRef
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_expr_stmt
+argument_list|)
+block|;
 name|template
 operator|<
 name|typename
@@ -714,10 +727,7 @@ name|mustQuote
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -729,20 +739,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -754,24 +758,18 @@ name|T
 operator|>>
 operator|(
 name|nullptr
-expr|,
+operator|,
 name|nullptr
-expr|,
+operator|,
 name|nullptr
 operator|)
 argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+block|; }
+expr_stmt|;
 comment|// Test if BlockScalarTraits<T> is defined on type T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -780,30 +778,29 @@ operator|>
 expr|struct
 name|has_BlockScalarTraits
 block|{
-typedef|typedef
-name|StringRef
-function_decl|(
-modifier|*
+name|using
 name|Signature_input
-function_decl|)
-parameter_list|(
+operator|=
 name|StringRef
-parameter_list|,
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|StringRef
+argument_list|,
 name|void
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|T
-modifier|&
-parameter_list|)
-function_decl|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+operator|&
+argument_list|)
+block|;
+name|using
+name|Signature_output
+operator|=
 name|void
 argument_list|(
 operator|*
-name|Signature_output
 argument_list|)
 argument_list|(
 specifier|const
@@ -813,15 +810,10 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -853,10 +845,7 @@ name|output
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -868,20 +857,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -893,22 +876,16 @@ name|T
 operator|>>
 operator|(
 name|nullptr
-expr|,
+operator|,
 name|nullptr
 operator|)
 argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+block|; }
+expr_stmt|;
 comment|// Test if MappingContextTraits<T> is defined on type T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -920,24 +897,25 @@ operator|>
 expr|struct
 name|has_MappingTraits
 block|{
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|Signature_mapping
-function_decl|)
-parameter_list|(
+operator|=
+name|void
+argument_list|(
+argument|*
+argument_list|)
+operator|(
 name|class
 name|IO
-modifier|&
-parameter_list|,
+operator|&
+operator|,
 name|T
-modifier|&
-parameter_list|,
+operator|&
+operator|,
 name|Context
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+operator|)
+block|;
 name|template
 operator|<
 name|typename
@@ -958,10 +936,7 @@ name|mapping
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -973,20 +948,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -1005,15 +974,9 @@ argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+block|; }
+expr_stmt|;
 comment|// Test if MappingTraits<T> is defined on type T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1027,21 +990,22 @@ operator|,
 name|EmptyContext
 operator|>
 block|{
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|Signature_mapping
-function_decl|)
-parameter_list|(
+operator|=
+name|void
+argument_list|(
+argument|*
+argument_list|)
+operator|(
 name|class
 name|IO
-modifier|&
-parameter_list|,
+operator|&
+operator|,
 name|T
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+operator|)
+block|;
 name|template
 operator|<
 name|typename
@@ -1062,10 +1026,7 @@ name|mapping
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -1077,20 +1038,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -1107,15 +1062,9 @@ argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+block|; }
+expr_stmt|;
 comment|// Test if MappingContextTraits<T>::validate() is defined on type T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1127,24 +1076,25 @@ operator|>
 expr|struct
 name|has_MappingValidateTraits
 block|{
-typedef|typedef
-name|StringRef
-function_decl|(
-modifier|*
+name|using
 name|Signature_validate
-function_decl|)
-parameter_list|(
+operator|=
+name|StringRef
+argument_list|(
+argument|*
+argument_list|)
+operator|(
 name|class
 name|IO
-modifier|&
-parameter_list|,
+operator|&
+operator|,
 name|T
-modifier|&
-parameter_list|,
+operator|&
+operator|,
 name|Context
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+operator|)
+block|;
 name|template
 operator|<
 name|typename
@@ -1165,10 +1115,7 @@ name|validate
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -1180,20 +1127,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -1212,15 +1153,9 @@ argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+block|; }
+expr_stmt|;
 comment|// Test if MappingTraits<T>::validate() is defined on type T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1234,21 +1169,22 @@ operator|,
 name|EmptyContext
 operator|>
 block|{
-typedef|typedef
-name|StringRef
-function_decl|(
-modifier|*
+name|using
 name|Signature_validate
-function_decl|)
-parameter_list|(
+operator|=
+name|StringRef
+argument_list|(
+argument|*
+argument_list|)
+operator|(
 name|class
 name|IO
-modifier|&
-parameter_list|,
+operator|&
+operator|,
 name|T
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+operator|)
+block|;
 name|template
 operator|<
 name|typename
@@ -1269,10 +1205,7 @@ name|validate
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -1284,20 +1217,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -1314,15 +1241,9 @@ argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+block|; }
+expr_stmt|;
 comment|// Test if SequenceTraits<T> is defined on type T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1331,21 +1252,22 @@ operator|>
 expr|struct
 name|has_SequenceMethodTraits
 block|{
-typedef|typedef
-name|size_t
-function_decl|(
-modifier|*
+name|using
 name|Signature_size
-function_decl|)
-parameter_list|(
+operator|=
+name|size_t
+argument_list|(
+argument|*
+argument_list|)
+operator|(
 name|class
 name|IO
-modifier|&
-parameter_list|,
+operator|&
+operator|,
 name|T
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+operator|)
+block|;
 name|template
 operator|<
 name|typename
@@ -1366,10 +1288,7 @@ name|size
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -1381,20 +1300,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -1411,15 +1324,9 @@ argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+block|; }
+expr_stmt|;
 comment|// Test if CustomMappingTraits<T> is defined on type T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1428,25 +1335,26 @@ operator|>
 expr|struct
 name|has_CustomMappingTraits
 block|{
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
+name|using
 name|Signature_input
-function_decl|)
-parameter_list|(
+operator|=
+name|void
+argument_list|(
+argument|*
+argument_list|)
+operator|(
 name|IO
-modifier|&
+operator|&
 name|io
-parameter_list|,
+operator|,
 name|StringRef
 name|key
-parameter_list|,
+operator|,
 name|T
-modifier|&
+operator|&
 name|v
-parameter_list|)
-function_decl|;
+operator|)
+block|;
 name|template
 operator|<
 name|typename
@@ -1467,10 +1375,7 @@ name|inputOne
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -1482,20 +1387,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -1512,23 +1411,11 @@ argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+block|; }
+expr_stmt|;
 comment|// has_FlowTraits<int> will cause an error with some compilers because
-end_comment
-
-begin_comment
 comment|// it subclasses int.  Using this wrapper only instantiates the
-end_comment
-
-begin_comment
 comment|// real has_FlowTraits only if the template type is a class.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1559,21 +1446,9 @@ operator|=
 name|false
 block|; }
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Some older gcc compilers don't support straight forward tests
-end_comment
-
-begin_comment
 comment|// for members, so test for ambiguity cause by the base and derived
-end_comment
-
-begin_comment
 comment|// classes both defining the member.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1659,13 +1534,7 @@ operator|==
 literal|2
 block|; }
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Test if SequenceTraits<T> is defined on type T
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1690,13 +1559,7 @@ name|value
 operator|>
 block|{ }
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Test if DocumentListTraits<T> is defined on type T
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1705,21 +1568,22 @@ operator|>
 expr|struct
 name|has_DocumentListTraits
 block|{
-typedef|typedef
-name|size_t
-function_decl|(
-modifier|*
+name|using
 name|Signature_size
-function_decl|)
-parameter_list|(
+operator|=
+name|size_t
+argument_list|(
+argument|*
+argument_list|)
+operator|(
 name|class
 name|IO
-modifier|&
-parameter_list|,
+operator|&
+operator|,
 name|T
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+operator|)
+block|;
 name|template
 operator|<
 name|typename
@@ -1740,10 +1604,7 @@ name|size
 operator|>
 operator|*
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -1755,20 +1616,14 @@ name|test
 argument_list|(
 operator|...
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 specifier|static
 name|bool
 specifier|const
 name|value
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -1785,11 +1640,8 @@ argument_list|)
 operator|==
 literal|1
 operator|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-unit|};
+block|; }
+expr_stmt|;
 specifier|inline
 name|bool
 name|isNumber
@@ -1968,9 +1820,6 @@ return|return
 name|false
 return|;
 block|}
-end_function
-
-begin_function
 specifier|inline
 name|bool
 name|isNumeric
@@ -2048,9 +1897,6 @@ return|return
 name|false
 return|;
 block|}
-end_function
-
-begin_function
 specifier|inline
 name|bool
 name|isNull
@@ -2089,9 +1935,6 @@ literal|"~"
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|inline
 name|bool
 name|isBool
@@ -2144,9 +1987,6 @@ literal|"FALSE"
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|inline
 name|bool
 name|needsQuotes
@@ -2257,9 +2097,6 @@ return|return
 name|false
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2346,9 +2183,6 @@ name|value
 operator|>
 block|{}
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2387,9 +2221,6 @@ name|value
 operator|>
 block|{}
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2429,13 +2260,7 @@ name|value
 operator|>
 block|{}
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Base class for Input and Output.
-end_comment
-
-begin_decl_stmt
 name|class
 name|IO
 block|{
@@ -2913,9 +2738,15 @@ condition|)
 block|{
 name|Val
 operator|=
+name|static_cast
+operator|<
+name|T
+operator|>
+operator|(
 name|Val
 operator||
 name|ConstVal
+operator|)
 expr_stmt|;
 block|}
 block|}
@@ -2956,9 +2787,15 @@ condition|)
 block|{
 name|Val
 operator|=
+name|static_cast
+operator|<
+name|T
+operator|>
+operator|(
 name|Val
 operator||
 name|ConstVal
+operator|)
 expr_stmt|;
 block|}
 block|}
@@ -3241,9 +3078,6 @@ name|Ctx
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3407,6 +3241,8 @@ name|SaveInfo
 block|;
 name|bool
 name|UseDefault
+operator|=
+name|true
 block|;
 specifier|const
 name|bool
@@ -3438,11 +3274,13 @@ operator|=
 name|T
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
+name|Val
+operator|.
+name|hasValue
+argument_list|()
+operator|&&
 name|this
 operator|->
 name|preflightKey
@@ -3493,10 +3331,8 @@ operator|=
 name|DefaultValue
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
-unit|}    template
+block|}
+name|template
 operator|<
 name|typename
 name|T
@@ -3574,9 +3410,6 @@ name|SaveInfo
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 block|{
 if|if
@@ -3588,10 +3421,8 @@ operator|=
 name|DefaultValue
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
-unit|}    template
+block|}
+name|template
 operator|<
 name|typename
 name|T
@@ -3656,18 +3487,21 @@ name|SaveInfo
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
-unit|}  private:
+block|}
+name|private
+operator|:
 name|void
-modifier|*
+operator|*
 name|Ctxt
-decl_stmt|;
+expr_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_decl_stmt
-unit|};
 name|namespace
 name|detail
 block|{
@@ -3919,14 +3753,12 @@ operator|::
 name|string
 name|Storage
 expr_stmt|;
-name|llvm
-operator|::
 name|raw_string_ostream
 name|Buffer
-argument_list|(
+parameter_list|(
 name|Storage
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|ScalarTraits
 operator|<
 name|T
@@ -4028,8 +3860,6 @@ name|io
 operator|.
 name|setError
 argument_list|(
-name|llvm
-operator|::
 name|Twine
 argument_list|(
 name|Result
@@ -4086,14 +3916,12 @@ operator|::
 name|string
 name|Storage
 expr_stmt|;
-name|llvm
-operator|::
 name|raw_string_ostream
 name|Buffer
-argument_list|(
+parameter_list|(
 name|Storage
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|BlockScalarTraits
 operator|<
 name|T
@@ -4174,8 +4002,6 @@ name|YamlIO
 operator|.
 name|setError
 argument_list|(
-name|llvm
-operator|::
 name|Twine
 argument_list|(
 name|Result
@@ -4280,8 +4106,6 @@ name|empty
 argument_list|()
 condition|)
 block|{
-name|llvm
-operator|::
 name|errs
 argument_list|()
 operator|<<
@@ -4681,8 +4505,7 @@ operator|<
 name|SequenceTraits
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 operator|::
 name|value
 condition|)
@@ -4914,8 +4737,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -4968,8 +4789,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5029,8 +4848,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5088,8 +4905,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5142,8 +4957,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5196,8 +5009,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5250,8 +5061,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5304,8 +5113,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5358,8 +5165,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5412,8 +5217,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5466,8 +5269,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5520,8 +5321,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5574,8 +5373,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -5649,7 +5446,9 @@ operator|,
 name|alignment
 operator|>>
 block|{
-typedef|typedef
+name|using
+name|endian_type
+operator|=
 name|support
 operator|::
 name|detail
@@ -5657,13 +5456,12 @@ operator|::
 name|packed_endian_specific_integral
 operator|<
 name|value_type
-operator|,
+block|,
 name|endian
-operator|,
+block|,
 name|alignment
 operator|>
-name|endian_type
-expr_stmt|;
+block|;
 specifier|static
 name|void
 name|output
@@ -5672,7 +5470,7 @@ argument|const endian_type&E
 argument_list|,
 argument|void *Ctx
 argument_list|,
-argument|llvm::raw_ostream&Stream
+argument|raw_ostream&Stream
 argument_list|)
 block|{
 name|ScalarTraits
@@ -5740,16 +5538,12 @@ return|return
 name|R
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|mustQuote
-parameter_list|(
-name|StringRef
-name|Str
-parameter_list|)
+argument_list|(
+argument|StringRef Str
+argument_list|)
 block|{
 return|return
 name|ScalarTraits
@@ -5763,7 +5557,7 @@ name|Str
 argument_list|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_comment
 unit|};
@@ -5908,17 +5702,16 @@ name|private
 label|:
 end_label
 
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
+begin_decl_stmt
+name|using
+name|Storage
+init|=
 name|AlignedCharArrayUnion
 operator|<
 name|TNorm
 operator|>
-name|Storage
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|Storage
@@ -5978,8 +5771,6 @@ name|TFinal
 operator|&
 name|Obj
 argument_list|,
-name|llvm
-operator|::
 name|BumpPtrAllocator
 operator|*
 name|allocator
@@ -5988,11 +5779,6 @@ operator|:
 name|io
 argument_list|(
 name|i_o
-argument_list|)
-block|,
-name|BufPtr
-argument_list|(
-name|nullptr
 argument_list|)
 block|,
 name|Result
@@ -6125,17 +5911,16 @@ name|private
 label|:
 end_label
 
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
+begin_decl_stmt
+name|using
+name|Storage
+init|=
 name|AlignedCharArrayUnion
 operator|<
 name|TNorm
 operator|>
-name|Storage
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|Storage
@@ -6154,6 +5939,8 @@ begin_decl_stmt
 name|TNorm
 modifier|*
 name|BufPtr
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -6228,6 +6015,17 @@ comment|// alternative error reporting.
 name|Input
 argument_list|(
 argument|StringRef InputContent
+argument_list|,
+argument|void *Ctxt = nullptr
+argument_list|,
+argument|SourceMgr::DiagHandlerTy DiagHandler = nullptr
+argument_list|,
+argument|void *DiagHandlerCtxt = nullptr
+argument_list|)
+block|;
+name|Input
+argument_list|(
+argument|MemoryBufferRef Input
 argument_list|,
 argument|void *Ctxt = nullptr
 argument_list|,
@@ -6471,7 +6269,6 @@ operator|=
 expr|default
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6513,7 +6310,6 @@ argument|n
 argument_list|)
 block|{ }
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6532,7 +6328,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6585,7 +6380,6 @@ name|_value
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6613,7 +6407,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6656,7 +6449,6 @@ argument|n
 argument_list|)
 block|{ }
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6675,7 +6467,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6686,9 +6477,9 @@ return|return
 name|true
 return|;
 block|}
-typedef|typedef
-name|llvm
-operator|::
+name|using
+name|NameToNode
+operator|=
 name|StringMap
 operator|<
 name|std
@@ -6697,13 +6488,10 @@ name|unique_ptr
 operator|<
 name|HNode
 operator|>>
-name|NameToNode
-expr_stmt|;
+block|;
 name|NameToNode
 name|Mapping
 block|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -6741,7 +6529,6 @@ argument|n
 argument_list|)
 block|{ }
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6760,7 +6547,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -6847,8 +6633,6 @@ specifier|const
 block|;
 name|private
 operator|:
-name|llvm
-operator|::
 name|SourceMgr
 name|SrcMgr
 block|;
@@ -6878,15 +6662,9 @@ operator|::
 name|error_code
 name|EC
 block|;
-name|llvm
-operator|::
 name|BumpPtrAllocator
 name|StringAllocator
 block|;
-name|llvm
-operator|::
-name|yaml
-operator|::
 name|document_iterator
 name|DocIterator
 block|;
@@ -6901,33 +6679,20 @@ block|;
 name|HNode
 operator|*
 name|CurrentNode
+operator|=
+name|nullptr
 block|;
 name|bool
 name|ScalarMatchFound
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|///
-end_comment
-
-begin_comment
 comment|/// The Output class is used to generate a yaml document from in-memory structs
-end_comment
-
-begin_comment
 comment|/// and vectors.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|Output
-range|:
+operator|:
 name|public
 name|IO
 block|{
@@ -6935,7 +6700,7 @@ name|public
 operator|:
 name|Output
 argument_list|(
-argument|llvm::raw_ostream&
+argument|raw_ostream&
 argument_list|,
 argument|void *Ctxt = nullptr
 argument_list|,
@@ -6948,6 +6713,21 @@ name|Output
 argument_list|()
 name|override
 block|;
+comment|/// \brief Set whether or not to output optional values which are equal
+comment|/// to the default value.  By default, when outputting if you attempt
+comment|/// to write a value that is equal to the default, the value gets ignored.
+comment|/// Sometimes, it is useful to be able to see these in the resulting YAML
+comment|/// anyway.
+name|void
+name|setWriteDefaultValues
+argument_list|(
+argument|bool Write
+argument_list|)
+block|{
+name|WriteDefaultValues
+operator|=
+name|Write
+block|; }
 name|bool
 name|outputting
 argument_list|()
@@ -7208,8 +6988,6 @@ block|,
 name|inFlowMapOtherKey
 block|}
 block|;
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|Out
@@ -7227,61 +7005,53 @@ name|StateStack
 block|;
 name|int
 name|Column
+operator|=
+literal|0
 block|;
 name|int
 name|ColumnAtFlowStart
+operator|=
+literal|0
 block|;
 name|int
 name|ColumnAtMapFlowStart
+operator|=
+literal|0
 block|;
 name|bool
 name|NeedBitValueComma
+operator|=
+name|false
 block|;
 name|bool
 name|NeedFlowSequenceComma
+operator|=
+name|false
 block|;
 name|bool
 name|EnumerationMatchFound
+operator|=
+name|false
 block|;
 name|bool
 name|NeedsNewLine
+operator|=
+name|false
+block|;
+name|bool
+name|WriteDefaultValues
+operator|=
+name|false
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// YAML I/O does conversion based on types. But often native data types
-end_comment
-
-begin_comment
 comment|/// are just a typedef of built in intergral types (e.g. int).  But the C++
-end_comment
-
-begin_comment
 comment|/// type matching system sees through the typedef and all the typedefed types
-end_comment
-
-begin_comment
 comment|/// look like a built in type. This will cause the generic YAML I/O conversion
-end_comment
-
-begin_comment
 comment|/// to be used. To provide better control over the YAML conversion, you can
-end_comment
-
-begin_comment
 comment|/// use this macro instead of typedef.  It will create a class with one field
-end_comment
-
-begin_comment
 comment|/// and automatic conversion operators to and from the base type.
-end_comment
-
-begin_comment
 comment|/// Based on BOOST_STRONG_TYPEDEF
-end_comment
-
-begin_define
 define|#
 directive|define
 name|LLVM_YAML_STRONG_TYPEDEF
@@ -7291,62 +7061,35 @@ parameter_list|,
 name|_type
 parameter_list|)
 define|\
-value|struct _type {                                                             \         _type() = default;                                                     \         _type(const _base v) : value(v) {}                                     \         _type(const _type&v) = default;                                       \         _type&operator=(const _type&rhs) = default;                          \         _type&operator=(const _base&rhs) { value = rhs; return *this; }      \         operator const _base& () const { return value; }                      \         bool operator==(const _type&rhs) const { return value == rhs.value; } \         bool operator==(const _base&rhs) const { return value == rhs; }       \         bool operator<(const _type&rhs) const { return value< rhs.value; }   \         _base value;                                                           \         typedef _base BaseType;                                                \     };
-end_define
-
-begin_comment
+value|struct _type {                                                             \         _type() = default;                                                     \         _type(const _base v) : value(v) {}                                     \         _type(const _type&v) = default;                                       \         _type&operator=(const _type&rhs) = default;                          \         _type&operator=(const _base&rhs) { value = rhs; return *this; }      \         operator const _base& () const { return value; }                      \         bool operator==(const _type&rhs) const { return value == rhs.value; } \         bool operator==(const _base&rhs) const { return value == rhs; }       \         bool operator<(const _type&rhs) const { return value< rhs.value; }   \         _base value;                                                           \         using BaseType = _base;                                                \     };
 comment|///
-end_comment
-
-begin_comment
 comment|/// Use these types instead of uintXX_t in any mapping to have
-end_comment
-
-begin_comment
 comment|/// its yaml output formatted as hexadecimal.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_macro
 name|LLVM_YAML_STRONG_TYPEDEF
 argument_list|(
 argument|uint8_t
 argument_list|,
 argument|Hex8
 argument_list|)
-end_macro
-
-begin_macro
 name|LLVM_YAML_STRONG_TYPEDEF
 argument_list|(
 argument|uint16_t
 argument_list|,
 argument|Hex16
 argument_list|)
-end_macro
-
-begin_macro
 name|LLVM_YAML_STRONG_TYPEDEF
 argument_list|(
 argument|uint32_t
 argument_list|,
 argument|Hex32
 argument_list|)
-end_macro
-
-begin_macro
 name|LLVM_YAML_STRONG_TYPEDEF
 argument_list|(
 argument|uint64_t
 argument_list|,
 argument|Hex64
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -7367,8 +7110,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -7397,10 +7138,8 @@ return|return
 name|false
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -7421,8 +7160,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -7451,10 +7188,8 @@ return|return
 name|false
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -7475,8 +7210,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -7505,10 +7238,8 @@ return|return
 name|false
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -7529,8 +7260,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -7559,14 +7288,9 @@ return|return
 name|false
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|// Define non-member operator>> so that Input can stream in a document list.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -7584,7 +7308,7 @@ name|T
 operator|>
 operator|::
 name|value
-operator|,
+block|,
 name|Input
 operator|&
 operator|>
@@ -7596,7 +7320,7 @@ operator|(
 name|Input
 operator|&
 name|yin
-operator|,
+expr|,
 name|T
 operator|&
 name|docList
@@ -7660,21 +7384,12 @@ operator|++
 name|i
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_return
 return|return
 name|yin
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|// Define non-member operator>> so that Input can stream in a map as a document.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|T
@@ -7688,12 +7403,12 @@ operator|<
 name|has_MappingTraits
 operator|<
 name|T
-operator|,
+block|,
 name|EmptyContext
 operator|>
 operator|::
 name|value
-operator|,
+block|,
 name|Input
 operator|&
 operator|>
@@ -7705,7 +7420,7 @@ operator|(
 name|Input
 operator|&
 name|yin
-operator|,
+expr|,
 name|T
 operator|&
 name|docMap
@@ -7734,17 +7449,8 @@ return|return
 name|yin
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Define non-member operator>> so that Input can stream in a sequence as
-end_comment
-
-begin_comment
 comment|// a document.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -7762,7 +7468,7 @@ name|T
 operator|>
 operator|::
 name|value
-operator|,
+block|,
 name|Input
 operator|&
 operator|>
@@ -7774,7 +7480,7 @@ operator|(
 name|Input
 operator|&
 name|yin
-operator|,
+expr|,
 name|T
 operator|&
 name|docSeq
@@ -7801,21 +7507,12 @@ argument_list|,
 name|Ctx
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|yin
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|// Define non-member operator>> so that Input can stream in a block scalar.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|T
@@ -7832,7 +7529,7 @@ name|T
 operator|>
 operator|::
 name|value
-operator|,
+block|,
 name|Input
 operator|&
 operator|>
@@ -7844,7 +7541,7 @@ operator|(
 name|Input
 operator|&
 name|In
-operator|,
+expr|,
 name|T
 operator|&
 name|Val
@@ -7871,21 +7568,12 @@ argument_list|,
 name|Ctx
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|In
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|// Define non-member operator>> so that Input can stream in a string map.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|T
@@ -7902,7 +7590,7 @@ name|T
 operator|>
 operator|::
 name|value
-operator|,
+block|,
 name|Input
 operator|&
 operator|>
@@ -7914,7 +7602,7 @@ operator|(
 name|Input
 operator|&
 name|In
-operator|,
+expr|,
 name|T
 operator|&
 name|Val
@@ -7941,21 +7629,12 @@ argument_list|,
 name|Ctx
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|In
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|// Provide better error message about types missing a trait specialization
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|T
@@ -7969,12 +7648,12 @@ operator|<
 name|missingTraits
 operator|<
 name|T
-operator|,
+block|,
 name|EmptyContext
 operator|>
 operator|::
 name|value
-operator|,
+block|,
 name|Input
 operator|&
 operator|>
@@ -7986,7 +7665,7 @@ operator|(
 name|Input
 operator|&
 name|yin
-operator|,
+expr|,
 name|T
 operator|&
 name|docSeq
@@ -8008,13 +7687,7 @@ return|return
 name|yin
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Define non-member operator<< so that Output can stream out document list.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -8032,7 +7705,7 @@ name|T
 operator|>
 operator|::
 name|value
-operator|,
+block|,
 name|Output
 operator|&
 operator|>
@@ -8044,7 +7717,7 @@ operator|(
 name|Output
 operator|&
 name|yout
-operator|,
+expr|,
 name|T
 operator|&
 name|docList
@@ -8128,29 +7801,18 @@ name|postflightDocument
 argument_list|()
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|}   yout
+block|}
+name|yout
 operator|.
 name|endDocuments
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|yout
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|// Define non-member operator<< so that Output can stream out a map.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|T
@@ -8164,12 +7826,12 @@ operator|<
 name|has_MappingTraits
 operator|<
 name|T
-operator|,
+block|,
 name|EmptyContext
 operator|>
 operator|::
 name|value
-operator|,
+block|,
 name|Output
 operator|&
 operator|>
@@ -8181,7 +7843,7 @@ operator|(
 name|Output
 operator|&
 name|yout
-operator|,
+expr|,
 name|T
 operator|&
 name|map
@@ -8227,21 +7889,18 @@ operator|.
 name|endDocuments
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|yout
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// Define non-member operator<< so that Output can stream out a sequence.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|T
@@ -8566,19 +8225,64 @@ end_expr_stmt
 begin_expr_stmt
 name|template
 operator|<
+name|bool
+name|B
+operator|>
+expr|struct
+name|IsFlowSequenceBase
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|IsFlowSequenceBase
+operator|<
+name|true
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|flow
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
 name|typename
 name|T
+operator|,
+name|bool
+name|Flow
 operator|>
 expr|struct
 name|SequenceTraitsImpl
+operator|:
+name|IsFlowSequenceBase
+operator|<
+name|Flow
+operator|>
 block|{
-typedef|typedef
+name|private
+operator|:
+name|using
+name|type
+operator|=
 name|typename
 name|T
 operator|::
 name|value_type
-name|_type
-expr_stmt|;
+block|;
+name|public
+operator|:
 specifier|static
 name|size_t
 name|size
@@ -8596,7 +8300,7 @@ argument_list|()
 return|;
 block|}
 specifier|static
-name|_type
+name|type
 operator|&
 name|element
 argument_list|(
@@ -8642,6 +8346,276 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|// Simple helper to check an expression can be used as a bool-valued template
+end_comment
+
+begin_comment
+comment|// argument.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|bool
+operator|>
+expr|struct
+name|CheckIsBool
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// If T has SequenceElementTraits, then vector<T> and SmallVector<T, N> have
+end_comment
+
+begin_comment
+comment|// SequenceTraits that do the obvious thing.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|SequenceTraits
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|T
+operator|>
+operator|,
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|CheckIsBool
+operator|<
+name|SequenceElementTraits
+operator|<
+name|T
+operator|>
+operator|::
+name|flow
+operator|>
+operator|::
+name|value
+operator|>
+operator|::
+name|type
+operator|>
+operator|:
+name|SequenceTraitsImpl
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|T
+operator|>
+operator|,
+name|SequenceElementTraits
+operator|<
+name|T
+operator|>
+operator|::
+name|flow
+operator|>
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|unsigned
+name|N
+operator|>
+expr|struct
+name|SequenceTraits
+operator|<
+name|SmallVector
+operator|<
+name|T
+operator|,
+name|N
+operator|>
+operator|,
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|CheckIsBool
+operator|<
+name|SequenceElementTraits
+operator|<
+name|T
+operator|>
+operator|::
+name|flow
+operator|>
+operator|::
+name|value
+operator|>
+operator|::
+name|type
+operator|>
+operator|:
+name|SequenceTraitsImpl
+operator|<
+name|SmallVector
+operator|<
+name|T
+operator|,
+name|N
+operator|>
+operator|,
+name|SequenceElementTraits
+operator|<
+name|T
+operator|>
+operator|::
+name|flow
+operator|>
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Sequences of fundamental types use flow formatting.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|SequenceElementTraits
+operator|<
+name|T
+operator|,
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_fundamental
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|>
+operator|::
+name|type
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|flow
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Sequences of strings use block formatting.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|SequenceElementTraits
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|flow
+operator|=
+name|false
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|SequenceElementTraits
+operator|<
+name|StringRef
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|flow
+operator|=
+name|false
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|SequenceElementTraits
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|std
+operator|::
+name|string
+operator|>>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|flow
+operator|=
+name|false
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Implementation of CustomMappingTraits for std::map<std::string, T>.
 end_comment
 
@@ -8654,7 +8628,9 @@ operator|>
 expr|struct
 name|StdMapStringCustomMappingTraitsImpl
 block|{
-typedef|typedef
+name|using
+name|map_type
+operator|=
 name|std
 operator|::
 name|map
@@ -8662,11 +8638,10 @@ operator|<
 name|std
 operator|::
 name|string
-operator|,
+block|,
 name|T
 operator|>
-name|map_type
-expr_stmt|;
+block|;
 specifier|static
 name|void
 name|inputOne
@@ -8742,6 +8717,19 @@ unit|}
 comment|// end namespace llvm
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LLVM_YAML_IS_SEQUENCE_VECTOR_IMPL
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|FLOW
+parameter_list|)
+define|\
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   static_assert(                                                               \       !std::is_fundamental<TYPE>::value&&                                     \       !std::is_same<TYPE, std::string>::value&&                               \       !std::is_same<TYPE, llvm::StringRef>::value,                             \       "only use LLVM_YAML_IS_SEQUENCE_VECTOR for types you control");          \   template<> struct SequenceElementTraits<TYPE> {                             \     static const bool flow = FLOW;                                             \   };                                                                           \   }                                                                            \   }
+end_define
+
 begin_comment
 comment|/// Utility for declaring that a std::vector of a particular type
 end_comment
@@ -8755,10 +8743,10 @@ define|#
 directive|define
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 parameter_list|(
-name|_type
+name|type
 parameter_list|)
 define|\
-value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<>                                                                  \   struct SequenceTraits<std::vector<_type>>                                    \       : public SequenceTraitsImpl<std::vector<_type>> {};                      \   template<unsigned N>                                                        \   struct SequenceTraits<SmallVector<_type, N>>                                 \       : public SequenceTraitsImpl<SmallVector<_type, N>> {};                   \   }                                                                            \   }
+value|LLVM_YAML_IS_SEQUENCE_VECTOR_IMPL(type, false)
 end_define
 
 begin_comment
@@ -8769,35 +8757,61 @@ begin_comment
 comment|/// should be considered a YAML flow sequence.
 end_comment
 
-begin_comment
-comment|/// We need to do a partial specialization on the vector version, not a full.
-end_comment
-
-begin_comment
-comment|/// If this is a full specialization, the compiler is a bit too "smart" and
-end_comment
-
-begin_comment
-comment|/// decides to warn on -Wunused-const-variable.  This workaround can be
-end_comment
-
-begin_comment
-comment|/// removed and we can do a full specialization on std::vector<T> once
-end_comment
-
-begin_comment
-comment|/// PR28878 is fixed.
-end_comment
-
 begin_define
 define|#
 directive|define
 name|LLVM_YAML_IS_FLOW_SEQUENCE_VECTOR
 parameter_list|(
-name|_type
+name|type
 parameter_list|)
 define|\
-value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<unsigned N>                                                        \   struct SequenceTraits<SmallVector<_type, N>>                                 \       : public SequenceTraitsImpl<SmallVector<_type, N>> {                     \     static const bool flow = true;                                             \   };                                                                           \   template<typename Allocator>                                                \   struct SequenceTraits<std::vector<_type, Allocator>>                         \       : public SequenceTraitsImpl<std::vector<_type, Allocator>> {             \     static const bool flow = true;                                             \   };                                                                           \   }                                                                            \   }
+value|LLVM_YAML_IS_SEQUENCE_VECTOR_IMPL(type, true)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_YAML_DECLARE_MAPPING_TRAITS
+parameter_list|(
+name|Type
+parameter_list|)
+define|\
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<> struct MappingTraits<Type> {                                     \     static void mapping(IO&IO, Type&Obj);                                    \   };                                                                           \   }                                                                            \   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_YAML_DECLARE_ENUM_TRAITS
+parameter_list|(
+name|Type
+parameter_list|)
+define|\
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<> struct ScalarEnumerationTraits<Type> {                           \     static void enumeration(IO&io, Type&Value);                              \   };                                                                           \   }                                                                            \   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_YAML_DECLARE_BITSET_TRAITS
+parameter_list|(
+name|Type
+parameter_list|)
+define|\
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<> struct ScalarBitSetTraits<Type> {                                \     static void bitset(IO&IO, Type&Options);                                 \   };                                                                           \   }                                                                            \   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_YAML_DECLARE_SCALAR_TRAITS
+parameter_list|(
+name|Type
+parameter_list|,
+name|MustQuote
+parameter_list|)
+define|\
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<> struct ScalarTraits<Type> {                                      \     static void output(const Type&Value, void *ctx, raw_ostream&Out);        \     static StringRef input(StringRef Scalar, void *ctxt, Type&Value);         \     static bool mustQuote(StringRef) { return MustQuote; }                     \   };                                                                           \   }                                                                            \   }
 end_define
 
 begin_comment
@@ -8816,7 +8830,7 @@ parameter_list|(
 name|_type
 parameter_list|)
 define|\
-value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<unsigned N>                                                        \   struct DocumentListTraits<SmallVector<_type, N>>                             \       : public SequenceTraitsImpl<SmallVector<_type, N>> {};                   \   template<>                                                                  \   struct DocumentListTraits<std::vector<_type>>                                \       : public SequenceTraitsImpl<std::vector<_type>> {};                      \   }                                                                            \   }
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<unsigned N>                                                        \   struct DocumentListTraits<SmallVector<_type, N>>                             \       : public SequenceTraitsImpl<SmallVector<_type, N>, false> {};            \   template<>                                                                  \   struct DocumentListTraits<std::vector<_type>>                                \       : public SequenceTraitsImpl<std::vector<_type>, false> {};               \   }                                                                            \   }
 end_define
 
 begin_comment

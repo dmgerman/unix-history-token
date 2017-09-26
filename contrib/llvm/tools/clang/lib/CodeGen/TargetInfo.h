@@ -631,10 +631,44 @@ argument|QualType QT
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// Get target favored AST address space of a global variable for languages
+comment|/// other than OpenCL and CUDA.
+comment|/// If \p D is nullptr, returns the default target favored address space
+comment|/// for global variable.
+name|virtual
+name|unsigned
+name|getGlobalVarAddressSpace
+argument_list|(
+name|CodeGenModule
+operator|&
+name|CGM
+argument_list|,
+specifier|const
+name|VarDecl
+operator|*
+name|D
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Get the AST address space for alloca.
+name|virtual
+name|unsigned
+name|getASTAllocaAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LangAS
+operator|::
+name|Default
+return|;
+block|}
 comment|/// Perform address space cast of an expression of pointer type.
 comment|/// \param V is the LLVM value to be casted to another address space.
-comment|/// \param SrcTy is the QualType of \p V.
-comment|/// \param DestTy is the destination QualType.
+comment|/// \param SrcAddr is the language address space of \p V.
+comment|/// \param DestAddr is the targeted language address space.
+comment|/// \param DestTy is the destination LLVM pointer type.
+comment|/// \param IsNonNull is the flag indicating \p V is known to be non null.
 name|virtual
 name|llvm
 operator|::
@@ -646,9 +680,37 @@ argument|CodeGen::CodeGenFunction&CGF
 argument_list|,
 argument|llvm::Value *V
 argument_list|,
-argument|QualType SrcTy
+argument|unsigned SrcAddr
 argument_list|,
-argument|QualType DestTy
+argument|unsigned DestAddr
+argument_list|,
+argument|llvm::Type *DestTy
+argument_list|,
+argument|bool IsNonNull = false
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// Perform address space cast of a constant expression of pointer type.
+comment|/// \param V is the LLVM constant to be casted to another address space.
+comment|/// \param SrcAddr is the language address space of \p V.
+comment|/// \param DestAddr is the targeted language address space.
+comment|/// \param DestTy is the destination LLVM pointer type.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|performAddrSpaceCast
+argument_list|(
+argument|CodeGenModule&CGM
+argument_list|,
+argument|llvm::Constant *V
+argument_list|,
+argument|unsigned SrcAddr
+argument_list|,
+argument|unsigned DestAddr
+argument_list|,
+argument|llvm::Type *DestTy
 argument_list|)
 specifier|const
 expr_stmt|;

@@ -171,6 +171,10 @@ name|tryMergeLessLess
 parameter_list|()
 function_decl|;
 name|bool
+name|tryMergeNSStringLiteral
+parameter_list|()
+function_decl|;
+name|bool
 name|tryMergeTokens
 argument_list|(
 name|ArrayRef

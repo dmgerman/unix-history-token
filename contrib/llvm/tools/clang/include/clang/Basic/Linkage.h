@@ -117,6 +117,17 @@ comment|/// \brief No linkage according to the standard, but is visible from oth
 comment|/// translation units because of types defined in a inline function.
 name|VisibleNoLinkage
 block|,
+comment|/// \brief Internal linkage according to the Modules TS, but can be referred
+comment|/// to from other translation units indirectly through inline functions and
+comment|/// templates in the module interface.
+name|ModuleInternalLinkage
+block|,
+comment|/// \brief Module linkage, which indicates that the entity can be referred
+comment|/// to from other translation units within the same module, and indirectly
+comment|/// from arbitrary other translation units through inline functions and
+comment|/// templates in the module interface.
+name|ModuleLinkage
+block|,
 comment|/// \brief External linkage, which indicates that the entity can
 comment|/// be referred to from other translation units.
 name|ExternalLinkage
@@ -175,11 +186,7 @@ parameter_list|)
 block|{
 return|return
 name|L
-operator|==
-name|ExternalLinkage
-operator|||
-name|L
-operator|==
+operator|>=
 name|VisibleNoLinkage
 return|;
 block|}
@@ -191,27 +198,34 @@ name|Linkage
 name|L
 parameter_list|)
 block|{
-if|if
+switch|switch
 condition|(
 name|L
-operator|==
-name|UniqueExternalLinkage
 condition|)
+block|{
+case|case
+name|UniqueExternalLinkage
+case|:
 return|return
 name|ExternalLinkage
 return|;
-if|if
-condition|(
-name|L
-operator|==
+case|case
 name|VisibleNoLinkage
-condition|)
+case|:
 return|return
 name|NoLinkage
 return|;
+case|case
+name|ModuleInternalLinkage
+case|:
+return|return
+name|InternalLinkage
+return|;
+default|default:
 return|return
 name|L
 return|;
+block|}
 block|}
 specifier|inline
 name|bool

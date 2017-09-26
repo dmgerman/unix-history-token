@@ -133,9 +133,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|TargetMachine
-decl_stmt|;
 define|#
 directive|define
 name|INITIALIZE_PASS
@@ -151,7 +148,7 @@ parameter_list|,
 name|analysis
 parameter_list|)
 define|\
-value|static void *initialize##passName##PassOnce(PassRegistry&Registry) {        \     PassInfo *PI = new PassInfo(                                               \         name, arg,&passName::ID,                                              \         PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis);     \     Registry.registerPass(*PI, true);                                          \     return PI;                                                                 \   }                                                                            \   LLVM_DEFINE_ONCE_FLAG(Initialize##passName##PassFlag);                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
+value|static void *initialize##passName##PassOnce(PassRegistry&Registry) {        \     PassInfo *PI = new PassInfo(                                               \         name, arg,&passName::ID,                                              \         PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis);     \     Registry.registerPass(*PI, true);                                          \     return PI;                                                                 \   }                                                                            \   static llvm::once_flag Initialize##passName##PassFlag;                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
 define|#
 directive|define
 name|INITIALIZE_PASS_BEGIN
@@ -198,7 +195,7 @@ parameter_list|,
 name|analysis
 parameter_list|)
 define|\
-value|PassInfo *PI = new PassInfo(                                                 \       name, arg,&passName::ID,                                                \       PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis);       \   Registry.registerPass(*PI, true);                                            \   return PI;                                                                   \   }                                                                            \   LLVM_DEFINE_ONCE_FLAG(Initialize##passName##PassFlag);                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
+value|PassInfo *PI = new PassInfo(                                                 \       name, arg,&passName::ID,                                                \       PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis);       \   Registry.registerPass(*PI, true);                                            \   return PI;                                                                   \   }                                                                            \   static llvm::once_flag Initialize##passName##PassFlag;                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
 define|#
 directive|define
 name|INITIALIZE_PASS_WITH_OPTIONS
@@ -247,26 +244,6 @@ name|PassName
 argument_list|()
 return|;
 block|}
-name|template
-operator|<
-name|typename
-name|PassName
-operator|>
-name|Pass
-operator|*
-name|callTargetMachineCtor
-argument_list|(
-argument|TargetMachine *TM
-argument_list|)
-block|{
-return|return
-name|new
-name|PassName
-argument_list|(
-name|TM
-argument_list|)
-return|;
-block|}
 comment|//===---------------------------------------------------------------------------
 comment|/// RegisterPass<t> template - This template class is used to notify the system
 comment|/// that a Pass is available for use, and registers it into the internal
@@ -278,11 +255,7 @@ comment|///
 comment|/// static RegisterPass<YourPassClassName> tmp("passopt", "My Pass Name");
 comment|///
 comment|/// This statement will cause your pass to be created by calling the default
-comment|/// constructor exposed by the pass.  If you have a different constructor that
-comment|/// must be called, create a global constructor function (which takes the
-comment|/// arguments you need and returns a Pass*) and register your pass like this:
-comment|///
-comment|/// static RegisterPass<PassClassName> tmp("passopt", "My Name");
+comment|/// constructor exposed by the pass.
 comment|///
 name|template
 operator|<
@@ -438,7 +411,7 @@ parameter_list|,
 name|defaultPass
 parameter_list|)
 define|\
-value|static void *initialize##agName##AnalysisGroupOnce(PassRegistry&Registry) { \     initialize##defaultPass##Pass(Registry);                                   \     PassInfo *AI = new PassInfo(name,&agName::ID);                            \     Registry.registerAnalysisGroup(&agName::ID, 0, *AI, false, true);          \     return AI;                                                                 \   }                                                                            \   LLVM_DEFINE_ONCE_FLAG(Initialize##agName##AnalysisGroupFlag);                \   void llvm::initialize##agName##AnalysisGroup(PassRegistry&Registry) {       \     llvm::call_once(Initialize##agName##AnalysisGroupFlag,                     \                     initialize##agName##AnalysisGroupOnce,                     \                     std::ref(Registry));                                       \   }
+value|static void *initialize##agName##AnalysisGroupOnce(PassRegistry&Registry) { \     initialize##defaultPass##Pass(Registry);                                   \     PassInfo *AI = new PassInfo(name,&agName::ID);                            \     Registry.registerAnalysisGroup(&agName::ID, 0, *AI, false, true);          \     return AI;                                                                 \   }                                                                            \   static llvm::once_flag Initialize##agName##AnalysisGroupFlag;                \   void llvm::initialize##agName##AnalysisGroup(PassRegistry&Registry) {       \     llvm::call_once(Initialize##agName##AnalysisGroupFlag,                     \                     initialize##agName##AnalysisGroupOnce,                     \                     std::ref(Registry));                                       \   }
 define|#
 directive|define
 name|INITIALIZE_AG_PASS
@@ -458,7 +431,7 @@ parameter_list|,
 name|def
 parameter_list|)
 define|\
-value|static void *initialize##passName##PassOnce(PassRegistry&Registry) {        \     if (!def)                                                                  \       initialize##agName##AnalysisGroup(Registry);                             \     PassInfo *PI = new PassInfo(                                               \         name, arg,&passName::ID,                                              \         PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis);     \     Registry.registerPass(*PI, true);                                          \                                                                                \     PassInfo *AI = new PassInfo(name,&agName::ID);                            \     Registry.registerAnalysisGroup(&agName::ID,&passName::ID, *AI, def,       \                                    true);                                      \     return AI;                                                                 \   }                                                                            \   LLVM_DEFINE_ONCE_FLAG(Initialize##passName##PassFlag);                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
+value|static void *initialize##passName##PassOnce(PassRegistry&Registry) {        \     if (!def)                                                                  \       initialize##agName##AnalysisGroup(Registry);                             \     PassInfo *PI = new PassInfo(                                               \         name, arg,&passName::ID,                                              \         PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis);     \     Registry.registerPass(*PI, true);                                          \                                                                                \     PassInfo *AI = new PassInfo(name,&agName::ID);                            \     Registry.registerAnalysisGroup(&agName::ID,&passName::ID, *AI, def,       \                                    true);                                      \     return AI;                                                                 \   }                                                                            \   static llvm::once_flag Initialize##passName##PassFlag;                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
 define|#
 directive|define
 name|INITIALIZE_AG_PASS_BEGIN
@@ -498,7 +471,7 @@ parameter_list|,
 name|def
 parameter_list|)
 define|\
-value|PassInfo *PI = new PassInfo(                                                 \       n, arg,&passName::ID,                                                   \       PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis);       \   Registry.registerPass(*PI, true);                                            \                                                                                \   PassInfo *AI = new PassInfo(n,&agName::ID);                                 \   Registry.registerAnalysisGroup(&agName::ID,&passName::ID, *AI, def, true);  \   return AI;                                                                   \   }                                                                            \   LLVM_DEFINE_ONCE_FLAG(Initialize##passName##PassFlag);                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
+value|PassInfo *PI = new PassInfo(                                                 \       n, arg,&passName::ID,                                                   \       PassInfo::NormalCtor_t(callDefaultCtor<passName>), cfg, analysis);       \   Registry.registerPass(*PI, true);                                            \                                                                                \   PassInfo *AI = new PassInfo(n,&agName::ID);                                 \   Registry.registerAnalysisGroup(&agName::ID,&passName::ID, *AI, def, true);  \   return AI;                                                                   \   }                                                                            \   static llvm::once_flag Initialize##passName##PassFlag;                       \   void llvm::initialize##passName##Pass(PassRegistry&Registry) {              \     llvm::call_once(Initialize##passName##PassFlag,                            \                     initialize##passName##PassOnce, std::ref(Registry));       \   }
 comment|//===---------------------------------------------------------------------------
 comment|/// PassRegistrationListener class - This class is meant to be derived from by
 comment|/// clients that are interested in which passes get registered and unregistered

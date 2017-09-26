@@ -670,6 +670,13 @@ name|getContext
 argument_list|()
 return|;
 block|}
+specifier|const
+name|CodeGenOptions
+operator|&
+name|getCodeGenOpts
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// ConvertType - Convert type T into a llvm::Type.
 name|llvm
 operator|::
@@ -1088,7 +1095,15 @@ name|CXXCtorType
 name|CtorKind
 parameter_list|,
 name|unsigned
-name|ExtraArgs
+name|ExtraPrefixArgs
+parameter_list|,
+name|unsigned
+name|ExtraSuffixArgs
+parameter_list|,
+name|bool
+name|PassProtoArgs
+init|=
+name|true
 parameter_list|)
 function_decl|;
 specifier|const
@@ -1108,6 +1123,9 @@ name|type
 parameter_list|,
 name|RequiredArgs
 name|required
+parameter_list|,
+name|unsigned
+name|numPrefixArgs
 parameter_list|)
 function_decl|;
 specifier|const

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Optional.h - Simple variant for passing optional values ---*- C++ -*-=//
+comment|//===- Optional.h - Simple variant for passing optional values --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -88,6 +88,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/type_traits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -123,31 +135,24 @@ name|storage
 block|;
 name|bool
 name|hasVal
+operator|=
+name|false
 block|;
 name|public
 operator|:
-typedef|typedef
-name|T
+name|using
 name|value_type
-typedef|;
+operator|=
+name|T
+block|;
 name|Optional
 argument_list|(
-name|NoneType
-argument_list|)
-operator|:
-name|hasVal
-argument_list|(
-argument|false
+argument|NoneType
 argument_list|)
 block|{}
 name|explicit
 name|Optional
 argument_list|()
-operator|:
-name|hasVal
-argument_list|(
-argument|false
-argument_list|)
 block|{}
 name|Optional
 argument_list|(
@@ -270,6 +275,13 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+operator|~
+name|Optional
+argument_list|()
+block|{
+name|reset
+argument_list|()
+block|;   }
 name|Optional
 operator|&
 name|operator
@@ -322,9 +334,9 @@ name|this
 return|;
 block|}
 name|Optional
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 name|Optional
 operator|&&
@@ -428,9 +440,9 @@ comment|// with the rvalue versions above - but this could place a different set
 comment|// requirements (notably: the existence of a default ctor) when implemented
 comment|// in that way. Careful SFINAE to avoid such pitfalls would be required.
 name|Optional
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|T
@@ -470,9 +482,9 @@ name|this
 return|;
 block|}
 name|Optional
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|Optional
@@ -500,9 +512,6 @@ operator|*
 name|this
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|reset
 parameter_list|()
@@ -528,16 +537,6 @@ name|false
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_expr_stmt
-operator|~
-name|Optional
-argument_list|()
-block|{
-name|reset
-argument_list|()
-block|;   }
 specifier|const
 name|T
 operator|*
@@ -564,9 +563,6 @@ name|buffer
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|T
 modifier|*
 name|getPointer
@@ -590,9 +586,6 @@ name|buffer
 operator|)
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|T
 operator|&
@@ -612,9 +605,6 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|T
 modifier|&
 name|getValue
@@ -632,9 +622,6 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|explicit
 name|operator
 name|bool
@@ -645,9 +632,6 @@ return|return
 name|hasVal
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|hasValue
 argument_list|()
@@ -657,27 +641,21 @@ return|return
 name|hasVal
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|const
 name|T
 operator|*
 name|operator
 operator|->
 expr|(
-end_expr_stmt
-
-begin_expr_stmt
-unit|)
-specifier|const
+block|)
+decl|const
 block|{
 return|return
 name|getPointer
 argument_list|()
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_expr_stmt
 name|T
@@ -889,23 +867,11 @@ name|T
 operator|>
 expr|struct
 name|isPodLike
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|isPodLike
 operator|<
 name|Optional
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 block|{
 comment|// An Optional<T> is pod-like if T is.
 specifier|static
@@ -1974,13 +1940,17 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_OPTIONAL_H
+end_comment
 
 end_unit
 

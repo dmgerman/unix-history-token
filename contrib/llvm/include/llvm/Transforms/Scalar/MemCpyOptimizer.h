@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/AliasAnalysis.h"
 end_include
 
@@ -84,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/GlobalsModRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/MemoryDependenceAnalysis.h"
 end_include
 
@@ -97,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Analysis/TargetLibraryInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/BasicBlock.h"
 end_include
 
 begin_include
@@ -127,6 +121,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
 end_include
 
 begin_decl_stmt
@@ -191,7 +197,9 @@ name|public
 operator|:
 name|MemCpyOptPass
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|PreservedAnalyses
 name|run
 argument_list|(
@@ -389,6 +397,10 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

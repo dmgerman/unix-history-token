@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===------ llvm/MC/MCAsmParserUtils.h - Asm Parser Utilities ---*- C++ -*-===//
+comment|//===- llvm/MC/MCAsmParserUtils.h - Asm Parser Utilities --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -104,6 +104,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCPARSER_MCASMPARSERUTILS_H
+end_comment
 
 end_unit
 

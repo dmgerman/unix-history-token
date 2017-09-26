@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Sequence.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -113,6 +107,18 @@ begin_include
 include|#
 directive|include
 file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
 end_include
 
 begin_include
@@ -177,38 +183,43 @@ name|PriorityWorklist
 block|{
 name|public
 operator|:
-typedef|typedef
-name|T
+name|using
 name|value_type
-typedef|;
-typedef|typedef
+operator|=
 name|T
+block|;
+name|using
 name|key_type
-typedef|;
-typedef|typedef
+operator|=
 name|T
-modifier|&
+block|;
+name|using
 name|reference
-typedef|;
-typedef|typedef
+operator|=
+name|T
+operator|&
+block|;
+name|using
+name|const_reference
+operator|=
 specifier|const
 name|T
-modifier|&
-name|const_reference
-typedef|;
-typedef|typedef
+operator|&
+block|;
+name|using
+name|size_type
+operator|=
 name|typename
 name|MapT
 operator|::
 name|size_type
-name|size_type
-expr_stmt|;
+block|;
 comment|/// Construct an empty PriorityWorklist
 name|PriorityWorklist
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 comment|/// Determine if the PriorityWorklist is empty or not.
 name|bool
 name|empty
@@ -240,12 +251,9 @@ comment|/// \returns 0 if the element is not in the PriorityWorklist, 1 if it is
 name|size_type
 name|count
 argument_list|(
-specifier|const
-name|key_type
-operator|&
-name|key
+argument|const key_type&key
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|M
@@ -284,12 +292,9 @@ comment|/// Insert a new element into the PriorityWorklist.
 comment|/// \returns true if the element was inserted into the PriorityWorklist.
 name|bool
 name|insert
-parameter_list|(
-specifier|const
-name|T
-modifier|&
-name|X
-parameter_list|)
+argument_list|(
+argument|const T&X
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -300,10 +305,10 @@ argument_list|()
 operator|&&
 literal|"Cannot insert a null (default constructed) value!"
 argument_list|)
-expr_stmt|;
+block|;
 name|auto
 name|InsertResult
-init|=
+operator|=
 name|M
 operator|.
 name|insert
@@ -317,7 +322,7 @@ name|size
 argument_list|()
 block|}
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|InsertResult
@@ -358,7 +363,7 @@ name|X
 operator|&&
 literal|"Value not actually at index in map!"
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|Index

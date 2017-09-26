@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm-c/Types.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm-c/Types.h"
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_define

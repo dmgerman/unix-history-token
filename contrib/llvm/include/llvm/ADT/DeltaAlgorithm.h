@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- DeltaAlgorithm.h - A Set Minimization Algorithm -------*- C++ -*--===//
+comment|//===- DeltaAlgorithm.h - A Set Minimization Algorithm ---------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -79,29 +79,32 @@ name|DeltaAlgorithm
 block|{
 name|public
 label|:
-typedef|typedef
-name|unsigned
+name|using
 name|change_ty
-typedef|;
+init|=
+name|unsigned
+decl_stmt|;
 comment|// FIXME: Use a decent data structure.
-typedef|typedef
+name|using
+name|changeset_ty
+init|=
 name|std
 operator|::
 name|set
 operator|<
 name|change_ty
 operator|>
-name|changeset_ty
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|changesetlist_ty
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|changeset_ty
 operator|>
-name|changesetlist_ty
-expr_stmt|;
+decl_stmt|;
 name|private
 label|:
 comment|/// Cache of failed test results. Successful test results are never cached
@@ -257,6 +260,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_DELTAALGORITHM_H
+end_comment
 
 end_unit
 

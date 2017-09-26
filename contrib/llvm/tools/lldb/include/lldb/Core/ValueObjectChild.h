@@ -43,22 +43,6 @@ directive|define
 name|liblldb_ValueObjectChild_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -68,8 +52,88 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_comment
+comment|// for CompilerType
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_comment
+comment|// for ConstString
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_comment
+comment|// for DISALLOW_COPY_AND_ASSIGN
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_comment
+comment|// for ValueType
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-enumerations.h"
+end_include
+
+begin_comment
+comment|// for LazyBool, AddressType
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
+begin_comment
+comment|// for offset_t
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t, uint64_t, int32_t
+end_comment
 
 begin_decl_stmt
 name|namespace

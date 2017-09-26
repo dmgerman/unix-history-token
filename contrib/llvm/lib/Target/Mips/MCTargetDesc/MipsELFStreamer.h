@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-------- MipsELFStreamer.h - ELF Object Output -----------------------===//
+comment|//===- MipsELFStreamer.h - ELF Object Output --------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -202,6 +202,8 @@ argument_list|(
 argument|const MCInst&Inst
 argument_list|,
 argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|bool = false
 argument_list|)
 name|override
 block|;
@@ -212,6 +214,8 @@ name|void
 name|EmitLabel
 argument_list|(
 argument|MCSymbol *Symbol
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 name|override
 block|;
@@ -278,13 +282,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSELFSTREAMER_H
+end_comment
 
 end_unit
 

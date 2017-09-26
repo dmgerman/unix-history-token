@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CallingConv.h - LLVM Calling Conventions -----------*- C++ -*-===//
+comment|//===- llvm/CallingConv.h - LLVM Calling Conventions ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,10 +70,11 @@ name|namespace
 name|CallingConv
 block|{
 comment|/// LLVM IR allows to use arbitrary numbers as calling convention identifiers.
-typedef|typedef
-name|unsigned
+name|using
 name|ID
-typedef|;
+init|=
+name|unsigned
+decl_stmt|;
 comment|/// A set of enums which specify the assigned numeric values for known llvm
 comment|/// calling conventions.
 comment|/// @brief LLVM Calling Convention Representation
@@ -243,11 +244,15 @@ name|X86_64_SysV
 init|=
 literal|78
 block|,
-comment|/// \brief The C convention as implemented on Windows/x86-64. This
-comment|/// convention differs from the more common \c X86_64_SysV convention
-comment|/// in a number of ways, most notably in that XMM registers used to pass
-comment|/// arguments are shadowed by GPRs, and vice versa.
-name|X86_64_Win64
+comment|/// \brief The C convention as implemented on Windows/x86-64 and
+comment|/// AArch64. This convention differs from the more common
+comment|/// \c X86_64_SysV convention in a number of ways, most notably in
+comment|/// that XMM registers used to pass arguments are shadowed by GPRs,
+comment|/// and vice versa.
+comment|/// On AArch64, this is identical to the normal C (AAPCS) calling
+comment|/// convention for normal functions, but floats are passed in integer
+comment|/// registers to variadic functions.
+name|Win64
 init|=
 literal|79
 block|,
@@ -325,6 +330,18 @@ name|X86_RegCall
 init|=
 literal|92
 block|,
+comment|/// Calling convention used for Mesa hull shaders. (= tessellation control
+comment|/// shaders)
+name|AMDGPU_HS
+init|=
+literal|93
+block|,
+comment|/// Calling convention used for special MSP430 rtlib functions
+comment|/// which have an "optimized" convention using additional registers.
+name|MSP430_BUILTIN
+init|=
+literal|94
+block|,
 comment|/// The highest possible calling convention ID. Must be some 2^k - 1.
 name|MaxID
 init|=
@@ -332,18 +349,22 @@ literal|1023
 block|}
 enum|;
 block|}
-comment|// End CallingConv namespace
+comment|// end namespace CallingConv
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_CALLINGCONV_H
+end_comment
 
 end_unit
 

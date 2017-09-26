@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- StringSet.h - The LLVM Compiler Driver -----------------*- C++ -*-===//
+comment|//===- StringSet.h - The LLVM Compiler Driver -------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -65,6 +65,36 @@ directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<initializer_list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -75,16 +105,12 @@ operator|<
 name|class
 name|AllocatorTy
 operator|=
-name|llvm
-operator|::
 name|MallocAllocator
 operator|>
 name|class
 name|StringSet
 operator|:
 name|public
-name|llvm
-operator|::
 name|StringMap
 operator|<
 name|char
@@ -92,24 +118,23 @@ operator|,
 name|AllocatorTy
 operator|>
 block|{
-typedef|typedef
-name|llvm
-operator|::
+name|using
+name|base
+operator|=
 name|StringMap
 operator|<
 name|char
-operator|,
+block|,
 name|AllocatorTy
 operator|>
-name|base
-expr_stmt|;
+block|;
 name|public
 operator|:
 name|StringSet
 argument_list|()
 operator|=
-block|default
-expr_stmt|;
+expr|default
+block|;
 name|StringSet
 argument_list|(
 argument|std::initializer_list<StringRef> S
@@ -136,7 +161,7 @@ name|typename
 name|base
 operator|::
 name|iterator
-operator|,
+block|,
 name|bool
 operator|>
 name|insert
@@ -212,15 +237,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

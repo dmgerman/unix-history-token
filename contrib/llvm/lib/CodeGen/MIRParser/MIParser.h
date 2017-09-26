@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MIParser.h - Machine Instructions Parser ---------------------------===//
+comment|//===- MIParser.h - Machine Instructions Parser -----------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,7 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallSet.h"
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_decl_stmt
@@ -76,22 +82,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|BasicBlock
-decl_stmt|;
-name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|MachineFunction
-decl_stmt|;
-name|class
-name|MachineInstr
-decl_stmt|;
-name|class
-name|MachineRegisterInfo
 decl_stmt|;
 name|class
 name|MDNode
@@ -107,6 +101,9 @@ name|SMDiagnostic
 decl_stmt|;
 name|class
 name|SourceMgr
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 name|class
 name|TargetRegisterClass
@@ -160,6 +157,26 @@ literal|0
 decl_stmt|;
 block|}
 struct|;
+name|using
+name|Name2RegClassMap
+init|=
+name|StringMap
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|>
+decl_stmt|;
+name|using
+name|Name2RegBankMap
+init|=
+name|StringMap
+operator|<
+specifier|const
+name|RegisterBank
+operator|*
+operator|>
+decl_stmt|;
 struct|struct
 name|PerFunctionMIParsingState
 block|{
@@ -178,6 +195,16 @@ specifier|const
 name|SlotMapping
 modifier|&
 name|IRSlots
+decl_stmt|;
+specifier|const
+name|Name2RegClassMap
+modifier|&
+name|Names2RegClasses
+decl_stmt|;
+specifier|const
+name|Name2RegBankMap
+modifier|&
+name|Names2RegBanks
 decl_stmt|;
 name|DenseMap
 operator|<
@@ -243,6 +270,16 @@ specifier|const
 name|SlotMapping
 operator|&
 name|IRSlots
+argument_list|,
+specifier|const
+name|Name2RegClassMap
+operator|&
+name|Names2RegClasses
+argument_list|,
+specifier|const
+name|Name2RegBankMap
+operator|&
+name|Names2RegBanks
 argument_list|)
 expr_stmt|;
 name|VRegInfo
@@ -435,6 +472,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_CODEGEN_MIRPARSER_MIPARSER_H
+end_comment
 
 end_unit
 

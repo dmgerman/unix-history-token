@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Wasm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
@@ -223,6 +229,17 @@ name|MVT
 name|Ty
 parameter_list|)
 function_decl|;
+specifier|const
+name|char
+modifier|*
+name|TypeToString
+argument_list|(
+name|wasm
+operator|::
+name|ValType
+name|Type
+argument_list|)
+decl_stmt|;
 block|}
 comment|// end namespace WebAssembly
 block|}

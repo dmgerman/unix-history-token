@@ -232,13 +232,13 @@ block|,
 comment|// Success
 name|ErrorSendFailed
 block|,
-comment|// Error sending the packet
+comment|// Status sending the packet
 name|ErrorSendAck
 block|,
 comment|// Didn't get an ack back after sending a packet
 name|ErrorReplyFailed
 block|,
-comment|// Error getting the reply
+comment|// Status getting the reply
 name|ErrorReplyTimeout
 block|,
 comment|// Timed out waiting for reply
@@ -288,6 +288,12 @@ name|chrono
 operator|::
 name|seconds
 name|m_saved_timeout
+block|;
+comment|// Don't ever reduce the timeout for a packet, only increase it. If the
+comment|// requested timeout if less than the current timeout, we don't set it
+comment|// and won't need to restore it.
+name|bool
+name|m_timeout_modified
 block|;   }
 block|;
 name|GDBRemoteCommunication
@@ -392,7 +398,7 @@ comment|//------------------------------------------------------------------
 comment|// Start a debugserver instance on the current host using the
 comment|// supplied connection URL.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|StartDebugserverProcess
 argument_list|(
 argument|const char *url
@@ -778,7 +784,7 @@ name|bool
 name|DecompressPacket
 argument_list|()
 block|;
-name|Error
+name|Status
 name|StartListenThread
 argument_list|(
 argument|const char *hostname =

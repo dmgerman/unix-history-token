@@ -234,6 +234,38 @@ name|Results
 return|;
 block|}
 name|void
+name|setNumLocals
+argument_list|(
+argument|size_t NumLocals
+argument_list|)
+block|{
+name|Locals
+operator|.
+name|resize
+argument_list|(
+name|NumLocals
+argument_list|,
+name|MVT
+operator|::
+name|i32
+argument_list|)
+block|; }
+name|void
+name|setLocal
+argument_list|(
+argument|size_t i
+argument_list|,
+argument|MVT VT
+argument_list|)
+block|{
+name|Locals
+index|[
+name|i
+index|]
+operator|=
+name|VT
+block|; }
+name|void
 name|addLocal
 argument_list|(
 argument|MVT VT

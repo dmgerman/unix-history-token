@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/GlobalISel/CallLowering.h - Call lowering --*- C++ -*-===//
+comment|//===- llvm/CodeGen/GlobalISel/CallLowering.h - Call lowering ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -78,13 +78,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Function.h"
+file|"llvm/IR/CallSite.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -93,19 +105,45 @@ directive|include
 file|"llvm/Target/TargetCallingConv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Forward declarations.
+name|class
+name|DataLayout
+decl_stmt|;
+name|class
+name|Function
+decl_stmt|;
 name|class
 name|MachineIRBuilder
 decl_stmt|;
 name|class
 name|MachineOperand
 decl_stmt|;
+struct_decl|struct
+name|MachinePointerInfo
+struct_decl|;
+name|class
+name|MachineRegisterInfo
+decl_stmt|;
 name|class
 name|TargetLowering
+decl_stmt|;
+name|class
+name|Type
 decl_stmt|;
 name|class
 name|Value
@@ -135,6 +173,9 @@ operator|::
 name|ArgFlagsTy
 name|Flags
 expr_stmt|;
+name|bool
+name|IsFixed
+decl_stmt|;
 name|ArgInfo
 argument_list|(
 argument|unsigned Reg
@@ -142,6 +183,8 @@ argument_list|,
 argument|Type *Ty
 argument_list|,
 argument|ISD::ArgFlagsTy Flags = ISD::ArgFlagsTy{}
+argument_list|,
+argument|bool IsFixed = true
 argument_list|)
 block|:
 name|Reg
@@ -156,7 +199,12 @@ argument_list|)
 operator|,
 name|Flags
 argument_list|(
-argument|Flags
+name|Flags
+argument_list|)
+operator|,
+name|IsFixed
+argument_list|(
+argument|IsFixed
 argument_list|)
 block|{}
 block|}
@@ -170,6 +218,43 @@ comment|/// class abstracts the differences.
 struct|struct
 name|ValueHandler
 block|{
+name|ValueHandler
+argument_list|(
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|,
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+name|CCAssignFn
+operator|*
+name|AssignFn
+argument_list|)
+operator|:
+name|MIRBuilder
+argument_list|(
+name|MIRBuilder
+argument_list|)
+operator|,
+name|MRI
+argument_list|(
+name|MRI
+argument_list|)
+operator|,
+name|AssignFn
+argument_list|(
+argument|AssignFn
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|ValueHandler
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Materialize a VReg containing the address of the specified
 comment|/// stack-based object. This is either based on a FrameIndex or
 comment|/// direct SP manipulation, depending on the context. \p MPO
@@ -239,6 +324,34 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Handle custom values, which may be passed into one or more of \p VAs.
+comment|/// \return The number of \p VAs that have been assigned after the first
+comment|///         one, and which should therefore be skipped from further
+comment|///         processing.
+name|virtual
+name|unsigned
+name|assignCustomValue
+argument_list|(
+specifier|const
+name|ArgInfo
+operator|&
+name|Arg
+argument_list|,
+name|ArrayRef
+operator|<
+name|CCValAssign
+operator|>
+name|VAs
+argument_list|)
+block|{
+comment|// This is not a pure virtual method because not all targets need to worry
+comment|// about custom values.
+name|llvm_unreachable
+argument_list|(
+literal|"Custom values not supported"
+argument_list|)
+expr_stmt|;
+block|}
 name|unsigned
 name|extendRegister
 parameter_list|(
@@ -250,39 +363,64 @@ modifier|&
 name|VA
 parameter_list|)
 function_decl|;
-name|ValueHandler
-argument_list|(
-name|MachineIRBuilder
-operator|&
-name|MIRBuilder
-argument_list|,
-name|MachineRegisterInfo
-operator|&
-name|MRI
-argument_list|)
-operator|:
-name|MIRBuilder
-argument_list|(
-name|MIRBuilder
-argument_list|)
-operator|,
-name|MRI
-argument_list|(
-argument|MRI
-argument_list|)
-block|{}
 name|virtual
-operator|~
-name|ValueHandler
-argument_list|()
-block|{}
-name|MachineIRBuilder
+name|bool
+name|assignArg
+argument_list|(
+name|unsigned
+name|ValNo
+argument_list|,
+name|MVT
+name|ValVT
+argument_list|,
+name|MVT
+name|LocVT
+argument_list|,
+name|CCValAssign
+operator|::
+name|LocInfo
+name|LocInfo
+argument_list|,
+specifier|const
+name|ArgInfo
 operator|&
+name|Info
+argument_list|,
+name|CCState
+operator|&
+name|State
+argument_list|)
+block|{
+return|return
+name|AssignFn
+argument_list|(
+name|ValNo
+argument_list|,
+name|ValVT
+argument_list|,
+name|LocVT
+argument_list|,
+name|LocInfo
+argument_list|,
+name|Info
+operator|.
+name|Flags
+argument_list|,
+name|State
+argument_list|)
+return|;
+block|}
+name|MachineIRBuilder
+modifier|&
 name|MIRBuilder
-expr_stmt|;
+decl_stmt|;
 name|MachineRegisterInfo
 modifier|&
 name|MRI
+decl_stmt|;
+name|CCAssignFn
+modifier|*
+name|AssignFn
 decl_stmt|;
 block|}
 struct|;
@@ -343,7 +481,7 @@ argument|const FuncInfoTy&FuncInfo
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// Invoke the \p AssignFn on each of the given \p Args and then use
+comment|/// Invoke Handler::assignArg on each of the given \p Args and then use
 comment|/// \p Callback to move them to the assigned locations.
 comment|///
 comment|/// \return True if everything has succeeded, false otherwise.
@@ -353,10 +491,6 @@ argument_list|(
 name|MachineIRBuilder
 operator|&
 name|MIRBuilder
-argument_list|,
-name|CCAssignFn
-operator|*
-name|AssignFn
 argument_list|,
 name|ArrayRef
 operator|<
@@ -389,7 +523,9 @@ name|virtual
 operator|~
 name|CallLowering
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// This hook must be implemented to lower outgoing return values, described
 comment|/// by \p Val, into the specified virtual register \p VReg.
 comment|/// This hook is used by GlobalISel.
@@ -399,13 +535,19 @@ name|virtual
 name|bool
 name|lowerReturn
 argument_list|(
-argument|MachineIRBuilder&MIRBuilder
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
 argument_list|,
-argument|const Value *Val
-argument_list|,
-argument|unsigned VReg
-argument_list|)
 specifier|const
+name|Value
+operator|*
+name|Val
+argument_list|,
+name|unsigned
+name|VReg
+argument_list|)
+decl|const
 block|{
 return|return
 name|false
@@ -448,6 +590,8 @@ block|}
 comment|/// This hook must be implemented to lower the given call instruction,
 comment|/// including argument and return value marshalling.
 comment|///
+comment|/// \p CallConv is the calling convention to be used for the call.
+comment|///
 comment|/// \p Callee is the destination of the call. It should be either a register,
 comment|/// globaladdress, or externalsymbol.
 comment|///
@@ -471,6 +615,11 @@ name|MachineIRBuilder
 operator|&
 name|MIRBuilder
 argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|,
 specifier|const
 name|MachineOperand
 operator|&
@@ -493,8 +642,10 @@ return|return
 name|false
 return|;
 block|}
-comment|/// This hook must be implemented to lower the given call instruction,
-comment|/// including argument and return value marshalling.
+comment|/// Lower the given call instruction, including argument and return value
+comment|/// marshalling.
+comment|///
+comment|/// \p CI is the call/invoke instruction.
 comment|///
 comment|/// \p ResReg is a register where the call's return value should be stored (or
 comment|/// 0 if there is no return value).
@@ -508,7 +659,6 @@ comment|/// CI. This might be because \p CI is indirect, or because of the limit
 comment|/// range of an immediate jump.
 comment|///
 comment|/// \return true if the lowering succeeded, false otherwise.
-name|virtual
 name|bool
 name|lowerCall
 argument_list|(
@@ -516,10 +666,8 @@ name|MachineIRBuilder
 operator|&
 name|MIRBuilder
 argument_list|,
-specifier|const
-name|CallInst
-operator|&
-name|CI
+name|ImmutableCallSite
+name|CS
 argument_list|,
 name|unsigned
 name|ResReg
@@ -547,13 +695,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GLOBALISEL_CALLLOWERING_H
+end_comment
 
 end_unit
 

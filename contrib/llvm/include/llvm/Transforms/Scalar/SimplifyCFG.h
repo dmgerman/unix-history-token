@@ -96,16 +96,23 @@ block|{
 name|int
 name|BonusInstThreshold
 block|;
+name|bool
+name|LateSimplifyCFG
+block|;
 name|public
 operator|:
-comment|/// \brief Construct a pass with the default thresholds.
+comment|/// \brief Construct a pass with the default thresholds
+comment|/// and switch optimizations.
 name|SimplifyCFGPass
 argument_list|()
 block|;
-comment|/// \brief Construct a pass with a specific bonus threshold.
+comment|/// \brief Construct a pass with a specific bonus threshold
+comment|/// and optional switch optimizations.
 name|SimplifyCFGPass
 argument_list|(
 argument|int BonusInstThreshold
+argument_list|,
+argument|bool LateSimplifyCFG
 argument_list|)
 block|;
 comment|/// \brief Run the pass over the function.

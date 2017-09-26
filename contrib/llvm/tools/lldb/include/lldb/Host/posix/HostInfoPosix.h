@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Host/HostInfoBase.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/HostInfoBase.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_decl_stmt

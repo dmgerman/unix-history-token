@@ -117,7 +117,9 @@ block|,
 name|OK_OutputAssembly
 block|,
 name|OK_OutputBitcode
-block|}
+block|,
+name|OK_OutputThinLTOBitcode
+block|, }
 enum|;
 enum|enum
 name|VerifierKind
@@ -136,6 +138,9 @@ comment|/// This function only exists factored away from opt.cpp in order to pre
 comment|/// inclusion of the new pass manager headers and the old headers into the same
 comment|/// file. It's interface is consequentially somewhat ad-hoc, but will go away
 comment|/// when the transition finishes.
+comment|///
+comment|/// ThinLTOLinkOut is only used when OK is OK_OutputThinLTOBitcode, and can be
+comment|/// nullptr.
 name|bool
 name|runPassPipeline
 argument_list|(
@@ -153,6 +158,10 @@ argument_list|,
 name|tool_output_file
 operator|*
 name|Out
+argument_list|,
+name|tool_output_file
+operator|*
+name|ThinLinkOut
 argument_list|,
 name|StringRef
 name|PassPipeline

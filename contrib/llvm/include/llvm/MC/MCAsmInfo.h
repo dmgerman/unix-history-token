@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCDirectives.h"
 end_include
 
@@ -88,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -101,6 +101,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MCContext
+decl_stmt|;
 name|class
 name|MCExpr
 decl_stmt|;
@@ -112,9 +115,6 @@ name|MCStreamer
 decl_stmt|;
 name|class
 name|MCSymbol
-decl_stmt|;
-name|class
-name|MCContext
 decl_stmt|;
 name|namespace
 name|WinEH
@@ -151,6 +151,7 @@ operator|,
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace WinEH
 name|namespace
 name|LCOMM
 block|{
@@ -165,20 +166,7 @@ name|Log2Alignment
 block|}
 enum|;
 block|}
-name|enum
-name|class
-name|DebugCompressionType
-block|{
-name|DCT_None
-operator|,
-comment|// no compression
-name|DCT_Zlib
-operator|,
-comment|// zlib style complession
-name|DCT_ZlibGnu
-comment|// zlib-gnu style compression
-block|}
-empty_stmt|;
+comment|// end namespace LCOMM
 comment|/// This class is intended to be used as a base class for asm
 comment|/// properties and features specific to the target.
 name|class
@@ -189,52 +177,72 @@ label|:
 comment|//===------------------------------------------------------------------===//
 comment|// Properties to be set by the target writer, used to configure asm printer.
 comment|//
-comment|/// Pointer size in bytes.  Default is 4.
+comment|/// Code pointer size in bytes.  Default is 4.
 name|unsigned
-name|PointerSize
+name|CodePointerSize
+init|=
+literal|4
 decl_stmt|;
 comment|/// Size of the stack slot reserved for callee-saved registers, in bytes.
 comment|/// Default is same as pointer size.
 name|unsigned
 name|CalleeSaveStackSlotSize
+init|=
+literal|4
 decl_stmt|;
 comment|/// True if target is little endian.  Default is true.
 name|bool
 name|IsLittleEndian
+init|=
+name|true
 decl_stmt|;
 comment|/// True if target stack grow up.  Default is false.
 name|bool
 name|StackGrowsUp
+init|=
+name|false
 decl_stmt|;
 comment|/// True if this target has the MachO .subsections_via_symbols directive.
 comment|/// Default is false.
 name|bool
 name|HasSubsectionsViaSymbols
+init|=
+name|false
 decl_stmt|;
 comment|/// True if this is a MachO target that supports the macho-specific .zerofill
 comment|/// directive for emitting BSS Symbols.  Default is false.
 name|bool
 name|HasMachoZeroFillDirective
+init|=
+name|false
 decl_stmt|;
 comment|/// True if this is a MachO target that supports the macho-specific .tbss
 comment|/// directive for emitting thread local BSS Symbols.  Default is false.
 name|bool
 name|HasMachoTBSSDirective
+init|=
+name|false
 decl_stmt|;
 comment|/// This is the maximum possible length of an instruction, which is needed to
 comment|/// compute the size of an inline asm.  Defaults to 4.
 name|unsigned
 name|MaxInstLength
+init|=
+literal|4
 decl_stmt|;
 comment|/// Every possible instruction length is a multiple of this value.  Factored
 comment|/// out in .debug_frame and .debug_line.  Defaults to 1.
 name|unsigned
 name|MinInstAlignment
+init|=
+literal|1
 decl_stmt|;
 comment|/// The '$' token, when not referencing an identifier or constant, refers to
 comment|/// the current PC.  Defaults to false.
 name|bool
 name|DollarIsPC
+init|=
+name|false
 decl_stmt|;
 comment|/// This string, if specified, is used to separate instructions from each
 comment|/// other when on the same line.  Defaults to ';'
@@ -257,10 +265,14 @@ decl_stmt|;
 comment|// Print the EH begin symbol with an assignment. Defaults to false.
 name|bool
 name|UseAssignmentForEHBegin
+init|=
+name|false
 decl_stmt|;
 comment|// Do we need to create a local symbol for .size?
 name|bool
 name|NeedsLocalForSize
+init|=
+name|false
 decl_stmt|;
 comment|/// This prefix is used for globals like constant pool entries that are
 comment|/// completely private to the .s file and should not have names in the .o
@@ -313,22 +325,30 @@ decl_stmt|;
 comment|/// Which dialect of an assembler variant to use.  Defaults to 0
 name|unsigned
 name|AssemblerDialect
+init|=
+literal|0
 decl_stmt|;
 comment|/// This is true if the assembler allows @ characters in symbol names.
 comment|/// Defaults to false.
 name|bool
 name|AllowAtInName
+init|=
+name|false
 decl_stmt|;
 comment|/// If this is true, symbol names with invalid characters will be printed in
 comment|/// quotes.
 name|bool
 name|SupportsQuotedNames
+init|=
+name|true
 decl_stmt|;
 comment|/// This is true if data region markers should be printed as
 comment|/// ".data_region/.end_data_region" directives. If false, use "$d/$a" labels
 comment|/// instead.
 name|bool
 name|UseDataRegionDirectives
+init|=
+name|false
 decl_stmt|;
 comment|//===--- Data Emission Directives -------------------------------------===//
 comment|/// This should be set to the directive used to get some number of zero bytes
@@ -381,19 +401,23 @@ name|Data64bitsDirective
 decl_stmt|;
 comment|/// If non-null, a directive that is used to emit a word which should be
 comment|/// relocated as a 64-bit GP-relative offset, e.g. .gpdword on Mips.  Defaults
-comment|/// to NULL.
+comment|/// to nullptr.
 specifier|const
 name|char
 modifier|*
 name|GPRel64Directive
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// If non-null, a directive that is used to emit a word which should be
 comment|/// relocated as a 32-bit GP-relative offset, e.g. .gpword on Mips or .gprel32
-comment|/// on Alpha.  Defaults to NULL.
+comment|/// on Alpha.  Defaults to nullptr.
 specifier|const
 name|char
 modifier|*
 name|GPRel32Directive
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// If non-null, directives that are used to emit a word/dword which should
 comment|/// be relocated as a 32/64-bit DTP/TP-relative offset, e.g. .dtprelword/
@@ -431,15 +455,21 @@ comment|/// ("#alloc,#write" etc) instead of the normal ELF syntax (,"a,w") in
 comment|/// .section directives.  Defaults to false.
 name|bool
 name|SunStyleELFSectionSwitchSyntax
+init|=
+name|false
 decl_stmt|;
 comment|/// This is true if this target uses ELF '.section' directive before the
 comment|/// '.bss' one. It's used for PPC/Linux which doesn't support the '.bss'
 comment|/// directive only.  Defaults to false.
 name|bool
 name|UsesELFSectionDirectiveForBSS
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|NeedsDwarfSectionOffsetDirective
+init|=
+name|false
 decl_stmt|;
 comment|//===--- Alignment Information ----------------------------------------===//
 comment|/// If this is true (the default) then the asmprinter emits ".align N"
@@ -448,11 +478,15 @@ comment|/// emits ".align log2(N)", e.g. 3 to align to an 8 byte boundary.  Defa
 comment|/// to true.
 name|bool
 name|AlignmentIsInBytes
+init|=
+name|true
 decl_stmt|;
 comment|/// If non-zero, this is used to fill the executable space created as the
 comment|/// result of a alignment directive.  Defaults to 0
 name|unsigned
 name|TextAlignFillValue
+init|=
+literal|0
 decl_stmt|;
 comment|//===--- Global Variable Emission Directives --------------------------===//
 comment|/// This is the directive used to declare a global entity. Defaults to
@@ -469,6 +503,8 @@ comment|///   a = f - g
 comment|///   .long a
 name|bool
 name|SetDirectiveSuppressesReloc
+init|=
+name|false
 decl_stmt|;
 comment|/// False if the assembler requires that we use
 comment|/// \code
@@ -485,11 +521,15 @@ comment|///
 comment|///  Defaults to true.
 name|bool
 name|HasAggressiveSymbolFolding
+init|=
+name|true
 decl_stmt|;
 comment|/// True is .comm's and .lcomms optional alignment is to be specified in bytes
 comment|/// instead of log2(n).  Defaults to true.
 name|bool
 name|COMMDirectiveAlignmentIsInBytes
+init|=
+name|true
 decl_stmt|;
 comment|/// Describes if the .lcomm directive for the target supports an alignment
 comment|/// argument and how it is interpreted.  Defaults to NoAlignment.
@@ -497,36 +537,52 @@ name|LCOMM
 operator|::
 name|LCOMMType
 name|LCOMMDirectiveAlignmentType
+operator|=
+name|LCOMM
+operator|::
+name|NoAlignment
 expr_stmt|;
 comment|// True if the target allows .align directives on functions. This is true for
 comment|// most targets, so defaults to true.
 name|bool
 name|HasFunctionAlignment
+init|=
+name|true
 decl_stmt|;
 comment|/// True if the target has .type and .size directives, this is true for most
 comment|/// ELF targets.  Defaults to true.
 name|bool
 name|HasDotTypeDotSizeDirective
+init|=
+name|true
 decl_stmt|;
 comment|/// True if the target has a single parameter .file directive, this is true
 comment|/// for ELF targets.  Defaults to true.
 name|bool
 name|HasSingleParameterDotFile
+init|=
+name|true
 decl_stmt|;
 comment|/// True if the target has a .ident directive, this is true for ELF targets.
 comment|/// Defaults to false.
 name|bool
 name|HasIdentDirective
+init|=
+name|false
 decl_stmt|;
 comment|/// True if this target supports the MachO .no_dead_strip directive.  Defaults
 comment|/// to false.
 name|bool
 name|HasNoDeadStrip
+init|=
+name|false
 decl_stmt|;
 comment|/// True if this target supports the MachO .alt_entry directive.  Defaults to
 comment|/// false.
 name|bool
 name|HasAltEntry
+init|=
+name|false
 decl_stmt|;
 comment|/// Used to declare a global as being a weak symbol. Defaults to ".weak".
 specifier|const
@@ -535,77 +591,111 @@ modifier|*
 name|WeakDirective
 decl_stmt|;
 comment|/// This directive, if non-null, is used to declare a global as being a weak
-comment|/// undefined symbol.  Defaults to NULL.
+comment|/// undefined symbol.  Defaults to nullptr.
 specifier|const
 name|char
 modifier|*
 name|WeakRefDirective
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// True if we have a directive to declare a global as being a weak defined
 comment|/// symbol.  Defaults to false.
 name|bool
 name|HasWeakDefDirective
+init|=
+name|false
 decl_stmt|;
 comment|/// True if we have a directive to declare a global as being a weak defined
 comment|/// symbol that can be hidden (unexported).  Defaults to false.
 name|bool
 name|HasWeakDefCanBeHiddenDirective
+init|=
+name|false
 decl_stmt|;
 comment|/// True if we have a .linkonce directive.  This is used on cygwin/mingw.
 comment|/// Defaults to false.
 name|bool
 name|HasLinkOnceDirective
+init|=
+name|false
 decl_stmt|;
 comment|/// This attribute, if not MCSA_Invalid, is used to declare a symbol as having
 comment|/// hidden visibility.  Defaults to MCSA_Hidden.
 name|MCSymbolAttr
 name|HiddenVisibilityAttr
+init|=
+name|MCSA_Hidden
 decl_stmt|;
 comment|/// This attribute, if not MCSA_Invalid, is used to declare an undefined
 comment|/// symbol as having hidden visibility. Defaults to MCSA_Hidden.
 name|MCSymbolAttr
 name|HiddenDeclarationVisibilityAttr
+init|=
+name|MCSA_Hidden
 decl_stmt|;
 comment|/// This attribute, if not MCSA_Invalid, is used to declare a symbol as having
 comment|/// protected visibility.  Defaults to MCSA_Protected
 name|MCSymbolAttr
 name|ProtectedVisibilityAttr
+init|=
+name|MCSA_Protected
 decl_stmt|;
 comment|//===--- Dwarf Emission Directives -----------------------------------===//
 comment|/// True if target supports emission of debugging information.  Defaults to
 comment|/// false.
 name|bool
 name|SupportsDebugInformation
+init|=
+name|false
 decl_stmt|;
 comment|/// Exception handling format for the target.  Defaults to None.
 name|ExceptionHandling
 name|ExceptionsType
+init|=
+name|ExceptionHandling
+operator|::
+name|None
 decl_stmt|;
 comment|/// Windows exception handling data (.pdata) encoding.  Defaults to Invalid.
 name|WinEH
 operator|::
 name|EncodingType
 name|WinEHEncodingType
+operator|=
+name|WinEH
+operator|::
+name|EncodingType
+operator|::
+name|Invalid
 expr_stmt|;
 comment|/// True if Dwarf2 output generally uses relocations for references to other
 comment|/// .debug_* sections.
 name|bool
 name|DwarfUsesRelocationsAcrossSections
+init|=
+name|true
 decl_stmt|;
 comment|/// True if DWARF FDE symbol reference relocations should be replaced by an
 comment|/// absolute difference.
 name|bool
 name|DwarfFDESymbolsUseAbsDiff
+init|=
+name|false
 decl_stmt|;
 comment|/// True if dwarf register numbers are printed instead of symbolic register
 comment|/// names in .cfi_* directives.  Defaults to false.
 name|bool
 name|DwarfRegNumForCFI
+init|=
+name|false
 decl_stmt|;
 comment|/// True if target uses parens to indicate the symbol variant instead of @.
 comment|/// For example, foo(plt) instead of foo@plt.  Defaults to false.
 name|bool
 name|UseParensForSymbolVariant
+init|=
+name|false
 decl_stmt|;
 comment|//===--- Prologue State ----------------------------------------------===//
 name|std
@@ -632,11 +722,17 @@ decl_stmt|;
 comment|/// Compress DWARF debug sections. Defaults to no compression.
 name|DebugCompressionType
 name|CompressDebugSections
+init|=
+name|DebugCompressionType
+operator|::
+name|None
 decl_stmt|;
 comment|/// True if the integrated assembler should interpret 'a>> b' constant
 comment|/// expressions as logical rather than arithmetic.
 name|bool
 name|UseLogicalShr
+init|=
+name|true
 decl_stmt|;
 comment|// If true, emit GOTPCRELX/REX_GOTPCRELX instead of GOTPCREL, on
 comment|// X86_64 ELF.
@@ -663,14 +759,14 @@ operator|~
 name|MCAsmInfo
 argument_list|()
 expr_stmt|;
-comment|/// Get the pointer size in bytes.
+comment|/// Get the code pointer size in bytes.
 name|unsigned
-name|getPointerSize
+name|getCodePointerSize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PointerSize
+name|CodePointerSize
 return|;
 block|}
 comment|/// Get the callee-saved register stack slot
@@ -1725,11 +1821,19 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCASMINFO_H
+end_comment
 
 end_unit
 

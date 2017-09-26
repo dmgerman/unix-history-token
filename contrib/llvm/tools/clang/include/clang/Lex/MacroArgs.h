@@ -148,11 +148,17 @@ name|MacroArgs
 modifier|*
 name|ArgCache
 decl_stmt|;
+comment|/// MacroArgs - The number of arguments the invoked macro expects.
+name|unsigned
+name|NumMacroArgs
+decl_stmt|;
 name|MacroArgs
 argument_list|(
 argument|unsigned NumToks
 argument_list|,
 argument|bool varargsElided
+argument_list|,
+argument|unsigned MacroArgs
 argument_list|)
 block|:
 name|NumUnexpArgTokens
@@ -167,7 +173,12 @@ argument_list|)
 operator|,
 name|ArgCache
 argument_list|(
-argument|nullptr
+name|nullptr
+argument_list|)
+operator|,
+name|NumMacroArgs
+argument_list|(
+argument|MacroArgs
 argument_list|)
 block|{}
 operator|~
@@ -296,15 +307,15 @@ name|SourceLocation
 name|ExpansionLocEnd
 parameter_list|)
 function_decl|;
-comment|/// getNumArguments - Return the number of arguments passed into this macro
-comment|/// invocation.
+comment|/// getNumMacroArguments - Return the number of arguments the invoked macro
+comment|/// expects.
 name|unsigned
-name|getNumArguments
+name|getNumMacroArguments
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumUnexpArgTokens
+name|NumMacroArgs
 return|;
 block|}
 comment|/// isVarargsElidedUse - Return true if this is a C99 style varargs macro

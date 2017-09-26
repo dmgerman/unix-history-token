@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<type_traits>
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<utility>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
 end_include
 
 begin_ifndef
@@ -222,8 +222,7 @@ operator|<
 name|T
 operator|,
 name|U
-operator|>
-expr|>
+operator|>>
 block|{
 specifier|static
 specifier|const
@@ -260,7 +259,9 @@ operator|>
 name|class
 name|is_integral_or_enum
 block|{
-typedef|typedef
+name|using
+name|UnderlyingT
+operator|=
 name|typename
 name|std
 operator|::
@@ -270,8 +271,7 @@ name|T
 operator|>
 operator|::
 name|type
-name|UnderlyingT
-expr_stmt|;
+block|;
 name|public
 operator|:
 specifier|static
@@ -333,19 +333,9 @@ operator|>
 operator|::
 name|value
 operator|)
+block|; }
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief If T is a pointer, just return it. If it is not, return T&.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -359,19 +349,13 @@ operator|>
 expr|struct
 name|add_lvalue_reference_if_not_pointer
 block|{
-typedef|typedef
-name|T
-modifier|&
+name|using
 name|type
-typedef|;
-block|}
-end_expr_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+operator|=
+name|T
+operator|&
+block|; }
+expr_stmt|;
 name|template
 operator|<
 name|typename
@@ -400,26 +384,14 @@ operator|::
 name|type
 operator|>
 block|{
-typedef|typedef
-name|T
+name|using
 name|type
-typedef|;
-block|}
-end_expr_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+operator|=
+name|T
+block|; }
+expr_stmt|;
 comment|/// \brief If T is a pointer to X, return a pointer to const X. If it is not,
-end_comment
-
-begin_comment
 comment|/// return const T.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -433,19 +405,13 @@ operator|>
 expr|struct
 name|add_const_past_pointer
 block|{
-typedef|typedef
+name|using
+name|type
+operator|=
 specifier|const
 name|T
-name|type
-typedef|;
-block|}
-end_expr_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+block|; }
+expr_stmt|;
 name|template
 operator|<
 name|typename
@@ -474,7 +440,9 @@ operator|::
 name|type
 operator|>
 block|{
-typedef|typedef
+name|using
+name|type
+operator|=
 specifier|const
 name|typename
 name|std
@@ -486,17 +454,77 @@ operator|>
 operator|::
 name|type
 operator|*
+block|; }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|Enable
+operator|=
+name|void
+operator|>
+expr|struct
+name|const_pointer_or_const_ref
+block|{
+name|using
 name|type
+operator|=
+specifier|const
+name|T
+operator|&
+block|; }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|const_pointer_or_const_ref
+operator|<
+name|T
+operator|,
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_pointer
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|>
+operator|::
+name|type
+operator|>
+block|{
+name|using
+name|type
+operator|=
+name|typename
+name|add_const_past_pointer
+operator|<
+name|T
+operator|>
+operator|::
+name|type
+block|; }
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_decl_stmt
 
 begin_comment
-unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_comment
 comment|// If the compiler supports detecting whether a class is final, define
 end_comment
 
@@ -580,6 +608,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_TYPE_TRAITS_H
+end_comment
 
 end_unit
 

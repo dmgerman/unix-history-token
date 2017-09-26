@@ -49,15 +49,6 @@ directive|include
 file|"fp_trunc_impl.inc"
 end_include
 
-begin_macro
-name|ARM_EABI_FNALIAS
-argument_list|(
-argument|d2f
-argument_list|,
-argument|truncdfsf2
-argument_list|)
-end_macro
-
 begin_function
 name|COMPILER_RT_ABI
 name|float
@@ -75,6 +66,38 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
+begin_function
+name|AEABI_RTABI
+name|float
+name|__aeabi_d2f
+parameter_list|(
+name|double
+name|a
+parameter_list|)
+block|{
+return|return
+name|__truncdfsf2
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

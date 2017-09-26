@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
@@ -87,19 +93,27 @@ comment|/// stored.  Also used as an anchor for instructions that need to be alt
 comment|/// when using frame pointers (dyna_add, dyna_sub.)
 name|int
 name|FramePointerSaveIndex
+operator|=
+literal|0
 block|;
 comment|/// ReturnAddrSaveIndex - Frame index of where the return address is stored.
 comment|///
 name|int
 name|ReturnAddrSaveIndex
+operator|=
+literal|0
 block|;
 comment|/// Frame index where the old base pointer is stored.
 name|int
 name|BasePointerSaveIndex
+operator|=
+literal|0
 block|;
 comment|/// Frame index where the old PIC base pointer is stored.
 name|int
 name|PICBasePointerSaveIndex
+operator|=
+literal|0
 block|;
 comment|/// MustSaveLR - Indicates whether LR is defined (or clobbered) in the current
 comment|/// function.  This is only valid after the initial scan of the function by
@@ -110,19 +124,27 @@ block|;
 comment|/// Does this function have any stack spills.
 name|bool
 name|HasSpills
+operator|=
+name|false
 block|;
 comment|/// Does this function spill using instructions with only r+r (not r+i)
 comment|/// forms.
 name|bool
 name|HasNonRISpills
+operator|=
+name|false
 block|;
 comment|/// SpillsCR - Indicates whether CR is spilled in the current function.
 name|bool
 name|SpillsCR
+operator|=
+name|false
 block|;
 comment|/// Indicates whether VRSAVE is spilled in the current function.
 name|bool
 name|SpillsVRSAVE
+operator|=
+name|false
 block|;
 comment|/// LRStoreRequired - The bool indicates whether there is some explicit use of
 comment|/// the LR/LR8 stack slot that is not obvious from scanning the code.  This
@@ -130,49 +152,69 @@ comment|/// requires that the code generator produce a store of LR to the stack 
 comment|/// entry, even though LR may otherwise apparently not be used.
 name|bool
 name|LRStoreRequired
+operator|=
+name|false
 block|;
 comment|/// This function makes use of the PPC64 ELF TOC base pointer (register r2).
 name|bool
 name|UsesTOCBasePtr
+operator|=
+name|false
 block|;
 comment|/// MinReservedArea - This is the frame size that is at least reserved in a
 comment|/// potential caller (parameter+linkage area).
 name|unsigned
 name|MinReservedArea
+operator|=
+literal|0
 block|;
 comment|/// TailCallSPDelta - Stack pointer delta used when tail calling. Maximum
 comment|/// amount the stack pointer is adjusted to make the frame bigger for tail
 comment|/// calls. Used for creating an area before the register spill area.
 name|int
 name|TailCallSPDelta
+operator|=
+literal|0
 block|;
 comment|/// HasFastCall - Does this function contain a fast call. Used to determine
 comment|/// how the caller's stack pointer should be calculated (epilog/dynamicalloc).
 name|bool
 name|HasFastCall
+operator|=
+name|false
 block|;
 comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
 name|int
 name|VarArgsFrameIndex
+operator|=
+literal|0
 block|;
 comment|/// VarArgsStackOffset - StackOffset for start of stack
 comment|/// arguments.
 name|int
 name|VarArgsStackOffset
+operator|=
+literal|0
 block|;
 comment|/// VarArgsNumGPR - Index of the first unused integer
 comment|/// register for parameter passing.
 name|unsigned
 name|VarArgsNumGPR
+operator|=
+literal|0
 block|;
 comment|/// VarArgsNumFPR - Index of the first unused double
 comment|/// register for parameter passing.
 name|unsigned
 name|VarArgsNumFPR
+operator|=
+literal|0
 block|;
 comment|/// CRSpillFrameIndex - FrameIndex for CR spill slot for 32-bit SVR4.
 name|int
 name|CRSpillFrameIndex
+operator|=
+literal|0
 block|;
 comment|/// If any of CR[2-4] need to be saved in the prologue and restored in the
 comment|/// epilogue then they are added to this array. This is used for the
@@ -193,11 +235,15 @@ block|;
 comment|/// Whether this uses the PIC Base register or not.
 name|bool
 name|UsesPICBase
+operator|=
+name|false
 block|;
 comment|/// True if this function has a subset of CSRs that is handled explicitly via
 comment|/// copies
 name|bool
 name|IsSplitCSR
+operator|=
+name|false
 block|;
 name|public
 operator|:
@@ -209,109 +255,9 @@ operator|&
 name|MF
 argument_list|)
 operator|:
-name|FramePointerSaveIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ReturnAddrSaveIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|BasePointerSaveIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|PICBasePointerSaveIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasSpills
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|HasNonRISpills
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|SpillsCR
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|SpillsVRSAVE
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|LRStoreRequired
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|UsesTOCBasePtr
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|MinReservedArea
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|TailCallSPDelta
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasFastCall
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|VarArgsFrameIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsStackOffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsNumGPR
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsNumFPR
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|CRSpillFrameIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|MF
 argument_list|(
-name|MF
-argument_list|)
-block|,
-name|UsesPICBase
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|IsSplitCSR
-argument_list|(
-argument|false
+argument|MF
 argument_list|)
 block|{}
 name|int
@@ -760,13 +706,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end of namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_POWERPC_PPCMACHINEFUNCTIONINFO_H
+end_comment
 
 end_unit
 

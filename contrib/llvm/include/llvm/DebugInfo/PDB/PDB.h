@@ -46,7 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"PDBTypes.h"
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBTypes.h"
 end_include
 
 begin_include
@@ -61,22 +67,16 @@ directive|include
 file|<memory>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<system_error>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|StringRef
-decl_stmt|;
 name|namespace
 name|pdb
 block|{
+name|class
+name|IPDBSession
+decl_stmt|;
 name|Error
 name|loadDataForPDB
 argument_list|(
@@ -116,13 +116,22 @@ name|Session
 argument_list|)
 decl_stmt|;
 block|}
+comment|// end namespace pdb
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_PDB_PDB_H
+end_comment
 
 end_unit
 

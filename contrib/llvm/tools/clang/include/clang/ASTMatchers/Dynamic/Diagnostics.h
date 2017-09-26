@@ -266,7 +266,7 @@ name|ET_ParserTrailingCode
 init|=
 literal|108
 block|,
-name|ET_ParserUnsignedError
+name|ET_ParserNumberError
 init|=
 literal|109
 block|,

@@ -131,6 +131,22 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|lowerCall
+argument_list|(
+argument|MachineIRBuilder&MIRBuilder
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|const MachineOperand&Callee
+argument_list|,
+argument|const ArgInfo&OrigRet
+argument_list|,
+argument|ArrayRef<ArgInfo> OrigArgs
+argument_list|)
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 name|bool
@@ -145,12 +161,45 @@ argument_list|,
 argument|MachineInstrBuilder&Ret
 argument_list|)
 specifier|const
-block|; }
+block|;
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+operator|>
+name|SplitArgTy
+expr_stmt|;
+comment|/// Split an argument into one or more arguments that the CC lowering can cope
+comment|/// with (e.g. replace pointers with integers).
+name|void
+name|splitToValueTypes
+argument_list|(
+argument|const ArgInfo&OrigArg
+argument_list|,
+argument|SmallVectorImpl<ArgInfo>&SplitArgs
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|const SplitArgTy&PerformArgSplit
+argument_list|)
+specifier|const
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End of namespace llvm
 end_comment
 

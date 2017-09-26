@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SetVector.h"
 end_include
 
@@ -365,6 +371,13 @@ name|EdgeQueueType
 name|FlowQ
 decl_stmt|;
 comment|// Work queue of CFG edges.
+name|DenseSet
+operator|<
+name|unsigned
+operator|>
+name|ReachedBB
+expr_stmt|;
+comment|// Cache of reached blocks.
 name|bool
 name|Trace
 decl_stmt|;
@@ -1401,6 +1414,21 @@ operator|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|// Replace the ref-to-reg-0 bit values with the given register.
+end_comment
+
+begin_function_decl
+name|RegisterCell
+modifier|&
+name|regify
+parameter_list|(
+name|unsigned
+name|R
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// Generate a "ref" cell for the corresponding register. In the resulting

@@ -93,6 +93,9 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+name|class
+name|DataExtractor
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// A class that can carry around a clang ASTContext and a opaque clang
 comment|// QualType. A clang::QualType can be easily reconstructed from an

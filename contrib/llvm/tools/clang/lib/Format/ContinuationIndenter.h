@@ -430,8 +430,6 @@ name|ParenState
 argument_list|(
 argument|unsigned Indent
 argument_list|,
-argument|unsigned IndentLevel
-argument_list|,
 argument|unsigned LastSpace
 argument_list|,
 argument|bool AvoidBinPacking
@@ -442,11 +440,6 @@ block|:
 name|Indent
 argument_list|(
 name|Indent
-argument_list|)
-operator|,
-name|IndentLevel
-argument_list|(
-name|IndentLevel
 argument_list|)
 operator|,
 name|LastSpace
@@ -477,6 +470,11 @@ operator|,
 name|NoLineBreak
 argument_list|(
 name|NoLineBreak
+argument_list|)
+operator|,
+name|NoLineBreakInOperand
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|LastOperatorWrapped
@@ -519,10 +517,6 @@ comment|/// indented.
 name|unsigned
 name|Indent
 expr_stmt|;
-comment|/// \brief The number of indentation levels of the block.
-name|unsigned
-name|IndentLevel
-decl_stmt|;
 comment|/// \brief The position of the last space on each level.
 comment|///
 comment|/// Used e.g. to break like:
@@ -619,6 +613,13 @@ decl_stmt|;
 comment|/// \brief Line breaking in this context would break a formatting rule.
 name|bool
 name|NoLineBreak
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Same as \c NoLineBreak, but is restricted until the end of the
+comment|/// operand (including the next ",").
+name|bool
+name|NoLineBreakInOperand
 range|:
 literal|1
 decl_stmt|;

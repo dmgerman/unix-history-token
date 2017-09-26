@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/YAMLTraits.h"
+file|"llvm/ObjectYAML/COFFYAML.h"
 end_include
 
 begin_include
@@ -58,13 +58,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/COFFYAML.h"
+file|"llvm/ObjectYAML/MachOYAML.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/MachOYAML.h"
+file|"llvm/ObjectYAML/WasmYAML.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -74,6 +86,9 @@ block|{
 name|namespace
 name|yaml
 block|{
+name|class
+name|IO
+decl_stmt|;
 struct|struct
 name|YamlObjectFile
 block|{
@@ -117,6 +132,16 @@ name|UniversalBinary
 operator|>
 name|FatMachO
 expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|WasmYAML
+operator|::
+name|Object
+operator|>
+name|Wasm
+expr_stmt|;
 block|}
 struct|;
 name|template
@@ -143,18 +168,22 @@ argument_list|)
 block|; }
 expr_stmt|;
 block|}
-comment|// namespace yaml
+comment|// end namespace yaml
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_OBJECTYAML_H
+end_comment
 
 end_unit
 

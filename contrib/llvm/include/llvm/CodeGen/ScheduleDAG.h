@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===------- llvm/CodeGen/ScheduleDAG.h - Common Base Class------*- C++ -*-===//
+comment|//===- llvm/CodeGen/ScheduleDAG.h - Common Base Class -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,15 +36,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file implements the ScheduleDAG class, which is used as the common
+comment|/// \file Implements the ScheduleDAG class, which is used as the common base
 end_comment
 
 begin_comment
-comment|// base class for instruction schedulers. This encapsulates the scheduling DAG,
+comment|/// class for instruction schedulers. This encapsulates the scheduling DAG,
 end_comment
 
 begin_comment
-comment|// which is shared between SelectionDAG and MachineInstr scheduling.
+comment|/// which is shared between SelectionDAG and MachineInstr scheduling.
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/AliasAnalysis.h"
+file|"llvm/ADT/iterator.h"
 end_include
 
 begin_include
@@ -106,52 +106,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|SUnit
-decl_stmt|;
-name|class
-name|MachineConstantPool
-decl_stmt|;
-name|class
-name|MachineFunction
-decl_stmt|;
-name|class
-name|MachineRegisterInfo
-decl_stmt|;
-name|class
-name|MachineInstr
-decl_stmt|;
-struct_decl|struct
-name|MCSchedClassDesc
-struct_decl|;
-name|class
-name|TargetRegisterInfo
-decl_stmt|;
-name|class
-name|ScheduleDAG
-decl_stmt|;
-name|class
-name|SDNode
-decl_stmt|;
-name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
-name|MCInstrDesc
-decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
-name|class
-name|TargetRegisterClass
-decl_stmt|;
 name|template
 operator|<
 name|class
@@ -160,14 +157,47 @@ operator|>
 name|class
 name|GraphWriter
 expr_stmt|;
-comment|/// SDep - Scheduling dependency. This represents one direction of an
-comment|/// edge in the scheduling DAG.
+name|class
+name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineRegisterInfo
+decl_stmt|;
+name|class
+name|MCInstrDesc
+decl_stmt|;
+struct_decl|struct
+name|MCSchedClassDesc
+struct_decl|;
+name|class
+name|ScheduleDAG
+decl_stmt|;
+name|class
+name|SDNode
+decl_stmt|;
+name|class
+name|SUnit
+decl_stmt|;
+name|class
+name|TargetInstrInfo
+decl_stmt|;
+name|class
+name|TargetMachine
+decl_stmt|;
+name|class
+name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
+comment|/// Scheduling dependency. This represents one direction of an edge in the
+comment|/// scheduling DAG.
 name|class
 name|SDep
 block|{
 name|public
 label|:
-comment|/// Kind - These are the different kinds of scheduling dependencies.
+comment|/// These are the different kinds of scheduling dependencies.
 enum|enum
 name|Kind
 block|{
@@ -176,7 +206,7 @@ block|,
 comment|///< Regular data dependence (aka true-dependence).
 name|Anti
 block|,
-comment|///< A register anti-dependedence (aka WAR).
+comment|///< A register anti-dependence (aka WAR).
 name|Output
 block|,
 comment|///< A register output-dependence (aka WAW).
@@ -186,7 +216,7 @@ block|}
 enum|;
 comment|// Strong dependencies must be respected by the scheduler. Artificial
 comment|// dependencies may be removed only if they are redundant with another
-comment|// strong depedence.
+comment|// strong dependence.
 comment|//
 comment|// Weak dependencies may be violated by the scheduling strategy, but only if
 comment|// the strategy can prove it is correct to do so.
@@ -217,7 +247,7 @@ block|}
 enum|;
 name|private
 label|:
-comment|/// Dep - A pointer to the depending/depended-on SUnit, and an enum
+comment|/// \brief A pointer to the depending/depended-on SUnit, and an enum
 comment|/// indicating the kind of the dependency.
 name|PointerIntPair
 operator|<
@@ -230,16 +260,16 @@ name|Kind
 operator|>
 name|Dep
 expr_stmt|;
-comment|/// Contents - A union discriminated by the dependence kind.
+comment|/// A union discriminated by the dependence kind.
 union|union
 block|{
-comment|/// Reg - For Data, Anti, and Output dependencies, the associated
-comment|/// register. For Data dependencies that don't currently have a register
-comment|/// assigned, this is set to zero.
+comment|/// For Data, Anti, and Output dependencies, the associated register. For
+comment|/// Data dependencies that don't currently have a register/ assigned, this
+comment|/// is set to zero.
 name|unsigned
 name|Reg
 decl_stmt|;
-comment|/// Order - Additional information about Order dependencies.
+comment|/// Additional information about Order dependencies.
 name|unsigned
 name|OrdKind
 decl_stmt|;
@@ -247,17 +277,16 @@ comment|// enum OrderKind
 block|}
 name|Contents
 union|;
-comment|/// Latency - The time associated with this edge. Often this is just
-comment|/// the value of the Latency field of the predecessor, however advanced
-comment|/// models may provide additional information about specific edges.
+comment|/// The time associated with this edge. Often this is just the value of the
+comment|/// Latency field of the predecessor, however advanced models may provide
+comment|/// additional information about specific edges.
 name|unsigned
 name|Latency
 decl_stmt|;
 name|public
 label|:
-comment|/// SDep - Construct a null SDep. This is only for use by container
-comment|/// classes which require default constructors. SUnits may not
-comment|/// have null SDep edges.
+comment|/// Constructs a null SDep. This is only for use by container classes which
+comment|/// require default constructors. SUnits may not/ have null SDep edges.
 name|SDep
 argument_list|()
 operator|:
@@ -268,7 +297,7 @@ argument_list|,
 argument|Data
 argument_list|)
 block|{}
-comment|/// SDep - Construct an SDep with the specified values.
+comment|/// Constructs an SDep with the specified values.
 name|SDep
 argument_list|(
 argument|SUnit *S
@@ -369,7 +398,7 @@ name|OrdKind
 operator|=
 name|kind
 block|;     }
-comment|/// Return true if the specified SDep is equivalent except for latency.
+comment|/// Returns true if the specified SDep is equivalent except for latency.
 name|bool
 name|overlaps
 argument_list|(
@@ -421,10 +450,9 @@ name|Other
 operator|)
 return|;
 block|}
-comment|/// getLatency - Return the latency value for this edge, which roughly
-comment|/// means the minimum number of cycles that must elapse between the
-comment|/// predecessor and the successor, given that they have this edge
-comment|/// between them.
+comment|/// \brief Returns the latency value for this edge, which roughly means the
+comment|/// minimum number of cycles that must elapse between the predecessor and
+comment|/// the successor, given that they have this edge between them.
 name|unsigned
 name|getLatency
 argument_list|()
@@ -434,7 +462,7 @@ return|return
 name|Latency
 return|;
 block|}
-comment|/// setLatency - Set the latency for this edge.
+comment|/// Sets the latency for this edge.
 name|void
 name|setLatency
 parameter_list|(
@@ -447,14 +475,14 @@ operator|=
 name|Lat
 expr_stmt|;
 block|}
-comment|//// getSUnit - Return the SUnit to which this edge points.
+comment|//// Returns the SUnit to which this edge points.
 name|SUnit
 operator|*
 name|getSUnit
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|//// setSUnit - Assign the SUnit to which this edge points.
+comment|//// Assigns the SUnit to which this edge points.
 name|void
 name|setSUnit
 parameter_list|(
@@ -463,13 +491,13 @@ modifier|*
 name|SU
 parameter_list|)
 function_decl|;
-comment|/// getKind - Return an enum value representing the kind of the dependence.
+comment|/// Returns an enum value representing the kind of the dependence.
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isCtrl - Shorthand for getKind() != SDep::Data.
+comment|/// Shorthand for getKind() != SDep::Data.
 name|bool
 name|isCtrl
 argument_list|()
@@ -482,9 +510,9 @@ operator|!=
 name|Data
 return|;
 block|}
-comment|/// isNormalMemory - Test if this is an Order dependence between two
-comment|/// memory accesses where both sides of the dependence access memory
-comment|/// in non-volatile and fully modeled ways.
+comment|/// \brief Tests if this is an Order dependence between two memory accesses
+comment|/// where both sides of the dependence access memory in non-volatile and
+comment|/// fully modeled ways.
 name|bool
 name|isNormalMemory
 argument_list|()
@@ -511,8 +539,7 @@ name|MustAliasMem
 operator|)
 return|;
 block|}
-comment|/// isBarrier - Test if this is an Order dependence that is marked
-comment|/// as a barrier.
+comment|/// Tests if this is an Order dependence that is marked as a barrier.
 name|bool
 name|isBarrier
 argument_list|()
@@ -531,8 +558,7 @@ operator|==
 name|Barrier
 return|;
 block|}
-comment|/// isNormalMemoryOrBarrier - Test if this is could be any kind of memory
-comment|/// dependence.
+comment|/// Tests if this is could be any kind of memory dependence.
 name|bool
 name|isNormalMemoryOrBarrier
 argument_list|()
@@ -548,9 +574,9 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// isMustAlias - Test if this is an Order dependence that is marked
-comment|/// as "must alias", meaning that the SUnits at either end of the edge
-comment|/// have a memory dependence on a known memory location.
+comment|/// \brief Tests if this is an Order dependence that is marked as
+comment|/// "must alias", meaning that the SUnits at either end of the edge have a
+comment|/// memory dependence on a known memory location.
 name|bool
 name|isMustAlias
 argument_list|()
@@ -569,10 +595,10 @@ operator|==
 name|MustAliasMem
 return|;
 block|}
-comment|/// isWeak - Test if this a weak dependence. Weak dependencies are
-comment|/// considered DAG edges for height computation and other heuristics, but do
-comment|/// not force ordering. Breaking a weak edge may require the scheduler to
-comment|/// compensate, for example by inserting a copy.
+comment|/// Tests if this a weak dependence. Weak dependencies are considered DAG
+comment|/// edges for height computation and other heuristics, but do not force
+comment|/// ordering. Breaking a weak edge may require the scheduler to compensate,
+comment|/// for example by inserting a copy.
 name|bool
 name|isWeak
 argument_list|()
@@ -591,8 +617,8 @@ operator|>=
 name|Weak
 return|;
 block|}
-comment|/// isArtificial - Test if this is an Order dependence that is marked
-comment|/// as "artificial", meaning it isn't necessary for correctness.
+comment|/// \brief Tests if this is an Order dependence that is marked as
+comment|/// "artificial", meaning it isn't necessary for correctness.
 name|bool
 name|isArtificial
 argument_list|()
@@ -611,8 +637,8 @@ operator|==
 name|Artificial
 return|;
 block|}
-comment|/// isCluster - Test if this is an Order dependence that is marked
-comment|/// as "cluster", meaning it is artificial and wants to be adjacent.
+comment|/// \brief Tests if this is an Order dependence that is marked as "cluster",
+comment|/// meaning it is artificial and wants to be adjacent.
 name|bool
 name|isCluster
 argument_list|()
@@ -631,8 +657,7 @@ operator|==
 name|Cluster
 return|;
 block|}
-comment|/// isAssignedRegDep - Test if this is a Data dependence that is
-comment|/// associated with a register.
+comment|/// Tests if this is a Data dependence that is associated with a register.
 name|bool
 name|isAssignedRegDep
 argument_list|()
@@ -651,9 +676,9 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// getReg - Return the register associated with this edge. This is
-comment|/// only valid on Data, Anti, and Output edges. On Data edges, this
-comment|/// value may be zero, meaning there is no associated register.
+comment|/// Returns the register associated with this edge. This is only valid on
+comment|/// Data, Anti, and Output edges. On Data edges, this value may be zero,
+comment|/// meaning there is no associated register.
 name|unsigned
 name|getReg
 argument_list|()
@@ -687,11 +712,10 @@ operator|.
 name|Reg
 return|;
 block|}
-comment|/// setReg - Assign the associated register for this edge. This is
-comment|/// only valid on Data, Anti, and Output edges. On Anti and Output
-comment|/// edges, this value must not be zero. On Data edges, the value may
-comment|/// be zero, which would mean that no specific register is associated
-comment|/// with this edge.
+comment|/// Assigns the associated register for this edge. This is only valid on
+comment|/// Data, Anti, and Output edges. On Anti and Output edges, this value must
+comment|/// not be zero. On Data edges, the value may be zero, which would mean that
+comment|/// no specific register is associated with this edge.
 name|void
 name|setReg
 parameter_list|(
@@ -760,6 +784,23 @@ operator|=
 name|Reg
 expr_stmt|;
 block|}
+name|raw_ostream
+modifier|&
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 name|template
@@ -779,7 +820,7 @@ operator|=
 name|true
 block|; }
 expr_stmt|;
-comment|/// SUnit - Scheduling unit. This is a node in the scheduling DAG.
+comment|/// Scheduling unit. This is a node in the scheduling DAG.
 name|class
 name|SUnit
 block|{
@@ -797,29 +838,35 @@ enum_decl|;
 name|SDNode
 modifier|*
 name|Node
+init|=
+name|nullptr
 decl_stmt|;
-comment|// Representative node.
+comment|///< Representative node.
 name|MachineInstr
 modifier|*
 name|Instr
+init|=
+name|nullptr
 decl_stmt|;
-comment|// Alternatively, a MachineInstr.
+comment|///< Alternatively, a MachineInstr.
 name|public
 label|:
 name|SUnit
 modifier|*
 name|OrigNode
+init|=
+name|nullptr
 decl_stmt|;
-comment|// If not this, the node from which
-comment|// this node was cloned.
-comment|// (SD scheduling only)
+comment|///< If not this, the node from which this node
+comment|/// was cloned. (SD scheduling only)
 specifier|const
 name|MCSchedClassDesc
 modifier|*
 name|SchedClass
+init|=
+name|nullptr
 decl_stmt|;
-comment|// NULL or resolved SchedClass.
-comment|// Preds/Succs - The SUnits before/after us in the graph.
+comment|///< nullptr or resolved SchedClass.
 name|SmallVector
 operator|<
 name|SDep
@@ -828,7 +875,7 @@ literal|4
 operator|>
 name|Preds
 expr_stmt|;
-comment|// All sunit predecessors.
+comment|///< All sunit predecessors.
 name|SmallVector
 operator|<
 name|SDep
@@ -837,7 +884,7 @@ literal|4
 operator|>
 name|Succs
 expr_stmt|;
-comment|// All sunit successors.
+comment|///< All sunit successors.
 typedef|typedef
 name|SmallVectorImpl
 operator|<
@@ -876,148 +923,172 @@ name|const_succ_iterator
 expr_stmt|;
 name|unsigned
 name|NodeNum
+init|=
+name|BoundaryID
 decl_stmt|;
-comment|// Entry # of node in the node vector.
+comment|///< Entry # of node in the node vector.
 name|unsigned
 name|NodeQueueId
+init|=
+literal|0
 decl_stmt|;
-comment|// Queue id of node.
+comment|///< Queue id of node.
 name|unsigned
 name|NumPreds
+init|=
+literal|0
 decl_stmt|;
-comment|// # of SDep::Data preds.
+comment|///< # of SDep::Data preds.
 name|unsigned
 name|NumSuccs
+init|=
+literal|0
 decl_stmt|;
-comment|// # of SDep::Data sucss.
+comment|///< # of SDep::Data sucss.
 name|unsigned
 name|NumPredsLeft
+init|=
+literal|0
 decl_stmt|;
-comment|// # of preds not scheduled.
+comment|///< # of preds not scheduled.
 name|unsigned
 name|NumSuccsLeft
+init|=
+literal|0
 decl_stmt|;
-comment|// # of succs not scheduled.
+comment|///< # of succs not scheduled.
 name|unsigned
 name|WeakPredsLeft
+init|=
+literal|0
 decl_stmt|;
-comment|// # of weak preds not scheduled.
+comment|///< # of weak preds not scheduled.
 name|unsigned
 name|WeakSuccsLeft
+init|=
+literal|0
 decl_stmt|;
-comment|// # of weak succs not scheduled.
+comment|///< # of weak succs not scheduled.
 name|unsigned
 name|short
 name|NumRegDefsLeft
+init|=
+literal|0
 decl_stmt|;
-comment|// # of reg defs with no scheduled use.
+comment|///< # of reg defs with no scheduled use.
 name|unsigned
 name|short
 name|Latency
+init|=
+literal|0
 decl_stmt|;
-comment|// Node latency.
+comment|///< Node latency.
 name|bool
 name|isVRegCycle
 range|:
 literal|1
 decl_stmt|;
-comment|// May use and def the same vreg.
+comment|///< May use and def the same vreg.
 name|bool
 name|isCall
 range|:
 literal|1
 decl_stmt|;
-comment|// Is a function call.
+comment|///< Is a function call.
 name|bool
 name|isCallOp
 range|:
 literal|1
 decl_stmt|;
-comment|// Is a function call operand.
+comment|///< Is a function call operand.
 name|bool
 name|isTwoAddress
 range|:
 literal|1
 decl_stmt|;
-comment|// Is a two-address instruction.
+comment|///< Is a two-address instruction.
 name|bool
 name|isCommutable
 range|:
 literal|1
 decl_stmt|;
-comment|// Is a commutable instruction.
+comment|///< Is a commutable instruction.
 name|bool
 name|hasPhysRegUses
 range|:
 literal|1
 decl_stmt|;
-comment|// Has physreg uses.
+comment|///< Has physreg uses.
 name|bool
 name|hasPhysRegDefs
 range|:
 literal|1
 decl_stmt|;
-comment|// Has physreg defs that are being used.
+comment|///< Has physreg defs that are being used.
 name|bool
 name|hasPhysRegClobbers
 range|:
 literal|1
 decl_stmt|;
-comment|// Has any physreg defs, used or not.
+comment|///< Has any physreg defs, used or not.
 name|bool
 name|isPending
 range|:
 literal|1
 decl_stmt|;
-comment|// True once pending.
+comment|///< True once pending.
 name|bool
 name|isAvailable
 range|:
 literal|1
 decl_stmt|;
-comment|// True once available.
+comment|///< True once available.
 name|bool
 name|isScheduled
 range|:
 literal|1
 decl_stmt|;
-comment|// True once scheduled.
+comment|///< True once scheduled.
 name|bool
 name|isScheduleHigh
 range|:
 literal|1
 decl_stmt|;
-comment|// True if preferable to schedule high.
+comment|///< True if preferable to schedule high.
 name|bool
 name|isScheduleLow
 range|:
 literal|1
 decl_stmt|;
-comment|// True if preferable to schedule low.
+comment|///< True if preferable to schedule low.
 name|bool
 name|isCloned
 range|:
 literal|1
 decl_stmt|;
-comment|// True if this node has been cloned.
+comment|///< True if this node has been cloned.
 name|bool
 name|isUnbuffered
 range|:
 literal|1
 decl_stmt|;
-comment|// Uses an unbuffered resource.
+comment|///< Uses an unbuffered resource.
 name|bool
 name|hasReservedResource
 range|:
 literal|1
 decl_stmt|;
-comment|// Uses a reserved resource.
+comment|///< Uses a reserved resource.
 name|Sched
 operator|::
 name|Preference
 name|SchedulingPref
+operator|=
+name|Sched
+operator|::
+name|None
 expr_stmt|;
-comment|// Scheduling preference.
+comment|///< Scheduling preference.
 name|private
 label|:
 name|bool
@@ -1025,44 +1096,56 @@ name|isDepthCurrent
 range|:
 literal|1
 decl_stmt|;
-comment|// True if Depth is current.
+comment|///< True if Depth is current.
 name|bool
 name|isHeightCurrent
 range|:
 literal|1
 decl_stmt|;
-comment|// True if Height is current.
+comment|///< True if Height is current.
 name|unsigned
 name|Depth
+init|=
+literal|0
 decl_stmt|;
-comment|// Node depth.
+comment|///< Node depth.
 name|unsigned
 name|Height
+init|=
+literal|0
 decl_stmt|;
-comment|// Node height.
+comment|///< Node height.
 name|public
 label|:
 name|unsigned
 name|TopReadyCycle
+init|=
+literal|0
 decl_stmt|;
-comment|// Cycle relative to start when node is ready.
+comment|///< Cycle relative to start when node is ready.
 name|unsigned
 name|BotReadyCycle
+init|=
+literal|0
 decl_stmt|;
-comment|// Cycle relative to end when node is ready.
+comment|///< Cycle relative to end when node is ready.
 specifier|const
 name|TargetRegisterClass
 modifier|*
 name|CopyDstRC
+init|=
+name|nullptr
 decl_stmt|;
-comment|// Is a special copy node if not null.
+comment|///< Is a special copy node if != nullptr.
 specifier|const
 name|TargetRegisterClass
 modifier|*
 name|CopySrcRC
+init|=
+name|nullptr
 decl_stmt|;
-comment|/// SUnit - Construct an SUnit for pre-regalloc scheduling to represent
-comment|/// an SDNode and any nodes flagged to it.
+comment|/// \brief Constructs an SUnit for pre-regalloc scheduling to represent an
+comment|/// SDNode and any nodes flagged to it.
 name|SUnit
 argument_list|(
 argument|SDNode *node
@@ -1075,69 +1158,9 @@ argument_list|(
 name|node
 argument_list|)
 operator|,
-name|Instr
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|OrigNode
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|SchedClass
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|NodeNum
 argument_list|(
 name|nodenum
-argument_list|)
-operator|,
-name|NodeQueueId
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumPreds
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumSuccs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumPredsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumSuccsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|WeakPredsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|WeakSuccsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumRegDefsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Latency
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|isVRegCycle
@@ -1220,13 +1243,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|SchedulingPref
-argument_list|(
-name|Sched
-operator|::
-name|None
-argument_list|)
-operator|,
 name|isDepthCurrent
 argument_list|(
 name|false
@@ -1234,41 +1250,11 @@ argument_list|)
 operator|,
 name|isHeightCurrent
 argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Depth
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Height
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TopReadyCycle
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|BotReadyCycle
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|CopyDstRC
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|CopySrcRC
-argument_list|(
-argument|nullptr
+argument|false
 argument_list|)
 block|{}
-comment|/// SUnit - Construct an SUnit for post-regalloc scheduling to represent
-comment|/// a MachineInstr.
+comment|/// \brief Constructs an SUnit for post-regalloc scheduling to represent a
+comment|/// MachineInstr.
 name|SUnit
 argument_list|(
 argument|MachineInstr *instr
@@ -1276,24 +1262,9 @@ argument_list|,
 argument|unsigned nodenum
 argument_list|)
 operator|:
-name|Node
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|Instr
 argument_list|(
 name|instr
-argument_list|)
-operator|,
-name|OrigNode
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|SchedClass
-argument_list|(
-name|nullptr
 argument_list|)
 operator|,
 name|NodeNum
@@ -1301,51 +1272,6 @@ argument_list|(
 name|nodenum
 argument_list|)
 operator|,
-name|NodeQueueId
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumPreds
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumSuccs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumPredsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumSuccsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|WeakPredsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|WeakSuccsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumRegDefsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Latency
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|isVRegCycle
 argument_list|(
 name|false
@@ -1426,13 +1352,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|SchedulingPref
-argument_list|(
-name|Sched
-operator|::
-name|None
-argument_list|)
-operator|,
 name|isDepthCurrent
 argument_list|(
 name|false
@@ -1440,113 +1359,13 @@ argument_list|)
 operator|,
 name|isHeightCurrent
 argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Depth
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Height
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TopReadyCycle
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|BotReadyCycle
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|CopyDstRC
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|CopySrcRC
-argument_list|(
-argument|nullptr
+argument|false
 argument_list|)
 block|{}
-comment|/// SUnit - Construct a placeholder SUnit.
+comment|/// \brief Constructs a placeholder SUnit.
 name|SUnit
 argument_list|()
 operator|:
-name|Node
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Instr
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|OrigNode
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|SchedClass
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NodeNum
-argument_list|(
-name|BoundaryID
-argument_list|)
-operator|,
-name|NodeQueueId
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumPreds
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumSuccs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumPredsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumSuccsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|WeakPredsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|WeakSuccsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumRegDefsLeft
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Latency
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|isVRegCycle
 argument_list|(
 name|false
@@ -1627,13 +1446,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|SchedulingPref
-argument_list|(
-name|Sched
-operator|::
-name|None
-argument_list|)
-operator|,
 name|isDepthCurrent
 argument_list|(
 name|false
@@ -1641,37 +1453,7 @@ argument_list|)
 operator|,
 name|isHeightCurrent
 argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Depth
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Height
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TopReadyCycle
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|BotReadyCycle
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|CopyDstRC
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|CopySrcRC
-argument_list|(
-argument|nullptr
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Boundary nodes are placeholders for the boundary of the
@@ -1680,7 +1462,7 @@ comment|///
 comment|/// BoundaryNodes can have DAG edges, including Data edges, but they do not
 comment|/// correspond to schedulable entities (e.g. instructions) and do not have a
 comment|/// valid ID. Consequently, always check for boundary nodes before accessing
-comment|/// an assoicative data structure keyed on node ID.
+comment|/// an associative data structure keyed on node ID.
 name|bool
 name|isBoundaryNode
 argument_list|()
@@ -1692,8 +1474,8 @@ operator|==
 name|BoundaryID
 return|;
 block|}
-comment|/// setNode - Assign the representative SDNode for this SUnit.
-comment|/// This may be used during pre-regalloc scheduling.
+comment|/// Assigns the representative SDNode for this SUnit. This may be used
+comment|/// during pre-regalloc scheduling.
 name|void
 name|setNode
 parameter_list|(
@@ -1715,8 +1497,8 @@ operator|=
 name|N
 expr_stmt|;
 block|}
-comment|/// getNode - Return the representative SDNode for this SUnit.
-comment|/// This may be used during pre-regalloc scheduling.
+comment|/// Returns the representative SDNode for this SUnit. This may be used
+comment|/// during pre-regalloc scheduling.
 name|SDNode
 operator|*
 name|getNode
@@ -1735,7 +1517,7 @@ return|return
 name|Node
 return|;
 block|}
-comment|/// isInstr - Return true if this SUnit refers to a machine instruction as
+comment|/// \brief Returns true if this SUnit refers to a machine instruction as
 comment|/// opposed to an SDNode.
 name|bool
 name|isInstr
@@ -1746,8 +1528,8 @@ return|return
 name|Instr
 return|;
 block|}
-comment|/// setInstr - Assign the instruction for the SUnit.
-comment|/// This may be used during post-regalloc scheduling.
+comment|/// Assigns the instruction for the SUnit. This may be used during
+comment|/// post-regalloc scheduling.
 name|void
 name|setInstr
 parameter_list|(
@@ -1769,8 +1551,8 @@ operator|=
 name|MI
 expr_stmt|;
 block|}
-comment|/// getInstr - Return the representative MachineInstr for this SUnit.
-comment|/// This may be used during post-regalloc scheduling.
+comment|/// Returns the representative MachineInstr for this SUnit. This may be used
+comment|/// during post-regalloc scheduling.
 name|MachineInstr
 operator|*
 name|getInstr
@@ -1789,9 +1571,8 @@ return|return
 name|Instr
 return|;
 block|}
-comment|/// addPred - This adds the specified edge as a pred of the current node if
-comment|/// not already.  It also adds the current node as a successor of the
-comment|/// specified node.
+comment|/// Adds the specified edge as a pred of the current node if not already.
+comment|/// It also adds the current node as a successor of the specified node.
 name|bool
 name|addPred
 parameter_list|(
@@ -1806,9 +1587,8 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-comment|/// addPredBarrier - This adds a barrier edge to SU by calling
-comment|/// addPred(), with latency 0 generally or latency 1 for a store
-comment|/// followed by a load.
+comment|/// \brief Adds a barrier edge to SU by calling addPred(), with latency 0
+comment|/// generally or latency 1 for a store followed by a load.
 name|bool
 name|addPredBarrier
 parameter_list|(
@@ -1868,9 +1648,8 @@ name|Dep
 argument_list|)
 return|;
 block|}
-comment|/// removePred - This removes the specified edge as a pred of the current
-comment|/// node if it exists.  It also removes the current node as a successor of
-comment|/// the specified node.
+comment|/// Removes the specified edge as a pred of the current node if it exists.
+comment|/// It also removes the current node as a successor of the specified node.
 name|void
 name|removePred
 parameter_list|(
@@ -1880,8 +1659,8 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
-comment|/// getDepth - Return the depth of this node, which is the length of the
-comment|/// maximum path up to any node which has no predecessors.
+comment|/// Returns the depth of this node, which is the length of the maximum path
+comment|/// up to any node which has no predecessors.
 name|unsigned
 name|getDepth
 argument_list|()
@@ -1908,7 +1687,7 @@ return|return
 name|Depth
 return|;
 block|}
-comment|/// getHeight - Return the height of this node, which is the length of the
+comment|/// \brief Returns the height of this node, which is the length of the
 comment|/// maximum path down to any node which has no successors.
 name|unsigned
 name|getHeight
@@ -1939,15 +1718,15 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// setDepthToAtLeast - If NewDepth is greater than this node's
+comment|/// \brief If NewDepth is greater than this node's depth value, sets it to
 end_comment
 
 begin_comment
-comment|/// depth value, set it to be the new depth value. This also
+comment|/// be the new depth value. This also recursively marks successor nodes
 end_comment
 
 begin_comment
-comment|/// recursively marks successor nodes dirty.
+comment|/// dirty.
 end_comment
 
 begin_function_decl
@@ -1961,15 +1740,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// setDepthToAtLeast - If NewDepth is greater than this node's
+comment|/// \brief If NewDepth is greater than this node's depth value, set it to be
 end_comment
 
 begin_comment
-comment|/// depth value, set it to be the new height value. This also
+comment|/// the new height value. This also recursively marks predecessor nodes
 end_comment
 
 begin_comment
-comment|/// recursively marks predecessor nodes dirty.
+comment|/// dirty.
 end_comment
 
 begin_function_decl
@@ -1983,15 +1762,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// setDepthDirty - Set a flag in this node to indicate that its
+comment|/// \brief Sets a flag in this node to indicate that its stored Depth value
 end_comment
 
 begin_comment
-comment|/// stored Depth value will require recomputation the next time
-end_comment
-
-begin_comment
-comment|/// getDepth() is called.
+comment|/// will require recomputation the next time getDepth() is called.
 end_comment
 
 begin_function_decl
@@ -2002,15 +1777,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// setHeightDirty - Set a flag in this node to indicate that its
+comment|/// \brief Sets a flag in this node to indicate that its stored Height value
 end_comment
 
 begin_comment
-comment|/// stored Height value will require recomputation the next time
-end_comment
-
-begin_comment
-comment|/// getHeight() is called.
+comment|/// will require recomputation the next time getHeight() is called.
 end_comment
 
 begin_function_decl
@@ -2021,48 +1792,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// isPred - Test if node N is a predecessor of this node.
+comment|/// Tests if node N is a predecessor of this node.
 end_comment
 
-begin_function
+begin_decl_stmt
 name|bool
 name|isPred
-parameter_list|(
+argument_list|(
+specifier|const
 name|SUnit
-modifier|*
+operator|*
 name|N
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 for|for
 control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-operator|(
-name|unsigned
-operator|)
+specifier|const
+name|SDep
+modifier|&
+name|Pred
+range|:
 name|Preds
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
 if|if
 condition|(
-name|Preds
-index|[
-name|i
-index|]
+name|Pred
 operator|.
 name|getSUnit
 argument_list|()
@@ -2076,51 +1831,35 @@ return|return
 name|false
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/// isSucc - Test if node N is a successor of this node.
+comment|/// Tests if node N is a successor of this node.
 end_comment
 
-begin_function
+begin_decl_stmt
 name|bool
 name|isSucc
-parameter_list|(
+argument_list|(
+specifier|const
 name|SUnit
-modifier|*
+operator|*
 name|N
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 for|for
 control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-operator|(
-name|unsigned
-operator|)
+specifier|const
+name|SDep
+modifier|&
+name|Succ
+range|:
 name|Succs
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
 if|if
 condition|(
-name|Succs
-index|[
-name|i
-index|]
+name|Succ
 operator|.
 name|getSUnit
 argument_list|()
@@ -2134,7 +1873,7 @@ return|return
 name|false
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_expr_stmt
 name|bool
@@ -2165,7 +1904,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Order this node's predecessor edges such that the critical path
+comment|/// \brief Orders this node's predecessor edges such that the critical path
 end_comment
 
 begin_comment
@@ -2206,7 +1945,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|raw_ostream
+modifier|&
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|,
+specifier|const
+name|SUnit
+operator|*
+name|N
+operator|=
+name|nullptr
+argument_list|,
+specifier|const
+name|SUnit
+operator|*
+name|X
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|raw_ostream
+modifier|&
 name|print
 argument_list|(
 name|raw_ostream
@@ -2243,7 +2010,7 @@ end_function_decl
 
 begin_comment
 unit|};
-comment|/// Return true if the specified SDep is equivalent except for latency.
+comment|/// Returns true if the specified SDep is equivalent except for latency.
 end_comment
 
 begin_expr_stmt
@@ -2326,7 +2093,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|//// getSUnit - Return the SUnit to which this edge points.
+comment|//// Returns the SUnit to which this edge points.
 end_comment
 
 begin_expr_stmt
@@ -2349,7 +2116,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|//// setSUnit - Assign the SUnit to which this edge points.
+comment|//// Assigns the SUnit to which this edge points.
 end_comment
 
 begin_expr_stmt
@@ -2369,7 +2136,7 @@ argument_list|(
 name|SU
 argument_list|)
 block|; }
-comment|/// getKind - Return an enum value representing the kind of the dependence.
+comment|/// Returns an enum value representing the kind of the dependence.
 specifier|inline
 name|SDep
 operator|::
@@ -2394,31 +2161,27 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// SchedulingPriorityQueue - This interface is used to plug different
+comment|/// \brief This interface is used to plug different priorities computation
 end_comment
 
 begin_comment
-comment|/// priorities computation algorithms into the list scheduler. It implements
+comment|/// algorithms into the list scheduler. It implements the interface of a
 end_comment
 
 begin_comment
-comment|/// the interface of a standard priority queue, where nodes are inserted in
+comment|/// standard priority queue, where nodes are inserted in arbitrary order and
 end_comment
 
 begin_comment
-comment|/// arbitrary order and returned in priority order.  The computation of the
+comment|/// returned in priority order.  The computation of the priority and the
 end_comment
 
 begin_comment
-comment|/// priority and the representation of the queue are totally up to the
+comment|/// representation of the queue are totally up to the implementation to
 end_comment
 
 begin_comment
-comment|/// implementation to decide.
-end_comment
-
-begin_comment
-comment|///
+comment|/// decide.
 end_comment
 
 begin_decl_stmt
@@ -2432,6 +2195,8 @@ parameter_list|()
 function_decl|;
 name|unsigned
 name|CurCycle
+init|=
+literal|0
 decl_stmt|;
 name|bool
 name|HasReadyFilter
@@ -2443,11 +2208,6 @@ argument_list|(
 argument|bool rf = false
 argument_list|)
 block|:
-name|CurCycle
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|HasReadyFilter
 argument_list|(
 argument|rf
@@ -2457,7 +2217,9 @@ name|virtual
 operator|~
 name|SchedulingPriorityQueue
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|bool
 name|isBottomUp
@@ -2654,10 +2416,9 @@ operator|*
 argument_list|)
 decl|const
 block|{}
-comment|/// scheduledNode - As each node is scheduled, this method is invoked.  This
-comment|/// allows the priority function to adjust the priority of related
-comment|/// unscheduled nodes, for example.
-comment|///
+comment|/// As each node is scheduled, this method is invoked.  This allows the
+comment|/// priority function to adjust the priority of related unscheduled nodes,
+comment|/// for example.
 name|virtual
 name|void
 name|scheduledNode
@@ -2713,29 +2474,29 @@ name|TargetMachine
 modifier|&
 name|TM
 decl_stmt|;
-comment|// Target processor
+comment|///< Target processor
 specifier|const
 name|TargetInstrInfo
 modifier|*
 name|TII
 decl_stmt|;
-comment|// Target instruction information
+comment|///< Target instruction information
 specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|TRI
 decl_stmt|;
-comment|// Target processor register info
+comment|///< Target processor register info
 name|MachineFunction
 modifier|&
 name|MF
 decl_stmt|;
-comment|// Machine function
+comment|///< Machine function
 name|MachineRegisterInfo
 modifier|&
 name|MRI
 decl_stmt|;
-comment|// Virtual/real register map
+comment|///< Virtual/real register map
 name|std
 operator|::
 name|vector
@@ -2744,15 +2505,15 @@ name|SUnit
 operator|>
 name|SUnits
 expr_stmt|;
-comment|// The scheduling units.
+comment|///< The scheduling units.
 name|SUnit
 name|EntrySU
 decl_stmt|;
-comment|// Special node for the region entry.
+comment|///< Special node for the region entry.
 name|SUnit
 name|ExitSU
 decl_stmt|;
-comment|// Special node for the region exit.
+comment|///< Special node for the region exit.
 ifdef|#
 directive|ifdef
 name|NDEBUG
@@ -2783,13 +2544,13 @@ operator|~
 name|ScheduleDAG
 argument_list|()
 expr_stmt|;
-comment|/// clearDAG - clear the DAG state (between regions).
+comment|/// Clears the DAG state (between regions).
 name|void
 name|clearDAG
 parameter_list|()
 function_decl|;
-comment|/// getInstrDesc - Return the MCInstrDesc of this SUnit.
-comment|/// Return NULL for SDNodes without a machine opcode.
+comment|/// Returns the MCInstrDesc of this SUnit.
+comment|/// Returns NULL for SDNodes without a machine opcode.
 specifier|const
 name|MCInstrDesc
 modifier|*
@@ -2829,9 +2590,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// viewGraph - Pop up a GraphViz/gv window with the ScheduleDAG rendered
-comment|/// using 'dot'.
-comment|///
+comment|/// Pops up a GraphViz/gv window with the ScheduleDAG rendered using 'dot'.
 name|virtual
 name|void
 name|viewGraph
@@ -2865,8 +2624,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// getGraphNodeLabel - Return a label for an SUnit node in a visualization
-comment|/// of the ScheduleDAG.
+comment|/// Returns a label for an SUnit node in a visualization of the ScheduleDAG.
 name|virtual
 name|std
 operator|::
@@ -2879,7 +2637,7 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// getDAGLabel - Return a label for the region of code covered by the DAG.
+comment|/// Returns a label for the region of code covered by the DAG.
 name|virtual
 name|std
 operator|::
@@ -2890,8 +2648,7 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// addCustomGraphFeatures - Add custom features for a visualization of
-comment|/// the ScheduleDAG.
+comment|/// Adds custom features for a visualization of the ScheduleDAG.
 name|virtual
 name|void
 name|addCustomGraphFeatures
@@ -2908,8 +2665,8 @@ block|{}
 ifndef|#
 directive|ifndef
 name|NDEBUG
-comment|/// VerifyScheduledDAG - Verify that all SUnits were scheduled and that
-comment|/// their state is consistent. Return the number of scheduled SUnits.
+comment|/// \brief Verifies that all SUnits were scheduled and that their state is
+comment|/// consistent. Returns the number of scheduled SUnits.
 name|unsigned
 name|VerifyScheduledDAG
 parameter_list|(
@@ -2921,7 +2678,7 @@ endif|#
 directive|endif
 name|private
 label|:
-comment|// Return the MCInstrDesc of this SDNode or NULL.
+comment|/// Returns the MCInstrDesc of this SDNode or NULL.
 specifier|const
 name|MCInstrDesc
 modifier|*
@@ -3180,7 +2937,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isCtrlDep - Test if this is not an SDep::Data dependence.
+comment|/// Tests if this is not an SDep::Data dependence.
 end_comment
 
 begin_expr_stmt
@@ -3395,15 +3152,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// ScheduleDAGTopologicalSort is a class that computes a topological
+comment|/// This class can compute a topological ordering for SUnits and provides
 end_comment
 
 begin_comment
-comment|/// ordering for SUnits and provides methods for dynamically updating
-end_comment
-
-begin_comment
-comment|/// the ordering as new edges are added.
+comment|/// methods for dynamically updating the ordering as new edges are added.
 end_comment
 
 begin_comment
@@ -3414,15 +3167,11 @@ begin_comment
 comment|/// This allows a very fast implementation of IsReachable, for example.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
 begin_decl_stmt
 name|class
 name|ScheduleDAGTopologicalSort
 block|{
-comment|/// SUnits - A reference to the ScheduleDAG's SUnits.
+comment|/// A reference to the ScheduleDAG's SUnits.
 name|std
 operator|::
 name|vector
@@ -3436,7 +3185,7 @@ name|SUnit
 modifier|*
 name|ExitSU
 decl_stmt|;
-comment|/// Index2Node - Maps topological index to the node number.
+comment|/// Maps topological index to the node number.
 name|std
 operator|::
 name|vector
@@ -3445,7 +3194,7 @@ name|int
 operator|>
 name|Index2Node
 expr_stmt|;
-comment|/// Node2Index - Maps the node number to its topological index.
+comment|/// Maps the node number to its topological index.
 name|std
 operator|::
 name|vector
@@ -3454,13 +3203,13 @@ name|int
 operator|>
 name|Node2Index
 expr_stmt|;
-comment|/// Visited - a set of nodes visited during a DFS traversal.
+comment|/// a set of nodes visited during a DFS traversal.
 name|BitVector
 name|Visited
 decl_stmt|;
-comment|/// DFS - make a DFS traversal and mark all nodes affected by the
-comment|/// edge insertion. These nodes will later get new topological indexes
-comment|/// by means of the Shift method.
+comment|/// Makes a DFS traversal and mark all nodes affected by the edge insertion.
+comment|/// These nodes will later get new topological indexes by means of the Shift
+comment|/// method.
 name|void
 name|DFS
 parameter_list|(
@@ -3477,8 +3226,8 @@ modifier|&
 name|HasLoop
 parameter_list|)
 function_decl|;
-comment|/// Shift - reassign topological indexes for the nodes in the DAG
-comment|/// to preserve the topological ordering.
+comment|/// \brief Reassigns topological indexes for the nodes in the DAG to
+comment|/// preserve the topological ordering.
 name|void
 name|Shift
 parameter_list|(
@@ -3493,7 +3242,7 @@ name|int
 name|UpperBound
 parameter_list|)
 function_decl|;
-comment|/// Allocate - assign the topological index to the node n.
+comment|/// Assigns the topological index to the node n.
 name|void
 name|Allocate
 parameter_list|(
@@ -3522,13 +3271,40 @@ operator|*
 name|ExitSU
 argument_list|)
 expr_stmt|;
-comment|/// InitDAGTopologicalSorting - create the initial topological
-comment|/// ordering from the DAG to be scheduled.
+comment|/// Creates the initial topological ordering from the DAG to be scheduled.
 name|void
 name|InitDAGTopologicalSorting
 parameter_list|()
 function_decl|;
-comment|/// IsReachable - Checks if SU is reachable from TargetSU.
+comment|/// Returns an array of SUs that are both in the successor
+comment|/// subtree of StartSU and in the predecessor subtree of TargetSU.
+comment|/// StartSU and TargetSU are not in the array.
+comment|/// Success is false if TargetSU is not in the successor subtree of
+comment|/// StartSU, else it is true.
+name|std
+operator|::
+name|vector
+operator|<
+name|int
+operator|>
+name|GetSubGraph
+argument_list|(
+specifier|const
+name|SUnit
+operator|&
+name|StartSU
+argument_list|,
+specifier|const
+name|SUnit
+operator|&
+name|TargetSU
+argument_list|,
+name|bool
+operator|&
+name|Success
+argument_list|)
+expr_stmt|;
+comment|/// Checks if \p SU is reachable from \p TargetSU.
 name|bool
 name|IsReachable
 parameter_list|(
@@ -3543,7 +3319,7 @@ modifier|*
 name|TargetSU
 parameter_list|)
 function_decl|;
-comment|/// WillCreateCycle - Return true if addPred(TargetSU, SU) creates a cycle.
+comment|/// Returns true if addPred(TargetSU, SU) creates a cycle.
 name|bool
 name|WillCreateCycle
 parameter_list|(
@@ -3556,8 +3332,8 @@ modifier|*
 name|SU
 parameter_list|)
 function_decl|;
-comment|/// AddPred - Updates the topological ordering to accommodate an edge
-comment|/// to be added from SUnit X to SUnit Y.
+comment|/// \brief Updates the topological ordering to accommodate an edge to be
+comment|/// added from SUnit \p X to SUnit \p Y.
 name|void
 name|AddPred
 parameter_list|(
@@ -3570,9 +3346,9 @@ modifier|*
 name|X
 parameter_list|)
 function_decl|;
-comment|/// RemovePred - Updates the topological ordering to accommodate an
-comment|/// an edge to be removed from the specified node N from the predecessors
-comment|/// of the current node M.
+comment|/// \brief Updates the topological ordering to accommodate an an edge to be
+comment|/// removed from the specified node \p N from the predecessors of the
+comment|/// current node \p M.
 name|void
 name|RemovePred
 parameter_list|(
@@ -3728,11 +3504,19 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_SCHEDULEDAG_H
+end_comment
 
 end_unit
 

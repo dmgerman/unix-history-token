@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsABIFlagsSection.h - Mips ELF ABI Flags Section -----*- C++ -*--===//
+comment|//===- MipsABIFlagsSection.h - Mips ELF ABI Flags Section -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCStreamer.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/MipsABIFlags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -90,126 +96,97 @@ empty_stmt|;
 comment|// Version of flags structure.
 name|uint16_t
 name|Version
+init|=
+literal|0
 decl_stmt|;
 comment|// The level of the ISA: 1-5, 32, 64.
 name|uint8_t
 name|ISALevel
+init|=
+literal|0
 decl_stmt|;
 comment|// The revision of ISA: 0 for MIPS V and below, 1-n otherwise.
 name|uint8_t
 name|ISARevision
+init|=
+literal|0
 decl_stmt|;
 comment|// The size of general purpose registers.
 name|Mips
 operator|::
 name|AFL_REG
 name|GPRSize
+operator|=
+name|Mips
+operator|::
+name|AFL_REG_NONE
 expr_stmt|;
 comment|// The size of co-processor 1 registers.
 name|Mips
 operator|::
 name|AFL_REG
 name|CPR1Size
+operator|=
+name|Mips
+operator|::
+name|AFL_REG_NONE
 expr_stmt|;
 comment|// The size of co-processor 2 registers.
 name|Mips
 operator|::
 name|AFL_REG
 name|CPR2Size
+operator|=
+name|Mips
+operator|::
+name|AFL_REG_NONE
 expr_stmt|;
 comment|// Processor-specific extension.
 name|Mips
 operator|::
 name|AFL_EXT
 name|ISAExtension
+operator|=
+name|Mips
+operator|::
+name|AFL_EXT_NONE
 expr_stmt|;
 comment|// Mask of ASEs used.
 name|uint32_t
 name|ASESet
+init|=
+literal|0
 decl_stmt|;
 name|bool
 name|OddSPReg
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|Is32BitABI
+init|=
+name|false
 decl_stmt|;
 name|protected
 label|:
 comment|// The floating-point ABI.
 name|FpABIKind
 name|FpABI
+init|=
+name|FpABIKind
+operator|::
+name|ANY
 decl_stmt|;
 name|public
 label|:
 name|MipsABIFlagsSection
 argument_list|()
-operator|:
-name|Version
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ISALevel
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ISARevision
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|GPRSize
-argument_list|(
-name|Mips
-operator|::
-name|AFL_REG_NONE
-argument_list|)
-operator|,
-name|CPR1Size
-argument_list|(
-name|Mips
-operator|::
-name|AFL_REG_NONE
-argument_list|)
-operator|,
-name|CPR2Size
-argument_list|(
-name|Mips
-operator|::
-name|AFL_REG_NONE
-argument_list|)
-operator|,
-name|ISAExtension
-argument_list|(
-name|Mips
-operator|::
-name|AFL_EXT_NONE
-argument_list|)
-operator|,
-name|ASESet
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|OddSPReg
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Is32BitABI
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|FpABI
-argument_list|(
-argument|FpABIKind::ANY
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|uint16_t
 name|getVersionValue
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -768,6 +745,19 @@ name|Mips
 operator|::
 name|AFL_ASE_MIPS16
 expr_stmt|;
+if|if
+condition|(
+name|P
+operator|.
+name|hasMT
+argument_list|()
+condition|)
+name|ASESet
+operator||=
+name|Mips
+operator|::
+name|AFL_ASE_MT
+expr_stmt|;
 block|}
 name|template
 decl|<
@@ -949,11 +939,19 @@ operator|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSABIFLAGSSECTION_H
+end_comment
 
 end_unit
 

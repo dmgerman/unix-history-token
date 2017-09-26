@@ -164,13 +164,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -218,7 +218,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_include
@@ -231,6 +249,24 @@ begin_include
 include|#
 directive|include
 file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tuple>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -273,6 +309,92 @@ argument_list|)
 name|AnalysisSetKey
 block|{}
 struct|;
+comment|/// This templated class represents "all analyses that operate over \<a
+comment|/// particular IR unit\>" (e.g. a Function or a Module) in instances of
+comment|/// PreservedAnalysis.
+comment|///
+comment|/// This lets a transformation say e.g. "I preserved all function analyses".
+comment|///
+comment|/// Note that you must provide an explicit instantiation declaration and
+comment|/// definition for this template in order to get the correct behavior on
+comment|/// Windows. Otherwise, the address of SetKey will not be stable.
+name|template
+operator|<
+name|typename
+name|IRUnitT
+operator|>
+name|class
+name|AllAnalysesOn
+block|{
+name|public
+operator|:
+specifier|static
+name|AnalysisSetKey
+operator|*
+name|ID
+argument_list|()
+block|{
+return|return
+operator|&
+name|SetKey
+return|;
+block|}
+name|private
+operator|:
+specifier|static
+name|AnalysisSetKey
+name|SetKey
+block|; }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|IRUnitT
+operator|>
+name|AnalysisSetKey
+name|AllAnalysesOn
+operator|<
+name|IRUnitT
+operator|>
+operator|::
+name|SetKey
+expr_stmt|;
+extern|extern template class AllAnalysesOn<Module>;
+extern|extern template class AllAnalysesOn<Function>;
+comment|/// Represents analyses that only rely on functions' control flow.
+comment|///
+comment|/// This can be used with \c PreservedAnalyses to mark the CFG as preserved and
+comment|/// to query whether it has been preserved.
+comment|///
+comment|/// The CFG of a function is defined as the set of basic blocks and the edges
+comment|/// between them. Changing the set of basic blocks in a function is enough to
+comment|/// mutate the CFG. Mutating the condition of a branch or argument of an
+comment|/// invoked function does not mutate the CFG, but changing the successor labels
+comment|/// of those instructions does.
+name|class
+name|CFGAnalyses
+block|{
+name|public
+label|:
+specifier|static
+name|AnalysisSetKey
+modifier|*
+name|ID
+parameter_list|()
+block|{
+return|return
+operator|&
+name|SetKey
+return|;
+block|}
+name|private
+label|:
+specifier|static
+name|AnalysisSetKey
+name|SetKey
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|/// A set of analyses that are preserved following a run of a transformation
 comment|/// pass.
 comment|///
@@ -339,6 +461,33 @@ operator|&
 name|AllAnalysesKey
 argument_list|)
 expr_stmt|;
+return|return
+name|PA
+return|;
+block|}
+comment|/// \brief Construct a preserved analyses object with a single preserved set.
+name|template
+operator|<
+name|typename
+name|AnalysisSetT
+operator|>
+specifier|static
+name|PreservedAnalyses
+name|allInSet
+argument_list|()
+block|{
+name|PreservedAnalyses
+name|PA
+block|;
+name|PA
+operator|.
+name|preserveSet
+operator|<
+name|AnalysisSetT
+operator|>
+operator|(
+operator|)
+block|;
 return|return
 name|PA
 return|;
@@ -1155,97 +1304,6 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// This templated class represents "all analyses that operate over \<a
-end_comment
-
-begin_comment
-comment|/// particular IR unit\>" (e.g. a Function or a Module) in instances of
-end_comment
-
-begin_comment
-comment|/// PreservedAnalysis.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This lets a transformation say e.g. "I preserved all function analyses".
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Note that you must provide an explicit instantiation declaration and
-end_comment
-
-begin_comment
-comment|/// definition for this template in order to get the correct behavior on
-end_comment
-
-begin_comment
-comment|/// Windows. Otherwise, the address of SetKey will not be stable.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|IRUnitT
-operator|>
-name|class
-name|AllAnalysesOn
-block|{
-name|public
-operator|:
-specifier|static
-name|AnalysisSetKey
-operator|*
-name|ID
-argument_list|()
-block|{
-return|return
-operator|&
-name|SetKey
-return|;
-block|}
-name|private
-operator|:
-specifier|static
-name|AnalysisSetKey
-name|SetKey
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
-name|template
-operator|<
-name|typename
-name|IRUnitT
-operator|>
-name|AnalysisSetKey
-name|AllAnalysesOn
-operator|<
-name|IRUnitT
-operator|>
-operator|::
-name|SetKey
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern template class AllAnalysesOn<Module>;
-end_extern
-
-begin_extern
-extern|extern template class AllAnalysesOn<Function>;
-end_extern
-
-begin_comment
 comment|/// \brief Manages a sequence of passes over a particular unit of IR.
 end_comment
 
@@ -1617,36 +1675,37 @@ argument_list|(
 argument|PassT Pass
 argument_list|)
 block|{
-typedef|typedef
+name|using
+name|PassModelT
+operator|=
 name|detail
 operator|::
 name|PassModel
 operator|<
 name|IRUnitT
-operator|,
+block|,
 name|PassT
-operator|,
+block|,
 name|PreservedAnalyses
-operator|,
+block|,
 name|AnalysisManagerT
-operator|,
+block|,
 name|ExtraArgTs
 operator|...
 operator|>
-name|PassModelT
-expr_stmt|;
+block|;
 name|Passes
 operator|.
 name|emplace_back
 argument_list|(
 argument|new PassModelT(std::move(Pass))
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-unit|}  private:
-typedef|typedef
+block|;   }
+name|private
+operator|:
+name|using
+name|PassConceptT
+operator|=
 name|detail
 operator|::
 name|PassConcept
@@ -1658,9 +1717,8 @@ operator|,
 name|ExtraArgTs
 operator|...
 operator|>
-name|PassConceptT
 expr_stmt|;
-end_typedef
+end_expr_stmt
 
 begin_expr_stmt
 name|std
@@ -1696,15 +1754,16 @@ begin_comment
 comment|/// \brief Convenience typedef for a pass manager over modules.
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|ModulePassManager
+init|=
 name|PassManager
 operator|<
 name|Module
 operator|>
-name|ModulePassManager
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_extern
 extern|extern template class PassManager<Function>;
@@ -1714,15 +1773,16 @@ begin_comment
 comment|/// \brief Convenience typedef for a pass manager over functions.
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|FunctionPassManager
+init|=
 name|PassManager
 operator|<
 name|Function
 operator|>
-name|FunctionPassManager
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief A container for analyses that lazily runs them and caches their
@@ -1765,66 +1825,46 @@ block|;
 name|private
 operator|:
 comment|// Now that we've defined our invalidator, we can define the concept types.
-typedef|typedef
+name|using
+name|ResultConceptT
+operator|=
 name|detail
 operator|::
 name|AnalysisResultConcept
 operator|<
 name|IRUnitT
-operator|,
+block|,
 name|PreservedAnalyses
-operator|,
+block|,
 name|Invalidator
 operator|>
-name|ResultConceptT
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|PassConceptT
+operator|=
 name|detail
 operator|::
 name|AnalysisPassConcept
 operator|<
 name|IRUnitT
-operator|,
+block|,
 name|PreservedAnalyses
-operator|,
+block|,
 name|Invalidator
-operator|,
+block|,
 name|ExtraArgTs
 operator|...
 operator|>
-name|PassConceptT
-expr_stmt|;
-end_typedef
-
-begin_comment
+block|;
 comment|/// \brief List of analysis pass IDs and associated concept pointers.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Requires iterators to be valid across appending new entries and arbitrary
-end_comment
-
-begin_comment
 comment|/// erases. Provides the analysis ID to enable finding iterators to a given
-end_comment
-
-begin_comment
 comment|/// entry in maps below, and provides the storage for the actual result
-end_comment
-
-begin_comment
 comment|/// concept.
-end_comment
-
-begin_typedef
-typedef|typedef
+name|using
+name|AnalysisResultListT
+operator|=
 name|std
 operator|::
 name|list
@@ -1835,48 +1875,32 @@ name|pair
 operator|<
 name|AnalysisKey
 operator|*
-operator|,
+block|,
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|ResultConceptT
 operator|>>>
-name|AnalysisResultListT
-expr_stmt|;
-end_typedef
-
-begin_comment
+block|;
 comment|/// \brief Map type from IRUnitT pointer to our custom list type.
-end_comment
-
-begin_typedef
-typedef|typedef
+name|using
+name|AnalysisResultListMapT
+operator|=
 name|DenseMap
 operator|<
 name|IRUnitT
 operator|*
-operator|,
+block|,
 name|AnalysisResultListT
 operator|>
-name|AnalysisResultListMapT
-expr_stmt|;
-end_typedef
-
-begin_comment
+block|;
 comment|/// \brief Map type from a pair of analysis ID and IRUnitT pointer to an
-end_comment
-
-begin_comment
 comment|/// iterator into a particular result list (which is where the actual analysis
-end_comment
-
-begin_comment
 comment|/// result is stored).
-end_comment
-
-begin_typedef
-typedef|typedef
+name|using
+name|AnalysisResultMapT
+operator|=
 name|DenseMap
 operator|<
 name|std
@@ -1885,67 +1909,33 @@ name|pair
 operator|<
 name|AnalysisKey
 operator|*
-operator|,
+block|,
 name|IRUnitT
 operator|*
 operator|>
-operator|,
+block|,
 name|typename
 name|AnalysisResultListT
 operator|::
 name|iterator
 operator|>
-name|AnalysisResultMapT
-expr_stmt|;
-end_typedef
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|/// API to communicate dependencies between analyses during invalidation.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When an analysis result embeds handles to other analysis results, it
-end_comment
-
-begin_comment
 comment|/// needs to be invalidated both when its own information isn't preserved and
-end_comment
-
-begin_comment
 comment|/// when any of its embedded analysis results end up invalidated. We pass an
-end_comment
-
-begin_comment
 comment|/// \c Invalidator object as an argument to \c invalidate() in order to let
-end_comment
-
-begin_comment
 comment|/// the analysis results themselves define the dependency graph on the fly.
-end_comment
-
-begin_comment
 comment|/// This lets us avoid building building an explicit representation of the
-end_comment
-
-begin_comment
 comment|/// dependencies between analysis results.
-end_comment
-
-begin_decl_stmt
 name|class
 name|Invalidator
 block|{
 name|public
-label|:
+operator|:
 comment|/// Trigger the invalidation of some other analysis pass if not already
 comment|/// handled and return whether it was in fact invalidated.
 comment|///
@@ -1974,26 +1964,27 @@ argument_list|,
 argument|const PreservedAnalyses&PA
 argument_list|)
 block|{
-typedef|typedef
+name|using
+name|ResultModelT
+operator|=
 name|detail
 operator|::
 name|AnalysisResultModel
 operator|<
 name|IRUnitT
-operator|,
+block|,
 name|PassT
-operator|,
+block|,
 name|typename
 name|PassT
 operator|::
 name|Result
-operator|,
+block|,
 name|PreservedAnalyses
-operator|,
+block|,
 name|Invalidator
 operator|>
-name|ResultModelT
-expr_stmt|;
+block|;
 return|return
 name|invalidateImpl
 operator|<
@@ -2011,49 +2002,21 @@ name|PA
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// A type-erased variant of the above invalidate method with the same core
-end_comment
-
-begin_comment
 comment|/// API other than passing an analysis ID rather than an analysis type
-end_comment
-
-begin_comment
 comment|/// parameter.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is sadly less efficient than the above routine, which leverages
-end_comment
-
-begin_comment
 comment|/// the type parameter to avoid the type erasure overhead.
-end_comment
-
-begin_function
 name|bool
 name|invalidate
-parameter_list|(
-name|AnalysisKey
-modifier|*
-name|ID
-parameter_list|,
-name|IRUnitT
-modifier|&
-name|IR
-parameter_list|,
-specifier|const
-name|PreservedAnalyses
-modifier|&
-name|PA
-parameter_list|)
+argument_list|(
+argument|AnalysisKey *ID
+argument_list|,
+argument|IRUnitT&IR
+argument_list|,
+argument|const PreservedAnalyses&PA
+argument_list|)
 block|{
 return|return
 name|invalidateImpl
@@ -2068,19 +2031,13 @@ name|PA
 operator|)
 return|;
 block|}
-end_function
-
-begin_label
 name|private
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 name|friend
 name|class
 name|AnalysisManager
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|template
@@ -2614,29 +2571,27 @@ name|ExtraArgs
 operator|...
 argument_list|)
 block|;
-typedef|typedef
+name|using
+name|ResultModelT
+operator|=
 name|detail
 operator|::
 name|AnalysisResultModel
 operator|<
 name|IRUnitT
-operator|,
+block|,
 name|PassT
-operator|,
+block|,
 name|typename
 name|PassT
 operator|::
 name|Result
-operator|,
+block|,
 name|PreservedAnalyses
-operator|,
+block|,
 name|Invalidator
 operator|>
-name|ResultModelT
-expr_stmt|;
-end_expr_stmt
-
-begin_return
+block|;
 return|return
 name|static_cast
 operator|<
@@ -2649,10 +2604,10 @@ operator|)
 operator|.
 name|Result
 return|;
-end_return
+block|}
+end_expr_stmt
 
 begin_comment
-unit|}
 comment|/// \brief Get the cached result of an analysis pass for a given IR unit.
 end_comment
 
@@ -2673,7 +2628,7 @@ comment|/// \returns null if there is no cached result.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|PassT
@@ -2726,10 +2681,9 @@ condition|)
 return|return
 name|nullptr
 return|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+name|using
+name|ResultModelT
+operator|=
 name|detail
 operator|::
 name|AnalysisResultModel
@@ -2747,9 +2701,8 @@ name|PreservedAnalyses
 operator|,
 name|Invalidator
 operator|>
-name|ResultModelT
 expr_stmt|;
-end_typedef
+end_expr_stmt
 
 begin_return
 return|return
@@ -2848,37 +2801,34 @@ argument_list|(
 argument|PassBuilderT&&PassBuilder
 argument_list|)
 block|{
-typedef|typedef
+name|using
+name|PassT
+operator|=
 name|decltype
 argument_list|(
-argument|PassBuilder()
+name|PassBuilder
+argument_list|()
 argument_list|)
-name|PassT
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|PassModelT
+operator|=
 name|detail
 operator|::
 name|AnalysisPassModel
 operator|<
 name|IRUnitT
-operator|,
+block|,
 name|PassT
-operator|,
+block|,
 name|PreservedAnalyses
-operator|,
+block|,
 name|Invalidator
-operator|,
+block|,
 name|ExtraArgTs
 operator|...
 operator|>
-name|PassModelT
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
+block|;
 name|auto
 operator|&
 name|PassPtr
@@ -2890,10 +2840,7 @@ operator|::
 name|ID
 argument_list|()
 index|]
-expr_stmt|;
-end_expr_stmt
-
-begin_if
+block|;
 if|if
 condition|(
 name|PassPtr
@@ -2902,17 +2849,8 @@ comment|// Already registered this pass type!
 return|return
 name|false
 return|;
-end_if
-
-begin_comment
 comment|// Construct a new model around the instance returned by the builder.
-end_comment
-
-begin_macro
 name|PassPtr
-end_macro
-
-begin_expr_stmt
 operator|.
 name|reset
 argument_list|(
@@ -3253,6 +3191,13 @@ operator|.
 name|name
 argument_list|()
 operator|<<
+literal|" on "
+operator|<<
+name|IR
+operator|.
+name|getName
+argument_list|()
+operator|<<
 literal|"\n"
 expr_stmt|;
 name|I
@@ -3483,6 +3428,13 @@ operator|.
 name|name
 argument_list|()
 operator|<<
+literal|" on "
+operator|<<
+name|IR
+operator|.
+name|getName
+argument_list|()
+operator|<<
 literal|"\n"
 expr_stmt|;
 name|AnalysisResultListT
@@ -3691,6 +3643,13 @@ operator|.
 name|name
 argument_list|()
 operator|<<
+literal|" on "
+operator|<<
+name|IR
+operator|.
+name|getName
+argument_list|()
+operator|<<
 literal|"\n"
 expr_stmt|;
 name|AnalysisResultLists
@@ -3720,22 +3679,23 @@ begin_comment
 comment|/// \brief Map type from module analysis pass ID to pass concept pointer.
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|AnalysisPassMapT
+init|=
 name|DenseMap
 operator|<
 name|AnalysisKey
 operator|*
-operator|,
+decl_stmt|,
 name|std
-operator|::
+decl|::
 name|unique_ptr
-operator|<
+decl|<
 name|PassConceptT
-operator|>>
-name|AnalysisPassMapT
-expr_stmt|;
-end_typedef
+decl|>>
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Collection of module analysis passes, indexed by ID.
@@ -3802,15 +3762,16 @@ begin_comment
 comment|/// \brief Convenience typedef for the Module analysis manager.
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|ModuleAnalysisManager
+init|=
 name|AnalysisManager
 operator|<
 name|Module
 operator|>
-name|ModuleAnalysisManager
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_extern
 extern|extern template class AnalysisManager<Function>;
@@ -3820,15 +3781,16 @@ begin_comment
 comment|/// \brief Convenience typedef for the Function analysis manager.
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|FunctionAnalysisManager
+init|=
 name|AnalysisManager
 operator|<
 name|Function
 operator|>
-name|FunctionAnalysisManager
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief An analysis over an "outer" IR unit that provides access to an
@@ -3961,6 +3923,24 @@ name|InnerAM
 operator|=
 name|nullptr
 block|;     }
+operator|~
+name|Result
+argument_list|()
+block|{
+comment|// InnerAM is cleared in a moved from state where there is nothing to do.
+if|if
+condition|(
+operator|!
+name|InnerAM
+condition|)
+return|return;
+comment|// Clear out the analysis manager if we're being destroyed -- it means we
+comment|// didn't even see an invalidate call when we got invalidated.
+name|InnerAM
+operator|->
+name|clear
+argument_list|()
+block|;     }
 name|Result
 operator|&
 name|operator
@@ -3991,24 +3971,6 @@ operator|*
 name|this
 return|;
 block|}
-operator|~
-name|Result
-argument_list|()
-block|{
-comment|// InnerAM is cleared in a moved from state where there is nothing to do.
-if|if
-condition|(
-operator|!
-name|InnerAM
-condition|)
-return|return;
-comment|// Clear out the analysis manager if we're being destroyed -- it means we
-comment|// didn't even see an invalidate call when we got invalidated.
-name|InnerAM
-operator|->
-name|clear
-argument_list|()
-block|;     }
 comment|/// \brief Accessor for the analysis manager.
 name|AnalysisManagerT
 operator|&
@@ -4213,17 +4175,18 @@ begin_comment
 comment|/// Provide the \c FunctionAnalysisManager to \c Module proxy.
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|FunctionAnalysisManagerModuleProxy
+init|=
 name|InnerAnalysisManagerProxy
 operator|<
 name|FunctionAnalysisManager
-operator|,
+decl_stmt|,
 name|Module
-operator|>
-name|FunctionAnalysisManagerModuleProxy
-expr_stmt|;
-end_typedef
+decl|>
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Specialization of the invalidate method for the \c
@@ -4411,26 +4374,152 @@ operator|*
 name|AM
 return|;
 block|}
-comment|/// \brief Handle invalidation by ignoring it; this pass is immutable.
+comment|/// When invalidation occurs, remove any registered invalidation events.
 name|bool
 name|invalidate
 argument_list|(
-argument|IRUnitT&
+argument|IRUnitT&IRUnit
 argument_list|,
-argument|const PreservedAnalyses&
+argument|const PreservedAnalyses&PA
 argument_list|,
 argument|typename AnalysisManager<IRUnitT
 argument_list|,
-argument|ExtraArgTs...>::Invalidator&
+argument|ExtraArgTs...>::Invalidator&Inv
 argument_list|)
 block|{
+comment|// Loop over the set of registered outer invalidation mappings and if any
+comment|// of them map to an analysis that is now invalid, clear it out.
+name|SmallVector
+operator|<
+name|AnalysisKey
+operator|*
+block|,
+literal|4
+operator|>
+name|DeadKeys
+block|;
+for|for
+control|(
+name|auto
+operator|&
+name|KeyValuePair
+operator|:
+name|OuterAnalysisInvalidationMap
+control|)
+block|{
+name|AnalysisKey
+modifier|*
+name|OuterID
+init|=
+name|KeyValuePair
+operator|.
+name|first
+decl_stmt|;
+name|auto
+operator|&
+name|InnerIDs
+operator|=
+name|KeyValuePair
+operator|.
+name|second
+expr_stmt|;
+name|InnerIDs
+operator|.
+name|erase
+argument_list|(
+name|llvm
+operator|::
+name|remove_if
+argument_list|(
+name|InnerIDs
+argument_list|,
+index|[
+operator|&
+index|]
+operator|(
+name|AnalysisKey
+operator|*
+name|InnerID
+operator|)
+block|{
+return|return
+name|Inv
+operator|.
+name|invalidate
+argument_list|(
+name|InnerID
+argument_list|,
+name|IRUnit
+argument_list|,
+name|PA
+argument_list|)
+return|;
+block|}
+block|)
+operator|,
+name|InnerIDs
+operator|.
+name|end
+argument_list|()
+block|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|InnerIDs
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|DeadKeys
+operator|.
+name|push_back
+argument_list|(
+name|OuterID
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_expr_stmt
+unit|}        for
+operator|(
+name|auto
+name|OuterID
+operator|:
+name|DeadKeys
+operator|)
+name|OuterAnalysisInvalidationMap
+operator|.
+name|erase
+argument_list|(
+name|OuterID
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// The proxy itself remains valid regardless of anything else.
+end_comment
+
+begin_return
 return|return
 name|false
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// Register a deferred invalidation event for when the outer analysis
+end_comment
+
+begin_comment
 comment|/// manager processes its invalidations.
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|OuterAnalysisT
@@ -4700,17 +4789,18 @@ begin_comment
 comment|/// Provide the \c ModuleAnalysisManager to \c Function proxy.
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|ModuleAnalysisManagerFunctionProxy
+init|=
 name|OuterAnalysisManagerProxy
 operator|<
 name|ModuleAnalysisManager
-operator|,
+decl_stmt|,
 name|Function
-operator|>
-name|ModuleAnalysisManagerFunctionProxy
-expr_stmt|;
-end_typedef
+decl|>
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Trivial adaptor that maps from a module to its functions.
@@ -5424,11 +5514,19 @@ return|;
 block|}
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_PASSMANAGER_H
+end_comment
 
 end_unit
 

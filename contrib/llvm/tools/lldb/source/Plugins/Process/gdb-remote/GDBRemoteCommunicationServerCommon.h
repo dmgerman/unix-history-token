@@ -136,7 +136,7 @@ operator|:
 name|ProcessLaunchInfo
 name|m_process_launch_info
 block|;
-name|Error
+name|Status
 name|m_process_launch_error
 block|;
 name|ProcessInstanceInfoList
@@ -501,7 +501,7 @@ operator|(
 name|StringExtractorGDBRemote
 name|packet
 expr|,
-name|Error
+name|Status
 operator|&
 name|error
 expr|,
@@ -542,11 +542,11 @@ comment|/// server in a situation where the startup code has been provided
 comment|/// with all the information for a child process to be launched.
 comment|///
 comment|/// @return
-comment|///     An Error object indicating the success or failure of the
+comment|///     An Status object indicating the success or failure of the
 comment|///     launch.
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|()
 operator|=
@@ -574,19 +574,9 @@ operator|:
 name|ModuleSpec
 name|GetModuleInfo
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|module_path
+argument|llvm::StringRef module_path
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|triple
+argument|llvm::StringRef triple
 argument_list|)
 block|; }
 decl_stmt|;

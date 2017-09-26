@@ -43,39 +43,57 @@ directive|define
 name|liblldb_StreamFile_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Stream.h"
-end_include
-
 begin_include
 include|#
 directive|include
 file|"lldb/Host/File.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Stream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_comment
+comment|// for DISALLOW_COPY_AND_ASSIGN
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_comment
+comment|// for FilePermissions::eFilePermission...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|// for size_t, FILE
+end_comment
 
 begin_decl_stmt
 name|namespace

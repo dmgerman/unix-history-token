@@ -184,6 +184,9 @@ block|{
 name|class
 name|ListRecTy
 decl_stmt|;
+struct_decl|struct
+name|MultiClass
+struct_decl|;
 name|class
 name|Record
 decl_stmt|;
@@ -196,9 +199,6 @@ decl_stmt|;
 name|class
 name|StringInit
 decl_stmt|;
-struct_decl|struct
-name|MultiClass
-struct_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Type Classes
 comment|//===----------------------------------------------------------------------===//
@@ -346,7 +346,6 @@ name|OS
 return|;
 block|}
 comment|/// 'bit' - Represent a single bit
-comment|///
 name|class
 name|BitRecTy
 range|:
@@ -416,7 +415,6 @@ name|override
 block|; }
 decl_stmt|;
 comment|/// 'bits<n>' - Represent a fixed number of bits
-comment|///
 name|class
 name|BitsRecTy
 range|:
@@ -495,7 +493,6 @@ name|override
 block|; }
 decl_stmt|;
 comment|/// 'code' - Represent a code fragment
-comment|///
 name|class
 name|CodeRecTy
 range|:
@@ -558,7 +555,6 @@ block|}
 expr|}
 block|;
 comment|/// 'int' - Represent an integer value of no particular size
-comment|///
 name|class
 name|IntRecTy
 operator|:
@@ -628,7 +624,6 @@ name|override
 block|; }
 block|;
 comment|/// 'string' - Represent an string value
-comment|///
 name|class
 name|StringRecTy
 operator|:
@@ -694,13 +689,20 @@ block|; }
 block|;
 comment|/// 'list<Ty>' - Represent a list of values, all of which must be of
 comment|/// the specified type.
-comment|///
 name|class
 name|ListRecTy
 operator|:
 name|public
 name|RecTy
 block|{
+name|friend
+name|ListRecTy
+operator|*
+name|RecTy
+operator|::
+name|getListTy
+argument_list|()
+block|;
 name|RecTy
 operator|*
 name|Ty
@@ -723,14 +725,6 @@ argument_list|(
 argument|T
 argument_list|)
 block|{}
-name|friend
-name|ListRecTy
-operator|*
-name|RecTy
-operator|::
-name|getListTy
-argument_list|()
-block|;
 name|public
 operator|:
 specifier|static
@@ -792,7 +786,6 @@ name|override
 block|; }
 block|;
 comment|/// 'dag' - Represent a dag fragment
-comment|///
 name|class
 name|DagRecTy
 operator|:
@@ -851,13 +844,16 @@ block|; }
 block|;
 comment|/// '[classname]' - Represent an instance of a class, such as:
 comment|/// (R32 X = EAX).
-comment|///
 name|class
 name|RecordRecTy
 operator|:
 name|public
 name|RecTy
 block|{
+name|friend
+name|class
+name|Record
+block|;
 name|Record
 operator|*
 name|Rec
@@ -880,10 +876,6 @@ argument_list|(
 argument|R
 argument_list|)
 block|{}
-name|friend
-name|class
-name|Record
-block|;
 name|public
 operator|:
 specifier|static
@@ -941,7 +933,6 @@ block|; }
 block|;
 comment|/// Find a common type that T1 and T2 convert to.
 comment|/// Return 0 if no such type exists.
-comment|///
 name|RecTy
 operator|*
 name|resolveTypes
@@ -1180,7 +1171,6 @@ comment|/// This method is used to implement the bitrange
 comment|/// selection operator.  Given an initializer, it selects the specified bits
 comment|/// out, returning them as a new init of bits type.  If it is not legal to use
 comment|/// the bit subscript operator on this initializer, return null.
-comment|///
 name|virtual
 name|Init
 operator|*
@@ -1198,7 +1188,6 @@ comment|/// This method is used to implement the list slice
 comment|/// selection operator.  Given an initializer, it selects the specified list
 comment|/// elements, returning them as a new init of list type.  If it is not legal
 comment|/// to take a slice of this, return null.
-comment|///
 name|virtual
 name|Init
 operator|*
@@ -1215,7 +1204,6 @@ block|}
 comment|/// This method is used to implement the FieldInit class.
 comment|/// Implementors of this method should return the type of the named field if
 comment|/// they are of record type.
-comment|///
 name|virtual
 name|RecTy
 operator|*
@@ -1232,7 +1220,6 @@ block|}
 comment|/// This method complements getFieldType to return the
 comment|/// initializer for the specified field.  If getFieldType returns non-null
 comment|/// this method should return non-null, otherwise it returns null.
-comment|///
 name|virtual
 name|Init
 operator|*
@@ -1254,7 +1241,6 @@ comment|/// This method is used by classes that refer to other
 comment|/// variables which may not be defined at the time the expression is formed.
 comment|/// If a value is set for the variable later, this method will be called on
 comment|/// users of the value to allow the value to propagate out.
-comment|///
 name|virtual
 name|Init
 operator|*
@@ -1353,7 +1339,6 @@ return|;
 block|}
 comment|/// This is the common super-class of types that have a specific,
 comment|/// explicit, type.
-comment|///
 name|class
 name|TypedInit
 operator|:
@@ -1396,7 +1381,6 @@ argument_list|(
 specifier|const
 name|TypedInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -1409,7 +1393,6 @@ operator|(
 specifier|const
 name|TypedInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -1507,7 +1490,6 @@ literal|0
 block|; }
 block|;
 comment|/// '?' - Represents an uninitialized value
-comment|///
 name|class
 name|UnsetInit
 operator|:
@@ -1541,7 +1523,6 @@ operator|(
 specifier|const
 name|UnsetInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -1622,7 +1603,6 @@ block|}
 expr|}
 block|;
 comment|/// 'true'/'false' - Represent a concrete initializer for a bit.
-comment|///
 name|class
 name|BitInit
 operator|:
@@ -1655,7 +1635,6 @@ argument_list|(
 specifier|const
 name|BitInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -1667,7 +1646,6 @@ operator|=
 operator|(
 name|BitInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -1763,7 +1741,6 @@ expr|}
 block|;
 comment|/// '{ a, b, c }' - Represents an initializer for a BitsRecTy value.
 comment|/// It contains a vector of bits, whose size is determined by the type.
-comment|///
 name|class
 name|BitsInit
 name|final
@@ -1815,7 +1792,6 @@ argument_list|(
 specifier|const
 name|BitsInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -1828,7 +1804,6 @@ operator|(
 specifier|const
 name|BitsInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -2061,7 +2036,6 @@ block|}
 expr|}
 block|;
 comment|/// '7' - Represent an initialization by a literal integer value.
-comment|///
 name|class
 name|IntInit
 operator|:
@@ -2099,7 +2073,6 @@ argument_list|(
 specifier|const
 name|IntInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -2112,7 +2085,6 @@ operator|(
 specifier|const
 name|IntInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -2228,7 +2200,6 @@ block|}
 expr|}
 block|;
 comment|/// "foo" - Represent an initialization by a string value.
-comment|///
 name|class
 name|StringInit
 operator|:
@@ -2266,7 +2237,6 @@ argument_list|(
 specifier|const
 name|StringInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -2279,7 +2249,6 @@ operator|(
 specifier|const
 name|StringInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -2438,7 +2407,6 @@ argument_list|(
 specifier|const
 name|StringInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -2451,7 +2419,6 @@ operator|(
 specifier|const
 name|StringInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -2581,7 +2548,7 @@ block|,
 name|public
 name|TrailingObjects
 operator|<
-name|BitsInit
+name|ListInit
 block|,
 name|Init
 operator|*
@@ -2592,13 +2559,14 @@ name|NumValues
 block|;
 name|public
 operator|:
-typedef|typedef
-name|Init
-modifier|*
-specifier|const
-modifier|*
+name|using
 name|const_iterator
-typedef|;
+operator|=
+name|Init
+operator|*
+specifier|const
+operator|*
+block|;
 name|private
 operator|:
 name|explicit
@@ -2633,7 +2601,6 @@ argument_list|(
 specifier|const
 name|ListInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -2646,7 +2613,6 @@ operator|(
 specifier|const
 name|ListInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -2925,7 +2891,6 @@ argument_list|(
 specifier|const
 name|OpInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -2937,7 +2902,6 @@ operator|=
 operator|(
 name|OpInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -3097,7 +3061,6 @@ argument_list|(
 specifier|const
 name|UnOpInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -3110,7 +3073,6 @@ operator|(
 specifier|const
 name|UnOpInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -3280,7 +3242,6 @@ name|override
 block|; }
 block|;
 comment|/// !op (X, Y) - Combine two inits.
-comment|///
 name|class
 name|BinOpInit
 operator|:
@@ -3364,7 +3325,6 @@ argument_list|(
 specifier|const
 name|BinOpInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -3377,7 +3337,6 @@ operator|(
 specifier|const
 name|BinOpInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -3576,7 +3535,6 @@ name|override
 block|; }
 block|;
 comment|/// !op (X, Y, Z) - Combine two inits.
-comment|///
 name|class
 name|TernOpInit
 operator|:
@@ -3656,7 +3614,6 @@ argument_list|(
 specifier|const
 name|TernOpInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -3669,7 +3626,6 @@ operator|(
 specifier|const
 name|TernOpInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -3902,7 +3858,6 @@ name|override
 block|; }
 block|;
 comment|/// 'Opcode' - Represent a reference to an entire variable object.
-comment|///
 name|class
 name|VarInit
 operator|:
@@ -3944,7 +3899,6 @@ argument_list|(
 specifier|const
 name|VarInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -3957,7 +3911,6 @@ operator|(
 specifier|const
 name|VarInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -4108,7 +4061,6 @@ block|}
 expr|}
 block|;
 comment|/// Opcode{0} - Represent access to one bit of a variable or field.
-comment|///
 name|class
 name|VarBitInit
 operator|:
@@ -4203,7 +4155,6 @@ argument_list|(
 specifier|const
 name|VarBitInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -4216,7 +4167,6 @@ operator|(
 specifier|const
 name|VarBitInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -4406,19 +4356,18 @@ argument_list|(
 specifier|const
 name|VarListElementInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
 block|;
-name|void
+name|VarListElementInit
+operator|&
 name|operator
 operator|=
 operator|(
 specifier|const
 name|VarListElementInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -4514,13 +4463,16 @@ name|override
 block|; }
 block|;
 comment|/// AL - Represent a reference to a 'def' in the description
-comment|///
 name|class
 name|DefInit
 operator|:
 name|public
 name|TypedInit
 block|{
+name|friend
+name|class
+name|Record
+block|;
 name|Record
 operator|*
 name|Def
@@ -4548,10 +4500,6 @@ argument_list|(
 argument|D
 argument_list|)
 block|{}
-name|friend
-name|class
-name|Record
-block|;
 name|public
 operator|:
 name|DefInit
@@ -4559,7 +4507,6 @@ argument_list|(
 specifier|const
 name|DefInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -4572,7 +4519,6 @@ operator|(
 specifier|const
 name|DefInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -4690,7 +4636,6 @@ block|;   }
 block|}
 block|;
 comment|/// X.Y - Represent a reference to a subfield of a variable
-comment|///
 name|class
 name|FieldInit
 operator|:
@@ -4755,7 +4700,6 @@ argument_list|(
 specifier|const
 name|FieldInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -4768,7 +4712,6 @@ operator|(
 specifier|const
 name|FieldInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -4866,16 +4809,31 @@ block|;
 comment|/// (v a, b) - Represent a DAG tree value.  DAG inits are required
 comment|/// to have at least one value then a (possibly empty) list of arguments.  Each
 comment|/// argument can have a name associated with it.
-comment|///
 name|class
 name|DagInit
+name|final
 operator|:
 name|public
 name|TypedInit
 block|,
 name|public
 name|FoldingSetNode
+block|,
+name|public
+name|TrailingObjects
+operator|<
+name|DagInit
+block|,
+name|Init
+operator|*
+block|,
+name|StringInit
+operator|*
+operator|>
 block|{
+name|friend
+name|TrailingObjects
+block|;
 name|Init
 operator|*
 name|Val
@@ -4884,47 +4842,21 @@ name|StringInit
 operator|*
 name|ValName
 block|;
-name|SmallVector
-operator|<
-name|Init
-operator|*
-block|,
-literal|4
-operator|>
-name|Args
+name|unsigned
+name|NumArgs
 block|;
-name|SmallVector
-operator|<
-name|StringInit
-operator|*
-block|,
-literal|4
-operator|>
-name|ArgNames
+name|unsigned
+name|NumArgNames
 block|;
 name|DagInit
 argument_list|(
-name|Init
-operator|*
-name|V
+argument|Init *V
 argument_list|,
-name|StringInit
-operator|*
-name|VN
+argument|StringInit *VN
 argument_list|,
-name|ArrayRef
-operator|<
-name|Init
-operator|*
-operator|>
-name|ArgRange
+argument|unsigned NumArgs
 argument_list|,
-name|ArrayRef
-operator|<
-name|StringInit
-operator|*
-operator|>
-name|NameRange
+argument|unsigned NumArgNames
 argument_list|)
 operator|:
 name|TypedInit
@@ -4947,26 +4879,27 @@ argument_list|(
 name|VN
 argument_list|)
 block|,
-name|Args
+name|NumArgs
 argument_list|(
-name|ArgRange
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|ArgRange
-operator|.
-name|end
-argument_list|()
+name|NumArgs
 argument_list|)
 block|,
-name|ArgNames
+name|NumArgNames
 argument_list|(
-argument|NameRange.begin()
-argument_list|,
-argument|NameRange.end()
+argument|NumArgNames
 argument_list|)
 block|{}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<Init *>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NumArgs
+return|;
+block|}
 name|public
 operator|:
 name|DagInit
@@ -4974,7 +4907,6 @@ argument_list|(
 specifier|const
 name|DagInit
 operator|&
-name|Other
 argument_list|)
 operator|=
 name|delete
@@ -4987,7 +4919,6 @@ operator|(
 specifier|const
 name|DagInit
 operator|&
-name|Other
 operator|)
 operator|=
 name|delete
@@ -5123,10 +5054,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Args
-operator|.
-name|size
-argument_list|()
+name|NumArgs
 return|;
 block|}
 name|Init
@@ -5141,16 +5069,19 @@ name|assert
 argument_list|(
 name|Num
 operator|<
-name|Args
-operator|.
-name|size
-argument_list|()
+name|NumArgs
 operator|&&
 literal|"Arg number out of range!"
 argument_list|)
 block|;
 return|return
-name|Args
+name|getTrailingObjects
+operator|<
+name|Init
+operator|*
+operator|>
+operator|(
+operator|)
 index|[
 name|Num
 index|]
@@ -5168,16 +5099,19 @@ name|assert
 argument_list|(
 name|Num
 operator|<
-name|ArgNames
-operator|.
-name|size
-argument_list|()
+name|NumArgNames
 operator|&&
 literal|"Arg number out of range!"
 argument_list|)
 block|;
 return|return
-name|ArgNames
+name|getTrailingObjects
+operator|<
+name|StringInit
+operator|*
+operator|>
+operator|(
+operator|)
 index|[
 name|Num
 index|]
@@ -5211,6 +5145,54 @@ name|StringRef
 argument_list|()
 return|;
 block|}
+name|ArrayRef
+operator|<
+name|Init
+operator|*
+operator|>
+name|getArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|getTrailingObjects
+operator|<
+name|Init
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|NumArgs
+argument_list|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|StringInit
+operator|*
+operator|>
+name|getArgNames
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|getTrailingObjects
+operator|<
+name|StringInit
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|NumArgNames
+argument_list|)
+return|;
+block|}
 name|Init
 operator|*
 name|resolveReferences
@@ -5230,7 +5212,9 @@ argument_list|()
 specifier|const
 name|override
 block|;
-typedef|typedef
+name|using
+name|const_arg_iterator
+operator|=
 name|SmallVectorImpl
 operator|<
 name|Init
@@ -5238,9 +5222,10 @@ operator|*
 operator|>
 operator|::
 name|const_iterator
-name|const_arg_iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|const_name_iterator
+operator|=
 name|SmallVectorImpl
 operator|<
 name|StringInit
@@ -5248,8 +5233,7 @@ operator|*
 operator|>
 operator|::
 name|const_iterator
-name|const_name_iterator
-expr_stmt|;
+block|;
 specifier|inline
 name|const_arg_iterator
 name|arg_begin
@@ -5257,7 +5241,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Args
+name|getArgs
+argument_list|()
 operator|.
 name|begin
 argument_list|()
@@ -5270,7 +5255,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Args
+name|getArgs
+argument_list|()
 operator|.
 name|end
 argument_list|()
@@ -5283,10 +5269,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Args
-operator|.
-name|size
-argument_list|()
+name|NumArgs
 return|;
 block|}
 specifier|inline
@@ -5296,10 +5279,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Args
-operator|.
-name|empty
-argument_list|()
+name|NumArgs
+operator|==
+literal|0
 return|;
 block|}
 specifier|inline
@@ -5309,7 +5291,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArgNames
+name|getArgNames
+argument_list|()
 operator|.
 name|begin
 argument_list|()
@@ -5322,7 +5305,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArgNames
+name|getArgNames
+argument_list|()
 operator|.
 name|end
 argument_list|()
@@ -5335,10 +5319,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArgNames
-operator|.
-name|size
-argument_list|()
+name|NumArgNames
 return|;
 block|}
 specifier|inline
@@ -5348,10 +5329,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArgNames
-operator|.
-name|empty
-argument_list|()
+name|NumArgNames
+operator|==
+literal|0
 return|;
 block|}
 name|Init
@@ -5422,15 +5402,6 @@ operator|:
 name|RecordVal
 argument_list|(
 argument|Init *N
-argument_list|,
-argument|RecTy *T
-argument_list|,
-argument|bool P
-argument_list|)
-block|;
-name|RecordVal
-argument_list|(
-argument|StringRef N
 argument_list|,
 argument|RecTy *T
 argument_list|,
@@ -5665,6 +5636,8 @@ comment|// can't be immediately resolved so we mark them ResolveFirst to fully
 comment|// resolve them later as soon as the multiclass is instantiated.
 name|bool
 name|ResolveFirst
+operator|=
+name|false
 block|;
 name|void
 name|init
@@ -5720,12 +5693,7 @@ argument_list|)
 block|,
 name|IsAnonymous
 argument_list|(
-name|Anonymous
-argument_list|)
-block|,
-name|ResolveFirst
-argument_list|(
-argument|false
+argument|Anonymous
 argument_list|)
 block|{
 name|init
@@ -5884,13 +5852,6 @@ name|Name
 argument_list|)
 block|;
 comment|// Also updates RecordKeeper.
-name|void
-name|setName
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|;
-comment|// Also updates RecordKeeper.
 name|ArrayRef
 operator|<
 name|SMLoc
@@ -5981,25 +5942,6 @@ return|return
 name|false
 return|;
 block|}
-name|bool
-name|isTemplateArg
-argument_list|(
-argument|StringRef Name
-argument_list|)
-specifier|const
-block|{
-return|return
-name|isTemplateArg
-argument_list|(
-name|StringInit
-operator|::
-name|get
-argument_list|(
-name|Name
-argument_list|)
-argument_list|)
-return|;
-block|}
 specifier|const
 name|RecordVal
 operator|*
@@ -6062,28 +6004,28 @@ argument_list|(
 argument|const Init *Name
 argument_list|)
 block|{
-for|for
-control|(
+return|return
+name|const_cast
+operator|<
 name|RecordVal
-modifier|&
-name|Val
-range|:
-name|Values
-control|)
-if|if
-condition|(
-name|Val
-operator|.
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Record
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getValue
+argument_list|(
 name|Name
-operator|==
-name|Name
-condition|)
-return|return
-operator|&
-name|Val
-return|;
-return|return
-name|nullptr
+argument_list|)
+operator|)
 return|;
 block|}
 name|RecordVal
@@ -6094,15 +6036,27 @@ argument|StringRef Name
 argument_list|)
 block|{
 return|return
+name|const_cast
+operator|<
+name|RecordVal
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|Record
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getValue
-argument_list|(
-name|StringInit
-operator|::
-name|get
 argument_list|(
 name|Name
 argument_list|)
-argument_list|)
+operator|)
 return|;
 block|}
 name|void
@@ -6127,22 +6081,6 @@ operator|.
 name|push_back
 argument_list|(
 name|Name
-argument_list|)
-block|;   }
-name|void
-name|addTemplateArg
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|{
-name|addTemplateArg
-argument_list|(
-name|StringInit
-operator|::
-name|get
-argument_list|(
-name|Name
-argument_list|)
 argument_list|)
 block|;   }
 name|void
@@ -6428,7 +6366,6 @@ argument_list|)
 block|;   }
 comment|/// If there are any field references that refer to fields
 comment|/// that have been filled in, we can propagate the values now.
-comment|///
 name|void
 name|resolveReferences
 argument_list|()
@@ -6489,6 +6426,13 @@ operator|=
 name|b
 block|;   }
 name|void
+name|print
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+block|;
+name|void
 name|dump
 argument_list|()
 specifier|const
@@ -6498,7 +6442,6 @@ comment|// High-level methods useful to tablegen back-ends
 comment|//
 comment|/// Return the initializer for a value with the specified name,
 comment|/// or throw an exception if the field does not exist.
-comment|///
 name|Init
 operator|*
 name|getValueInit
@@ -6531,10 +6474,7 @@ block|}
 comment|/// This method looks up the specified field and returns
 comment|/// its value as a string, throwing an exception if the field does not exist
 comment|/// or if the value is not a string.
-comment|///
-name|std
-operator|::
-name|string
+name|StringRef
 name|getValueAsString
 argument_list|(
 argument|StringRef FieldName
@@ -6544,7 +6484,6 @@ block|;
 comment|/// This method looks up the specified field and returns
 comment|/// its value as a BitsInit, throwing an exception if the field does not exist
 comment|/// or if the value is not the right type.
-comment|///
 name|BitsInit
 operator|*
 name|getValueAsBitsInit
@@ -6556,7 +6495,6 @@ block|;
 comment|/// This method looks up the specified field and returns
 comment|/// its value as a ListInit, throwing an exception if the field does not exist
 comment|/// or if the value is not the right type.
-comment|///
 name|ListInit
 operator|*
 name|getValueAsListInit
@@ -6568,7 +6506,6 @@ block|;
 comment|/// This method looks up the specified field and
 comment|/// returns its value as a vector of records, throwing an exception if the
 comment|/// field does not exist or if the value is not the right type.
-comment|///
 name|std
 operator|::
 name|vector
@@ -6585,7 +6522,6 @@ block|;
 comment|/// This method looks up the specified field and
 comment|/// returns its value as a vector of integers, throwing an exception if the
 comment|/// field does not exist or if the value is not the right type.
-comment|///
 name|std
 operator|::
 name|vector
@@ -6601,14 +6537,11 @@ block|;
 comment|/// This method looks up the specified field and
 comment|/// returns its value as a vector of strings, throwing an exception if the
 comment|/// field does not exist or if the value is not the right type.
-comment|///
 name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|string
+name|StringRef
 operator|>
 name|getValueAsListOfStrings
 argument_list|(
@@ -6619,7 +6552,6 @@ block|;
 comment|/// This method looks up the specified field and returns its
 comment|/// value as a Record, throwing an exception if the field does not exist or if
 comment|/// the value is not the right type.
-comment|///
 name|Record
 operator|*
 name|getValueAsDef
@@ -6631,7 +6563,6 @@ block|;
 comment|/// This method looks up the specified field and returns its
 comment|/// value as a bit, throwing an exception if the field does not exist or if
 comment|/// the value is not the right type.
-comment|///
 name|bool
 name|getValueAsBit
 argument_list|(
@@ -6642,7 +6573,6 @@ block|;
 comment|/// This method looks up the specified field and
 comment|/// returns its value as a bit. If the field is unset, sets Unset to true and
 comment|/// returns false.
-comment|///
 name|bool
 name|getValueAsBitOrUnset
 argument_list|(
@@ -6655,7 +6585,6 @@ block|;
 comment|/// This method looks up the specified field and returns its
 comment|/// value as an int64_t, throwing an exception if the field does not exist or
 comment|/// if the value is not the right type.
-comment|///
 name|int64_t
 name|getValueAsInt
 argument_list|(
@@ -6666,7 +6595,6 @@ block|;
 comment|/// This method looks up the specified field and returns its
 comment|/// value as an Dag, throwing an exception if the field does not exist or if
 comment|/// the value is not the right type.
-comment|///
 name|DagInit
 operator|*
 name|getValueAsDag
@@ -6697,7 +6625,9 @@ name|Record
 name|Rec
 block|;
 comment|// Placeholder for template args and Name.
-typedef|typedef
+name|using
+name|RecordVector
+operator|=
 name|std
 operator|::
 name|vector
@@ -6708,8 +6638,7 @@ name|unique_ptr
 operator|<
 name|Record
 operator|>>
-name|RecordVector
-expr_stmt|;
+block|;
 name|RecordVector
 name|DefPrototypes
 block|;
@@ -6741,7 +6670,9 @@ block|;
 name|class
 name|RecordKeeper
 block|{
-typedef|typedef
+name|using
+name|RecordMap
+operator|=
 name|std
 operator|::
 name|map
@@ -6749,15 +6680,14 @@ operator|<
 name|std
 operator|::
 name|string
-operator|,
+block|,
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|Record
 operator|>>
-name|RecordMap
-expr_stmt|;
+block|;
 name|RecordMap
 name|Classes
 block|,
@@ -6972,10 +6902,9 @@ name|dump
 argument_list|()
 specifier|const
 block|; }
-decl_stmt|;
+block|;
 comment|/// Sorting predicate to sort record pointers by name.
-comment|///
-struct|struct
+block|struct
 name|LessRecord
 block|{
 name|bool
@@ -6986,7 +6915,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-operator|,
+expr|,
 specifier|const
 name|Record
 operator|*
@@ -7014,13 +6943,13 @@ operator|<
 literal|0
 return|;
 block|}
-block|}
-struct|;
+expr|}
+block|;
 comment|/// Sorting predicate to sort record pointers by their
 comment|/// unique ID. If you just need a deterministic order, use this, since it
 comment|/// just compares two `unsigned`; the other sorting predicates require
 comment|/// string manipulation.
-struct|struct
+block|struct
 name|LessRecordByID
 block|{
 name|bool
@@ -7031,7 +6960,7 @@ specifier|const
 name|Record
 operator|*
 name|LHS
-operator|,
+expr|,
 specifier|const
 name|Record
 operator|*
@@ -7051,12 +6980,11 @@ name|getID
 argument_list|()
 return|;
 block|}
-block|}
-struct|;
+expr|}
+block|;
 comment|/// Sorting predicate to sort record pointers by their
 comment|/// name field.
-comment|///
-struct|struct
+block|struct
 name|LessRecordFieldName
 block|{
 name|bool
@@ -7067,7 +6995,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-operator|,
+expr|,
 specifier|const
 name|Record
 operator|*
@@ -7091,18 +7019,16 @@ literal|"Name"
 argument_list|)
 return|;
 block|}
-block|}
-struct|;
-struct|struct
+expr|}
+block|;  struct
 name|LessRecordRegister
 block|{
 specifier|static
 name|bool
 name|ascii_isdigit
-parameter_list|(
-name|char
-name|x
-parameter_list|)
+argument_list|(
+argument|char x
+argument_list|)
 block|{
 return|return
 name|x
@@ -7114,7 +7040,7 @@ operator|<=
 literal|'9'
 return|;
 block|}
-struct|struct
+expr|struct
 name|RecordParts
 block|{
 name|SmallVector
@@ -7124,14 +7050,14 @@ operator|::
 name|pair
 operator|<
 name|bool
-operator|,
+block|,
 name|StringRef
 operator|>
-operator|,
+block|,
 literal|4
 operator|>
 name|Parts
-expr_stmt|;
+block|;
 name|RecordParts
 argument_list|(
 argument|StringRef Rec
@@ -7147,29 +7073,29 @@ condition|)
 return|return;
 name|size_t
 name|Len
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Start
-init|=
+operator|=
 name|Rec
 operator|.
 name|data
 argument_list|()
-decl_stmt|;
+block|;
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Curr
-init|=
+operator|=
 name|Start
-decl_stmt|;
+block|;
 name|bool
 name|isDigitPart
-init|=
+operator|=
 name|ascii_isdigit
 argument_list|(
 name|Curr
@@ -7177,7 +7103,7 @@ index|[
 literal|0
 index|]
 argument_list|)
-decl_stmt|;
+block|;
 for|for
 control|(
 name|size_t
@@ -7198,7 +7124,7 @@ name|E
 condition|;
 operator|++
 name|I
-operator|,
+incr|,
 operator|++
 name|Len
 control|)
@@ -7287,7 +7213,7 @@ expr_stmt|;
 block|}
 name|size_t
 name|size
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Parts
@@ -7301,7 +7227,7 @@ operator|::
 name|pair
 operator|<
 name|bool
-operator|,
+block|,
 name|StringRef
 operator|>
 name|getPart
@@ -7328,8 +7254,8 @@ name|i
 index|]
 return|;
 block|}
-block|}
-struct|;
+expr|}
+block|;
 name|bool
 name|operator
 argument_list|()
@@ -7338,7 +7264,7 @@ specifier|const
 name|Record
 operator|*
 name|Rec1
-operator|,
+expr|,
 specifier|const
 name|Record
 operator|*
@@ -7681,14 +7607,8 @@ operator|<
 name|RHSNumParts
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+expr|}
+block|;
 name|raw_ostream
 operator|&
 name|operator
@@ -7697,48 +7617,31 @@ operator|(
 name|raw_ostream
 operator|&
 name|OS
-operator|,
+expr|,
 specifier|const
 name|RecordKeeper
 operator|&
 name|RK
 operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// Return an Init with a qualifier prefix referring
-end_comment
-
-begin_comment
 comment|/// to CurRec's name.
-end_comment
-
-begin_function_decl
 name|Init
-modifier|*
+operator|*
 name|QualifyName
-parameter_list|(
-name|Record
-modifier|&
-name|CurRec
-parameter_list|,
-name|MultiClass
-modifier|*
-name|CurMultiClass
-parameter_list|,
-name|Init
-modifier|*
-name|Name
-parameter_list|,
-name|StringRef
-name|Scoper
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|Record&CurRec
+argument_list|,
+argument|MultiClass *CurMultiClass
+argument_list|,
+argument|Init *Name
+argument_list|,
+argument|StringRef Scoper
+argument_list|)
+block|;  }
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

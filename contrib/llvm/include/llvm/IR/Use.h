@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Use.h - Definition of the Use class ----------------*- C++ -*-===//
+comment|//===- llvm/Use.h - Definition of the Use class -----------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -106,6 +106,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -118,22 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm-c/Types.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Value
-decl_stmt|;
-name|class
-name|User
-decl_stmt|;
-name|class
-name|Use
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -141,6 +138,12 @@ operator|>
 expr|struct
 name|simplify_type
 expr_stmt|;
+name|class
+name|User
+decl_stmt|;
+name|class
+name|Value
+decl_stmt|;
 comment|/// \brief A Use represents the edge between a Value definition and its users.
 comment|///
 comment|/// This is notionally a two-dimensional linked list. It supports traversing
@@ -183,20 +186,120 @@ modifier|&
 name|RHS
 parameter_list|)
 function_decl|;
+comment|/// Pointer traits for the UserRef PointerIntPair. This ensures we always
+comment|/// use the LSB regardless of pointer alignment on different targets.
+struct|struct
+name|UserRefPointerTraits
+block|{
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|getAsVoidPointer
+parameter_list|(
+name|User
+modifier|*
+name|P
+parameter_list|)
+block|{
+return|return
+name|P
+return|;
+block|}
+specifier|static
+specifier|inline
+name|User
+modifier|*
+name|getFromVoidPointer
+parameter_list|(
+name|void
+modifier|*
+name|P
+parameter_list|)
+block|{
+return|return
+operator|(
+name|User
+operator|*
+operator|)
+name|P
+return|;
+block|}
+enum|enum
+block|{
+name|NumLowBitsAvailable
+init|=
+literal|1
+block|}
+enum|;
+block|}
+struct|;
 comment|// A type for the word following an array of hung-off Uses in memory, which is
 comment|// a pointer back to their User with the bottom bit set.
-typedef|typedef
+name|using
+name|UserRef
+init|=
 name|PointerIntPair
 operator|<
 name|User
 operator|*
-operator|,
-literal|1
-operator|,
+decl_stmt|, 1,
 name|unsigned
-operator|>
-name|UserRef
-expr_stmt|;
+decl_stmt|,
+name|UserRefPointerTraits
+decl|>
+decl_stmt|;
+comment|/// Pointer traits for the Prev PointerIntPair. This ensures we always use
+comment|/// the two LSBs regardless of pointer alignment on different targets.
+struct|struct
+name|PrevPointerTraits
+block|{
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|getAsVoidPointer
+parameter_list|(
+name|Use
+modifier|*
+modifier|*
+name|P
+parameter_list|)
+block|{
+return|return
+name|P
+return|;
+block|}
+specifier|static
+specifier|inline
+name|Use
+modifier|*
+modifier|*
+name|getFromVoidPointer
+parameter_list|(
+name|void
+modifier|*
+name|P
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Use
+operator|*
+operator|*
+operator|)
+name|P
+return|;
+block|}
+enum|enum
+block|{
+name|NumLowBitsAvailable
+init|=
+literal|2
+block|}
+enum|;
+block|}
+struct|;
 name|private
 label|:
 comment|/// Destructor - Only for zap()
@@ -229,11 +332,6 @@ name|Use
 argument_list|(
 argument|PrevPtrTag tag
 argument_list|)
-block|:
-name|Val
-argument_list|(
-argument|nullptr
-argument_list|)
 block|{
 name|Prev
 operator|.
@@ -245,6 +343,10 @@ expr_stmt|;
 block|}
 name|public
 label|:
+name|friend
+name|class
+name|Value
+decl_stmt|;
 name|operator
 name|Value
 operator|*
@@ -275,6 +377,7 @@ operator|*
 name|getUser
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 specifier|inline
 name|void
@@ -435,6 +538,7 @@ operator|*
 name|getImpliedUser
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 end_expr_stmt
 
@@ -442,6 +546,8 @@ begin_decl_stmt
 name|Value
 modifier|*
 name|Val
+init|=
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -462,6 +568,8 @@ operator|,
 literal|2
 operator|,
 name|PrevPtrTag
+operator|,
+name|PrevPointerTraits
 operator|>
 name|Prev
 expr_stmt|;
@@ -561,13 +669,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-name|friend
-name|class
-name|Value
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 unit|};
 comment|/// \brief Allow clients to treat uses just like values when using
@@ -587,11 +688,12 @@ operator|<
 name|Use
 operator|>
 block|{
-typedef|typedef
-name|Value
-modifier|*
+name|using
 name|SimpleType
-typedef|;
+operator|=
+name|Value
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -606,14 +708,10 @@ name|get
 argument_list|()
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -624,12 +722,13 @@ specifier|const
 name|Use
 operator|>
 block|{
-typedef|typedef
+name|using
+name|SimpleType
+operator|=
 comment|/*const*/
 name|Value
-modifier|*
-name|SimpleType
-typedef|;
+operator|*
+block|;
 specifier|static
 name|SimpleType
 name|getSimplifiedValue
@@ -644,14 +743,10 @@ name|get
 argument_list|()
 return|;
 block|}
-block|}
 end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
 end_comment
 

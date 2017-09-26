@@ -82,11 +82,6 @@ decl_stmt|;
 name|void
 name|createPDB
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Path
-argument_list|,
 name|SymbolTable
 operator|*
 name|Symtab

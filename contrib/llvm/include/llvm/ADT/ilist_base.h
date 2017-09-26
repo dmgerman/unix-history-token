@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/ADT/ilist_base.h - Intrusive List Base ---------------*- C++ -*-==//
+comment|//===- llvm/ADT/ilist_base.h - Intrusive List Base --------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -55,18 +55,6 @@ directive|include
 file|<cassert>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<cstddef>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<type_traits>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -82,13 +70,14 @@ name|ilist_base
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|node_base_type
+operator|=
 name|ilist_node_base
 operator|<
 name|EnableSentinelTracking
 operator|>
-name|node_base_type
-expr_stmt|;
+block|;
 specifier|static
 name|void
 name|insertBeforeImpl
@@ -289,17 +278,17 @@ operator|&&
 comment|// Check for the most common mistake.
 literal|"Insertion point can't be one of the transferred nodes"
 argument_list|)
-expr_stmt|;
+block|;
 name|node_base_type
-modifier|&
+operator|&
 name|Final
-init|=
+operator|=
 operator|*
 name|Last
 operator|.
 name|getPrev
 argument_list|()
-decl_stmt|;
+block|;
 comment|// Detach from old list/position.
 name|First
 operator|.
@@ -311,7 +300,7 @@ argument_list|(
 operator|&
 name|Last
 argument_list|)
-expr_stmt|;
+block|;
 name|Last
 operator|.
 name|setPrev
@@ -321,18 +310,18 @@ operator|.
 name|getPrev
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 comment|// Splice [First, Final] into its new list/position.
 name|node_base_type
-modifier|&
+operator|&
 name|Prev
-init|=
+operator|=
 operator|*
 name|Next
 operator|.
 name|getPrev
 argument_list|()
-decl_stmt|;
+block|;
 name|Final
 operator|.
 name|setNext
@@ -340,7 +329,7 @@ argument_list|(
 operator|&
 name|Next
 argument_list|)
-expr_stmt|;
+block|;
 name|First
 operator|.
 name|setPrev
@@ -348,7 +337,7 @@ argument_list|(
 operator|&
 name|Prev
 argument_list|)
-expr_stmt|;
+block|;
 name|Prev
 operator|.
 name|setNext
@@ -356,7 +345,7 @@ argument_list|(
 operator|&
 name|First
 argument_list|)
-expr_stmt|;
+block|;
 name|Next
 operator|.
 name|setPrev
@@ -364,11 +353,7 @@ argument_list|(
 operator|&
 name|Final
 argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
+block|;   }
 name|template
 operator|<
 name|class
@@ -453,10 +438,15 @@ argument_list|,
 name|Last
 argument_list|)
 block|;   }
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};  }
+unit|}
 comment|// end namespace llvm
 end_comment
 

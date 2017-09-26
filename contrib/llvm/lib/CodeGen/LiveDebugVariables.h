@@ -189,6 +189,7 @@ comment|/// dump - Print data structures to dbgs().
 name|void
 name|dump
 argument_list|()
+specifier|const
 block|;
 name|private
 operator|:

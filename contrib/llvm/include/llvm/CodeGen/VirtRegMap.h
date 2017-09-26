@@ -383,46 +383,9 @@ name|assignVirt2Phys
 argument_list|(
 argument|unsigned virtReg
 argument_list|,
-argument|unsigned physReg
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|TargetRegisterInfo
-operator|::
-name|isVirtualRegister
-argument_list|(
-name|virtReg
-argument_list|)
-operator|&&
-name|TargetRegisterInfo
-operator|::
-name|isPhysicalRegister
-argument_list|(
-name|physReg
-argument_list|)
+argument|MCPhysReg physReg
 argument_list|)
 block|;
-name|assert
-argument_list|(
-name|Virt2PhysMap
-index|[
-name|virtReg
-index|]
-operator|==
-name|NO_PHYS_REG
-operator|&&
-literal|"attempt to assign physical register to already mapped "
-literal|"virtual register"
-argument_list|)
-block|;
-name|Virt2PhysMap
-index|[
-name|virtReg
-index|]
-operator|=
-name|physReg
-block|;     }
 comment|/// @brief clears the specified virtual register's, physical
 comment|/// register mapping
 name|void

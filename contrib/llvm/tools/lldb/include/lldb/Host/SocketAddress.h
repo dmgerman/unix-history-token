@@ -150,6 +150,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -159,11 +165,46 @@ name|SocketAddress
 block|{
 name|public
 label|:
+comment|//----------------------------------------------------------------------------
+comment|// Static method to get all address information for a host and/or service
+comment|//----------------------------------------------------------------------------
+specifier|static
+name|std
+operator|::
+name|vector
+operator|<
+name|SocketAddress
+operator|>
+name|GetAddressInfo
+argument_list|(
+argument|const char *hostname
+argument_list|,
+argument|const char *servname
+argument_list|,
+argument|int ai_family
+argument_list|,
+argument|int ai_socktype
+argument_list|,
+argument|int ai_protocol
+argument_list|,
+argument|int ai_flags =
+literal|0
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
 name|SocketAddress
 argument_list|()
+expr_stmt|;
+name|SocketAddress
+argument_list|(
+specifier|const
+expr|struct
+name|addrinfo
+operator|*
+name|addr_info
+argument_list|)
 expr_stmt|;
 name|SocketAddress
 argument_list|(
@@ -293,6 +334,28 @@ operator|&
 name|s
 operator|)
 decl_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|SocketAddress
+operator|&
+name|rhs
+operator|)
+specifier|const
+expr_stmt|;
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|SocketAddress
+operator|&
+name|rhs
+operator|)
+specifier|const
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Clear the contents of this socket address
 comment|//------------------------------------------------------------------
@@ -439,6 +502,22 @@ comment|// Returns true if there is a valid socket address in this object.
 comment|//------------------------------------------------------------------
 name|bool
 name|IsValid
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|// Returns true if the socket is INADDR_ANY
+comment|//------------------------------------------------------------------
+name|bool
+name|IsAnyAddr
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|// Returns true if the socket is INADDR_LOOPBACK
+comment|//------------------------------------------------------------------
+name|bool
+name|IsLocalhost
 argument_list|()
 specifier|const
 expr_stmt|;

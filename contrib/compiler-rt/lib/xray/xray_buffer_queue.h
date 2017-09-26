@@ -70,13 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<atomic>
+file|"sanitizer_common/sanitizer_atomic.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstdint>
+file|"sanitizer_common/sanitizer_mutex.h"
 end_include
 
 begin_include
@@ -88,19 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mutex>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<system_error>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unordered_set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -126,33 +120,37 @@ name|Buffer
 init|=
 name|nullptr
 decl_stmt|;
-name|std
-operator|::
 name|size_t
 name|Size
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 block|}
 struct|;
 name|private
 label|:
-name|std
-operator|::
 name|size_t
 name|BufferSize
-expr_stmt|;
+decl_stmt|;
+comment|// We use a bool to indicate whether the Buffer has been used in this
+comment|// freelist implementation.
 name|std
 operator|::
 name|deque
 operator|<
-name|Buffer
-operator|>
-name|Buffers
-expr_stmt|;
 name|std
 operator|::
-name|mutex
+name|tuple
+operator|<
+name|Buffer
+operator|,
+name|bool
+operator|>>
+name|Buffers
+expr_stmt|;
+name|__sanitizer
+operator|::
+name|BlockingMutex
 name|Mutex
 expr_stmt|;
 name|std
@@ -164,22 +162,99 @@ operator|*
 operator|>
 name|OwnedBuffers
 expr_stmt|;
-name|std
+name|__sanitizer
 operator|::
-name|atomic
-operator|<
-name|bool
-operator|>
+name|atomic_uint8_t
 name|Finalizing
 expr_stmt|;
 name|public
 label|:
-comment|/// Initialise a queue of size |N| with buffers of size |B|.
+name|enum
+name|class
+name|ErrorCode
+range|:
+name|unsigned
+block|{
+name|Ok
+block|,
+name|NotEnoughMemory
+block|,
+name|QueueFinalizing
+block|,
+name|UnrecognizedBuffer
+block|,
+name|AlreadyFinalized
+block|,   }
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getErrorString
+parameter_list|(
+name|ErrorCode
+name|E
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|E
+condition|)
+block|{
+case|case
+name|ErrorCode
+operator|::
+name|Ok
+case|:
+return|return
+literal|"(none)"
+return|;
+case|case
+name|ErrorCode
+operator|::
+name|NotEnoughMemory
+case|:
+return|return
+literal|"no available buffers in the queue"
+return|;
+case|case
+name|ErrorCode
+operator|::
+name|QueueFinalizing
+case|:
+return|return
+literal|"queue already finalizing"
+return|;
+case|case
+name|ErrorCode
+operator|::
+name|UnrecognizedBuffer
+case|:
+return|return
+literal|"buffer being returned not owned by buffer queue"
+return|;
+case|case
+name|ErrorCode
+operator|::
+name|AlreadyFinalized
+case|:
+return|return
+literal|"queue already finalized"
+return|;
+block|}
+return|return
+literal|"unknown error"
+return|;
+block|}
+comment|/// Initialise a queue of size |N| with buffers of size |B|. We report success
+comment|/// through |Success|.
 name|BufferQueue
 argument_list|(
-argument|std::size_t B
+argument|size_t B
 argument_list|,
-argument|std::size_t N
+argument|size_t N
+argument_list|,
+argument|bool&Success
 argument_list|)
 empty_stmt|;
 comment|/// Updates |Buf| to contain the pointer to an appropriate buffer. Returns an
@@ -193,59 +268,126 @@ comment|/// Returns:
 comment|///   - std::errc::not_enough_memory on exceeding MaxSize.
 comment|///   - no error when we find a Buffer.
 comment|///   - std::errc::state_not_recoverable on finalising BufferQueue.
-name|std
-operator|::
-name|error_code
+name|ErrorCode
 name|getBuffer
-argument_list|(
+parameter_list|(
 name|Buffer
-operator|&
+modifier|&
 name|Buf
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Updates |Buf| to point to nullptr, with size 0.
 comment|///
 comment|/// Returns:
 comment|///   - ...
-name|std
-operator|::
-name|error_code
+name|ErrorCode
 name|releaseBuffer
-argument_list|(
+parameter_list|(
 name|Buffer
-operator|&
+modifier|&
 name|Buf
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|bool
 name|finalizing
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Finalizing
-operator|.
-name|load
+name|__sanitizer
+operator|::
+name|atomic_load
 argument_list|(
-name|std
+operator|&
+name|Finalizing
+argument_list|,
+name|__sanitizer
 operator|::
 name|memory_order_acquire
 argument_list|)
 return|;
 block|}
-comment|// Sets the state of the BufferQueue to finalizing, which ensures that:
-comment|//
-comment|//   - All subsequent attempts to retrieve a Buffer will fail.
-comment|//   - All releaseBuffer operations will not fail.
-comment|//
-comment|// After a call to finalize succeeds, all subsequent calls to finalize will
-comment|// fail with std::errc::state_not_recoverable.
+comment|/// Returns the configured size of the buffers in the buffer queue.
+name|size_t
+name|ConfiguredBufferSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BufferSize
+return|;
+block|}
+comment|/// Sets the state of the BufferQueue to finalizing, which ensures that:
+comment|///
+comment|///   - All subsequent attempts to retrieve a Buffer will fail.
+comment|///   - All releaseBuffer operations will not fail.
+comment|///
+comment|/// After a call to finalize succeeds, all subsequent calls to finalize will
+comment|/// fail with std::errc::state_not_recoverable.
+name|ErrorCode
+name|finalize
+parameter_list|()
+function_decl|;
+comment|/// Applies the provided function F to each Buffer in the queue, only if the
+comment|/// Buffer is marked 'used' (i.e. has been the result of getBuffer(...) and a
+comment|/// releaseBuffer(...) operation.
+name|template
+operator|<
+name|class
+name|F
+operator|>
+name|void
+name|apply
+argument_list|(
+argument|F Fn
+argument_list|)
+block|{
+name|__sanitizer
+operator|::
+name|BlockingMutexLock
+name|G
+argument_list|(
+operator|&
+name|Mutex
+argument_list|)
+block|;
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|T
+range|:
+name|Buffers
+control|)
+block|{
+if|if
+condition|(
 name|std
 operator|::
-name|error_code
-name|finalize
-argument_list|()
+name|get
+operator|<
+literal|1
+operator|>
+operator|(
+name|T
+operator|)
+condition|)
+name|Fn
+argument_list|(
+name|std
+operator|::
+name|get
+operator|<
+literal|0
+operator|>
+operator|(
+name|T
+operator|)
+argument_list|)
 expr_stmt|;
+block|}
+block|}
 comment|// Cleans up allocated buffers.
 operator|~
 name|BufferQueue

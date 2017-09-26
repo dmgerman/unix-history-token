@@ -64,7 +64,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<climits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
 end_include
 
 begin_decl_stmt
@@ -101,6 +119,8 @@ name|PointerEmbeddedInt
 block|{
 name|uintptr_t
 name|Value
+operator|=
+literal|0
 block|;
 comment|// Note: This '<' is correct; using '<=' would result in some shifts
 comment|// overflowing their storage types.
@@ -182,12 +202,9 @@ name|public
 operator|:
 name|PointerEmbeddedInt
 argument_list|()
-operator|:
-name|Value
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|PointerEmbeddedInt
 argument_list|(
 argument|IntT I
@@ -197,7 +214,7 @@ operator|*
 name|this
 operator|=
 name|I
-block|;   }
+block|; }
 name|PointerEmbeddedInt
 operator|&
 name|operator
@@ -219,8 +236,6 @@ operator|>
 operator|::
 name|value
 operator|?
-name|llvm
-operator|::
 name|isInt
 operator|<
 name|Bits
@@ -229,8 +244,6 @@ operator|(
 name|I
 operator|)
 operator|:
-name|llvm
-operator|::
 name|isUInt
 operator|<
 name|Bits
@@ -341,15 +354,16 @@ operator|,
 name|Bits
 operator|>>
 block|{
-typedef|typedef
+name|using
+name|T
+operator|=
 name|PointerEmbeddedInt
 operator|<
 name|IntT
-operator|,
+block|,
 name|Bits
 operator|>
-name|T
-expr_stmt|;
+block|;
 name|public
 operator|:
 specifier|static
@@ -391,13 +405,19 @@ argument|typename T::RawValueTag()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 specifier|inline
 name|T
 name|getFromVoidPointer
-argument_list|(
-argument|const void *P
-argument_list|)
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|P
+parameter_list|)
 block|{
 return|return
 name|T
@@ -408,16 +428,19 @@ argument|typename T::RawValueTag()
 argument_list|)
 return|;
 block|}
-block|enum
+end_function
+
+begin_enum
+enum|enum
 block|{
 name|NumLowBitsAvailable
-operator|=
+init|=
 name|T
 operator|::
 name|Shift
 block|}
-expr_stmt|;
-end_expr_stmt
+enum|;
+end_enum
 
 begin_comment
 unit|};
@@ -447,33 +470,29 @@ operator|,
 name|Bits
 operator|>>
 block|{
-typedef|typedef
+name|using
+name|T
+operator|=
 name|PointerEmbeddedInt
 operator|<
 name|IntT
-operator|,
+block|,
 name|Bits
 operator|>
-name|T
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|IntInfo
+operator|=
 name|DenseMapInfo
 operator|<
 name|IntT
 operator|>
-name|IntInfo
-expr_stmt|;
-end_typedef
-
-begin_function
+block|;
 specifier|static
 specifier|inline
 name|T
 name|getEmptyKey
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|IntInfo
@@ -482,14 +501,11 @@ name|getEmptyKey
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|T
 name|getTombstoneKey
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|IntInfo
@@ -498,7 +514,7 @@ name|getTombstoneKey
 argument_list|()
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -546,11 +562,19 @@ return|;
 block|}
 end_function
 
+begin_comment
+unit|};  }
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}; }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_POINTEREMBEDDEDINT_H
+end_comment
 
 end_unit
 

@@ -83,6 +83,12 @@ decl_stmt|;
 name|namespace
 name|pdb
 block|{
+name|class
+name|PDBSymbolTypeVTable
+decl_stmt|;
+name|class
+name|PDBSymbolTypeVTableShape
+decl_stmt|;
 comment|/// IPDBRawSymbol defines an interface used to represent an arbitrary symbol.
 comment|/// It exposes a monolithic interface consisting of accessors for the union of
 comment|/// all properties that are valid for any symbol type.  This interface is then
@@ -749,6 +755,19 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PDBSymbolTypeBuiltin
+operator|>
+name|getVirtualBaseTableType
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
 name|uint32_t
 name|getVirtualTableShapeId
 argument_list|()
@@ -773,7 +792,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|PDB_UniqueId
+name|codeview
+operator|::
+name|GUID
 name|getGuid
 argument_list|()
 specifier|const

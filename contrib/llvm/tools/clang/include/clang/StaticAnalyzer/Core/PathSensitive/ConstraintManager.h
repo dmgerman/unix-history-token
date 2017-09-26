@@ -503,6 +503,8 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|/// Scan all symbols referenced by the constraints. If the symbol is not
+comment|/// alive, remove it.
 name|virtual
 name|ProgramStateRef
 name|removeDeadBindings
@@ -630,6 +632,23 @@ operator|<
 name|ConstraintManager
 operator|>
 name|CreateRangeConstraintManager
+argument_list|(
+name|ProgramStateManager
+operator|&
+name|statemgr
+argument_list|,
+name|SubEngine
+operator|*
+name|subengine
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ConstraintManager
+operator|>
+name|CreateZ3ConstraintManager
 argument_list|(
 name|ProgramStateManager
 operator|&

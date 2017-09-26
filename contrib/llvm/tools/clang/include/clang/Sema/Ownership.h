@@ -1338,6 +1338,16 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|UnionOpaquePtr
+operator|<
+name|TemplateName
+operator|>
+name|UnionParsedTemplateTy
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|MutableArrayRef
 operator|<
 name|Expr

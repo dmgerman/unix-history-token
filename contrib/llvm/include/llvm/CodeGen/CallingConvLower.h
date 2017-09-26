@@ -758,20 +758,6 @@ operator|&
 name|State
 argument_list|)
 typedef|;
-comment|/// ParmContext - This enum tracks whether calling convention lowering is in
-comment|/// the context of prologue or call generation. Not all backends make use of
-comment|/// this information.
-typedef|typedef
-enum|enum
-block|{
-name|Unknown
-block|,
-name|Prologue
-block|,
-name|Call
-block|}
-name|ParmContext
-typedef|;
 comment|/// CCState - This class holds information needed while lowering arguments and
 comment|/// return values.  It captures which registers are already assigned and which
 comment|/// stack slots are used.  It provides accessors to allocate these values.
@@ -920,11 +906,6 @@ comment|// InRegsParamsProcessed - shows how many instances of ByValRegs was pro
 comment|// during argument analysis.
 name|unsigned
 name|InRegsParamsProcessed
-decl_stmt|;
-name|protected
-label|:
-name|ParmContext
-name|CallOrPrologue
 decl_stmt|;
 name|public
 label|:
@@ -1977,15 +1958,6 @@ name|InRegsParamsProcessed
 operator|=
 literal|0
 expr_stmt|;
-block|}
-name|ParmContext
-name|getCallOrPrologue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CallOrPrologue
-return|;
 block|}
 comment|// Get list of pending assignments
 name|SmallVectorImpl

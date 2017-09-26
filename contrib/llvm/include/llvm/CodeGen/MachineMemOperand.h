@@ -271,12 +271,31 @@ name|O
 argument_list|)
 return|;
 block|}
+comment|/// Return true if memory region [V, V+Offset+Size) is known to be
+comment|/// dereferenceable.
+name|bool
+name|isDereferenceable
+argument_list|(
+name|unsigned
+name|Size
+argument_list|,
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
+struct|;
 comment|/// Return the LLVM IR address space number that this pointer points into.
 name|unsigned
 name|getAddrSpace
 argument_list|()
-decl|const
-struct|;
+specifier|const
+expr_stmt|;
 comment|/// Return a MachinePointerInfo record that refers to the constant pool.
 specifier|static
 name|MachinePointerInfo
@@ -438,6 +457,9 @@ operator|<<
 literal|5
 block|,
 comment|// Reserved for use by target-specific passes.
+comment|// Targets may override getSerializableMachineMemOperandTargetFlags() to
+comment|// enable MIR serialization/parsing of these flags.  If more of these flags
+comment|// are added, the MIR printing/parsing code will need to be updated as well.
 name|MOTargetFlag1
 init|=
 literal|1u
@@ -469,13 +491,13 @@ comment|/// Atomic information for this memory operation.
 struct|struct
 name|MachineAtomicInfo
 block|{
-comment|/// Synchronization scope for this memory operation.
+comment|/// Synchronization scope ID for this memory operation.
 name|unsigned
-name|SynchScope
+name|SSID
 range|:
-literal|1
+literal|8
 decl_stmt|;
-comment|// enum SynchronizationScope
+comment|// SyncScope::ID
 comment|/// Atomic ordering requirements for this memory operation. For cmpxchg
 comment|/// atomic operations, atomic ordering requirements when store occurs.
 name|unsigned
@@ -539,7 +561,7 @@ argument|const AAMDNodes&AAInfo = AAMDNodes()
 argument_list|,
 argument|const MDNode *Ranges = nullptr
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|,
 argument|AtomicOrdering Ordering = AtomicOrdering::NotAtomic
 argument_list|,
@@ -728,21 +750,25 @@ return|return
 name|Ranges
 return|;
 block|}
-comment|/// Return the synchronization scope for this memory operation.
-name|SynchronizationScope
-name|getSynchScope
+comment|/// Returns the synchronization scope ID for this memory operation.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
 argument_list|()
 specifier|const
 block|{
 return|return
 name|static_cast
 operator|<
-name|SynchronizationScope
+name|SyncScope
+operator|::
+name|ID
 operator|>
 operator|(
 name|AtomicInfo
 operator|.
-name|SynchScope
+name|SSID
 operator|)
 return|;
 block|}

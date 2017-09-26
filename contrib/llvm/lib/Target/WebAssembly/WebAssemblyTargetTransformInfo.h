@@ -228,11 +228,12 @@ parameter_list|)
 function_decl|;
 name|unsigned
 name|getRegisterBitWidth
-parameter_list|(
+argument_list|(
 name|bool
 name|Vector
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|unsigned
 name|getArithmeticInstrCost
 argument_list|(

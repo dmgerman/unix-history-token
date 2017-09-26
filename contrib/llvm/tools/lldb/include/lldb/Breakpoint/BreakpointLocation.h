@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UserID.h"
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_include
@@ -338,7 +338,7 @@ name|ExecutionContext
 modifier|&
 name|exe_ctx
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)

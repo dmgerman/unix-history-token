@@ -43,38 +43,22 @@ directive|define
 name|liblldb_POSIXStopInfo_H_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"FreeBSDThread.h"
+end_include
 
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"Plugins/Process/POSIX/CrashReason.h"
+end_include
 
 begin_include
 include|#
 directive|include
 file|"lldb/Target/StopInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"CrashReason.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"FreeBSDThread.h"
 end_include
 
 begin_include
@@ -203,56 +187,6 @@ name|Event
 operator|*
 name|event_ptr
 argument_list|)
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|/// @class POSIXCrashStopInfo
-end_comment
-
-begin_comment
-comment|/// @brief Represents the stop state of process that is ready to crash.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|class
-name|POSIXCrashStopInfo
-range|:
-name|public
-name|POSIXStopInfo
-block|{
-name|public
-operator|:
-name|POSIXCrashStopInfo
-argument_list|(
-argument|FreeBSDThread&thread
-argument_list|,
-argument|uint32_t status
-argument_list|,
-argument|CrashReason reason
-argument_list|,
-argument|lldb::addr_t fault_addr
-argument_list|)
-block|;
-operator|~
-name|POSIXCrashStopInfo
-argument_list|()
-block|;
-name|lldb
-operator|::
-name|StopReason
-name|GetStopReason
-argument_list|()
-specifier|const
 block|; }
 decl_stmt|;
 end_decl_stmt

@@ -1115,6 +1115,11 @@ operator|::
 name|all
 argument_list|()
 block|;
+name|CG
+operator|.
+name|buildRefSCCs
+argument_list|()
+block|;
 for|for
 control|(
 name|auto
@@ -2154,8 +2159,42 @@ name|PassPA
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Update the call graph based on this function pass. This may also
-comment|// update the current SCC to point to a smaller, more refined SCC.
+comment|// If the call graph hasn't been preserved, update it based on this
+comment|// function pass. This may also update the current SCC to point to
+comment|// a smaller, more refined SCC.
+name|auto
+name|PAC
+init|=
+name|PA
+operator|.
+name|getChecker
+operator|<
+name|LazyCallGraphAnalysis
+operator|>
+operator|(
+operator|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|PAC
+operator|.
+name|preserved
+argument_list|()
+operator|&&
+operator|!
+name|PAC
+operator|.
+name|preservedSet
+operator|<
+name|AllAnalysesOn
+operator|<
+name|Module
+operator|>>
+operator|(
+operator|)
+condition|)
+block|{
 name|CurrentC
 operator|=
 operator|&
@@ -2191,6 +2230,7 @@ operator|&&
 literal|"Current SCC not updated to the SCC containing the current node!"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_for
 
@@ -2457,7 +2497,7 @@ block|;
 comment|// Collect value handles for all of the indirect call sites.
 name|SmallVector
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 block|,
 literal|8
 operator|>
@@ -2490,7 +2530,7 @@ name|C
 operator|,
 name|SmallVectorImpl
 operator|<
-name|WeakVH
+name|WeakTrackingVH
 operator|>
 operator|&
 name|CallHandles
@@ -2596,7 +2636,7 @@ name|CallHandles
 operator|.
 name|push_back
 argument_list|(
-name|WeakVH
+name|WeakTrackingVH
 argument_list|(
 operator|&
 name|I
@@ -2748,7 +2788,7 @@ index|[
 operator|&
 index|]
 operator|(
-name|WeakVH
+name|WeakTrackingVH
 operator|&
 name|CallH
 operator|)

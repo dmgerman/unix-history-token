@@ -327,22 +327,18 @@ expr_stmt|;
 name|public
 label|:
 comment|/// \brief Construct an empty, invalid template argument.
+name|constexpr
 name|TemplateArgument
 argument_list|()
-block|{
+operator|:
 name|TypeOrValue
-operator|.
-name|Kind
-operator|=
-name|Null
-expr_stmt|;
-name|TypeOrValue
-operator|.
-name|V
-operator|=
+argument_list|(
+argument|{Null
+argument_list|,
 literal|0
-expr_stmt|;
-block|}
+argument|}
+argument_list|)
+block|{}
 comment|/// \brief Construct a template type argument.
 name|TemplateArgument
 argument_list|(
@@ -356,11 +352,11 @@ operator|.
 name|Kind
 operator|=
 name|isNullPtr
-condition|?
+operator|?
 name|NullPtr
-else|:
+operator|:
 name|Type
-expr_stmt|;
+block|;
 name|TypeOrValue
 operator|.
 name|V
@@ -375,8 +371,7 @@ operator|.
 name|getAsOpaquePtr
 argument_list|()
 operator|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Construct a template argument that refers to a
 comment|/// declaration, which is either an external declaration or a
 comment|/// template declaration.
@@ -393,13 +388,13 @@ name|D
 operator|&&
 literal|"Expected decl"
 argument_list|)
-expr_stmt|;
+block|;
 name|DeclArg
 operator|.
 name|Kind
 operator|=
 name|Declaration
-expr_stmt|;
+block|;
 name|DeclArg
 operator|.
 name|QT
@@ -408,14 +403,13 @@ name|QT
 operator|.
 name|getAsOpaquePtr
 argument_list|()
-expr_stmt|;
+block|;
 name|DeclArg
 operator|.
 name|D
 operator|=
 name|D
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Construct an integral constant template argument. The memory to
 comment|/// store the value is allocated with Ctx.
 name|TemplateArgument
@@ -426,7 +420,7 @@ argument|const llvm::APSInt&Value
 argument_list|,
 argument|QualType Type
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 comment|/// \brief Construct an integral constant template argument with the same
 comment|/// value as Other but a different type.
 name|TemplateArgument
@@ -1320,9 +1314,22 @@ block|}
 union|;
 name|public
 label|:
+name|constexpr
 name|TemplateArgumentLocInfo
 argument_list|()
-expr_stmt|;
+operator|:
+name|Template
+argument_list|(
+argument|{nullptr
+argument_list|,
+argument|nullptr
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument|}
+argument_list|)
+block|{}
 name|TemplateArgumentLocInfo
 argument_list|(
 name|TypeSourceInfo
@@ -1486,8 +1493,9 @@ name|LocInfo
 decl_stmt|;
 name|public
 label|:
+name|constexpr
 name|TemplateArgumentLoc
-argument_list|()
+parameter_list|()
 block|{}
 name|TemplateArgumentLoc
 argument_list|(
@@ -2179,6 +2187,10 @@ name|private
 label|:
 name|friend
 name|TrailingObjects
+decl_stmt|;
+name|friend
+name|class
+name|ASTNodeImporter
 decl_stmt|;
 name|ASTTemplateArgumentListInfo
 argument_list|(

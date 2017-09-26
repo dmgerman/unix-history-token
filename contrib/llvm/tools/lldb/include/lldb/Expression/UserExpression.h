@@ -544,7 +544,7 @@ argument|llvm::StringRef expr_prefix
 argument_list|,
 argument|lldb::ValueObjectSP&result_valobj_sp
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|,
 argument|uint32_t line_offset =
 literal|0
@@ -556,7 +556,7 @@ argument_list|)
 block|;
 specifier|static
 specifier|const
-name|Error
+name|Status
 operator|::
 name|ValueType
 name|kNoResult
@@ -564,7 +564,7 @@ operator|=
 literal|0x1001
 block|;
 comment|///< ValueObject::GetError() returns this if there is no result
-comment|///from the expression.
+comment|/// from the expression.
 specifier|const
 name|char
 operator|*
@@ -634,7 +634,7 @@ argument|lldb::StackFrameSP frame_sp
 argument_list|,
 argument|ConstString&object_name
 argument_list|,
-argument|Error&err
+argument|Status&err
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------

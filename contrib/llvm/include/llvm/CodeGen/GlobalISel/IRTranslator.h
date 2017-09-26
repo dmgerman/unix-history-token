@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/GlobalISel/IRTranslator.h - IRTranslator ---*- C++ -*-===//
+comment|//===- llvm/CodeGen/GlobalISel/IRTranslator.h - IRTranslator ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -82,19 +82,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Types.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SetVector.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -106,22 +100,54 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/GlobalISel/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Intrinsics.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Forward declarations.
+name|class
+name|AllocaInst
+decl_stmt|;
 name|class
 name|BasicBlock
+decl_stmt|;
+name|class
+name|CallInst
 decl_stmt|;
 name|class
 name|CallLowering
 decl_stmt|;
 name|class
 name|Constant
+decl_stmt|;
+name|class
+name|DataLayout
 decl_stmt|;
 name|class
 name|Instruction
@@ -139,7 +165,19 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|OptimizationRemarkEmitter
+decl_stmt|;
+name|class
+name|PHINode
+decl_stmt|;
+name|class
 name|TargetPassConfig
+decl_stmt|;
+name|class
+name|User
+decl_stmt|;
+name|class
+name|Value
 decl_stmt|;
 comment|// Technically the pass should run on an hypothetical MachineModule,
 comment|// since it should translate Global into some sort of MachineGlobal.
@@ -174,24 +212,6 @@ comment|/// to the related virtual registers.
 name|ValueToVReg
 name|ValToVReg
 block|;
-comment|// Constants are special because when we encounter one,
-comment|// we do not know at first where to insert the definition since
-comment|// this depends on all its uses.
-comment|// Thus, we will insert the sequences to materialize them when
-comment|// we know all their users.
-comment|// In the meantime, just keep it in a set.
-comment|// Note: Constants that end up as immediate in the related instructions,
-comment|// do not appear in that map.
-name|SmallSetVector
-operator|<
-specifier|const
-name|Constant
-operator|*
-block|,
-literal|8
-operator|>
-name|Constants
-block|;
 comment|// N.b. it's not completely obvious that this will be sufficient for every
 comment|// LLVM IR construct (with "invoke" being the obvious candidate to mess up our
 comment|// lives.
@@ -205,6 +225,40 @@ name|MachineBasicBlock
 operator|*
 operator|>
 name|BBToMBB
+block|;
+comment|// One BasicBlock can be translated to multiple MachineBasicBlocks.  For such
+comment|// BasicBlocks translated to multiple MachineBasicBlocks, MachinePreds retains
+comment|// a mapping between the edges arriving at the BasicBlock to the corresponding
+comment|// created MachineBasicBlocks. Some BasicBlocks that get translated to a
+comment|// single MachineBasicBlock may also end up in this Map.
+name|using
+name|CFGEdge
+operator|=
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+block|,
+specifier|const
+name|BasicBlock
+operator|*
+operator|>
+block|;
+name|DenseMap
+operator|<
+name|CFGEdge
+block|,
+name|SmallVector
+operator|<
+name|MachineBasicBlock
+operator|*
+block|,
+literal|1
+operator|>>
+name|MachinePreds
 block|;
 comment|// List of stubbed PHI instructions, for values and basic blocks to be filled
 comment|// in once all MachineBasicBlocks have been created.
@@ -238,7 +292,7 @@ name|int
 operator|>
 name|FrameIndices
 block|;
-comment|/// Methods for translating form LLVM IR to MachineInstr.
+comment|/// \name Methods for translating form LLVM IR to MachineInstr.
 comment|/// \see ::translate for general information on the translate methods.
 comment|/// @{
 comment|/// Translate \p Inst into its corresponding MachineInstr instruction(s).
@@ -327,17 +381,15 @@ operator|&
 name|MIRBuilder
 argument_list|)
 block|;
+comment|/// Translate an LLVM string intrinsic (memcpy, memset, ...).
 name|bool
-name|translateMemcpy
+name|translateMemfunc
 argument_list|(
-specifier|const
-name|CallInst
-operator|&
-name|CI
+argument|const CallInst&CI
 argument_list|,
-name|MachineIRBuilder
-operator|&
-name|MIRBuilder
+argument|MachineIRBuilder&MIRBuilder
+argument_list|,
+argument|unsigned Intrinsic
 argument_list|)
 block|;
 name|void
@@ -366,6 +418,19 @@ argument_list|,
 argument|Intrinsic::ID ID
 argument_list|,
 argument|MachineIRBuilder&MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateInlineAsm
+argument_list|(
+specifier|const
+name|CallInst
+operator|&
+name|CI
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
 argument_list|)
 block|;
 comment|/// Translate call instruction.
@@ -419,21 +484,6 @@ argument_list|,
 argument|const User&U
 argument_list|,
 argument|MachineIRBuilder&MIRBuilder
-argument_list|)
-block|;
-comment|/// Translate static alloca instruction (i.e. one  of constant size and in the
-comment|/// first basic block).
-name|bool
-name|translateStaticAlloca
-argument_list|(
-specifier|const
-name|AllocaInst
-operator|&
-name|Inst
-argument_list|,
-name|MachineIRBuilder
-operator|&
-name|MIRBuilder
 argument_list|)
 block|;
 comment|/// Translate a phi instruction.
@@ -547,6 +597,19 @@ name|MIRBuilder
 argument_list|)
 block|;
 name|bool
+name|translateIndirectBr
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
 name|translateExtractValue
 argument_list|(
 specifier|const
@@ -598,12 +661,38 @@ operator|&
 name|MIRBuilder
 argument_list|)
 block|;
+name|bool
+name|translateAlloca
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
 comment|/// Translate return (ret) instruction.
 comment|/// The target needs to implement CallLowering::lowerReturn for
 comment|/// this to succeed.
 comment|/// \pre \p U is a return instruction.
 name|bool
 name|translateRet
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateFSub
 argument_list|(
 specifier|const
 name|User
@@ -820,29 +909,6 @@ operator|::
 name|G_SREM
 argument_list|,
 name|U
-argument_list|,
-name|MIRBuilder
-argument_list|)
-return|;
-block|}
-name|bool
-name|translateAlloca
-argument_list|(
-argument|const User&U
-argument_list|,
-argument|MachineIRBuilder&MIRBuilder
-argument_list|)
-block|{
-return|return
-name|translateStaticAlloca
-argument_list|(
-name|cast
-operator|<
-name|AllocaInst
-operator|>
-operator|(
-name|U
-operator|)
 argument_list|,
 name|MIRBuilder
 argument_list|)
@@ -1176,27 +1242,6 @@ argument_list|)
 return|;
 block|}
 name|bool
-name|translateFSub
-argument_list|(
-argument|const User&U
-argument_list|,
-argument|MachineIRBuilder&MIRBuilder
-argument_list|)
-block|{
-return|return
-name|translateBinaryOp
-argument_list|(
-name|TargetOpcode
-operator|::
-name|G_FSUB
-argument_list|,
-name|U
-argument_list|,
-name|MIRBuilder
-argument_list|)
-return|;
-block|}
-name|bool
 name|translateFMul
 argument_list|(
 argument|const User&U
@@ -1259,20 +1304,60 @@ name|MIRBuilder
 argument_list|)
 return|;
 block|}
+name|bool
+name|translateVAArg
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateInsertElement
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateExtractElement
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
+name|translateShuffleVector
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
 comment|// Stubs to keep the compiler happy while we implement the rest of the
 comment|// translation.
-name|bool
-name|translateIndirectBr
-argument_list|(
-argument|const User&U
-argument_list|,
-argument|MachineIRBuilder&MIRBuilder
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
 name|bool
 name|translateResume
 argument_list|(
@@ -1417,54 +1502,6 @@ return|return
 name|false
 return|;
 block|}
-name|bool
-name|translateVAArg
-argument_list|(
-argument|const User&U
-argument_list|,
-argument|MachineIRBuilder&MIRBuilder
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
-name|bool
-name|translateExtractElement
-argument_list|(
-argument|const User&U
-argument_list|,
-argument|MachineIRBuilder&MIRBuilder
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
-name|bool
-name|translateInsertElement
-argument_list|(
-argument|const User&U
-argument_list|,
-argument|MachineIRBuilder&MIRBuilder
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
-name|bool
-name|translateShuffleVector
-argument_list|(
-argument|const User&U
-argument_list|,
-argument|MachineIRBuilder&MIRBuilder
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// @}
 comment|// Builder for machine instruction a la IRBuilder.
 comment|// I.e., compared to regular MIBuilder, this one also inserts the instruction
@@ -1487,6 +1524,8 @@ comment|/// MachineRegisterInfo used to create virtual registers.
 name|MachineRegisterInfo
 operator|*
 name|MRI
+operator|=
+name|nullptr
 block|;
 specifier|const
 name|DataLayout
@@ -1498,6 +1537,15 @@ specifier|const
 name|TargetPassConfig
 operator|*
 name|TPC
+block|;
+comment|/// Current optimization remark emitter. Used to report failures.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|OptimizationRemarkEmitter
+operator|>
+name|ORE
 block|;
 comment|// * Insert all the code needed to materialize the constants
 comment|// at the proper place. E.g., Entry block or dominator block
@@ -1541,11 +1589,12 @@ operator|&
 name|I
 argument_list|)
 block|;
-comment|/// Get the MachineBasicBlock that represents \p BB.
-comment|/// If such basic block does not exist, it is created.
+comment|/// Get the MachineBasicBlock that represents \p BB. Specifically, the block
+comment|/// returned will be the head of the translated block (suitable for branch
+comment|/// destinations).
 name|MachineBasicBlock
 operator|&
-name|getOrCreateBB
+name|getMBB
 argument_list|(
 specifier|const
 name|BasicBlock
@@ -1553,12 +1602,86 @@ operator|&
 name|BB
 argument_list|)
 block|;
+comment|/// Record \p NewPred as a Machine predecessor to `Edge.second`, corresponding
+comment|/// to `Edge.first` at the IR level. This is used when IRTranslation creates
+comment|/// multiple MachineBasicBlocks for a given IR block and the CFG is no longer
+comment|/// represented simply by the IR-level CFG.
+name|void
+name|addMachineCFGPred
+argument_list|(
+argument|CFGEdge Edge
+argument_list|,
+argument|MachineBasicBlock *NewPred
+argument_list|)
+block|;
+comment|/// Returns the Machine IR predecessors for the given IR CFG edge. Usually
+comment|/// this is just the single MachineBasicBlock corresponding to the predecessor
+comment|/// in the IR. More complex lowering can result in multiple MachineBasicBlocks
+comment|/// preceding the original though (e.g. switch instructions).
+name|SmallVector
+operator|<
+name|MachineBasicBlock
+operator|*
+block|,
+literal|1
+operator|>
+name|getMachinePredBBs
+argument_list|(
+argument|CFGEdge Edge
+argument_list|)
+block|{
+name|auto
+name|RemappedEdge
+operator|=
+name|MachinePreds
+operator|.
+name|find
+argument_list|(
+name|Edge
+argument_list|)
+block|;
+if|if
+condition|(
+name|RemappedEdge
+operator|!=
+name|MachinePreds
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|RemappedEdge
+operator|->
+name|second
+return|;
+return|return
+name|SmallVector
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|,
+literal|4
+operator|>
+operator|(
+literal|1
+expr|,
+operator|&
+name|getMBB
+argument_list|(
+operator|*
+name|Edge
+operator|.
+name|first
+argument_list|)
+operator|)
+return|;
+block|}
 name|public
-operator|:
+label|:
 comment|// Ctor, nothing fancy.
 name|IRTranslator
 argument_list|()
-block|;
+expr_stmt|;
 name|StringRef
 name|getPassName
 argument_list|()
@@ -1572,42 +1695,54 @@ block|}
 name|void
 name|getAnalysisUsage
 argument_list|(
-argument|AnalysisUsage&AU
+name|AnalysisUsage
+operator|&
+name|AU
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|// Algo:
 comment|//   CallLowering = MF.subtarget.getCallLowering()
 comment|//   F = MF.getParent()
 comment|//   MIRBuilder.reset(MF)
-comment|//   MIRBuilder.getOrCreateBB(F.getEntryBB())
+comment|//   getMBB(F.getEntryBB())
 comment|//   CallLowering->translateArguments(MIRBuilder, F, ValToVReg)
 comment|//   for each bb in F
-comment|//     MIRBuilder.getOrCreateBB(bb)
+comment|//     getMBB(bb)
 comment|//     for each inst in bb
 comment|//       if (!translate(MIRBuilder, inst, ValToVReg, ConstantToSequence))
-comment|//         report_fatal_error(âDonât know how to translate input");
+comment|//         report_fatal_error("Don't know how to translate input");
 comment|//   finalize()
 name|bool
 name|runOnMachineFunction
 argument_list|(
-argument|MachineFunction&MF
+name|MachineFunction
+operator|&
+name|MF
 argument_list|)
 name|override
-block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-comment|// End namespace llvm.
+unit|}
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GLOBALISEL_IRTRANSLATOR_H
+end_comment
 
 end_unit
 

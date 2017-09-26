@@ -84,6 +84,59 @@ block|{
 name|class
 name|ASTContext
 decl_stmt|;
+comment|// Some notes on redeclarables:
+comment|//
+comment|//  - Every redeclarable is on a circular linked list.
+comment|//
+comment|//  - Every decl has a pointer to the first element of the chain _and_ a
+comment|//    DeclLink that may point to one of 3 possible states:
+comment|//      - the "previous" (temporal) element in the chain
+comment|//      - the "latest" (temporal) element in the chain
+comment|//      - the an "uninitialized-latest" value (when newly-constructed)
+comment|//
+comment|//  - The first element is also often called the canonical element. Every
+comment|//    element has a pointer to it so that "getCanonical" can be fast.
+comment|//
+comment|//  - Most links in the chain point to previous, except the link out of
+comment|//    the first; it points to latest.
+comment|//
+comment|//  - Elements are called "first", "previous", "latest" or
+comment|//    "most-recent" when referring to temporal order: order of addition
+comment|//    to the chain.
+comment|//
+comment|//  - To make matters confusing, the DeclLink type uses the term "next"
+comment|//    for its pointer-storage internally (thus functions like
+comment|//    NextIsPrevious). It's easiest to just ignore the implementation of
+comment|//    DeclLink when making sense of the redeclaration chain.
+comment|//
+comment|//  - There's also a "definition" link for several types of
+comment|//    redeclarable, where only one definition should exist at any given
+comment|//    time (and the defn pointer is stored in the decl's "data" which
+comment|//    is copied to every element on the chain when it's changed).
+comment|//
+comment|//    Here is some ASCII art:
+comment|//
+comment|//      "first"                                     "latest"
+comment|//      "canonical"                                 "most recent"
+comment|//      +------------+         first                +--------------+
+comment|//      |            |<--------------------------- |              |
+comment|//      |            |                              |              |
+comment|//      |            |                              |              |
+comment|//      |            |       +--------------+       |              |
+comment|//      |            | first |              |       |              |
+comment|//      |            |<---- |              |       |              |
+comment|//      |            |       |              |       |              |
+comment|//      | @class A   |  link | @interface A |  link | @class A     |
+comment|//      | seen first |<---- | seen second  |<---- | seen third   |
+comment|//      |            |       |              |       |              |
+comment|//      +------------+       +--------------+       +--------------+
+comment|//      | data       | defn  | data         |  defn | data         |
+comment|//      |            | ----> |              |<---- |              |
+comment|//      +------------+       +--------------+       +--------------+
+comment|//        |                     |     ^                  ^
+comment|//        |                     |defn |                  |
+comment|//        | link                +-----+                  |
+comment|//        +-->-------------------------------------------+
 comment|/// \brief Provides common interface for the Decls that can be redeclared.
 name|template
 operator|<

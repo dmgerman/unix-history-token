@@ -91,6 +91,9 @@ decl_stmt|;
 name|size_t
 name|Amount
 decl_stmt|;
+name|char
+name|Fill
+decl_stmt|;
 name|FmtAlign
 argument_list|(
 argument|detail::format_adapter&Adapter
@@ -98,6 +101,9 @@ argument_list|,
 argument|AlignStyle Where
 argument_list|,
 argument|size_t Amount
+argument_list|,
+argument|char Fill =
+literal|' '
 argument_list|)
 block|:
 name|Adapter
@@ -112,7 +118,12 @@ argument_list|)
 operator|,
 name|Amount
 argument_list|(
-argument|Amount
+name|Amount
+argument_list|)
+operator|,
+name|Fill
+argument_list|(
+argument|Fill
 argument_list|)
 block|{}
 name|void
@@ -207,10 +218,10 @@ name|S
 operator|<<
 name|Item
 expr_stmt|;
-name|S
-operator|.
-name|indent
+name|fill
 argument_list|(
+name|S
+argument_list|,
 name|PadAmount
 argument_list|)
 expr_stmt|;
@@ -228,10 +239,10 @@ name|PadAmount
 operator|/
 literal|2
 decl_stmt|;
-name|S
-operator|.
-name|indent
+name|fill
 argument_list|(
+name|S
+argument_list|,
 name|X
 argument_list|)
 expr_stmt|;
@@ -239,10 +250,10 @@ name|S
 operator|<<
 name|Item
 expr_stmt|;
-name|S
-operator|.
-name|indent
+name|fill
 argument_list|(
+name|S
+argument_list|,
 name|PadAmount
 operator|-
 name|X
@@ -251,10 +262,10 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
-name|S
-operator|.
-name|indent
+name|fill
 argument_list|(
+name|S
+argument_list|,
 name|PadAmount
 argument_list|)
 expr_stmt|;
@@ -264,6 +275,35 @@ name|Item
 expr_stmt|;
 break|break;
 block|}
+block|}
+name|private
+range|:
+name|void
+name|fill
+argument_list|(
+argument|llvm::raw_ostream&S
+argument_list|,
+argument|uint32_t Count
+argument_list|)
+block|{
+for|for
+control|(
+name|uint32_t
+name|I
+init|=
+literal|0
+init|;
+name|I
+operator|<
+name|Count
+condition|;
+operator|++
+name|I
+control|)
+name|S
+operator|<<
+name|Fill
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt

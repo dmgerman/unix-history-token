@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCAsmInfoCOFF.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCAsmInfoDarwin.h"
 end_include
 
@@ -123,6 +129,17 @@ name|Triple
 operator|&
 name|T
 argument_list|)
+block|; }
+decl_stmt|;
+name|struct
+name|AArch64MCAsmInfoCOFF
+range|:
+name|public
+name|MCAsmInfoCOFF
+block|{
+name|explicit
+name|AArch64MCAsmInfoCOFF
+argument_list|()
 block|; }
 decl_stmt|;
 block|}

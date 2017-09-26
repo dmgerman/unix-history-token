@@ -164,13 +164,13 @@ argument_list|()
 specifier|const
 block|;
 name|void
-name|setS23_2_reloc
+name|setS27_2_reloc
 argument_list|(
 argument|bool Val = true
 argument_list|)
 block|;
 name|bool
-name|s23_2_reloc
+name|s27_2_reloc
 argument_list|()
 specifier|const
 block|;
@@ -207,7 +207,7 @@ name|bool
 name|MustExtend
 block|;
 name|bool
-name|S23_2_reloc
+name|S27_2_reloc
 block|;
 name|bool
 name|SignMismatch

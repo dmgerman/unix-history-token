@@ -174,6 +174,16 @@ argument|PassManagerBase&PM
 argument_list|)
 name|override
 block|;
+name|bool
+name|isMachineVerifierClean
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
 name|private
 operator|:
 name|std

@@ -78,19 +78,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Flags.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StructuredData.h"
+file|"lldb/Utility/Flags.h"
 end_include
 
 begin_include
@@ -103,6 +91,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/OptionValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StructuredData.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==- SystemZTargetMachine.h - Define TargetMachine for SystemZ ---*- C++ -*-=//
+comment|//=- SystemZTargetMachine.h - Define TargetMachine for SystemZ ----*- C++ -*-=//
 end_comment
 
 begin_comment
@@ -68,16 +68,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/TargetTransformInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|TargetFrameLowering
-decl_stmt|;
 name|class
 name|SystemZTargetMachine
 range|:
@@ -186,7 +213,7 @@ return|return
 name|true
 return|;
 block|}
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -199,6 +226,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_SYSTEMZ_SYSTEMZTARGETMACHINE_H
+end_comment
 
 end_unit
 

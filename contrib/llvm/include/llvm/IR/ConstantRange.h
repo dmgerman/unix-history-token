@@ -146,7 +146,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -156,9 +168,12 @@ block|{
 name|class
 name|MDNode
 decl_stmt|;
-comment|/// This class represents a range of values.
-comment|///
 name|class
+name|raw_ostream
+decl_stmt|;
+comment|/// This class represents a range of values.
+name|class
+name|LLVM_NODISCARD
 name|ConstantRange
 block|{
 name|APInt
@@ -166,15 +181,9 @@ name|Lower
 decl_stmt|,
 name|Upper
 decl_stmt|;
-comment|// If we have move semantics, pass APInts by value and move them into place.
-typedef|typedef
-name|APInt
-name|APIntMoveTy
-typedef|;
 name|public
 label|:
 comment|/// Initialize a full (the default) or empty set for the specified bit width.
-comment|///
 name|explicit
 name|ConstantRange
 parameter_list|(
@@ -188,10 +197,9 @@ name|true
 parameter_list|)
 function_decl|;
 comment|/// Initialize a range to hold the single specified value.
-comment|///
 name|ConstantRange
 argument_list|(
-argument|APIntMoveTy Value
+argument|APInt Value
 argument_list|)
 empty_stmt|;
 comment|/// @brief Initialize a range of values explicitly. This will assert out if
@@ -199,9 +207,9 @@ comment|/// Lower==Upper and Lower != Min or Max value for its type. It will als
 comment|/// assert out if the two APInt's are not the same bit width.
 name|ConstantRange
 argument_list|(
-argument|APIntMoveTy Lower
+argument|APInt Lower
 argument_list|,
-argument|APIntMoveTy Upper
+argument|APInt Upper
 argument_list|)
 empty_stmt|;
 comment|/// Produce the smallest range such that all values that may satisfy the given
@@ -277,7 +285,7 @@ comment|/// guaranteed not to wrap (overflow) for all Y in Other.
 comment|///
 comment|/// NB! The returned set does *not* contain **all** possible values of X for
 comment|/// which "X BinOpC Y" does not wrap -- some viable values of X may be
-comment|/// missing, so you cannot use this to contrain X's range.  E.g. in the last
+comment|/// missing, so you cannot use this to constrain X's range.  E.g. in the last
 comment|/// example, "(-2) + 1" is both nsw and nuw (so the "X" could be -2), but (-2)
 comment|/// is not in the set returned.
 comment|///
@@ -327,7 +335,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Return the lower value for this range.
-comment|///
 specifier|const
 name|APInt
 operator|&
@@ -340,7 +347,6 @@ name|Lower
 return|;
 block|}
 comment|/// Return the upper value for this range.
-comment|///
 specifier|const
 name|APInt
 operator|&
@@ -353,7 +359,6 @@ name|Upper
 return|;
 block|}
 comment|/// Get the bit width of this ConstantRange.
-comment|///
 name|uint32_t
 name|getBitWidth
 argument_list|()
@@ -368,14 +373,12 @@ return|;
 block|}
 comment|/// Return true if this set contains all of the elements possible
 comment|/// for this data-type.
-comment|///
 name|bool
 name|isFullSet
 argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// Return true if this set contains no members.
-comment|///
 name|bool
 name|isEmptySet
 argument_list|()
@@ -383,7 +386,6 @@ specifier|const
 expr_stmt|;
 comment|/// Return true if this set wraps around the top of the range.
 comment|/// For example: [100, 8).
-comment|///
 name|bool
 name|isWrappedSet
 argument_list|()
@@ -391,14 +393,12 @@ specifier|const
 expr_stmt|;
 comment|/// Return true if this set wraps around the INT_MIN of
 comment|/// its bitwidth. For example: i8 [120, 140).
-comment|///
 name|bool
 name|isSignWrappedSet
 argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// Return true if the specified value is in the set.
-comment|///
 name|bool
 name|contains
 argument_list|(
@@ -410,7 +410,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Return true if the other range is a subset of this one.
-comment|///
 name|bool
 name|contains
 argument_list|(
@@ -422,7 +421,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// If this set contains a single element, return it, otherwise return null.
-comment|///
 specifier|const
 name|APInt
 operator|*
@@ -477,10 +475,6 @@ begin_comment
 comment|/// Return true if this set contains exactly one member.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
 begin_expr_stmt
 name|bool
 name|isSingleElement
@@ -500,10 +494,6 @@ begin_comment
 comment|/// Return the number of elements in this set.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
 begin_expr_stmt
 name|APInt
 name|getSetSize
@@ -513,11 +503,39 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Return the largest unsigned value contained in the ConstantRange.
+comment|/// Compare set size of this range with the range CR.
 end_comment
 
+begin_decl_stmt
+name|bool
+name|isSizeStrictlySmallerThan
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|CR
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|///
+comment|// Compare set size of this range with Value.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isSizeLargerThan
+argument_list|(
+name|uint64_t
+name|MaxSize
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Return the largest unsigned value contained in the ConstantRange.
 end_comment
 
 begin_expr_stmt
@@ -532,10 +550,6 @@ begin_comment
 comment|/// Return the smallest unsigned value contained in the ConstantRange.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
 begin_expr_stmt
 name|APInt
 name|getUnsignedMin
@@ -546,10 +560,6 @@ end_expr_stmt
 
 begin_comment
 comment|/// Return the largest signed value contained in the ConstantRange.
-end_comment
-
-begin_comment
-comment|///
 end_comment
 
 begin_expr_stmt
@@ -564,10 +574,6 @@ begin_comment
 comment|/// Return the smallest signed value contained in the ConstantRange.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
 begin_expr_stmt
 name|APInt
 name|getSignedMin
@@ -578,10 +584,6 @@ end_expr_stmt
 
 begin_comment
 comment|/// Return true if this range is equal to another range.
-end_comment
-
-begin_comment
-comment|///
 end_comment
 
 begin_expr_stmt
@@ -653,11 +655,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Subtract the specified range from this range (aka relative
+comment|/// Subtract the specified range from this range (aka relative complement of
 end_comment
 
 begin_comment
-comment|/// complement of the sets).
+comment|/// the sets).
 end_comment
 
 begin_decl_stmt
@@ -697,10 +699,6 @@ begin_comment
 comment|/// be equal to B.intersectWith(A).
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
 begin_decl_stmt
 name|ConstantRange
 name|intersectWith
@@ -732,10 +730,6 @@ end_comment
 
 begin_comment
 comment|/// in either set before.
-end_comment
-
-begin_comment
-comment|///
 end_comment
 
 begin_decl_stmt
@@ -1229,10 +1223,6 @@ begin_comment
 comment|/// Return a new range that is the logical not of the current set.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
 begin_expr_stmt
 name|ConstantRange
 name|inverse
@@ -1243,10 +1233,6 @@ end_expr_stmt
 
 begin_comment
 comment|/// Print out the bounds to a stream.
-end_comment
-
-begin_comment
-comment|///
 end_comment
 
 begin_decl_stmt
@@ -1263,10 +1249,6 @@ end_decl_stmt
 
 begin_comment
 comment|/// Allow printing from a debugger easily.
-end_comment
-
-begin_comment
-comment|///
 end_comment
 
 begin_expr_stmt
@@ -1334,13 +1316,17 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_CONSTANTRANGE_H
+end_comment
 
 end_unit
 

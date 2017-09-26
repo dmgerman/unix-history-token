@@ -989,6 +989,7 @@ operator|>
 operator|&
 name|d
 argument_list|)
+decl|const
 decl_stmt|;
 name|bool
 name|iterateOnFunction
@@ -1166,6 +1167,39 @@ range|:
 name|PassInfoMixin
 operator|<
 name|GVNHoistPass
+operator|>
+block|{
+comment|/// \brief Run the pass over the function.
+name|PreservedAnalyses
+name|run
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+name|FunctionAnalysisManager
+operator|&
+name|AM
+argument_list|)
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Uses an "inverted" value numbering to decide the similarity of
+end_comment
+
+begin_comment
+comment|/// expressions and sinks similar expressions into successors.
+end_comment
+
+begin_decl_stmt
+name|struct
+name|GVNSinkPass
+range|:
+name|PassInfoMixin
+operator|<
+name|GVNSinkPass
 operator|>
 block|{
 comment|/// \brief Run the pass over the function.

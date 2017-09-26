@@ -68,13 +68,22 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+name|class
+name|ArchSpec
+decl_stmt|;
+name|class
+name|ModuleSpec
+decl_stmt|;
+name|class
+name|UUID
+decl_stmt|;
 name|class
 name|Symbols
 block|{

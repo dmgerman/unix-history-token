@@ -70,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataBuffer.h"
+file|"lldb/Utility/DataBuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include

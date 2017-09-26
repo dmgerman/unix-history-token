@@ -180,7 +180,7 @@ operator|:
 name|void
 name|emitDiagnosticMessage
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|PresumedLoc PLoc
 argument_list|,
@@ -190,8 +190,6 @@ argument|StringRef Message
 argument_list|,
 argument|ArrayRef<CharSourceRange> Ranges
 argument_list|,
-argument|const SourceManager *SM
-argument_list|,
 argument|DiagOrStoredDiag D
 argument_list|)
 name|override
@@ -199,30 +197,26 @@ block|;
 name|void
 name|emitDiagnosticLoc
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|PresumedLoc PLoc
 argument_list|,
 argument|DiagnosticsEngine::Level Level
 argument_list|,
 argument|ArrayRef<CharSourceRange> Ranges
-argument_list|,
-argument|const SourceManager&SM
 argument_list|)
 name|override
 block|;
 name|void
 name|emitCodeContext
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|DiagnosticsEngine::Level Level
 argument_list|,
-argument|SmallVectorImpl<CharSourceRange>& Ranges
+argument|SmallVectorImpl<CharSourceRange>&Ranges
 argument_list|,
 argument|ArrayRef<FixItHint> Hints
-argument_list|,
-argument|const SourceManager&SM
 argument_list|)
 name|override
 block|{
@@ -235,44 +229,36 @@ argument_list|,
 name|Ranges
 argument_list|,
 name|Hints
-argument_list|,
-name|SM
 argument_list|)
 block|;   }
 name|void
 name|emitIncludeLocation
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|PresumedLoc PLoc
-argument_list|,
-argument|const SourceManager&SM
 argument_list|)
 name|override
 block|;
 name|void
 name|emitImportLocation
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|PresumedLoc PLoc
 argument_list|,
 argument|StringRef ModuleName
-argument_list|,
-argument|const SourceManager&SM
 argument_list|)
 name|override
 block|;
 name|void
 name|emitBuildingModuleLocation
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|PresumedLoc PLoc
 argument_list|,
 argument|StringRef ModuleName
-argument_list|,
-argument|const SourceManager&SM
 argument_list|)
 name|override
 block|;
@@ -289,15 +275,13 @@ block|;
 name|void
 name|emitSnippetAndCaret
 argument_list|(
-argument|SourceLocation Loc
+argument|FullSourceLoc Loc
 argument_list|,
 argument|DiagnosticsEngine::Level Level
 argument_list|,
-argument|SmallVectorImpl<CharSourceRange>& Ranges
+argument|SmallVectorImpl<CharSourceRange>&Ranges
 argument_list|,
 argument|ArrayRef<FixItHint> Hints
-argument_list|,
-argument|const SourceManager&SM
 argument_list|)
 block|;
 name|void

@@ -304,7 +304,7 @@ init|=
 literal|0
 function_decl|;
 comment|/// Called by CoreEngine.  Used to processing branching behavior
-comment|/// at static initalizers.
+comment|/// at static initializers.
 name|virtual
 name|void
 name|processStaticInitializer
@@ -495,6 +495,11 @@ operator|>
 name|Regions
 argument_list|,
 specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
+specifier|const
 name|CallEvent
 operator|*
 name|Call
@@ -513,6 +518,11 @@ specifier|const
 name|MemRegion
 modifier|*
 name|MR
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LCtx
 parameter_list|)
 block|{
 return|return
@@ -525,6 +535,8 @@ argument_list|,
 name|MR
 argument_list|,
 name|MR
+argument_list|,
+name|LCtx
 argument_list|,
 name|nullptr
 argument_list|)
@@ -542,6 +554,11 @@ name|Loc
 parameter_list|,
 name|SVal
 name|Val
+parameter_list|,
+specifier|const
+name|LocationContext
+modifier|*
+name|LCtx
 parameter_list|)
 init|=
 literal|0

@@ -153,7 +153,7 @@ specifier|const
 name|unsigned
 name|NumNSStringMethods
 init|=
-literal|5
+literal|6
 decl_stmt|;
 name|IdentifierInfo
 modifier|*
@@ -323,7 +323,7 @@ specifier|const
 name|unsigned
 name|NumNSDictionaryMethods
 init|=
-literal|14
+literal|13
 decl_stmt|;
 comment|/// \brief The Objective-C NSDictionary selectors.
 name|Selector

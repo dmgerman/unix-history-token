@@ -116,6 +116,15 @@ name|CycleFrequency
 init|=
 literal|0
 decl_stmt|;
+comment|// This is different depending on the type of xray record. The naive format
+comment|// stores a Wallclock timespec. FDR logging stores the size of a thread
+comment|// buffer.
+name|char
+name|FreeFormData
+index|[
+literal|16
+index|]
+decl_stmt|;
 block|}
 struct|;
 comment|/// Determines the supported types of records that could be seen in XRay traces.
@@ -138,8 +147,8 @@ comment|/// The type of record.
 name|uint16_t
 name|RecordType
 decl_stmt|;
-comment|/// The CPU where the thread is running. We assume number of CPUs<= 256.
-name|uint8_t
+comment|/// The CPU where the thread is running. We assume number of CPUs<= 65536.
+name|uint16_t
 name|CPU
 decl_stmt|;
 comment|/// Identifies the type of record.

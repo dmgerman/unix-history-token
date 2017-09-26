@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SymbolizableModule.h ------------------------------------ C++ -----===//
+comment|//===- SymbolizableModule.h -------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -65,19 +65,11 @@ directive|include
 file|"llvm/DebugInfo/DIContext.h"
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|namespace
-name|object
-block|{
-name|class
-name|ObjectFile
-decl_stmt|;
-block|}
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -102,21 +94,26 @@ name|virtual
 operator|~
 name|SymbolizableModule
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|DILineInfo
 name|symbolizeCode
 argument_list|(
-argument|uint64_t ModuleOffset
+name|uint64_t
+name|ModuleOffset
 argument_list|,
-argument|FunctionNameKind FNKind
+name|FunctionNameKind
+name|FNKind
 argument_list|,
-argument|bool UseSymbolTable
+name|bool
+name|UseSymbolTable
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|virtual
 name|DIInliningInfo
 name|symbolizeInlinedCode
@@ -167,12 +164,12 @@ expr_stmt|;
 block|}
 empty_stmt|;
 block|}
-comment|// namespace symbolize
+comment|// end namespace symbolize
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

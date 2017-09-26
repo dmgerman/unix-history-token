@@ -193,7 +193,7 @@ comment|///
 comment|/// @return
 comment|///     An error object that indicates success or failure
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|CreateTarget
 argument_list|(
 argument|Debugger&debugger
@@ -215,7 +215,7 @@ comment|///
 comment|/// Same as the function above, but used when you already know the
 comment|/// platform you will be using
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|CreateTarget
 argument_list|(
 argument|Debugger&debugger
@@ -441,7 +441,7 @@ operator|&
 name|debugger
 argument_list|)
 expr_stmt|;
-name|Error
+name|Status
 name|CreateDummyTarget
 argument_list|(
 name|Debugger
@@ -460,7 +460,7 @@ operator|&
 name|target_sp
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|CreateTargetInternal
 argument_list|(
 name|Debugger
@@ -495,7 +495,7 @@ name|bool
 name|is_dummy_target
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|CreateTargetInternal
 argument_list|(
 name|Debugger

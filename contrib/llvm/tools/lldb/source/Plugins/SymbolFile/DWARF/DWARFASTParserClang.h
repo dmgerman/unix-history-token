@@ -255,6 +255,21 @@ name|DelayedPropertyList
 expr_stmt|;
 name|clang
 operator|::
+name|DeclContext
+operator|*
+name|GetDeclContextForBlock
+argument_list|(
+specifier|const
+name|DWARFDIE
+operator|&
+name|die
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|clang
+operator|::
 name|BlockDecl
 operator|*
 name|ResolveBlockDIE
@@ -264,8 +279,8 @@ name|DWARFDIE
 operator|&
 name|die
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|clang

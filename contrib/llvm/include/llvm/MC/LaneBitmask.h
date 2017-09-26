@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/LaneBitmask.h -----------------------------------*- C++ -*-===//
+comment|//===- llvm/MC/LaneBitmask.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -126,6 +126,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Format.h"
 end_include
 
@@ -149,10 +155,11 @@ struct|struct
 name|LaneBitmask
 block|{
 comment|// When changing the underlying type, change the format string as well.
-typedef|typedef
-name|unsigned
+name|using
 name|Type
-typedef|;
+init|=
+name|unsigned
+decl_stmt|;
 enum_decl|enum :
 name|unsigned
 block|{
@@ -418,6 +425,26 @@ literal|0
 argument_list|)
 return|;
 block|}
+specifier|static
+name|LaneBitmask
+name|getLane
+parameter_list|(
+name|unsigned
+name|Lane
+parameter_list|)
+block|{
+return|return
+name|LaneBitmask
+argument_list|(
+name|Type
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+name|Lane
+argument_list|)
+return|;
+block|}
 name|private
 label|:
 name|Type
@@ -468,6 +495,10 @@ return|;
 block|}
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

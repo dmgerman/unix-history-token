@@ -143,6 +143,13 @@ operator|.
 name|Level
 argument_list|)
 operator|,
+name|MatchingOpeningBlockLineIndex
+argument_list|(
+name|Line
+operator|.
+name|MatchingOpeningBlockLineIndex
+argument_list|)
+operator|,
 name|InPPDirective
 argument_list|(
 name|Line
@@ -501,6 +508,9 @@ decl_stmt|;
 name|unsigned
 name|Level
 decl_stmt|;
+name|size_t
+name|MatchingOpeningBlockLineIndex
+decl_stmt|;
 name|bool
 name|InPPDirective
 decl_stmt|;
@@ -523,7 +533,7 @@ comment|/// input ranges.
 name|bool
 name|LeadingEmptyLinesAffected
 decl_stmt|;
-comment|/// \c True if a one of this line's children intersects with an input range.
+comment|/// \c True if one of this line's children intersects with an input range.
 name|bool
 name|ChildrenAffected
 decl_stmt|;

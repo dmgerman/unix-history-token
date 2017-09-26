@@ -72,7 +72,13 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
 name|MachineInstr
+decl_stmt|;
+name|class
+name|MachineLoop
 decl_stmt|;
 name|class
 name|WebAssemblyFunctionInfo
@@ -121,8 +127,30 @@ modifier|&
 name|MFI
 parameter_list|)
 function_decl|;
+name|bool
+name|isCallIndirect
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
+function_decl|;
 block|}
 comment|// end namespace WebAssembly
+comment|/// Return the "bottom" block of a loop. This differs from
+comment|/// MachineLoop::getBottomBlock in that it works even if the loop is
+comment|/// discontiguous.
+name|MachineBasicBlock
+modifier|*
+name|LoopBottom
+parameter_list|(
+specifier|const
+name|MachineLoop
+modifier|*
+name|Loop
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

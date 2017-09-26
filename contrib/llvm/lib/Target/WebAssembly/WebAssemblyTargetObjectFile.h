@@ -78,11 +78,30 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|WebAssemblyTargetObjectFile
+name|WebAssemblyTargetObjectFileELF
 name|final
 range|:
 name|public
 name|TargetLoweringObjectFileELF
+block|{
+name|public
+operator|:
+name|void
+name|Initialize
+argument_list|(
+argument|MCContext&Ctx
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+name|override
+block|; }
+decl_stmt|;
+name|class
+name|WebAssemblyTargetObjectFile
+name|final
+range|:
+name|public
+name|TargetLoweringObjectFileWasm
 block|{
 name|public
 operator|:

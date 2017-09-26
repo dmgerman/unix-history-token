@@ -116,7 +116,8 @@ name|void
 name|SetErrorDescriptionn
 argument_list|(
 specifier|const
-name|CMIUtilString
+name|char
+operator|*
 name|vFormat
 argument_list|,
 operator|...

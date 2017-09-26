@@ -84,11 +84,19 @@ comment|///<Expression>        :=<Literal> |<NamedValue> |<MatcherExpression>
 end_comment
 
 begin_comment
-comment|///<Literal>           :=<StringLiteral> |<Unsigned>
+comment|///<Literal>           :=<StringLiteral> |<Boolean> |<Double> |<Unsigned>
 end_comment
 
 begin_comment
 comment|///<StringLiteral>     := "quoted string"
+end_comment
+
+begin_comment
+comment|///<Boolean>           := true | false
+end_comment
+
+begin_comment
+comment|///<Double>            := [0-9]+.[0-9]* | [0-9]+.[0-9]*[eE][-+]?[0-9]+
 end_comment
 
 begin_comment

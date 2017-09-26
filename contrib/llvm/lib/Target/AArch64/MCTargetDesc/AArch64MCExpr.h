@@ -187,6 +187,14 @@ name|VK_ABS
 operator||
 name|VK_PAGE
 block|,
+name|VK_ABS_PAGE_NC
+operator|=
+name|VK_ABS
+operator||
+name|VK_PAGE
+operator||
+name|VK_NC
+block|,
 name|VK_ABS_G3
 operator|=
 name|VK_ABS
@@ -416,8 +424,6 @@ operator|=
 name|VK_TLSDESC
 operator||
 name|VK_PAGEOFF
-operator||
-name|VK_NC
 block|,
 name|VK_TLSDESC_PAGE
 operator|=

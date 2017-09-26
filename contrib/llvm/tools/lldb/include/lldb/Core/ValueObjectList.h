@@ -43,12 +43,24 @@ directive|define
 name|liblldb_ValueObjectList_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
+comment|// for ValueObjectSP
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
+begin_comment
+comment|// for user_id_t
 end_comment
 
 begin_include
@@ -57,31 +69,25 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_comment
-comment|// Other libraries and framework includes
+comment|// for size_t
 end_comment
 
-begin_comment
-comment|// Project includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UserID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/ExecutionContextScope.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ValueObject
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

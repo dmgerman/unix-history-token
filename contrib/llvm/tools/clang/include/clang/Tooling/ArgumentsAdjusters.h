@@ -150,6 +150,12 @@ name|ArgumentsAdjuster
 name|getClangStripOutputAdjuster
 parameter_list|()
 function_decl|;
+comment|/// \brief Gets an argument adjuster which removes dependency-file
+comment|/// related command line arguments.
+name|ArgumentsAdjuster
+name|getClangStripDependencyFileAdjuster
+parameter_list|()
+function_decl|;
 name|enum
 name|class
 name|ArgumentInsertPosition

@@ -1305,7 +1305,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Run checkers on begining of function.
+comment|/// \brief Run checkers on beginning of function.
 end_comment
 
 begin_function_decl
@@ -1546,6 +1546,11 @@ name|MemRegion
 operator|*
 operator|>
 name|Regions
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
 argument_list|,
 specifier|const
 name|CallEvent
@@ -2100,6 +2105,11 @@ name|MemRegion
 operator|*
 operator|>
 name|Regions
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
 argument_list|,
 specifier|const
 name|CallEvent

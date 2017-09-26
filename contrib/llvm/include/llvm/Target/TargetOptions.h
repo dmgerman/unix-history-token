@@ -231,11 +231,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|LessPreciseFPMADOption
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|UnsafeFPMath
 argument_list|(
 name|false
@@ -256,6 +251,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|NoSignedZerosFPMath
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|HonorSignDependentRoundingFPMathOption
 argument_list|(
 name|false
@@ -269,11 +269,6 @@ operator|,
 name|GuaranteedTailCallOpt
 argument_list|(
 name|false
-argument_list|)
-operator|,
-name|StackAlignmentOverride
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|StackSymbolOrdering
@@ -292,11 +287,6 @@ name|false
 argument_list|)
 operator|,
 name|DisableIntegratedAS
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|CompressDebugSections
 argument_list|(
 name|false
 argument_list|)
@@ -333,54 +323,7 @@ argument_list|)
 operator|,
 name|EnableIPRA
 argument_list|(
-name|false
-argument_list|)
-operator|,
-name|FloatABIType
-argument_list|(
-name|FloatABI
-operator|::
-name|Default
-argument_list|)
-operator|,
-name|AllowFPOpFusion
-argument_list|(
-name|FPOpFusion
-operator|::
-name|Standard
-argument_list|)
-operator|,
-name|ThreadModel
-argument_list|(
-name|ThreadModel
-operator|::
-name|POSIX
-argument_list|)
-operator|,
-name|EABIVersion
-argument_list|(
-name|EABI
-operator|::
-name|Default
-argument_list|)
-operator|,
-name|DebuggerTuning
-argument_list|(
-name|DebuggerKind
-operator|::
-name|Default
-argument_list|)
-operator|,
-name|FPDenormalMode
-argument_list|(
-name|FPDenormal
-operator|::
-name|IEEE
-argument_list|)
-operator|,
-name|ExceptionModel
-argument_list|(
-argument|ExceptionHandling::None
+argument|false
 argument_list|)
 block|{}
 comment|/// PrintMachineCode - This flag is enabled when the -print-machineinstrs
@@ -403,27 +346,11 @@ name|MF
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// LessPreciseFPMAD - This flag is enabled when the
-comment|/// -enable-fp-mad is specified on the command line.  When this flag is off
-comment|/// (the default), the code generator is not allowed to generate mad
-comment|/// (multiply add) if the result is "less precise" than doing those
-comment|/// operations individually.
-name|unsigned
-name|LessPreciseFPMADOption
-range|:
-literal|1
-decl_stmt|;
-name|bool
-name|LessPreciseFPMAD
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// UnsafeFPMath - This flag is enabled when the
 comment|/// -enable-unsafe-fp-math flag is specified on the command line.  When
 comment|/// this flag is off (the default), the code generator is not allowed to
 comment|/// produce results that are "less precise" than IEEE allows.  This includes
 comment|/// use of X86 instructions like FSIN and FCOS instead of libcalls.
-comment|/// UnsafeFPMath implies LessPreciseFPMAD.
 name|unsigned
 name|UnsafeFPMath
 range|:
@@ -452,6 +379,15 @@ comment|/// -enable-no-trapping-fp-math is specified on the command line. This
 comment|/// specifies that there are no trap handlers to handle exceptions.
 name|unsigned
 name|NoTrappingFPMath
+range|:
+literal|1
+decl_stmt|;
+comment|/// NoSignedZerosFPMath - This flag is enabled when the
+comment|/// -enable-no-signed-zeros-fp-math is specified on the command line. This
+comment|/// specifies that optimizations are allowed to treat the sign of a zero
+comment|/// argument or result as insignificant.
+name|unsigned
+name|NoSignedZerosFPMath
 range|:
 literal|1
 decl_stmt|;
@@ -494,6 +430,8 @@ decl_stmt|;
 comment|/// StackAlignmentOverride - Override default stack alignment for target.
 name|unsigned
 name|StackAlignmentOverride
+init|=
+literal|0
 decl_stmt|;
 comment|/// StackSymbolOrdering - When true, this will allow CodeGen to order
 comment|/// the local stack symbols (for code size, code locality, or any other
@@ -526,10 +464,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Compress DWARF debug sections.
-name|unsigned
+name|DebugCompressionType
 name|CompressDebugSections
-range|:
-literal|1
+init|=
+name|DebugCompressionType
+operator|::
+name|None
 decl_stmt|;
 name|unsigned
 name|RelaxELFRelocations
@@ -582,6 +522,10 @@ name|FloatABI
 operator|::
 name|ABIType
 name|FloatABIType
+operator|=
+name|FloatABI
+operator|::
+name|Default
 expr_stmt|;
 comment|/// AllowFPOpFusion - This flag is set by the -fuse-fp-ops=xxx option.
 comment|/// This controls the creation of fused FP ops that store intermediate
@@ -603,6 +547,10 @@ name|FPOpFusion
 operator|::
 name|FPOpFusionMode
 name|AllowFPOpFusion
+operator|=
+name|FPOpFusion
+operator|::
+name|Standard
 expr_stmt|;
 comment|/// ThreadModel - This flag specifies the type of threading model to assume
 comment|/// for things like atomics
@@ -610,14 +558,26 @@ name|ThreadModel
 operator|::
 name|Model
 name|ThreadModel
+operator|=
+name|ThreadModel
+operator|::
+name|POSIX
 expr_stmt|;
 comment|/// EABIVersion - This flag specifies the EABI version
 name|EABI
 name|EABIVersion
+init|=
+name|EABI
+operator|::
+name|Default
 decl_stmt|;
 comment|/// Which debugger to tune for.
 name|DebuggerKind
 name|DebuggerTuning
+init|=
+name|DebuggerKind
+operator|::
+name|Default
 decl_stmt|;
 comment|/// FPDenormalMode - This flags specificies which denormal numbers the code
 comment|/// is permitted to require.
@@ -625,10 +585,18 @@ name|FPDenormal
 operator|::
 name|DenormalMode
 name|FPDenormalMode
+operator|=
+name|FPDenormal
+operator|::
+name|IEEE
 expr_stmt|;
 comment|/// What exception model to use
 name|ExceptionHandling
 name|ExceptionModel
+init|=
+name|ExceptionHandling
+operator|::
+name|None
 decl_stmt|;
 comment|/// Machine level options.
 name|MCTargetOptions
@@ -636,165 +604,6 @@ name|MCOptions
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|// Comparison operators:
-specifier|inline
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|TargetOptions
-operator|&
-name|LHS
-operator|,
-specifier|const
-name|TargetOptions
-operator|&
-name|RHS
-operator|)
-block|{
-define|#
-directive|define
-name|ARE_EQUAL
-parameter_list|(
-name|X
-parameter_list|)
-value|LHS.X == RHS.X
-return|return
-name|ARE_EQUAL
-argument_list|(
-name|UnsafeFPMath
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|NoInfsFPMath
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|NoNaNsFPMath
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|NoTrappingFPMath
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|HonorSignDependentRoundingFPMathOption
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|NoZerosInBSS
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|GuaranteedTailCallOpt
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|StackAlignmentOverride
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|EnableFastISel
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|UseInitArray
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|TrapUnreachable
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|EmulatedTLS
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|FloatABIType
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|AllowFPOpFusion
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|ThreadModel
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|EABIVersion
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|DebuggerTuning
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|FPDenormalMode
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|ExceptionModel
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|MCOptions
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|EnableIPRA
-argument_list|)
-return|;
-undef|#
-directive|undef
-name|ARE_EQUAL
-block|}
-specifier|inline
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|TargetOptions
-operator|&
-name|LHS
-operator|,
-specifier|const
-name|TargetOptions
-operator|&
-name|RHS
-operator|)
-block|{
-return|return
-operator|!
-operator|(
-name|LHS
-operator|==
-name|RHS
-operator|)
-return|;
-block|}
 block|}
 end_decl_stmt
 

@@ -152,14 +152,14 @@ decl_stmt|;
 name|mach_msg_type_number_t
 name|count
 decl_stmt|;
-name|Error
+name|Status
 name|Save
 parameter_list|(
 name|task_t
 name|task
 parameter_list|)
 function_decl|;
-name|Error
+name|Status
 name|Restore
 parameter_list|(
 name|task_t
@@ -390,7 +390,7 @@ argument_list|(
 argument|task_t task
 argument_list|)
 expr_stmt|;
-name|Error
+name|Status
 name|Reply
 argument_list|(
 operator|::
@@ -404,7 +404,7 @@ name|int
 name|signal
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|Receive
 parameter_list|(
 name|mach_port_t

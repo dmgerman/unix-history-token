@@ -253,7 +253,7 @@ argument|bool enable
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ReadRegisterValueFromMemory
 argument_list|(
 argument|const lldb_private::RegisterInfo *reg_info
@@ -266,7 +266,7 @@ argument|RegisterValue&reg_value
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|WriteRegisterValueToMemory
 argument_list|(
 argument|const lldb_private::RegisterInfo *reg_info

@@ -264,6 +264,11 @@ name|MCSection
 modifier|*
 name|DwarfStrOffDWOSection
 decl_stmt|;
+comment|/// The DWARF v5 string offset and address table sections.
+name|MCSection
+modifier|*
+name|DwarfStrOffSection
+decl_stmt|;
 name|MCSection
 modifier|*
 name|DwarfAddrSection
@@ -303,7 +308,7 @@ name|MCSection
 modifier|*
 name|TLSExtraDataSection
 decl_stmt|;
-comment|/// Section directive for Thread Local data. ELF, MachO and COFF.
+comment|/// Section directive for Thread Local data. ELF, MachO, COFF, and Wasm.
 name|MCSection
 modifier|*
 name|TLSDataSection
@@ -872,6 +877,16 @@ return|;
 block|}
 name|MCSection
 operator|*
+name|getDwarfStrOffSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfStrOffSection
+return|;
+block|}
+name|MCSection
+operator|*
 name|getDwarfAddrSection
 argument_list|()
 specifier|const
@@ -1256,6 +1271,8 @@ block|,
 name|IsELF
 block|,
 name|IsCOFF
+block|,
+name|IsWasm
 block|}
 enum|;
 name|Environment
@@ -1316,6 +1333,15 @@ parameter_list|)
 function_decl|;
 name|void
 name|initCOFFMCObjectFileInfo
+parameter_list|(
+specifier|const
+name|Triple
+modifier|&
+name|T
+parameter_list|)
+function_decl|;
+name|void
+name|initWasmMCObjectFileInfo
 parameter_list|(
 specifier|const
 name|Triple

@@ -242,6 +242,50 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+enum|enum
+block|{
+name|ReplaceLastInlinedAt
+init|=
+name|true
+block|}
+enum|;
+comment|/// Rebuild the entire inlined-at chain for this instruction so that the top of
+comment|/// the chain now is inlined-at the new call site.
+comment|/// \param   InlinedAt    The new outermost inlined-at in the chain.
+comment|/// \param   ReplaceLast  Replace the last location in the inlined-at chain.
+specifier|static
+name|DebugLoc
+name|appendInlinedAt
+argument_list|(
+name|DebugLoc
+name|DL
+argument_list|,
+name|DILocation
+operator|*
+name|InlinedAt
+argument_list|,
+name|LLVMContext
+operator|&
+name|Ctx
+argument_list|,
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+argument_list|,
+name|MDNode
+operator|*
+operator|>
+operator|&
+name|Cache
+argument_list|,
+name|bool
+name|ReplaceLast
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
 name|unsigned
 name|getLine
 argument_list|()

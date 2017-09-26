@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Config/config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Config/config.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt

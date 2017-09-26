@@ -444,6 +444,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<iterator>
 end_include
 
@@ -649,17 +655,18 @@ comment|/// It should be considered private to the implementation.
 name|namespace
 name|IntervalMapImpl
 block|{
-typedef|typedef
+name|using
+name|IdxPair
+operator|=
 name|std
 operator|::
 name|pair
 operator|<
 name|unsigned
-operator|,
+block|,
 name|unsigned
 operator|>
-name|IdxPair
-expr_stmt|;
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//---                    IntervalMapImpl::NodeBase                         ---//
 comment|//===----------------------------------------------------------------------===//
@@ -690,10 +697,10 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
-operator|,
+block|,
 name|unsigned
 name|N
 operator|>
@@ -1621,7 +1628,9 @@ operator|:
 name|MinLeafSize
 block|}
 block|;
-typedef|typedef
+name|using
+name|LeafBase
+operator|=
 name|NodeBase
 operator|<
 name|std
@@ -1629,17 +1638,15 @@ operator|::
 name|pair
 operator|<
 name|KeyT
-operator|,
+block|,
 name|KeyT
 operator|>
-operator|,
+block|,
 name|ValT
-operator|,
+block|,
 name|LeafSize
 operator|>
-name|LeafBase
-expr_stmt|;
-block|enum
+block|;    enum
 block|{
 comment|// Now that we have the leaf branching factor, compute the actual allocation
 comment|// unit size by rounding up to a whole number of cache lines.
@@ -1690,21 +1697,21 @@ comment|/// Allocator - The recycling allocator used for both branch and leaf no
 comment|/// This typedef is very likely to be identical for all IntervalMaps with
 comment|/// reasonably sized entries, so the same allocator can be shared among
 comment|/// different kinds of maps.
-typedef|typedef
+name|using
+name|Allocator
+operator|=
 name|RecyclingAllocator
 operator|<
 name|BumpPtrAllocator
-operator|,
+block|,
 name|char
-operator|,
+block|,
 name|AllocBytes
-operator|,
+block|,
 name|CacheLineBytes
 operator|>
-name|Allocator
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//---                     IntervalMapImpl::NodeRef                         ---//
 comment|//===----------------------------------------------------------------------===//
@@ -1727,20 +1734,17 @@ comment|//
 comment|//===----------------------------------------------------------------------===//
 name|class
 name|NodeRef
-block|{
-struct|struct
+block|{   struct
 name|CacheAlignedPointerTraits
 block|{
 specifier|static
 specifier|inline
 name|void
-modifier|*
+operator|*
 name|getAsVoidPointer
-parameter_list|(
-name|void
-modifier|*
-name|P
-parameter_list|)
+argument_list|(
+argument|void *P
+argument_list|)
 block|{
 return|return
 name|P
@@ -1749,48 +1753,45 @@ block|}
 specifier|static
 specifier|inline
 name|void
-modifier|*
+operator|*
 name|getFromVoidPointer
-parameter_list|(
-name|void
-modifier|*
-name|P
-parameter_list|)
+argument_list|(
+argument|void *P
+argument_list|)
 block|{
 return|return
 name|P
 return|;
 block|}
-enum|enum
+expr|enum
 block|{
 name|NumLowBitsAvailable
-init|=
+operator|=
 name|Log2CacheLine
 block|}
-enum|;
-block|}
-struct|;
+block|;   }
+block|;
 name|PointerIntPair
 operator|<
 name|void
 operator|*
-operator|,
+block|,
 name|Log2CacheLine
-operator|,
+block|,
 name|unsigned
-operator|,
+block|,
 name|CacheAlignedPointerTraits
 operator|>
 name|pip
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 comment|/// NodeRef - Create a null ref.
 name|NodeRef
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 comment|/// operator bool - Detect a null ref.
 name|explicit
 name|operator
@@ -1855,10 +1856,9 @@ block|}
 comment|/// setSize - Update the node size.
 name|void
 name|setSize
-parameter_list|(
-name|unsigned
-name|n
-parameter_list|)
+argument_list|(
+argument|unsigned n
+argument_list|)
 block|{
 name|pip
 operator|.
@@ -1868,19 +1868,17 @@ name|n
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// subtree - Access the i'th subtree reference in a branch node.
 comment|/// This depends on branch nodes storing the NodeRef array as their first
 comment|/// member.
 name|NodeRef
-modifier|&
+operator|&
 name|subtree
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|reinterpret_cast
@@ -1964,7 +1962,7 @@ argument_list|()
 operator|&&
 literal|"Inconsistent NodeRefs"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|false
 return|;
@@ -1989,101 +1987,38 @@ name|RHS
 operator|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//---                      IntervalMapImpl::LeafNode                       ---//
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Leaf nodes store up to N disjoint intervals with corresponding values.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// The intervals are kept sorted and fully coalesced so there are no adjacent
-end_comment
-
-begin_comment
 comment|// intervals mapping to the same value.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// These constraints are always satisfied:
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// - Traits::stopLess(start(i), stop(i))    - Non-empty, sane intervals.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// - Traits::stopLess(stop(i), start(i + 1) - Sorted.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// - value(i) != value(i + 1) || !Traits::adjacent(stop(i), start(i + 1))
-end_comment
-
-begin_comment
 comment|//                                          - Fully coalesced.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|KeyT
-operator|,
+block|,
 name|typename
 name|ValT
-operator|,
+block|,
 name|unsigned
 name|N
-operator|,
+block|,
 name|typename
 name|Traits
 operator|>
@@ -2098,12 +2033,12 @@ operator|::
 name|pair
 operator|<
 name|KeyT
-operator|,
+block|,
 name|KeyT
 operator|>
-operator|,
+block|,
 name|ValT
-operator|,
+block|,
 name|N
 operator|>
 block|{
@@ -2149,18 +2084,14 @@ operator|.
 name|second
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 specifier|const
 name|ValT
-modifier|&
+operator|&
 name|value
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|this
@@ -2171,16 +2102,12 @@ name|i
 index|]
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|KeyT
-modifier|&
+operator|&
 name|start
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
+argument_list|(
+argument|unsigned i
+argument_list|)
 block|{
 return|return
 name|this
@@ -2193,16 +2120,12 @@ operator|.
 name|first
 return|;
 block|}
-end_function
-
-begin_function
 name|KeyT
-modifier|&
+operator|&
 name|stop
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
+argument_list|(
+argument|unsigned i
+argument_list|)
 block|{
 return|return
 name|this
@@ -2215,16 +2138,12 @@ operator|.
 name|second
 return|;
 block|}
-end_function
-
-begin_function
 name|ValT
-modifier|&
+operator|&
 name|value
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
+argument_list|(
+argument|unsigned i
+argument_list|)
 block|{
 return|return
 name|this
@@ -2235,46 +2154,22 @@ name|i
 index|]
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// findFrom - Find the first interval after i that may contain x.
-end_comment
-
-begin_comment
 comment|/// @param i    Starting index for the search.
-end_comment
-
-begin_comment
 comment|/// @param Size Number of elements in node.
-end_comment
-
-begin_comment
 comment|/// @param x    Key to search for.
-end_comment
-
-begin_comment
 comment|/// @return     First index with !stopLess(key[i].stop, x), or size.
-end_comment
-
-begin_comment
 comment|///             This is the first interval that can possibly contain x.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|findFrom
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|,
-name|unsigned
-name|Size
+argument|unsigned Size
 argument_list|,
-name|KeyT
-name|x
+argument|KeyT x
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -2288,7 +2183,7 @@ name|N
 operator|&&
 literal|"Bad indices"
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 operator|(
@@ -2313,7 +2208,7 @@ operator|)
 operator|&&
 literal|"Index is past the needed point"
 argument_list|)
-expr_stmt|;
+block|;
 while|while
 condition|(
 name|i
@@ -2339,47 +2234,21 @@ return|return
 name|i
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// safeFind - Find an interval that is known to exist. This is the same as
-end_comment
-
-begin_comment
 comment|/// findFrom except is it assumed that x is at least within range of the last
-end_comment
-
-begin_comment
 comment|/// interval.
-end_comment
-
-begin_comment
 comment|/// @param i Starting index for the search.
-end_comment
-
-begin_comment
 comment|/// @param x Key to search for.
-end_comment
-
-begin_comment
 comment|/// @return  First index with !stopLess(key[i].stop, x), never size.
-end_comment
-
-begin_comment
 comment|///          This is the first interval that can possibly contain x.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|safeFind
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|,
-name|KeyT
-name|x
+argument|KeyT x
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -2389,7 +2258,7 @@ name|N
 operator|&&
 literal|"Bad index"
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 operator|(
@@ -2414,7 +2283,7 @@ operator|)
 operator|&&
 literal|"Index is past the needed point"
 argument_list|)
-expr_stmt|;
+block|;
 while|while
 condition|(
 name|Traits
@@ -2440,55 +2309,35 @@ name|N
 operator|&&
 literal|"Unsafe intervals"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|i
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// safeLookup - Lookup mapped value for a safe key.
-end_comment
-
-begin_comment
 comment|/// It is assumed that x is within range of the last entry.
-end_comment
-
-begin_comment
 comment|/// @param x        Key to search for.
-end_comment
-
-begin_comment
 comment|/// @param NotFound Value to return if x is not in any interval.
-end_comment
-
-begin_comment
 comment|/// @return         The mapped value at x or NotFound.
-end_comment
-
-begin_decl_stmt
 name|ValT
 name|safeLookup
 argument_list|(
-name|KeyT
-name|x
+argument|KeyT x
 argument_list|,
-name|ValT
-name|NotFound
+argument|ValT NotFound
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|unsigned
 name|i
-init|=
+operator|=
 name|safeFind
 argument_list|(
 literal|0
 argument_list|,
 name|x
 argument_list|)
-decl_stmt|;
+block|;
 return|return
 name|Traits
 operator|::
@@ -2510,69 +2359,30 @@ name|i
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function_decl
 name|unsigned
 name|insertFrom
-parameter_list|(
-name|unsigned
-modifier|&
-name|Pos
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|,
-name|KeyT
-name|a
-parameter_list|,
-name|KeyT
-name|b
-parameter_list|,
-name|ValT
-name|y
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-unit|};
+argument_list|(
+argument|unsigned&Pos
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|KeyT a
+argument_list|,
+argument|KeyT b
+argument_list|,
+argument|ValT y
+argument_list|)
+block|; }
+expr_stmt|;
 comment|/// insertFrom - Add mapping of [a;b] to y if possible, coalescing as much as
-end_comment
-
-begin_comment
 comment|/// possible. This may cause the node to grow by 1, or it may cause the node
-end_comment
-
-begin_comment
 comment|/// to shrink because of coalescing.
-end_comment
-
-begin_comment
 comment|/// @param Pos  Starting index = insertFrom(0, size, a)
-end_comment
-
-begin_comment
 comment|/// @param Size Number of elements in node.
-end_comment
-
-begin_comment
 comment|/// @param a    Interval start.
-end_comment
-
-begin_comment
 comment|/// @param b    Interval stop.
-end_comment
-
-begin_comment
 comment|/// @param y    Value be mapped.
-end_comment
-
-begin_comment
 comment|/// @return     (insert position, new size), or (i, Capacity+1) on overflow.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2812,41 +2622,23 @@ argument_list|)
 operator|=
 name|b
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|Size
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|// Detect overflow.
-end_comment
-
-begin_expr_stmt
-unit|if
-operator|(
+if|if
+condition|(
 name|i
 operator|==
 name|N
-operator|)
-end_expr_stmt
-
-begin_return
+condition|)
 return|return
 name|N
 operator|+
 literal|1
 return|;
-end_return
-
-begin_comment
 comment|// Add new interval at end.
-end_comment
-
-begin_if
 if|if
 condition|(
 name|i
@@ -2881,13 +2673,7 @@ operator|+
 literal|1
 return|;
 block|}
-end_if
-
-begin_comment
 comment|// Try to coalesce with following interval.
-end_comment
-
-begin_if
 if|if
 condition|(
 name|value
@@ -2921,13 +2707,7 @@ return|return
 name|Size
 return|;
 block|}
-end_if
-
-begin_comment
 comment|// We must insert before i. Detect overflow.
-end_comment
-
-begin_if
 if|if
 condition|(
 name|Size
@@ -2939,13 +2719,7 @@ name|N
 operator|+
 literal|1
 return|;
-end_if
-
-begin_comment
 comment|// Insert before i.
-end_comment
-
-begin_expr_stmt
 name|this
 operator|->
 name|shift
@@ -2955,9 +2729,6 @@ argument_list|,
 name|Size
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|start
 argument_list|(
 name|i
@@ -2965,9 +2736,6 @@ argument_list|)
 operator|=
 name|a
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|stop
 argument_list|(
 name|i
@@ -2975,9 +2743,6 @@ argument_list|)
 operator|=
 name|b
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|value
 argument_list|(
 name|i
@@ -2985,18 +2750,15 @@ argument_list|)
 operator|=
 name|y
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|Size
 operator|+
 literal|1
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -3069,7 +2831,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|KeyT
@@ -4300,99 +4062,83 @@ operator|>>
 name|class
 name|IntervalMap
 block|{
-typedef|typedef
+name|using
+name|Sizer
+operator|=
 name|IntervalMapImpl
 operator|::
 name|NodeSizer
 operator|<
 name|KeyT
-operator|,
+block|,
 name|ValT
 operator|>
-name|Sizer
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|Leaf
+operator|=
 name|IntervalMapImpl
 operator|::
 name|LeafNode
 operator|<
 name|KeyT
-operator|,
+block|,
 name|ValT
-operator|,
+block|,
 name|Sizer
 operator|::
 name|LeafSize
-operator|,
+block|,
 name|Traits
 operator|>
-name|Leaf
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|Branch
+operator|=
 name|IntervalMapImpl
 operator|::
 name|BranchNode
 operator|<
 name|KeyT
-operator|,
+block|,
 name|ValT
-operator|,
+block|,
 name|Sizer
 operator|::
 name|BranchSize
-operator|,
+block|,
 name|Traits
 operator|>
-name|Branch
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|RootLeaf
+operator|=
 name|IntervalMapImpl
 operator|::
 name|LeafNode
 operator|<
 name|KeyT
-operator|,
+block|,
 name|ValT
-operator|,
+block|,
 name|N
-operator|,
+block|,
 name|Traits
 operator|>
-name|RootLeaf
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|IdxPair
+operator|=
 name|IntervalMapImpl
 operator|::
 name|IdxPair
-name|IdxPair
-expr_stmt|;
-end_typedef
-
-begin_comment
+block|;
 comment|// The RootLeaf capacity is given as a template parameter. We must compute the
-end_comment
-
-begin_comment
 comment|// corresponding RootBranch capacity.
-end_comment
-
-begin_enum
-enum|enum
+block|enum
 block|{
 name|DesiredRootBranchCap
-init|=
+operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -4420,156 +4166,94 @@ argument_list|)
 operator|)
 block|,
 name|RootBranchCap
-init|=
+operator|=
 name|DesiredRootBranchCap
-condition|?
+operator|?
 name|DesiredRootBranchCap
-else|:
+operator|:
 literal|1
 block|}
-enum|;
-end_enum
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|RootBranch
+operator|=
 name|IntervalMapImpl
 operator|::
 name|BranchNode
 operator|<
 name|KeyT
-operator|,
+block|,
 name|ValT
-operator|,
+block|,
 name|RootBranchCap
-operator|,
+block|,
 name|Traits
 operator|>
-name|RootBranch
-expr_stmt|;
-end_typedef
-
-begin_comment
+block|;
 comment|// When branched, we store a global start key as well as the branch node.
-end_comment
-
-begin_struct
-struct|struct
+block|struct
 name|RootBranchData
 block|{
 name|KeyT
 name|start
-decl_stmt|;
+block|;
 name|RootBranch
 name|node
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_label
+block|;   }
+block|;
 name|public
-label|:
-end_label
-
-begin_typedef
-typedef|typedef
+operator|:
+name|using
+name|Allocator
+operator|=
 name|typename
 name|Sizer
 operator|::
 name|Allocator
-name|Allocator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|KeyT
+block|;
+name|using
 name|KeyType
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|ValT
+operator|=
+name|KeyT
+block|;
+name|using
 name|ValueType
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|Traits
+operator|=
+name|ValT
+block|;
+name|using
 name|KeyTraits
-typedef|;
-end_typedef
-
-begin_label
+operator|=
+name|Traits
+block|;
 name|private
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|// The root data is either a RootLeaf or a RootBranchData instance.
-end_comment
-
-begin_expr_stmt
 name|AlignedCharArrayUnion
 operator|<
 name|RootLeaf
-operator|,
+block|,
 name|RootBranchData
 operator|>
 name|data
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// Tree height.
-end_comment
-
-begin_comment
 comment|// 0: Leaves in root.
-end_comment
-
-begin_comment
 comment|// 1: Root points to leaf.
-end_comment
-
-begin_comment
 comment|// 2: root->branch->leaf ...
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|height
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// Number of entries in the root node.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|rootSize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// Allocator used for creating external nodes.
-end_comment
-
-begin_decl_stmt
 name|Allocator
-modifier|&
+operator|&
 name|allocator
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// dataAs - Represent data as a node type without breaking aliasing rules.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -4609,9 +4293,6 @@ operator|.
 name|t
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|const
 name|RootLeaf
 operator|&
@@ -6629,6 +6310,8 @@ comment|// The map referred to.
 name|IntervalMap
 operator|*
 name|map
+operator|=
+name|nullptr
 block|;
 comment|// We store a full path from the root to the current position.
 comment|// The path may be partially filled, but never between iterator calls.
@@ -6941,19 +6624,28 @@ end_comment
 begin_expr_stmt
 name|const_iterator
 argument_list|()
-operator|:
-name|map
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// setMap - Change the map iterated over. This call must be followed by a
+end_comment
+
+begin_comment
 comment|/// call to goToBegin(), goToEnd(), or find()
+end_comment
+
+begin_function
 name|void
 name|setMap
-argument_list|(
-argument|const IntervalMap&m
-argument_list|)
+parameter_list|(
+specifier|const
+name|IntervalMap
+modifier|&
+name|m
+parameter_list|)
 block|{
 name|map
 operator|=
@@ -6966,8 +6658,15 @@ operator|(
 operator|&
 name|m
 operator|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// valid - Return true if the current position is valid, false for end().
+end_comment
+
+begin_expr_stmt
 name|bool
 name|valid
 argument_list|()
@@ -8110,12 +7809,13 @@ name|friend
 name|class
 name|IntervalMap
 block|;
-typedef|typedef
+name|using
+name|IdxPair
+operator|=
 name|IntervalMapImpl
 operator|::
 name|IdxPair
-name|IdxPair
-expr_stmt|;
+block|;
 name|explicit
 name|iterator
 argument_list|(
@@ -8136,28 +7836,17 @@ argument|unsigned Level
 argument_list|,
 argument|KeyT Stop
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 name|bool
 name|insertNode
 argument_list|(
-name|unsigned
-name|Level
+argument|unsigned Level
 argument_list|,
-name|IntervalMapImpl
-operator|::
-name|NodeRef
-name|Node
+argument|IntervalMapImpl::NodeRef Node
 argument_list|,
-name|KeyT
-name|Stop
+argument|KeyT Stop
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -8168,179 +7857,89 @@ name|overflow
 argument_list|(
 argument|unsigned Level
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
+block|;
 name|void
 name|treeInsert
-parameter_list|(
-name|KeyT
-name|a
-parameter_list|,
-name|KeyT
-name|b
-parameter_list|,
-name|ValT
-name|y
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|(
+argument|KeyT a
+argument_list|,
+argument|KeyT b
+argument_list|,
+argument|ValT y
+argument_list|)
+block|;
 name|void
 name|eraseNode
-parameter_list|(
-name|unsigned
-name|Level
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|(
+argument|unsigned Level
+argument_list|)
+block|;
 name|void
 name|treeErase
-parameter_list|(
-name|bool
-name|UpdateRoot
-init|=
-name|true
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|(
+argument|bool UpdateRoot = true
+argument_list|)
+block|;
 name|bool
 name|canCoalesceLeft
-parameter_list|(
-name|KeyT
-name|Start
-parameter_list|,
-name|ValT
-name|x
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|(
+argument|KeyT Start
+argument_list|,
+argument|ValT x
+argument_list|)
+block|;
 name|bool
 name|canCoalesceRight
-parameter_list|(
-name|KeyT
-name|Stop
-parameter_list|,
-name|ValT
-name|x
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_label
+argument_list|(
+argument|KeyT Stop
+argument_list|,
+argument|ValT x
+argument_list|)
+block|;
 name|public
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|/// iterator - Create null iterator.
-end_comment
-
-begin_expr_stmt
 name|iterator
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// setStart - Move the start of the current interval.
-end_comment
-
-begin_comment
 comment|/// This may cause coalescing with the previous interval.
-end_comment
-
-begin_comment
 comment|/// @param a New start key, must not overlap the previous interval.
-end_comment
-
-begin_function_decl
 name|void
 name|setStart
-parameter_list|(
-name|KeyT
-name|a
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|(
+argument|KeyT a
+argument_list|)
+block|;
 comment|/// setStop - Move the end of the current interval.
-end_comment
-
-begin_comment
 comment|/// This may cause coalescing with the following interval.
-end_comment
-
-begin_comment
 comment|/// @param b New stop key, must not overlap the following interval.
-end_comment
-
-begin_function_decl
 name|void
 name|setStop
-parameter_list|(
-name|KeyT
-name|b
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|(
+argument|KeyT b
+argument_list|)
+block|;
 comment|/// setValue - Change the mapped value of the current interval.
-end_comment
-
-begin_comment
 comment|/// This may cause coalescing with the previous and following intervals.
-end_comment
-
-begin_comment
 comment|/// @param x New value.
-end_comment
-
-begin_function_decl
 name|void
 name|setValue
-parameter_list|(
-name|ValT
-name|x
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|(
+argument|ValT x
+argument_list|)
+block|;
 comment|/// setStartUnchecked - Move the start of the current interval without
-end_comment
-
-begin_comment
 comment|/// checking for coalescing or overlaps.
-end_comment
-
-begin_comment
 comment|/// This should only be used when it is known that coalescing is not required.
-end_comment
-
-begin_comment
 comment|/// @param a New start key.
-end_comment
-
-begin_function
 name|void
 name|setStartUnchecked
-parameter_list|(
-name|KeyT
-name|a
-parameter_list|)
+argument_list|(
+argument|KeyT a
+argument_list|)
 block|{
 name|this
 operator|->
@@ -8348,33 +7947,16 @@ name|unsafeStart
 argument_list|()
 operator|=
 name|a
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// setStopUnchecked - Move the end of the current interval without checking
-end_comment
-
-begin_comment
 comment|/// for coalescing or overlaps.
-end_comment
-
-begin_comment
 comment|/// This should only be used when it is known that coalescing is not required.
-end_comment
-
-begin_comment
 comment|/// @param b New stop key.
-end_comment
-
-begin_function
 name|void
 name|setStopUnchecked
-parameter_list|(
-name|KeyT
-name|b
-parameter_list|)
+argument_list|(
+argument|KeyT b
+argument_list|)
 block|{
 name|this
 operator|->
@@ -8382,7 +7964,7 @@ name|unsafeStop
 argument_list|()
 operator|=
 name|b
-expr_stmt|;
+block|;
 comment|// Update keys in branch nodes as well.
 if|if
 condition|(
@@ -8413,27 +7995,14 @@ name|b
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// setValueUnchecked - Change the mapped value of the current interval
-end_comment
-
-begin_comment
 comment|/// without checking for coalescing.
-end_comment
-
-begin_comment
 comment|/// @param x New value.
-end_comment
-
-begin_function
 name|void
 name|setValueUnchecked
-parameter_list|(
-name|ValT
-name|x
-parameter_list|)
+argument_list|(
+argument|ValT x
+argument_list|)
 block|{
 name|this
 operator|->
@@ -8441,29 +8010,19 @@ name|unsafeValue
 argument_list|()
 operator|=
 name|x
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// insert - Insert mapping [a;b] -> y before the current position.
-end_comment
-
-begin_function_decl
 name|void
 name|insert
-parameter_list|(
-name|KeyT
-name|a
-parameter_list|,
-name|KeyT
-name|b
-parameter_list|,
-name|ValT
-name|y
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|KeyT a
+argument_list|,
+argument|KeyT b
+argument_list|,
+argument|ValT y
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// erase - Erase the current interval.
@@ -11709,12 +11268,11 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_for
-for|for
-control|(
-init|;
-condition|;
-control|)
+begin_while
+while|while
+condition|(
+name|true
+condition|)
 block|{
 name|KeyT
 name|Stop
@@ -11812,7 +11370,7 @@ operator|++
 name|Pos
 expr_stmt|;
 block|}
-end_for
+end_while
 
 begin_comment
 comment|// Where was I? Find NewOffset.
@@ -11934,59 +11492,40 @@ operator|>
 name|class
 name|IntervalMapOverlaps
 block|{
-typedef|typedef
+name|using
+name|KeyType
+operator|=
 name|typename
 name|MapA
 operator|::
 name|KeyType
-name|KeyType
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|Traits
+operator|=
 name|typename
 name|MapA
 operator|::
 name|KeyTraits
-name|Traits
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
+block|;
 name|typename
 name|MapA
 operator|::
 name|const_iterator
 name|posA
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|typename
 name|MapB
 operator|::
 name|const_iterator
 name|posB
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// advance - Move posA and posB forward until reaching an overlap, or until
-end_comment
-
-begin_comment
 comment|/// either meets end.
-end_comment
-
-begin_comment
 comment|/// Don't move the iterators if they are already overlapping.
-end_comment
-
-begin_function
 name|void
 name|advance
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -12050,6 +11589,9 @@ argument_list|)
 condition|)
 return|return;
 block|}
+end_expr_stmt
+
+begin_elseif
 elseif|else
 if|if
 condition|(
@@ -12106,14 +11648,19 @@ argument_list|)
 condition|)
 return|return;
 block|}
+end_elseif
+
+begin_else
 else|else
 comment|// Already overlapping.
 return|return;
-for|for
-control|(
-init|;
-condition|;
-control|)
+end_else
+
+begin_while
+while|while
+condition|(
+name|true
+condition|)
 block|{
 comment|// Make a.end> b.start.
 name|posA
@@ -12188,15 +11735,10 @@ argument_list|)
 condition|)
 return|return;
 block|}
-block|}
-end_function
-
-begin_label
-name|public
-label|:
-end_label
+end_while
 
 begin_comment
+unit|}  public:
 comment|/// IntervalMapOverlaps - Create an iterator for the overlaps of a and b.
 end_comment
 

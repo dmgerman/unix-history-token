@@ -235,6 +235,18 @@ directive|include
 file|"llvm/IR/PassManager.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Utils/LCSSA.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Utils/LoopSimplify.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -916,7 +928,23 @@ name|Pass
 argument_list|(
 argument|std::move(Pass)
 argument_list|)
-block|{}
+block|{
+name|LoopCanonicalizationFPM
+operator|.
+name|addPass
+argument_list|(
+name|LoopSimplifyPass
+argument_list|()
+argument_list|)
+block|;
+name|LoopCanonicalizationFPM
+operator|.
+name|addPass
+argument_list|(
+name|LCSSAPass
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// \brief Runs the loop passes across every loop in the function.
 name|PreservedAnalyses
 name|run
@@ -926,23 +954,21 @@ argument_list|,
 argument|FunctionAnalysisManager&AM
 argument_list|)
 block|{
-comment|// Setup the loop analysis manager from its proxy.
-name|LoopAnalysisManager
-operator|&
-name|LAM
+comment|// Before we even compute any loop analyses, first run a miniature function
+comment|// pass pipeline to put loops into their canonical form. Note that we can
+comment|// directly build up function analyses after this as the function pass
+comment|// manager handles all the invalidation at that layer.
+name|PreservedAnalyses
+name|PA
 operator|=
-name|AM
+name|LoopCanonicalizationFPM
 operator|.
-name|getResult
-operator|<
-name|LoopAnalysisManagerFunctionProxy
-operator|>
-operator|(
+name|run
+argument_list|(
 name|F
-operator|)
-operator|.
-name|getManager
-argument_list|()
+argument_list|,
+name|AM
+argument_list|)
 block|;
 comment|// Get the loop structure for this function
 name|LoopInfo
@@ -968,10 +994,7 @@ name|empty
 argument_list|()
 condition|)
 return|return
-name|PreservedAnalyses
-operator|::
-name|all
-argument_list|()
+name|PA
 return|;
 comment|// Get the analysis results needed by loop passes.
 name|LoopStandardAnalysisResults
@@ -1049,12 +1072,26 @@ name|F
 operator|)
 block|}
 block|;
-name|PreservedAnalyses
-name|PA
+comment|// Setup the loop analysis manager from its proxy. It is important that
+comment|// this is only done when there are loops to process and we have built the
+comment|// LoopStandardAnalysisResults object. The loop analyses cached in this
+comment|// manager have access to those analysis results and so it must invalidate
+comment|// itself when they go away.
+name|LoopAnalysisManager
+operator|&
+name|LAM
 operator|=
-name|PreservedAnalyses
-operator|::
-name|all
+name|AM
+operator|.
+name|getResult
+operator|<
+name|LoopAnalysisManagerFunctionProxy
+operator|>
+operator|(
+name|F
+operator|)
+operator|.
+name|getManager
 argument_list|()
 block|;
 comment|// A postorder worklist of loops to process.
@@ -1122,6 +1159,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
+comment|// Save a parent loop pointer for asserts.
 name|Updater
 operator|.
 name|ParentL
@@ -1130,6 +1168,28 @@ name|L
 operator|->
 name|getParentLoop
 argument_list|()
+expr_stmt|;
+comment|// Verify the loop structure and LCSSA form before visiting the loop.
+name|L
+operator|->
+name|verifyLoop
+argument_list|()
+expr_stmt|;
+name|assert
+argument_list|(
+name|L
+operator|->
+name|isRecursivelyLCSSAForm
+argument_list|(
+name|LAR
+operator|.
+name|DT
+argument_list|,
+name|LI
+argument_list|)
+operator|&&
+literal|"Loops must remain in LCSSA form!"
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1254,18 +1314,6 @@ name|PA
 operator|.
 name|preserve
 operator|<
-name|AssumptionAnalysis
-operator|>
-operator|(
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PA
-operator|.
-name|preserve
-operator|<
 name|DominatorTreeAnalysis
 operator|>
 operator|(
@@ -1363,6 +1411,12 @@ begin_decl_stmt
 unit|}  private:
 name|LoopPassT
 name|Pass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FunctionPassManager
+name|LoopCanonicalizationFPM
 decl_stmt|;
 end_decl_stmt
 

@@ -251,6 +251,12 @@ argument|legacy::PassManagerBase
 argument_list|,
 argument|LLVMPassManagerRef
 argument_list|)
+comment|/// If -time-passes has been specified, report the timings immediately and then
+comment|/// reset the timers to zero.
+name|void
+name|reportAndResetTimings
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

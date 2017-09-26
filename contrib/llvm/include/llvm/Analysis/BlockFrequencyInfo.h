@@ -191,6 +191,25 @@ operator|~
 name|BlockFrequencyInfo
 argument_list|()
 expr_stmt|;
+comment|/// Handle invalidation explicitly.
+name|bool
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+argument_list|)
+decl_stmt|;
 specifier|const
 name|Function
 operator|*
@@ -264,6 +283,29 @@ name|uint64_t
 name|Freq
 parameter_list|)
 function_decl|;
+comment|/// Set the frequency of \p ReferenceBB to \p Freq and scale the frequencies
+comment|/// of the blocks in \p BlocksToScale such that their frequencies relative
+comment|/// to \p ReferenceBB remain unchanged.
+name|void
+name|setBlockFreqAndScale
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|*
+name|ReferenceBB
+argument_list|,
+name|uint64_t
+name|Freq
+argument_list|,
+name|SmallPtrSetImpl
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|&
+name|BlocksToScale
+argument_list|)
+decl_stmt|;
 comment|/// calculate - compute block frequency info for the given function.
 name|void
 name|calculate

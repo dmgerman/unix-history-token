@@ -387,6 +387,19 @@ return|return
 name|BasePtr
 return|;
 block|}
+comment|/// Returns physical register used as frame pointer.
+comment|/// This will always returns the frame pointer register, contrary to
+comment|/// getFrameRegister() which returns the "base pointer" in situations
+comment|/// involving a stack, frame and base pointer.
+name|unsigned
+name|getFramePtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FramePtr
+return|;
+block|}
 comment|// FIXME: Move to FrameInfok
 name|unsigned
 name|getSlotSize

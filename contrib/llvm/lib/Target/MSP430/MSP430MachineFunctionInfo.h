@@ -95,6 +95,12 @@ comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
 name|int
 name|VarArgsFrameIndex
 block|;
+comment|/// SRetReturnReg - Some subtargets require that sret lowering includes
+comment|/// returning the value of the returned struct in a register. This field
+comment|/// holds the virtual register into which the sret argument is passed.
+name|unsigned
+name|SRetReturnReg
+block|;
 name|public
 operator|:
 name|MSP430MachineFunctionInfo
@@ -122,6 +128,11 @@ name|ReturnAddrIndex
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|SRetReturnReg
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 name|unsigned
 name|getCalleeSavedFrameSize
@@ -141,6 +152,25 @@ block|{
 name|CalleeSavedFrameSize
 operator|=
 name|bytes
+block|; }
+name|unsigned
+name|getSRetReturnReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SRetReturnReg
+return|;
+block|}
+name|void
+name|setSRetReturnReg
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|SRetReturnReg
+operator|=
+name|Reg
 block|; }
 name|int
 name|getRAIndex

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===----------------- LLDBAssert.h --------------------------------*- C++
-end_comment
-
-begin_comment
-comment|//-*-===//
+comment|//===----------------- LLDBAssert.h ------------------------------*- C++-*-===//
 end_comment
 
 begin_comment
@@ -46,12 +42,6 @@ define|#
 directive|define
 name|utility_LLDBAssert_h_
 end_define
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
 
 begin_ifdef
 ifdef|#

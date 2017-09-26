@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/MachinePassRegistry.h ----------------------*- C++ -*-===//
+comment|//===- llvm/CodeGen/MachinePassRegistry.h -----------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -78,6 +78,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/Passes.h"
 end_include
 
@@ -91,15 +97,16 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-typedef|typedef
-name|void
-modifier|*
-function_decl|(
-modifier|*
+name|using
 name|MachinePassCtor
-function_decl|)
-parameter_list|()
-function_decl|;
+init|=
+name|void
+operator|*
+call|(
+modifier|*
+call|)
+argument_list|()
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// MachinePassRegistryListener - Listener to adds and removals of nodes in
@@ -118,25 +125,32 @@ name|public
 label|:
 name|MachinePassRegistryListener
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 operator|~
 name|MachinePassRegistryListener
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|NotifyAdd
-argument_list|(
-argument|StringRef N
-argument_list|,
-argument|MachinePassCtor C
-argument_list|,
-argument|StringRef D
-argument_list|)
-operator|=
+parameter_list|(
+name|StringRef
+name|N
+parameter_list|,
+name|MachinePassCtor
+name|C
+parameter_list|,
+name|StringRef
+name|D
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
 name|void
 name|NotifyRemove
@@ -162,6 +176,8 @@ label|:
 name|MachinePassRegistryNode
 modifier|*
 name|Next
+init|=
+name|nullptr
 decl_stmt|;
 comment|// Next function pass in list.
 name|StringRef
@@ -187,11 +203,6 @@ argument_list|,
 argument|MachinePassCtor C
 argument_list|)
 block|:
-name|Next
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
 name|Name
 argument_list|(
 name|N
@@ -511,7 +522,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|// Implement the MachinePassRegistryListener callbacks.
-comment|//
 name|void
 name|NotifyAdd
 argument_list|(
@@ -555,7 +565,7 @@ name|N
 argument_list|)
 block|;   }
 expr|}
-block|;   }
+block|;  }
 end_decl_stmt
 
 begin_comment
@@ -566,6 +576,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEPASSREGISTRY_H
+end_comment
 
 end_unit
 

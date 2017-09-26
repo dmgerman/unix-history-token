@@ -162,13 +162,9 @@ block|;
 name|SourceRange
 name|Range
 block|;
-comment|// Record the FP_CONTRACT state that applies to this operator call. Only
-comment|// meaningful for floating point types. For other types this value can be
-comment|// set to false.
-name|unsigned
-name|FPContractable
-operator|:
-literal|1
+comment|// Only meaningful for floating point types.
+name|FPOptions
+name|FPFeatures
 block|;
 name|SourceRange
 name|getSourceRangeImpl
@@ -194,7 +190,7 @@ argument|ExprValueKind VK
 argument_list|,
 argument|SourceLocation operatorloc
 argument_list|,
-argument|bool fpContractable
+argument|FPOptions FPFeatures
 argument_list|)
 operator|:
 name|CallExpr
@@ -219,9 +215,9 @@ argument_list|(
 name|Op
 argument_list|)
 block|,
-name|FPContractable
+name|FPFeatures
 argument_list|(
-argument|fpContractable
+argument|FPFeatures
 argument_list|)
 block|{
 name|Range
@@ -430,24 +426,36 @@ block|}
 comment|// Set the FP contractability status of this operator. Only meaningful for
 comment|// operations on floating point types.
 name|void
-name|setFPContractable
+name|setFPFeatures
 argument_list|(
-argument|bool FPC
+argument|FPOptions F
 argument_list|)
 block|{
-name|FPContractable
+name|FPFeatures
 operator|=
-name|FPC
+name|F
 block|; }
-comment|// Get the FP contractability status of this operator. Only meaningful for
-comment|// operations on floating point types.
-name|bool
-name|isFPContractable
+name|FPOptions
+name|getFPFeatures
 argument_list|()
 specifier|const
 block|{
 return|return
-name|FPContractable
+name|FPFeatures
+return|;
+block|}
+comment|// Get the FP contractability status of this operator. Only meaningful for
+comment|// operations on floating point types.
+name|bool
+name|isFPContractableWithinStatement
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FPFeatures
+operator|.
+name|allowFPContractWithinStatement
+argument_list|()
 return|;
 block|}
 name|friend
@@ -6127,7 +6135,9 @@ argument|const ASTContext&C
 argument_list|,
 argument|CXXConstructorDecl *Cons
 argument_list|,
-argument|TypeSourceInfo *Type
+argument|QualType Type
+argument_list|,
+argument|TypeSourceInfo *TSI
 argument_list|,
 argument|ArrayRef<Expr *> Args
 argument_list|,
@@ -16154,6 +16164,12 @@ operator|::
 name|Count
 index|]
 block|;
+name|OpaqueValueExpr
+operator|*
+name|OpaqueValue
+operator|=
+name|nullptr
+block|;
 name|friend
 name|class
 name|ASTStmtReader
@@ -16173,6 +16189,8 @@ argument_list|,
 argument|Expr *Suspend
 argument_list|,
 argument|Expr *Resume
+argument_list|,
+argument|OpaqueValueExpr *OpaqueValue
 argument_list|)
 operator|:
 name|Expr
@@ -16217,7 +16235,12 @@ argument_list|)
 block|,
 name|KeywordLoc
 argument_list|(
-argument|KeywordLoc
+name|KeywordLoc
+argument_list|)
+block|,
+name|OpaqueValue
+argument_list|(
+argument|OpaqueValue
 argument_list|)
 block|{
 name|SubExprs
@@ -16426,6 +16449,17 @@ index|]
 operator|)
 return|;
 block|}
+comment|/// \brief getOpaqueValue - Return the opaque value placeholder.
+name|OpaqueValueExpr
+operator|*
+name|getOpaqueValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpaqueValue
+return|;
+block|}
 name|Expr
 operator|*
 name|getReadyExpr
@@ -16582,6 +16616,10 @@ argument_list|,
 argument|Expr *Suspend
 argument_list|,
 argument|Expr *Resume
+argument_list|,
+argument|OpaqueValueExpr *OpaqueValue
+argument_list|,
+argument|bool IsImplicit = false
 argument_list|)
 operator|:
 name|CoroutineSuspendExpr
@@ -16597,8 +16635,16 @@ argument_list|,
 argument|Suspend
 argument_list|,
 argument|Resume
+argument_list|,
+argument|OpaqueValue
 argument_list|)
-block|{}
+block|{
+name|CoawaitBits
+operator|.
+name|IsImplicit
+operator|=
+name|IsImplicit
+block|;   }
 name|CoawaitExpr
 argument_list|(
 argument|SourceLocation CoawaitLoc
@@ -16606,6 +16652,8 @@ argument_list|,
 argument|QualType Ty
 argument_list|,
 argument|Expr *Operand
+argument_list|,
+argument|bool IsImplicit = false
 argument_list|)
 operator|:
 name|CoroutineSuspendExpr
@@ -16618,7 +16666,13 @@ argument|Ty
 argument_list|,
 argument|Operand
 argument_list|)
-block|{}
+block|{
+name|CoawaitBits
+operator|.
+name|IsImplicit
+operator|=
+name|IsImplicit
+block|;   }
 name|CoawaitExpr
 argument_list|(
 argument|EmptyShell Empty
@@ -16643,6 +16697,29 @@ name|getCommonExpr
 argument_list|()
 return|;
 block|}
+name|bool
+name|isImplicit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CoawaitBits
+operator|.
+name|IsImplicit
+return|;
+block|}
+name|void
+name|setIsImplicit
+argument_list|(
+argument|bool value = true
+argument_list|)
+block|{
+name|CoawaitBits
+operator|.
+name|IsImplicit
+operator|=
+name|value
+block|; }
 specifier|static
 name|bool
 name|classof
@@ -16657,6 +16734,213 @@ name|getStmtClass
 argument_list|()
 operator|==
 name|CoawaitExprClass
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Represents a 'co_await' expression while the type of the promise
+comment|/// is dependent.
+name|class
+name|DependentCoawaitExpr
+operator|:
+name|public
+name|Expr
+block|{
+name|SourceLocation
+name|KeywordLoc
+block|;
+name|Stmt
+operator|*
+name|SubExprs
+index|[
+literal|2
+index|]
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|public
+operator|:
+name|DependentCoawaitExpr
+argument_list|(
+argument|SourceLocation KeywordLoc
+argument_list|,
+argument|QualType Ty
+argument_list|,
+argument|Expr *Op
+argument_list|,
+argument|UnresolvedLookupExpr *OpCoawait
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|DependentCoawaitExprClass
+argument_list|,
+name|Ty
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+comment|/*TypeDependent*/
+name|true
+argument_list|,
+comment|/*ValueDependent*/
+name|true
+argument_list|,
+comment|/*InstantiationDependent*/
+name|true
+argument_list|,
+name|Op
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|KeywordLoc
+argument_list|(
+argument|KeywordLoc
+argument_list|)
+block|{
+comment|// NOTE: A co_await expression is dependent on the coroutines promise
+comment|// type and may be dependent even when the `Op` expression is not.
+name|assert
+argument_list|(
+name|Ty
+operator|->
+name|isDependentType
+argument_list|()
+operator|&&
+literal|"wrong constructor for non-dependent co_await/co_yield expression"
+argument_list|)
+block|;
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|=
+name|Op
+block|;
+name|SubExprs
+index|[
+literal|1
+index|]
+operator|=
+name|OpCoawait
+block|;   }
+name|DependentCoawaitExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|DependentCoawaitExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{}
+name|Expr
+operator|*
+name|getOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|)
+return|;
+block|}
+name|UnresolvedLookupExpr
+operator|*
+name|getOperatorCoawaitLookup
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|UnresolvedLookupExpr
+operator|>
+operator|(
+name|SubExprs
+index|[
+literal|1
+index|]
+operator|)
+return|;
+block|}
+name|SourceLocation
+name|getKeywordLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|KeywordLoc
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|KeywordLoc
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|getOperand
+argument_list|()
+operator|->
+name|getLocEnd
+argument_list|()
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|SubExprs
+argument_list|,
+name|SubExprs
+operator|+
+literal|2
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|DependentCoawaitExprClass
 return|;
 block|}
 expr|}
@@ -16685,6 +16969,8 @@ argument_list|,
 argument|Expr *Suspend
 argument_list|,
 argument|Expr *Resume
+argument_list|,
+argument|OpaqueValueExpr *OpaqueValue
 argument_list|)
 operator|:
 name|CoroutineSuspendExpr
@@ -16700,6 +16986,8 @@ argument_list|,
 argument|Suspend
 argument_list|,
 argument|Resume
+argument_list|,
+argument|OpaqueValue
 argument_list|)
 block|{}
 name|CoyieldExpr

@@ -62,25 +62,37 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Object/Error.h"
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorOr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/FileSystem.h"
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -101,21 +113,6 @@ name|Binary
 block|{
 name|private
 label|:
-name|Binary
-argument_list|()
-operator|=
-name|delete
-expr_stmt|;
-name|Binary
-argument_list|(
-specifier|const
-name|Binary
-operator|&
-name|other
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
 name|unsigned
 name|int
 name|TypeID
@@ -143,9 +140,6 @@ block|,
 name|ID_IR
 block|,
 comment|// LLVM IR
-name|ID_ModuleSummaryIndex
-block|,
-comment|// Module summary index
 comment|// Object and children.
 name|ID_StartObjects
 block|,
@@ -175,6 +169,9 @@ comment|// MachO 64-bit, little endian
 name|ID_MachO64B
 block|,
 comment|// MachO 64-bit, big endian
+name|ID_WinRes
+block|,
+comment|// Windows resource (.res) file.
 name|ID_Wasm
 block|,
 name|ID_EndObjects
@@ -247,6 +244,21 @@ return|;
 block|}
 name|public
 label|:
+name|Binary
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
+name|Binary
+argument_list|(
+specifier|const
+name|Binary
+operator|&
+name|other
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
 name|virtual
 operator|~
 name|Binary
@@ -304,6 +316,9 @@ name|isIR
 argument_list|()
 operator|||
 name|isObject
+argument_list|()
+operator|||
+name|isCOFFImportFile
 argument_list|()
 return|;
 block|}
@@ -404,17 +419,6 @@ name|ID_IR
 return|;
 block|}
 name|bool
-name|isModuleSummaryIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TypeID
-operator|==
-name|ID_ModuleSummaryIndex
-return|;
-block|}
-name|bool
 name|isLittleEndian
 argument_list|()
 specifier|const
@@ -438,6 +442,60 @@ name|TypeID
 operator|==
 name|ID_MachO64B
 operator|)
+return|;
+block|}
+name|bool
+name|isWinRes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeID
+operator|==
+name|ID_WinRes
+return|;
+block|}
+name|Triple
+operator|::
+name|ObjectFormatType
+name|getTripleObjectFormat
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isCOFF
+argument_list|()
+condition|)
+return|return
+name|Triple
+operator|::
+name|COFF
+return|;
+if|if
+condition|(
+name|isMachO
+argument_list|()
+condition|)
+return|return
+name|Triple
+operator|::
+name|MachO
+return|;
+if|if
+condition|(
+name|isELF
+argument_list|()
+condition|)
+return|return
+name|Triple
+operator|::
+name|ELF
+return|;
+return|return
+name|Triple
+operator|::
+name|UnknownObjectFormat
 return|;
 block|}
 block|}
@@ -623,7 +681,9 @@ operator|>
 operator|::
 name|OwningBinary
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|template
 operator|<
 name|typename
@@ -817,13 +877,25 @@ argument|StringRef Path
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace object
+end_comment
+
+begin_comment
+unit|}
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_BINARY_H
+end_comment
 
 end_unit
 

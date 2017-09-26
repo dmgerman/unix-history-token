@@ -150,19 +150,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/ScalarEvolutionExpressions.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Instruction
-decl_stmt|;
-name|class
-name|DominatorTree
-decl_stmt|;
 name|class
 name|Loop
 decl_stmt|;
@@ -172,27 +178,6 @@ decl_stmt|;
 name|class
 name|SCEV
 decl_stmt|;
-name|class
-name|Value
-decl_stmt|;
-comment|/// TransformKind - Different types of transformations that
-comment|/// TransformForPostIncUse can do.
-enum|enum
-name|TransformKind
-block|{
-comment|/// Normalize - Normalize according to the given loops.
-name|Normalize
-block|,
-comment|/// NormalizeAutodetect - Detect post-inc opportunities on new expressions,
-comment|/// update the given loop set, and normalize.
-name|NormalizeAutodetect
-block|,
-comment|/// Denormalize - Perform the inverse transform on the expression with the
-comment|/// given loop set.
-name|Denormalize
-block|}
-enum|;
-comment|/// PostIncLoopSet - A set of loops.
 typedef|typedef
 name|SmallPtrSet
 operator|<
@@ -204,29 +189,31 @@ literal|2
 operator|>
 name|PostIncLoopSet
 expr_stmt|;
-comment|/// TransformForPostIncUse - Transform the given expression according to the
-comment|/// given transformation kind.
+typedef|typedef
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+specifier|const
+name|SCEVAddRecExpr
+operator|*
+argument_list|)
+operator|>
+name|NormalizePredTy
+expr_stmt|;
+comment|/// Normalize \p S to be post-increment for all loops present in \p
+comment|/// Loops.
 specifier|const
 name|SCEV
 modifier|*
-name|TransformForPostIncUse
+name|normalizeForPostIncUse
 parameter_list|(
-name|TransformKind
-name|Kind
-parameter_list|,
 specifier|const
 name|SCEV
 modifier|*
 name|S
 parameter_list|,
-name|Instruction
-modifier|*
-name|User
-parameter_list|,
-name|Value
-modifier|*
-name|OperandValToReplace
-parameter_list|,
+specifier|const
 name|PostIncLoopSet
 modifier|&
 name|Loops
@@ -234,14 +221,56 @@ parameter_list|,
 name|ScalarEvolution
 modifier|&
 name|SE
+parameter_list|)
+function_decl|;
+comment|/// Normalize \p S for all add recurrence sub-expressions for which \p
+comment|/// Pred returns true.
+specifier|const
+name|SCEV
+modifier|*
+name|normalizeForPostIncUseIf
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|S
 parameter_list|,
-name|DominatorTree
+name|NormalizePredTy
+name|Pred
+parameter_list|,
+name|ScalarEvolution
 modifier|&
-name|DT
+name|SE
+parameter_list|)
+function_decl|;
+comment|/// Denormalize \p S to be post-increment for all loops present in \p
+comment|/// Loops.
+specifier|const
+name|SCEV
+modifier|*
+name|denormalizeForPostIncUse
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|PostIncLoopSet
+modifier|&
+name|Loops
+parameter_list|,
+name|ScalarEvolution
+modifier|&
+name|SE
 parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

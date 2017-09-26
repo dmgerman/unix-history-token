@@ -84,18 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/DerivedTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Instruction.h"
 end_include
 
@@ -135,16 +123,6 @@ range|:
 name|public
 name|User
 block|{
-name|protected
-operator|:
-comment|// NOTE: Cannot use = delete because it's not legal to delete
-comment|// an overridden method that's not deleted in the base class. Cannot leave
-comment|// this unimplemented because that leads to an ODR-violation.
-operator|~
-name|Operator
-argument_list|()
-name|override
-block|;
 name|public
 operator|:
 comment|// The Operator class is intended to be used as a utility, and is never itself
@@ -154,15 +132,9 @@ argument_list|()
 operator|=
 name|delete
 block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
+operator|~
+name|Operator
+argument_list|()
 operator|=
 name|delete
 block|;
@@ -277,7 +249,6 @@ name|UserOp1
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -291,7 +262,6 @@ name|true
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -305,7 +275,6 @@ name|true
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -465,7 +434,6 @@ literal|0
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -511,7 +479,6 @@ name|Shl
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -557,7 +524,6 @@ name|Shl
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -710,7 +676,6 @@ name|LShr
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -728,7 +693,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -746,7 +710,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -826,6 +789,8 @@ argument_list|)
 block|{ }
 name|public
 operator|:
+comment|/// This is how the bits are used in Value::SubclassOptionalData so they
+comment|/// should fit there too.
 expr|enum
 block|{
 name|UnsafeAlgebra
@@ -866,6 +831,14 @@ operator|(
 literal|1
 operator|<<
 literal|4
+operator|)
+block|,
+name|AllowContract
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|5
 operator|)
 block|}
 block|;
@@ -957,6 +930,21 @@ operator|)
 return|;
 block|}
 name|bool
+name|allowContract
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+operator|!=
+operator|(
+name|Flags
+operator|&
+name|AllowContract
+operator|)
+return|;
+block|}
+name|bool
 name|unsafeAlgebra
 argument_list|()
 specifier|const
@@ -1005,6 +993,25 @@ operator||=
 name|AllowReciprocal
 block|; }
 name|void
+name|setAllowContract
+argument_list|(
+argument|bool B
+argument_list|)
+block|{
+name|Flags
+operator|=
+operator|(
+name|Flags
+operator|&
+operator|~
+name|AllowContract
+operator|)
+operator||
+name|B
+operator|*
+name|AllowContract
+block|;   }
+name|void
 name|setUnsafeAlgebra
 argument_list|()
 block|{
@@ -1023,6 +1030,11 @@ argument_list|()
 block|;
 name|setAllowReciprocal
 argument_list|()
+block|;
+name|setAllowContract
+argument_list|(
+name|true
+argument_list|)
 block|;   }
 name|void
 name|operator
@@ -1209,6 +1221,31 @@ operator|::
 name|AllowReciprocal
 operator|)
 block|;   }
+name|void
+name|setHasAllowContract
+argument_list|(
+argument|bool B
+argument_list|)
+block|{
+name|SubclassOptionalData
+operator|=
+operator|(
+name|SubclassOptionalData
+operator|&
+operator|~
+name|FastMathFlags
+operator|::
+name|AllowContract
+operator|)
+operator||
+operator|(
+name|B
+operator|*
+name|FastMathFlags
+operator|::
+name|AllowContract
+operator|)
+block|;   }
 comment|/// Convenience function for setting multiple fast-math flags.
 comment|/// FMF is a mask of the bits to set.
 name|void
@@ -1334,6 +1371,25 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// Test whether this operation is permitted to
+comment|/// be floating-point contracted.
+name|bool
+name|hasAllowContract
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|SubclassOptionalData
+operator|&
+name|FastMathFlags
+operator|::
+name|AllowContract
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
 comment|/// Convenience function for getting all the fast-math flags
 name|FastMathFlags
 name|getFastMathFlags
@@ -1356,7 +1412,6 @@ argument_list|()
 specifier|const
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1383,7 +1438,32 @@ name|FCmp
 return|;
 block|}
 specifier|static
-specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const ConstantExpr *CE
+argument_list|)
+block|{
+return|return
+name|CE
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isFPOrFPVectorTy
+argument_list|()
+operator|||
+name|CE
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|Instruction
+operator|::
+name|FCmp
+return|;
+block|}
+specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -1391,6 +1471,7 @@ argument|const Value *V
 argument_list|)
 block|{
 return|return
+operator|(
 name|isa
 operator|<
 name|Instruction
@@ -1409,6 +1490,28 @@ operator|(
 name|V
 operator|)
 argument_list|)
+operator|)
+operator|||
+operator|(
+name|isa
+operator|<
+name|ConstantExpr
+operator|>
+operator|(
+name|V
+operator|)
+operator|&&
+name|classof
+argument_list|(
+name|cast
+operator|<
+name|ConstantExpr
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
+operator|)
 return|;
 block|}
 expr|}
@@ -1431,7 +1534,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1448,7 +1550,6 @@ name|Opc
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1465,7 +1566,6 @@ name|Opc
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

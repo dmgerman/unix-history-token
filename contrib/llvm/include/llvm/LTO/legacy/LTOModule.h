@@ -644,7 +644,7 @@ block|}
 name|private
 label|:
 comment|/// Parse metadata from the module
-comment|// FIXME: it only parses "Linker Options" metadata at the moment
+comment|// FIXME: it only parses "llvm.linker.options" metadata at the moment
 name|void
 name|parseMetadata
 parameter_list|()

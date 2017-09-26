@@ -204,6 +204,11 @@ init|=
 literal|0x200
 block|,
 comment|// The comma following this token was elided (MS).
+name|IsEditorPlaceholder
+init|=
+literal|0x400
+block|,
+comment|// This identifier is a placeholder.
 block|}
 enum|;
 name|tok
@@ -1149,6 +1154,23 @@ return|return
 name|getFlag
 argument_list|(
 name|CommaAfterElided
+argument_list|)
+return|;
+block|}
+comment|/// Returns true if this token is an editor placeholder.
+comment|///
+comment|/// Editor placeholders are produced by the code-completion engine and are
+comment|/// represented as characters between '<#' and '#>' in the source code. The
+comment|/// lexer uses identifier tokens to represent placeholders.
+name|bool
+name|isEditorPlaceholder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlag
+argument_list|(
+name|IsEditorPlaceholder
 argument_list|)
 return|;
 block|}

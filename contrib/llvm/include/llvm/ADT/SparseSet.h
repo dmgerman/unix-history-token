@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- llvm/ADT/SparseSet.h - Sparse set ----------------------*- C++ -*-===//
+comment|//===- llvm/ADT/SparseSet.h - Sparse set ------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -342,26 +342,29 @@ argument_list|,
 literal|"SparseT must be an unsigned integer type"
 argument_list|)
 block|;
-typedef|typedef
+name|using
+name|KeyT
+operator|=
 name|typename
 name|KeyFunctorT
 operator|::
 name|argument_type
-name|KeyT
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|DenseT
+operator|=
 name|SmallVector
 operator|<
 name|ValueT
-operator|,
+block|,
 literal|8
 operator|>
-name|DenseT
-expr_stmt|;
-typedef|typedef
-name|unsigned
+block|;
+name|using
 name|size_type
-typedef|;
+operator|=
+name|unsigned
+block|;
 name|DenseT
 name|Dense
 block|;
@@ -391,37 +394,42 @@ name|ValIndexOf
 block|;
 name|public
 operator|:
-typedef|typedef
-name|ValueT
+name|using
 name|value_type
-typedef|;
-typedef|typedef
+operator|=
 name|ValueT
-modifier|&
+block|;
+name|using
 name|reference
-typedef|;
-typedef|typedef
-specifier|const
+operator|=
 name|ValueT
-modifier|&
+operator|&
+block|;
+name|using
 name|const_reference
-typedef|;
-typedef|typedef
-name|ValueT
-modifier|*
-name|pointer
-typedef|;
-typedef|typedef
+operator|=
 specifier|const
 name|ValueT
-modifier|*
+operator|&
+block|;
+name|using
+name|pointer
+operator|=
+name|ValueT
+operator|*
+block|;
+name|using
 name|const_pointer
-typedef|;
+operator|=
+specifier|const
+name|ValueT
+operator|*
+block|;
 name|SparseSet
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|SparseSet
 argument_list|(
 specifier|const
@@ -430,11 +438,11 @@ operator|&
 argument_list|)
 operator|=
 name|delete
-expr_stmt|;
+block|;
 name|SparseSet
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|SparseSet
@@ -442,7 +450,7 @@ operator|&
 operator|)
 operator|=
 name|delete
-decl_stmt|;
+block|;
 operator|~
 name|SparseSet
 argument_list|()
@@ -492,7 +500,7 @@ name|free
 argument_list|(
 name|Sparse
 argument_list|)
-expr_stmt|;
+block|;
 comment|// The Sparse array doesn't actually need to be initialized, so malloc
 comment|// would be enough here, but that will cause tools like valgrind to
 comment|// complain about branching on uninitialized data.
@@ -514,39 +522,28 @@ name|SparseT
 argument_list|)
 argument_list|)
 operator|)
-expr_stmt|;
+block|;
 name|Universe
 operator|=
 name|U
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
+block|;   }
 comment|// Import trivial vector stuff from DenseT.
-end_comment
-
-begin_typedef
-typedef|typedef
+name|using
+name|iterator
+operator|=
 name|typename
 name|DenseT
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|const_iterator
+operator|=
 name|typename
 name|DenseT
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
+block|;
 name|const_iterator
 name|begin
 argument_list|()
@@ -559,9 +556,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|const_iterator
 name|end
 argument_list|()
@@ -574,12 +568,9 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|iterator
 name|begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Dense
@@ -588,12 +579,9 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|iterator
 name|end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Dense
@@ -602,25 +590,10 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// empty - Returns true if the set is empty.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is not the same as BitVector::empty().
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_expr_stmt
 name|bool
 name|empty
 argument_list|()
@@ -633,29 +606,11 @@ name|empty
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// size - Returns the number of elements in the set.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is not the same as BitVector::size() which returns the size of the
-end_comment
-
-begin_comment
 comment|/// universe.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_expr_stmt
 name|size_type
 name|size
 argument_list|()
@@ -668,57 +623,28 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// clear - Clears the set.  This is a very fast constant time operation.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function
 name|void
 name|clear
-parameter_list|()
+argument_list|()
 block|{
 comment|// Sparse does not need to be cleared, see find().
 name|Dense
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|;   }
 comment|/// findIndex - Find an element by its index.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// @param   Idx A valid index to find.
-end_comment
-
-begin_comment
 comment|/// @returns An iterator to the element identified by key, or end().
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function
 name|iterator
 name|findIndex
-parameter_list|(
-name|unsigned
-name|Idx
-parameter_list|)
+argument_list|(
+argument|unsigned Idx
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -728,11 +654,11 @@ name|Universe
 operator|&&
 literal|"Key out of range"
 argument_list|)
-expr_stmt|;
+block|;
 specifier|const
 name|unsigned
 name|Stride
-init|=
+operator|=
 name|std
 operator|::
 name|numeric_limits
@@ -744,7 +670,7 @@ name|max
 argument_list|()
 operator|+
 literal|1u
-decl_stmt|;
+block|;
 for|for
 control|(
 name|unsigned
@@ -815,37 +741,16 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// find - Find an element by its key.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// @param   Key A valid key to find.
-end_comment
-
-begin_comment
 comment|/// @returns An iterator to the element identified by key, or end().
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function
 name|iterator
 name|find
-parameter_list|(
-specifier|const
-name|KeyT
-modifier|&
-name|Key
-parameter_list|)
+argument_list|(
+argument|const KeyT&Key
+argument_list|)
 block|{
 return|return
 name|findIndex
@@ -857,18 +762,12 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 name|const_iterator
 name|find
 argument_list|(
-specifier|const
-name|KeyT
-operator|&
-name|Key
+argument|const KeyT&Key
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|const_cast
@@ -889,30 +788,15 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// count - Returns 1 if this set contains an element identified by Key,
-end_comment
-
-begin_comment
 comment|/// 0 otherwise.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|size_type
 name|count
 argument_list|(
-specifier|const
-name|KeyT
-operator|&
-name|Key
+argument|const KeyT&Key
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|find
@@ -922,61 +806,28 @@ argument_list|)
 operator|==
 name|end
 argument_list|()
-condition|?
+operator|?
 literal|0
-else|:
+operator|:
 literal|1
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// insert - Attempts to insert a new element.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If Val is successfully inserted, return (I, true), where I is an iterator
-end_comment
-
-begin_comment
 comment|/// pointing to the newly inserted element.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If the set already contains an element with the same key as Val, return
-end_comment
-
-begin_comment
 comment|/// (I, false), where I is an iterator pointing to the existing element.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Insertion invalidates all iterators.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|pair
 operator|<
 name|iterator
-operator|,
+block|,
 name|bool
 operator|>
 name|insert
@@ -1024,20 +875,14 @@ index|]
 operator|=
 name|size
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|Dense
 operator|.
 name|push_back
 argument_list|(
 name|Val
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_return
+block|;
 return|return
 name|std
 operator|::
@@ -1051,23 +896,11 @@ argument_list|,
 name|true
 argument_list|)
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// array subscript - If an element already exists with this key, return it.
-end_comment
-
-begin_comment
 comment|/// Otherwise, automatically construct a new value from Key, insert it,
-end_comment
-
-begin_comment
 comment|/// and return the newly inserted element.
-end_comment
-
-begin_expr_stmt
-unit|ValueT
+name|ValueT
 operator|&
 name|operator
 index|[]
@@ -1091,12 +924,9 @@ operator|.
 name|first
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|ValueT
 name|pop_back_val
-parameter_list|()
+argument_list|()
 block|{
 comment|// Sparse does not need to be cleared, see find().
 return|return
@@ -1106,71 +936,25 @@ name|pop_back_val
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// erase - Erases an existing element identified by a valid iterator.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This invalidates all iterators, but erase() returns an iterator pointing
-end_comment
-
-begin_comment
 comment|/// to the next element.  This makes it possible to erase selected elements
-end_comment
-
-begin_comment
 comment|/// while iterating over the set:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   for (SparseSet::iterator I = Set.begin(); I != Set.end();)
-end_comment
-
-begin_comment
 comment|///     if (test(*I))
-end_comment
-
-begin_comment
 comment|///       I = Set.erase(I);
-end_comment
-
-begin_comment
 comment|///     else
-end_comment
-
-begin_comment
 comment|///       ++I;
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note that end() changes when elements are erased, unlike std::list.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function
 name|iterator
 name|erase
-parameter_list|(
-name|iterator
-name|I
-parameter_list|)
+argument_list|(
+argument|iterator I
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1187,7 +971,7 @@ argument_list|()
 operator|&&
 literal|"Invalid iterator"
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|I
@@ -1248,46 +1032,25 @@ return|return
 name|I
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// erase - Erases an element identified by Key, if it exists.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// @param   Key The key identifying the element to erase.
-end_comment
-
-begin_comment
 comment|/// @returns True when an element was erased, false if no element was found.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function
 name|bool
 name|erase
-parameter_list|(
-specifier|const
-name|KeyT
-modifier|&
-name|Key
-parameter_list|)
+argument_list|(
+argument|const KeyT&Key
+argument_list|)
 block|{
 name|iterator
 name|I
-init|=
+operator|=
 name|find
 argument_list|(
 name|Key
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|I
@@ -1302,15 +1065,20 @@ name|erase
 argument_list|(
 name|I
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|true
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};  }
+unit|}
 comment|// end namespace llvm
 end_comment
 

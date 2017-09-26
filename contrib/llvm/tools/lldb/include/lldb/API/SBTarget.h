@@ -361,9 +361,6 @@ comment|///
 comment|/// @param[in] envp
 comment|///     The environment array.
 comment|///
-comment|/// @param[in] launch_flags
-comment|///     Flags to modify the launch (@see lldb::LaunchFlags)
-comment|///
 comment|/// @param[in] stdin_path
 comment|///     The path to use when re-directing the STDIN of the new
 comment|///     process. If all stdXX_path arguments are nullptr, a pseudo
@@ -1014,6 +1011,7 @@ comment|//------------------------------------------------------------------
 comment|/// Resolve a current file address into a section offset address.
 comment|///
 comment|/// @param[in] file_addr
+comment|///     The file address to resolve.
 comment|///
 comment|/// @return
 comment|///     An SBAddress which will be valid if...
@@ -1108,7 +1106,7 @@ comment|///     The maximum number of host bytes to read in the buffer passed
 comment|///     into this call
 comment|///
 comment|/// @param[out] error
-comment|///     Error information is written here if the memory read fails.
+comment|///     Status information is written here if the memory read fails.
 comment|///
 comment|/// @return
 comment|///     The amount of data read in host bytes.
@@ -1469,7 +1467,7 @@ comment|///
 comment|/// @param[in] source_file
 comment|///    The file from which to read the breakpoints.
 comment|///
-comment|/// @param[out] bkpt_list
+comment|/// @param[out] new_bps
 comment|///    A list of the newly created breakpoints.
 comment|///
 comment|/// @return
@@ -1500,7 +1498,7 @@ comment|/// @param[in] matching_names
 comment|///    Only read in breakpoints whose names match one of the names in this
 comment|///    list.
 comment|///
-comment|/// @param[out] bkpt_list
+comment|/// @param[out] new_bps
 comment|///    A list of the newly created breakpoints.
 comment|///
 comment|/// @return

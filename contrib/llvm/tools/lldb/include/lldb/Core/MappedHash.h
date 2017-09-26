@@ -98,13 +98,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataExtractor.h"
+file|"lldb/Utility/DataExtractor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Stream.h"
+file|"lldb/Utility/Stream.h"
 end_include
 
 begin_decl_stmt
@@ -1663,7 +1663,7 @@ comment|// this bucket is terminated, search no more
 name|eResultError
 init|=
 literal|3u
-comment|// Error parsing the hash data, abort
+comment|// Status parsing the hash data, abort
 block|}
 enum|;
 end_enum
@@ -1841,12 +1841,6 @@ operator|&&
 name|m_header
 operator|.
 name|bucket_count
-operator|>
-literal|0
-operator|&&
-name|m_header
-operator|.
-name|hashes_count
 operator|>
 literal|0
 return|;
@@ -2136,7 +2130,7 @@ return|;
 case|case
 name|eResultError
 case|:
-comment|// Error parsing the hash data, abort
+comment|// Status parsing the hash data, abort
 return|return
 name|false
 return|;

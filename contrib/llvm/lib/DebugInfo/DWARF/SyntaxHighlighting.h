@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SyntaxHighlighting.h ------------------------------------*- C++ -*-===//
+comment|//===- SyntaxHighlighting.h -------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -43,16 +43,13 @@ directive|define
 name|LLVM_LIB_DEBUGINFO_SYNTAXHIGHLIGHTING_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 name|namespace
 name|dwarf
 block|{
@@ -81,18 +78,16 @@ comment|/// specific color.
 name|class
 name|WithColor
 block|{
-name|llvm
-operator|::
 name|raw_ostream
-operator|&
+modifier|&
 name|OS
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 comment|/// To be used like this: WithColor(OS, syntax::String)<< "text";
 name|WithColor
 argument_list|(
-argument|llvm::raw_ostream&OS
+argument|raw_ostream&OS
 argument_list|,
 argument|enum HighlightColor Type
 argument_list|)
@@ -101,24 +96,18 @@ operator|~
 name|WithColor
 argument_list|()
 expr_stmt|;
-name|llvm
-operator|::
 name|raw_ostream
-operator|&
+modifier|&
 name|get
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|OS
 return|;
 block|}
 name|operator
-name|llvm
-operator|::
 name|raw_ostream
-operator|&
-operator|(
-operator|)
+function|& ()
 block|{
 return|return
 name|OS
@@ -127,14 +116,24 @@ block|}
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace syntax
 block|}
+comment|// end namespace dwarf
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_DEBUGINFO_SYNTAXHIGHLIGHTING_H
+end_comment
 
 end_unit
 

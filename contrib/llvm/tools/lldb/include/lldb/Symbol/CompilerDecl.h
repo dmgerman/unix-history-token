@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/CompilerType.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_include

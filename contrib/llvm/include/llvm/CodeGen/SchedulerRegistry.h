@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/SchedulerRegistry.h ------------------------*- C++ -*-===//
+comment|//===- llvm/CodeGen/SchedulerRegistry.h -------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_decl_stmt
@@ -85,16 +85,10 @@ comment|/// RegisterScheduler class - Track the registration of instruction sche
 comment|///
 comment|//===----------------------------------------------------------------------===//
 name|class
-name|SelectionDAGISel
-decl_stmt|;
-name|class
 name|ScheduleDAGSDNodes
 decl_stmt|;
 name|class
-name|SelectionDAG
-decl_stmt|;
-name|class
-name|MachineBasicBlock
+name|SelectionDAGISel
 decl_stmt|;
 name|class
 name|RegisterScheduler
@@ -104,24 +98,27 @@ name|MachinePassRegistryNode
 block|{
 name|public
 operator|:
-typedef|typedef
-name|ScheduleDAGSDNodes
-modifier|*
-typedef|(
-modifier|*
+name|using
 name|FunctionPassCtor
-typedef|)
-parameter_list|(
-name|SelectionDAGISel
+operator|=
+name|ScheduleDAGSDNodes
+operator|*
+call|(
 modifier|*
-parameter_list|,
-typedef|CodeGenOpt::
+call|)
+argument_list|(
+name|SelectionDAGISel
+operator|*
+argument_list|,
+name|CodeGenOpt
+operator|::
 name|Level
-typedef|);
+argument_list|)
+block|;
 specifier|static
 name|MachinePassRegistry
 name|Registry
-decl_stmt|;
+block|;
 name|RegisterScheduler
 argument_list|(
 argument|const char *N
@@ -130,7 +127,7 @@ argument|const char *D
 argument_list|,
 argument|FunctionPassCtor C
 argument_list|)
-block|:
+operator|:
 name|MachinePassRegistryNode
 argument_list|(
 argument|N
@@ -146,8 +143,7 @@ name|Add
 argument_list|(
 name|this
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 operator|~
 name|RegisterScheduler
 argument_list|()
@@ -160,7 +156,6 @@ name|this
 argument_list|)
 block|; }
 comment|// Accessors.
-comment|//
 name|RegisterScheduler
 operator|*
 name|getNext
@@ -180,9 +175,9 @@ return|;
 block|}
 specifier|static
 name|RegisterScheduler
-modifier|*
+operator|*
 name|getList
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|(
@@ -198,11 +193,9 @@ block|}
 specifier|static
 name|void
 name|setListener
-parameter_list|(
-name|MachinePassRegistryListener
-modifier|*
-name|L
-parameter_list|)
+argument_list|(
+argument|MachinePassRegistryListener *L
+argument_list|)
 block|{
 name|Registry
 operator|.
@@ -210,84 +203,37 @@ name|setListener
 argument_list|(
 name|L
 argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+block|;   }
+expr|}
+block|;
 comment|/// createBURRListDAGScheduler - This creates a bottom up register usage
-end_comment
-
-begin_comment
 comment|/// reduction list scheduler.
-end_comment
-
-begin_decl_stmt
 name|ScheduleDAGSDNodes
-modifier|*
+operator|*
 name|createBURRListDAGScheduler
 argument_list|(
-name|SelectionDAGISel
-operator|*
-name|IS
+argument|SelectionDAGISel *IS
 argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+argument|CodeGenOpt::Level OptLevel
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// createBURRListDAGScheduler - This creates a bottom up list scheduler that
-end_comment
-
-begin_comment
 comment|/// schedules nodes in source code order when possible.
-end_comment
-
-begin_decl_stmt
 name|ScheduleDAGSDNodes
-modifier|*
+operator|*
 name|createSourceListDAGScheduler
 argument_list|(
-name|SelectionDAGISel
-operator|*
-name|IS
+argument|SelectionDAGISel *IS
 argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+argument|CodeGenOpt::Level OptLevel
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// createHybridListDAGScheduler - This creates a bottom up register pressure
-end_comment
-
-begin_comment
 comment|/// aware list scheduler that make use of latency information to avoid stalls
-end_comment
-
-begin_comment
 comment|/// for long latency instructions in low register pressure mode. In high
-end_comment
-
-begin_comment
 comment|/// register pressure mode it schedules to reduce register pressure.
-end_comment
-
-begin_decl_stmt
 name|ScheduleDAGSDNodes
-modifier|*
+operator|*
 name|createHybridListDAGScheduler
 argument_list|(
 name|SelectionDAGISel
@@ -298,28 +244,13 @@ name|CodeGenOpt
 operator|::
 name|Level
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// createILPListDAGScheduler - This creates a bottom up register pressure
-end_comment
-
-begin_comment
 comment|/// aware list scheduler that tries to increase instruction level parallelism
-end_comment
-
-begin_comment
 comment|/// in low register pressure mode. In high register pressure mode it schedules
-end_comment
-
-begin_comment
 comment|/// to reduce register pressure.
-end_comment
-
-begin_decl_stmt
 name|ScheduleDAGSDNodes
-modifier|*
+operator|*
 name|createILPListDAGScheduler
 argument_list|(
 name|SelectionDAGISel
@@ -330,115 +261,55 @@ name|CodeGenOpt
 operator|::
 name|Level
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// createFastDAGScheduler - This creates a "fast" scheduler.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|ScheduleDAGSDNodes
-modifier|*
+operator|*
 name|createFastDAGScheduler
 argument_list|(
-name|SelectionDAGISel
-operator|*
-name|IS
+argument|SelectionDAGISel *IS
 argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+argument|CodeGenOpt::Level OptLevel
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// createVLIWDAGScheduler - Scheduler for VLIW targets. This creates top down
-end_comment
-
-begin_comment
 comment|/// DFA driven list scheduler with clustering heuristic to control
-end_comment
-
-begin_comment
 comment|/// register pressure.
-end_comment
-
-begin_decl_stmt
 name|ScheduleDAGSDNodes
-modifier|*
+operator|*
 name|createVLIWDAGScheduler
 argument_list|(
-name|SelectionDAGISel
-operator|*
-name|IS
+argument|SelectionDAGISel *IS
 argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+argument|CodeGenOpt::Level OptLevel
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// createDefaultScheduler - This creates an instruction scheduler appropriate
-end_comment
-
-begin_comment
 comment|/// for the target.
-end_comment
-
-begin_decl_stmt
 name|ScheduleDAGSDNodes
-modifier|*
+operator|*
 name|createDefaultScheduler
 argument_list|(
-name|SelectionDAGISel
-operator|*
-name|IS
+argument|SelectionDAGISel *IS
 argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+argument|CodeGenOpt::Level OptLevel
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// createDAGLinearizer - This creates a "no-scheduling" scheduler which
-end_comment
-
-begin_comment
 comment|/// linearize the DAG using topological order.
-end_comment
-
-begin_decl_stmt
 name|ScheduleDAGSDNodes
-modifier|*
+operator|*
 name|createDAGLinearizer
 argument_list|(
-name|SelectionDAGISel
-operator|*
-name|IS
+argument|SelectionDAGISel *IS
 argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+argument|CodeGenOpt::Level OptLevel
 argument_list|)
-decl_stmt|;
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 
@@ -446,6 +317,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_SCHEDULERREGISTRY_H
+end_comment
 
 end_unit
 

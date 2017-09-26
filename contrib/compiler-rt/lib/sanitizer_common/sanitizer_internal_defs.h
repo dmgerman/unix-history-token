@@ -93,6 +93,24 @@ directive|if
 name|SANITIZER_WINDOWS
 end_if
 
+begin_if
+if|#
+directive|if
+name|SANITIZER_IMPORT_INTERFACE
+end_if
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERFACE_ATTRIBUTE
+value|__declspec(dllimport)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -100,9 +118,10 @@ name|SANITIZER_INTERFACE_ATTRIBUTE
 value|__declspec(dllexport)
 end_define
 
-begin_comment
-comment|// FIXME find out what we need on Windows, if anything.
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -152,6 +171,102 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|//--------------------------- WEAK FUNCTIONS ---------------------------------//
+end_comment
+
+begin_comment
+comment|// When working with weak functions, to simplify the code and make it more
+end_comment
+
+begin_comment
+comment|// portable, when possible define a default implementation using this macro:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// SANITIZER_INTERFACE_WEAK_DEF(<return_type>,<name>,<parameter list>)
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// For example:
+end_comment
+
+begin_comment
+comment|//   SANITIZER_INTERFACE_WEAK_DEF(bool, compare, int a, int b) { return a> b; }
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SANITIZER_WINDOWS
+end_if
+
+begin_include
+include|#
+directive|include
+file|"sanitizer_win_defs.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERFACE_WEAK_DEF
+parameter_list|(
+name|ReturnType
+parameter_list|,
+name|Name
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|WIN_WEAK_EXPORT_DEF(ReturnType, Name, __VA_ARGS__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERFACE_WEAK_DEF
+parameter_list|(
+name|ReturnType
+parameter_list|,
+name|Name
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|extern "C" SANITIZER_INTERFACE_ATTRIBUTE SANITIZER_WEAK_ATTRIBUTE            \   ReturnType Name(__VA_ARGS__)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// SANITIZER_SUPPORTS_WEAK_HOOKS means that we support real weak functions that
+end_comment
+
+begin_comment
+comment|// will evaluate to a null pointer when not defined.
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -159,8 +274,6 @@ operator|(
 name|SANITIZER_LINUX
 operator|||
 name|SANITIZER_MAC
-operator|||
-name|SANITIZER_WINDOWS
 operator|)
 operator|&&
 operator|!
@@ -190,6 +303,58 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// For some weak hooks that will be called very often and we want to avoid the
+end_comment
+
+begin_comment
+comment|// overhead of executing the default implementation when it is not necessary,
+end_comment
+
+begin_comment
+comment|// we can use the flag SANITIZER_SUPPORTS_WEAK_HOOKS to only define the default
+end_comment
+
+begin_comment
+comment|// implementation for platforms that doesn't support weak symbols. For example:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   #if !SANITIZER_SUPPORT_WEAK_HOOKS
+end_comment
+
+begin_comment
+comment|//     SANITIZER_INTERFACE_WEAK_DEF(bool, compare_hook, int a, int b) {
+end_comment
+
+begin_comment
+comment|//       return a> b;
+end_comment
+
+begin_comment
+comment|//     }
+end_comment
+
+begin_comment
+comment|//   #endif
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// And then use it as: if (compare_hook) compare_hook(a, b);
+end_comment
+
+begin_comment
+comment|//----------------------------------------------------------------------------//
+end_comment
 
 begin_comment
 comment|// We can use .preinit_array section on Linux to call sanitizer initialization
@@ -501,6 +666,22 @@ name|operator_new_size_type
 typedef|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+if|#
+directive|if
+name|SANITIZER_MAC
+comment|// On Darwin, thread IDs are 64-bit even on 32-bit systems.
+typedef|typedef
+name|u64
+name|tid_t
+typedef|;
+else|#
+directive|else
+typedef|typedef
+name|uptr
+name|tid_t
+typedef|;
 endif|#
 directive|endif
 comment|// ----------- ATTENTION -------------
@@ -1250,11 +1431,24 @@ name|defined
 argument_list|(
 name|__clang__
 argument_list|)
+if|#
+directive|if
+name|SANITIZER_S390_31
+define|#
+directive|define
+name|GET_CALLER_PC
+parameter_list|()
+define|\
+value|(__sanitizer::uptr) __builtin_extract_return_addr(__builtin_return_address(0))
+else|#
+directive|else
 define|#
 directive|define
 name|GET_CALLER_PC
 parameter_list|()
 value|(__sanitizer::uptr) __builtin_return_address(0)
+endif|#
+directive|endif
 define|#
 directive|define
 name|GET_CURRENT_FRAME

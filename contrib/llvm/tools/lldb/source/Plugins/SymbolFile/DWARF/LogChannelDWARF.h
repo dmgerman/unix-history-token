@@ -62,15 +62,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Log.h"
+file|"lldb/Utility/Log.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|DWARF_LOG_VERBOSE
-value|(1u<< 0)
-end_define
 
 begin_define
 define|#
@@ -143,145 +136,69 @@ value|(DWARF_LOG_DEBUG_INFO)
 end_define
 
 begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
 name|class
 name|LogChannelDWARF
-range|:
-name|public
-name|lldb_private
-operator|::
-name|LogChannel
 block|{
+specifier|static
+name|Log
+operator|::
+name|Channel
+name|g_channel
+expr_stmt|;
 name|public
-operator|:
-name|LogChannelDWARF
-argument_list|()
-block|;
-operator|~
-name|LogChannelDWARF
-argument_list|()
-name|override
-block|;
+label|:
 specifier|static
 name|void
 name|Initialize
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 specifier|static
 name|void
 name|Terminate
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 specifier|static
-name|lldb_private
-operator|::
-name|ConstString
-name|GetPluginNameStatic
-argument_list|()
-block|;
-specifier|static
-specifier|const
-name|char
-operator|*
-name|GetPluginDescriptionStatic
-argument_list|()
-block|;
-specifier|static
-name|lldb_private
-operator|::
-name|LogChannel
-operator|*
-name|CreateInstance
-argument_list|()
-block|;
-name|lldb_private
-operator|::
-name|ConstString
-name|GetPluginName
-argument_list|()
-name|override
-block|;
+name|Log
+modifier|*
+name|GetLogIfAll
+parameter_list|(
 name|uint32_t
-name|GetPluginVersion
-argument_list|()
-name|override
-block|;
-name|void
-name|Disable
-argument_list|(
-argument|const char **categories
-argument_list|,
-argument|lldb_private::Stream *feedback_strm
-argument_list|)
-name|override
-block|;
-name|void
-name|Delete
-argument_list|()
-block|;
-name|bool
-name|Enable
-argument_list|(
-argument|lldb::StreamSP&log_stream_sp
-argument_list|,
-argument|uint32_t log_options
-argument_list|,
-argument|lldb_private::Stream                   *feedback_strm
-argument_list|,
-comment|// Feedback stream for argument errors etc
-argument|const char **categories
-argument_list|)
-name|override
-block|;
-comment|// The categories to enable
-comment|// within this logging stream,
-comment|// if empty, enable default set
-name|void
-name|ListCategories
-argument_list|(
-argument|lldb_private::Stream *strm
-argument_list|)
-name|override
-block|;
-specifier|static
-name|lldb_private
-operator|::
-name|Log
-operator|*
-name|GetLog
-argument_list|()
-block|;
-specifier|static
-name|lldb_private
-operator|::
-name|Log
-operator|*
+name|mask
+parameter_list|)
+block|{
+return|return
+name|g_channel
+operator|.
 name|GetLogIfAll
 argument_list|(
-argument|uint32_t mask
+name|mask
 argument_list|)
-block|;
+return|;
+block|}
 specifier|static
-name|lldb_private
-operator|::
 name|Log
-operator|*
+modifier|*
+name|GetLogIfAny
+parameter_list|(
+name|uint32_t
+name|mask
+parameter_list|)
+block|{
+return|return
+name|g_channel
+operator|.
 name|GetLogIfAny
 argument_list|(
-argument|uint32_t mask
+name|mask
 argument_list|)
-block|;
-specifier|static
-name|void
-name|LogIf
-argument_list|(
-argument|uint32_t mask
-argument_list|,
-argument|const char *format
-argument_list|,
-argument|...
-argument_list|)
-block|; }
-decl_stmt|;
+return|;
+block|}
+block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif

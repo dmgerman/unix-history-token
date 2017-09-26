@@ -153,6 +153,18 @@ directive|include
 file|<list>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -176,6 +188,7 @@ name|class
 name|Stream
 decl_stmt|;
 block|}
+comment|// end namespace yaml
 name|namespace
 name|SymbolRewriter
 block|{
@@ -193,28 +206,6 @@ comment|/// SymbolRewriter pass.
 name|class
 name|RewriteDescriptor
 block|{
-name|RewriteDescriptor
-argument_list|(
-specifier|const
-name|RewriteDescriptor
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-specifier|const
-name|RewriteDescriptor
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|RewriteDescriptor
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|public
 label|:
 name|enum
@@ -235,11 +226,34 @@ operator|,
 comment|/// named alias - descriptor rewrites a global alias
 block|}
 empty_stmt|;
+name|RewriteDescriptor
+argument_list|(
+specifier|const
+name|RewriteDescriptor
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|RewriteDescriptor
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|RewriteDescriptor
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|virtual
 operator|~
 name|RewriteDescriptor
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|Type
 name|getType
 argument_list|()
@@ -434,6 +448,7 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace SymbolRewriter
 name|ModulePass
 modifier|*
 name|createRewriteSymbolsPass
@@ -518,6 +533,10 @@ block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

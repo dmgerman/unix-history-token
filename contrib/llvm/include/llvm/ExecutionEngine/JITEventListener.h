@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"RuntimeDyld.h"
+file|"llvm/Config/llvm-config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Config/llvm-config.h"
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
 begin_include
@@ -160,10 +160,11 @@ name|JITEventListener
 block|{
 name|public
 label|:
-typedef|typedef
-name|JITEvent_EmittedFunctionDetails
+name|using
 name|EmittedFunctionDetails
-typedef|;
+init|=
+name|JITEvent_EmittedFunctionDetails
+decl_stmt|;
 name|public
 label|:
 name|JITEventListener

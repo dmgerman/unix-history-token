@@ -92,6 +92,9 @@ name|MemoryBuffer
 operator|>
 name|Buf
 expr_stmt|;
+name|StringRef
+name|MemberName
+decl_stmt|;
 name|sys
 operator|::
 name|TimePoint

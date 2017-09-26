@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- OrcCBindingsStack.h - Orc JIT stack for C bindings ---*- C++ -*---===//
+comment|//===- OrcCBindingsStack.h - Orc JIT stack for C bindings -----*- C++ -*---===//
 end_comment
 
 begin_comment
@@ -52,7 +52,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
+file|"llvm-c/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
@@ -82,19 +100,109 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/Orc/ObjectLinkingLayer.h"
+file|"llvm/ExecutionEngine/Orc/LambdaResolver.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/LLVMContext.h"
+file|"llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/SectionMemoryManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DataLayout.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Mangler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CBindingWrapping.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -104,6 +212,18 @@ block|{
 name|class
 name|OrcCBindingsStack
 decl_stmt|;
+name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
+argument_list|(
+argument|std::shared_ptr<Module>
+argument_list|,
+argument|LLVMSharedModuleRef
+argument_list|)
+name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
+argument_list|(
+argument|std::shared_ptr<MemoryBuffer>
+argument_list|,
+argument|LLVMSharedObjectBufferRef
+argument_list|)
 name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
 argument_list|(
 argument|OrcCBindingsStack
@@ -121,41 +241,49 @@ name|OrcCBindingsStack
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|CompileCallbackMgr
+init|=
 name|orc
 operator|::
 name|JITCompileCallbackManager
-name|CompileCallbackMgr
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|ObjLayerT
+init|=
 name|orc
 operator|::
-name|ObjectLinkingLayer
-operator|<
-operator|>
-name|ObjLayerT
-expr_stmt|;
-typedef|typedef
+name|RTDyldObjectLinkingLayer
+decl_stmt|;
+name|using
+name|CompileLayerT
+init|=
 name|orc
 operator|::
 name|IRCompileLayer
 operator|<
 name|ObjLayerT
-operator|>
-name|CompileLayerT
-expr_stmt|;
-typedef|typedef
+decl_stmt|,
+name|orc
+decl|::
+name|SimpleCompiler
+decl|>
+decl_stmt|;
+name|using
+name|CODLayerT
+init|=
 name|orc
 operator|::
 name|CompileOnDemandLayer
 operator|<
 name|CompileLayerT
-operator|,
+decl_stmt|,
 name|CompileCallbackMgr
-operator|>
-name|CODLayerT
-expr_stmt|;
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|CallbackManagerBuilder
+init|=
 name|std
 operator|::
 name|function
@@ -169,14 +297,14 @@ operator|>
 operator|(
 operator|)
 operator|>
-name|CallbackManagerBuilder
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|IndirectStubsManagerBuilder
+init|=
 name|CODLayerT
 operator|::
 name|IndirectStubsManagerBuilderT
-name|IndirectStubsManagerBuilder
-expr_stmt|;
+decl_stmt|;
 name|private
 label|:
 name|class
@@ -188,20 +316,28 @@ name|virtual
 operator|~
 name|GenericHandle
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
-argument|const std::string&Name
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
 argument_list|,
-argument|bool ExportedSymbolsOnly
+name|bool
+name|ExportedSymbolsOnly
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|virtual
-name|void
+name|Error
 name|removeModule
 parameter_list|()
 init|=
@@ -226,7 +362,7 @@ name|GenericHandleImpl
 argument_list|(
 argument|LayerT&Layer
 argument_list|,
-argument|typename LayerT::ModuleSetHandleT Handle
+argument|typename LayerT::ModuleHandleT Handle
 argument_list|)
 operator|:
 name|Layer
@@ -261,7 +397,7 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-name|void
+name|Error
 name|removeModule
 argument_list|()
 name|override
@@ -269,7 +405,7 @@ block|{
 return|return
 name|Layer
 operator|.
-name|removeModuleSet
+name|removeModule
 argument_list|(
 name|Handle
 argument_list|)
@@ -284,7 +420,7 @@ block|;
 name|typename
 name|LayerT
 operator|::
-name|ModuleSetHandleT
+name|ModuleHandleT
 name|Handle
 block|;   }
 expr_stmt|;
@@ -305,7 +441,7 @@ name|createGenericHandle
 argument_list|(
 argument|LayerT&Layer
 argument_list|,
-argument|typename LayerT::ModuleSetHandleT Handle
+argument|typename LayerT::ModuleHandleT Handle
 argument_list|)
 block|{
 return|return
@@ -331,15 +467,11 @@ return|;
 block|}
 name|public
 label|:
-comment|// We need a 'ModuleSetHandleT' to conform to the layer concept.
-typedef|typedef
-name|unsigned
-name|ModuleSetHandleT
-typedef|;
-typedef|typedef
-name|unsigned
+name|using
 name|ModuleHandleT
-typedef|;
+init|=
+name|unsigned
+decl_stmt|;
 name|OrcCBindingsStack
 argument_list|(
 argument|TargetMachine&TM
@@ -374,8 +506,24 @@ argument_list|)
 argument_list|)
 operator|,
 name|ObjectLayer
-argument_list|()
-operator|,
+argument_list|(
+index|[]
+operator|(
+operator|)
+block|{
+return|return
+name|std
+operator|::
+name|make_shared
+operator|<
+name|SectionMemoryManager
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+block|)
+decl_stmt|,
 name|CompileLayer
 argument_list|(
 name|ObjectLayer
@@ -387,7 +535,7 @@ argument_list|(
 name|TM
 argument_list|)
 argument_list|)
-operator|,
+decl_stmt|,
 name|CODLayer
 argument_list|(
 name|CompileLayer
@@ -452,21 +600,24 @@ name|S
 argument_list|)
 return|;
 block|}
-block|)
-block|{}
 end_decl_stmt
 
-begin_expr_stmt
-operator|~
-name|OrcCBindingsStack
-argument_list|()
+begin_block
+unit|)
+block|{}
+end_block
+
+begin_function
+name|LLVMOrcErrorCode
+name|shutdown
+parameter_list|()
 block|{
 comment|// Run any destructors registered with __cxa_atexit.
 name|CXXRuntimeOverrides
 operator|.
 name|runDestructors
 argument_list|()
-block|;
+expr_stmt|;
 comment|// Run any IR destructors.
 for|for
 control|(
@@ -476,6 +627,11 @@ name|DtorRunner
 operator|:
 name|IRStaticDestructorRunners
 control|)
+if|if
+condition|(
+name|auto
+name|Err
+init|=
 name|DtorRunner
 operator|.
 name|runViaLayer
@@ -483,9 +639,23 @@ argument_list|(
 operator|*
 name|this
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|mapError
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Err
+argument_list|)
+argument_list|)
+return|;
+return|return
+name|LLVMOrcErrSuccess
+return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_expr_stmt
 name|std
@@ -557,9 +727,13 @@ block|}
 end_expr_stmt
 
 begin_function
-name|JITTargetAddress
+name|LLVMOrcErrorCode
 name|createLazyCompileCallback
 parameter_list|(
+name|JITTargetAddress
+modifier|&
+name|RetAddr
+parameter_list|,
 name|LLVMOrcLazyCompileCallbackFn
 name|Callback
 parameter_list|,
@@ -583,11 +757,15 @@ argument_list|(
 argument|[=]() -> JITTargetAddress {       return Callback(wrap(this), CallbackCtx);     }
 argument_list|)
 expr_stmt|;
-return|return
+name|RetAddr
+operator|=
 name|CCInfo
 operator|.
 name|getAddress
 argument_list|()
+expr_stmt|;
+return|return
+name|LLVMOrcErrSuccess
 return|;
 block|}
 end_function
@@ -653,7 +831,7 @@ end_function
 begin_expr_stmt
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|JITSymbolResolver
 operator|>
@@ -673,14 +851,14 @@ argument|[this
 argument_list|,
 argument|ExternalResolver
 argument_list|,
-argument|ExternalResolverCtx](const std::string&Name)             -> JITSymbol {
+argument|ExternalResolverCtx](const std::string&Name)           -> JITSymbol {
 comment|// Search order:
 comment|// 1. JIT'd symbols.
 comment|// 2. Runtime overrides.
 comment|// 3. External resolver (if present).
-argument|if (auto Sym = CODLayer.findSymbol(Name, true))             return Sym;           if (auto Sym = CXXRuntimeOverrides.searchOverrides(Name))             return Sym;            if (ExternalResolver)             return JITSymbol(                 ExternalResolver(Name.c_str(), ExternalResolverCtx),                 llvm::JITSymbolFlags::Exported);            return JITSymbol(nullptr);         }
+argument|if (auto Sym = CODLayer.findSymbol(Name, true))             return Sym;           else if (auto Err = Sym.takeError())             return Sym.takeError();            if (auto Sym = CXXRuntimeOverrides.searchOverrides(Name))             return Sym;            if (ExternalResolver)             return JITSymbol(                 ExternalResolver(Name.c_str(), ExternalResolverCtx),                 JITSymbolFlags::Exported);            return JITSymbol(nullptr);         }
 argument_list|,
-argument|[](const std::string&Name) {           return JITSymbol(nullptr);         }
+argument|[](const std::string&Name) -> JITSymbol {           return JITSymbol(nullptr);         }
 argument_list|)
 return|;
 block|}
@@ -692,12 +870,14 @@ operator|<
 name|typename
 name|LayerT
 operator|>
-name|ModuleHandleT
+name|LLVMOrcErrorCode
 name|addIRModule
 argument_list|(
+argument|ModuleHandleT&RetHandle
+argument_list|,
 argument|LayerT&Layer
 argument_list|,
-argument|Module *M
+argument|std::shared_ptr<Module> M
 argument_list|,
 argument|std::unique_ptr<RuntimeDyld::MemoryManager> MemMgr
 argument_list|,
@@ -823,53 +1003,27 @@ begin_comment
 comment|// Add the module to the JIT.
 end_comment
 
-begin_expr_stmt
-name|std
-operator|::
-name|vector
-operator|<
-name|Module
-operator|*
-operator|>
-name|S
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+name|ModuleHandleT
+name|H
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|S
+begin_if
+if|if
+condition|(
+name|auto
+name|LHOrErr
+init|=
+name|Layer
 operator|.
-name|push_back
+name|addModule
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
 name|M
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|auto
-name|LH
-init|=
-name|Layer
-operator|.
-name|addModuleSet
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|S
-argument_list|)
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|MemMgr
 argument_list|)
 argument_list|,
 name|std
@@ -879,21 +1033,28 @@ argument_list|(
 name|Resolver
 argument_list|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ModuleHandleT
+condition|)
 name|H
-init|=
+operator|=
 name|createHandle
 argument_list|(
 name|Layer
 argument_list|,
-name|LH
+operator|*
+name|LHOrErr
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+else|else
+return|return
+name|mapError
+argument_list|(
+name|LHOrErr
+operator|.
+name|takeError
+argument_list|()
+argument_list|)
+return|;
+end_if
 
 begin_comment
 comment|// Run the static constructors, and save the static destructor runner for
@@ -924,7 +1085,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+name|auto
+name|Err
+init|=
 name|CtorRunner
 operator|.
 name|runViaLayer
@@ -932,8 +1098,19 @@ argument_list|(
 operator|*
 name|this
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+condition|)
+return|return
+name|mapError
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Err
+argument_list|)
+argument_list|)
+return|;
+end_if
 
 begin_expr_stmt
 name|IRStaticDestructorRunners
@@ -952,17 +1129,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|RetHandle
+operator|=
+name|H
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
-name|H
+name|LLVMOrcErrSuccess
 return|;
 end_return
 
 begin_macro
-unit|}    ModuleHandleT
+unit|}    LLVMOrcErrorCode
 name|addIRModuleEager
 argument_list|(
-argument|Module *M
+argument|ModuleHandleT&RetHandle
+argument_list|,
+argument|std::shared_ptr<Module> M
 argument_list|,
 argument|LLVMOrcSymbolResolverFn ExternalResolver
 argument_list|,
@@ -975,6 +1161,8 @@ block|{
 return|return
 name|addIRModule
 argument_list|(
+name|RetHandle
+argument_list|,
 name|CompileLayer
 argument_list|,
 name|std
@@ -1006,25 +1194,35 @@ return|;
 block|}
 end_block
 
-begin_function
-name|ModuleHandleT
+begin_decl_stmt
+name|LLVMOrcErrorCode
 name|addIRModuleLazy
-parameter_list|(
+argument_list|(
+name|ModuleHandleT
+operator|&
+name|RetHandle
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|Module
-modifier|*
+operator|>
 name|M
-parameter_list|,
+argument_list|,
 name|LLVMOrcSymbolResolverFn
 name|ExternalResolver
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|ExternalResolverCtx
-parameter_list|)
+argument_list|)
 block|{
 return|return
 name|addIRModule
 argument_list|(
+name|RetHandle
+argument_list|,
 name|CODLayer
 argument_list|,
 name|std
@@ -1054,16 +1252,21 @@ name|ExternalResolverCtx
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
-name|void
+name|LLVMOrcErrorCode
 name|removeModule
 parameter_list|(
 name|ModuleHandleT
 name|H
 parameter_list|)
 block|{
+if|if
+condition|(
+name|auto
+name|Err
+init|=
 name|GenericHandles
 index|[
 name|H
@@ -1071,7 +1274,18 @@ index|]
 operator|->
 name|removeModule
 argument_list|()
-expr_stmt|;
+condition|)
+return|return
+name|mapError
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Err
+argument_list|)
+argument_list|)
+return|;
 name|GenericHandles
 index|[
 name|H
@@ -1086,6 +1300,9 @@ argument_list|(
 name|H
 argument_list|)
 expr_stmt|;
+return|return
+name|LLVMOrcErrSuccess
+return|;
 block|}
 end_function
 
@@ -1171,6 +1388,107 @@ return|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|LLVMOrcErrorCode
+name|findSymbolAddress
+argument_list|(
+name|JITTargetAddress
+operator|&
+name|RetAddr
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|,
+name|bool
+name|ExportedSymbolsOnly
+argument_list|)
+block|{
+name|RetAddr
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|auto
+name|Sym
+init|=
+name|findSymbol
+argument_list|(
+name|Name
+argument_list|,
+name|ExportedSymbolsOnly
+argument_list|)
+condition|)
+block|{
+comment|// Successful lookup, non-null symbol:
+if|if
+condition|(
+name|auto
+name|AddrOrErr
+init|=
+name|Sym
+operator|.
+name|getAddress
+argument_list|()
+condition|)
+block|{
+name|RetAddr
+operator|=
+operator|*
+name|AddrOrErr
+expr_stmt|;
+return|return
+name|LLVMOrcErrSuccess
+return|;
+block|}
+else|else
+return|return
+name|mapError
+argument_list|(
+name|AddrOrErr
+operator|.
+name|takeError
+argument_list|()
+argument_list|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|auto
+name|Err
+init|=
+name|Sym
+operator|.
+name|takeError
+argument_list|()
+condition|)
+block|{
+comment|// Lookup failure - report error.
+return|return
+name|mapError
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Err
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|// Otherwise we had a successful lookup but got a null result. We already
+comment|// set RetAddr to '0' above, so just return success.
+return|return
+name|LLVMOrcErrSuccess
+return|;
+block|}
+end_decl_stmt
+
 begin_expr_stmt
 specifier|const
 name|std
@@ -1203,7 +1521,7 @@ name|createHandle
 argument_list|(
 argument|LayerT&Layer
 argument_list|,
-argument|typename LayerT::ModuleSetHandleT Handle
+argument|typename LayerT::ModuleHandleT Handle
 argument_list|)
 block|{
 name|unsigned

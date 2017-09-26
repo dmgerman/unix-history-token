@@ -739,11 +739,10 @@ parameter_list|(
 name|Str
 parameter_list|)
 function_decl|;
-name|SwitchInst
-operator|::
-name|ConstCaseIt
+name|auto
 name|Case
-operator|=
+init|=
+operator|*
 name|SwitchInst
 operator|::
 name|ConstCaseIt
@@ -754,7 +753,7 @@ name|SI
 argument_list|,
 name|SuccNo
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|OS
 operator|<<
 name|Case

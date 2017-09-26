@@ -74,12 +74,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UserID.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/Process.h"
 end_include
 
@@ -110,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Utility/UserID.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private.h"
 end_include
 
@@ -130,9 +130,10 @@ comment|//
 comment|//  The thread maintaining a thread plan stack, and you program the actions of a
 comment|//  particular thread
 comment|//  by pushing plans onto the plan stack.
-comment|//  There is always a "Current" plan, which is the head of the plan stack,
+comment|//  There is always a "Current" plan, which is the top of the plan stack,
 comment|//  though in some cases
-comment|//  a plan may defer to plans higher in the stack for some piece of information.
+comment|//  a plan may defer to plans higher in the stack for some piece of information
+comment|//  (let us define that the plan stack grows downwards).
 comment|//
 comment|//  The plan stack is never empty, there is always a Base Plan which persists
 comment|//  through the life
@@ -199,6 +200,15 @@ comment|//  the target resumes, and you want to leave the target state correct f
 comment|//  plans in the time between when
 comment|//  your plan gets unshipped and the next resume.
 comment|//
+comment|//  Thread State Checkpoint:
+comment|//
+comment|//  Note that calling functions on target process (ThreadPlanCallFunction) changes
+comment|//  current thread state. The function can be called either by direct user demand or
+comment|//  internally, for example lldb allocates memory on device to calculate breakpoint
+comment|//  condition expression - on Linux it is performed by calling mmap on device.
+comment|//  ThreadStateCheckpoint saves Thread state (stop info and completed
+comment|//  plan stack) to restore it after completing function call.
+comment|//
 comment|//  Over the lifetime of the plan, various methods of the ThreadPlan are then
 comment|//  called in response to changes of state in
 comment|//  the process we are debugging as follows:
@@ -239,7 +249,7 @@ comment|//  PlanExplainsStop.
 comment|//  If the Current plan answers "true" then it is asked if the stop should
 comment|//  percolate all the way to the
 comment|//  user by calling the ShouldStop method.  If the current plan doesn't explain
-comment|//  the stop, then we query down
+comment|//  the stop, then we query up
 comment|//  the plan stack for a plan that does explain the stop.  The plan that does
 comment|//  explain the stop then needs to
 comment|//  figure out what to do about the plans below it in the stack.  If the stop is
@@ -260,7 +270,7 @@ comment|//  the stop reason.  However, if a plan wishes to stay on the stack aft
 comment|//  event it didn't directly handle
 comment|//  it can designate itself a "Master" plan by responding true to IsMasterPlan,
 comment|//  and then if it wants not to be
-comment|//  discarded, it can return true to OkayToDiscard, and it and all its dependent
+comment|//  discarded, it can return false to OkayToDiscard, and it and all its dependent
 comment|//  plans will be preserved when
 comment|//  we resume execution.
 comment|//
@@ -297,7 +307,7 @@ comment|//  Actually Stopping:
 comment|//
 comment|//  If a plan says responds "true" to ShouldStop, then it is asked if it's job
 comment|//  is complete by calling
-comment|//  MischiefManaged.  If that returns true, the thread is popped from the plan
+comment|//  MischiefManaged.  If that returns true, the plan is popped from the plan
 comment|//  stack and added to the
 comment|//  Completed Plan Stack.  Then the next plan in the stack is asked if it
 comment|//  ShouldStop, and  it returns "true",
@@ -331,9 +341,9 @@ comment|//  Reporting the stop:
 comment|//
 comment|//  When the process stops, the thread is given a StopReason, in the form of a
 comment|//  StopInfo object.  If there is a completed
-comment|//  plan corresponding to the stop, then the "actual" stop reason will be
+comment|//  plan corresponding to the stop, then the "actual" stop reason can be
 comment|//  suppressed, and instead a StopInfoThreadPlan
-comment|//  object will be cons'ed up from the highest completed plan in the stack.
+comment|//  object will be cons'ed up from the top completed plan in the stack.
 comment|//  However, if the plan doesn't want to be
 comment|//  the stop reason, then it can call SetPlanComplete and pass in "false" for
 comment|//  the "success" parameter.  In that case,

@@ -264,7 +264,7 @@ name|CreateGoroutineAtIndex
 argument_list|(
 argument|uint64_t idx
 argument_list|,
-argument|lldb_private::Error&err
+argument|lldb_private::Status&err
 argument_list|)
 block|;
 name|std

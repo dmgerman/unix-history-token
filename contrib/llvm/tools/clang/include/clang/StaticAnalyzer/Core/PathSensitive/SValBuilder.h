@@ -478,6 +478,22 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Simplify symbolic expressions within a given SVal. Return an SVal
+comment|/// that represents the same value, but is hopefully easier to work with
+comment|/// than the original SVal.
+name|virtual
+name|SVal
+name|simplifySVal
+parameter_list|(
+name|ProgramStateRef
+name|State
+parameter_list|,
+name|SVal
+name|Val
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// Constructs a symbolic expression for two non-location values.
 name|SVal
 name|makeSymExprValNN
@@ -1495,6 +1511,30 @@ operator|.
 name|getTruthValue
 argument_list|(
 name|b
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// Create NULL pointer, with proper pointer bit-width for given address
+comment|/// space.
+comment|/// \param type pointer type.
+name|Loc
+name|makeNullWithType
+parameter_list|(
+name|QualType
+name|type
+parameter_list|)
+block|{
+return|return
+name|loc
+operator|::
+name|ConcreteInt
+argument_list|(
+name|BasicVals
+operator|.
+name|getZeroWithTypeSize
+argument_list|(
+name|type
 argument_list|)
 argument_list|)
 return|;

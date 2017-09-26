@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugRangeList.h -----------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugRangeList.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,19 +34,37 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGRANGELIST_H
+name|LLVM_DEBUGINFO_DWARF_DWARFDEBUGRANGELIST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGRANGELIST_H
+name|LLVM_DEBUGINFO_DWARF_DWARFDEBUGRANGELIST_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataExtractor.h"
+file|"llvm/DebugInfo/DWARF/DWARFDataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -62,22 +80,31 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+struct|struct
+name|DWARFAddressRange
+block|{
+name|uint64_t
+name|LowPC
+decl_stmt|;
+name|uint64_t
+name|HighPC
+decl_stmt|;
+name|uint64_t
+name|SectionIndex
+decl_stmt|;
+block|}
+struct|;
 comment|/// DWARFAddressRangesVector - represents a set of absolute address ranges.
-typedef|typedef
+name|using
+name|DWARFAddressRangesVector
+init|=
 name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-operator|,
-name|uint64_t
-operator|>>
-name|DWARFAddressRangesVector
-expr_stmt|;
+name|DWARFAddressRange
+operator|>
+decl_stmt|;
 name|class
 name|DWARFDebugRangeList
 block|{
@@ -86,24 +113,28 @@ label|:
 struct|struct
 name|RangeListEntry
 block|{
-comment|// A beginning address offset. This address offset has the size of an
-comment|// address and is relative to the applicable base address of the
-comment|// compilation unit referencing this range list. It marks the beginning
-comment|// of an address range.
+comment|/// A beginning address offset. This address offset has the size of an
+comment|/// address and is relative to the applicable base address of the
+comment|/// compilation unit referencing this range list. It marks the beginning
+comment|/// of an address range.
 name|uint64_t
 name|StartAddress
 decl_stmt|;
-comment|// An ending address offset. This address offset again has the size of
-comment|// an address and is relative to the applicable base address of the
-comment|// compilation unit referencing this range list. It marks the first
-comment|// address past the end of the address range. The ending address must
-comment|// be greater than or equal to the beginning address.
+comment|/// An ending address offset. This address offset again has the size of
+comment|/// an address and is relative to the applicable base address of the
+comment|/// compilation unit referencing this range list. It marks the first
+comment|/// address past the end of the address range. The ending address must
+comment|/// be greater than or equal to the beginning address.
 name|uint64_t
 name|EndAddress
 decl_stmt|;
-comment|// The end of any given range list is marked by an end of list entry,
-comment|// which consists of a 0 for the beginning address offset
-comment|// and a 0 for the ending address offset.
+comment|/// A section index this range belongs to.
+name|uint64_t
+name|SectionIndex
+decl_stmt|;
+comment|/// The end of any given range list is marked by an end of list entry,
+comment|/// which consists of a 0 for the beginning address offset
+comment|/// and a 0 for the ending address offset.
 name|bool
 name|isEndOfListEntry
 argument_list|()
@@ -123,12 +154,12 @@ literal|0
 operator|)
 return|;
 block|}
-comment|// A base address selection entry consists of:
-comment|// 1. The value of the largest representable address offset
-comment|// (for example, 0xffffffff when the size of an address is 32 bits).
-comment|// 2. An address, which defines the appropriate base address for
-comment|// use in interpreting the beginning and ending address offsets of
-comment|// subsequent entries of the location list.
+comment|/// A base address selection entry consists of:
+comment|/// 1. The value of the largest representable address offset
+comment|/// (for example, 0xffffffff when the size of an address is 32 bits).
+comment|/// 2. An address, which defines the appropriate base address for
+comment|/// use in interpreting the beginning and ending address offsets of
+comment|/// subsequent entries of the location list.
 name|bool
 name|isBaseAddressSelectionEntry
 argument_list|(
@@ -172,7 +203,7 @@ block|}
 struct|;
 name|private
 label|:
-comment|// Offset in .debug_ranges section.
+comment|/// Offset in .debug_ranges section.
 name|uint32_t
 name|Offset
 decl_stmt|;
@@ -212,7 +243,9 @@ decl_stmt|;
 name|bool
 name|extract
 parameter_list|(
-name|DataExtractor
+specifier|const
+name|DWARFDataExtractor
+modifier|&
 name|data
 parameter_list|,
 name|uint32_t
@@ -252,7 +285,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -261,7 +294,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_DEBUGINFO_DWARFDEBUGRANGELIST_H
+comment|// LLVM_DEBUGINFO_DWARF_DWARFDEBUGRANGELIST_H
 end_comment
 
 end_unit

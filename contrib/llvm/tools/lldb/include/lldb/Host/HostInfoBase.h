@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include
@@ -111,55 +111,6 @@ name|void
 name|Terminate
 parameter_list|()
 function_decl|;
-comment|//------------------------------------------------------------------
-comment|/// Returns the number of CPUs on this current host.
-comment|///
-comment|/// @return
-comment|///     Number of CPUs on this current host, or zero if the number
-comment|///     of CPUs can't be determined on this host.
-comment|//------------------------------------------------------------------
-specifier|static
-name|uint32_t
-name|GetNumberCPUS
-parameter_list|()
-function_decl|;
-comment|//------------------------------------------------------------------
-comment|/// Returns the maximum length of a thread name on this platform.
-comment|///
-comment|/// @return
-comment|///     Maximum length of a thread name on this platform.
-comment|//------------------------------------------------------------------
-specifier|static
-name|uint32_t
-name|GetMaxThreadNameLength
-parameter_list|()
-function_decl|;
-comment|//------------------------------------------------------------------
-comment|/// Gets the host vendor string.
-comment|///
-comment|/// @return
-comment|///     A const string object containing the host vendor name.
-comment|//------------------------------------------------------------------
-specifier|static
-name|llvm
-operator|::
-name|StringRef
-name|GetVendorString
-argument_list|()
-expr_stmt|;
-comment|//------------------------------------------------------------------
-comment|/// Gets the host Operating System (OS) string.
-comment|///
-comment|/// @return
-comment|///     A const string object containing the host OS name.
-comment|//------------------------------------------------------------------
-specifier|static
-name|llvm
-operator|::
-name|StringRef
-name|GetOSString
-argument_list|()
-expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Gets the host target triple as a const string.
 comment|///

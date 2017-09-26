@@ -121,6 +121,13 @@ modifier|*
 name|GetEnviron
 parameter_list|()
 function_decl|;
+name|void
+name|RestrictMemoryToMaxAddress
+parameter_list|(
+name|uptr
+name|max_address
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

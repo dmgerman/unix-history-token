@@ -106,6 +106,7 @@ extern|extern cl::list<std::string> FilterSections;
 extern|extern cl::opt<bool> Disassemble;
 extern|extern cl::opt<bool> DisassembleAll;
 extern|extern cl::opt<bool> NoShowRawInsn;
+extern|extern cl::opt<bool> NoLeadingAddr;
 extern|extern cl::opt<bool> PrivateHeaders;
 extern|extern cl::opt<bool> FirstPrivateHeader;
 extern|extern cl::opt<bool> ExportsTrie;
@@ -199,7 +200,6 @@ decl_stmt|;
 name|void
 name|printMachORebaseTable
 argument_list|(
-specifier|const
 name|object
 operator|::
 name|MachOObjectFile
@@ -210,7 +210,6 @@ decl_stmt|;
 name|void
 name|printMachOBindTable
 argument_list|(
-specifier|const
 name|object
 operator|::
 name|MachOObjectFile
@@ -221,7 +220,6 @@ decl_stmt|;
 name|void
 name|printMachOLazyBindTable
 argument_list|(
-specifier|const
 name|object
 operator|::
 name|MachOObjectFile
@@ -232,7 +230,6 @@ decl_stmt|;
 name|void
 name|printMachOWeakBindTable
 argument_list|(
-specifier|const
 name|object
 operator|::
 name|MachOObjectFile
@@ -331,7 +328,6 @@ decl_stmt|;
 name|void
 name|printRebaseTable
 argument_list|(
-specifier|const
 name|object
 operator|::
 name|ObjectFile
@@ -342,7 +338,6 @@ decl_stmt|;
 name|void
 name|printBindTable
 argument_list|(
-specifier|const
 name|object
 operator|::
 name|ObjectFile
@@ -353,7 +348,6 @@ decl_stmt|;
 name|void
 name|printLazyBindTable
 argument_list|(
-specifier|const
 name|object
 operator|::
 name|ObjectFile
@@ -364,7 +358,6 @@ decl_stmt|;
 name|void
 name|printWeakBindTable
 argument_list|(
-specifier|const
 name|object
 operator|::
 name|ObjectFile

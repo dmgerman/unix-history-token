@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -92,7 +92,7 @@ name|PipeBase
 argument_list|()
 expr_stmt|;
 name|virtual
-name|Error
+name|Status
 name|CreateNew
 parameter_list|(
 name|bool
@@ -102,7 +102,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|CreateNew
 argument_list|(
 name|llvm
@@ -117,7 +117,7 @@ init|=
 literal|0
 decl_stmt|;
 name|virtual
-name|Error
+name|Status
 name|CreateWithUniqueName
 argument_list|(
 name|llvm
@@ -141,7 +141,7 @@ init|=
 literal|0
 decl_stmt|;
 name|virtual
-name|Error
+name|Status
 name|OpenAsReader
 argument_list|(
 name|llvm
@@ -155,7 +155,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-name|Error
+name|Status
 name|OpenAsWriter
 argument_list|(
 name|llvm
@@ -168,7 +168,7 @@ name|child_process_inherit
 argument_list|)
 decl_stmt|;
 name|virtual
-name|Error
+name|Status
 name|OpenAsWriterWithTimeout
 argument_list|(
 name|llvm
@@ -261,7 +261,7 @@ literal|0
 function_decl|;
 comment|// Delete named pipe.
 name|virtual
-name|Error
+name|Status
 name|Delete
 argument_list|(
 name|llvm
@@ -273,7 +273,7 @@ init|=
 literal|0
 decl_stmt|;
 name|virtual
-name|Error
+name|Status
 name|Write
 parameter_list|(
 specifier|const
@@ -292,7 +292,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|Error
+name|Status
 name|ReadWithTimeout
 argument_list|(
 name|void
@@ -318,7 +318,7 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
-name|Error
+name|Status
 name|Read
 parameter_list|(
 name|void

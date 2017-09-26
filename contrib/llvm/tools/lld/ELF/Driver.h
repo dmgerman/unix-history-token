@@ -129,6 +129,9 @@ name|addFile
 parameter_list|(
 name|StringRef
 name|Path
+parameter_list|,
+name|bool
+name|WithLOption
 parameter_list|)
 function_decl|;
 name|void
@@ -140,17 +143,6 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-name|std
-operator|::
-name|vector
-operator|<
-name|MemoryBufferRef
-operator|>
-name|getArchiveMembers
-argument_list|(
-argument|MemoryBufferRef MB
-argument_list|)
-expr_stmt|;
 name|void
 name|readConfigs
 argument_list|(
@@ -290,6 +282,8 @@ parameter_list|,
 name|_10
 parameter_list|,
 name|_11
+parameter_list|,
+name|_12
 parameter_list|)
 value|OPT_##ID,
 include|#
@@ -309,17 +303,6 @@ modifier|*
 name|Argv0
 parameter_list|)
 function_decl|;
-name|std
-operator|::
-name|vector
-operator|<
-name|uint8_t
-operator|>
-name|parseHexstring
-argument_list|(
-argument|StringRef S
-argument_list|)
-expr_stmt|;
 name|std
 operator|::
 name|string

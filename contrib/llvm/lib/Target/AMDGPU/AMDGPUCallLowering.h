@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"AMDGPU.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/GlobalISel/CallLowering.h"
 end_include
 
@@ -82,6 +88,33 @@ range|:
 name|public
 name|CallLowering
 block|{
+name|AMDGPUAS
+name|AMDGPUASI
+block|;
+name|unsigned
+name|lowerParameterPtr
+argument_list|(
+argument|MachineIRBuilder&MIRBuilder
+argument_list|,
+argument|Type *ParamTy
+argument_list|,
+argument|unsigned Offset
+argument_list|)
+specifier|const
+block|;
+name|void
+name|lowerParameter
+argument_list|(
+argument|MachineIRBuilder&MIRBuilder
+argument_list|,
+argument|Type *ParamTy
+argument_list|,
+argument|unsigned Offset
+argument_list|,
+argument|unsigned DstReg
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|AMDGPUCallLowering
@@ -115,6 +148,26 @@ argument|ArrayRef<unsigned> VRegs
 argument_list|)
 specifier|const
 name|override
+block|;
+specifier|static
+name|CCAssignFn
+operator|*
+name|CCAssignFnForCall
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|,
+argument|bool IsVarArg
+argument_list|)
+block|;
+specifier|static
+name|CCAssignFn
+operator|*
+name|CCAssignFnForReturn
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|,
+argument|bool IsVarArg
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

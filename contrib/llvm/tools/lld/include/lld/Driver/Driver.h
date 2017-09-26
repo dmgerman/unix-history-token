@@ -74,6 +74,17 @@ name|char
 operator|*
 operator|>
 name|Args
+argument_list|,
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|Diag
+operator|=
+name|llvm
+operator|::
+name|errs
+argument_list|()
 argument_list|)
 decl_stmt|;
 block|}

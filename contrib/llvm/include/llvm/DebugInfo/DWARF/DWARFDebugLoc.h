@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugLoc.h -----------------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugLoc.h ------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGLOC_H
+name|LLVM_DEBUGINFO_DWARF_DWARFDEBUGLOC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGLOC_H
+name|LLVM_DEBUGINFO_DWARF_DWARFDEBUGLOC_H
 end_define
 
 begin_include
@@ -52,13 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/DWARF/DWARFDataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/DWARF/DWARFRelocMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataExtractor.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -115,59 +121,39 @@ name|Entries
 expr_stmt|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|LocationLists
+init|=
 name|SmallVector
 operator|<
 name|LocationList
-operator|,
-literal|4
-operator|>
-name|LocationLists
-expr_stmt|;
+decl_stmt|, 4>;
 comment|/// A list of all the variables in the debug_loc section, each one describing
 comment|/// the locations in which the variable is stored.
 name|LocationLists
 name|Locations
 decl_stmt|;
-comment|/// A map used to resolve binary relocations.
-specifier|const
-name|RelocAddrMap
-modifier|&
-name|RelocMap
-decl_stmt|;
 name|public
 label|:
-name|DWARFDebugLoc
-argument_list|(
-specifier|const
-name|RelocAddrMap
-operator|&
-name|LocRelocMap
-argument_list|)
-operator|:
-name|RelocMap
-argument_list|(
-argument|LocRelocMap
-argument_list|)
-block|{}
 comment|/// Print the location lists found within the debug_loc section.
 name|void
 name|dump
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 comment|/// Parse the debug_loc section accessible via the 'data' parameter using the
-comment|/// specified address size to interpret the address ranges.
+comment|/// address size also given in 'data' to interpret the address ranges.
 name|void
 name|parse
 parameter_list|(
-name|DataExtractor
+specifier|const
+name|DWARFDataExtractor
+modifier|&
 name|data
-parameter_list|,
-name|unsigned
-name|AddressSize
 parameter_list|)
 function_decl|;
 block|}
@@ -211,15 +197,13 @@ name|Entries
 expr_stmt|;
 block|}
 struct|;
-typedef|typedef
+name|using
+name|LocationLists
+init|=
 name|SmallVector
 operator|<
 name|LocationList
-operator|,
-literal|4
-operator|>
-name|LocationLists
-expr_stmt|;
+decl_stmt|, 4>;
 name|LocationLists
 name|Locations
 decl_stmt|;
@@ -246,10 +230,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARF_DWARFDEBUGLOC_H
+end_comment
 
 end_unit
 

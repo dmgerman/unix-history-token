@@ -704,6 +704,16 @@ name|DiagnosticsEngine
 operator|>
 operator|(
 operator|)
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VFS
+operator|=
+name|nullptr
 argument_list|)
 block|;
 comment|/// Return the value of the last argument as an integer, or a default. If Diags

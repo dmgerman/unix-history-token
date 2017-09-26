@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdint>
 end_include
 
@@ -224,6 +230,18 @@ argument|StringRef SectionName
 argument_list|,
 argument|bool LocalAddress
 argument_list|)
+expr_stmt|;
+comment|/// \brief If there is a section at the given local address, return its load
+comment|///        address, otherwise return none.
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getSectionLoadAddress
+argument_list|(
+argument|void *LocalAddress
+argument_list|)
+specifier|const
 expr_stmt|;
 name|private
 label|:

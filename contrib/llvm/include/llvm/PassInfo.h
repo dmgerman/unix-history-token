@@ -107,18 +107,6 @@ name|NormalCtor_t
 function_decl|)
 parameter_list|()
 function_decl|;
-typedef|typedef
-name|Pass
-modifier|*
-function_decl|(
-modifier|*
-name|TargetMachineCtor_t
-function_decl|)
-parameter_list|(
-name|TargetMachine
-modifier|*
-parameter_list|)
-function_decl|;
 name|private
 label|:
 name|StringRef
@@ -163,9 +151,6 @@ comment|// Interfaces implemented by this pass
 name|NormalCtor_t
 name|NormalCtor
 decl_stmt|;
-name|TargetMachineCtor_t
-name|TargetMachineCtor
-decl_stmt|;
 name|public
 label|:
 comment|/// PassInfo ctor - Do not call this directly, this should only be invoked
@@ -183,8 +168,6 @@ argument_list|,
 argument|bool isCFGOnly
 argument_list|,
 argument|bool is_analysis
-argument_list|,
-argument|TargetMachineCtor_t machine = nullptr
 argument_list|)
 block|:
 name|PassName
@@ -219,12 +202,7 @@ argument_list|)
 operator|,
 name|NormalCtor
 argument_list|(
-name|normal
-argument_list|)
-operator|,
-name|TargetMachineCtor
-argument_list|(
-argument|machine
+argument|normal
 argument_list|)
 block|{}
 comment|/// PassInfo ctor - Do not call this directly, this should only be invoked
@@ -268,11 +246,6 @@ name|true
 argument_list|)
 operator|,
 name|NormalCtor
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|TargetMachineCtor
 argument_list|(
 argument|nullptr
 argument_list|)
@@ -384,32 +357,6 @@ name|Ctor
 parameter_list|)
 block|{
 name|NormalCtor
-operator|=
-name|Ctor
-expr_stmt|;
-block|}
-comment|/// getTargetMachineCtor - Return a pointer to a function, that when called
-comment|/// with a TargetMachine, creates an instance of the pass and returns it.
-comment|/// This pointer may be null if there is no constructor with a TargetMachine
-comment|/// for the pass.
-comment|///
-name|TargetMachineCtor_t
-name|getTargetMachineCtor
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetMachineCtor
-return|;
-block|}
-name|void
-name|setTargetMachineCtor
-parameter_list|(
-name|TargetMachineCtor_t
-name|Ctor
-parameter_list|)
-block|{
-name|TargetMachineCtor
 operator|=
 name|Ctor
 expr_stmt|;

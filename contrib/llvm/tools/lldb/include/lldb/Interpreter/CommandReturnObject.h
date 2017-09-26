@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StreamString.h"
+file|"lldb/Utility/StreamString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StreamTee.h"
+file|"lldb/Utility/StreamTee.h"
 end_include
 
 begin_include
@@ -726,7 +726,7 @@ name|void
 name|SetError
 argument_list|(
 specifier|const
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,

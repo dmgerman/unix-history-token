@@ -105,6 +105,15 @@ operator|=
 expr|default
 block|;
 name|void
+name|emitEntryFunctionPrologue
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
+name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF
@@ -124,6 +133,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|int
+name|getFrameIndexReference
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
+argument_list|)
+specifier|const
+name|override
+block|;
 name|void
 name|processFunctionBeforeFrameFinalized
 argument_list|(
@@ -139,9 +160,7 @@ operator|:
 name|void
 name|emitFlatScratchInit
 argument_list|(
-argument|const SIInstrInfo *TII
-argument_list|,
-argument|const SIRegisterInfo* TRI
+argument|const SISubtarget&ST
 argument_list|,
 argument|MachineFunction&MF
 argument_list|,
@@ -164,7 +183,14 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|std
+operator|::
+name|pair
+operator|<
 name|unsigned
+block|,
+name|unsigned
+operator|>
 name|getReservedPrivateSegmentWaveByteOffsetReg
 argument_list|(
 argument|const SISubtarget&ST
@@ -186,6 +212,23 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|,
 argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
+name|public
+operator|:
+name|bool
+name|hasFP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|hasSP
+argument_list|(
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|; }

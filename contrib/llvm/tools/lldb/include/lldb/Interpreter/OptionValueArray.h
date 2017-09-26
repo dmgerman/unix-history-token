@@ -134,7 +134,7 @@ argument|uint32_t dump_mask
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 argument|llvm::StringRef value
@@ -143,7 +143,7 @@ argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 specifier|const
@@ -204,7 +204,7 @@ argument|llvm::StringRef name
 argument_list|,
 argument|bool will_modify
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 specifier|const
 name|override
@@ -525,7 +525,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|Error
+name|Status
 name|SetArgs
 parameter_list|(
 specifier|const

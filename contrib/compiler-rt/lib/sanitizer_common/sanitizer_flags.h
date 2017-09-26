@@ -69,6 +69,16 @@ begin_decl_stmt
 name|namespace
 name|__sanitizer
 block|{
+enum|enum
+name|HandleSignalMode
+block|{
+name|kHandleSignalNo
+block|,
+name|kHandleSignalYes
+block|,
+name|kHandleSignalExclusive
+block|, }
+enum|;
 struct|struct
 name|CommonFlags
 block|{

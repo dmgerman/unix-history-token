@@ -91,6 +91,12 @@ directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/MapVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -305,6 +311,10 @@ name|Stmt
 modifier|*
 name|PreInit
 decl_stmt|;
+comment|/// Region that captures the associated stmt.
+name|OpenMPDirectiveKind
+name|CaptureRegion
+decl_stmt|;
 name|protected
 label|:
 comment|/// Set pre-initialization statement for the clause.
@@ -314,11 +324,20 @@ parameter_list|(
 name|Stmt
 modifier|*
 name|S
+parameter_list|,
+name|OpenMPDirectiveKind
+name|ThisRegion
+init|=
+name|OMPD_unknown
 parameter_list|)
 block|{
 name|PreInit
 operator|=
 name|S
+expr_stmt|;
+name|CaptureRegion
+operator|=
+name|ThisRegion
 expr_stmt|;
 block|}
 name|OMPClauseWithPreInit
@@ -331,7 +350,12 @@ argument_list|)
 operator|:
 name|PreInit
 argument_list|(
-argument|nullptr
+name|nullptr
+argument_list|)
+operator|,
+name|CaptureRegion
+argument_list|(
+argument|OMPD_unknown
 argument_list|)
 block|{
 name|assert
@@ -366,6 +390,15 @@ parameter_list|()
 block|{
 return|return
 name|PreInit
+return|;
+block|}
+comment|/// Get capture region for the stmt in the clause.
+name|OpenMPDirectiveKind
+name|getCaptureRegion
+parameter_list|()
+block|{
+return|return
+name|CaptureRegion
 return|;
 block|}
 specifier|static
@@ -865,86 +898,101 @@ name|OMPIfClause
 range|:
 name|public
 name|OMPClause
+decl_stmt|,
+name|public
+name|OMPClauseWithPreInit
 block|{
 name|friend
 name|class
 name|OMPClauseReader
-block|;
+decl_stmt|;
 comment|/// \brief Location of '('.
 name|SourceLocation
 name|LParenLoc
-block|;
+decl_stmt|;
 comment|/// \brief Condition of the 'if' clause.
 name|Stmt
-operator|*
+modifier|*
 name|Condition
-block|;
+decl_stmt|;
 comment|/// \brief Location of ':' (if any).
 name|SourceLocation
 name|ColonLoc
-block|;
+decl_stmt|;
 comment|/// \brief Directive name modifier for the clause.
 name|OpenMPDirectiveKind
 name|NameModifier
-block|;
+decl_stmt|;
 comment|/// \brief Name modifier location.
 name|SourceLocation
 name|NameModifierLoc
-block|;
+decl_stmt|;
 comment|/// \brief Set condition.
 comment|///
 name|void
 name|setCondition
-argument_list|(
-argument|Expr *Cond
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|Cond
+parameter_list|)
 block|{
 name|Condition
 operator|=
 name|Cond
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Set directive name modifier for the clause.
 comment|///
 name|void
 name|setNameModifier
-argument_list|(
-argument|OpenMPDirectiveKind NM
-argument_list|)
+parameter_list|(
+name|OpenMPDirectiveKind
+name|NM
+parameter_list|)
 block|{
 name|NameModifier
 operator|=
 name|NM
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Set location of directive name modifier for the clause.
 comment|///
 name|void
 name|setNameModifierLoc
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
 block|{
 name|NameModifierLoc
 operator|=
 name|Loc
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Set location of ':'.
 comment|///
 name|void
 name|setColonLoc
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
 block|{
 name|ColonLoc
 operator|=
 name|Loc
-block|; }
+expr_stmt|;
+block|}
 name|public
-operator|:
+label|:
 comment|/// \brief Build 'if' clause with condition \a Cond.
 comment|///
 comment|/// \param NameModifier [OpenMP 4.1] Directive name modifier of clause.
 comment|/// \param Cond Condition of the clause.
+comment|/// \param HelperCond Helper condition for the clause.
+comment|/// \param CaptureRegion Innermost OpenMP region where expressions in this
+comment|/// clause must be captured.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param NameModifierLoc Location of directive name modifier.
@@ -957,6 +1005,10 @@ argument|OpenMPDirectiveKind NameModifier
 argument_list|,
 argument|Expr *Cond
 argument_list|,
+argument|Stmt *HelperCond
+argument_list|,
+argument|OpenMPDirectiveKind CaptureRegion
+argument_list|,
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
@@ -967,7 +1019,7 @@ argument|SourceLocation ColonLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|)
-operator|:
+block|:
 name|OMPClause
 argument_list|(
 name|OMPC_if
@@ -976,32 +1028,44 @@ name|StartLoc
 argument_list|,
 name|EndLoc
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|(
 name|LParenLoc
 argument_list|)
-block|,
+operator|,
 name|Condition
 argument_list|(
 name|Cond
 argument_list|)
-block|,
+operator|,
 name|ColonLoc
 argument_list|(
 name|ColonLoc
 argument_list|)
-block|,
+operator|,
 name|NameModifier
 argument_list|(
 name|NameModifier
 argument_list|)
-block|,
+operator|,
 name|NameModifierLoc
 argument_list|(
 argument|NameModifierLoc
 argument_list|)
-block|{}
+block|{
+name|setPreInitStmt
+argument_list|(
+name|HelperCond
+argument_list|,
+name|CaptureRegion
+argument_list|)
+block|;   }
 comment|/// \brief Build an empty clause.
 comment|///
 name|OMPIfClause
@@ -1017,23 +1081,28 @@ argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|()
-block|,
+operator|,
 name|Condition
 argument_list|(
 name|nullptr
 argument_list|)
-block|,
+operator|,
 name|ColonLoc
 argument_list|()
-block|,
+operator|,
 name|NameModifier
 argument_list|(
 name|OMPD_unknown
 argument_list|)
-block|,
+operator|,
 name|NameModifierLoc
 argument_list|()
 block|{}
@@ -1108,9 +1177,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -1123,7 +1195,7 @@ return|;
 block|}
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -1138,19 +1210,49 @@ literal|1
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents 'final' clause in the '#pragma omp ...' directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp task final(a> 5)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp task' has simple 'final'
+end_comment
+
+begin_comment
 comment|/// clause with condition 'a> 5'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPFinalClause
-operator|:
+range|:
 name|public
 name|OMPClause
 block|{
@@ -1332,6 +1434,9 @@ name|OMPNumThreadsClause
 operator|:
 name|public
 name|OMPClause
+block|,
+name|public
+name|OMPClauseWithPreInit
 block|{
 name|friend
 name|class
@@ -1363,6 +1468,9 @@ operator|:
 comment|/// \brief Build 'num_threads' clause with condition \a NumThreads.
 comment|///
 comment|/// \param NumThreads Number of threads for the construct.
+comment|/// \param HelperNumThreads Helper Number of threads for the construct.
+comment|/// \param CaptureRegion Innermost OpenMP region where expressions in this
+comment|/// clause must be captured.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
@@ -1370,6 +1478,10 @@ comment|///
 name|OMPNumThreadsClause
 argument_list|(
 argument|Expr *NumThreads
+argument_list|,
+argument|Stmt *HelperNumThreads
+argument_list|,
+argument|OpenMPDirectiveKind CaptureRegion
 argument_list|,
 argument|SourceLocation StartLoc
 argument_list|,
@@ -1387,6 +1499,11 @@ argument_list|,
 name|EndLoc
 argument_list|)
 block|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+block|,
 name|LParenLoc
 argument_list|(
 name|LParenLoc
@@ -1396,7 +1513,14 @@ name|NumThreads
 argument_list|(
 argument|NumThreads
 argument_list|)
-block|{}
+block|{
+name|setPreInitStmt
+argument_list|(
+name|HelperNumThreads
+argument_list|,
+name|CaptureRegion
+argument_list|)
+block|;   }
 comment|/// \brief Build an empty clause.
 comment|///
 name|OMPNumThreadsClause
@@ -1411,6 +1535,11 @@ argument_list|()
 argument_list|,
 name|SourceLocation
 argument_list|()
+argument_list|)
+block|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
 argument_list|)
 block|,
 name|LParenLoc
@@ -6491,23 +6620,23 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief This represents clause 'linear' in the '#pragma omp ...'
+comment|/// This represents clause 'task_reduction' in the '#pragma omp taskgroup'
 comment|/// directives.
 comment|///
 comment|/// \code
-comment|/// #pragma omp simd linear(a,b : 2)
+comment|/// #pragma omp taskgroup task_reduction(+:a,b)
 comment|/// \endcode
-comment|/// In this example directive '#pragma omp simd' has clause 'linear'
-comment|/// with variables 'a', 'b' and linear step '2'.
+comment|/// In this example directive '#pragma omp taskgroup' has clause
+comment|/// 'task_reduction' with operator '+' and the variables 'a' and 'b'.
 comment|///
 name|class
-name|OMPLinearClause
+name|OMPTaskReductionClause
 name|final
 operator|:
 name|public
 name|OMPVarListClause
 operator|<
-name|OMPLinearClause
+name|OMPTaskReductionClause
 operator|>
 block|,
 name|public
@@ -6518,7 +6647,7 @@ name|llvm
 operator|::
 name|TrailingObjects
 operator|<
-name|OMPLinearClause
+name|OMPTaskReductionClause
 block|,
 name|Expr
 operator|*
@@ -6534,87 +6663,51 @@ name|friend
 name|class
 name|OMPClauseReader
 block|;
-comment|/// \brief Modifier of 'linear' clause.
-name|OpenMPLinearClauseKind
-name|Modifier
-block|;
-comment|/// \brief Location of linear modifier if any.
-name|SourceLocation
-name|ModifierLoc
-block|;
-comment|/// \brief Location of ':'.
+comment|/// Location of ':'.
 name|SourceLocation
 name|ColonLoc
 block|;
-comment|/// \brief Sets the linear step for clause.
-name|void
-name|setStep
-argument_list|(
-argument|Expr *Step
-argument_list|)
-block|{
-operator|*
-operator|(
-name|getFinals
-argument_list|()
-operator|.
-name|end
-argument_list|()
-operator|)
-operator|=
-name|Step
-block|; }
-comment|/// \brief Sets the expression to calculate linear step for clause.
-name|void
-name|setCalcStep
-argument_list|(
-argument|Expr *CalcStep
-argument_list|)
-block|{
-operator|*
-operator|(
-name|getFinals
-argument_list|()
-operator|.
-name|end
-argument_list|()
-operator|+
-literal|1
-operator|)
-operator|=
-name|CalcStep
-block|; }
-comment|/// \brief Build 'linear' clause with given number of variables \a NumVars.
+comment|/// Nested name specifier for C++.
+name|NestedNameSpecifierLoc
+name|QualifierLoc
+block|;
+comment|/// Name of custom operator.
+name|DeclarationNameInfo
+name|NameInfo
+block|;
+comment|/// Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
-comment|/// \param ColonLoc Location of ':'.
 comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param NumVars Number of variables.
+comment|/// \param ColonLoc Location of ':'.
+comment|/// \param N Number of the variables in the clause.
+comment|/// \param QualifierLoc The nested-name qualifier with location information
+comment|/// \param NameInfo The full name info for reduction identifier.
 comment|///
-name|OMPLinearClause
+name|OMPTaskReductionClause
 argument_list|(
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
-argument|OpenMPLinearClauseKind Modifier
-argument_list|,
-argument|SourceLocation ModifierLoc
-argument_list|,
 argument|SourceLocation ColonLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
-argument|unsigned NumVars
+argument|unsigned N
+argument_list|,
+argument|NestedNameSpecifierLoc QualifierLoc
+argument_list|,
+argument|const DeclarationNameInfo&NameInfo
 argument_list|)
 operator|:
 name|OMPVarListClause
 operator|<
-name|OMPLinearClause
+name|OMPTaskReductionClause
 operator|>
 operator|(
-name|OMPC_linear
+name|OMPC_task_reduction
 expr|,
 name|StartLoc
 expr|,
@@ -6622,7 +6715,7 @@ name|LParenLoc
 expr|,
 name|EndLoc
 expr|,
-name|NumVars
+name|N
 operator|)
 block|,
 name|OMPClauseWithPostUpdate
@@ -6630,37 +6723,37 @@ argument_list|(
 name|this
 argument_list|)
 block|,
-name|Modifier
-argument_list|(
-name|Modifier
-argument_list|)
-block|,
-name|ModifierLoc
-argument_list|(
-name|ModifierLoc
-argument_list|)
-block|,
 name|ColonLoc
 argument_list|(
-argument|ColonLoc
+name|ColonLoc
+argument_list|)
+block|,
+name|QualifierLoc
+argument_list|(
+name|QualifierLoc
+argument_list|)
+block|,
+name|NameInfo
+argument_list|(
+argument|NameInfo
 argument_list|)
 block|{}
-comment|/// \brief Build an empty clause.
+comment|/// Build an empty clause.
 comment|///
-comment|/// \param NumVars Number of variables.
+comment|/// \param N Number of variables.
 comment|///
 name|explicit
-name|OMPLinearClause
+name|OMPTaskReductionClause
 argument_list|(
-argument|unsigned NumVars
+argument|unsigned N
 argument_list|)
 operator|:
 name|OMPVarListClause
 operator|<
-name|OMPLinearClause
+name|OMPTaskReductionClause
 operator|>
 operator|(
-name|OMPC_linear
+name|OMPC_task_reduction
 expr|,
 name|SourceLocation
 argument_list|()
@@ -6671,7 +6764,7 @@ expr|,
 name|SourceLocation
 argument_list|()
 expr|,
-name|NumVars
+name|N
 operator|)
 block|,
 name|OMPClauseWithPostUpdate
@@ -6679,236 +6772,50 @@ argument_list|(
 name|this
 argument_list|)
 block|,
-name|Modifier
-argument_list|(
-name|OMPC_LINEAR_val
-argument_list|)
-block|,
-name|ModifierLoc
-argument_list|()
-block|,
 name|ColonLoc
 argument_list|()
+block|,
+name|QualifierLoc
+argument_list|()
+block|,
+name|NameInfo
+argument_list|()
 block|{}
-comment|/// \brief Gets the list of initial values for linear variables.
-comment|///
-comment|/// There are NumVars expressions with initial values allocated after the
-comment|/// varlist, they are followed by NumVars update expressions (used to update
-comment|/// the linear variable's value on current iteration) and they are followed by
-comment|/// NumVars final expressions (used to calculate the linear variable's
-comment|/// value after the loop body). After these lists, there are 2 helper
-comment|/// expressions - linear step and a helper to calculate it before the
-comment|/// loop body (used when the linear step is not constant):
-comment|///
-comment|/// { Vars[] /* in OMPVarListClause */; Privates[]; Inits[]; Updates[];
-comment|/// Finals[]; Step; CalcStep; }
-comment|///
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-name|getPrivates
-argument_list|()
-block|{
-return|return
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-name|varlist_end
-argument_list|()
-expr|,
-name|varlist_size
-argument_list|()
-operator|)
-return|;
-block|}
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-name|getPrivates
-argument_list|()
-specifier|const
-block|{
-return|return
-name|llvm
-operator|::
-name|makeArrayRef
+comment|/// Sets location of ':' symbol in clause.
+name|void
+name|setColonLoc
 argument_list|(
-name|varlist_end
-argument_list|()
-argument_list|,
-name|varlist_size
-argument_list|()
+argument|SourceLocation CL
 argument_list|)
-return|;
-block|}
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-name|getInits
-argument_list|()
 block|{
-return|return
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-name|getPrivates
-argument_list|()
-operator|.
-name|end
-argument_list|()
-expr|,
-name|varlist_size
-argument_list|()
-operator|)
-return|;
-block|}
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-name|getInits
-argument_list|()
-specifier|const
-block|{
-return|return
-name|llvm
-operator|::
-name|makeArrayRef
+name|ColonLoc
+operator|=
+name|CL
+block|; }
+comment|/// Sets the name info for specified reduction identifier.
+name|void
+name|setNameInfo
 argument_list|(
-name|getPrivates
-argument_list|()
-operator|.
-name|end
-argument_list|()
-argument_list|,
-name|varlist_size
-argument_list|()
+argument|DeclarationNameInfo DNI
 argument_list|)
-return|;
-block|}
-comment|/// \brief Sets the list of update expressions for linear variables.
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-name|getUpdates
-argument_list|()
 block|{
-return|return
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-name|getInits
-argument_list|()
-operator|.
-name|end
-argument_list|()
-expr|,
-name|varlist_size
-argument_list|()
-operator|)
-return|;
-block|}
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-name|getUpdates
-argument_list|()
-specifier|const
-block|{
-return|return
-name|llvm
-operator|::
-name|makeArrayRef
+name|NameInfo
+operator|=
+name|DNI
+block|; }
+comment|/// Sets the nested name specifier.
+name|void
+name|setQualifierLoc
 argument_list|(
-name|getInits
-argument_list|()
-operator|.
-name|end
-argument_list|()
-argument_list|,
-name|varlist_size
-argument_list|()
+argument|NestedNameSpecifierLoc NSL
 argument_list|)
-return|;
-block|}
-comment|/// \brief Sets the list of final update expressions for linear variables.
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-name|getFinals
-argument_list|()
 block|{
-return|return
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-name|getUpdates
-argument_list|()
-operator|.
-name|end
-argument_list|()
-expr|,
-name|varlist_size
-argument_list|()
-operator|)
-return|;
-block|}
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-name|getFinals
-argument_list|()
-specifier|const
-block|{
-return|return
-name|llvm
-operator|::
-name|makeArrayRef
-argument_list|(
-name|getUpdates
-argument_list|()
-operator|.
-name|end
-argument_list|()
-argument_list|,
-name|varlist_size
-argument_list|()
-argument_list|)
-return|;
-block|}
-comment|/// \brief Sets the list of the copies of original linear variables.
-comment|/// \param PL List of expressions.
+name|QualifierLoc
+operator|=
+name|NSL
+block|; }
+comment|/// Set list of helper expressions, required for proper codegen of the clause.
+comment|/// These expressions represent private copy of the reduction variable.
 name|void
 name|setPrivates
 argument_list|(
@@ -6917,45 +6824,296 @@ operator|<
 name|Expr
 operator|*
 operator|>
-name|PL
+name|Privates
 argument_list|)
 block|;
-comment|/// \brief Sets the list of the initial values for linear variables.
-comment|/// \param IL List of expressions.
+comment|/// Get the list of helper privates.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getPrivates
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getPrivates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Set list of helper expressions, required for proper codegen of the clause.
+comment|/// These expressions represent LHS expression in the final reduction
+comment|/// expression performed by the reduction clause.
 name|void
-name|setInits
+name|setLHSExprs
 argument_list|(
 name|ArrayRef
 operator|<
 name|Expr
 operator|*
 operator|>
-name|IL
+name|LHSExprs
 argument_list|)
 block|;
+comment|/// Get the list of helper LHS expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getLHSExprs
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getLHSExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Set list of helper expressions, required for proper codegen of the clause.
+comment|/// These expressions represent RHS expression in the final reduction
+comment|/// expression performed by the reduction clause. Also, variables in these
+comment|/// expressions are used for proper initialization of reduction copies.
+name|void
+name|setRHSExprs
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|RHSExprs
+argument_list|)
+block|;
+comment|///  Get the list of helper destination expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getRHSExprs
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getLHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getRHSExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getLHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Set list of helper reduction expressions, required for proper
+comment|/// codegen of the clause. These expressions are binary expressions or
+comment|/// operator/custom reduction call that calculates new value from source
+comment|/// helper expressions to destination helper expressions.
+name|void
+name|setReductionOps
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|ReductionOps
+argument_list|)
+block|;
+comment|///  Get the list of helper reduction expressions.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getReductionOps
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getRHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getReductionOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getRHSExprs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|public
 operator|:
-comment|/// \brief Creates clause with a list of variables \a VL and a linear step
-comment|/// \a Step.
+comment|/// Creates clause with a list of variables \a VL.
 comment|///
-comment|/// \param C AST Context.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
-comment|/// \param Modifier Modifier of 'linear' clause.
-comment|/// \param ModifierLoc Modifier location.
 comment|/// \param ColonLoc Location of ':'.
 comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param VL List of references to the variables.
-comment|/// \param PL List of private copies of original variables.
-comment|/// \param IL List of initial values for the variables.
-comment|/// \param Step Linear step.
-comment|/// \param CalcStep Calculation of the linear step.
+comment|/// \param VL The variables in the clause.
+comment|/// \param QualifierLoc The nested-name qualifier with location information
+comment|/// \param NameInfo The full name info for reduction identifier.
+comment|/// \param Privates List of helper expressions for proper generation of
+comment|/// private copies.
+comment|/// \param LHSExprs List of helper expressions for proper generation of
+comment|/// assignment operation required for copyprivate clause. This list represents
+comment|/// LHSs of the reduction expressions.
+comment|/// \param RHSExprs List of helper expressions for proper generation of
+comment|/// assignment operation required for copyprivate clause. This list represents
+comment|/// RHSs of the reduction expressions.
+comment|/// Also, variables in these expressions are used for proper initialization of
+comment|/// reduction copies.
+comment|/// \param ReductionOps List of helper expressions that represents reduction
+comment|/// expressions:
+comment|/// \code
+comment|/// LHSExprs binop RHSExprs;
+comment|/// operator binop(LHSExpr, RHSExpr);
+comment|///<CutomReduction>(LHSExpr, RHSExpr);
+comment|/// \endcode
+comment|/// Required for proper codegen of final reduction operation performed by the
+comment|/// reduction clause.
 comment|/// \param PreInit Statement that must be executed before entering the OpenMP
 comment|/// region with this clause.
 comment|/// \param PostUpdate Expression that must be executed after exit from the
 comment|/// OpenMP region with this clause.
+comment|///
 specifier|static
-name|OMPLinearClause
+name|OMPTaskReductionClause
 operator|*
 name|Create
 argument_list|(
@@ -6965,98 +7123,45 @@ argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
-argument|OpenMPLinearClauseKind Modifier
-argument_list|,
-argument|SourceLocation ModifierLoc
-argument_list|,
 argument|SourceLocation ColonLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
 argument|ArrayRef<Expr *> VL
 argument_list|,
-argument|ArrayRef<Expr *> PL
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
-argument|ArrayRef<Expr *> IL
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
-argument|Expr *Step
+argument|ArrayRef<Expr *> Privates
 argument_list|,
-argument|Expr *CalcStep
+argument|ArrayRef<Expr *> LHSExprs
+argument_list|,
+argument|ArrayRef<Expr *> RHSExprs
+argument_list|,
+argument|ArrayRef<Expr *> ReductionOps
 argument_list|,
 argument|Stmt *PreInit
 argument_list|,
 argument|Expr *PostUpdate
 argument_list|)
 block|;
-comment|/// \brief Creates an empty clause with the place for \a NumVars variables.
+comment|/// Creates an empty clause with the place for \a N variables.
 comment|///
 comment|/// \param C AST context.
-comment|/// \param NumVars Number of variables.
+comment|/// \param N The number of variables.
 comment|///
 specifier|static
-name|OMPLinearClause
+name|OMPTaskReductionClause
 operator|*
 name|CreateEmpty
 argument_list|(
 argument|const ASTContext&C
 argument_list|,
-argument|unsigned NumVars
+argument|unsigned N
 argument_list|)
 block|;
-comment|/// \brief Set modifier.
-name|void
-name|setModifier
-argument_list|(
-argument|OpenMPLinearClauseKind Kind
-argument_list|)
-block|{
-name|Modifier
-operator|=
-name|Kind
-block|; }
-comment|/// \brief Return modifier.
-name|OpenMPLinearClauseKind
-name|getModifier
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Modifier
-return|;
-block|}
-comment|/// \brief Set modifier location.
-name|void
-name|setModifierLoc
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
-block|{
-name|ModifierLoc
-operator|=
-name|Loc
-block|; }
-comment|/// \brief Return modifier location.
-name|SourceLocation
-name|getModifierLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ModifierLoc
-return|;
-block|}
-comment|/// \brief Sets the location of ':'.
-name|void
-name|setColonLoc
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
-block|{
-name|ColonLoc
-operator|=
-name|Loc
-block|; }
-comment|/// \brief Returns the location of ':'.
+comment|/// Gets location of ':' symbol in clause.
 name|SourceLocation
 name|getColonLoc
 argument_list|()
@@ -7066,108 +7171,28 @@ return|return
 name|ColonLoc
 return|;
 block|}
-comment|/// \brief Returns linear step.
-name|Expr
-operator|*
-name|getStep
-argument_list|()
-block|{
-return|return
-operator|*
-operator|(
-name|getFinals
-argument_list|()
-operator|.
-name|end
-argument_list|()
-operator|)
-return|;
-block|}
-comment|/// \brief Returns linear step.
+comment|/// Gets the name info for specified reduction identifier.
 specifier|const
-name|Expr
-operator|*
-name|getStep
+name|DeclarationNameInfo
+operator|&
+name|getNameInfo
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
-operator|(
-name|getFinals
-argument_list|()
-operator|.
-name|end
-argument_list|()
-operator|)
+name|NameInfo
 return|;
 block|}
-comment|/// \brief Returns expression to calculate linear step.
-name|Expr
-operator|*
-name|getCalcStep
-argument_list|()
-block|{
-return|return
-operator|*
-operator|(
-name|getFinals
-argument_list|()
-operator|.
-name|end
-argument_list|()
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-comment|/// \brief Returns expression to calculate linear step.
-specifier|const
-name|Expr
-operator|*
-name|getCalcStep
+comment|/// Gets the nested name specifier.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
-operator|(
-name|getFinals
-argument_list|()
-operator|.
-name|end
-argument_list|()
-operator|+
-literal|1
-operator|)
+name|QualifierLoc
 return|;
 block|}
-comment|/// \brief Sets the list of update expressions for linear variables.
-comment|/// \param UL List of expressions.
-name|void
-name|setUpdates
-argument_list|(
-name|ArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-name|UL
-argument_list|)
-block|;
-comment|/// \brief Sets the list of final update expressions for linear variables.
-comment|/// \param FL List of expressions.
-name|void
-name|setFinals
-argument_list|(
-name|ArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-name|FL
-argument_list|)
-block|;
 typedef|typedef
 name|MutableArrayRef
 operator|<
@@ -7176,7 +7201,7 @@ operator|*
 operator|>
 operator|::
 name|iterator
-name|privates_iterator
+name|helper_expr_iterator
 expr_stmt|;
 typedef|typedef
 name|ArrayRef
@@ -7187,137 +7212,71 @@ operator|*
 operator|>
 operator|::
 name|iterator
-name|privates_const_iterator
+name|helper_expr_const_iterator
 expr_stmt|;
 typedef|typedef
 name|llvm
 operator|::
 name|iterator_range
 operator|<
-name|privates_iterator
+name|helper_expr_iterator
 operator|>
-name|privates_range
+name|helper_expr_range
 expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|iterator_range
-operator|<
-name|privates_const_iterator
-operator|>
-name|privates_const_range
-expr_stmt|;
-name|privates_range
-name|privates
-argument_list|()
-block|{
-return|return
-name|privates_range
-argument_list|(
-name|getPrivates
-argument_list|()
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|getPrivates
-argument_list|()
-operator|.
-name|end
-argument_list|()
-argument_list|)
-return|;
-block|}
-name|privates_const_range
-name|privates
-argument_list|()
-specifier|const
-block|{
-return|return
-name|privates_const_range
-argument_list|(
-name|getPrivates
-argument_list|()
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|getPrivates
-argument_list|()
-operator|.
-name|end
-argument_list|()
-argument_list|)
-return|;
-block|}
 end_decl_stmt
 
 begin_typedef
 typedef|typedef
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
+name|llvm
 operator|::
-name|iterator
-name|inits_iterator
+name|iterator_range
+operator|<
+name|helper_expr_const_iterator
+operator|>
+name|helper_expr_const_range
 expr_stmt|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|ArrayRef
-operator|<
+begin_expr_stmt
+name|helper_expr_const_range
+name|privates
+argument_list|()
 specifier|const
-name|Expr
-operator|*
-operator|>
-operator|::
-name|iterator
-name|inits_const_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|iterator_range
-operator|<
-name|inits_iterator
-operator|>
-name|inits_range
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|iterator_range
-operator|<
-name|inits_const_iterator
-operator|>
-name|inits_const_range
-expr_stmt|;
-end_typedef
-
-begin_function
-name|inits_range
-name|inits
-parameter_list|()
 block|{
 return|return
-name|inits_range
+name|helper_expr_const_range
 argument_list|(
-name|getInits
+name|getPrivates
 argument_list|()
 operator|.
 name|begin
 argument_list|()
 argument_list|,
-name|getInits
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|helper_expr_range
+name|privates
+parameter_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getPrivates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivates
 argument_list|()
 operator|.
 name|end
@@ -7328,21 +7287,21 @@ block|}
 end_function
 
 begin_expr_stmt
-name|inits_const_range
-name|inits
+name|helper_expr_const_range
+name|lhs_exprs
 argument_list|()
 specifier|const
 block|{
 return|return
-name|inits_const_range
+name|helper_expr_const_range
 argument_list|(
-name|getInits
+name|getLHSExprs
 argument_list|()
 operator|.
 name|begin
 argument_list|()
 argument_list|,
-name|getInits
+name|getLHSExprs
 argument_list|()
 operator|.
 name|end
@@ -7352,72 +7311,21 @@ return|;
 block|}
 end_expr_stmt
 
-begin_typedef
-typedef|typedef
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|::
-name|iterator
-name|updates_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-operator|::
-name|iterator
-name|updates_const_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|iterator_range
-operator|<
-name|updates_iterator
-operator|>
-name|updates_range
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|iterator_range
-operator|<
-name|updates_const_iterator
-operator|>
-name|updates_const_range
-expr_stmt|;
-end_typedef
-
 begin_function
-name|updates_range
-name|updates
+name|helper_expr_range
+name|lhs_exprs
 parameter_list|()
 block|{
 return|return
-name|updates_range
+name|helper_expr_range
 argument_list|(
-name|getUpdates
+name|getLHSExprs
 argument_list|()
 operator|.
 name|begin
 argument_list|()
 argument_list|,
-name|getUpdates
+name|getLHSExprs
 argument_list|()
 operator|.
 name|end
@@ -7428,21 +7336,21 @@ block|}
 end_function
 
 begin_expr_stmt
-name|updates_const_range
-name|updates
+name|helper_expr_const_range
+name|rhs_exprs
 argument_list|()
 specifier|const
 block|{
 return|return
-name|updates_const_range
+name|helper_expr_const_range
 argument_list|(
-name|getUpdates
+name|getRHSExprs
 argument_list|()
 operator|.
 name|begin
 argument_list|()
 argument_list|,
-name|getUpdates
+name|getRHSExprs
 argument_list|()
 operator|.
 name|end
@@ -7452,72 +7360,21 @@ return|;
 block|}
 end_expr_stmt
 
-begin_typedef
-typedef|typedef
-name|MutableArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|::
-name|iterator
-name|finals_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-operator|::
-name|iterator
-name|finals_const_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|iterator_range
-operator|<
-name|finals_iterator
-operator|>
-name|finals_range
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|iterator_range
-operator|<
-name|finals_const_iterator
-operator|>
-name|finals_const_range
-expr_stmt|;
-end_typedef
-
 begin_function
-name|finals_range
-name|finals
+name|helper_expr_range
+name|rhs_exprs
 parameter_list|()
 block|{
 return|return
-name|finals_range
+name|helper_expr_range
 argument_list|(
-name|getFinals
+name|getRHSExprs
 argument_list|()
 operator|.
 name|begin
 argument_list|()
 argument_list|,
-name|getFinals
+name|getRHSExprs
 argument_list|()
 operator|.
 name|end
@@ -7528,21 +7385,21 @@ block|}
 end_function
 
 begin_expr_stmt
-name|finals_const_range
-name|finals
+name|helper_expr_const_range
+name|reduction_ops
 argument_list|()
 specifier|const
 block|{
 return|return
-name|finals_const_range
+name|helper_expr_const_range
 argument_list|(
-name|getFinals
+name|getReductionOps
 argument_list|()
 operator|.
 name|begin
 argument_list|()
 argument_list|,
-name|getFinals
+name|getReductionOps
 argument_list|()
 operator|.
 name|end
@@ -7551,6 +7408,30 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_function
+name|helper_expr_range
+name|reduction_ops
+parameter_list|()
+block|{
+return|return
+name|helper_expr_range
+argument_list|(
+name|getReductionOps
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getReductionOps
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_function
 name|child_range
@@ -7603,13 +7484,1151 @@ operator|->
 name|getClauseKind
 argument_list|()
 operator|==
-name|OMPC_linear
+name|OMPC_task_reduction
 return|;
 block|}
 end_function
 
 begin_comment
 unit|};
+comment|/// \brief This represents clause 'linear' in the '#pragma omp ...'
+end_comment
+
+begin_comment
+comment|/// directives.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// #pragma omp simd linear(a,b : 2)
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|/// In this example directive '#pragma omp simd' has clause 'linear'
+end_comment
+
+begin_comment
+comment|/// with variables 'a', 'b' and linear step '2'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|class
+name|OMPLinearClause
+name|final
+range|:
+name|public
+name|OMPVarListClause
+operator|<
+name|OMPLinearClause
+operator|>
+decl_stmt|,
+name|public
+name|OMPClauseWithPostUpdate
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|OMPLinearClause
+decl_stmt|,
+name|Expr
+modifier|*
+decl|>
+block|{
+name|friend
+name|TrailingObjects
+decl_stmt|;
+name|friend
+name|OMPVarListClause
+decl_stmt|;
+name|friend
+name|class
+name|OMPClauseReader
+decl_stmt|;
+comment|/// \brief Modifier of 'linear' clause.
+name|OpenMPLinearClauseKind
+name|Modifier
+decl_stmt|;
+comment|/// \brief Location of linear modifier if any.
+name|SourceLocation
+name|ModifierLoc
+decl_stmt|;
+comment|/// \brief Location of ':'.
+name|SourceLocation
+name|ColonLoc
+decl_stmt|;
+comment|/// \brief Sets the linear step for clause.
+name|void
+name|setStep
+parameter_list|(
+name|Expr
+modifier|*
+name|Step
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|)
+operator|=
+name|Step
+expr_stmt|;
+block|}
+comment|/// \brief Sets the expression to calculate linear step for clause.
+name|void
+name|setCalcStep
+parameter_list|(
+name|Expr
+modifier|*
+name|CalcStep
+parameter_list|)
+block|{
+operator|*
+operator|(
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|+
+literal|1
+operator|)
+operator|=
+name|CalcStep
+expr_stmt|;
+block|}
+comment|/// \brief Build 'linear' clause with given number of variables \a NumVars.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param ColonLoc Location of ':'.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param NumVars Number of variables.
+comment|///
+name|OMPLinearClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|OpenMPLinearClauseKind Modifier
+argument_list|,
+argument|SourceLocation ModifierLoc
+argument_list|,
+argument|SourceLocation ColonLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumVars
+argument_list|)
+block|:
+name|OMPVarListClause
+operator|<
+name|OMPLinearClause
+operator|>
+operator|(
+name|OMPC_linear
+operator|,
+name|StartLoc
+operator|,
+name|LParenLoc
+operator|,
+name|EndLoc
+operator|,
+name|NumVars
+operator|)
+operator|,
+name|OMPClauseWithPostUpdate
+argument_list|(
+name|this
+argument_list|)
+operator|,
+name|Modifier
+argument_list|(
+name|Modifier
+argument_list|)
+operator|,
+name|ModifierLoc
+argument_list|(
+name|ModifierLoc
+argument_list|)
+operator|,
+name|ColonLoc
+argument_list|(
+argument|ColonLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+comment|/// \param NumVars Number of variables.
+comment|///
+name|explicit
+name|OMPLinearClause
+argument_list|(
+argument|unsigned NumVars
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPLinearClause
+operator|>
+operator|(
+name|OMPC_linear
+operator|,
+name|SourceLocation
+argument_list|()
+operator|,
+name|SourceLocation
+argument_list|()
+operator|,
+name|SourceLocation
+argument_list|()
+operator|,
+name|NumVars
+operator|)
+operator|,
+name|OMPClauseWithPostUpdate
+argument_list|(
+name|this
+argument_list|)
+operator|,
+name|Modifier
+argument_list|(
+name|OMPC_LINEAR_val
+argument_list|)
+operator|,
+name|ModifierLoc
+argument_list|()
+operator|,
+name|ColonLoc
+argument_list|()
+block|{}
+comment|/// \brief Gets the list of initial values for linear variables.
+comment|///
+comment|/// There are NumVars expressions with initial values allocated after the
+comment|/// varlist, they are followed by NumVars update expressions (used to update
+comment|/// the linear variable's value on current iteration) and they are followed by
+comment|/// NumVars final expressions (used to calculate the linear variable's
+comment|/// value after the loop body). After these lists, there are 2 helper
+comment|/// expressions - linear step and a helper to calculate it before the
+comment|/// loop body (used when the linear step is not constant):
+comment|///
+comment|/// { Vars[] /* in OMPVarListClause */; Privates[]; Inits[]; Updates[];
+comment|/// Finals[]; Step; CalcStep; }
+comment|///
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getPrivates
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+operator|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getPrivates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getInits
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getInits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Sets the list of update expressions for linear variables.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getUpdates
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getUpdates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Sets the list of final update expressions for linear variables.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getFinals
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getUpdates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getFinals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getUpdates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Sets the list of the copies of original linear variables.
+comment|/// \param PL List of expressions.
+name|void
+name|setPrivates
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|PL
+argument_list|)
+decl_stmt|;
+comment|/// \brief Sets the list of the initial values for linear variables.
+comment|/// \param IL List of expressions.
+name|void
+name|setInits
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|IL
+argument_list|)
+decl_stmt|;
+name|public
+label|:
+comment|/// \brief Creates clause with a list of variables \a VL and a linear step
+comment|/// \a Step.
+comment|///
+comment|/// \param C AST Context.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param Modifier Modifier of 'linear' clause.
+comment|/// \param ModifierLoc Modifier location.
+comment|/// \param ColonLoc Location of ':'.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param VL List of references to the variables.
+comment|/// \param PL List of private copies of original variables.
+comment|/// \param IL List of initial values for the variables.
+comment|/// \param Step Linear step.
+comment|/// \param CalcStep Calculation of the linear step.
+comment|/// \param PreInit Statement that must be executed before entering the OpenMP
+comment|/// region with this clause.
+comment|/// \param PostUpdate Expression that must be executed after exit from the
+comment|/// OpenMP region with this clause.
+specifier|static
+name|OMPLinearClause
+modifier|*
+name|Create
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|SourceLocation
+name|StartLoc
+argument_list|,
+name|SourceLocation
+name|LParenLoc
+argument_list|,
+name|OpenMPLinearClauseKind
+name|Modifier
+argument_list|,
+name|SourceLocation
+name|ModifierLoc
+argument_list|,
+name|SourceLocation
+name|ColonLoc
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|,
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VL
+argument_list|,
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|PL
+argument_list|,
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|IL
+argument_list|,
+name|Expr
+operator|*
+name|Step
+argument_list|,
+name|Expr
+operator|*
+name|CalcStep
+argument_list|,
+name|Stmt
+operator|*
+name|PreInit
+argument_list|,
+name|Expr
+operator|*
+name|PostUpdate
+argument_list|)
+decl_stmt|;
+comment|/// \brief Creates an empty clause with the place for \a NumVars variables.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param NumVars Number of variables.
+comment|///
+specifier|static
+name|OMPLinearClause
+modifier|*
+name|CreateEmpty
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|NumVars
+parameter_list|)
+function_decl|;
+comment|/// \brief Set modifier.
+name|void
+name|setModifier
+parameter_list|(
+name|OpenMPLinearClauseKind
+name|Kind
+parameter_list|)
+block|{
+name|Modifier
+operator|=
+name|Kind
+expr_stmt|;
+block|}
+comment|/// \brief Return modifier.
+name|OpenMPLinearClauseKind
+name|getModifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Modifier
+return|;
+block|}
+comment|/// \brief Set modifier location.
+name|void
+name|setModifierLoc
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{
+name|ModifierLoc
+operator|=
+name|Loc
+expr_stmt|;
+block|}
+comment|/// \brief Return modifier location.
+name|SourceLocation
+name|getModifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModifierLoc
+return|;
+block|}
+comment|/// \brief Sets the location of ':'.
+name|void
+name|setColonLoc
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{
+name|ColonLoc
+operator|=
+name|Loc
+expr_stmt|;
+block|}
+comment|/// \brief Returns the location of ':'.
+name|SourceLocation
+name|getColonLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ColonLoc
+return|;
+block|}
+comment|/// \brief Returns linear step.
+name|Expr
+modifier|*
+name|getStep
+parameter_list|()
+block|{
+return|return
+operator|*
+operator|(
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns linear step.
+specifier|const
+name|Expr
+operator|*
+name|getStep
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+operator|(
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns expression to calculate linear step.
+name|Expr
+modifier|*
+name|getCalcStep
+parameter_list|()
+block|{
+return|return
+operator|*
+operator|(
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/// \brief Returns expression to calculate linear step.
+specifier|const
+name|Expr
+operator|*
+name|getCalcStep
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+operator|(
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/// \brief Sets the list of update expressions for linear variables.
+comment|/// \param UL List of expressions.
+name|void
+name|setUpdates
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|UL
+argument_list|)
+decl_stmt|;
+comment|/// \brief Sets the list of final update expressions for linear variables.
+comment|/// \param FL List of expressions.
+name|void
+name|setFinals
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|FL
+argument_list|)
+decl_stmt|;
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|privates_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|privates_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|privates_iterator
+operator|>
+name|privates_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|privates_const_iterator
+operator|>
+name|privates_const_range
+expr_stmt|;
+name|privates_range
+name|privates
+parameter_list|()
+block|{
+return|return
+name|privates_range
+argument_list|(
+name|getPrivates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|privates_const_range
+name|privates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|privates_const_range
+argument_list|(
+name|getPrivates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|inits_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|inits_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|inits_iterator
+operator|>
+name|inits_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|inits_const_iterator
+operator|>
+name|inits_const_range
+expr_stmt|;
+name|inits_range
+name|inits
+parameter_list|()
+block|{
+return|return
+name|inits_range
+argument_list|(
+name|getInits
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|inits_const_range
+name|inits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|inits_const_range
+argument_list|(
+name|getInits
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|updates_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|updates_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|updates_iterator
+operator|>
+name|updates_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|updates_const_iterator
+operator|>
+name|updates_const_range
+expr_stmt|;
+name|updates_range
+name|updates
+parameter_list|()
+block|{
+return|return
+name|updates_range
+argument_list|(
+name|getUpdates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getUpdates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|updates_const_range
+name|updates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|updates_const_range
+argument_list|(
+name|getUpdates
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getUpdates
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|finals_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|finals_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|finals_iterator
+operator|>
+name|finals_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|finals_const_iterator
+operator|>
+name|finals_const_range
+expr_stmt|;
+name|finals_range
+name|finals
+parameter_list|()
+block|{
+return|return
+name|finals_range
+argument_list|(
+name|getFinals
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|finals_const_range
+name|finals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|finals_const_range
+argument_list|(
+name|getFinals
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getFinals
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|child_range
+name|children
+parameter_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_begin
+argument_list|()
+operator|)
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+operator|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_linear
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents clause 'aligned' in the '#pragma omp ...'
 end_comment
 
@@ -11084,7 +12103,7 @@ comment|// expression. Original expressions are always the first component of th
 comment|// mappable component list.
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 name|ValueDecl
 operator|*
@@ -13065,39 +14084,48 @@ name|OMPNumTeamsClause
 range|:
 name|public
 name|OMPClause
+decl_stmt|,
+name|public
+name|OMPClauseWithPreInit
 block|{
 name|friend
 name|class
 name|OMPClauseReader
-block|;
+decl_stmt|;
 comment|/// \brief Location of '('.
 name|SourceLocation
 name|LParenLoc
-block|;
+decl_stmt|;
 comment|/// \brief NumTeams number.
 name|Stmt
-operator|*
+modifier|*
 name|NumTeams
-block|;
+decl_stmt|;
 comment|/// \brief Set the NumTeams number.
 comment|///
 comment|/// \param E NumTeams number.
 comment|///
 name|void
 name|setNumTeams
-argument_list|(
-argument|Expr *E
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|)
 block|{
 name|NumTeams
 operator|=
 name|E
-block|; }
+expr_stmt|;
+block|}
 name|public
-operator|:
+label|:
 comment|/// \brief Build 'num_teams' clause.
 comment|///
 comment|/// \param E Expression associated with this clause.
+comment|/// \param HelperE Helper Expression associated with this clause.
+comment|/// \param CaptureRegion Innermost OpenMP region where expressions in this
+comment|/// clause must be captured.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
@@ -13106,13 +14134,17 @@ name|OMPNumTeamsClause
 argument_list|(
 argument|Expr *E
 argument_list|,
+argument|Stmt *HelperE
+argument_list|,
+argument|OpenMPDirectiveKind CaptureRegion
+argument_list|,
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|)
-operator|:
+block|:
 name|OMPClause
 argument_list|(
 name|OMPC_num_teams
@@ -13121,17 +14153,29 @@ name|StartLoc
 argument_list|,
 name|EndLoc
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|(
 name|LParenLoc
 argument_list|)
-block|,
+operator|,
 name|NumTeams
 argument_list|(
 argument|E
 argument_list|)
-block|{}
+block|{
+name|setPreInitStmt
+argument_list|(
+name|HelperE
+argument_list|,
+name|CaptureRegion
+argument_list|)
+block|;   }
 comment|/// \brief Build an empty clause.
 comment|///
 name|OMPNumTeamsClause
@@ -13147,13 +14191,18 @@ argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|(
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|,
+operator|,
 name|NumTeams
 argument_list|(
 argument|nullptr
@@ -13182,9 +14231,9 @@ return|;
 block|}
 comment|/// \brief Return NumTeams number.
 name|Expr
-operator|*
+modifier|*
 name|getNumTeams
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|cast
@@ -13216,9 +14265,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -13231,7 +14283,7 @@ return|;
 block|}
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -13246,55 +14298,97 @@ literal|1
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents 'thread_limit' clause in the '#pragma omp ...'
+end_comment
+
+begin_comment
 comment|/// directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp teams thread_limit(n)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp teams' has clause 'thread_limit'
+end_comment
+
+begin_comment
 comment|/// with single expression 'n'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPThreadLimitClause
-operator|:
+range|:
 name|public
 name|OMPClause
+decl_stmt|,
+name|public
+name|OMPClauseWithPreInit
 block|{
 name|friend
 name|class
 name|OMPClauseReader
-block|;
+decl_stmt|;
 comment|/// \brief Location of '('.
 name|SourceLocation
 name|LParenLoc
-block|;
+decl_stmt|;
 comment|/// \brief ThreadLimit number.
 name|Stmt
-operator|*
+modifier|*
 name|ThreadLimit
-block|;
+decl_stmt|;
 comment|/// \brief Set the ThreadLimit number.
 comment|///
 comment|/// \param E ThreadLimit number.
 comment|///
 name|void
 name|setThreadLimit
-argument_list|(
-argument|Expr *E
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|)
 block|{
 name|ThreadLimit
 operator|=
 name|E
-block|; }
+expr_stmt|;
+block|}
 name|public
-operator|:
+label|:
 comment|/// \brief Build 'thread_limit' clause.
 comment|///
 comment|/// \param E Expression associated with this clause.
+comment|/// \param HelperE Helper Expression associated with this clause.
+comment|/// \param CaptureRegion Innermost OpenMP region where expressions in this
+comment|/// clause must be captured.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
@@ -13303,13 +14397,17 @@ name|OMPThreadLimitClause
 argument_list|(
 argument|Expr *E
 argument_list|,
+argument|Stmt *HelperE
+argument_list|,
+argument|OpenMPDirectiveKind CaptureRegion
+argument_list|,
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|)
-operator|:
+block|:
 name|OMPClause
 argument_list|(
 name|OMPC_thread_limit
@@ -13318,17 +14416,29 @@ name|StartLoc
 argument_list|,
 name|EndLoc
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|(
 name|LParenLoc
 argument_list|)
-block|,
+operator|,
 name|ThreadLimit
 argument_list|(
 argument|E
 argument_list|)
-block|{}
+block|{
+name|setPreInitStmt
+argument_list|(
+name|HelperE
+argument_list|,
+name|CaptureRegion
+argument_list|)
+block|;   }
 comment|/// \brief Build an empty clause.
 comment|///
 name|OMPThreadLimitClause
@@ -13344,13 +14454,18 @@ argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|,
+operator|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+operator|,
 name|LParenLoc
 argument_list|(
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|,
+operator|,
 name|ThreadLimit
 argument_list|(
 argument|nullptr
@@ -13379,9 +14494,9 @@ return|;
 block|}
 comment|/// \brief Return ThreadLimit number.
 name|Expr
-operator|*
+modifier|*
 name|getThreadLimit
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|cast
@@ -13413,9 +14528,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -13428,7 +14546,7 @@ return|;
 block|}
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -13443,20 +14561,53 @@ literal|1
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents 'priority' clause in the '#pragma omp ...'
+end_comment
+
+begin_comment
 comment|/// directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp task priority(n)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp teams' has clause 'priority' with
+end_comment
+
+begin_comment
 comment|/// single expression 'n'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPPriorityClause
-operator|:
+range|:
 name|public
 name|OMPClause
 block|{

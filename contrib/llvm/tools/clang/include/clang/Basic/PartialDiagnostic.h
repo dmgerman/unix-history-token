@@ -1403,6 +1403,63 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Retrieve the string argument at the given index.
+end_comment
+
+begin_function
+name|StringRef
+name|getStringArg
+parameter_list|(
+name|unsigned
+name|I
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|DiagStorage
+operator|&&
+literal|"No diagnostic storage?"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|I
+operator|<
+name|DiagStorage
+operator|->
+name|NumDiagArgs
+operator|&&
+literal|"Not enough diagnostic args"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|DiagStorage
+operator|->
+name|DiagArgumentsKind
+index|[
+name|I
+index|]
+operator|==
+name|DiagnosticsEngine
+operator|::
+name|ak_std_string
+operator|&&
+literal|"Not a string arg"
+argument_list|)
+expr_stmt|;
+return|return
+name|DiagStorage
+operator|->
+name|DiagArgumentsStr
+index|[
+name|I
+index|]
+return|;
+block|}
+end_function
+
 begin_expr_stmt
 name|friend
 specifier|const

@@ -117,6 +117,13 @@ name|AC
 init|=
 name|nullptr
 decl_stmt|;
+specifier|const
+name|DataLayout
+modifier|*
+name|DL
+init|=
+name|nullptr
+decl_stmt|;
 name|class
 name|TargetLibraryInfo
 modifier|*
@@ -171,6 +178,11 @@ name|AssumptionCache
 operator|*
 name|AC_
 argument_list|,
+specifier|const
+name|DataLayout
+operator|*
+name|DL_
+argument_list|,
 name|TargetLibraryInfo
 operator|*
 name|TLI_
@@ -183,6 +195,11 @@ operator|:
 name|AC
 argument_list|(
 name|AC_
+argument_list|)
+operator|,
+name|DL
+argument_list|(
+name|DL_
 argument_list|)
 operator|,
 name|TLI
@@ -207,6 +224,13 @@ argument_list|(
 name|Arg
 operator|.
 name|AC
+argument_list|)
+operator|,
+name|DL
+argument_list|(
+name|Arg
+operator|.
+name|DL
 argument_list|)
 operator|,
 name|TLI
@@ -252,6 +276,12 @@ operator|=
 name|Arg
 operator|.
 name|AC
+block|;
+name|DL
+operator|=
+name|Arg
+operator|.
+name|DL
 block|;
 name|TLI
 operator|=
@@ -422,6 +452,31 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// Return the ConstantRage constraint that is known to hold for the
+comment|/// specified value on the specified edge. This may be only be called
+comment|/// on integer-typed Values.
+name|ConstantRange
+name|getConstantRangeOnEdge
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|FromBB
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|ToBB
+parameter_list|,
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|/// Inform the analysis cache that we have threaded an edge from
 comment|/// PredBB to OldSucc to be from PredBB to NewSucc instead.
 name|void
@@ -449,11 +504,51 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
+comment|/// Print the \LazyValueInfo Analysis.
+comment|/// We pass in the DTree that is required for identifying which basic blocks
+comment|/// we can solve/print for, in the LVIPrinter. The DT is optional
+comment|/// in LVI, so we need to pass it here as an argument.
+name|void
+name|printLVI
+parameter_list|(
+name|Function
+modifier|&
+name|F
+parameter_list|,
+name|DominatorTree
+modifier|&
+name|DTree
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 comment|// For old PM pass. Delete once LazyValueInfoWrapperPass is gone.
 name|void
 name|releaseMemory
 parameter_list|()
 function_decl|;
+comment|/// Handle invalidation events in the new pass manager.
+name|bool
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+name|Inv
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Analysis to compute lazy value information.

@@ -134,6 +134,8 @@ name|UbuntuYakkety
 block|,
 name|UbuntuZesty
 block|,
+name|UbuntuArtful
+block|,
 name|UnknownDistro
 block|}
 enum|;
@@ -316,7 +318,7 @@ name|UbuntuHardy
 operator|&&
 name|DistroVal
 operator|<=
-name|UbuntuZesty
+name|UbuntuArtful
 return|;
 block|}
 comment|/// @}

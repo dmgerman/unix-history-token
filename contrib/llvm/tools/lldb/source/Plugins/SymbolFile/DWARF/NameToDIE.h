@@ -187,7 +187,7 @@ name|function
 operator|<
 name|bool
 argument_list|(
-argument|llvm::StringRef name
+argument|lldb_private::ConstString name
 argument_list|,
 argument|const DIERef&die_ref
 argument_list|)

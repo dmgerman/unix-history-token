@@ -100,9 +100,8 @@ name|ImportIndex
 decl_stmt|;
 comment|/// Globals to import from this module, all other functions will be
 comment|/// imported as declarations instead of definitions.
-name|DenseSet
+name|SetVector
 operator|<
-specifier|const
 name|GlobalValue
 operator|*
 operator|>
@@ -247,9 +246,8 @@ name|ModuleSummaryIndex
 operator|&
 name|Index
 argument_list|,
-name|DenseSet
+name|SetVector
 operator|<
-specifier|const
 name|GlobalValue
 operator|*
 operator|>
@@ -333,9 +331,8 @@ name|GlobalValue
 operator|*
 name|SGV
 argument_list|,
-name|DenseSet
+name|SetVector
 operator|<
-specifier|const
 name|GlobalValue
 operator|*
 operator|>
@@ -371,9 +368,8 @@ name|ModuleSummaryIndex
 operator|&
 name|Index
 argument_list|,
-name|DenseSet
+name|SetVector
 operator|<
-specifier|const
 name|GlobalValue
 operator|*
 operator|>

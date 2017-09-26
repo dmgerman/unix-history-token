@@ -219,6 +219,10 @@ name|Loop
 operator|*
 name|L
 argument_list|,
+name|ScalarEvolution
+operator|&
+name|SE
+argument_list|,
 name|TTI
 operator|::
 name|UnrollingPreferences
@@ -251,13 +255,27 @@ decl_stmt|;
 comment|/// @}
 name|int
 name|getUserCost
-parameter_list|(
+argument_list|(
 specifier|const
 name|User
-modifier|*
+operator|*
 name|U
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Operands
+argument_list|)
+decl_stmt|;
+comment|// Hexagon specific decision to generate a lookup table.
+name|bool
+name|shouldBuildLookupTables
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 end_decl_stmt
 

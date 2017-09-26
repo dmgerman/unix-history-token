@@ -41,6 +41,18 @@ endif|#
 directive|endif
 typedef|typedef
 name|struct
+name|LLVMOpaqueSharedModule
+modifier|*
+name|LLVMSharedModuleRef
+typedef|;
+typedef|typedef
+name|struct
+name|LLVMOpaqueSharedObjectBuffer
+modifier|*
+name|LLVMSharedObjectBufferRef
+typedef|;
+typedef|typedef
+name|struct
 name|LLVMOrcOpaqueJITStack
 modifier|*
 name|LLVMOrcJITStackRef
@@ -96,6 +108,38 @@ name|LLVMOrcErrGeneric
 block|}
 name|LLVMOrcErrorCode
 typedef|;
+comment|/**  * Turn an LLVMModuleRef into an LLVMSharedModuleRef.  *  * The JIT uses shared ownership for LLVM modules, since it is generally  * difficult to know when the JIT will be finished with a module (and the JIT  * has no way of knowing when a user may be finished with one).  *  * Calling this method with an LLVMModuleRef creates a shared-pointer to the  * module, and returns a reference to this shared pointer.  *  * The shared module should be disposed when finished with by calling  * LLVMOrcDisposeSharedModule (not LLVMDisposeModule). The Module will be  * deleted when the last shared pointer owner relinquishes it.  */
+name|LLVMSharedModuleRef
+name|LLVMOrcMakeSharedModule
+parameter_list|(
+name|LLVMModuleRef
+name|Mod
+parameter_list|)
+function_decl|;
+comment|/**  * Dispose of a shared module.  *  * The module should not be accessed after this call. The module will be  * deleted once all clients (including the JIT itself) have released their  * shared pointers.  */
+name|void
+name|LLVMOrcDisposeSharedModuleRef
+parameter_list|(
+name|LLVMSharedModuleRef
+name|SharedMod
+parameter_list|)
+function_decl|;
+comment|/**  * Get an LLVMSharedObjectBufferRef from an LLVMMemoryBufferRef.  */
+name|LLVMSharedObjectBufferRef
+name|LLVMOrcMakeSharedObjectBuffer
+parameter_list|(
+name|LLVMMemoryBufferRef
+name|ObjBuffer
+parameter_list|)
+function_decl|;
+comment|/**  * Dispose of a shared object buffer.  */
+name|void
+name|LLVMOrcDisposeSharedObjectBufferRef
+parameter_list|(
+name|LLVMSharedObjectBufferRef
+name|SharedObjBuffer
+parameter_list|)
+function_decl|;
 comment|/**  * Create an ORC JIT stack.  *  * The client owns the resulting stack, and must call OrcDisposeInstance(...)  * to destroy it and free its memory. The JIT stack will take ownership of the  * TargetMachine, which will be destroyed when the stack is destroyed. The  * client should not attempt to dispose of the Target Machine, or it will result  * in a double-free.  */
 name|LLVMOrcJITStackRef
 name|LLVMOrcCreateInstance
@@ -142,11 +186,15 @@ name|MangledSymbol
 parameter_list|)
 function_decl|;
 comment|/**  * Create a lazy compile callback.  */
-name|LLVMOrcTargetAddress
+name|LLVMOrcErrorCode
 name|LLVMOrcCreateLazyCompileCallback
 parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
+parameter_list|,
+name|LLVMOrcTargetAddress
+modifier|*
+name|RetAddr
 parameter_list|,
 name|LLVMOrcLazyCompileCallbackFn
 name|Callback
@@ -189,13 +237,17 @@ name|NewAddr
 parameter_list|)
 function_decl|;
 comment|/**  * Add module to be eagerly compiled.  */
-name|LLVMOrcModuleHandle
+name|LLVMOrcErrorCode
 name|LLVMOrcAddEagerlyCompiledIR
 parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
 parameter_list|,
-name|LLVMModuleRef
+name|LLVMOrcModuleHandle
+modifier|*
+name|RetHandle
+parameter_list|,
+name|LLVMSharedModuleRef
 name|Mod
 parameter_list|,
 name|LLVMOrcSymbolResolverFn
@@ -207,13 +259,17 @@ name|SymbolResolverCtx
 parameter_list|)
 function_decl|;
 comment|/**  * Add module to be lazily compiled one function at a time.  */
-name|LLVMOrcModuleHandle
+name|LLVMOrcErrorCode
 name|LLVMOrcAddLazilyCompiledIR
 parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
 parameter_list|,
-name|LLVMModuleRef
+name|LLVMOrcModuleHandle
+modifier|*
+name|RetHandle
+parameter_list|,
+name|LLVMSharedModuleRef
 name|Mod
 parameter_list|,
 name|LLVMOrcSymbolResolverFn
@@ -225,13 +281,17 @@ name|SymbolResolverCtx
 parameter_list|)
 function_decl|;
 comment|/**  * Add an object file.  */
-name|LLVMOrcModuleHandle
+name|LLVMOrcErrorCode
 name|LLVMOrcAddObjectFile
 parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
 parameter_list|,
-name|LLVMObjectFileRef
+name|LLVMOrcModuleHandle
+modifier|*
+name|RetHandle
+parameter_list|,
+name|LLVMSharedObjectBufferRef
 name|Obj
 parameter_list|,
 name|LLVMOrcSymbolResolverFn
@@ -243,7 +303,7 @@ name|SymbolResolverCtx
 parameter_list|)
 function_decl|;
 comment|/**  * Remove a module set from the JIT.  *  * This works for all modules that can be added via OrcAdd*, including object  * files.  */
-name|void
+name|LLVMOrcErrorCode
 name|LLVMOrcRemoveModule
 parameter_list|(
 name|LLVMOrcJITStackRef
@@ -254,11 +314,15 @@ name|H
 parameter_list|)
 function_decl|;
 comment|/**  * Get symbol address from JIT instance.  */
-name|LLVMOrcTargetAddress
+name|LLVMOrcErrorCode
 name|LLVMOrcGetSymbolAddress
 parameter_list|(
 name|LLVMOrcJITStackRef
 name|JITStack
+parameter_list|,
+name|LLVMOrcTargetAddress
+modifier|*
+name|RetAddr
 parameter_list|,
 specifier|const
 name|char
@@ -267,7 +331,7 @@ name|SymbolName
 parameter_list|)
 function_decl|;
 comment|/**  * Dispose of an ORC JIT stack.  */
-name|void
+name|LLVMOrcErrorCode
 name|LLVMOrcDisposeInstance
 parameter_list|(
 name|LLVMOrcJITStackRef

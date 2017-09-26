@@ -62,18 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSubtargetInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/DataLayout.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -81,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_include

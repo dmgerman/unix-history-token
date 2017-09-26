@@ -244,8 +244,7 @@ name|a
 parameter_list|,
 name|imm
 parameter_list|)
-define|\
-value|((unsigned short)(((__v8hi)__builtin_ia32_vcvtps2ph((__v4sf){a, 0, 0, 0}, \                                                       (imm)))[0]))
+value|__extension__ ({ \   (unsigned short)(((__v8hi)__builtin_ia32_vcvtps2ph((__v4sf){a, 0, 0, 0}, \                                                      (imm)))[0]); })
 end_define
 
 begin_comment
@@ -349,8 +348,7 @@ name|a
 parameter_list|,
 name|imm
 parameter_list|)
-define|\
-value|((__m128i)__builtin_ia32_vcvtps2ph((__v4sf)(__m128)(a), (imm)))
+value|__extension__ ({ \   (__m128i)__builtin_ia32_vcvtps2ph((__v4sf)(__m128)(a), (imm)); })
 end_define
 
 begin_comment

@@ -62,7 +62,37 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/BinaryFormat/Magic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/Binary.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FileSystem.h"
 end_include
 
 begin_include
@@ -74,7 +104,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utility>
+file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cinttypes>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -148,7 +214,8 @@ literal|"("
 operator|<<
 name|format
 argument_list|(
-literal|"0x%x8"
+literal|"0x%08"
+name|PRIxPTR
 argument_list|,
 name|D
 operator|.
@@ -159,7 +226,7 @@ literal|" ("
 operator|<<
 name|format
 argument_list|(
-literal|"0x%x8"
+literal|"0x%08x"
 argument_list|,
 name|D
 operator|.
@@ -172,7 +239,7 @@ literal|", "
 operator|<<
 name|format
 argument_list|(
-literal|"0x%x8"
+literal|"0x%08x"
 argument_list|,
 name|D
 operator|.
@@ -427,6 +494,8 @@ specifier|const
 name|SymbolicFile
 modifier|*
 name|OwningObject
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
@@ -529,19 +598,16 @@ block|}
 enum|;
 name|BasicSymbolRef
 argument_list|()
-operator|:
-name|OwningObject
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 name|BasicSymbolRef
 argument_list|(
 argument|DataRefImpl SymbolP
 argument_list|,
 argument|const SymbolicFile *Owner
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|bool
 name|operator
 operator|==
@@ -597,13 +663,14 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
-typedef|typedef
+name|using
+name|basic_symbol_iterator
+init|=
 name|content_iterator
 operator|<
 name|BasicSymbolRef
 operator|>
-name|basic_symbol_iterator
-expr_stmt|;
+decl_stmt|;
 name|class
 name|SymbolicFile
 range|:
@@ -612,17 +679,17 @@ name|Binary
 block|{
 name|public
 operator|:
-operator|~
-name|SymbolicFile
-argument_list|()
-name|override
-block|;
 name|SymbolicFile
 argument_list|(
 argument|unsigned int Type
 argument_list|,
 argument|MemoryBufferRef Source
 argument_list|)
+block|;
+operator|~
+name|SymbolicFile
+argument_list|()
+name|override
 block|;
 comment|// virtual interface.
 name|virtual
@@ -676,13 +743,14 @@ operator|=
 literal|0
 block|;
 comment|// convenience wrappers.
-typedef|typedef
+name|using
+name|basic_symbol_iterator_range
+operator|=
 name|iterator_range
 operator|<
 name|basic_symbol_iterator
 operator|>
-name|basic_symbol_iterator_range
-expr_stmt|;
+block|;
 name|basic_symbol_iterator_range
 name|symbols
 argument_list|()
@@ -713,11 +781,11 @@ name|createSymbolicFile
 argument_list|(
 argument|MemoryBufferRef Object
 argument_list|,
-argument|sys::fs::file_magic Type
+argument|llvm::file_magic Type
 argument_list|,
 argument|LLVMContext *Context
 argument_list|)
-decl_stmt|;
+block|;
 specifier|static
 name|Expected
 operator|<
@@ -737,9 +805,7 @@ name|createSymbolicFile
 argument_list|(
 name|Object
 argument_list|,
-name|sys
-operator|::
-name|fs
+name|llvm
 operator|::
 name|file_magic
 operator|::
@@ -760,17 +826,13 @@ name|createSymbolicFile
 argument_list|(
 argument|StringRef ObjectPath
 argument_list|)
-expr_stmt|;
+block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Binary
-modifier|*
-name|v
-parameter_list|)
+argument_list|(
+argument|const Binary *v
+argument_list|)
 block|{
 return|return
 name|v
@@ -779,8 +841,8 @@ name|isSymbolic
 argument_list|()
 return|;
 block|}
-block|}
-empty_stmt|;
+expr|}
+block|;
 specifier|inline
 name|BasicSymbolRef
 operator|::
@@ -795,7 +857,7 @@ name|SymbolPimpl
 argument_list|(
 name|SymbolP
 argument_list|)
-operator|,
+block|,
 name|OwningObject
 argument_list|(
 argument|Owner
@@ -927,14 +989,23 @@ return|return
 name|OwningObject
 return|;
 block|}
-block|}
+expr|}
+comment|// end namespace object
+expr|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_SYMBOLICFILE_H
+end_comment
 
 end_unit
 

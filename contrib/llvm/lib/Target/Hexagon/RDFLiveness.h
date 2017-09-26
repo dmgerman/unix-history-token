@@ -118,14 +118,14 @@ block|{
 name|LiveMapType
 argument_list|(
 specifier|const
-name|TargetRegisterInfo
+name|PhysicalRegisterInfo
 operator|&
-name|tri
+name|pri
 argument_list|)
 operator|:
 name|Empty
 argument_list|(
-argument|tri
+argument|pri
 argument_list|)
 block|{}
 name|RegisterAggr
@@ -228,6 +228,14 @@ name|getTRI
 argument_list|()
 argument_list|)
 operator|,
+name|PRI
+argument_list|(
+name|g
+operator|.
+name|getPRI
+argument_list|()
+argument_list|)
+operator|,
 name|MDT
 argument_list|(
 name|g
@@ -244,16 +252,11 @@ name|getDF
 argument_list|()
 argument_list|)
 operator|,
-name|MRI
-argument_list|(
-name|mri
-argument_list|)
-operator|,
 name|LiveMap
 argument_list|(
 name|g
 operator|.
-name|getTRI
+name|getPRI
 argument_list|()
 argument_list|)
 operator|,
@@ -264,7 +267,7 @@ name|NoRegs
 argument_list|(
 name|g
 operator|.
-name|getTRI
+name|getPRI
 argument_list|()
 argument_list|)
 operator|,
@@ -279,6 +282,8 @@ argument_list|(
 argument|RegisterRef RefRR
 argument_list|,
 argument|NodeAddr<RefNode*> RefA
+argument_list|,
+argument|bool TopShadows
 argument_list|,
 argument|bool FullChain
 argument_list|,
@@ -312,6 +317,8 @@ name|RefA
 argument_list|,
 name|false
 argument_list|,
+name|false
+argument_list|,
 name|NoRegs
 argument_list|)
 return|;
@@ -339,33 +346,12 @@ name|RefA
 argument_list|,
 name|false
 argument_list|,
+name|false
+argument_list|,
 name|NoRegs
 argument_list|)
 return|;
 block|}
-name|NodeSet
-name|getAllReachingDefsRec
-argument_list|(
-name|RegisterRef
-name|RefRR
-argument_list|,
-name|NodeAddr
-operator|<
-name|RefNode
-operator|*
-operator|>
-name|RefA
-argument_list|,
-name|NodeSet
-operator|&
-name|Visited
-argument_list|,
-specifier|const
-name|NodeSet
-operator|&
-name|Defs
-argument_list|)
-decl_stmt|;
 name|NodeSet
 name|getAllReachedUses
 argument_list|(
@@ -410,6 +396,37 @@ name|NoRegs
 argument_list|)
 return|;
 block|}
+name|std
+operator|::
+name|pair
+operator|<
+name|NodeSet
+operator|,
+name|bool
+operator|>
+name|getAllReachingDefsRec
+argument_list|(
+argument|RegisterRef RefRR
+argument_list|,
+argument|NodeAddr<RefNode*> RefA
+argument_list|,
+argument|NodeSet&Visited
+argument_list|,
+argument|const NodeSet&Defs
+argument_list|)
+expr_stmt|;
+name|NodeAddr
+operator|<
+name|RefNode
+operator|*
+operator|>
+name|getNearestAliasedRef
+argument_list|(
+argument|RegisterRef RefRR
+argument_list|,
+argument|NodeAddr<InstrNode*> IA
+argument_list|)
+expr_stmt|;
 name|LiveMapType
 modifier|&
 name|getLiveMap
@@ -514,6 +531,11 @@ modifier|&
 name|TRI
 decl_stmt|;
 specifier|const
+name|PhysicalRegisterInfo
+modifier|&
+name|PRI
+decl_stmt|;
+specifier|const
 name|MachineDominatorTree
 modifier|&
 name|MDT
@@ -522,10 +544,6 @@ specifier|const
 name|MachineDominanceFrontier
 modifier|&
 name|MDF
-decl_stmt|;
-name|MachineRegisterInfo
-modifier|&
-name|MRI
 decl_stmt|;
 name|LiveMapType
 name|LiveMap
@@ -617,40 +635,6 @@ name|RefMap
 operator|>
 name|PhiLOX
 expr_stmt|;
-name|bool
-name|isRestrictedToRef
-argument_list|(
-name|NodeAddr
-operator|<
-name|InstrNode
-operator|*
-operator|>
-name|IA
-argument_list|,
-name|NodeAddr
-operator|<
-name|RefNode
-operator|*
-operator|>
-name|RA
-argument_list|,
-name|RegisterRef
-name|RR
-argument_list|)
-decl|const
-decl_stmt|;
-name|RegisterRef
-name|getRestrictedRegRef
-argument_list|(
-name|NodeAddr
-operator|<
-name|RefNode
-operator|*
-operator|>
-name|RA
-argument_list|)
-decl|const
-decl_stmt|;
 name|MachineBasicBlock
 modifier|*
 name|getBlockWithRef
@@ -680,6 +664,29 @@ modifier|&
 name|M
 parameter_list|)
 function_decl|;
+name|std
+operator|::
+name|pair
+operator|<
+name|NodeSet
+operator|,
+name|bool
+operator|>
+name|getAllReachingDefsRecImpl
+argument_list|(
+argument|RegisterRef RefRR
+argument_list|,
+argument|NodeAddr<RefNode*> RefA
+argument_list|,
+argument|NodeSet&Visited
+argument_list|,
+argument|const NodeSet&Defs
+argument_list|,
+argument|unsigned Nest
+argument_list|,
+argument|unsigned MaxNest
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 block|}

@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeDatabase.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/TypeIndex.h"
 end_include
 
@@ -89,6 +83,9 @@ decl_stmt|;
 name|namespace
 name|codeview
 block|{
+name|class
+name|TypeCollection
+decl_stmt|;
 comment|/// Dumper for CodeView type streams found in COFF object files and PDB files.
 name|class
 name|TypeDumpVisitor
@@ -100,7 +97,7 @@ name|public
 operator|:
 name|TypeDumpVisitor
 argument_list|(
-argument|TypeDatabase&TypeDB
+argument|TypeCollection&TpiTypes
 argument_list|,
 argument|ScopedPrinter *W
 argument_list|,
@@ -117,13 +114,37 @@ argument_list|(
 name|PrintRecordBytes
 argument_list|)
 block|,
-name|TypeDB
+name|TpiTypes
 argument_list|(
-argument|TypeDB
+argument|TpiTypes
 argument_list|)
 block|{}
+comment|/// When dumping types from an IPI stream in a PDB, a type index may refer to
+comment|/// a type or an item ID. The dumper will lookup the "name" of the index in
+comment|/// the item database if appropriate. If ItemDB is null, it will use TypeDB,
+comment|/// which is correct when dumping types from an object file (/Z7).
+name|void
+name|setIpiTypes
+argument_list|(
+argument|TypeCollection&Types
+argument_list|)
+block|{
+name|IpiTypes
+operator|=
+operator|&
+name|Types
+block|; }
 name|void
 name|printTypeIndex
+argument_list|(
+argument|StringRef FieldName
+argument_list|,
+argument|TypeIndex TI
+argument_list|)
+specifier|const
+block|;
+name|void
+name|printItemIndex
 argument_list|(
 argument|StringRef FieldName
 argument_list|,
@@ -152,6 +173,15 @@ name|Error
 name|visitTypeBegin
 argument_list|(
 argument|CVType&Record
+argument_list|)
+name|override
+block|;
+name|Error
+name|visitTypeBegin
+argument_list|(
+argument|CVType&Record
+argument_list|,
+argument|TypeIndex Index
 argument_list|)
 name|override
 block|;
@@ -226,7 +256,7 @@ name|AliasName
 parameter_list|)
 include|#
 directive|include
-file|"TypeRecords.def"
+file|"llvm/DebugInfo/CodeView/CodeViewTypes.def"
 name|private
 operator|:
 name|void
@@ -245,6 +275,24 @@ argument_list|,
 argument|MethodOptions Options
 argument_list|)
 block|;
+comment|/// Get the database of indices for the stream that we are dumping. If ItemDB
+comment|/// is set, then we must be dumping an item (IPI) stream. This will also
+comment|/// always get the appropriate DB for printing item names.
+name|TypeCollection
+operator|&
+name|getSourceTypes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IpiTypes
+operator|?
+operator|*
+name|IpiTypes
+operator|:
+name|TpiTypes
+return|;
+block|}
 name|ScopedPrinter
 operator|*
 name|W
@@ -254,9 +302,15 @@ name|PrintRecordBytes
 operator|=
 name|false
 block|;
-name|TypeDatabase
+name|TypeCollection
 operator|&
-name|TypeDB
+name|TpiTypes
+block|;
+name|TypeCollection
+operator|*
+name|IpiTypes
+operator|=
+name|nullptr
 block|; }
 decl_stmt|;
 block|}

@@ -60,12 +60,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<functional>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -86,19 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UUID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Symbol/ObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UUID.h"
 end_include
 
 begin_include
@@ -519,9 +513,9 @@ argument_list|(
 argument|lldb::user_id_t id
 argument_list|)
 block|;
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 name|StripLinkerSymbolAnnotations
 argument_list|(
 argument|llvm::StringRef symbol_name
@@ -682,34 +676,6 @@ operator|::
 name|AddressClass
 operator|>
 name|FileAddressToAddressClassMap
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|function
-operator|<
-name|lldb
-operator|::
-name|offset_t
-argument_list|(
-name|lldb_private
-operator|::
-name|DataExtractor
-operator|&
-argument_list|,
-name|lldb
-operator|::
-name|offset_t
-argument_list|,
-name|lldb
-operator|::
-name|offset_t
-argument_list|)
-operator|>
-name|SetDataFunction
 expr_stmt|;
 end_typedef
 
@@ -909,10 +875,11 @@ name|ProgramHeaderColl
 operator|&
 name|program_headers
 argument_list|,
-specifier|const
-name|SetDataFunction
+name|lldb_private
+operator|::
+name|DataExtractor
 operator|&
-name|set_data
+name|object_data
 argument_list|,
 specifier|const
 name|elf
@@ -1025,10 +992,11 @@ name|SectionHeaderColl
 operator|&
 name|section_headers
 argument_list|,
-specifier|const
-name|SetDataFunction
+name|lldb_private
+operator|::
+name|DataExtractor
 operator|&
-name|set_data
+name|object_data
 argument_list|,
 specifier|const
 name|elf
@@ -1684,7 +1652,7 @@ begin_expr_stmt
 specifier|static
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|RefineModuleDetailsFromNote
 argument_list|(
 name|lldb_private
@@ -1704,39 +1672,6 @@ operator|::
 name|UUID
 operator|&
 name|uuid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|lldb
-operator|::
-name|offset_t
-name|SetData
-argument_list|(
-argument|const lldb_private::DataExtractor&src
-argument_list|,
-argument|lldb_private::DataExtractor&dst
-argument_list|,
-argument|lldb::offset_t offset
-argument_list|,
-argument|lldb::offset_t length
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lldb
-operator|::
-name|offset_t
-name|SetDataWithReadMemoryFallback
-argument_list|(
-argument|lldb_private::DataExtractor&dst
-argument_list|,
-argument|lldb::offset_t offset
-argument_list|,
-argument|lldb::offset_t length
 argument_list|)
 expr_stmt|;
 end_expr_stmt

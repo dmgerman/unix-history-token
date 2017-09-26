@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCInstPrinter.h"
 end_include
 
@@ -212,6 +218,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_XCORE_INSTPRINTER_XCOREINSTPRINTER_H
+end_comment
 
 end_unit
 

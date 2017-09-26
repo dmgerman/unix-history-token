@@ -64,18 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/IOObject.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/Predicate.h"
 end_include
 
@@ -83,6 +71,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/SocketAddress.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/IOObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_ifdef
@@ -190,11 +190,11 @@ argument|const SocketProtocol protocol
 argument_list|,
 argument|bool child_processes_inherit
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 expr_stmt|;
 name|virtual
-name|Error
+name|Status
 name|Connect
 block|(
 name|llvm
@@ -203,7 +203,7 @@ name|StringRef
 name|name
 block|) = 0;
 name|virtual
-name|Error
+name|Status
 name|Listen
 block|(
 name|llvm
@@ -218,32 +218,24 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|Error
+name|Status
 name|Accept
-block|(
-name|llvm
-block|::
-name|StringRef
-name|name
-block|,
-name|bool
-name|child_processes_inherit
-block|,
+parameter_list|(
 name|Socket
 modifier|*
 modifier|&
 name|socket
-block|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|// Initialize a Tcp Socket object in listening mode.  listen and accept are
 comment|// implemented
 comment|// separately because the caller may wish to manipulate or query the socket
 comment|// after it is
 comment|// initialized, but before entering a blocking accept.
 specifier|static
-name|Error
+name|Status
 name|TcpListen
 argument_list|(
 name|llvm
@@ -273,7 +265,7 @@ literal|5
 argument_list|)
 block|;
 specifier|static
-name|Error
+name|Status
 name|TcpConnect
 argument_list|(
 name|llvm
@@ -291,7 +283,7 @@ name|socket
 argument_list|)
 block|;
 specifier|static
-name|Error
+name|Status
 name|UdpConnect
 argument_list|(
 name|llvm
@@ -305,16 +297,11 @@ argument_list|,
 name|Socket
 operator|*
 operator|&
-name|send_socket
-argument_list|,
-name|Socket
-operator|*
-operator|&
-name|recv_socket
+name|socket
 argument_list|)
 block|;
 specifier|static
-name|Error
+name|Status
 name|UnixDomainConnect
 argument_list|(
 name|llvm
@@ -332,7 +319,7 @@ name|socket
 argument_list|)
 block|;
 specifier|static
-name|Error
+name|Status
 name|UnixDomainAccept
 argument_list|(
 name|llvm
@@ -350,7 +337,7 @@ name|socket
 argument_list|)
 block|;
 specifier|static
-name|Error
+name|Status
 name|UnixAbstractConnect
 argument_list|(
 name|llvm
@@ -368,7 +355,7 @@ name|socket
 argument_list|)
 block|;
 specifier|static
-name|Error
+name|Status
 name|UnixAbstractAccept
 argument_list|(
 name|llvm
@@ -430,7 +417,7 @@ return|return
 name|m_protocol
 return|;
 block|}
-name|Error
+name|Status
 name|Read
 argument_list|(
 name|void
@@ -443,7 +430,7 @@ name|num_bytes
 argument_list|)
 name|override
 empty_stmt|;
-name|Error
+name|Status
 name|Write
 argument_list|(
 specifier|const
@@ -458,11 +445,11 @@ argument_list|)
 name|override
 block|;
 name|virtual
-name|Error
+name|Status
 name|PreDisconnect
 parameter_list|()
 function_decl|;
-name|Error
+name|Status
 name|Close
 argument_list|()
 name|override
@@ -509,7 +496,7 @@ name|int32_t
 operator|&
 name|port
 argument_list|,
-name|Error
+name|Status
 operator|*
 name|error_ptr
 argument_list|)
@@ -518,11 +505,11 @@ name|protected
 label|:
 name|Socket
 argument_list|(
-argument|NativeSocket socket
-argument_list|,
 argument|SocketProtocol protocol
 argument_list|,
 argument|bool should_close
+argument_list|,
+argument|bool m_child_process_inherit
 argument_list|)
 empty_stmt|;
 name|virtual
@@ -543,7 +530,7 @@ specifier|static
 name|void
 name|SetLastError
 parameter_list|(
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -567,7 +554,7 @@ parameter_list|,
 name|bool
 name|child_processes_inherit
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -591,7 +578,7 @@ parameter_list|,
 name|bool
 name|child_processes_inherit
 parameter_list|,
-name|Error
+name|Status
 modifier|&
 name|error
 parameter_list|)
@@ -601,6 +588,9 @@ name|m_protocol
 block|;
 name|NativeSocket
 name|m_socket
+block|;
+name|bool
+name|m_child_processes_inherit
 block|;
 block|}
 enum|;

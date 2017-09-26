@@ -609,7 +609,7 @@ block|;
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr&MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -619,7 +619,7 @@ name|isProfitableToDupForIfCvt
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|unsigned NumCyles
+argument|unsigned NumCycles
 argument_list|,
 argument|BranchProbability Probability
 argument_list|)
@@ -631,7 +631,7 @@ name|isProfitableToIfCvt
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|unsigned NumCyles
+argument|unsigned NumCycles
 argument_list|,
 argument|unsigned ExtraPredCycles
 argument_list|,

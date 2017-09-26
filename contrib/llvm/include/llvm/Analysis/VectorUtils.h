@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/Transforms/Utils/VectorUtils.h - Vector utilities -*- C++ -*-=====//
+comment|//===- llvm/Analysis/VectorUtils.h - Vector utilities -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TRANSFORMS_UTILS_VECTORUTILS_H
+name|LLVM_ANALYSIS_VECTORUTILS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TRANSFORMS_UTILS_VECTORUTILS_H
+name|LLVM_ANALYSIS_VECTORUTILS_H
 end_define
 
 begin_include
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Analysis/TargetLibraryInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/IRBuilder.h"
 end_include
 
 begin_decl_stmt
@@ -340,6 +346,122 @@ name|Value
 operator|*
 operator|>
 name|VL
+argument_list|)
+decl_stmt|;
+comment|/// \brief Create an interleave shuffle mask.
+comment|///
+comment|/// This function creates a shuffle mask for interleaving \p NumVecs vectors of
+comment|/// vectorization factor \p VF into a single wide vector. The mask is of the
+comment|/// form:
+comment|///
+comment|///<0, VF, VF * 2, ..., VF * (NumVecs - 1), 1, VF + 1, VF * 2 + 1, ...>
+comment|///
+comment|/// For example, the mask for VF = 4 and NumVecs = 2 is:
+comment|///
+comment|///<0, 4, 1, 5, 2, 6, 3, 7>.
+name|Constant
+modifier|*
+name|createInterleaveMask
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|unsigned
+name|VF
+argument_list|,
+name|unsigned
+name|NumVecs
+argument_list|)
+decl_stmt|;
+comment|/// \brief Create a stride shuffle mask.
+comment|///
+comment|/// This function creates a shuffle mask whose elements begin at \p Start and
+comment|/// are incremented by \p Stride. The mask can be used to deinterleave an
+comment|/// interleaved vector into separate vectors of vectorization factor \p VF. The
+comment|/// mask is of the form:
+comment|///
+comment|///<Start, Start + Stride, ..., Start + Stride * (VF - 1)>
+comment|///
+comment|/// For example, the mask for Start = 0, Stride = 2, and VF = 4 is:
+comment|///
+comment|///<0, 2, 4, 6>
+name|Constant
+modifier|*
+name|createStrideMask
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|unsigned
+name|Start
+argument_list|,
+name|unsigned
+name|Stride
+argument_list|,
+name|unsigned
+name|VF
+argument_list|)
+decl_stmt|;
+comment|/// \brief Create a sequential shuffle mask.
+comment|///
+comment|/// This function creates shuffle mask whose elements are sequential and begin
+comment|/// at \p Start.  The mask contains \p NumInts integers and is padded with \p
+comment|/// NumUndefs undef values. The mask is of the form:
+comment|///
+comment|///<Start, Start + 1, ... Start + NumInts - 1, undef_1, ... undef_NumUndefs>
+comment|///
+comment|/// For example, the mask for Start = 0, NumInsts = 4, and NumUndefs = 4 is:
+comment|///
+comment|///<0, 1, 2, 3, undef, undef, undef, undef>
+name|Constant
+modifier|*
+name|createSequentialMask
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|unsigned
+name|Start
+argument_list|,
+name|unsigned
+name|NumInts
+argument_list|,
+name|unsigned
+name|NumUndefs
+argument_list|)
+decl_stmt|;
+comment|/// \brief Concatenate a list of vectors.
+comment|///
+comment|/// This function generates code that concatenate the vectors in \p Vecs into a
+comment|/// single large vector. The number of vectors should be greater than one, and
+comment|/// their element types should be the same. The number of elements in the
+comment|/// vectors should also be the same; however, if the last vector has fewer
+comment|/// elements, it will be padded with undefs.
+name|Value
+modifier|*
+name|concatenateVectors
+argument_list|(
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Vecs
 argument_list|)
 decl_stmt|;
 block|}

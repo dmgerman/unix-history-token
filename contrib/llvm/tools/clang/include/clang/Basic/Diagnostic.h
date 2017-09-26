@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -593,29 +599,9 @@ name|AllExtensionsSilenced
 decl_stmt|;
 comment|// Used by __extension__
 name|bool
-name|IgnoreAllWarnings
+name|SuppressAfterFatalError
 decl_stmt|;
-comment|// Ignore all warnings: -w
-name|bool
-name|WarningsAsErrors
-decl_stmt|;
-comment|// Treat warnings like errors.
-name|bool
-name|EnableAllWarnings
-decl_stmt|;
-comment|// Enable all warnings.
-name|bool
-name|ErrorsAsFatal
-decl_stmt|;
-comment|// Treat errors like fatal errors.
-name|bool
-name|FatalsAsError
-decl_stmt|;
-comment|// Treat fatal errors like errors.
-name|bool
-name|SuppressSystemWarnings
-decl_stmt|;
-comment|// Suppress warnings in system headers.
+comment|// Suppress diagnostics after a fatal error?
 name|bool
 name|SuppressAllDiagnostics
 decl_stmt|;
@@ -650,12 +636,6 @@ name|ConstexprBacktraceLimit
 decl_stmt|;
 comment|// Cap on depth of constexpr evaluation
 comment|// backtrace stack, 0 -> no limit.
-name|diag
-operator|::
-name|Severity
-name|ExtBehavior
-expr_stmt|;
-comment|// Map extensions to warnings or errors?
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticIDs
@@ -710,6 +690,76 @@ name|DiagMap
 expr_stmt|;
 name|public
 label|:
+comment|// "Global" configuration state that can actually vary between modules.
+name|unsigned
+name|IgnoreAllWarnings
+range|:
+literal|1
+decl_stmt|;
+comment|// Ignore all warnings: -w
+name|unsigned
+name|EnableAllWarnings
+range|:
+literal|1
+decl_stmt|;
+comment|// Enable all warnings.
+name|unsigned
+name|WarningsAsErrors
+range|:
+literal|1
+decl_stmt|;
+comment|// Treat warnings like errors.
+name|unsigned
+name|ErrorsAsFatal
+range|:
+literal|1
+decl_stmt|;
+comment|// Treat errors like fatal errors.
+name|unsigned
+name|SuppressSystemWarnings
+range|:
+literal|1
+decl_stmt|;
+comment|// Suppress warnings in system headers.
+name|diag
+operator|::
+name|Severity
+name|ExtBehavior
+expr_stmt|;
+comment|// Map extensions to warnings or errors?
+name|DiagState
+argument_list|()
+operator|:
+name|IgnoreAllWarnings
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|EnableAllWarnings
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|WarningsAsErrors
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ErrorsAsFatal
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|SuppressSystemWarnings
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ExtBehavior
+argument_list|(
+argument|diag::Severity::Ignored
+argument_list|)
+block|{}
 typedef|typedef
 name|llvm
 operator|::
@@ -757,6 +807,25 @@ name|Info
 expr_stmt|;
 block|}
 name|DiagnosticMapping
+name|lookupMapping
+argument_list|(
+name|diag
+operator|::
+name|kind
+name|Diag
+argument_list|)
+decl|const
+block|{
+return|return
+name|DiagMap
+operator|.
+name|lookup
+argument_list|(
+name|Diag
+argument_list|)
+return|;
+block|}
+name|DiagnosticMapping
 modifier|&
 name|getOrAddMapping
 argument_list|(
@@ -801,6 +870,110 @@ name|DiagState
 operator|>
 name|DiagStates
 expr_stmt|;
+comment|/// A mapping from files to the diagnostic states for those files. Lazily
+comment|/// built on demand for files in which the diagnostic state has not changed.
+name|class
+name|DiagStateMap
+block|{
+name|public
+label|:
+comment|/// Add an initial diagnostic state.
+name|void
+name|appendFirst
+parameter_list|(
+name|DiagState
+modifier|*
+name|State
+parameter_list|)
+function_decl|;
+comment|/// Add a new latest state point.
+name|void
+name|append
+parameter_list|(
+name|SourceManager
+modifier|&
+name|SrcMgr
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|DiagState
+modifier|*
+name|State
+parameter_list|)
+function_decl|;
+comment|/// Look up the diagnostic state at a given source location.
+name|DiagState
+modifier|*
+name|lookup
+argument_list|(
+name|SourceManager
+operator|&
+name|SrcMgr
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Determine whether this map is empty.
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Files
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// Clear out this map.
+name|void
+name|clear
+parameter_list|()
+block|{
+name|Files
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|FirstDiagState
+operator|=
+name|CurDiagState
+operator|=
+name|nullptr
+expr_stmt|;
+name|CurDiagStateLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+block|}
+comment|/// Grab the most-recently-added state point.
+name|DiagState
+operator|*
+name|getCurDiagState
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurDiagState
+return|;
+block|}
+comment|/// Get the location at which a diagnostic state was last added.
+name|SourceLocation
+name|getCurDiagStateLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurDiagStateLoc
+return|;
+block|}
+name|private
+label|:
 comment|/// \brief Represents a point in source where the diagnostic state was
 comment|/// modified because of a pragma.
 comment|///
@@ -813,14 +986,14 @@ name|DiagState
 modifier|*
 name|State
 decl_stmt|;
-name|FullSourceLoc
-name|Loc
+name|unsigned
+name|Offset
 decl_stmt|;
 name|DiagStatePoint
 argument_list|(
 argument|DiagState *State
 argument_list|,
-argument|FullSourceLoc Loc
+argument|unsigned Offset
 argument_list|)
 block|:
 name|State
@@ -828,112 +1001,118 @@ argument_list|(
 name|State
 argument_list|)
 operator|,
-name|Loc
+name|Offset
 argument_list|(
-argument|Loc
+argument|Offset
 argument_list|)
 block|{ }
-name|bool
-name|operator
-operator|<
-operator|(
-specifier|const
-name|DiagStatePoint
-operator|&
-name|RHS
-operator|)
-specifier|const
+block|}
+struct|;
+comment|/// Description of the diagnostic states and state transitions for a
+comment|/// particular FileID.
+struct|struct
+name|File
 block|{
-comment|// If Loc is invalid it means it came from<command-line>, in which case
-comment|// we regard it as coming before any valid source location.
-if|if
-condition|(
-name|RHS
-operator|.
-name|Loc
-operator|.
-name|isInvalid
-argument_list|()
-condition|)
-return|return
+comment|/// The diagnostic state for the parent file. This is strictly redundant,
+comment|/// as looking up the DecomposedIncludedLoc for the FileID in the Files
+comment|/// map would give us this, but we cache it here for performance.
+name|File
+modifier|*
+name|Parent
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// The offset of this file within its parent.
+name|unsigned
+name|ParentOffset
+init|=
+literal|0
+decl_stmt|;
+comment|/// Whether this file has any local (not imported from an AST file)
+comment|/// diagnostic state transitions.
+name|bool
+name|HasLocalTransitions
+init|=
 name|false
-return|;
-if|if
-condition|(
-name|Loc
-operator|.
-name|isInvalid
-argument_list|()
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|Loc
-operator|.
-name|isBeforeInTranslationUnitThan
+decl_stmt|;
+comment|/// The points within the file where the state changes. There will always
+comment|/// be at least one of these (the state on entry to the file).
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|DiagStatePoint
+operator|,
+literal|4
+operator|>
+name|StateTransitions
+expr_stmt|;
+name|DiagState
+modifier|*
+name|lookup
 argument_list|(
-name|RHS
-operator|.
-name|Loc
+name|unsigned
+name|Offset
 argument_list|)
-return|;
+decl|const
+decl_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// \brief A sorted vector of all DiagStatePoints representing changes in
-end_comment
-
-begin_comment
-comment|/// diagnostic state due to diagnostic pragmas.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// The vector is always sorted according to the SourceLocation of the
-end_comment
-
-begin_comment
-comment|/// DiagStatePoint.
-end_comment
-
-begin_typedef
-typedef|typedef
+struct|;
+comment|/// The diagnostic states for each file.
+name|mutable
 name|std
 operator|::
-name|vector
+name|map
 operator|<
-name|DiagStatePoint
+name|FileID
+operator|,
+name|File
 operator|>
-name|DiagStatePointsTy
+name|Files
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
-name|mutable
-name|DiagStatePointsTy
-name|DiagStatePoints
+comment|/// The initial diagnostic state.
+name|DiagState
+modifier|*
+name|FirstDiagState
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
+comment|/// The current diagnostic state.
+name|DiagState
+modifier|*
+name|CurDiagState
+decl_stmt|;
+comment|/// The location at which the current diagnostic state was established.
+name|SourceLocation
+name|CurDiagStateLoc
+decl_stmt|;
+comment|/// Get the diagnostic state information for a file.
+name|File
+modifier|*
+name|getFile
+argument_list|(
+name|SourceManager
+operator|&
+name|SrcMgr
+argument_list|,
+name|FileID
+name|ID
+argument_list|)
+decl|const
+decl_stmt|;
+name|friend
+name|class
+name|ASTReader
+decl_stmt|;
+name|friend
+name|class
+name|ASTWriter
+decl_stmt|;
+block|}
+empty_stmt|;
+name|DiagStateMap
+name|DiagStatesByLoc
+decl_stmt|;
 comment|/// \brief Keeps the DiagState that was active during each diagnostic 'push'
-end_comment
-
-begin_comment
 comment|/// so we can get back at it when we 'pop'.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -943,36 +1122,19 @@ operator|*
 operator|>
 name|DiagStateOnPushStack
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|DiagState
 operator|*
 name|GetCurDiagState
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-operator|!
-name|DiagStatePoints
-operator|.
-name|empty
-argument_list|()
-argument_list|)
-block|;
 return|return
-name|DiagStatePoints
+name|DiagStatesByLoc
 operator|.
-name|back
+name|getCurDiagState
 argument_list|()
-operator|.
-name|State
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|PushDiagStatePoint
 parameter_list|(
@@ -983,246 +1145,89 @@ parameter_list|,
 name|SourceLocation
 name|L
 parameter_list|)
-block|{
-name|FullSourceLoc
-name|Loc
-argument_list|(
-name|L
-argument_list|,
-name|getSourceManager
-argument_list|()
-argument_list|)
-decl_stmt|;
-comment|// Make sure that DiagStatePoints is always sorted according to Loc.
-name|assert
-argument_list|(
-name|Loc
-operator|.
-name|isValid
-argument_list|()
-operator|&&
-literal|"Adding invalid loc point"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|!
-name|DiagStatePoints
-operator|.
-name|empty
-argument_list|()
-operator|&&
-operator|(
-name|DiagStatePoints
-operator|.
-name|back
-argument_list|()
-operator|.
-name|Loc
-operator|.
-name|isInvalid
-argument_list|()
-operator|||
-name|DiagStatePoints
-operator|.
-name|back
-argument_list|()
-operator|.
-name|Loc
-operator|.
-name|isBeforeInTranslationUnitThan
-argument_list|(
-name|Loc
-argument_list|)
-operator|)
-operator|&&
-literal|"Previous point loc comes after or is the same as new one"
-argument_list|)
-expr_stmt|;
-name|DiagStatePoints
-operator|.
-name|push_back
-argument_list|(
-name|DiagStatePoint
-argument_list|(
-name|State
-argument_list|,
-name|Loc
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+function_decl|;
 comment|/// \brief Finds the DiagStatePoint that contains the diagnostic state of
-end_comment
-
-begin_comment
 comment|/// the given source location.
-end_comment
-
-begin_expr_stmt
-name|DiagStatePointsTy
-operator|::
-name|iterator
-name|GetDiagStatePointForLoc
+name|DiagState
+modifier|*
+name|GetDiagStateForLoc
 argument_list|(
-argument|SourceLocation Loc
+name|SourceLocation
+name|Loc
 argument_list|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+decl|const
+block|{
+return|return
+name|SourceMgr
+condition|?
+name|DiagStatesByLoc
+operator|.
+name|lookup
+argument_list|(
+operator|*
+name|SourceMgr
+argument_list|,
+name|Loc
+argument_list|)
+else|:
+name|DiagStatesByLoc
+operator|.
+name|getCurDiagState
+argument_list|()
+return|;
+block|}
 comment|/// \brief Sticky flag set to \c true when an error is emitted.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|ErrorOccurred
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Sticky flag set to \c true when an "uncompilable error" occurs.
-end_comment
-
-begin_comment
 comment|/// I.e. an error that was not upgraded from a warning by -Werror.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|UncompilableErrorOccurred
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Sticky flag set to \c true when a fatal error is emitted.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|FatalErrorOccurred
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Indicates that an unrecoverable error has occurred.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|UnrecoverableErrorOccurred
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Counts for DiagnosticErrorTrap to check whether an error occurred
-end_comment
-
-begin_comment
 comment|/// during a parsing section, e.g. during parsing a function.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|TrapNumErrorsOccurred
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|TrapNumUnrecoverableErrorsOccurred
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief The level of the last diagnostic emitted.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is used to emit continuation diagnostics with the same level as the
-end_comment
-
-begin_comment
 comment|/// diagnostic that they follow.
-end_comment
-
-begin_expr_stmt
 name|DiagnosticIDs
 operator|::
 name|Level
 name|LastDiagLevel
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|unsigned
 name|NumWarnings
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|///< Number of warnings reported
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|NumErrors
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|///< Number of errors reported
-end_comment
-
-begin_comment
 comment|/// \brief A function pointer that converts an opaque diagnostic
-end_comment
-
-begin_comment
 comment|/// argument to a strings.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This takes the modifiers and argument that was present in the diagnostic.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The PrevArgs array indicates the previous arguments formatted for this
-end_comment
-
-begin_comment
 comment|/// diagnostic.  Implementations of this function can use this information to
-end_comment
-
-begin_comment
 comment|/// avoid redundancy across arguments.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is a hack to avoid a layering violation between libbasic and libsema.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|void
 argument_list|(
@@ -1265,97 +1270,43 @@ operator|>
 name|QualTypeVals
 operator|)
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|void
 modifier|*
 name|ArgToStringCookie
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ArgToStringFnTy
 name|ArgToStringFn
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief ID of the "delayed" diagnostic, which is a (typically
-end_comment
-
-begin_comment
 comment|/// fatal) diagnostic that had to be delayed because it was found
-end_comment
-
-begin_comment
 comment|/// while emitting another diagnostic.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|DelayedDiagID
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief First string argument for the delayed diagnostic.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|string
 name|DelayedDiagArg1
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Second string argument for the delayed diagnostic.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|string
 name|DelayedDiagArg2
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Optional flag value.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Some flags accept values, for instance: -Wframe-larger-than=<value> and
-end_comment
-
-begin_comment
 comment|/// -Rpass=<value>. The content of this string is emitted after the flag name
-end_comment
-
-begin_comment
 comment|/// and '='.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|string
 name|FlagValue
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_decl_stmt
 name|explicit
 name|DiagnosticsEngine
 argument_list|(
@@ -1381,9 +1332,6 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|DiagnosticsEngine
 argument_list|(
 specifier|const
@@ -1393,9 +1341,6 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|DiagnosticsEngine
 modifier|&
 name|operator
@@ -1408,16 +1353,10 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 operator|~
 name|DiagnosticsEngine
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 specifier|const
 name|IntrusiveRefCntPtr
 operator|<
@@ -1432,13 +1371,7 @@ return|return
 name|Diags
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the diagnostic options.
-end_comment
-
-begin_expr_stmt
 name|DiagnosticOptions
 operator|&
 name|getDiagnosticOptions
@@ -1450,9 +1383,6 @@ operator|*
 name|DiagOpts
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -1464,13 +1394,7 @@ name|const_iterator
 operator|>
 name|diag_mapping_range
 expr_stmt|;
-end_typedef
-
-begin_comment
 comment|/// \brief Get the current set of diagnostic mappings.
-end_comment
-
-begin_expr_stmt
 name|diag_mapping_range
 name|getDiagnosticMappings
 argument_list|()
@@ -1500,9 +1424,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|DiagnosticConsumer
 modifier|*
 name|getClient
@@ -1512,9 +1433,6 @@ return|return
 name|Client
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|DiagnosticConsumer
 operator|*
@@ -1526,13 +1444,7 @@ return|return
 name|Client
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this \c DiagnosticsEngine object own its client.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|ownsClient
 argument_list|()
@@ -1544,17 +1456,8 @@ operator|!=
 name|nullptr
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Return the current diagnostic client along with ownership of that
-end_comment
-
-begin_comment
 comment|/// client.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
@@ -1573,9 +1476,6 @@ name|Owner
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|hasSourceManager
 argument_list|()
@@ -1587,9 +1487,6 @@ operator|!=
 name|nullptr
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceManager
 operator|&
 name|getSourceManager
@@ -1608,9 +1505,6 @@ operator|*
 name|SourceMgr
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setSourceManager
 parameter_list|(
@@ -1619,38 +1513,27 @@ modifier|*
 name|SrcMgr
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|DiagStatesByLoc
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Leftover diag state from a different SourceManager."
+argument_list|)
+expr_stmt|;
 name|SourceMgr
 operator|=
 name|SrcMgr
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//  DiagnosticsEngine characterization methods, used by a client to customize
-end_comment
-
-begin_comment
 comment|//  how diagnostics are emitted.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|/// \brief Copies the current DiagMappings and pushes the new copy
-end_comment
-
-begin_comment
 comment|/// onto the top of the stack.
-end_comment
-
-begin_function_decl
 name|void
 name|pushMappings
 parameter_list|(
@@ -1658,29 +1541,11 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Pops the current DiagMappings off the top of the stack,
-end_comment
-
-begin_comment
 comment|/// causing the new top of the stack to be the active mappings.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns \c true if the pop happens, \c false if there is only one
-end_comment
-
-begin_comment
 comment|/// DiagMapping on the stack.
-end_comment
-
-begin_function_decl
 name|bool
 name|popMappings
 parameter_list|(
@@ -1688,25 +1553,10 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Set the diagnostic client associated with this diagnostic object.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param ShouldOwnClient true if the diagnostic object should take
-end_comment
-
-begin_comment
 comment|/// ownership of \c client.
-end_comment
-
-begin_function_decl
 name|void
 name|setClient
 parameter_list|(
@@ -1720,25 +1570,10 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Specify a limit for the number of errors we should
-end_comment
-
-begin_comment
 comment|/// emit before giving up.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Zero disables the limit.
-end_comment
-
-begin_function
 name|void
 name|setErrorLimit
 parameter_list|(
@@ -1751,17 +1586,8 @@ operator|=
 name|Limit
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Specify the maximum number of template instantiation
-end_comment
-
-begin_comment
 comment|/// notes to emit along with a given diagnostic.
-end_comment
-
-begin_function
 name|void
 name|setTemplateBacktraceLimit
 parameter_list|(
@@ -1774,17 +1600,8 @@ operator|=
 name|Limit
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Retrieve the maximum number of template instantiation
-end_comment
-
-begin_comment
 comment|/// notes to emit along with a given diagnostic.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getTemplateBacktraceLimit
 argument_list|()
@@ -1794,17 +1611,8 @@ return|return
 name|TemplateBacktraceLimit
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Specify the maximum number of constexpr evaluation
-end_comment
-
-begin_comment
 comment|/// notes to emit along with a given diagnostic.
-end_comment
-
-begin_function
 name|void
 name|setConstexprBacktraceLimit
 parameter_list|(
@@ -1817,17 +1625,8 @@ operator|=
 name|Limit
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Retrieve the maximum number of constexpr evaluation
-end_comment
-
-begin_comment
 comment|/// notes to emit along with a given diagnostic.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getConstexprBacktraceLimit
 argument_list|()
@@ -1837,21 +1636,9 @@ return|return
 name|ConstexprBacktraceLimit
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief When set to true, any unmapped warnings are ignored.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If this and WarningsAsErrors are both set, then this one wins.
-end_comment
-
-begin_function
 name|void
 name|setIgnoreAllWarnings
 parameter_list|(
@@ -1859,42 +1646,30 @@ name|bool
 name|Val
 parameter_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|IgnoreAllWarnings
 operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|getIgnoreAllWarnings
 argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|IgnoreAllWarnings
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief When set to true, any unmapped ignored warnings are no longer
-end_comment
-
-begin_comment
 comment|/// ignored.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If this and IgnoreAllWarnings are both set, then that one wins.
-end_comment
-
-begin_function
 name|void
 name|setEnableAllWarnings
 parameter_list|(
@@ -1902,30 +1677,27 @@ name|bool
 name|Val
 parameter_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|EnableAllWarnings
 operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|getEnableAllWarnings
 argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|EnableAllWarnings
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief When set to true, any warnings reported are issued as errors.
-end_comment
-
-begin_function
 name|void
 name|setWarningsAsErrors
 parameter_list|(
@@ -1933,30 +1705,27 @@ name|bool
 name|Val
 parameter_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|WarningsAsErrors
 operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|getWarningsAsErrors
 argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|WarningsAsErrors
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief When set to true, any error reported is made a fatal error.
-end_comment
-
-begin_function
 name|void
 name|setErrorsAsFatal
 parameter_list|(
@@ -1964,69 +1733,41 @@ name|bool
 name|Val
 parameter_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|ErrorsAsFatal
 operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|getErrorsAsFatal
 argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|ErrorsAsFatal
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief When set to true, any fatal error reported is made an error.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This setting takes precedence over the setErrorsAsFatal setting above.
-end_comment
-
-begin_function
+comment|/// \brief When set to true (the default), suppress further diagnostics after
+comment|/// a fatal error.
 name|void
-name|setFatalsAsError
+name|setSuppressAfterFatalError
 parameter_list|(
 name|bool
 name|Val
 parameter_list|)
 block|{
-name|FatalsAsError
+name|SuppressAfterFatalError
 operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
-name|bool
-name|getFatalsAsError
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FatalsAsError
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief When set to true mask warnings that come from system headers.
-end_comment
-
-begin_function
 name|void
 name|setSuppressSystemWarnings
 parameter_list|(
@@ -2034,38 +1775,29 @@ name|bool
 name|Val
 parameter_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|SuppressSystemWarnings
 operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|getSuppressSystemWarnings
 argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|SuppressSystemWarnings
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Suppress all diagnostics, to silence the front end when we
-end_comment
-
-begin_comment
 comment|/// know that we don't want any more diagnostics to be passed along to the
-end_comment
-
-begin_comment
 comment|/// client
-end_comment
-
-begin_function
 name|void
 name|setSuppressAllDiagnostics
 parameter_list|(
@@ -2080,9 +1812,6 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|getSuppressAllDiagnostics
 argument_list|()
@@ -2092,17 +1821,8 @@ return|return
 name|SuppressAllDiagnostics
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Set type eliding, to skip outputting same types occurring in
-end_comment
-
-begin_comment
 comment|/// template types.
-end_comment
-
-begin_function
 name|void
 name|setElideType
 parameter_list|(
@@ -2117,9 +1837,6 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|bool
 name|getElideType
 parameter_list|()
@@ -2128,17 +1845,8 @@ return|return
 name|ElideType
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Set tree printing, to outputting the template difference in a
-end_comment
-
-begin_comment
 comment|/// tree format.
-end_comment
-
-begin_function
 name|void
 name|setPrintTemplateTree
 parameter_list|(
@@ -2153,9 +1861,6 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|bool
 name|getPrintTemplateTree
 parameter_list|()
@@ -2164,17 +1869,8 @@ return|return
 name|PrintTemplateTree
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Set color printing, so the type diffing will inject color markers
-end_comment
-
-begin_comment
 comment|/// into the output.
-end_comment
-
-begin_function
 name|void
 name|setShowColors
 parameter_list|(
@@ -2189,9 +1885,6 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|bool
 name|getShowColors
 parameter_list|()
@@ -2200,25 +1893,10 @@ return|return
 name|ShowColors
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Specify which overload candidates to show when overload resolution
-end_comment
-
-begin_comment
 comment|/// fails.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// By default, we show all candidates.
-end_comment
-
-begin_function
 name|void
 name|setShowOverloads
 parameter_list|(
@@ -2231,9 +1909,6 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|OverloadsShown
 name|getShowOverloads
 argument_list|()
@@ -2243,25 +1918,10 @@ return|return
 name|ShowOverloads
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Pretend that the last diagnostic issued was ignored, so any
-end_comment
-
-begin_comment
 comment|/// subsequent notes will be suppressed.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This can be used by clients who suppress diagnostics themselves.
-end_comment
-
-begin_function
 name|void
 name|setLastDiagnosticIgnored
 parameter_list|()
@@ -2285,21 +1945,9 @@ operator|::
 name|Ignored
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Determine whether the previous diagnostic was ignored. This can
-end_comment
-
-begin_comment
 comment|/// be used by clients that want to determine whether notes attached to a
-end_comment
-
-begin_comment
 comment|/// diagnostic will be suppressed.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isLastDiagnosticIgnored
 argument_list|()
@@ -2313,25 +1961,10 @@ operator|::
 name|Ignored
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Controls whether otherwise-unmapped extension diagnostics are
-end_comment
-
-begin_comment
 comment|/// mapped onto ignore/warning/error.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This corresponds to the GCC -pedantic and -pedantic-errors option.
-end_comment
-
-begin_decl_stmt
 name|void
 name|setExtensionHandlingBehavior
 argument_list|(
@@ -2341,14 +1974,14 @@ name|Severity
 name|H
 argument_list|)
 block|{
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|ExtBehavior
 operator|=
 name|H
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|diag
 operator|::
 name|Severity
@@ -2357,28 +1990,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|GetCurDiagState
+argument_list|()
+operator|->
 name|ExtBehavior
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Counter bumped when an __extension__  block is/ encountered.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When non-zero, all extension diagnostics are entirely silenced, no
-end_comment
-
-begin_comment
 comment|/// matter how they are mapped.
-end_comment
-
-begin_function
 name|void
 name|IncrementAllExtensionsSilenced
 parameter_list|()
@@ -2387,9 +2008,6 @@ operator|++
 name|AllExtensionsSilenced
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|DecrementAllExtensionsSilenced
 parameter_list|()
@@ -2398,9 +2016,6 @@ operator|--
 name|AllExtensionsSilenced
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|bool
 name|hasAllExtensionsSilenced
 parameter_list|()
@@ -2411,41 +2026,14 @@ operator|!=
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief This allows the client to specify that certain warnings are
-end_comment
-
-begin_comment
 comment|/// ignored.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Notes can never be mapped, errors can only be mapped to fatal, and
-end_comment
-
-begin_comment
 comment|/// WARNINGs and EXTENSIONs can be mapped arbitrarily.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Loc The source location that this change of diagnostic state should
-end_comment
-
-begin_comment
 comment|/// take affect. It can be null if we are setting the latest state.
-end_comment
-
-begin_decl_stmt
 name|void
 name|setSeverity
 argument_list|(
@@ -2463,53 +2051,17 @@ name|SourceLocation
 name|Loc
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Change an entire diagnostic group (e.g. "unknown-pragmas") to
-end_comment
-
-begin_comment
 comment|/// have the specified mapping.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns true (and ignores the request) if "Group" was unknown, false
-end_comment
-
-begin_comment
 comment|/// otherwise.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Flavor The flavor of group to affect. -Rfoo does not affect the
-end_comment
-
-begin_comment
 comment|/// state of the -Wfoo group and vice versa.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Loc The source location that this change of diagnostic state should
-end_comment
-
-begin_comment
 comment|/// take affect. It can be null if we are setting the state from command-line.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|setSeverityForGroup
 argument_list|(
@@ -2533,29 +2085,11 @@ name|SourceLocation
 argument_list|()
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Set the warning-as-error flag for the given diagnostic group.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This function always only operates on the current diagnostic state.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns True if the given group is unknown, false otherwise.
-end_comment
-
-begin_function_decl
 name|bool
 name|setDiagnosticGroupWarningAsError
 parameter_list|(
@@ -2566,29 +2100,11 @@ name|bool
 name|Enabled
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Set the error-as-fatal flag for the given diagnostic group.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This function always only operates on the current diagnostic state.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns True if the given group is unknown, false otherwise.
-end_comment
-
-begin_function_decl
 name|bool
 name|setDiagnosticGroupErrorAsFatal
 parameter_list|(
@@ -2599,29 +2115,11 @@ name|bool
 name|Enabled
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Add the specified mapping to all diagnostics of the specified
-end_comment
-
-begin_comment
 comment|/// flavor.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Mainly to be used by -Wno-everything to disable all warnings but allow
-end_comment
-
-begin_comment
 comment|/// subsequent -W options to enable specific warnings.
-end_comment
-
-begin_decl_stmt
 name|void
 name|setSeverityForAll
 argument_list|(
@@ -2642,9 +2140,6 @@ name|SourceLocation
 argument_list|()
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|bool
 name|hasErrorOccurred
 argument_list|()
@@ -2654,17 +2149,8 @@ return|return
 name|ErrorOccurred
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Errors that actually prevent compilation, not those that are
-end_comment
-
-begin_comment
 comment|/// upgraded from a warning by -Werror.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUncompilableErrorOccurred
 argument_list|()
@@ -2674,9 +2160,6 @@ return|return
 name|UncompilableErrorOccurred
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|hasFatalErrorOccurred
 argument_list|()
@@ -2686,13 +2169,7 @@ return|return
 name|FatalErrorOccurred
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether any kind of unrecoverable error has occurred.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasUnrecoverableErrorOccurred
 argument_list|()
@@ -2704,9 +2181,6 @@ operator|||
 name|UnrecoverableErrorOccurred
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|getNumWarnings
 argument_list|()
@@ -2716,9 +2190,6 @@ return|return
 name|NumWarnings
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setNumWarnings
 parameter_list|(
@@ -2733,41 +2204,14 @@ operator|=
 name|NumWarnings
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Return an ID for a diagnostic with the specified format string and
-end_comment
-
-begin_comment
 comment|/// level.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If this is the first request for this diagnostic, it is registered and
-end_comment
-
-begin_comment
 comment|/// created, otherwise the existing ID is returned.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param FormatString A fixed diagnostic format string that will be hashed
-end_comment
-
-begin_comment
 comment|/// and mapped to a unique DiagID.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|unsigned
@@ -2804,17 +2248,8 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Converts a diagnostic argument (as an intptr_t) into the string
-end_comment
-
-begin_comment
 comment|/// that represents it.
-end_comment
-
-begin_decl_stmt
 name|void
 name|ConvertArgToString
 argument_list|(
@@ -2871,9 +2306,6 @@ name|QualTypeVals
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|SetArgToStringFn
 parameter_list|(
@@ -2894,17 +2326,8 @@ operator|=
 name|Cookie
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Note that the prior diagnostic was emitted by some other
-end_comment
-
-begin_comment
 comment|/// \c DiagnosticsEngine, and we may be attaching a note to that diagnostic.
-end_comment
-
-begin_function
 name|void
 name|notePriorDiagnosticFrom
 parameter_list|(
@@ -2921,68 +2344,23 @@ operator|.
 name|LastDiagLevel
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Reset the state of the diagnostic object to its initial
-end_comment
-
-begin_comment
 comment|/// configuration.
-end_comment
-
-begin_function_decl
 name|void
 name|Reset
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// DiagnosticsEngine classification and reporting interfaces.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|/// \brief Determine whether the diagnostic is known to be ignored.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This can be used to opportunistically avoid expensive checks when it's
-end_comment
-
-begin_comment
 comment|/// known for certain that the diagnostic has been suppressed at the
-end_comment
-
-begin_comment
 comment|/// specified location \p Loc.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Loc The source location we are interested in finding out the
-end_comment
-
-begin_comment
 comment|/// diagnostic state. Can be null in order to query the latest state.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isIgnored
 argument_list|(
@@ -3014,49 +2392,16 @@ operator|::
 name|Ignored
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Based on the way the client configured the DiagnosticsEngine
-end_comment
-
-begin_comment
 comment|/// object, classify the specified diagnostic ID into a Level, consumable by
-end_comment
-
-begin_comment
 comment|/// the DiagnosticConsumer.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// To preserve invariant assumptions, this function should not be used to
-end_comment
-
-begin_comment
 comment|/// influence parse or semantic analysis actions. Instead consider using
-end_comment
-
-begin_comment
 comment|/// \c isIgnored().
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Loc The source location we are interested in finding out the
-end_comment
-
-begin_comment
 comment|/// diagnostic state. Can be null in order to query the latest state.
-end_comment
-
-begin_decl_stmt
 name|Level
 name|getDiagnosticLevel
 argument_list|(
@@ -3085,41 +2430,14 @@ name|this
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Issue the message to the client.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This actually returns an instance of DiagnosticBuilder which emits the
-end_comment
-
-begin_comment
 comment|/// diagnostics (through @c ProcessDiag) when it is destroyed.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param DiagID A member of the @c diag::kind enum.
-end_comment
-
-begin_comment
 comment|/// \param Loc Represents the source location associated with the diagnostic,
-end_comment
-
-begin_comment
 comment|/// which can be an invalid location if no position information is available.
-end_comment
-
-begin_function_decl
 specifier|inline
 name|DiagnosticBuilder
 name|Report
@@ -3131,9 +2449,6 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|inline
 name|DiagnosticBuilder
 name|Report
@@ -3142,9 +2457,6 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|Report
 parameter_list|(
@@ -3154,13 +2466,7 @@ modifier|&
 name|storedDiag
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Determine whethere there is already a diagnostic in flight.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isDiagnosticInFlight
 argument_list|()
@@ -3173,93 +2479,27 @@ operator|~
 literal|0U
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Set the "delayed" diagnostic that will be emitted once
-end_comment
-
-begin_comment
 comment|/// the current diagnostic completes.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///  If a diagnostic is already in-flight but the front end must
-end_comment
-
-begin_comment
 comment|///  report a problem (e.g., with an inconsistent file system
-end_comment
-
-begin_comment
 comment|///  state), this routine sets a "delayed" diagnostic that will be
-end_comment
-
-begin_comment
 comment|///  emitted after the current diagnostic completes. This should
-end_comment
-
-begin_comment
 comment|///  only be used for fatal errors detected at inconvenient
-end_comment
-
-begin_comment
 comment|///  times. If emitting a delayed diagnostic causes a second delayed
-end_comment
-
-begin_comment
 comment|///  diagnostic to be introduced, that second delayed diagnostic
-end_comment
-
-begin_comment
 comment|///  will be ignored.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param DiagID The ID of the diagnostic being delayed.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Arg1 A string argument that will be provided to the
-end_comment
-
-begin_comment
 comment|/// diagnostic. A copy of this string will be stored in the
-end_comment
-
-begin_comment
 comment|/// DiagnosticsEngine object itself.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Arg2 A string argument that will be provided to the
-end_comment
-
-begin_comment
 comment|/// diagnostic. A copy of this string will be stored in the
-end_comment
-
-begin_comment
 comment|/// DiagnosticsEngine object itself.
-end_comment
-
-begin_function_decl
 name|void
 name|SetDelayedDiagnostic
 parameter_list|(
@@ -3277,13 +2517,7 @@ init|=
 literal|""
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Clear out the current diagnostic.
-end_comment
-
-begin_function
 name|void
 name|Clear
 parameter_list|()
@@ -3294,13 +2528,7 @@ operator|~
 literal|0U
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Return the value associated with this diagnostic flag.
-end_comment
-
-begin_expr_stmt
 name|StringRef
 name|getFlagValue
 argument_list|()
@@ -3310,112 +2538,49 @@ return|return
 name|FlagValue
 return|;
 block|}
-end_expr_stmt
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_comment
 comment|/// \brief Report the delayed diagnostic.
-end_comment
-
-begin_function_decl
 name|void
 name|ReportDelayed
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|// This is private state used by DiagnosticBuilder.  We put it here instead of
-end_comment
-
-begin_comment
 comment|// in DiagnosticBuilder in order to keep DiagnosticBuilder a small lightweight
-end_comment
-
-begin_comment
 comment|// object.  This implementation choice means that we can only have one
-end_comment
-
-begin_comment
 comment|// diagnostic "in flight" at a time, but this seems to be a reasonable
-end_comment
-
-begin_comment
 comment|// tradeoff to keep these objects small.  Assertions verify that only one
-end_comment
-
-begin_comment
 comment|// diagnostic is in flight at a time.
-end_comment
-
-begin_decl_stmt
 name|friend
 name|class
 name|DiagnosticIDs
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|DiagnosticBuilder
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|Diagnostic
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|PartialDiagnostic
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|DiagnosticErrorTrap
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief The location of the current diagnostic that is in flight.
-end_comment
-
-begin_decl_stmt
 name|SourceLocation
 name|CurDiagLoc
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief The ID of the current diagnostic that is in flight.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is set to ~0U when there is no diagnostic in flight.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|CurDiagID
 decl_stmt|;
-end_decl_stmt
-
-begin_enum
 enum|enum
 block|{
 comment|/// \brief The maximum number of arguments we can hold.
@@ -3428,40 +2593,16 @@ init|=
 literal|10
 block|,   }
 enum|;
-end_enum
-
-begin_comment
 comment|/// \brief The number of entries in Arguments.
-end_comment
-
-begin_decl_stmt
 name|signed
 name|char
 name|NumDiagArgs
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Specifies whether an argument is in DiagArgumentsStr or
-end_comment
-
-begin_comment
 comment|/// in DiagArguments.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is an array of ArgumentKind::ArgumentKind enum values, one for each
-end_comment
-
-begin_comment
 comment|/// argument.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|char
 name|DiagArgumentsKind
@@ -3469,25 +2610,10 @@ index|[
 name|MaxArguments
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Holds the values of each string argument for the current
-end_comment
-
-begin_comment
 comment|/// diagnostic.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is only used when the corresponding ArgumentKind is ak_std_string.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -3496,42 +2622,18 @@ index|[
 name|MaxArguments
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The values for the various substitution positions.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is used when the argument is not an std::string.  The specific
-end_comment
-
-begin_comment
 comment|/// value is mangled into an intptr_t and the interpretation depends on
-end_comment
-
-begin_comment
 comment|/// exactly what sort of argument kind it is.
-end_comment
-
-begin_decl_stmt
 name|intptr_t
 name|DiagArgumentsVal
 index|[
 name|MaxArguments
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief The list of ranges added to this diagnostic.
-end_comment
-
-begin_expr_stmt
 name|SmallVector
 operator|<
 name|CharSourceRange
@@ -3540,17 +2642,8 @@ literal|8
 operator|>
 name|DiagRanges
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief If valid, provides a hint with some code to insert, remove,
-end_comment
-
-begin_comment
 comment|/// or modify at a particular position.
-end_comment
-
-begin_expr_stmt
 name|SmallVector
 operator|<
 name|FixItHint
@@ -3559,9 +2652,6 @@ literal|8
 operator|>
 name|DiagFixItHints
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|DiagnosticMapping
 name|makeUserMapping
 argument_list|(
@@ -3623,21 +2713,9 @@ return|return
 name|Mapping
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Used to report a diagnostic that is finally fully formed.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \returns true if the diagnostic was emitted, false if it was suppressed.
-end_comment
-
-begin_function
 name|bool
 name|ProcessDiag
 parameter_list|()
@@ -3652,57 +2730,21 @@ name|this
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// @name Diagnostic Emission
-end_comment
-
-begin_comment
 comment|/// @{
-end_comment
-
-begin_label
 name|protected
 label|:
-end_label
-
-begin_comment
 comment|// Sema requires access to the following functions because the current design
-end_comment
-
-begin_comment
 comment|// of SFINAE requires it to use its own SemaDiagnosticBuilder, which needs to
-end_comment
-
-begin_comment
 comment|// access us directly to ensure we minimize the emitted code for the common
-end_comment
-
-begin_comment
 comment|// Sema::Diag() patterns.
-end_comment
-
-begin_decl_stmt
 name|friend
 name|class
 name|Sema
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Emit the current diagnostic and clear the diagnostic state.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param Force Emit the diagnostic regardless of suppression settings.
-end_comment
-
-begin_function_decl
 name|bool
 name|EmitCurrentDiagnostic
 parameter_list|(
@@ -3712,9 +2754,6 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|unsigned
 name|getCurrentDiagID
 argument_list|()
@@ -3724,9 +2763,6 @@ return|return
 name|CurDiagID
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getCurrentDiagLoc
 argument_list|()
@@ -3736,28 +2772,23 @@ return|return
 name|CurDiagLoc
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// @}
-end_comment
-
-begin_decl_stmt
 name|friend
 name|class
 name|ASTReader
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|ASTWriter
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};
 comment|/// \brief RAII class that determines when any errors have occurred
 end_comment
 

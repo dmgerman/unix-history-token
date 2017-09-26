@@ -356,6 +356,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/API/SBTrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBTraceOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/API/SBType.h"
 end_include
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/lib/Target/AArch64/AArch64CallLowering.h - Call lowering -----===//
+comment|//===--- AArch64CallLowering.h - Call lowering ------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -54,14 +54,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_AARCH64_AARCH64CALLLOWERING
+name|LLVM_LIB_TARGET_AARCH64_AARCH64CALLLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_AARCH64_AARCH64CALLLOWERING
+name|LLVM_LIB_TARGET_AARCH64_AARCH64CALLLOWERING_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
 
 begin_include
 include|#
@@ -72,7 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
 end_include
 
 begin_decl_stmt
@@ -126,6 +138,8 @@ name|bool
 name|lowerCall
 argument_list|(
 argument|MachineIRBuilder&MIRBuilder
+argument_list|,
+argument|CallingConv::ID CallConv
 argument_list|,
 argument|const MachineOperand&Callee
 argument_list|,
@@ -184,15 +198,9 @@ name|function
 operator|<
 name|void
 argument_list|(
-name|ArrayRef
-operator|<
 name|unsigned
-operator|>
 argument_list|,
-name|ArrayRef
-operator|<
 name|uint64_t
-operator|>
 argument_list|)
 operator|>
 name|SplitArgTy
@@ -221,7 +229,9 @@ name|MachineRegisterInfo
 operator|&
 name|MRI
 argument_list|,
+specifier|const
 name|SplitArgTy
+operator|&
 name|SplitArg
 argument_list|)
 decl|const
@@ -235,13 +245,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End of namespace llvm;
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_AARCH64_AARCH64CALLLOWERING_H
+end_comment
 
 end_unit
 

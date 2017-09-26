@@ -50,12 +50,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Stream.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ValueObject.h"
 end_include
 
@@ -69,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/ObjCLanguageRuntime.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Stream.h"
 end_include
 
 begin_decl_stmt

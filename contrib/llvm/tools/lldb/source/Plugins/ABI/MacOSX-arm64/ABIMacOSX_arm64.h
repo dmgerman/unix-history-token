@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Target/ABI.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/ABI.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_include
@@ -286,12 +286,9 @@ operator|::
 name|ABISP
 name|CreateInstance
 argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|ArchSpec
-operator|&
-name|arch
+argument|lldb::ProcessSP process_sp
+argument_list|,
+argument|const lldb_private::ArchSpec&arch
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -344,7 +341,7 @@ end_expr_stmt
 begin_expr_stmt
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|SetReturnValueObject
 argument_list|(
 argument|lldb::StackFrameSP&frame_sp
@@ -380,14 +377,21 @@ name|private
 label|:
 end_label
 
-begin_expr_stmt
+begin_macro
 name|ABIMacOSX_arm64
-argument_list|()
-operator|:
+argument_list|(
+argument|lldb::ProcessSP process_sp
+argument_list|)
+end_macro
+
+begin_expr_stmt
+unit|:
 name|lldb_private
 operator|::
 name|ABI
-argument_list|()
+argument_list|(
+argument|process_sp
+argument_list|)
 block|{
 comment|// Call CreateInstance instead.
 block|}

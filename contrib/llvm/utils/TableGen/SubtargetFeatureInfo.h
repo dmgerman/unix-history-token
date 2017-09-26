@@ -83,6 +83,24 @@ decl_stmt|;
 name|class
 name|RecordKeeper
 decl_stmt|;
+struct_decl|struct
+name|SubtargetFeatureInfo
+struct_decl|;
+name|using
+name|SubtargetFeatureInfoMap
+init|=
+name|std
+operator|::
+name|map
+operator|<
+name|Record
+operator|*
+decl_stmt|,
+name|SubtargetFeatureInfo
+decl_stmt|,
+name|LessRecordByID
+decl|>
+decl_stmt|;
 comment|/// Helper class for storing information on a subtarget feature which
 comment|/// participates in instruction matching.
 struct|struct
@@ -134,6 +152,43 @@ name|str
 argument_list|()
 return|;
 block|}
+comment|/// \brief The name of the enumerated constant identifying the bitnumber for
+comment|/// this feature.
+name|std
+operator|::
+name|string
+name|getEnumBitName
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|"Feature_"
+operator|+
+name|TheDef
+operator|->
+name|getName
+argument_list|()
+operator|.
+name|str
+argument_list|()
+operator|+
+literal|"Bit"
+return|;
+block|}
+name|bool
+name|mustRecomputePerFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheDef
+operator|->
+name|getValueAsBit
+argument_list|(
+literal|"RecomputePerFunction"
+argument_list|)
+return|;
+block|}
 name|void
 name|dump
 argument_list|()
@@ -162,54 +217,98 @@ name|Records
 argument_list|)
 expr_stmt|;
 comment|/// Emit the subtarget feature flag definitions.
+comment|///
+comment|/// This version emits the bit value for the feature and is therefore limited
+comment|/// to 64 feature bits.
 specifier|static
 name|void
 name|emitSubtargetFeatureFlagEnumeration
-argument_list|(
-name|std
-operator|::
-name|map
-operator|<
-name|Record
-operator|*
-argument_list|,
-name|SubtargetFeatureInfo
-argument_list|,
-name|LessRecordByID
-operator|>
-operator|&
+parameter_list|(
+name|SubtargetFeatureInfoMap
+modifier|&
 name|SubtargetFeatures
-argument_list|,
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
+comment|/// Emit the subtarget feature flag definitions.
+comment|///
+comment|/// This version emits the bit index for the feature and can therefore support
+comment|/// more than 64 feature bits.
+specifier|static
+name|void
+name|emitSubtargetFeatureBitEnumeration
+parameter_list|(
+name|SubtargetFeatureInfoMap
+modifier|&
+name|SubtargetFeatures
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 specifier|static
 name|void
 name|emitNameTable
-argument_list|(
-name|std
-operator|::
-name|map
-operator|<
-name|Record
-operator|*
-argument_list|,
-name|SubtargetFeatureInfo
-argument_list|,
-name|LessRecordByID
-operator|>
-operator|&
+parameter_list|(
+name|SubtargetFeatureInfoMap
+modifier|&
 name|SubtargetFeatures
-argument_list|,
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Emit the function to compute the list of available features given a
 comment|/// subtarget.
+comment|///
+comment|/// This version is used for subtarget features defined using Predicate<>
+comment|/// and supports more than 64 feature bits.
+comment|///
+comment|/// \param TargetName The name of the target as used in class prefixes (e.g.
+comment|///<TargetName>Subtarget)
+comment|/// \param ClassName  The name of the class (without the<Target> prefix)
+comment|///                   that will contain the generated functions.
+comment|/// \param FuncName   The name of the function to emit.
+comment|/// \param SubtargetFeatures A map of TableGen records to the
+comment|///                          SubtargetFeatureInfo equivalent.
+comment|/// \param ExtraParams Additional arguments to the generated function.
+specifier|static
+name|void
+name|emitComputeAvailableFeatures
+parameter_list|(
+name|StringRef
+name|TargetName
+parameter_list|,
+name|StringRef
+name|ClassName
+parameter_list|,
+name|StringRef
+name|FuncName
+parameter_list|,
+name|SubtargetFeatureInfoMap
+modifier|&
+name|SubtargetFeatures
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|StringRef
+name|ExtraParams
+init|=
+literal|""
+parameter_list|)
+function_decl|;
+comment|/// Emit the function to compute the list of available features given a
+comment|/// subtarget.
+comment|///
+comment|/// This version is used for subtarget features defined using
+comment|/// AssemblerPredicate<> and supports up to 64 feature bits.
 comment|///
 comment|/// \param TargetName The name of the target as used in class prefixes (e.g.
 comment|///<TargetName>Subtarget)
@@ -220,36 +319,26 @@ comment|/// \param SubtargetFeatures A map of TableGen records to the
 comment|///                          SubtargetFeatureInfo equivalent.
 specifier|static
 name|void
-name|emitComputeAvailableFeatures
-argument_list|(
+name|emitComputeAssemblerAvailableFeatures
+parameter_list|(
 name|StringRef
 name|TargetName
-argument_list|,
+parameter_list|,
 name|StringRef
 name|ClassName
-argument_list|,
+parameter_list|,
 name|StringRef
 name|FuncName
-argument_list|,
-name|std
-operator|::
-name|map
-operator|<
-name|Record
-operator|*
-argument_list|,
-name|SubtargetFeatureInfo
-argument_list|,
-name|LessRecordByID
-operator|>
-operator|&
+parameter_list|,
+name|SubtargetFeatureInfoMap
+modifier|&
 name|SubtargetFeatures
-argument_list|,
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 block|}

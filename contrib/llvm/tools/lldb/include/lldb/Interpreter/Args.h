@@ -98,13 +98,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/OptionParser.h"
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -123,6 +117,9 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+struct_decl|struct
+name|Option
+struct_decl|;
 typedef|typedef
 name|std
 operator|::
@@ -590,6 +587,35 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|/// Gets the argument as an ArrayRef. Note that the return value does *not*
+comment|/// have a nullptr const char * at the end, as the size of the list is
+comment|/// embedded in the ArrayRef object.
+comment|//------------------------------------------------------------------
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|GetArgumentArrayRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|m_argv
+argument_list|)
+operator|.
+name|drop_back
+argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
 comment|/// Appends a new argument to the end of the list argument list.
 comment|///
 comment|/// @param[in] arg_cstr
@@ -802,7 +828,7 @@ comment|///   not occur due to not having a platform.
 comment|///
 comment|/// @see class Options
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|ParseOptions
 argument_list|(
 name|Options
@@ -1041,7 +1067,7 @@ argument|llvm::StringRef s
 argument_list|,
 argument|lldb::addr_t fail_value
 argument_list|,
-argument|Error *error
+argument|Status *error
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -1094,7 +1120,7 @@ argument_list|,
 name|int32_t
 name|fail_value
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1114,7 +1140,7 @@ argument_list|)
 expr_stmt|;
 comment|// TODO: Use StringRef
 specifier|static
-name|Error
+name|Status
 name|StringToFormat
 argument_list|(
 specifier|const

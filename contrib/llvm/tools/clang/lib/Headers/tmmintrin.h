@@ -1925,19 +1925,23 @@ comment|///    contiguous products with signed saturation, and writes the 16-bit
 end_comment
 
 begin_comment
-comment|///    the corresponding bits in the destination. For example, bits [7:0] of
+comment|///    the corresponding bits in the destination.
 end_comment
 
 begin_comment
-comment|///    both operands are multiplied, bits [15:8] of both operands are
+comment|///
 end_comment
 
 begin_comment
-comment|///    multiplied, and the sum of both results is written to bits [15:0] of the
+comment|///    For example, bits [7:0] of both operands are multiplied, bits [15:8] of
 end_comment
 
 begin_comment
-comment|///    destination.
+comment|///    both operands are multiplied, and the sum of both results is written to
+end_comment
+
+begin_comment
+comment|///    bits [15:0] of the destination.
 end_comment
 
 begin_comment
@@ -2067,19 +2071,23 @@ comment|///    contiguous products with signed saturation, and writes the 16-bit
 end_comment
 
 begin_comment
-comment|///    the corresponding bits in the destination. For example, bits [7:0] of
+comment|///    the corresponding bits in the destination.
 end_comment
 
 begin_comment
-comment|///    both operands are multiplied, bits [15:8] of both operands are
+comment|///
 end_comment
 
 begin_comment
-comment|///    multiplied, and the sum of both results is written to bits [15:0] of the
+comment|///    For example, bits [7:0] of both operands are multiplied, bits [15:8] of
 end_comment
 
 begin_comment
-comment|///    destination.
+comment|///    both operands are multiplied, and the sum of both results is written to
+end_comment
+
+begin_comment
+comment|///    bits [15:0] of the destination.
 end_comment
 
 begin_comment
@@ -2585,31 +2593,35 @@ comment|/// \brief For each 8-bit integer in the first source operand, perform o
 end_comment
 
 begin_comment
-comment|///    the following actions as specified by the second source operand: If the
+comment|///    the following actions as specified by the second source operand.
 end_comment
 
 begin_comment
-comment|///    byte in the second source is negative, calculate the two's complement of
+comment|///
 end_comment
 
 begin_comment
-comment|///    the corresponding byte in the first source, and write that value to the
+comment|///    If the byte in the second source is negative, calculate the two's
 end_comment
 
 begin_comment
-comment|///    destination. If the byte in the second source is positive, copy the
+comment|///    complement of the corresponding byte in the first source, and write that
 end_comment
 
 begin_comment
-comment|///    corresponding byte from the first source to the destination. If the byte
+comment|///    value to the destination. If the byte in the second source is positive,
 end_comment
 
 begin_comment
-comment|///    in the second source is zero, clear the corresponding byte in the
+comment|///    copy the corresponding byte from the first source to the destination. If
 end_comment
 
 begin_comment
-comment|///    destination.
+comment|///    the byte in the second source is zero, clear the corresponding byte in
+end_comment
+
+begin_comment
+comment|///    the destination.
 end_comment
 
 begin_comment
@@ -2695,31 +2707,35 @@ comment|/// \brief For each 16-bit integer in the first source operand, perform 
 end_comment
 
 begin_comment
-comment|///    the following actions as specified by the second source operand: If the
+comment|///    the following actions as specified by the second source operand.
 end_comment
 
 begin_comment
-comment|///    word in the second source is negative, calculate the two's complement of
+comment|///
 end_comment
 
 begin_comment
-comment|///    the corresponding word in the first source, and write that value to the
+comment|///    If the word in the second source is negative, calculate the two's
 end_comment
 
 begin_comment
-comment|///    destination. If the word in the second source is positive, copy the
+comment|///    complement of the corresponding word in the first source, and write that
 end_comment
 
 begin_comment
-comment|///    corresponding word from the first source to the destination. If the word
+comment|///    value to the destination. If the word in the second source is positive,
 end_comment
 
 begin_comment
-comment|///    in the second source is zero, clear the corresponding word in the
+comment|///    copy the corresponding word from the first source to the destination. If
 end_comment
 
 begin_comment
-comment|///    destination.
+comment|///    the word in the second source is zero, clear the corresponding word in
+end_comment
+
+begin_comment
+comment|///    the destination.
 end_comment
 
 begin_comment
@@ -2805,11 +2821,15 @@ comment|/// \brief For each 32-bit integer in the first source operand, perform 
 end_comment
 
 begin_comment
-comment|///    the following actions as specified by the second source operand: If the
+comment|///    the following actions as specified by the second source operand.
 end_comment
 
 begin_comment
-comment|///    doubleword in the second source is negative, calculate the two's
+comment|///
+end_comment
+
+begin_comment
+comment|///    If the doubleword in the second source is negative, calculate the two's
 end_comment
 
 begin_comment
@@ -2915,31 +2935,35 @@ comment|/// \brief For each 8-bit integer in the first source operand, perform o
 end_comment
 
 begin_comment
-comment|///    the following actions as specified by the second source operand: If the
+comment|///    the following actions as specified by the second source operand.
 end_comment
 
 begin_comment
-comment|///    byte in the second source is negative, calculate the two's complement of
+comment|///
 end_comment
 
 begin_comment
-comment|///    the corresponding byte in the first source, and write that value to the
+comment|///    If the byte in the second source is negative, calculate the two's
 end_comment
 
 begin_comment
-comment|///    destination. If the byte in the second source is positive, copy the
+comment|///    complement of the corresponding byte in the first source, and write that
 end_comment
 
 begin_comment
-comment|///    corresponding byte from the first source to the destination. If the byte
+comment|///    value to the destination. If the byte in the second source is positive,
 end_comment
 
 begin_comment
-comment|///    in the second source is zero, clear the corresponding byte in the
+comment|///    copy the corresponding byte from the first source to the destination. If
 end_comment
 
 begin_comment
-comment|///    destination.
+comment|///    the byte in the second source is zero, clear the corresponding byte in
+end_comment
+
+begin_comment
+comment|///    the destination.
 end_comment
 
 begin_comment
@@ -3025,31 +3049,35 @@ comment|/// \brief For each 16-bit integer in the first source operand, perform 
 end_comment
 
 begin_comment
-comment|///    the following actions as specified by the second source operand: If the
+comment|///    the following actions as specified by the second source operand.
 end_comment
 
 begin_comment
-comment|///    word in the second source is negative, calculate the two's complement of
+comment|///
 end_comment
 
 begin_comment
-comment|///    the corresponding word in the first source, and write that value to the
+comment|///    If the word in the second source is negative, calculate the two's
 end_comment
 
 begin_comment
-comment|///    destination. If the word in the second source is positive, copy the
+comment|///    complement of the corresponding word in the first source, and write that
 end_comment
 
 begin_comment
-comment|///    corresponding word from the first source to the destination. If the word
+comment|///    value to the destination. If the word in the second source is positive,
 end_comment
 
 begin_comment
-comment|///    in the second source is zero, clear the corresponding word in the
+comment|///    copy the corresponding word from the first source to the destination. If
 end_comment
 
 begin_comment
-comment|///    destination.
+comment|///    the word in the second source is zero, clear the corresponding word in
+end_comment
+
+begin_comment
+comment|///    the destination.
 end_comment
 
 begin_comment
@@ -3135,11 +3163,15 @@ comment|/// \brief For each 32-bit integer in the first source operand, perform 
 end_comment
 
 begin_comment
-comment|///    the following actions as specified by the second source operand: If the
+comment|///    the following actions as specified by the second source operand.
 end_comment
 
 begin_comment
-comment|///    doubleword in the second source is negative, calculate the two's
+comment|///
+end_comment
+
+begin_comment
+comment|///    If the doubleword in the second source is negative, calculate the two's
 end_comment
 
 begin_comment

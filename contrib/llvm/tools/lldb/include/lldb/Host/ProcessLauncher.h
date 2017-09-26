@@ -51,7 +51,7 @@ name|class
 name|ProcessLaunchInfo
 decl_stmt|;
 name|class
-name|Error
+name|Status
 decl_stmt|;
 name|class
 name|HostProcess
@@ -75,7 +75,7 @@ name|ProcessLaunchInfo
 operator|&
 name|launch_info
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

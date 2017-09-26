@@ -98,18 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UserID.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/UserSettingsController.h"
 end_include
 
@@ -129,6 +117,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/StackFrameList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_include
@@ -456,6 +456,16 @@ name|stop_info_sp
 expr_stmt|;
 comment|// You have to restore the stop info or you
 comment|// might continue with the wrong signals.
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|ThreadPlanSP
+operator|>
+name|m_completed_plan_stack
+expr_stmt|;
 name|lldb
 operator|::
 name|RegisterCheckpointSP
@@ -1162,7 +1172,7 @@ name|GetCurrentInlinedDepth
 argument_list|()
 return|;
 block|}
-name|Error
+name|Status
 name|ReturnFromFrameWithIndex
 argument_list|(
 name|uint32_t
@@ -1179,7 +1189,7 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|ReturnFromFrame
 argument_list|(
 name|lldb
@@ -1198,7 +1208,7 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|JumpToLine
 argument_list|(
 specifier|const
@@ -1450,7 +1460,7 @@ comment|/// @return
 comment|///     An error that describes anything that went wrong
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|StepIn
 parameter_list|(
 name|bool
@@ -1481,7 +1491,7 @@ comment|/// @return
 comment|///     An error that describes anything that went wrong
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|StepOver
 parameter_list|(
 name|bool
@@ -1503,7 +1513,7 @@ comment|/// @return
 comment|///     An error that describes anything that went wrong
 comment|//------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|StepOut
 parameter_list|()
 function_decl|;
@@ -2075,7 +2085,7 @@ comment|///
 comment|/// @return
 comment|///     An error if the thread plan could not be unwound.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|UnwindInnermostExpression
 parameter_list|()
 function_decl|;
@@ -2156,6 +2166,17 @@ name|ThreadPlan
 modifier|*
 name|plan
 parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Check if we have completed plan to override breakpoint stop reason
+comment|///
+comment|/// @return
+comment|///     Returns true if completed plan stack is not empty
+comment|///     false otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|CompletedPlanOverridesBreakpoint
+parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Queues a generic thread plan.
@@ -2446,6 +2467,11 @@ name|num_frames_with_source
 parameter_list|,
 name|bool
 name|stop_format
+parameter_list|,
+name|bool
+name|only_stacks
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|size_t
@@ -2555,6 +2581,10 @@ operator|&
 name|stop_info_sp
 argument_list|)
 decl_stmt|;
+name|void
+name|ResetStopInfo
+parameter_list|()
+function_decl|;
 name|void
 name|SetShouldReportStop
 parameter_list|(

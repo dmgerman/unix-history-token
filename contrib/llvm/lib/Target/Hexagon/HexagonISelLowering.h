@@ -182,57 +182,17 @@ comment|// Jump table.
 name|CP
 block|,
 comment|// Constant pool.
-name|POPCOUNT
-block|,
 name|COMBINE
 block|,
 name|PACKHL
 block|,
-name|VSPLATB
+name|VSPLAT
 block|,
-name|VSPLATH
+name|VASL
 block|,
-name|SHUFFEB
+name|VASR
 block|,
-name|SHUFFEH
-block|,
-name|SHUFFOB
-block|,
-name|SHUFFOH
-block|,
-name|VSXTBH
-block|,
-name|VSXTBW
-block|,
-name|VSRAW
-block|,
-name|VSRAH
-block|,
-name|VSRLW
-block|,
-name|VSRLH
-block|,
-name|VSHLW
-block|,
-name|VSHLH
-block|,
-name|VCMPBEQ
-block|,
-name|VCMPBGT
-block|,
-name|VCMPBGTU
-block|,
-name|VCMPHEQ
-block|,
-name|VCMPHGT
-block|,
-name|VCMPHGTU
-block|,
-name|VCMPWEQ
-block|,
-name|VCMPWGT
-block|,
-name|VCMPWGTU
+name|VLSR
 block|,
 name|INSERT
 block|,
@@ -244,13 +204,17 @@ name|EXTRACTURP
 block|,
 name|VCOMBINE
 block|,
-name|VPACK
+name|VPACKE
+block|,
+name|VPACKO
 block|,
 name|TC_RETURN
 block|,
 name|EH_RETURN
 block|,
 name|DCFETCH
+block|,
+name|READCYCLE
 block|,
 name|OP_END
 block|}
@@ -513,6 +477,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerREADCYCLECOUNTER
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerEH_LABEL
 argument_list|(
 argument|SDValue Op
@@ -613,7 +586,7 @@ argument|SDValue Chain
 argument_list|,
 argument|GlobalAddressSDNode *GA
 argument_list|,
-argument|SDValue *InFlag
+argument|SDValue InFlag
 argument_list|,
 argument|EVT PtrVT
 argument_list|,
@@ -686,15 +659,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerCTPOP
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerFRAMEADDR
 argument_list|(
 argument|SDValue Op
@@ -721,14 +685,21 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-name|SDValue
-name|LowerLOAD
+name|bool
+name|CanLowerReturn
 argument_list|(
-argument|SDValue Op
+argument|CallingConv::ID CallConv
 argument_list|,
-argument|SelectionDAG&DAG
+argument|MachineFunction&MF
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|LLVMContext&Context
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerReturn
@@ -753,7 +724,7 @@ block|;
 name|bool
 name|mayBeEmittedAsTailCall
 argument_list|(
-argument|CallInst *CI
+argument|const CallInst *CI
 argument_list|)
 specifier|const
 name|override

@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/IR/Intrinsics.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Intrinsics.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -649,7 +649,6 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-name|LLVM_DUMP_METHOD
 name|void
 name|dump
 argument_list|()
@@ -1155,7 +1154,7 @@ argument_list|(
 name|isReg
 argument_list|()
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|SubReg_TargetFlags
@@ -1245,7 +1244,7 @@ argument_list|(
 name|isReg
 argument_list|()
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsImp
@@ -1270,7 +1269,7 @@ operator|&&
 operator|!
 name|IsDef
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1308,7 +1307,7 @@ argument_list|()
 operator|&&
 name|IsDef
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsDead
@@ -1330,7 +1329,7 @@ argument_list|(
 name|isReg
 argument_list|()
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsUndef
@@ -1352,7 +1351,7 @@ argument_list|(
 name|isReg
 argument_list|()
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsInternalRead
@@ -1376,7 +1375,7 @@ argument_list|()
 operator|&&
 name|IsDef
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsEarlyClobber
@@ -1401,7 +1400,7 @@ operator|&&
 operator|!
 name|IsDef
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|IsDebug
@@ -1947,7 +1946,7 @@ name|isBlockAddress
 argument_list|()
 operator|)
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|SmallContents
@@ -1996,7 +1995,7 @@ name|isJTI
 argument_list|()
 operator|)
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|Contents
@@ -2023,7 +2022,7 @@ argument_list|(
 name|isMBB
 argument_list|()
 operator|&&
-literal|"Wrong MachineOperand accessor"
+literal|"Wrong MachineOperand mutator"
 argument_list|)
 expr_stmt|;
 name|Contents

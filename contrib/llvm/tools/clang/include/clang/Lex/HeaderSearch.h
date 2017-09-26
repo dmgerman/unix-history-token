@@ -162,7 +162,7 @@ comment|/// SrcMgr::CharacteristicKind.
 name|unsigned
 name|DirInfo
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/// \brief Whether this header file info was supplied by an external source,
 comment|/// and has not changed since.
@@ -1124,6 +1124,9 @@ comment|///
 comment|/// \param SuggestedModule If non-null, and the file found is semantically
 comment|/// part of a known module, this will be set to the module that should
 comment|/// be imported instead of preprocessing/parsing the file found.
+comment|///
+comment|/// \param IsMapped If non-null, and the search involved header maps, set to
+comment|/// true.
 specifier|const
 name|FileEntry
 modifier|*
@@ -1188,6 +1191,10 @@ operator|::
 name|KnownHeader
 operator|*
 name|SuggestedModule
+argument_list|,
+name|bool
+operator|*
+name|IsMapped
 argument_list|,
 name|bool
 name|SkipCache
@@ -1630,7 +1637,14 @@ comment|/// \brief Read the contents of the given module map file.
 comment|///
 comment|/// \param File The module map file.
 comment|/// \param IsSystem Whether this file is in a system header directory.
-comment|///
+comment|/// \param ID If the module map file is already mapped (perhaps as part of
+comment|///        processing a preprocessed module), the ID of the file.
+comment|/// \param Offset [inout] An offset within ID to start parsing. On exit,
+comment|///        filled by the end of the parsed contents (either EOF or the
+comment|///        location of an end-of-module-map pragma).
+comment|/// \param OriginalModuleMapFile The original path to the module map file,
+comment|///        used to resolve paths within the module (this is required when
+comment|///        building the module from preprocessed source).
 comment|/// \returns true if an error occurred, false otherwise.
 name|bool
 name|loadModuleMapFile
@@ -1642,6 +1656,24 @@ name|File
 parameter_list|,
 name|bool
 name|IsSystem
+parameter_list|,
+name|FileID
+name|ID
+init|=
+name|FileID
+argument_list|()
+parameter_list|,
+name|unsigned
+modifier|*
+name|Offset
+init|=
+name|nullptr
+parameter_list|,
+name|StringRef
+name|OriginalModuleMapFile
+init|=
+name|StringRef
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// \brief Collect the set of all known, top-level modules.
@@ -2088,6 +2120,18 @@ specifier|const
 name|DirectoryEntry
 modifier|*
 name|Dir
+parameter_list|,
+name|FileID
+name|ID
+init|=
+name|FileID
+argument_list|()
+parameter_list|,
+name|unsigned
+modifier|*
+name|Offset
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Try to load the module map file in the given directory.

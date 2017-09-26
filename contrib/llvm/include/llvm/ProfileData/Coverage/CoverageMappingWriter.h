@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=-- CoverageMappingWriter.h - Code coverage mapping writer ------*- C++ -*-=//
+comment|//===- CoverageMappingWriter.h - Code coverage mapping writer ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_PROFILEDATA_COVERAGEMAPPINGWRITER_H
+name|LLVM_PROFILEDATA_COVERAGE_COVERAGEMAPPINGWRITER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_PROFILEDATA_COVERAGEMAPPINGWRITER_H
+name|LLVM_PROFILEDATA_COVERAGE_COVERAGEMAPPINGWRITER_H
 end_define
 
 begin_include
@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -81,16 +81,13 @@ directive|include
 file|"llvm/ProfileData/Coverage/CoverageMapping.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 name|namespace
 name|coverage
 block|{
@@ -216,6 +213,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_PROFILEDATA_COVERAGE_COVERAGEMAPPINGWRITER_H
+end_comment
 
 end_unit
 

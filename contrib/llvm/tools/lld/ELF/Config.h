@@ -64,7 +64,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ELF.h"
+file|"llvm/BinaryFormat/ELF.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CachePruning.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Endian.h"
 end_include
 
 begin_include
@@ -118,7 +136,7 @@ operator|,
 name|Uuid
 block|}
 empty_stmt|;
-comment|// For --discard-{all,locals,none} and --retain-symbols-file.
+comment|// For --discard-{all,locals,none}.
 name|enum
 name|class
 name|DiscardPolicy
@@ -128,8 +146,6 @@ operator|,
 name|All
 operator|,
 name|Locals
-operator|,
-name|RetainFile
 operator|,
 name|None
 block|}
@@ -151,13 +167,15 @@ name|enum
 name|class
 name|UnresolvedPolicy
 block|{
-name|NoUndef
-operator|,
 name|ReportError
 operator|,
 name|Warn
 operator|,
+name|WarnAll
+operator|,
 name|Ignore
+operator|,
+name|IgnoreAll
 block|}
 empty_stmt|;
 comment|// For --sort-section and linkerscript sorting rules.
@@ -209,23 +227,6 @@ comment|// can be found in version script if it is used for link.
 struct|struct
 name|VersionDefinition
 block|{
-name|VersionDefinition
-argument_list|(
-argument|llvm::StringRef Name
-argument_list|,
-argument|uint16_t Id
-argument_list|)
-block|:
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-operator|,
-name|Id
-argument_list|(
-argument|Id
-argument_list|)
-block|{}
 name|llvm
 operator|::
 name|StringRef
@@ -233,6 +234,8 @@ name|Name
 expr_stmt|;
 name|uint16_t
 name|Id
+init|=
+literal|0
 decl_stmt|;
 name|std
 operator|::
@@ -244,8 +247,23 @@ name|Globals
 expr_stmt|;
 name|size_t
 name|NameOff
+init|=
+literal|0
 decl_stmt|;
-comment|// Offset in string table.
+comment|// Offset in the string table
+block|}
+struct|;
+comment|// Structure for mapping renamed symbols
+struct|struct
+name|RenamedSymbol
+block|{
+name|Symbol
+modifier|*
+name|Target
+decl_stmt|;
+name|uint8_t
+name|OriginalBinding
+decl_stmt|;
 block|}
 struct|;
 comment|// This struct contains the global configuration for the linker.
@@ -266,6 +284,11 @@ name|OSABI
 init|=
 literal|0
 decl_stmt|;
+name|llvm
+operator|::
+name|CachePruningPolicy
+name|ThinLTOCachePolicy
+expr_stmt|;
 name|llvm
 operator|::
 name|StringMap
@@ -312,7 +335,17 @@ expr_stmt|;
 name|llvm
 operator|::
 name|StringRef
+name|MapFile
+expr_stmt|;
+name|llvm
+operator|::
+name|StringRef
 name|OutputFile
+expr_stmt|;
+name|llvm
+operator|::
+name|StringRef
+name|OptRemarksFilename
 expr_stmt|;
 name|llvm
 operator|::
@@ -326,15 +359,13 @@ name|Sysroot
 expr_stmt|;
 name|llvm
 operator|::
-name|StringSet
-operator|<
-operator|>
-name|RetainSymbolsFile
+name|StringRef
+name|ThinLTOCacheDir
 expr_stmt|;
 name|std
 operator|::
 name|string
-name|RPath
+name|Rpath
 expr_stmt|;
 name|std
 operator|::
@@ -352,7 +383,27 @@ name|llvm
 operator|::
 name|StringRef
 operator|>
+name|Argv
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|>
 name|AuxiliaryList
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|>
+name|FilterList
 expr_stmt|;
 name|std
 operator|::
@@ -408,6 +459,17 @@ name|uint8_t
 operator|>
 name|BuildIdVector
 expr_stmt|;
+name|llvm
+operator|::
+name|MapVector
+operator|<
+name|Symbol
+operator|*
+operator|,
+name|RenamedSymbol
+operator|>
+name|RenamedSymbols
+expr_stmt|;
 name|bool
 name|AllowMultipleDefinition
 decl_stmt|;
@@ -428,6 +490,9 @@ init|=
 name|false
 decl_stmt|;
 name|bool
+name|CompressDebugSections
+decl_stmt|;
+name|bool
 name|DefineCommon
 decl_stmt|;
 name|bool
@@ -440,6 +505,9 @@ name|DisableVerify
 decl_stmt|;
 name|bool
 name|EhFrameHdr
+decl_stmt|;
+name|bool
+name|EmitRelocs
 decl_stmt|;
 name|bool
 name|EnableNewDtags
@@ -458,16 +526,9 @@ name|GdbIndex
 decl_stmt|;
 name|bool
 name|GnuHash
-init|=
-name|false
 decl_stmt|;
 name|bool
 name|ICF
-decl_stmt|;
-name|bool
-name|Mips64EL
-init|=
-name|false
 decl_stmt|;
 name|bool
 name|MipsN32Abi
@@ -487,19 +548,16 @@ name|bool
 name|OFormatBinary
 decl_stmt|;
 name|bool
-name|OMagic
+name|Omagic
 decl_stmt|;
 name|bool
-name|Pic
+name|OptRemarksWithHotness
 decl_stmt|;
 name|bool
 name|Pie
 decl_stmt|;
 name|bool
 name|PrintGcSections
-decl_stmt|;
-name|bool
-name|Rela
 decl_stmt|;
 name|bool
 name|Relocatable
@@ -520,8 +578,6 @@ name|false
 decl_stmt|;
 name|bool
 name|SysvHash
-init|=
-name|true
 decl_stmt|;
 name|bool
 name|Target1Rel
@@ -548,7 +604,13 @@ name|bool
 name|ZExecstack
 decl_stmt|;
 name|bool
+name|ZNocopyreloc
+decl_stmt|;
+name|bool
 name|ZNodelete
+decl_stmt|;
+name|bool
+name|ZNodlopen
 decl_stmt|;
 name|bool
 name|ZNow
@@ -558,6 +620,12 @@ name|ZOrigin
 decl_stmt|;
 name|bool
 name|ZRelro
+decl_stmt|;
+name|bool
+name|ZRodynamic
+decl_stmt|;
+name|bool
+name|ZText
 decl_stmt|;
 name|bool
 name|ExitEarly
@@ -573,20 +641,12 @@ name|SortSection
 decl_stmt|;
 name|StripPolicy
 name|Strip
-init|=
-name|StripPolicy
-operator|::
-name|None
 decl_stmt|;
 name|UnresolvedPolicy
 name|UnresolvedSymbols
 decl_stmt|;
 name|Target2Policy
 name|Target2
-init|=
-name|Target2Policy
-operator|::
-name|GotRel
 decl_stmt|;
 name|BuildIdKind
 name|BuildId
@@ -643,6 +703,69 @@ name|Optimize
 decl_stmt|;
 name|unsigned
 name|ThinLTOJobs
+decl_stmt|;
+comment|// The following config options do not directly correspond to any
+comment|// particualr command line options.
+comment|// True if we need to pass through relocations in input files to the
+comment|// output file. Usually false because we consume relocations.
+name|bool
+name|CopyRelocs
+decl_stmt|;
+comment|// True if the target is ELF64. False if ELF32.
+name|bool
+name|Is64
+decl_stmt|;
+comment|// True if the target is little-endian. False if big-endian.
+name|bool
+name|IsLE
+decl_stmt|;
+comment|// endianness::little if IsLE is true. endianness::big otherwise.
+name|llvm
+operator|::
+name|support
+operator|::
+name|endianness
+name|Endianness
+expr_stmt|;
+comment|// True if the target is the little-endian MIPS64.
+comment|//
+comment|// The reason why we have this variable only for the MIPS is because
+comment|// we use this often.  Some ELF headers for MIPS64EL are in a
+comment|// mixed-endian (which is horrible and I'd say that's a serious spec
+comment|// bug), and we need to know whether we are reading MIPS ELF files or
+comment|// not in various places.
+comment|//
+comment|// (Note that MIPS64EL is not a typo for MIPS64LE. This is the official
+comment|// name whatever that means. A fun hypothesis is that "EL" is short for
+comment|// little-endian written in the little-endian order, but I don't know
+comment|// if that's true.)
+name|bool
+name|IsMips64EL
+decl_stmt|;
+comment|// The ELF spec defines two types of relocation table entries, RELA and
+comment|// REL. RELA is a triplet of (offset, info, addend) while REL is a
+comment|// tuple of (offset, info). Addends for REL are implicit and read from
+comment|// the location where the relocations are applied. So, REL is more
+comment|// compact than RELA but requires a bit of more work to process.
+comment|//
+comment|// (From the linker writer's view, this distinction is not necessary.
+comment|// If the ELF had chosen whichever and sticked with it, it would have
+comment|// been easier to write code to process relocations, but it's too late
+comment|// to change the spec.)
+comment|//
+comment|// Each ABI defines its relocation type. IsRela is true if target
+comment|// uses RELA. As far as we know, all 64-bit ABIs are using RELA. A
+comment|// few 32-bit ABIs are using RELA too.
+name|bool
+name|IsRela
+decl_stmt|;
+comment|// True if we are creating position-independent code.
+name|bool
+name|Pic
+decl_stmt|;
+comment|// 4 for ELF32, 8 for ELF64.
+name|int
+name|Wordsize
 decl_stmt|;
 block|}
 struct|;

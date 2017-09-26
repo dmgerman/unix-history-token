@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-------------- OrcABISupport.h - ABI support code  ---------*- C++ -*-===//
+comment|//===- OrcABISupport.h - ABI support code -----------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -78,7 +78,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"IndirectionUtils.h"
+file|"llvm/ExecutionEngine/JITSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -90,7 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Process.h"
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -135,22 +153,23 @@ name|ResolverCodeSize
 init|=
 literal|1
 decl_stmt|;
-typedef|typedef
-name|JITTargetAddress
-function_decl|(
-modifier|*
+name|using
 name|JITReentryFn
-function_decl|)
-parameter_list|(
+init|=
+name|JITTargetAddress
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|CallbackMgr
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|TrampolineId
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|void
 name|writeResolverCode
@@ -294,12 +313,9 @@ name|StubSizeVal
 block|;
 name|GenericIndirectStubsInfo
 argument_list|()
-operator|:
-name|NumStubs
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|GenericIndirectStubsInfo
 argument_list|(
 argument|unsigned NumStubs
@@ -467,6 +483,8 @@ name|private
 operator|:
 name|unsigned
 name|NumStubs
+operator|=
+literal|0
 block|;
 name|sys
 operator|::
@@ -500,29 +518,31 @@ name|ResolverCodeSize
 init|=
 literal|0x120
 decl_stmt|;
-typedef|typedef
+name|using
+name|IndirectStubsInfo
+init|=
 name|GenericIndirectStubsInfo
 operator|<
 literal|8
 operator|>
-name|IndirectStubsInfo
-expr_stmt|;
-typedef|typedef
-name|JITTargetAddress
-function_decl|(
-modifier|*
+decl_stmt|;
+name|using
 name|JITReentryFn
-function_decl|)
-parameter_list|(
+init|=
+name|JITTargetAddress
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|CallbackMgr
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|TrampolineId
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// @brief Write the resolver code into the given memory. The user is be
 comment|///        responsible for allocating the memory and setting permissions.
 specifier|static
@@ -606,13 +626,14 @@ name|TrampolineSize
 init|=
 literal|8
 decl_stmt|;
-typedef|typedef
+name|using
+name|IndirectStubsInfo
+init|=
 name|GenericIndirectStubsInfo
 operator|<
 literal|8
 operator|>
-name|IndirectStubsInfo
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief Write the requsted number of trampolines into the given memory,
 comment|///        which must be big enough to hold 1 pointer, plus NumTrampolines
 comment|///        trampolines.
@@ -674,22 +695,23 @@ name|ResolverCodeSize
 operator|=
 literal|0x6C
 block|;
-typedef|typedef
-name|JITTargetAddress
-function_decl|(
-modifier|*
+name|using
 name|JITReentryFn
-function_decl|)
-parameter_list|(
+operator|=
+name|JITTargetAddress
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|CallbackMgr
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|TrampolineId
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// @brief Write the resolver code into the given memory. The user is be
 comment|///        responsible for allocating the memory and setting permissions.
 specifier|static
@@ -702,9 +724,8 @@ argument|JITReentryFn Reentry
 argument_list|,
 argument|void *CallbackMgr
 argument_list|)
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 comment|/// @brief X86_64 support for Win32.
 comment|///
 comment|/// X86_64_Win32 supports lazy JITing.
@@ -723,22 +744,23 @@ name|ResolverCodeSize
 operator|=
 literal|0x74
 block|;
-typedef|typedef
-name|JITTargetAddress
-function_decl|(
-modifier|*
+name|using
 name|JITReentryFn
-function_decl|)
-parameter_list|(
+operator|=
+name|JITTargetAddress
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|CallbackMgr
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|TrampolineId
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// @brief Write the resolver code into the given memory. The user is be
 comment|///        responsible for allocating the memory and setting permissions.
 specifier|static
@@ -751,27 +773,11 @@ argument|JITReentryFn Reentry
 argument_list|,
 argument|void *CallbackMgr
 argument_list|)
+block|; }
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// @brief I386 support.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// I386 supports lazy JITing.
-end_comment
-
-begin_decl_stmt
 name|class
 name|OrcI386
 block|{
@@ -798,29 +804,31 @@ name|ResolverCodeSize
 init|=
 literal|0x4a
 decl_stmt|;
-typedef|typedef
+name|using
+name|IndirectStubsInfo
+init|=
 name|GenericIndirectStubsInfo
 operator|<
 literal|8
 operator|>
-name|IndirectStubsInfo
-expr_stmt|;
-typedef|typedef
-name|JITTargetAddress
-function_decl|(
-modifier|*
+decl_stmt|;
+name|using
 name|JITReentryFn
-function_decl|)
-parameter_list|(
+init|=
+name|JITTargetAddress
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|CallbackMgr
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|TrampolineId
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// @brief Write the resolver code into the given memory. The user is be
 comment|///        responsible for allocating the memory and setting permissions.
 specifier|static
@@ -881,20 +889,14 @@ name|InitialPtrVal
 parameter_list|)
 function_decl|;
 block|}
+empty_stmt|;
+block|}
+comment|// end namespace orc
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
-comment|// End namespace orc.
-end_comment
-
-begin_comment
-unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif

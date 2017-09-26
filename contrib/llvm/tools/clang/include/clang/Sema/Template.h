@@ -135,6 +135,13 @@ literal|4
 operator|>
 name|TemplateArgumentLists
 expr_stmt|;
+comment|/// \brief The number of outer levels of template arguments that are not
+comment|/// being substituted.
+name|unsigned
+name|NumRetainedOuterLevels
+init|=
+literal|0
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief Construct an empty set of template argument lists.
@@ -170,6 +177,22 @@ name|TemplateArgumentLists
 operator|.
 name|size
 argument_list|()
+operator|+
+name|NumRetainedOuterLevels
+return|;
+block|}
+comment|/// \brief Determine the number of substituted levels in this template
+comment|/// argument list.
+name|unsigned
+name|getNumSubstitutedLevels
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TemplateArgumentLists
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 comment|/// \brief Retrieve the template argument at a given depth and index.
@@ -189,11 +212,13 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+name|NumRetainedOuterLevels
+operator|<=
+name|Depth
+operator|&&
 name|Depth
 operator|<
-name|TemplateArgumentLists
-operator|.
-name|size
+name|getNumLevels
 argument_list|()
 argument_list|)
 block|;
@@ -249,12 +274,19 @@ name|assert
 argument_list|(
 name|Depth
 operator|<
-name|TemplateArgumentLists
-operator|.
-name|size
+name|getNumLevels
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Depth
+operator|<
+name|NumRetainedOuterLevels
+condition|)
+return|return
+name|false
+return|;
 if|if
 condition|(
 name|Index
@@ -307,11 +339,13 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
+name|NumRetainedOuterLevels
+operator|<=
+name|Depth
+operator|&&
 name|Depth
 operator|<
-name|TemplateArgumentLists
-operator|.
-name|size
+name|getNumLevels
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -393,12 +427,31 @@ name|ArgList
 name|Args
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|NumRetainedOuterLevels
+operator|&&
+literal|"substituted args outside retained args?"
+argument_list|)
+expr_stmt|;
 name|TemplateArgumentLists
 operator|.
 name|push_back
 argument_list|(
 name|Args
 argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Add an outermost level that we are not substituting. We have no
+comment|/// arguments at this level, and do not remove it from the depth of inner
+comment|/// template parameters that we instantiate.
+name|void
+name|addOuterRetainedLevel
+parameter_list|()
+block|{
+operator|++
+name|NumRetainedOuterLevels
 expr_stmt|;
 block|}
 comment|/// \brief Retrieve the innermost template argument list.

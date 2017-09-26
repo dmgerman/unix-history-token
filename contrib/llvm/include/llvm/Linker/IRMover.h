@@ -321,10 +321,6 @@ comment|///   value is referenced by one of the ValuesToLink (transitively) but 
 comment|///   not present in ValuesToLink. The GlobalValue and a ValueAdder callback
 comment|///   are passed as an argument, and the callback is expected to be called
 comment|///   if the GlobalValue needs to be added to the \p ValuesToLink and linked.
-comment|/// - \p LinkModuleInlineAsm is true if the ModuleInlineAsm string in Src
-comment|///   should be linked with (concatenated into) the ModuleInlineAsm string
-comment|///   for the destination module. It should be true for full LTO, but not
-comment|///   when importing for ThinLTO, otherwise we can have duplicate symbols.
 comment|/// - \p IsPerformingImport is true when this IR link is to perform ThinLTO
 comment|///   function importing from Src.
 name|Error
@@ -357,9 +353,6 @@ argument|ValueAdder Add
 argument_list|)
 operator|>
 name|AddLazyFor
-argument_list|,
-name|bool
-name|LinkModuleInlineAsm
 argument_list|,
 name|bool
 name|IsPerformingImport

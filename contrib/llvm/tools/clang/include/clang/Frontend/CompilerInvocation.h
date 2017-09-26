@@ -703,6 +703,32 @@ name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|)
+block|;
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|createVFSFromCompilerInvocation
+argument_list|(
+specifier|const
+name|CompilerInvocation
+operator|&
+name|CI
+argument_list|,
+name|DiagnosticsEngine
+operator|&
+name|Diags
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|BaseFS
+argument_list|)
 block|;  }
 end_decl_stmt
 

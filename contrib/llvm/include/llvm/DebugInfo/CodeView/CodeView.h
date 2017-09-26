@@ -31,6 +31,22 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Defines constants and basic types describing CodeView debug information.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -53,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Endian.h"
 end_include
 
 begin_decl_stmt
@@ -83,7 +105,7 @@ parameter_list|)
 value|name = value,
 include|#
 directive|include
-file|"TypeRecords.def"
+file|"CodeViewTypes.def"
 block|}
 decl_stmt|;
 comment|/// Duplicate copy of the above enum, but using the official CV names. Useful
@@ -104,7 +126,7 @@ parameter_list|)
 value|name = val,
 include|#
 directive|include
-file|"TypeRecords.def"
+file|"CodeViewTypes.def"
 block|}
 enum|;
 comment|/// Distinguishes individual records in the Symbols subsection of a .debug$S
@@ -128,7 +150,7 @@ parameter_list|)
 value|name = value,
 include|#
 directive|include
-file|"CVSymbolTypes.def"
+file|"CodeViewSymbols.def"
 block|}
 decl_stmt|;
 comment|/// Duplicate copy of the above enum, but using the official CV names. Useful
@@ -149,7 +171,7 @@ parameter_list|)
 value|name = val,
 include|#
 directive|include
-file|"CVSymbolTypes.def"
+file|"CodeViewSymbols.def"
 block|}
 enum|;
 define|#
@@ -921,12 +943,28 @@ name|CV_DEFINE_ENUM_CLASS_FLAGS_OPERATORS
 argument_list|(
 name|MethodOptions
 argument_list|)
-comment|/// Equivalent to CV_modifier_t.
-comment|/// TODO: Add flag for _Atomic modifier
+comment|/// Equivalent to CV_LABEL_TYPE_e.
 expr|enum
 name|class
-name|ModifierOptions
+name|LabelType
 operator|:
+name|uint16_t
+block|{
+name|Near
+operator|=
+literal|0x0
+block|,
+name|Far
+operator|=
+literal|0x4
+block|, }
+expr_stmt|;
+comment|/// Equivalent to CV_modifier_t.
+comment|/// TODO: Add flag for _Atomic modifier
+name|enum
+name|class
+name|ModifierOptions
+range|:
 name|uint16_t
 block|{
 name|None
@@ -945,14 +983,14 @@ name|Unaligned
 operator|=
 literal|0x0004
 block|}
-expr_stmt|;
+decl_stmt|;
 name|CV_DEFINE_ENUM_CLASS_FLAGS_OPERATORS
 argument_list|(
 name|ModifierOptions
 argument_list|)
 expr|enum
 name|class
-name|ModuleSubstreamKind
+name|DebugSubsectionKind
 operator|:
 name|uint32_t
 block|{
@@ -1353,6 +1391,46 @@ name|CV_DEFINE_ENUM_CLASS_FLAGS_OPERATORS
 argument_list|(
 name|LocalSymFlags
 argument_list|)
+comment|/// Corresponds to the CV_PUBSYMFLAGS bitfield.
+expr|enum
+name|class
+name|PublicSymFlags
+operator|:
+name|uint32_t
+block|{
+name|None
+operator|=
+literal|0
+block|,
+name|Code
+operator|=
+literal|1
+operator|<<
+literal|0
+block|,
+name|Function
+operator|=
+literal|1
+operator|<<
+literal|1
+block|,
+name|Managed
+operator|=
+literal|1
+operator|<<
+literal|2
+block|,
+name|MSIL
+operator|=
+literal|1
+operator|<<
+literal|3
+block|, }
+expr_stmt|;
+name|CV_DEFINE_ENUM_CLASS_FLAGS_OPERATORS
+argument_list|(
+name|PublicSymFlags
+argument_list|)
 comment|/// Corresponds to the CV_PROCFLAGS bitfield.
 expr|enum
 name|class
@@ -1424,6 +1502,14 @@ name|CompileSym2Flags
 operator|:
 name|uint32_t
 block|{
+name|None
+operator|=
+literal|0
+block|,
+name|SourceLanguageMask
+operator|=
+literal|0xFF
+block|,
 name|EC
 operator|=
 literal|1
@@ -1490,6 +1576,14 @@ name|CompileSym3Flags
 operator|:
 name|uint32_t
 block|{
+name|None
+operator|=
+literal|0
+block|,
+name|SourceLanguageMask
+operator|=
+literal|0xFF
+block|,
 name|EC
 operator|=
 literal|1
@@ -1573,6 +1667,10 @@ name|ExportFlags
 operator|:
 name|uint16_t
 block|{
+name|None
+operator|=
+literal|0
+block|,
 name|IsConstant
 operator|=
 literal|1
@@ -1922,15 +2020,163 @@ decl_stmt|;
 enum|enum
 name|LineFlags
 enum|:
-name|uint32_t
+name|uint16_t
 block|{
-name|HaveColumns
+name|LF_None
+init|=
+literal|0
+block|,
+name|LF_HaveColumns
 init|=
 literal|1
 block|,
 comment|// CV_LINES_HAVE_COLUMNS
 block|}
 enum|;
+comment|/// Data in the the SUBSEC_FRAMEDATA subection.
+struct|struct
+name|FrameData
+block|{
+name|support
+operator|::
+name|ulittle32_t
+name|RvaStart
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|CodeSize
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|LocalSize
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|ParamsSize
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|MaxStackSize
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|FrameFunc
+expr_stmt|;
+name|support
+operator|::
+name|ulittle16_t
+name|PrologSize
+expr_stmt|;
+name|support
+operator|::
+name|ulittle16_t
+name|SavedRegsSize
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|Flags
+expr_stmt|;
+enum_decl|enum :
+name|uint32_t
+block|{
+name|HasSEH
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+name|HasEH
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+name|IsFunctionStart
+init|=
+literal|1
+operator|<<
+literal|2
+block|,   }
+enum_decl|;
+block|}
+struct|;
+comment|// Corresponds to LocalIdAndGlobalIdPair structure.
+comment|// This structure information allows cross-referencing between PDBs.  For
+comment|// example, when a PDB is being built during compilation it is not yet known
+comment|// what other modules may end up in the PDB at link time.  So certain types of
+comment|// IDs may clash between the various compile time PDBs.  For each affected
+comment|// module, a subsection would be put into the PDB containing a mapping from its
+comment|// local IDs to a single ID namespace for all items in the PDB file.
+struct|struct
+name|CrossModuleExport
+block|{
+name|support
+operator|::
+name|ulittle32_t
+name|Local
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|Global
+expr_stmt|;
+block|}
+struct|;
+struct|struct
+name|CrossModuleImport
+block|{
+name|support
+operator|::
+name|ulittle32_t
+name|ModuleNameOffset
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|Count
+expr_stmt|;
+comment|// Number of elements
+comment|// support::ulittle32_t ids[Count]; // id from referenced module
+block|}
+struct|;
+name|enum
+name|class
+name|CodeViewContainer
+block|{
+name|ObjectFile
+operator|,
+name|Pdb
+block|}
+empty_stmt|;
+specifier|inline
+name|uint32_t
+name|alignOf
+parameter_list|(
+name|CodeViewContainer
+name|Container
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Container
+operator|==
+name|CodeViewContainer
+operator|::
+name|ObjectFile
+condition|)
+return|return
+literal|1
+return|;
+return|return
+literal|4
+return|;
+block|}
 block|}
 block|}
 end_decl_stmt

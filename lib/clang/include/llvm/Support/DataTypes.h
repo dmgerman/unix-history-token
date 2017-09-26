@@ -319,13 +319,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<cstdlib>
+file|<cstddef>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cstddef>
+file|<cstdlib>
 end_include
 
 begin_else
@@ -336,13 +336,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<stddef.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stddef.h>
+file|<stdlib.h>
 end_include
 
 begin_endif

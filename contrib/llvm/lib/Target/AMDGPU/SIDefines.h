@@ -134,6 +134,12 @@ literal|1
 operator|<<
 literal|10
 block|,
+name|VOP3P
+init|=
+literal|1
+operator|<<
+literal|12
+block|,
 name|VINTRP
 init|=
 literal|1
@@ -298,6 +304,15 @@ literal|1
 argument_list|)
 operator|<<
 literal|41
+block|,
+name|HasFPClamp
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|42
 block|}
 enum_decl|;
 comment|// v_cmp_class_* etc. use a 10-bit mask for what operation is checked.
@@ -413,6 +428,10 @@ name|OPERAND_REG_INLINE_C_FP32
 block|,
 name|OPERAND_REG_INLINE_C_FP64
 block|,
+name|OPERAND_REG_INLINE_C_V2FP16
+block|,
+name|OPERAND_REG_INLINE_C_V2INT16
+block|,
 name|OPERAND_REG_IMM_FIRST
 init|=
 name|OPERAND_REG_IMM_INT32
@@ -427,7 +446,7 @@ name|OPERAND_REG_INLINE_C_INT16
 block|,
 name|OPERAND_REG_INLINE_C_LAST
 init|=
-name|OPERAND_REG_INLINE_C_FP64
+name|OPERAND_REG_INLINE_C_V2INT16
 block|,
 name|OPERAND_SRC_FIRST
 init|=
@@ -439,6 +458,11 @@ name|OPERAND_REG_INLINE_C_LAST
 block|,
 comment|// Operand for source modifiers for VOP instructions
 name|OPERAND_INPUT_MODS
+block|,
+comment|// Operand for SDWA instructions
+name|OPERAND_SDWA_SRC
+block|,
+name|OPERAND_SDWA_VOPC_DST
 block|,
 comment|/// Operand with 32-bit immediate that uses the constant bus.
 name|OPERAND_KIMM32
@@ -473,7 +497,24 @@ init|=
 literal|1
 operator|<<
 literal|0
+block|,
 comment|// Integer sign-extend modifier
+name|NEG_HI
+init|=
+name|ABS
+block|,
+comment|// Floating-point negate high packed component modifier.
+name|OP_SEL_0
+init|=
+literal|1
+operator|<<
+literal|2
+block|,
+name|OP_SEL_1
+init|=
+literal|1
+operator|<<
+literal|3
 block|}
 enum|;
 block|}
@@ -548,9 +589,13 @@ name|SDWA
 init|=
 literal|2
 block|,
-name|DPP
+name|SDWA9
 init|=
 literal|3
+block|,
+name|DPP
+init|=
+literal|4
 block|}
 enum|;
 block|}
@@ -858,6 +903,10 @@ name|ID_SYMBOLIC_LAST_
 init|=
 literal|8
 block|,
+name|ID_MEM_BASES
+init|=
+literal|15
+block|,
 name|ID_SHIFT_
 init|=
 literal|0
@@ -914,6 +963,14 @@ operator|)
 operator|<<
 name|OFFSET_SHIFT_
 operator|)
+block|,
+name|OFFSET_SRC_SHARED_BASE
+init|=
+literal|16
+block|,
+name|OFFSET_SRC_PRIVATE_BASE
+init|=
+literal|0
 block|}
 enum|;
 enum|enum
@@ -947,10 +1004,104 @@ operator|)
 operator|<<
 name|WIDTH_M1_SHIFT_
 operator|)
+block|,
+name|WIDTH_M1_SRC_SHARED_BASE
+init|=
+literal|15
+block|,
+name|WIDTH_M1_SRC_PRIVATE_BASE
+init|=
+literal|15
 block|}
 enum|;
 block|}
 comment|// namespace Hwreg
+name|namespace
+name|Swizzle
+block|{
+comment|// Encoding of swizzle macro used in ds_swizzle_b32.
+enum|enum
+name|Id
+block|{
+comment|// id of symbolic names
+name|ID_QUAD_PERM
+init|=
+literal|0
+block|,
+name|ID_BITMASK_PERM
+block|,
+name|ID_SWAP
+block|,
+name|ID_REVERSE
+block|,
+name|ID_BROADCAST
+block|}
+enum|;
+enum|enum
+name|EncBits
+block|{
+comment|// swizzle mode encodings
+name|QUAD_PERM_ENC
+init|=
+literal|0x8000
+block|,
+name|QUAD_PERM_ENC_MASK
+init|=
+literal|0xFF00
+block|,
+name|BITMASK_PERM_ENC
+init|=
+literal|0x0000
+block|,
+name|BITMASK_PERM_ENC_MASK
+init|=
+literal|0x8000
+block|,
+comment|// QUAD_PERM encodings
+name|LANE_MASK
+init|=
+literal|0x3
+block|,
+name|LANE_MAX
+init|=
+name|LANE_MASK
+block|,
+name|LANE_SHIFT
+init|=
+literal|2
+block|,
+name|LANE_NUM
+init|=
+literal|4
+block|,
+comment|// BITMASK_PERM encodings
+name|BITMASK_MASK
+init|=
+literal|0x1F
+block|,
+name|BITMASK_MAX
+init|=
+name|BITMASK_MASK
+block|,
+name|BITMASK_WIDTH
+init|=
+literal|5
+block|,
+name|BITMASK_AND_SHIFT
+init|=
+literal|0
+block|,
+name|BITMASK_OR_SHIFT
+init|=
+literal|5
+block|,
+name|BITMASK_XOR_SHIFT
+init|=
+literal|10
+block|}
+enum|;
+block|}
+comment|// namespace Swizzle
 name|namespace
 name|SDWA
 block|{
@@ -1002,6 +1153,42 @@ init|=
 literal|2
 block|, }
 enum|;
+enum|enum
+name|SDWA9EncValues
+block|{
+name|SRC_SGPR_MASK
+init|=
+literal|0x100
+block|,
+name|SRC_VGPR_MASK
+init|=
+literal|0xFF
+block|,
+name|VOPC_DST_VCC_MASK
+init|=
+literal|0x80
+block|,
+name|VOPC_DST_SGPR_MASK
+init|=
+literal|0x7F
+block|,
+name|SRC_VGPR_MIN
+init|=
+literal|0
+block|,
+name|SRC_VGPR_MAX
+init|=
+literal|255
+block|,
+name|SRC_SGPR_MIN
+init|=
+literal|256
+block|,
+name|SRC_SGPR_MAX
+init|=
+literal|357
+block|, }
+enum|;
 block|}
 comment|// namespace SDWA
 block|}
@@ -1029,6 +1216,10 @@ define|#
 directive|define
 name|R_00B228_SPI_SHADER_PGM_RSRC1_GS
 value|0x00B228
+define|#
+directive|define
+name|R_00B428_SPI_SHADER_PGM_RSRC1_HS
+value|0x00B428
 define|#
 directive|define
 name|R_00B848_COMPUTE_PGM_RSRC1
@@ -1087,6 +1278,24 @@ define|#
 directive|define
 name|C_00B84C_USER_SGPR
 value|0xFFFFFFC1
+define|#
+directive|define
+name|S_00B84C_TRAP_HANDLER
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x1)<< 6)
+define|#
+directive|define
+name|G_00B84C_TRAP_HANDLER
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 6)& 0x1)
+define|#
+directive|define
+name|C_00B84C_TRAP_HANDLER
+value|0xFFFFFFBF
 define|#
 directive|define
 name|S_00B84C_TGID_X_EN

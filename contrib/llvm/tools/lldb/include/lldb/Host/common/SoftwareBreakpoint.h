@@ -72,7 +72,7 @@ block|;
 name|public
 operator|:
 specifier|static
-name|Error
+name|Status
 name|CreateSoftwareBreakpoint
 argument_list|(
 argument|NativeProcessProtocol&process
@@ -99,12 +99,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|Error
+name|Status
 name|DoEnable
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|DoDisable
 argument_list|()
 name|override
@@ -146,7 +146,7 @@ name|size_t
 name|m_opcode_size
 block|;
 specifier|static
-name|Error
+name|Status
 name|EnableSoftwareBreakpoint
 argument_list|(
 argument|NativeProcessProtocol&process

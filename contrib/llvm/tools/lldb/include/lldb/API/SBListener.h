@@ -381,11 +381,7 @@ operator|::
 name|ListenerSP
 name|GetSP
 argument_list|()
-block|{
-return|return
-name|m_opaque_sp
-return|;
-block|}
+expr_stmt|;
 name|private
 label|:
 name|lldb_private

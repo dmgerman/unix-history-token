@@ -46,13 +46,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|<dlfcn.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dlfcn.h>
+file|<pthread.h>
 end_include
 
 begin_include

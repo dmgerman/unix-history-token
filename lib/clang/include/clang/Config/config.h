@@ -146,6 +146,14 @@ comment|/* #undef CLANG_HAVE_LIBXML */
 end_comment
 
 begin_comment
+comment|/* Define if we have z3 and want to build it */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_ANALYZER_WITH_Z3 */
+end_comment
+
+begin_comment
 comment|/* Define if we have sys/resource.h (rlimits) */
 end_comment
 
@@ -164,7 +172,7 @@ begin_define
 define|#
 directive|define
 name|BACKEND_PACKAGE_STRING
-value|"LLVM 4.0.0"
+value|"LLVM 5.0.0svn"
 end_define
 
 begin_comment
@@ -193,6 +201,22 @@ directive|define
 name|ENABLE_X86_RELAX_RELOCATIONS
 value|0
 end_define
+
+begin_comment
+comment|/* Enable each functionality of modules */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_ENABLE_ARCMT */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_ENABLE_OBJC_REWRITER */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_ENABLE_STATIC_ANALYZER */
+end_comment
 
 begin_endif
 endif|#

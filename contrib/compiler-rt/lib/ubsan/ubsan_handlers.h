@@ -380,19 +380,27 @@ struct|struct
 name|NonNullReturnData
 block|{
 name|SourceLocation
-name|Loc
-decl_stmt|;
-name|SourceLocation
 name|AttrLoc
 decl_stmt|;
 block|}
 struct|;
-comment|/// \brief Handle returning null from function with returns_nonnull attribute.
+comment|/// \brief Handle returning null from function with the returns_nonnull
+comment|/// attribute, or a return type annotated with _Nonnull.
 name|RECOVERABLE
 argument_list|(
-argument|nonnull_return
+argument|nonnull_return_v1
 argument_list|,
 argument|NonNullReturnData *Data
+argument_list|,
+argument|SourceLocation *Loc
+argument_list|)
+name|RECOVERABLE
+argument_list|(
+argument|nullability_return_v1
+argument_list|,
+argument|NonNullReturnData *Data
+argument_list|,
+argument|SourceLocation *Loc
 argument_list|)
 struct|struct
 name|NonNullArgData
@@ -408,20 +416,43 @@ name|ArgIndex
 decl_stmt|;
 block|}
 struct|;
-comment|/// \brief Handle passing null pointer to function with nonnull attribute.
+comment|/// \brief Handle passing null pointer to a function parameter with the nonnull
+comment|/// attribute, or a _Nonnull type annotation.
 name|RECOVERABLE
 argument_list|(
-name|nonnull_arg
+argument|nonnull_arg
 argument_list|,
-name|NonNullArgData
-operator|*
-name|Data
+argument|NonNullArgData *Data
+argument_list|)
+name|RECOVERABLE
+argument_list|(
+argument|nullability_arg
+argument_list|,
+argument|NonNullArgData *Data
+argument_list|)
+struct|struct
+name|PointerOverflowData
+block|{
+name|SourceLocation
+name|Loc
+decl_stmt|;
+block|}
+struct|;
+name|RECOVERABLE
+argument_list|(
+argument|pointer_overflow
+argument_list|,
+argument|PointerOverflowData *Data
+argument_list|,
+argument|ValueHandle Base
+argument_list|,
+argument|ValueHandle Result
 argument_list|)
 comment|/// \brief Known CFI check kinds.
 comment|/// Keep in sync with the enum of the same name in CodeGenFunction.h
-expr|enum
+enum|enum
 name|CFITypeCheckKind
-operator|:
+enum|:
 name|unsigned
 name|char
 block|{
@@ -435,7 +466,7 @@ name|CFITCK_UnrelatedCast
 block|,
 name|CFITCK_ICall
 block|, }
-expr_stmt|;
+enum|;
 struct|struct
 name|CFICheckFailData
 block|{

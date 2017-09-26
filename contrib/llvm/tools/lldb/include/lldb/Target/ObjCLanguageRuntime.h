@@ -738,7 +738,7 @@ argument|lldb::DescriptionLevel level
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ConfigurePrecondition
 argument_list|(
 argument|Args&args

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -373,10 +379,8 @@ block|;
 name|StringRef
 name|ASTFile
 block|;
-name|uint64_t
+name|ASTFileSignature
 name|Signature
-operator|=
-literal|0
 block|;
 specifier|const
 name|Module
@@ -399,7 +403,7 @@ argument|StringRef Path
 argument_list|,
 argument|StringRef ASTFile
 argument_list|,
-argument|uint64_t Signature
+argument|ASTFileSignature Signature
 argument_list|)
 operator|:
 name|PCHModuleName
@@ -471,7 +475,7 @@ return|return
 name|ASTFile
 return|;
 block|}
-name|uint64_t
+name|ASTFileSignature
 name|getSignature
 argument_list|()
 specifier|const
@@ -504,6 +508,25 @@ operator|>
 name|getSourceDescriptor
 argument_list|(
 argument|unsigned ID
+argument_list|)
+block|;    enum
+name|ExtKind
+block|{
+name|EK_Always
+block|,
+name|EK_Never
+block|,
+name|EK_ReplyHazy
+block|}
+block|;
+name|virtual
+name|ExtKind
+name|hasExternalDefinitions
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
 argument_list|)
 block|;
 comment|/// \brief Finds all declarations lexically contained within the given

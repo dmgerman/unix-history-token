@@ -381,8 +381,6 @@ name|bool
 name|handleBeginSource
 argument_list|(
 argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
 argument_list|)
 block|{
 return|return
@@ -638,6 +636,8 @@ comment|///                 header paths will be resolved relative to this.
 comment|/// \param PCHContainerOps The PCHContainerOperations for loading and creating
 comment|/// clang modules.
 comment|///
+comment|/// \param Adjuster A function to filter the command line arguments as specified.
+comment|///
 comment|/// \return The resulting AST or null if an error occurred.
 name|std
 operator|::
@@ -647,53 +647,19 @@ name|ASTUnit
 operator|>
 name|buildASTFromCodeWithArgs
 argument_list|(
-specifier|const
-name|Twine
-operator|&
-name|Code
+argument|const Twine&Code
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|Args
+argument|const std::vector<std::string>&Args
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|FileName
-operator|=
+argument|const Twine&FileName =
 literal|"input.cc"
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|ToolName
-operator|=
+argument|const Twine&ToolName =
 literal|"clang-tool"
 argument_list|,
-name|std
-operator|::
-name|shared_ptr
-operator|<
-name|PCHContainerOperations
-operator|>
-name|PCHContainerOps
-operator|=
-name|std
-operator|::
-name|make_shared
-operator|<
-name|PCHContainerOperations
-operator|>
-operator|(
-operator|)
+argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps =       std::make_shared<PCHContainerOperations>()
+argument_list|,
+argument|ArgumentsAdjuster Adjuster = getClangStripDependencyFileAdjuster()
 argument_list|)
 expr_stmt|;
 comment|/// \brief Utility to run a FrontendAction in a single clang invocation.
@@ -1328,8 +1294,6 @@ name|bool
 name|BeginSourceFileAction
 argument_list|(
 argument|CompilerInstance&CI
-argument_list|,
-argument|StringRef Filename
 argument_list|)
 name|override
 block|{
@@ -1343,8 +1307,6 @@ operator|::
 name|BeginSourceFileAction
 argument_list|(
 name|CI
-argument_list|,
-name|Filename
 argument_list|)
 condition|)
 return|return
@@ -1360,8 +1322,6 @@ operator|->
 name|handleBeginSource
 argument_list|(
 name|CI
-argument_list|,
-name|Filename
 argument_list|)
 return|;
 return|return

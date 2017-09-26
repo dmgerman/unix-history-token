@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -61,27 +61,12 @@ directive|include
 file|"llvm/MC/MCObjectStreamer.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/MC/SectionKind.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|MCAsmBackend
-decl_stmt|;
-name|class
-name|MCAssembler
 decl_stmt|;
 name|class
 name|MCCodeEmitter
@@ -91,9 +76,6 @@ name|MCExpr
 decl_stmt|;
 name|class
 name|MCInst
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 name|class
 name|MCELFStreamer
@@ -124,24 +106,21 @@ argument_list|)
 operator|:
 name|MCObjectStreamer
 argument_list|(
-name|Context
+argument|Context
 argument_list|,
-name|TAB
+argument|TAB
 argument_list|,
-name|OS
+argument|OS
 argument_list|,
-name|Emitter
-argument_list|)
-block|,
-name|SeenIdent
-argument_list|(
-argument|false
+argument|Emitter
 argument_list|)
 block|{}
 operator|~
 name|MCELFStreamer
 argument_list|()
 name|override
+operator|=
+expr|default
 block|;
 comment|/// state management
 name|void
@@ -185,6 +164,19 @@ name|void
 name|EmitLabel
 argument_list|(
 argument|MCSymbol *Symbol
+argument_list|,
+argument|SMLoc Loc = SMLoc()
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitLabel
+argument_list|(
+argument|MCSymbol *Symbol
+argument_list|,
+argument|SMLoc Loc
+argument_list|,
+argument|MCFragment *F
 argument_list|)
 name|override
 block|;
@@ -238,32 +230,6 @@ argument|uint64_t Size
 argument_list|,
 argument|unsigned ByteAlignment
 argument_list|)
-name|override
-block|;
-name|void
-name|BeginCOFFSymbolDef
-argument_list|(
-argument|const MCSymbol *Symbol
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitCOFFSymbolStorageClass
-argument_list|(
-argument|int StorageClass
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitCOFFSymbolType
-argument_list|(
-argument|int Type
-argument_list|)
-name|override
-block|;
-name|void
-name|EndCOFFSymbolDef
-argument_list|()
 name|override
 block|;
 name|void
@@ -323,13 +289,6 @@ argument_list|,
 argument|unsigned Size
 argument_list|,
 argument|SMLoc Loc = SMLoc()
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitFileDirective
-argument_list|(
-argument|StringRef Filename
 argument_list|)
 name|override
 block|;
@@ -424,11 +383,11 @@ argument_list|)
 block|;
 name|bool
 name|SeenIdent
+operator|=
+name|false
 block|;
 comment|/// BundleGroups - The stack of fragments holding the bundle-locked
 comment|/// instructions.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|MCDataFragment
@@ -477,6 +436,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCELFSTREAMER_H
+end_comment
 
 end_unit
 

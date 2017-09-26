@@ -62,32 +62,28 @@ name|_TEXASR_PTR
 parameter_list|(
 name|TM_BUF
 parameter_list|)
-define|\
-value|((texasr_t *)((TM_BUF)+0))
+value|((texasr_t *)((char *)(TM_BUF) + 0))
 define|#
 directive|define
 name|_TEXASRU_PTR
 parameter_list|(
 name|TM_BUF
 parameter_list|)
-define|\
-value|((texasru_t *)((TM_BUF)+0))
+value|((texasru_t *)((char *)(TM_BUF) + 0))
 define|#
 directive|define
 name|_TEXASRL_PTR
 parameter_list|(
 name|TM_BUF
 parameter_list|)
-define|\
-value|((texasrl_t *)((TM_BUF)+4))
+value|((texasrl_t *)((char *)(TM_BUF) + 4))
 define|#
 directive|define
 name|_TFIAR_PTR
 parameter_list|(
 name|TM_BUF
 parameter_list|)
-define|\
-value|((tfiar_t *)((TM_BUF)+8))
+value|((tfiar_t *)((char *)(TM_BUF) + 8))
 typedef|typedef
 name|char
 name|TM_buff_type
@@ -657,7 +653,7 @@ init|=
 operator|*
 name|_TEXASRU_PTR
 argument_list|(
-name|TM_buff
+name|__TM_buff
 argument_list|)
 decl_stmt|;
 comment|/* Return TEXASR bits 11 (Self-Induced Conflict) through      14 (Translation Invalidation Conflict).  */

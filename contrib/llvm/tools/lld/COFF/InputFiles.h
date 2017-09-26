@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"Config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lld/Core/LLVM.h"
 end_include
 
@@ -64,13 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/LLVMContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/LTO/legacy/LTOModule.h"
+file|"llvm/LTO/LTO.h"
 end_include
 
 begin_include
@@ -111,16 +111,25 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
+name|pdb
+block|{
+name|class
+name|DbiModuleDescriptorBuilder
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|lld
 block|{
 name|namespace
 name|coff
 block|{
-name|using
-name|llvm
-operator|::
-name|LTOModule
-expr_stmt|;
 name|using
 name|llvm
 operator|::
@@ -259,6 +268,9 @@ return|return
 name|IMAGE_FILE_MACHINE_UNKNOWN
 return|;
 block|}
+name|MemoryBufferRef
+name|MB
+decl_stmt|;
 comment|// An archive file name if this file is created from an archive.
 name|StringRef
 name|ParentName
@@ -297,9 +309,6 @@ argument_list|(
 argument|K
 argument_list|)
 block|{}
-name|MemoryBufferRef
-name|MB
-expr_stmt|;
 name|std
 operator|::
 name|string
@@ -527,6 +536,20 @@ operator|*
 operator|>
 name|SEHandlers
 block|;
+comment|// Pointer to the PDB module descriptor builder. Various debug info records
+comment|// will reference object files by "module index", which is here. Things like
+comment|// source files and section contributions are also recorded here. Will be null
+comment|// if we are not producing a PDB.
+name|llvm
+operator|::
+name|pdb
+operator|::
+name|DbiModuleDescriptorBuilder
+operator|*
+name|ModuleDBI
+operator|=
+name|nullptr
+block|;
 name|private
 operator|:
 name|void
@@ -566,11 +589,6 @@ operator|<
 name|COFFObjectFile
 operator|>
 name|COFFObj
-block|;
-name|llvm
-operator|::
-name|BumpPtrAllocator
-name|Alloc
 block|;
 specifier|const
 name|coff_section
@@ -662,9 +680,9 @@ argument_list|,
 name|M
 argument_list|)
 block|,
-name|StringAlloc
+name|Live
 argument_list|(
-argument|StringAllocAux
+argument|!Config->DoGC
 argument_list|)
 block|{}
 specifier|static
@@ -689,6 +707,12 @@ name|ImpSym
 operator|=
 name|nullptr
 block|;
+name|DefinedImportData
+operator|*
+name|ConstSym
+operator|=
+name|nullptr
+block|;
 name|DefinedImportThunk
 operator|*
 name|ThunkSym
@@ -707,21 +731,6 @@ name|parse
 argument_list|()
 name|override
 block|;
-name|llvm
-operator|::
-name|BumpPtrAllocator
-name|Alloc
-block|;
-name|llvm
-operator|::
-name|BumpPtrAllocator
-name|StringAllocAux
-block|;
-name|llvm
-operator|::
-name|StringSaver
-name|StringAlloc
-block|;
 name|public
 operator|:
 name|StringRef
@@ -737,6 +746,15 @@ operator|*
 name|Location
 operator|=
 name|nullptr
+block|;
+comment|// We want to eliminate dllimported symbols if no one actually refers them.
+comment|// This "Live" bit is used to keep track of which import library members
+comment|// are actually in use.
+comment|//
+comment|// If the Live bit is turned off by MarkLive, Writer will ignore dllimported
+comment|// symbols provided by this import library member.
+name|bool
+name|Live
 block|; }
 decl_stmt|;
 comment|// Used for LTO.
@@ -801,25 +819,13 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|LTOModule
-operator|>
-name|takeModule
-argument_list|()
-block|{
-return|return
-name|std
-operator|::
-name|move
-argument_list|(
-name|M
-argument_list|)
-return|;
-block|}
-specifier|static
 name|llvm
 operator|::
-name|LLVMContext
-name|Context
+name|lto
+operator|::
+name|InputFile
+operator|>
+name|Obj
 block|;
 name|private
 operator|:
@@ -836,19 +842,6 @@ name|SymbolBody
 operator|*
 operator|>
 name|SymbolBodies
-block|;
-name|llvm
-operator|::
-name|BumpPtrAllocator
-name|Alloc
-block|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|LTOModule
-operator|>
-name|M
 block|; }
 decl_stmt|;
 block|}

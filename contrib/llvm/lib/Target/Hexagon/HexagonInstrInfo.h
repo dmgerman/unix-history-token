@@ -564,7 +564,7 @@ comment|/// PredicateOperand.
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr&MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -694,6 +694,91 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// getOperandLatency - Compute and return the use operand latency of a given
+comment|/// pair of def and use.
+comment|/// In most cases, the static scheduling itinerary was enough to determine the
+comment|/// operand latency. But it may not be possible for instructions with variable
+comment|/// number of defs / uses.
+comment|///
+comment|/// This is a raw interface to the itinerary that may be directly overriden by
+comment|/// a target. Use computeOperandLatency to get the best estimate of latency.
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr&DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr&UseMI
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Decompose the machine operand's target flags into two values - the direct
+comment|/// target flag value and any of bit flags that are applied.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|decomposeMachineOperandsTargetFlags
+argument_list|(
+argument|unsigned TF
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Return an array that contains the direct target flag values and their
+comment|/// names.
+comment|///
+comment|/// MIR Serialization is able to serialize only the target flags that are
+comment|/// defined by this method.
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableDirectMachineOperandTargetFlags
+argument_list|()
+specifier|const
+name|override
+block|;
+comment|/// Return an array that contains the bitmask target flag values and their
+comment|/// names.
+comment|///
+comment|/// MIR Serialization is able to serialize only the target flags that are
+comment|/// defined by this method.
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableBitmaskMachineOperandTargetFlags
+argument_list|()
+specifier|const
+name|override
+block|;
 name|bool
 name|isTailCall
 argument_list|(
@@ -747,41 +832,6 @@ specifier|const
 block|;
 name|bool
 name|isCompoundBranchInstr
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isCondInst
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isConditionalALU32
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isConditionalLoad
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isConditionalStore
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isConditionalTransfer
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|)
@@ -1124,7 +1174,7 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|isV60VectorInstruction
+name|isHVXVec
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|)
@@ -1389,6 +1439,13 @@ argument_list|)
 specifier|const
 block|;
 name|int
+name|getNonDotCurOp
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+name|int
 name|getDotNewOp
 argument_list|(
 argument|const MachineInstr&MI
@@ -1416,7 +1473,7 @@ block|;
 name|int
 name|getDotOldOp
 argument_list|(
-argument|const int opc
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1540,13 +1597,6 @@ name|unsigned
 name|getUnits
 argument_list|(
 argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getValidSubTargets
-argument_list|(
-argument|const unsigned Opcode
 argument_list|)
 specifier|const
 block|;

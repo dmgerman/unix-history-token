@@ -134,14 +134,14 @@ name|PipePosix
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|CreateNew
 argument_list|(
 argument|bool child_process_inherit
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|CreateNew
 argument_list|(
 argument|llvm::StringRef name
@@ -150,7 +150,7 @@ argument|bool child_process_inherit
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|CreateWithUniqueName
 argument_list|(
 argument|llvm::StringRef prefix
@@ -161,7 +161,7 @@ argument|llvm::SmallVectorImpl<char>&name
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|OpenAsReader
 argument_list|(
 argument|llvm::StringRef name
@@ -170,7 +170,7 @@ argument|bool child_process_inherit
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|OpenAsWriterWithTimeout
 argument_list|(
 argument|llvm::StringRef name
@@ -231,14 +231,14 @@ name|Close
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|Delete
 argument_list|(
 argument|llvm::StringRef name
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Write
 argument_list|(
 argument|const void *buf
@@ -249,7 +249,7 @@ argument|size_t&bytes_written
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|ReadWithTimeout
 argument_list|(
 argument|void *buf

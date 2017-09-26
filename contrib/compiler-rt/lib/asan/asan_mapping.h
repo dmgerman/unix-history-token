@@ -1026,16 +1026,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SHADOW_TO_MEM
-parameter_list|(
-name|shadow
-parameter_list|)
-value|(((shadow) - SHADOW_OFFSET)<< SHADOW_SCALE)
-end_define
-
-begin_define
-define|#
-directive|define
 name|kLowMemBeg
 value|0
 end_define

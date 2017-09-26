@@ -130,13 +130,50 @@ argument|ArrayRef<unsigned> VRegs
 argument_list|)
 specifier|const
 name|override
-block|; }
+block|;
+name|private
+operator|:
+comment|/// A function of this type is used to perform value split action.
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+argument_list|)
+operator|>
+name|SplitArgTy
+expr_stmt|;
+name|bool
+name|splitToValueTypes
+argument_list|(
+argument|const ArgInfo&OrigArgInfo
+argument_list|,
+argument|SmallVectorImpl<ArgInfo>&SplitArgs
+argument_list|,
+argument|const DataLayout&DL
+argument_list|,
+argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|SplitArgTy SplitArg
+argument_list|)
+specifier|const
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-comment|// End of namespace llvm;
+unit|}
+comment|// namespace llvm
 end_comment
 
 begin_endif

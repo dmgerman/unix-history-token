@@ -68,13 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
+file|"lldb/Target/Process.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Process.h"
+file|"lldb/Utility/StructuredData.h"
 end_include
 
 begin_include

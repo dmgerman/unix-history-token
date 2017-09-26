@@ -78,6 +78,9 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 name|class
+name|Error
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|namespace
@@ -95,32 +98,11 @@ block|,
 name|BestSizeCompression
 block|}
 enum|;
-enum|enum
-name|Status
-block|{
-name|StatusOK
-block|,
-name|StatusUnsupported
-block|,
-comment|// zlib is unavailable
-name|StatusOutOfMemory
-block|,
-comment|// there was not enough memory
-name|StatusBufferTooShort
-block|,
-comment|// there was not enough room in the output buffer
-name|StatusInvalidArg
-block|,
-comment|// invalid input parameter
-name|StatusInvalidData
-comment|// data was corrupted or incomplete
-block|}
-enum|;
 name|bool
 name|isAvailable
 parameter_list|()
 function_decl|;
-name|Status
+name|Error
 name|compress
 argument_list|(
 name|StringRef
@@ -139,7 +121,7 @@ operator|=
 name|DefaultCompression
 argument_list|)
 decl_stmt|;
-name|Status
+name|Error
 name|uncompress
 parameter_list|(
 name|StringRef
@@ -154,7 +136,7 @@ modifier|&
 name|UncompressedSize
 parameter_list|)
 function_decl|;
-name|Status
+name|Error
 name|uncompress
 argument_list|(
 name|StringRef

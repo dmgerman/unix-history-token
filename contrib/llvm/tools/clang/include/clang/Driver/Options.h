@@ -43,6 +43,12 @@ directive|define
 name|LLVM_CLANG_DRIVER_OPTIONS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -143,6 +149,14 @@ literal|1
 operator|<<
 literal|12
 operator|)
+block|,
+name|Ignored
+init|=
+operator|(
+literal|1
+operator|<<
+literal|13
+operator|)
 block|}
 enum|;
 enum|enum
@@ -174,11 +188,14 @@ parameter_list|,
 name|FLAGS
 parameter_list|,
 name|PARAM
-parameter_list|, \
+parameter_list|,  \
 name|HELPTEXT
 parameter_list|,
 name|METAVAR
+parameter_list|,
+name|VALUES
 parameter_list|)
+define|\
 value|OPT_##ID,
 include|#
 directive|include
@@ -190,12 +207,16 @@ name|OPTION
 block|}
 enum|;
 block|}
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|opt
 operator|::
 name|OptTable
-operator|*
+operator|>
 name|createDriverOptTable
 argument_list|()
 expr_stmt|;

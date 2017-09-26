@@ -73,15 +73,6 @@ directive|include
 file|"int_lib.h"
 end_include
 
-begin_macro
-name|ARM_EABI_FNALIAS
-argument_list|(
-argument|i2d
-argument_list|,
-argument|floatsidf
-argument_list|)
-end_macro
-
 begin_function
 name|COMPILER_RT_ABI
 name|fp_t
@@ -206,6 +197,38 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
+begin_function
+name|AEABI_RTABI
+name|fp_t
+name|__aeabi_i2d
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+block|{
+return|return
+name|__floatsidf
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

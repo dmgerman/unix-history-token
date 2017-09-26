@@ -62,7 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UUID.h"
+file|"lldb/Utility/UUID.h"
 end_include
 
 begin_include
@@ -139,7 +139,7 @@ argument|uint32_t dump_mask
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 argument|llvm::StringRef value
@@ -148,7 +148,7 @@ argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 specifier|const

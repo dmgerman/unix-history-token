@@ -276,7 +276,7 @@ operator|::
 name|SBError
 name|m_Error
 block|;
-comment|// Error object, which is examined when
+comment|// Status object, which is examined when
 comment|// m_bEvaluatedExpression is false
 name|CMIUtilString
 name|m_strValue

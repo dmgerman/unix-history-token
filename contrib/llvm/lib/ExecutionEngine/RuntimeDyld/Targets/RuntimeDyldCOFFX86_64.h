@@ -62,19 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Object/COFF.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/COFF.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../RuntimeDyldCOFF.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/BinaryFormat/COFF.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/COFF.h"
 end_include
 
 begin_define
@@ -834,16 +834,6 @@ operator|.
 name|clear
 argument_list|()
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|deregisterEHFrames
-parameter_list|()
-function|override
-block|{
-comment|// Stub
 block|}
 end_function
 

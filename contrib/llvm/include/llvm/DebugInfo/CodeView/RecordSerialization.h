@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamReader.h"
+file|"llvm/Support/BinaryStreamReader.h"
 end_include
 
 begin_include
@@ -179,13 +179,11 @@ decl_stmt|;
 specifier|inline
 name|Error
 name|consume
-argument_list|(
-name|msf
-operator|::
-name|StreamReader
-operator|&
+parameter_list|(
+name|BinaryStreamReader
+modifier|&
 name|Reader
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|Error
@@ -200,77 +198,67 @@ comment|/// 15), it is emitted directly in Data. Otherwise, it has a tag like LF
 comment|/// that indicates the bitwidth and sign of the numeric data.
 name|Error
 name|consume
-argument_list|(
-name|msf
-operator|::
-name|StreamReader
-operator|&
+parameter_list|(
+name|BinaryStreamReader
+modifier|&
 name|Reader
-argument_list|,
+parameter_list|,
 name|APSInt
-operator|&
+modifier|&
 name|Num
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Decodes a numeric leaf value that is known to be a particular type.
 name|Error
 name|consume_numeric
-argument_list|(
-name|msf
-operator|::
-name|StreamReader
-operator|&
+parameter_list|(
+name|BinaryStreamReader
+modifier|&
 name|Reader
-argument_list|,
+parameter_list|,
 name|uint64_t
-operator|&
+modifier|&
 name|Value
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Decodes signed and unsigned fixed-length integers.
 name|Error
 name|consume
-argument_list|(
-name|msf
-operator|::
-name|StreamReader
-operator|&
+parameter_list|(
+name|BinaryStreamReader
+modifier|&
 name|Reader
-argument_list|,
+parameter_list|,
 name|uint32_t
-operator|&
+modifier|&
 name|Item
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|Error
 name|consume
-argument_list|(
-name|msf
-operator|::
-name|StreamReader
-operator|&
+parameter_list|(
+name|BinaryStreamReader
+modifier|&
 name|Reader
-argument_list|,
+parameter_list|,
 name|int32_t
-operator|&
+modifier|&
 name|Item
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Decodes a null terminated string.
 name|Error
 name|consume
-argument_list|(
-name|msf
-operator|::
-name|StreamReader
-operator|&
+parameter_list|(
+name|BinaryStreamReader
+modifier|&
 name|Reader
-argument_list|,
+parameter_list|,
 name|StringRef
-operator|&
+modifier|&
 name|Item
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|Error
 name|consume
 parameter_list|(
@@ -305,7 +293,7 @@ operator|>
 name|Error
 name|consume
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|,
 argument|T *&Item
 argument_list|)
@@ -350,7 +338,7 @@ block|{}
 name|Error
 name|deserialize
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|)
 specifier|const
 block|{
@@ -450,7 +438,7 @@ block|{}
 name|Error
 name|deserialize
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|)
 specifier|const
 block|{
@@ -505,7 +493,7 @@ block|{}
 name|Error
 name|deserialize
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|)
 specifier|const
 block|{
@@ -592,7 +580,7 @@ block|{}
 name|Error
 name|deserialize
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|)
 specifier|const
 block|{
@@ -636,7 +624,7 @@ name|EC
 init|=
 name|Reader
 operator|.
-name|readZeroString
+name|readCString
 argument_list|(
 name|Field
 argument_list|)
@@ -704,7 +692,7 @@ block|{}
 name|Error
 name|deserialize
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|)
 specifier|const
 block|{
@@ -766,7 +754,7 @@ block|{}
 name|Error
 name|deserialize
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|)
 specifier|const
 block|{
@@ -1032,7 +1020,7 @@ operator|>
 name|Error
 name|consume
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|,
 argument|const serialize_conditional_impl<T
 argument_list|,
@@ -1062,7 +1050,7 @@ operator|>
 name|Error
 name|consume
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|,
 argument|const serialize_array_impl<T
 argument_list|,
@@ -1080,22 +1068,20 @@ return|;
 block|}
 end_expr_stmt
 
-begin_decl_stmt
+begin_function
 specifier|inline
 name|Error
 name|consume
-argument_list|(
-name|msf
-operator|::
-name|StreamReader
-operator|&
+parameter_list|(
+name|BinaryStreamReader
+modifier|&
 name|Reader
-argument_list|,
+parameter_list|,
 specifier|const
 name|serialize_null_term_string_array_impl
-operator|&
+modifier|&
 name|Item
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|Item
@@ -1106,7 +1092,7 @@ name|Reader
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|template
@@ -1117,7 +1103,7 @@ operator|>
 name|Error
 name|consume
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|,
 argument|const serialize_vector_tail_impl<T>&Item
 argument_list|)
@@ -1142,7 +1128,7 @@ operator|>
 name|Error
 name|consume
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|,
 argument|const serialize_arrayref_tail_impl<T>&Item
 argument_list|)
@@ -1167,7 +1153,7 @@ operator|>
 name|Error
 name|consume
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|,
 argument|const serialize_numeric_impl<T>&Item
 argument_list|)
@@ -1199,7 +1185,7 @@ operator|>
 name|Error
 name|consume
 argument_list|(
-argument|msf::StreamReader&Reader
+argument|BinaryStreamReader&Reader
 argument_list|,
 argument|T&&X
 argument_list|,

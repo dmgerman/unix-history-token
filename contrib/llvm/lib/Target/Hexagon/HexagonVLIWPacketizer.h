@@ -40,6 +40,12 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|HexagonInstrInfo
+decl_stmt|;
+name|class
+name|HexagonRegisterInfo
+decl_stmt|;
+name|class
 name|HexagonPacketizerList
 range|:
 name|public
@@ -86,6 +92,13 @@ name|MachineInstr
 operator|*
 operator|>
 name|IgnoreDepMIs
+block|;
+comment|// Set to true if the packet contains an instruction that stalls with an
+comment|// instruction from the previous packet.
+name|bool
+name|PacketStalls
+operator|=
+name|false
 block|;
 name|protected
 operator|:
@@ -426,6 +439,20 @@ argument_list|)
 block|;
 name|bool
 name|hasControlDependence
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|I
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|&
+name|J
+argument_list|)
+block|;
+name|bool
+name|hasRegMaskDependence
 argument_list|(
 specifier|const
 name|MachineInstr

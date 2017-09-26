@@ -74,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Target/Language.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Language.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_include

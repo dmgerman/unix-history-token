@@ -785,6 +785,120 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// \brief Returns the captured statement associated with the
+comment|/// component region within the (combined) directive.
+comment|//
+comment|// \param RegionKind Component region kind.
+name|CapturedStmt
+operator|*
+name|getCapturedStmt
+argument_list|(
+argument|OpenMPDirectiveKind RegionKind
+argument_list|)
+specifier|const
+block|{
+name|SmallVector
+operator|<
+name|OpenMPDirectiveKind
+block|,
+literal|4
+operator|>
+name|CaptureRegions
+block|;
+name|getOpenMPCaptureRegions
+argument_list|(
+name|CaptureRegions
+argument_list|,
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|std
+operator|::
+name|any_of
+argument_list|(
+name|CaptureRegions
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|CaptureRegions
+operator|.
+name|end
+argument_list|()
+argument_list|,
+index|[
+operator|=
+index|]
+operator|(
+specifier|const
+name|OpenMPDirectiveKind
+name|K
+operator|)
+block|{
+return|return
+name|K
+operator|==
+name|RegionKind
+return|;
+block|}
+argument_list|)
+operator|&&
+literal|"RegionKind not found in OpenMP CaptureRegions."
+argument_list|)
+block|;
+name|auto
+operator|*
+name|CS
+operator|=
+name|cast
+operator|<
+name|CapturedStmt
+operator|>
+operator|(
+name|getAssociatedStmt
+argument_list|()
+operator|)
+block|;
+for|for
+control|(
+name|auto
+name|ThisCaptureRegion
+range|:
+name|CaptureRegions
+control|)
+block|{
+if|if
+condition|(
+name|ThisCaptureRegion
+operator|==
+name|RegionKind
+condition|)
+return|return
+name|CS
+return|;
+name|CS
+operator|=
+name|cast
+operator|<
+name|CapturedStmt
+operator|>
+operator|(
+name|CS
+operator|->
+name|getCapturedStmt
+argument_list|()
+operator|)
+expr_stmt|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Incorrect RegionKind specified for directive."
+argument_list|)
+expr_stmt|;
+block|}
 name|OpenMPDirectiveKind
 name|getDirectiveKind
 argument_list|()
@@ -1136,12 +1250,18 @@ block|;
 comment|/// \brief Offsets to the stored exprs.
 comment|/// This enumeration contains offsets to all the pointers to children
 comment|/// expressions stored in OMPLoopDirective.
-comment|/// The first 9 children are nesessary for all the loop directives, and
-comment|/// the next 10 are specific to the worksharing ones.
+comment|/// The first 9 children are necessary for all the loop directives,
+comment|/// the next 8 are specific to the worksharing ones, and the next 11 are
+comment|/// used for combined constructs containing two pragmas associated to loops.
 comment|/// After the fixed children, three arrays of length CollapsedNum are
 comment|/// allocated: loop counters, their updates and final values.
 comment|/// PrevLowerBound and PrevUpperBound are used to communicate blocking
 comment|/// information in composite constructs which require loop blocking
+comment|/// DistInc is used to generate the increment expression for the distribute
+comment|/// loop when combined with a further nested loop
+comment|/// PrevEnsureUpperBound is used as the EnsureUpperBound expression for the
+comment|/// for loop when combined with a previous distribute loop in the same pragma
+comment|/// (e.g. 'distribute parallel for')
 comment|///
 block|enum
 block|{
@@ -1188,7 +1308,7 @@ name|DefaultEnd
 operator|=
 literal|9
 block|,
-comment|// The following 7 exprs are used by worksharing loops only.
+comment|// The following 8 exprs are used by worksharing and distribute loops only.
 name|IsLastIterVariableOffset
 operator|=
 literal|9
@@ -1221,6 +1341,11 @@ name|NumIterationsOffset
 operator|=
 literal|16
 block|,
+comment|// Offset to the end for worksharing loop directives.
+name|WorksharingEnd
+operator|=
+literal|17
+block|,
 name|PrevLowerBoundVariableOffset
 operator|=
 literal|17
@@ -1229,11 +1354,47 @@ name|PrevUpperBoundVariableOffset
 operator|=
 literal|18
 block|,
-comment|// Offset to the end (and start of the following counters/updates/finals
-comment|// arrays) for worksharing loop directives.
-name|WorksharingEnd
+name|DistIncOffset
 operator|=
 literal|19
+block|,
+name|PrevEnsureUpperBoundOffset
+operator|=
+literal|20
+block|,
+name|CombinedLowerBoundVariableOffset
+operator|=
+literal|21
+block|,
+name|CombinedUpperBoundVariableOffset
+operator|=
+literal|22
+block|,
+name|CombinedEnsureUpperBoundOffset
+operator|=
+literal|23
+block|,
+name|CombinedInitOffset
+operator|=
+literal|24
+block|,
+name|CombinedConditionOffset
+operator|=
+literal|25
+block|,
+name|CombinedNextLowerBoundOffset
+operator|=
+literal|26
+block|,
+name|CombinedNextUpperBoundOffset
+operator|=
+literal|27
+block|,
+comment|// Offset to the end (and start of the following counters/updates/finals
+comment|// arrays) for combined distribute loop directives.
+name|CombinedDistributeEnd
+operator|=
+literal|28
 block|,   }
 block|;
 comment|/// \brief Get the counters storage.
@@ -1583,8 +1744,18 @@ argument_list|(
 argument|OpenMPDirectiveKind Kind
 argument_list|)
 block|{
+if|if
+condition|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|Kind
+argument_list|)
+condition|)
 return|return
-operator|(
+name|CombinedDistributeEnd
+return|;
+if|if
+condition|(
 name|isOpenMPWorksharingDirective
 argument_list|(
 name|Kind
@@ -1599,22 +1770,31 @@ name|isOpenMPDistributeDirective
 argument_list|(
 name|Kind
 argument_list|)
-operator|)
-operator|?
+condition|)
+return|return
 name|WorksharingEnd
-operator|:
+return|;
+return|return
 name|DefaultEnd
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Children number.
+end_comment
+
+begin_function
 specifier|static
 name|unsigned
 name|numLoopChildren
-argument_list|(
-argument|unsigned CollapsedNum
-argument_list|,
-argument|OpenMPDirectiveKind Kind
-argument_list|)
+parameter_list|(
+name|unsigned
+name|CollapsedNum
+parameter_list|,
+name|OpenMPDirectiveKind
+name|Kind
+parameter_list|)
 block|{
 return|return
 name|getArraysOffset
@@ -1630,11 +1810,16 @@ comment|// Counters,
 comment|// PrivateCounters, Inits,
 comment|// Updates and Finals
 block|}
+end_function
+
+begin_function
 name|void
 name|setIterationVariable
-argument_list|(
-argument|Expr *IV
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|IV
+parameter_list|)
 block|{
 operator|*
 name|std
@@ -1648,12 +1833,18 @@ name|IterationVariableOffset
 argument_list|)
 operator|=
 name|IV
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setLastIteration
-argument_list|(
-argument|Expr *LI
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|LI
+parameter_list|)
 block|{
 operator|*
 name|std
@@ -1667,12 +1858,18 @@ name|LastIterationOffset
 argument_list|)
 operator|=
 name|LI
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setCalcLastIteration
-argument_list|(
-argument|Expr *CLI
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|CLI
+parameter_list|)
 block|{
 operator|*
 name|std
@@ -1686,12 +1883,18 @@ name|CalcLastIterationOffset
 argument_list|)
 operator|=
 name|CLI
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setPreCond
-argument_list|(
-argument|Expr *PC
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|PC
+parameter_list|)
 block|{
 operator|*
 name|std
@@ -1705,12 +1908,18 @@ name|PreConditionOffset
 argument_list|)
 operator|=
 name|PC
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setCond
-argument_list|(
-argument|Expr *Cond
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|Cond
+parameter_list|)
 block|{
 operator|*
 name|std
@@ -1724,12 +1933,18 @@ name|CondOffset
 argument_list|)
 operator|=
 name|Cond
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setInit
-argument_list|(
-argument|Expr *Init
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|Init
+parameter_list|)
 block|{
 operator|*
 name|std
@@ -1743,12 +1958,18 @@ name|InitOffset
 argument_list|)
 operator|=
 name|Init
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setInc
-argument_list|(
-argument|Expr *Inc
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|Inc
+parameter_list|)
 block|{
 operator|*
 name|std
@@ -1762,12 +1983,18 @@ name|IncOffset
 argument_list|)
 operator|=
 name|Inc
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setPreInits
-argument_list|(
-argument|Stmt *PreInits
-argument_list|)
+parameter_list|(
+name|Stmt
+modifier|*
+name|PreInits
+parameter_list|)
 block|{
 operator|*
 name|std
@@ -1781,12 +2008,18 @@ name|PreInitsOffset
 argument_list|)
 operator|=
 name|PreInits
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setIsLastIterVariable
-argument_list|(
-argument|Expr *IL
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|IL
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1812,7 +2045,7 @@ operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|std
 operator|::
@@ -1825,12 +2058,18 @@ name|IsLastIterVariableOffset
 argument_list|)
 operator|=
 name|IL
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setLowerBoundVariable
-argument_list|(
-argument|Expr *LB
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|LB
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1856,7 +2095,7 @@ operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|std
 operator|::
@@ -1869,12 +2108,18 @@ name|LowerBoundVariableOffset
 argument_list|)
 operator|=
 name|LB
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setUpperBoundVariable
-argument_list|(
-argument|Expr *UB
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|UB
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1900,7 +2145,7 @@ operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|std
 operator|::
@@ -1913,12 +2158,18 @@ name|UpperBoundVariableOffset
 argument_list|)
 operator|=
 name|UB
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setStrideVariable
-argument_list|(
-argument|Expr *ST
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|ST
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1944,7 +2195,7 @@ operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|std
 operator|::
@@ -1957,12 +2208,18 @@ name|StrideVariableOffset
 argument_list|)
 operator|=
 name|ST
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setEnsureUpperBound
-argument_list|(
-argument|Expr *EUB
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|EUB
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1988,7 +2245,7 @@ operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|std
 operator|::
@@ -2001,12 +2258,18 @@ name|EnsureUpperBoundOffset
 argument_list|)
 operator|=
 name|EUB
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setNextLowerBound
-argument_list|(
-argument|Expr *NLB
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|NLB
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -2032,7 +2295,7 @@ operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|std
 operator|::
@@ -2045,12 +2308,18 @@ name|NextLowerBoundOffset
 argument_list|)
 operator|=
 name|NLB
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setNextUpperBound
-argument_list|(
-argument|Expr *NUB
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|NUB
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -2076,7 +2345,7 @@ operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|std
 operator|::
@@ -2089,12 +2358,18 @@ name|NextUpperBoundOffset
 argument_list|)
 operator|=
 name|NUB
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setNumIterations
-argument_list|(
-argument|Expr *NI
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|NI
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -2120,7 +2395,7 @@ operator|)
 operator|&&
 literal|"expected worksharing loop directive"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|std
 operator|::
@@ -2133,38 +2408,30 @@ name|NumIterationsOffset
 argument_list|)
 operator|=
 name|NI
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setPrevLowerBoundVariable
-argument_list|(
-argument|Expr *PrevLB
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|PrevLB
+parameter_list|)
 block|{
 name|assert
 argument_list|(
-operator|(
-name|isOpenMPWorksharingDirective
+name|isOpenMPLoopBoundSharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
-operator|||
-name|isOpenMPTaskLoopDirective
-argument_list|(
-name|getDirectiveKind
-argument_list|()
-argument_list|)
-operator|||
-name|isOpenMPDistributeDirective
-argument_list|(
-name|getDirectiveKind
-argument_list|()
-argument_list|)
-operator|)
 operator|&&
-literal|"expected worksharing loop directive"
+literal|"expected loop bound sharing directive"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|std
 operator|::
@@ -2177,38 +2444,30 @@ name|PrevLowerBoundVariableOffset
 argument_list|)
 operator|=
 name|PrevLB
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setPrevUpperBoundVariable
-argument_list|(
-argument|Expr *PrevUB
-argument_list|)
+parameter_list|(
+name|Expr
+modifier|*
+name|PrevUB
+parameter_list|)
 block|{
 name|assert
 argument_list|(
-operator|(
-name|isOpenMPWorksharingDirective
+name|isOpenMPLoopBoundSharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
-operator|||
-name|isOpenMPTaskLoopDirective
-argument_list|(
-name|getDirectiveKind
-argument_list|()
-argument_list|)
-operator|||
-name|isOpenMPDistributeDirective
-argument_list|(
-name|getDirectiveKind
-argument_list|()
-argument_list|)
-operator|)
 operator|&&
-literal|"expected worksharing loop directive"
+literal|"expected loop bound sharing directive"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|std
 operator|::
@@ -2221,7 +2480,335 @@ name|PrevUpperBoundVariableOffset
 argument_list|)
 operator|=
 name|PrevUB
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setDistInc
+parameter_list|(
+name|Expr
+modifier|*
+name|DistInc
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+expr_stmt|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|DistIncOffset
+argument_list|)
+operator|=
+name|DistInc
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setPrevEnsureUpperBound
+parameter_list|(
+name|Expr
+modifier|*
+name|PrevEUB
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+expr_stmt|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|PrevEnsureUpperBoundOffset
+argument_list|)
+operator|=
+name|PrevEUB
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setCombinedLowerBoundVariable
+parameter_list|(
+name|Expr
+modifier|*
+name|CombLB
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+expr_stmt|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedLowerBoundVariableOffset
+argument_list|)
+operator|=
+name|CombLB
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setCombinedUpperBoundVariable
+parameter_list|(
+name|Expr
+modifier|*
+name|CombUB
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+expr_stmt|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedUpperBoundVariableOffset
+argument_list|)
+operator|=
+name|CombUB
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setCombinedEnsureUpperBound
+parameter_list|(
+name|Expr
+modifier|*
+name|CombEUB
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+expr_stmt|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedEnsureUpperBoundOffset
+argument_list|)
+operator|=
+name|CombEUB
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setCombinedInit
+parameter_list|(
+name|Expr
+modifier|*
+name|CombInit
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+expr_stmt|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedInitOffset
+argument_list|)
+operator|=
+name|CombInit
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setCombinedCond
+parameter_list|(
+name|Expr
+modifier|*
+name|CombCond
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+expr_stmt|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedConditionOffset
+argument_list|)
+operator|=
+name|CombCond
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setCombinedNextLowerBound
+parameter_list|(
+name|Expr
+modifier|*
+name|CombNLB
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+expr_stmt|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedNextLowerBoundOffset
+argument_list|)
+operator|=
+name|CombNLB
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setCombinedNextUpperBound
+parameter_list|(
+name|Expr
+modifier|*
+name|CombNUB
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+expr_stmt|;
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedNextUpperBoundOffset
+argument_list|)
+operator|=
+name|CombNUB
+expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
 name|void
 name|setCounters
 argument_list|(
@@ -2232,7 +2819,10 @@ operator|*
 operator|>
 name|A
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|setPrivateCounters
 argument_list|(
@@ -2243,7 +2833,10 @@ operator|*
 operator|>
 name|A
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|setInits
 argument_list|(
@@ -2254,7 +2847,10 @@ operator|*
 operator|>
 name|A
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|setUpdates
 argument_list|(
@@ -2265,7 +2861,10 @@ operator|*
 operator|>
 name|A
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|setFinals
 argument_list|(
@@ -2276,161 +2875,252 @@ operator|*
 operator|>
 name|A
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_comment
+comment|/// The expressions built to support OpenMP loops in combined/composite
+end_comment
+
+begin_comment
+comment|/// pragmas (e.g. pragma omp distribute parallel for)
+end_comment
+
+begin_struct
+struct|struct
+name|DistCombinedHelperExprs
+block|{
+comment|/// DistributeLowerBound - used when composing 'omp distribute' with
+comment|/// 'omp for' in a same construct.
+name|Expr
+modifier|*
+name|LB
+decl_stmt|;
+comment|/// DistributeUpperBound - used when composing 'omp distribute' with
+comment|/// 'omp for' in a same construct.
+name|Expr
+modifier|*
+name|UB
+decl_stmt|;
+comment|/// DistributeEnsureUpperBound - used when composing 'omp distribute'
+comment|///  with 'omp for' in a same construct, EUB depends on DistUB
+name|Expr
+modifier|*
+name|EUB
+decl_stmt|;
+comment|/// Distribute loop iteration variable init used when composing 'omp
+comment|/// distribute'
+comment|///  with 'omp for' in a same construct
+name|Expr
+modifier|*
+name|Init
+decl_stmt|;
+comment|/// Distribute Loop condition used when composing 'omp distribute'
+comment|///  with 'omp for' in a same construct
+name|Expr
+modifier|*
+name|Cond
+decl_stmt|;
+comment|/// Update of LowerBound for statically sheduled omp loops for
+comment|/// outer loop in combined constructs (e.g. 'distribute parallel for')
+name|Expr
+modifier|*
+name|NLB
+decl_stmt|;
+comment|/// Update of UpperBound for statically sheduled omp loops for
+comment|/// outer loop in combined constructs (e.g. 'distribute parallel for')
+name|Expr
+modifier|*
+name|NUB
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/// \brief The expressions built for the OpenMP loop CodeGen for the
+end_comment
+
+begin_comment
 comment|/// whole collapsed loop nest.
-expr|struct
+end_comment
+
+begin_struct
+struct|struct
 name|HelperExprs
 block|{
 comment|/// \brief Loop iteration variable.
 name|Expr
-operator|*
+modifier|*
 name|IterationVarRef
-block|;
+decl_stmt|;
 comment|/// \brief Loop last iteration number.
 name|Expr
-operator|*
+modifier|*
 name|LastIteration
-block|;
+decl_stmt|;
 comment|/// \brief Loop number of iterations.
 name|Expr
-operator|*
+modifier|*
 name|NumIterations
-block|;
+decl_stmt|;
 comment|/// \brief Calculation of last iteration.
 name|Expr
-operator|*
+modifier|*
 name|CalcLastIteration
-block|;
+decl_stmt|;
 comment|/// \brief Loop pre-condition.
 name|Expr
-operator|*
+modifier|*
 name|PreCond
-block|;
+decl_stmt|;
 comment|/// \brief Loop condition.
 name|Expr
-operator|*
+modifier|*
 name|Cond
-block|;
+decl_stmt|;
 comment|/// \brief Loop iteration variable init.
 name|Expr
-operator|*
+modifier|*
 name|Init
-block|;
+decl_stmt|;
 comment|/// \brief Loop increment.
 name|Expr
-operator|*
+modifier|*
 name|Inc
-block|;
+decl_stmt|;
 comment|/// \brief IsLastIteration - local flag variable passed to runtime.
 name|Expr
-operator|*
+modifier|*
 name|IL
-block|;
+decl_stmt|;
 comment|/// \brief LowerBound - local variable passed to runtime.
 name|Expr
-operator|*
+modifier|*
 name|LB
-block|;
+decl_stmt|;
 comment|/// \brief UpperBound - local variable passed to runtime.
 name|Expr
-operator|*
+modifier|*
 name|UB
-block|;
+decl_stmt|;
 comment|/// \brief Stride - local variable passed to runtime.
 name|Expr
-operator|*
+modifier|*
 name|ST
-block|;
-comment|/// \brief EnsureUpperBound -- expression LB = min(LB, NumIterations).
+decl_stmt|;
+comment|/// \brief EnsureUpperBound -- expression UB = min(UB, NumIterations).
 name|Expr
-operator|*
+modifier|*
 name|EUB
-block|;
+decl_stmt|;
 comment|/// \brief Update of LowerBound for statically sheduled 'omp for' loops.
 name|Expr
-operator|*
+modifier|*
 name|NLB
-block|;
+decl_stmt|;
 comment|/// \brief Update of UpperBound for statically sheduled 'omp for' loops.
 name|Expr
-operator|*
+modifier|*
 name|NUB
-block|;
+decl_stmt|;
 comment|/// \brief PreviousLowerBound - local variable passed to runtime in the
 comment|/// enclosing schedule or null if that does not apply.
 name|Expr
-operator|*
+modifier|*
 name|PrevLB
-block|;
+decl_stmt|;
 comment|/// \brief PreviousUpperBound - local variable passed to runtime in the
 comment|/// enclosing schedule or null if that does not apply.
 name|Expr
-operator|*
+modifier|*
 name|PrevUB
-block|;
+decl_stmt|;
+comment|/// \brief DistInc - increment expression for distribute loop when found
+comment|/// combined with a further loop level (e.g. in 'distribute parallel for')
+comment|/// expression IV = IV + ST
+name|Expr
+modifier|*
+name|DistInc
+decl_stmt|;
+comment|/// \brief PrevEUB - expression similar to EUB but to be used when loop
+comment|/// scheduling uses PrevLB and PrevUB (e.g.  in 'distribute parallel for'
+comment|/// when ensuring that the UB is either the calculated UB by the runtime or
+comment|/// the end of the assigned distribute chunk)
+comment|/// expression UB = min (UB, PrevUB)
+name|Expr
+modifier|*
+name|PrevEUB
+decl_stmt|;
 comment|/// \brief Counters Loop counters.
 name|SmallVector
 operator|<
 name|Expr
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|Counters
-block|;
+expr_stmt|;
 comment|/// \brief PrivateCounters Loop counters.
 name|SmallVector
 operator|<
 name|Expr
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|PrivateCounters
-block|;
+expr_stmt|;
 comment|/// \brief Expressions for loop counters inits for CodeGen.
 name|SmallVector
 operator|<
 name|Expr
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|Inits
-block|;
+expr_stmt|;
 comment|/// \brief Expressions for loop counters update for CodeGen.
 name|SmallVector
 operator|<
 name|Expr
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|Updates
-block|;
+expr_stmt|;
 comment|/// \brief Final loop counter values for GodeGen.
 name|SmallVector
 operator|<
 name|Expr
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|Finals
-block|;
+expr_stmt|;
 comment|/// Init statement for all captured expressions.
 name|Stmt
-operator|*
+modifier|*
 name|PreInits
-block|;
+decl_stmt|;
+comment|/// Expressions used when combining OpenMP loop pragmas
+name|DistCombinedHelperExprs
+name|DistCombinedFields
+decl_stmt|;
 comment|/// \brief Check if all the expressions are built (does not check the
 comment|/// worksharing ones).
 name|bool
 name|builtAll
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|IterationVarRef
@@ -2466,113 +3156,122 @@ comment|/// \brief Initialize all the fields to null.
 comment|/// \param Size Number of elements in the counters/finals/updates arrays.
 name|void
 name|clear
-argument_list|(
-argument|unsigned Size
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Size
+parameter_list|)
 block|{
 name|IterationVarRef
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|LastIteration
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|CalcLastIteration
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|PreCond
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|Cond
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|Init
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|Inc
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|IL
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|LB
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|UB
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|ST
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|EUB
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|NLB
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|NUB
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|NumIterations
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|PrevLB
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|PrevUB
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
+name|DistInc
+operator|=
+name|nullptr
+expr_stmt|;
+name|PrevEUB
+operator|=
+name|nullptr
+expr_stmt|;
 name|Counters
 operator|.
 name|resize
 argument_list|(
 name|Size
 argument_list|)
-block|;
+expr_stmt|;
 name|PrivateCounters
 operator|.
 name|resize
 argument_list|(
 name|Size
 argument_list|)
-block|;
+expr_stmt|;
 name|Inits
 operator|.
 name|resize
 argument_list|(
 name|Size
 argument_list|)
-block|;
+expr_stmt|;
 name|Updates
 operator|.
 name|resize
 argument_list|(
 name|Size
 argument_list|)
-block|;
+expr_stmt|;
 name|Finals
 operator|.
 name|resize
 argument_list|(
 name|Size
 argument_list|)
-block|;
+expr_stmt|;
 for|for
 control|(
 name|unsigned
@@ -2628,10 +3327,58 @@ name|PreInits
 operator|=
 name|nullptr
 expr_stmt|;
+name|DistCombinedFields
+operator|.
+name|LB
+operator|=
+name|nullptr
+expr_stmt|;
+name|DistCombinedFields
+operator|.
+name|UB
+operator|=
+name|nullptr
+expr_stmt|;
+name|DistCombinedFields
+operator|.
+name|EUB
+operator|=
+name|nullptr
+expr_stmt|;
+name|DistCombinedFields
+operator|.
+name|Init
+operator|=
+name|nullptr
+expr_stmt|;
+name|DistCombinedFields
+operator|.
+name|Cond
+operator|=
+name|nullptr
+expr_stmt|;
+name|DistCombinedFields
+operator|.
+name|NLB
+operator|=
+name|nullptr
+expr_stmt|;
+name|DistCombinedFields
+operator|.
+name|NUB
+operator|=
+name|nullptr
+expr_stmt|;
 block|}
-expr|}
-block|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/// \brief Get number of collapsed loops.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getCollapsedNumber
 argument_list|()
@@ -2641,6 +3388,9 @@ return|return
 name|CollapsedNum
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getIterationVariable
@@ -2675,6 +3425,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getLastIteration
@@ -2709,6 +3462,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getCalcLastIteration
@@ -2743,6 +3499,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getPreCond
@@ -2777,6 +3536,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getCond
@@ -2811,6 +3573,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getInit
@@ -2845,6 +3610,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getInc
@@ -2879,6 +3647,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|Stmt
 operator|*
@@ -2899,10 +3670,13 @@ name|PreInitsOffset
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|Stmt
-operator|*
+modifier|*
 name|getPreInits
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|*
@@ -2917,6 +3691,9 @@ name|PreInitsOffset
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getIsLastIterVariable
@@ -2976,6 +3753,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getLowerBoundVariable
@@ -3035,6 +3815,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getUpperBoundVariable
@@ -3094,6 +3877,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getStrideVariable
@@ -3153,6 +3939,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getEnsureUpperBound
@@ -3212,6 +4001,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getNextLowerBound
@@ -3271,6 +4063,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getNextUpperBound
@@ -3330,6 +4125,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getNumIterations
@@ -3389,6 +4187,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getPrevLowerBoundVariable
@@ -3397,27 +4198,13 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-operator|(
-name|isOpenMPWorksharingDirective
+name|isOpenMPLoopBoundSharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
-operator|||
-name|isOpenMPTaskLoopDirective
-argument_list|(
-name|getDirectiveKind
-argument_list|()
-argument_list|)
-operator|||
-name|isOpenMPDistributeDirective
-argument_list|(
-name|getDirectiveKind
-argument_list|()
-argument_list|)
-operator|)
 operator|&&
-literal|"expected worksharing loop directive"
+literal|"expected loop bound sharing directive"
 argument_list|)
 block|;
 return|return
@@ -3448,6 +4235,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Expr
 operator|*
 name|getPrevUpperBoundVariable
@@ -3456,27 +4246,13 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-operator|(
-name|isOpenMPWorksharingDirective
+name|isOpenMPLoopBoundSharingDirective
 argument_list|(
 name|getDirectiveKind
 argument_list|()
 argument_list|)
-operator|||
-name|isOpenMPTaskLoopDirective
-argument_list|(
-name|getDirectiveKind
-argument_list|()
-argument_list|)
-operator|||
-name|isOpenMPDistributeDirective
-argument_list|(
-name|getDirectiveKind
-argument_list|()
-argument_list|)
-operator|)
 operator|&&
-literal|"expected worksharing loop directive"
+literal|"expected loop bound sharing directive"
 argument_list|)
 block|;
 return|return
@@ -3507,6 +4283,441 @@ operator|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|Expr
+operator|*
+name|getDistInc
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|DistIncOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|Expr
+operator|*
+name|getPrevEnsureUpperBound
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|PrevEnsureUpperBoundOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|Expr
+operator|*
+name|getCombinedLowerBoundVariable
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedLowerBoundVariableOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|Expr
+operator|*
+name|getCombinedUpperBoundVariable
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedUpperBoundVariableOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|Expr
+operator|*
+name|getCombinedEnsureUpperBound
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedEnsureUpperBoundOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|Expr
+operator|*
+name|getCombinedInit
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedInitOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|Expr
+operator|*
+name|getCombinedCond
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedConditionOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|Expr
+operator|*
+name|getCombinedNextLowerBound
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedNextLowerBoundOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|Expr
+operator|*
+name|getCombinedNextUpperBound
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isOpenMPLoopBoundSharingDirective
+argument_list|(
+name|getDirectiveKind
+argument_list|()
+argument_list|)
+operator|&&
+literal|"expected loop bound sharing directive"
+argument_list|)
+block|;
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+name|CombinedNextUpperBoundOffset
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|Stmt
 operator|*
@@ -3576,11 +4787,16 @@ name|getBody
 argument_list|()
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|Body
 return|;
-block|}
-name|ArrayRef
+end_return
+
+begin_expr_stmt
+unit|}    ArrayRef
 operator|<
 name|Expr
 operator|*
@@ -3593,6 +4809,9 @@ name|getCounters
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|Expr
@@ -3616,6 +4835,9 @@ name|getCounters
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|Expr
@@ -3629,6 +4851,9 @@ name|getPrivateCounters
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|Expr
@@ -3652,6 +4877,9 @@ name|getPrivateCounters
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|Expr
@@ -3665,6 +4893,9 @@ name|getInits
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|Expr
@@ -3688,6 +4919,9 @@ name|getInits
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|Expr
@@ -3701,6 +4935,9 @@ name|getUpdates
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|Expr
@@ -3724,6 +4961,9 @@ name|getUpdates
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|Expr
@@ -3737,6 +4977,9 @@ name|getFinals
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ArrayRef
 operator|<
 name|Expr
@@ -3760,12 +5003,18 @@ name|getFinals
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -3895,20 +5144,49 @@ operator|==
 name|OMPTeamsDistributeParallelForDirectiveClass
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// \brief This represents '#pragma omp simd' directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp simd private(a,b) linear(i,j:s) reduction(+:c,d)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp simd' has clauses 'private'
+end_comment
+
+begin_comment
 comment|/// with the variables 'a' and 'b', 'linear' with variables 'i', 'j' and
+end_comment
+
+begin_comment
 comment|/// linear step 's', 'reduction' with operator '+' and variables 'c' and 'd'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPSimdDirective
-operator|:
+range|:
 name|public
 name|OMPLoopDirective
 block|{
@@ -6273,7 +7551,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief This represents '#pragma omp taskgroup' directive.
+comment|/// This represents '#pragma omp taskgroup' directive.
 comment|///
 comment|/// \code
 comment|/// #pragma omp taskgroup
@@ -6289,16 +7567,19 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
-comment|/// \brief Build directive with the given start and end location.
+comment|/// Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending location of the directive.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 name|OMPTaskgroupDirective
 argument_list|(
 argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumClauses
 argument_list|)
 operator|:
 name|OMPExecutableDirective
@@ -6313,16 +7594,19 @@ argument|StartLoc
 argument_list|,
 argument|EndLoc
 argument_list|,
-literal|0
+argument|NumClauses
 argument_list|,
 literal|1
 argument_list|)
 block|{}
-comment|/// \brief Build an empty directive.
+comment|/// Build an empty directive.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 name|explicit
 name|OMPTaskgroupDirective
-argument_list|()
+argument_list|(
+argument|unsigned NumClauses
+argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
@@ -6336,18 +7620,19 @@ argument|SourceLocation()
 argument_list|,
 argument|SourceLocation()
 argument_list|,
-literal|0
+argument|NumClauses
 argument_list|,
 literal|1
 argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// \brief Creates directive.
+comment|/// Creates directive.
 comment|///
 comment|/// \param C AST context.
 comment|/// \param StartLoc Starting location of the directive kind.
 comment|/// \param EndLoc Ending Location of the directive.
+comment|/// \param Clauses List of clauses.
 comment|/// \param AssociatedStmt Statement, associated with the directive.
 comment|///
 specifier|static
@@ -6361,24 +7646,26 @@ argument|SourceLocation StartLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
+argument|ArrayRef<OMPClause *> Clauses
+argument_list|,
 argument|Stmt *AssociatedStmt
 argument_list|)
 block|;
-comment|/// \brief Creates an empty directive.
+comment|/// Creates an empty directive.
 comment|///
 comment|/// \param C AST context.
+comment|/// \param NumClauses Number of clauses.
 comment|///
 specifier|static
 name|OMPTaskgroupDirective
 operator|*
 name|CreateEmpty
 argument_list|(
-specifier|const
-name|ASTContext
-operator|&
-name|C
+argument|const ASTContext&C
 argument_list|,
-name|EmptyShell
+argument|unsigned NumClauses
+argument_list|,
+argument|EmptyShell
 argument_list|)
 block|;
 specifier|static

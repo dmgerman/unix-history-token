@@ -283,6 +283,26 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+comment|/// Peek at the SFINAE diagnostic.
+specifier|const
+name|PartialDiagnosticAt
+operator|&
+name|peekSFINAEDiagnostic
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|HasSFINAEDiagnostic
+argument_list|)
+block|;
+return|return
+name|SuppressedDiagnostics
+operator|.
+name|front
+argument_list|()
+return|;
+block|}
 comment|/// \brief Provide a new template argument list that contains the
 comment|/// results of template argument deduction.
 name|void

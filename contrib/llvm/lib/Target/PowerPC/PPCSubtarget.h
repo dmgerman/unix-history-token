@@ -1036,6 +1036,29 @@ return|return
 literal|16
 return|;
 block|}
+comment|// DarwinABI has a 224-byte red zone. PPC32 SVR4ABI(Non-DarwinABI) has no
+comment|// red zone and PPC64 SVR4ABI has a 288-byte red zone.
+name|unsigned
+name|getRedZoneSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isDarwinABI
+argument_list|()
+operator|?
+literal|224
+operator|:
+operator|(
+name|isPPC64
+argument_list|()
+operator|?
+literal|288
+operator|:
+literal|0
+operator|)
+return|;
+block|}
 name|bool
 name|hasHTM
 argument_list|()
@@ -1213,6 +1236,8 @@ name|isELFv2ABI
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Originally, this function return hasISEL(). Now we always enable it,
+comment|/// but may expand the ISEL instruction later.
 name|bool
 name|enableEarlyIfConversion
 argument_list|()
@@ -1220,8 +1245,7 @@ specifier|const
 name|override
 block|{
 return|return
-name|hasISEL
-argument_list|()
+name|true
 return|;
 block|}
 comment|// Scheduling customization.
@@ -1292,6 +1316,18 @@ name|GV
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|isXRaySupported
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|IsPPC64
+operator|&&
+name|IsLittleEndian
+return|;
+block|}
 block|}
 end_decl_stmt
 

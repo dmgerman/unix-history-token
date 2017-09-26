@@ -113,6 +113,11 @@ name|FunctionCoverageSummary
 operator|&
 name|Function
 argument_list|,
+specifier|const
+name|DemangleCache
+operator|&
+name|DC
+argument_list|,
 name|raw_ostream
 operator|&
 name|OS
@@ -156,6 +161,11 @@ operator|::
 name|string
 operator|>
 name|Files
+argument_list|,
+specifier|const
+name|DemangleCache
+operator|&
+name|DC
 argument_list|,
 name|raw_ostream
 operator|&

@@ -53,17 +53,29 @@ directive|include
 file|<initializer_list>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<list>
-end_include
+begin_comment
+comment|// for initializer_list
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<string>
 end_include
+
+begin_comment
+comment|// for string
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_comment
+comment|// for pair
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -162,13 +174,6 @@ name|HasAtLeast
 parameter_list|(
 name|Size
 name|s
-parameter_list|)
-function_decl|;
-name|bool
-name|HasAny
-parameter_list|(
-name|Character
-name|c
 parameter_list|)
 function_decl|;
 name|std

@@ -43,33 +43,165 @@ directive|define
 name|liblldb_Address_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
 
 begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
+comment|// for LLDB_INVALID_ADDRESS
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/SymbolContextScope.h"
+file|"lldb/lldb-enumerations.h"
 end_include
+
+begin_comment
+comment|// for AddressClass::eAddressClassInvalid
+end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/lldb-forward.h"
 end_include
+
+begin_comment
+comment|// for SectionWP, SectionSP, ModuleSP
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
+begin_comment
+comment|// for addr_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t, UINT32_MAX, int64_t
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Block
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|CompileUnit
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|ExecutionContextScope
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Function
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|SectionList
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Symbol
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|SymbolContext
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Target
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+struct_decl|struct
+name|LineEntry
+struct_decl|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -722,6 +854,10 @@ comment|///     The target to use when trying resolve the address into
 comment|///     a section + offset. The Target's SectionLoadList object
 comment|///     is used to resolve the address.
 comment|///
+comment|/// @param[in] allow_section_end
+comment|///     If true, treat an address pointing to the end of the module as
+comment|///     belonging to that module.
+comment|///
 comment|/// @return
 comment|///     Returns \b true if the load address was resolved to be
 comment|///     section/offset, \b false otherwise. It is often ok for an
@@ -740,6 +876,11 @@ argument_list|,
 name|Target
 operator|*
 name|target
+argument_list|,
+name|bool
+name|allow_section_end
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 name|bool
@@ -762,6 +903,11 @@ operator|=
 name|lldb
 operator|::
 name|eAddressClassInvalid
+argument_list|,
+name|bool
+name|allow_section_end
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 name|bool

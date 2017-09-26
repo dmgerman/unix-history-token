@@ -110,12 +110,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -123,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -170,12 +170,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Use.h"
 end_include
 
@@ -189,6 +183,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -350,11 +350,9 @@ argument_list|)
 block|; }
 name|private
 operator|:
-comment|/// CallSiteBase::get - This static method is sort of like a constructor.  It
-comment|/// will create an appropriate call site for a Call or Invoke instruction, but
-comment|/// it can also create a null initialized CallSiteBase object for something
-comment|/// which is NOT a call site.
-comment|///
+comment|/// This static method is like a constructor. It will create an appropriate
+comment|/// call site for a Call or Invoke instruction, but it can also create a null
+comment|/// initialized CallSiteBase object for something which is NOT a call site.
 specifier|static
 name|CallSiteBase
 name|get
@@ -434,9 +432,8 @@ return|;
 block|}
 name|public
 operator|:
-comment|/// isCall - true if a CallInst is enclosed.
-comment|/// Note that !isCall() does not mean it is an InvokeInst enclosed,
-comment|/// it also could signify a NULL Instruction pointer.
+comment|/// Return true if a CallInst is enclosed. Note that !isCall() does not mean
+comment|/// an InvokeInst is enclosed. It may also signify a NULL instruction pointer.
 name|bool
 name|isCall
 argument_list|()
@@ -449,8 +446,7 @@ name|getInt
 argument_list|()
 return|;
 block|}
-comment|/// isInvoke - true if a InvokeInst is enclosed.
-comment|///
+comment|/// Return true if a InvokeInst is enclosed.
 name|bool
 name|isInvoke
 argument_list|()
@@ -508,7 +504,7 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-comment|/// Get the basic block containing the call site
+comment|/// Get the basic block containing the call site.
 name|BBTy
 operator|*
 name|getParent
@@ -523,8 +519,7 @@ name|getParent
 argument_list|()
 return|;
 block|}
-comment|/// getCalledValue - Return the pointer to function that is being called.
-comment|///
+comment|/// Return the pointer to function that is being called.
 name|ValTy
 operator|*
 name|getCalledValue
@@ -545,9 +540,8 @@ name|getCallee
 argument_list|()
 return|;
 block|}
-comment|/// getCalledFunction - Return the function being called if this is a direct
-comment|/// call, otherwise return null (if it's an indirect call).
-comment|///
+comment|/// Return the function being called if this is a direct call, otherwise
+comment|/// return null (if it's an indirect call).
 name|FunTy
 operator|*
 name|getCalledFunction
@@ -565,13 +559,93 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// setCalledFunction - Set the callee to the specified value.
-comment|///
+comment|/// Return true if the callsite is an indirect call.
+name|bool
+name|isIndirectCall
+argument_list|()
+specifier|const
+block|{
+name|Value
+operator|*
+name|V
+operator|=
+name|getCalledValue
+argument_list|()
+block|;
+if|if
+condition|(
+operator|!
+name|V
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|isa
+operator|<
+name|FunTy
+operator|>
+operator|(
+name|V
+operator|)
+operator|||
+name|isa
+operator|<
+name|Constant
+operator|>
+operator|(
+name|V
+operator|)
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|CallInst
+modifier|*
+name|CI
+init|=
+name|dyn_cast
+operator|<
+name|CallInst
+operator|>
+operator|(
+name|getInstruction
+argument_list|()
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|CI
+operator|->
+name|isInlineAsm
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+block|}
+return|return
+name|true
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Set the callee to the specified value.
+end_comment
+
+begin_function
 name|void
 name|setCalledFunction
-argument_list|(
-argument|Value *V
-argument_list|)
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -580,16 +654,29 @@ argument_list|()
 operator|&&
 literal|"Not a call or invoke instruction!"
 argument_list|)
-block|;
+expr_stmt|;
 operator|*
 name|getCallee
 argument_list|()
 operator|=
 name|V
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// Return the intrinsic ID of the intrinsic called by this CallSite,
+end_comment
+
+begin_comment
 comment|/// or Intrinsic::not_intrinsic if the called function is not an
+end_comment
+
+begin_comment
 comment|/// intrinsic, or if this CallSite is an indirect call.
+end_comment
+
+begin_expr_stmt
 name|Intrinsic
 operator|::
 name|ID
@@ -612,8 +699,17 @@ operator|->
 name|getIntrinsicID
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_comment
 comment|// Don't use Intrinsic::not_intrinsic, as it will require pulling
+end_comment
+
+begin_comment
 comment|// Intrinsics.h into every header that uses CallSite.
+end_comment
+
+begin_return
 return|return
 name|static_cast
 operator|<
@@ -625,27 +721,23 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
-comment|/// isCallee - Determine whether the passed iterator points to the
+unit|}
+comment|/// Determine whether the passed iterator points to the callee operand's Use.
 end_comment
 
-begin_comment
-comment|/// callee operand's Use.
-end_comment
-
-begin_decl_stmt
-name|bool
+begin_macro
+unit|bool
 name|isCallee
 argument_list|(
-name|Value
-operator|::
-name|const_user_iterator
-name|UI
+argument|Value::const_user_iterator UI
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 return|return
 name|isCallee
@@ -658,7 +750,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
 comment|/// Determine whether this Use is the callee operand's Use.
@@ -685,11 +777,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Determine whether the passed iterator points to an argument
-end_comment
-
-begin_comment
-comment|/// operand.
+comment|/// Determine whether the passed iterator points to an argument operand.
 end_comment
 
 begin_decl_stmt
@@ -717,7 +805,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Determine whether the passed use points to an argument operand.
+comment|/// Determine whether the passed use points to an argument operand.
 end_comment
 
 begin_decl_stmt
@@ -757,7 +845,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Determine whether the passed iterator points to a bundle operand.
+comment|/// Determine whether the passed iterator points to a bundle operand.
 end_comment
 
 begin_decl_stmt
@@ -785,7 +873,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Determine whether the passed use points to a bundle operand.
+comment|/// Determine whether the passed use points to a bundle operand.
 end_comment
 
 begin_decl_stmt
@@ -847,7 +935,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Determine whether the passed iterator points to a data operand.
+comment|/// Determine whether the passed iterator points to a data operand.
 end_comment
 
 begin_decl_stmt
@@ -875,7 +963,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Determine whether the passed use points to a data operand.
+comment|/// Determine whether the passed use points to a data operand.
 end_comment
 
 begin_decl_stmt
@@ -1063,19 +1151,20 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// arg_iterator - The type of iterator to use when looping over actual
+comment|/// The type of iterator to use when looping over actual arguments at this
 end_comment
 
 begin_comment
-comment|/// arguments at this call site.
+comment|/// call site.
 end_comment
 
-begin_typedef
-typedef|typedef
-name|IterTy
+begin_decl_stmt
+name|using
 name|arg_iterator
-typedef|;
-end_typedef
+init|=
+name|IterTy
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|iterator_range
@@ -1135,11 +1224,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Given a value use iterator, returns the data operand that corresponds to
-end_comment
-
-begin_comment
-comment|/// it.
+comment|/// Given a value use iterator, return the data operand corresponding to it.
 end_comment
 
 begin_comment
@@ -1224,12 +1309,13 @@ begin_comment
 comment|/// (see below).
 end_comment
 
-begin_typedef
-typedef|typedef
-name|IterTy
+begin_decl_stmt
+name|using
 name|data_operand_iterator
-typedef|;
-end_typedef
+init|=
+name|IterTy
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// data_operands_begin/data_operands_end - Return iterators iterating over
@@ -1372,11 +1458,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getType - Return the type of the instruction that generated this call site
-end_comment
-
-begin_comment
-comment|///
+comment|/// Return the type of the instruction that generated this call site.
 end_comment
 
 begin_expr_stmt
@@ -1399,11 +1481,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getCaller - Return the caller function for this call site
-end_comment
-
-begin_comment
-comment|///
+comment|/// Return the caller function for this call site.
 end_comment
 
 begin_expr_stmt
@@ -1429,11 +1507,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Tests if this call site must be tail call optimized.  Only a
+comment|/// Tests if this call site must be tail call optimized. Only a CallInst can
 end_comment
 
 begin_comment
-comment|/// CallInst can be tail call optimized.
+comment|/// be tail call optimized.
 end_comment
 
 begin_expr_stmt
@@ -1462,7 +1540,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Tests if this call site is marked as a tail call.
+comment|/// Tests if this call site is marked as a tail call.
 end_comment
 
 begin_expr_stmt
@@ -1585,11 +1663,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// getCallingConv/setCallingConv - get or set the calling convention of the
-end_comment
-
-begin_comment
-comment|/// call.
+comment|/// Get the calling convention of the call.
 end_comment
 
 begin_expr_stmt
@@ -1606,6 +1680,7 @@ name|getCallingConv
 argument_list|()
 argument_list|)
 block|;   }
+comment|/// Set the calling convention of the call.
 name|void
 name|setCallingConv
 argument_list|(
@@ -1647,9 +1722,8 @@ name|Ty
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// getAttributes/setAttributes - get or set the parameter attributes of
-comment|/// the call.
-name|AttributeSet
+comment|/// Get the parameter attributes of the call.
+name|AttributeList
 name|getAttributes
 argument_list|()
 specifier|const
@@ -1660,10 +1734,11 @@ name|getAttributes
 argument_list|()
 argument_list|)
 block|;   }
+comment|/// Set the parameter attributes of the call.
 name|void
 name|setAttributes
 argument_list|(
-argument|AttributeSet PAL
+argument|AttributeList PAL
 argument_list|)
 block|{
 name|CALLSITE_DELEGATE_SETTER
@@ -1711,6 +1786,24 @@ argument_list|)
 argument_list|)
 block|;   }
 name|void
+name|addParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|addParamAttr
+argument_list|(
+name|ArgNo
+argument_list|,
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+name|void
 name|removeAttribute
 argument_list|(
 argument|unsigned i
@@ -1746,7 +1839,25 @@ name|Kind
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// \brief Return true if this function has the given attribute.
+name|void
+name|removeParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|removeParamAttr
+argument_list|(
+name|ArgNo
+argument_list|,
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// Return true if this function has the given attribute.
 name|bool
 name|hasFnAttr
 argument_list|(
@@ -1762,7 +1873,7 @@ name|Kind
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// \brief Return true if this function has the given attribute.
+comment|/// Return true if this function has the given attribute.
 name|bool
 name|hasFnAttr
 argument_list|(
@@ -1778,11 +1889,27 @@ name|Kind
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// \brief Return true if the call or the callee has the given attribute.
+comment|/// Return true if this return value has the given attribute.
+name|bool
+name|hasRetAttr
+argument_list|(
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|hasRetAttr
+argument_list|(
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// Return true if the call or the callee has the given attribute.
 name|bool
 name|paramHasAttr
 argument_list|(
-argument|unsigned i
+argument|unsigned ArgNo
 argument_list|,
 argument|Attribute::AttrKind Kind
 argument_list|)
@@ -1792,7 +1919,7 @@ name|CALLSITE_DELEGATE_GETTER
 argument_list|(
 name|paramHasAttr
 argument_list|(
-name|i
+name|ArgNo
 argument_list|,
 name|Kind
 argument_list|)
@@ -1836,8 +1963,8 @@ name|Kind
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// \brief Return true if the data operand at index \p i directly or
-comment|/// indirectly has the attribute \p A.
+comment|/// Return true if the data operand at index \p i directly or indirectly has
+comment|/// the attribute \p A.
 comment|///
 comment|/// Normal call or invoke arguments have per operand attributes, as specified
 comment|/// in the attribute set attached to this instruction, while operand bundle
@@ -1862,11 +1989,23 @@ name|Kind
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// @brief Extract the alignment for a call or parameter (0=unknown).
-name|uint16_t
+comment|/// Extract the alignment of the return value.
+name|unsigned
+name|getRetAlignment
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getRetAlignment
+argument_list|()
+argument_list|)
+block|;   }
+comment|/// Extract the alignment for a call or parameter (0=unknown).
+name|unsigned
 name|getParamAlignment
 argument_list|(
-argument|uint16_t i
+argument|unsigned ArgNo
 argument_list|)
 specifier|const
 block|{
@@ -1874,16 +2013,16 @@ name|CALLSITE_DELEGATE_GETTER
 argument_list|(
 name|getParamAlignment
 argument_list|(
-name|i
+name|ArgNo
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// @brief Extract the number of dereferenceable bytes for a call or
-comment|/// parameter (0=unknown).
+comment|/// Extract the number of dereferenceable bytes for a call or parameter
+comment|/// (0=unknown).
 name|uint64_t
 name|getDereferenceableBytes
 argument_list|(
-argument|uint16_t i
+argument|unsigned i
 argument_list|)
 specifier|const
 block|{
@@ -1895,12 +2034,12 @@ name|i
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// @brief Extract the number of dereferenceable_or_null bytes for a call or
+comment|/// Extract the number of dereferenceable_or_null bytes for a call or
 comment|/// parameter (0=unknown).
 name|uint64_t
 name|getDereferenceableOrNullBytes
 argument_list|(
-argument|uint16_t i
+argument|unsigned i
 argument_list|)
 specifier|const
 block|{
@@ -1912,26 +2051,19 @@ name|i
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// @brief Determine if the parameter or return value is marked with NoAlias
-comment|/// attribute.
-comment|/// @param n The parameter to check. 1 is the first parameter, 0 is the return
+comment|/// Determine if the return value is marked with NoAlias attribute.
 name|bool
-name|doesNotAlias
-argument_list|(
-argument|unsigned n
-argument_list|)
+name|returnDoesNotAlias
+argument_list|()
 specifier|const
 block|{
 name|CALLSITE_DELEGATE_GETTER
 argument_list|(
-name|doesNotAlias
-argument_list|(
-name|n
-argument_list|)
+name|returnDoesNotAlias
+argument_list|()
 argument_list|)
 block|;   }
-comment|/// \brief Return true if the call should not be treated as a call to a
-comment|/// builtin.
+comment|/// Return true if the call should not be treated as a call to a builtin.
 name|bool
 name|isNoBuiltin
 argument_list|()
@@ -1943,7 +2075,7 @@ name|isNoBuiltin
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// @brief Return true if the call should not be inlined.
+comment|/// Return true if the call should not be inlined.
 name|bool
 name|isNoInline
 argument_list|()
@@ -1969,7 +2101,7 @@ name|Value
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// @brief Determine if the call does not access memory.
+comment|/// Determine if the call does not access memory.
 name|bool
 name|doesNotAccessMemory
 argument_list|()
@@ -1991,7 +2123,7 @@ name|setDoesNotAccessMemory
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// @brief Determine if the call does not access or only reads memory.
+comment|/// Determine if the call does not access or only reads memory.
 name|bool
 name|onlyReadsMemory
 argument_list|()
@@ -2013,7 +2145,7 @@ name|setOnlyReadsMemory
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// @brief Determine if the call does not access or only writes memory.
+comment|/// Determine if the call does not access or only writes memory.
 name|bool
 name|doesNotReadMemory
 argument_list|()
@@ -2035,7 +2167,7 @@ name|setDoesNotReadMemory
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// @brief Determine if the call can access memmory only using pointers based
+comment|/// Determine if the call can access memmory only using pointers based
 comment|/// on its arguments.
 name|bool
 name|onlyAccessesArgMemory
@@ -2058,7 +2190,7 @@ name|setOnlyAccessesArgMemory
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// @brief Determine if the call cannot return.
+comment|/// Determine if the call cannot return.
 name|bool
 name|doesNotReturn
 argument_list|()
@@ -2080,7 +2212,7 @@ name|setDoesNotReturn
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// @brief Determine if the call cannot unwind.
+comment|/// Determine if the call cannot unwind.
 name|bool
 name|doesNotThrow
 argument_list|()
@@ -2102,7 +2234,7 @@ name|setDoesNotThrow
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// @brief Determine if the call can be duplicated.
+comment|/// Determine if the call can be duplicated.
 name|bool
 name|cannotDuplicate
 argument_list|()
@@ -2124,7 +2256,7 @@ name|setCannotDuplicate
 argument_list|()
 argument_list|)
 block|;   }
-comment|/// @brief Determine if the call is convergent.
+comment|/// Determine if the call is convergent.
 name|bool
 name|isConvergent
 argument_list|()
@@ -2373,7 +2505,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// @brief Determine whether this data operand is not captured.
+comment|/// Determine whether this data operand is not captured.
 end_comment
 
 begin_decl_stmt
@@ -2401,7 +2533,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Determine whether this argument is passed by value.
+comment|/// Determine whether this argument is passed by value.
 end_comment
 
 begin_decl_stmt
@@ -2417,8 +2549,6 @@ return|return
 name|paramHasAttr
 argument_list|(
 name|ArgNo
-operator|+
-literal|1
 argument_list|,
 name|Attribute
 operator|::
@@ -2429,7 +2559,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Determine whether this argument is passed in an alloca.
+comment|/// Determine whether this argument is passed in an alloca.
 end_comment
 
 begin_decl_stmt
@@ -2445,8 +2575,6 @@ return|return
 name|paramHasAttr
 argument_list|(
 name|ArgNo
-operator|+
-literal|1
 argument_list|,
 name|Attribute
 operator|::
@@ -2457,7 +2585,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Determine whether this argument is passed by value or in an alloca.
+comment|/// Determine whether this argument is passed by value or in an alloca.
 end_comment
 
 begin_decl_stmt
@@ -2473,8 +2601,6 @@ return|return
 name|paramHasAttr
 argument_list|(
 name|ArgNo
-operator|+
-literal|1
 argument_list|,
 name|Attribute
 operator|::
@@ -2484,8 +2610,6 @@ operator|||
 name|paramHasAttr
 argument_list|(
 name|ArgNo
-operator|+
-literal|1
 argument_list|,
 name|Attribute
 operator|::
@@ -2496,11 +2620,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// @brief Determine if there are is an inalloca argument.  Only the last
+comment|/// Determine if there are is an inalloca argument. Only the last argument can
 end_comment
 
 begin_comment
-comment|/// argument can have the inalloca attribute.
+comment|/// have the inalloca attribute.
 end_comment
 
 begin_expr_stmt
@@ -2510,10 +2634,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
+name|arg_empty
+argument_list|()
+operator|&&
 name|paramHasAttr
 argument_list|(
 name|arg_size
 argument_list|()
+operator|-
+literal|1
 argument_list|,
 name|Attribute
 operator|::
@@ -2582,8 +2712,43 @@ return|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|doesNotReadMemory
+argument_list|(
+name|unsigned
+name|OpNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|dataOperandHasImpliedAttr
+argument_list|(
+name|OpNo
+operator|+
+literal|1
+argument_list|,
+name|Attribute
+operator|::
+name|WriteOnly
+argument_list|)
+operator|||
+name|dataOperandHasImpliedAttr
+argument_list|(
+name|OpNo
+operator|+
+literal|1
+argument_list|,
+name|Attribute
+operator|::
+name|ReadNone
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
 begin_comment
-comment|/// @brief Return true if the return value is known to be not null.
+comment|/// Return true if the return value is known to be not null.
 end_comment
 
 begin_comment
@@ -2602,10 +2767,8 @@ specifier|const
 block|{
 if|if
 condition|(
-name|paramHasAttr
+name|hasRetAttr
 argument_list|(
-literal|0
-argument_list|,
 name|Attribute
 operator|::
 name|NonNull
@@ -2619,7 +2782,9 @@ if|if
 condition|(
 name|getDereferenceableBytes
 argument_list|(
-literal|0
+name|AttributeList
+operator|::
+name|ReturnIndex
 argument_list|)
 operator|>
 literal|0
@@ -2645,11 +2810,11 @@ end_return
 
 begin_comment
 unit|}
-comment|/// hasArgument - Returns true if this CallSite passes the given Value* as an
+comment|/// Returns true if this CallSite passes the given Value* as an argument to
 end_comment
 
 begin_comment
-comment|/// argument to the called function.
+comment|/// the called function.
 end_comment
 
 begin_macro
@@ -3050,7 +3215,7 @@ end_function
 
 begin_comment
 unit|};
-comment|/// ImmutableCallSite - establish a view to a call site for examination
+comment|/// Establish a view to a call site for examination.
 end_comment
 
 begin_decl_stmt

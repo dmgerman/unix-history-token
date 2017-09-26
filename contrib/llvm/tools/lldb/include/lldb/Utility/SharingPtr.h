@@ -54,12 +54,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<algorithm>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<memory>
 end_include
 
@@ -102,6 +96,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
 
 begin_comment
 comment|// Other libraries and framework includes

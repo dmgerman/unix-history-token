@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/AliasAnalysis.h"
 end_include
 
@@ -97,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Operator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_decl_stmt
@@ -180,16 +180,6 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-typedef|typedef
-name|SmallVector
-operator|<
-name|DbgValueInst
-operator|*
-operator|,
-literal|1
-operator|>
-name|DbgValueList
-expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Local constant propagation.
 comment|//
@@ -227,6 +217,24 @@ comment|/// Return true if the result produced by the instruction is not used, a
 comment|/// instruction has no side effects.
 name|bool
 name|isInstructionTriviallyDead
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Return true if the result produced by the instruction would have no side
+comment|/// effects if it was not used. This is equivalent to checking whether
+comment|/// isInstructionTriviallyDead would be true if the use count was 0.
+name|bool
+name|wouldInstructionBeTriviallyDead
 parameter_list|(
 name|Instruction
 modifier|*
@@ -401,6 +409,11 @@ operator|*
 name|LoopHeaders
 operator|=
 name|nullptr
+argument_list|,
+name|bool
+name|LateSimplifyCFG
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// This function is used to flatten a CFG. For example, it uses parallel-and
@@ -1080,19 +1093,23 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// Finds the llvm.dbg.value intrinsics corresponding to an alloca, if any.
+comment|/// Finds the llvm.dbg.value intrinsics describing a value.
 name|void
-name|FindAllocaDbgValues
-parameter_list|(
-name|DbgValueList
-modifier|&
+name|findDbgValues
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|DbgValueInst
+operator|*
+operator|>
+operator|&
 name|DbgValues
-parameter_list|,
+argument_list|,
 name|Value
-modifier|*
+operator|*
 name|V
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Replaces llvm.dbg.declare instruction when the address it describes
 comment|/// is replaced with a new value. If Deref is true, an additional DW_OP_deref is
 comment|/// prepended to the expression. If Offset is non-zero, a constant displacement
@@ -1177,6 +1194,17 @@ name|int
 name|Offset
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+comment|/// Assuming the instruction \p I is going to be deleted, attempt to salvage any
+comment|/// dbg.value intrinsics referring to \p I by rewriting its effect into a
+comment|/// DIExpression.
+name|void
+name|salvageDebugInfo
+parameter_list|(
+name|Instruction
+modifier|&
+name|I
 parameter_list|)
 function_decl|;
 comment|/// Remove all instructions from a basic block other than it's terminator
@@ -1294,6 +1322,20 @@ modifier|*
 name|J
 parameter_list|)
 function_decl|;
+comment|// Replace each use of 'From' with 'To', if that use does not belong to basic
+comment|// block where 'From' is defined. Returns the number of replacements made.
+name|unsigned
+name|replaceNonLocalUsesWith
+parameter_list|(
+name|Instruction
+modifier|*
+name|From
+parameter_list|,
+name|Value
+modifier|*
+name|To
+parameter_list|)
+function_decl|;
 comment|/// Replace each use of 'From' with 'To' if that use is dominated by
 comment|/// the given edge.  Returns the number of replacements made.
 name|unsigned
@@ -1355,6 +1397,53 @@ name|ImmutableCallSite
 name|CS
 parameter_list|)
 function_decl|;
+comment|/// Copy a nonnull metadata node to a new load instruction.
+comment|///
+comment|/// This handles mapping it to range metadata if the new load is an integer
+comment|/// load instead of a pointer load.
+name|void
+name|copyNonnullMetadata
+parameter_list|(
+specifier|const
+name|LoadInst
+modifier|&
+name|OldLI
+parameter_list|,
+name|MDNode
+modifier|*
+name|N
+parameter_list|,
+name|LoadInst
+modifier|&
+name|NewLI
+parameter_list|)
+function_decl|;
+comment|/// Copy a range metadata node to a new load instruction.
+comment|///
+comment|/// This handles mapping it to nonnull metadata if the new load is a pointer
+comment|/// load instead of an integer load and the range doesn't cover null.
+name|void
+name|copyRangeMetadata
+parameter_list|(
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
+name|LoadInst
+modifier|&
+name|OldLI
+parameter_list|,
+name|MDNode
+modifier|*
+name|N
+parameter_list|,
+name|LoadInst
+modifier|&
+name|NewLI
+parameter_list|)
+function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Intrinsic pattern matching
 comment|//
@@ -1409,6 +1498,23 @@ specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
+parameter_list|)
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//  Transform predicates
+comment|//
+comment|/// Given an instruction, is it legal to set operand OpIdx to a non-constant
+comment|/// value?
+name|bool
+name|canReplaceOperandWithVariable
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|unsigned
+name|OpIdx
 parameter_list|)
 function_decl|;
 block|}

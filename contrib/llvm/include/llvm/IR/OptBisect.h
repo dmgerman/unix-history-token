@@ -126,31 +126,6 @@ operator|&
 name|U
 argument_list|)
 expr_stmt|;
-comment|/// Checks the bisect limit to determine if the optimization described by the
-comment|/// /p Desc argument should run.
-comment|///
-comment|/// This function will immediate return true if bisection is disabled. If the
-comment|/// bisect limit is set to -1, the function will print a message with the
-comment|/// bisect number assigned to the optimization along with the /p Desc
-comment|/// description and return true.  Otherwise, the function will print a message
-comment|/// with the bisect number assigned to the optimization and indicating whether
-comment|/// or not the pass will be run and return true if the bisect limit has not
-comment|/// yet been exceded or false if it has.
-comment|///
-comment|/// Passes may call this function to provide more fine grained control over
-comment|/// individual optimizations performed by the pass.  Passes which cannot be
-comment|/// skipped entirely (such as non-optional code generation passes) may still
-comment|/// call this function to control whether or not individual optional
-comment|/// transformations are performed.
-name|bool
-name|shouldRunCase
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|Desc
-parameter_list|)
-function_decl|;
 name|private
 label|:
 name|bool

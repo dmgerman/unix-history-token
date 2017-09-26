@@ -853,7 +853,7 @@ name|override
 argument_list|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|ExecuteMultipleLines
 argument_list|(
 argument|const char *in_string
@@ -862,7 +862,7 @@ argument|const ExecuteScriptOptions&options = ExecuteScriptOptions()
 argument_list|)
 name|override
 argument_list|;
-name|Error
+name|Status
 name|ExportFunctionDefinitionToInterpreter
 argument_list|(
 argument|StringList&function_def
@@ -1056,7 +1056,7 @@ name|LoadPluginModule
 argument_list|(
 argument|const FileSpec&file_spec
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 argument_list|;
@@ -1071,7 +1071,7 @@ argument|Target *target
 argument_list|,
 argument|const char *setting_name
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 argument_list|;
@@ -1145,7 +1145,7 @@ argument|ScriptedCommandSynchronicity synchronicity
 argument_list|,
 argument|lldb_private::CommandReturnObject&cmd_retobj
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|,
 argument|const lldb_private::ExecutionContext&exe_ctx
 argument_list|)
@@ -1162,13 +1162,13 @@ argument|ScriptedCommandSynchronicity synchronicity
 argument_list|,
 argument|lldb_private::CommandReturnObject&cmd_retobj
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|,
 argument|const lldb_private::ExecutionContext&exe_ctx
 argument_list|)
 name|override
 argument_list|;
-name|Error
+name|Status
 name|GenerateFunction
 argument_list|(
 argument|const char *signature
@@ -1177,7 +1177,7 @@ argument|const StringList&input
 argument_list|)
 name|override
 argument_list|;
-name|Error
+name|Status
 name|GenerateBreakpointCommandCallbackData
 argument_list|(
 argument|StringList&input
@@ -1340,7 +1340,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1364,7 +1364,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1388,7 +1388,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1412,7 +1412,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1436,7 +1436,7 @@ name|string
 operator|&
 name|output
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1458,7 +1458,7 @@ name|init_session
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -1525,7 +1525,7 @@ argument_list|)
 name|override
 decl_stmt|;
 comment|/// Set the callback body text into the callback for the breakpoint.
-name|Error
+name|Status
 name|SetBreakpointCommandCallback
 argument_list|(
 name|BreakpointOptions
@@ -1554,7 +1554,7 @@ argument_list|)
 name|override
 decl_stmt|;
 comment|/// This one is for deserialization:
-name|Error
+name|Status
 name|SetBreakpointCommandCallback
 argument_list|(
 name|BreakpointOptions

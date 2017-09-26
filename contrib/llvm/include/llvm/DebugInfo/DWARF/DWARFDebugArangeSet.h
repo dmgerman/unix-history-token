@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DWARFDebugArangeSet.h -----------------------------------*- C++ -*-===//
+comment|//===- DWARFDebugArangeSet.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGARANGESET_H
+name|LLVM_DEBUGINFO_DWARFDEBUGARANGESET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_DEBUGINFO_DWARFDEBUGARANGESET_H
+name|LLVM_DEBUGINFO_DWARFDEBUGARANGESET_H
 end_define
 
 begin_include
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -76,27 +82,27 @@ label|:
 struct|struct
 name|Header
 block|{
-comment|// The total length of the entries for that set, not including the length
-comment|// field itself.
+comment|/// The total length of the entries for that set, not including the length
+comment|/// field itself.
 name|uint32_t
 name|Length
 decl_stmt|;
-comment|// The offset from the beginning of the .debug_info section of the
-comment|// compilation unit entry referenced by the table.
+comment|/// The offset from the beginning of the .debug_info section of the
+comment|/// compilation unit entry referenced by the table.
 name|uint32_t
 name|CuOffset
 decl_stmt|;
-comment|// The DWARF version number.
+comment|/// The DWARF version number.
 name|uint16_t
 name|Version
 decl_stmt|;
-comment|// The size in bytes of an address on the target architecture. For segmented
-comment|// addressing, this is the size of the offset portion of the address.
+comment|/// The size in bytes of an address on the target architecture. For segmented
+comment|/// addressing, this is the size of the offset portion of the address.
 name|uint8_t
 name|AddrSize
 decl_stmt|;
-comment|// The size in bytes of a segment descriptor on the target architecture.
-comment|// If the target system uses a flat address space, this value is 0.
+comment|/// The size in bytes of a segment descriptor on the target architecture.
+comment|/// If the target system uses a flat address space, this value is 0.
 name|uint8_t
 name|SegSize
 decl_stmt|;
@@ -126,24 +132,26 @@ block|}
 struct|;
 name|private
 label|:
-typedef|typedef
+name|using
+name|DescriptorColl
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|Descriptor
 operator|>
-name|DescriptorColl
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|desc_iterator_range
+init|=
 name|iterator_range
 operator|<
 name|DescriptorColl
 operator|::
 name|const_iterator
 operator|>
-name|desc_iterator_range
-expr_stmt|;
+decl_stmt|;
 name|uint32_t
 name|Offset
 decl_stmt|;
@@ -233,10 +241,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_DWARFDEBUGARANGESET_H
+end_comment
 
 end_unit
 

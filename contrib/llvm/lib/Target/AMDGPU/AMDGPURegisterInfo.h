@@ -67,22 +67,10 @@ directive|define
 name|LLVM_LIB_TARGET_AMDGPU_AMDGPUREGISTERINFO_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
-end_include
-
 begin_define
 define|#
 directive|define
 name|GET_REGINFO_HEADER
-end_define
-
-begin_define
-define|#
-directive|define
-name|GET_REGINFO_ENUM
 end_define
 
 begin_include
@@ -118,24 +106,6 @@ argument_list|(
 argument|unsigned Channel
 argument_list|)
 specifier|const
-block|;
-specifier|const
-name|MCPhysReg
-operator|*
-name|getCalleeSavedRegs
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|)
-specifier|const
-name|override
-block|;
-name|unsigned
-name|getFrameRegister
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-name|override
 block|; }
 decl_stmt|;
 block|}

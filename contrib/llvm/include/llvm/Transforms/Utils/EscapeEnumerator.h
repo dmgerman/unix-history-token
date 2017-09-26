@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/IR/IRBuilder.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Function.h"
+file|"llvm/IR/IRBuilder.h"
 end_include
 
 begin_decl_stmt

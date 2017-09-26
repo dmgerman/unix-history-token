@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ModuleSymbolTable.h - symbol table for in-memory IR ----------------===//
+comment|//===- ModuleSymbolTable.h - symbol table for in-memory IR ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,13 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerUnion.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
+file|"llvm/ADT/PointerUnion.h"
 end_include
 
 begin_include
@@ -94,6 +94,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -101,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -115,7 +133,9 @@ name|ModuleSymbolTable
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|AsmSymbol
+init|=
 name|std
 operator|::
 name|pair
@@ -123,22 +143,22 @@ operator|<
 name|std
 operator|::
 name|string
-operator|,
+decl_stmt|,
 name|uint32_t
-operator|>
-name|AsmSymbol
-expr_stmt|;
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|Symbol
+init|=
 name|PointerUnion
 operator|<
 name|GlobalValue
 operator|*
-operator|,
+decl_stmt|,
 name|AsmSymbol
-operator|*
-operator|>
-name|Symbol
-expr_stmt|;
+modifier|*
+decl|>
+decl_stmt|;
 name|private
 label|:
 name|Module
@@ -216,12 +236,9 @@ name|void
 name|CollectAsmSymbols
 argument_list|(
 specifier|const
-name|Triple
+name|Module
 operator|&
-name|TheTriple
-argument_list|,
-name|StringRef
-name|InlineAsm
+name|M
 argument_list|,
 name|function_ref
 operator|<
@@ -244,10 +261,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECT_MODULESYMBOLTABLE_H
+end_comment
 
 end_unit
 

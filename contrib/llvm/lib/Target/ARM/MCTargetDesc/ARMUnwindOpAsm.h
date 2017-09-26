@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ARMEHABI.h"
+file|<cstddef>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -93,8 +93,6 @@ name|UnwindOpcodeAssembler
 block|{
 name|private
 label|:
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|uint8_t
@@ -103,8 +101,6 @@ literal|32
 operator|>
 name|Ops
 expr_stmt|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|unsigned
@@ -115,16 +111,13 @@ name|OpBegins
 expr_stmt|;
 name|bool
 name|HasPersonality
+init|=
+name|false
 decl_stmt|;
 name|public
 label|:
 name|UnwindOpcodeAssembler
 argument_list|()
-operator|:
-name|HasPersonality
-argument_list|(
-literal|0
-argument_list|)
 block|{
 name|OpBegins
 operator|.
@@ -132,51 +125,58 @@ name|push_back
 argument_list|(
 literal|0
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// Reset the unwind opcode assembler.
 name|void
 name|Reset
-argument_list|()
+parameter_list|()
 block|{
 name|Ops
 operator|.
 name|clear
 argument_list|()
-block|;
+expr_stmt|;
 name|OpBegins
 operator|.
 name|clear
 argument_list|()
-block|;
+expr_stmt|;
 name|OpBegins
 operator|.
 name|push_back
 argument_list|(
 literal|0
 argument_list|)
-block|;
+expr_stmt|;
 name|HasPersonality
 operator|=
-literal|0
-block|;   }
+name|false
+expr_stmt|;
+block|}
 comment|/// Set the personality
 name|void
 name|setPersonality
-argument_list|(
-argument|const MCSymbol *Per
-argument_list|)
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|*
+name|Per
+parameter_list|)
 block|{
 name|HasPersonality
 operator|=
-literal|1
-block|;   }
+name|true
+expr_stmt|;
+block|}
 comment|/// Emit unwind opcodes for .save directives
 name|void
 name|EmitRegSave
-argument_list|(
-argument|uint32_t RegSave
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|uint32_t
+name|RegSave
+parameter_list|)
+function_decl|;
 comment|/// Emit unwind opcodes for .vsave directives
 name|void
 name|EmitVFPRegSave
@@ -386,13 +386,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_ARM_MCTARGETDESC_ARMUNWINDOPASM_H
+end_comment
 
 end_unit
 

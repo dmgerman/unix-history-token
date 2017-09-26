@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/ValueSymbolTable.h - Implement a Value Symtab ------*- C++ -*-===//
+comment|//===- llvm/ValueSymbolTable.h - Implement a Value Symtab -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,27 +68,46 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Value.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|typename
-name|ValueSubClass
-operator|>
 name|class
-name|SymbolTableListTraits
-expr_stmt|;
+name|Argument
+decl_stmt|;
+name|class
+name|BasicBlock
+decl_stmt|;
+name|class
+name|Function
+decl_stmt|;
+name|class
+name|GlobalAlias
+decl_stmt|;
+name|class
+name|GlobalIFunc
+decl_stmt|;
+name|class
+name|GlobalVariable
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
 name|template
 operator|<
 name|unsigned
@@ -97,21 +116,14 @@ operator|>
 name|class
 name|SmallString
 expr_stmt|;
+name|template
+operator|<
+name|typename
+name|ValueSubClass
+operator|>
 name|class
-name|BasicBlock
-decl_stmt|;
-name|class
-name|Function
-decl_stmt|;
-name|class
-name|NamedMDNode
-decl_stmt|;
-name|class
-name|Module
-decl_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
+name|SymbolTableListTraits
+expr_stmt|;
 comment|/// This class provides a symbol table of name/value pairs. It is essentially
 comment|/// a std::map<std::string,Value*> but has a controlled interface provided by
 comment|/// LLVM as well as ensuring uniqueness of names.
@@ -119,10 +131,6 @@ comment|///
 name|class
 name|ValueSymbolTable
 block|{
-name|friend
-name|class
-name|Value
-decl_stmt|;
 name|friend
 name|class
 name|SymbolTableListTraits
@@ -141,21 +149,7 @@ name|friend
 name|class
 name|SymbolTableListTraits
 operator|<
-name|Instruction
-operator|>
-expr_stmt|;
-name|friend
-name|class
-name|SymbolTableListTraits
-operator|<
 name|Function
-operator|>
-expr_stmt|;
-name|friend
-name|class
-name|SymbolTableListTraits
-operator|<
-name|GlobalVariable
 operator|>
 expr_stmt|;
 name|friend
@@ -172,47 +166,61 @@ operator|<
 name|GlobalIFunc
 operator|>
 expr_stmt|;
+name|friend
+name|class
+name|SymbolTableListTraits
+operator|<
+name|GlobalVariable
+operator|>
+expr_stmt|;
+name|friend
+name|class
+name|SymbolTableListTraits
+operator|<
+name|Instruction
+operator|>
+expr_stmt|;
+name|friend
+name|class
+name|Value
+decl_stmt|;
 comment|/// @name Types
 comment|/// @{
 name|public
 label|:
 comment|/// @brief A mapping of names to values.
-typedef|typedef
+name|using
+name|ValueMap
+init|=
 name|StringMap
 operator|<
 name|Value
 operator|*
 operator|>
-name|ValueMap
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief An iterator over a ValueMap.
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|ValueMap
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// @brief A const_iterator over a ValueMap.
-typedef|typedef
+name|using
+name|const_iterator
+init|=
 name|ValueMap
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// @}
 comment|/// @name Constructors
 comment|/// @{
-name|public
-label|:
 name|ValueSymbolTable
 argument_list|()
 operator|:
 name|vmap
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastUnique
 argument_list|(
 literal|0
 argument_list|)
@@ -224,8 +232,6 @@ expr_stmt|;
 comment|/// @}
 comment|/// @name Accessors
 comment|/// @{
-name|public
-label|:
 comment|/// This method finds the value with the given \p Name in the
 comment|/// the symbol table.
 comment|/// @returns the value associated with the \p Name
@@ -291,8 +297,6 @@ expr_stmt|;
 comment|/// @}
 comment|/// @name Iteration
 comment|/// @{
-name|public
-label|:
 comment|/// @brief Get an iterator that from the beginning of the symbol table.
 specifier|inline
 name|iterator
@@ -409,8 +413,6 @@ function_decl|;
 comment|/// @}
 comment|/// @name Internal Data
 comment|/// @{
-name|private
-label|:
 name|ValueMap
 name|vmap
 decl_stmt|;
@@ -418,6 +420,8 @@ comment|///< The map that holds the symbol table.
 name|mutable
 name|uint32_t
 name|LastUnique
+init|=
+literal|0
 decl_stmt|;
 comment|///< Counter for tracking unique names
 comment|/// @}
@@ -427,13 +431,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_VALUESYMBOLTABLE_H
+end_comment
 
 end_unit
 

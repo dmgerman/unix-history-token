@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- PDBExtras.h - helper functions and classes for PDBs -------*- C++-*-===//
+comment|//===- PDBExtras.h - helper functions and classes for PDBs ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,19 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"PDBTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/CodeView.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/DebugInfo/PDB/PDBTypes.h"
 end_include
 
 begin_include
@@ -71,20 +65,24 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 name|namespace
 name|pdb
 block|{
-typedef|typedef
+name|using
+name|TagStats
+init|=
 name|std
 operator|::
 name|unordered_map
 operator|<
 name|PDB_SymType
-operator|,
+decl_stmt|,
 name|int
-operator|>
-name|TagStats
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|raw_ostream
 operator|&
 name|operator
@@ -264,21 +262,6 @@ operator|&
 name|OS
 operator|,
 specifier|const
-name|PDB_UniqueId
-operator|&
-name|Id
-operator|)
-expr_stmt|;
-name|raw_ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|raw_ostream
-operator|&
-name|OS
-operator|,
-specifier|const
 name|PDB_Machine
 operator|&
 name|Machine
@@ -330,13 +313,22 @@ name|Stats
 operator|)
 expr_stmt|;
 block|}
+comment|// end namespace pdb
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_PDB_PDBEXTRAS_H
+end_comment
 
 end_unit
 

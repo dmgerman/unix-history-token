@@ -239,7 +239,7 @@ comment|// IsNan2008 - IEEE 754-2008 NaN encoding.
 name|bool
 name|IsNaN2008bit
 block|;
-comment|// IsFP64bit - General-purpose registers are 64 bits wide
+comment|// IsGP64bit - General-purpose registers are 64 bits wide
 name|bool
 name|IsGP64bit
 block|;
@@ -292,10 +292,6 @@ comment|// Mips16 hard float
 name|bool
 name|InMips16HardFloat
 block|;
-comment|// PreviousInMips16 -- the function we just processed was in Mips 16 Mode
-name|bool
-name|PreviousInMips16Mode
-block|;
 comment|// InMicroMips -- can process MicroMips instructions
 name|bool
 name|InMicroMipsMode
@@ -326,9 +322,28 @@ comment|// UseTCCInDIV -- Enables the use of trapping in the assembler.
 name|bool
 name|UseTCCInDIV
 block|;
+comment|// Sym32 -- On Mips64 symbols are 32 bits.
+name|bool
+name|HasSym32
+block|;
 comment|// HasEVA -- supports EVA ASE.
 name|bool
 name|HasEVA
+block|;
+comment|// nomadd4 - disables generation of 4-operand madd.s, madd.d and
+comment|// related instructions.
+name|bool
+name|DisableMadd4
+block|;
+comment|// HasMT -- support MT ASE.
+name|bool
+name|HasMT
+block|;
+comment|// Disable use of the `jal` instruction.
+name|bool
+name|UseLongCalls
+operator|=
+name|false
 block|;
 name|InstrItineraryData
 name|InstrItins
@@ -454,9 +469,9 @@ name|MipsSubtarget
 argument_list|(
 argument|const Triple&TT
 argument_list|,
-argument|const std::string&CPU
+argument|StringRef CPU
 argument_list|,
-argument|const std::string&FS
+argument|StringRef FS
 argument_list|,
 argument|bool little
 argument_list|,
@@ -828,12 +843,44 @@ name|IsPTR64bit
 return|;
 block|}
 name|bool
+name|hasSym32
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|HasSym32
+operator|&&
+name|isABI_N64
+argument_list|()
+operator|)
+operator|||
+name|isABI_N32
+argument_list|()
+operator|||
+name|isABI_O32
+argument_list|()
+return|;
+block|}
+name|bool
 name|isSingleFloat
 argument_list|()
 specifier|const
 block|{
 return|return
 name|IsSingleFloat
+return|;
+block|}
+name|bool
+name|isTargetELF
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSBinFormatELF
+argument_list|()
 return|;
 block|}
 name|bool
@@ -949,12 +996,30 @@ name|HasMSA
 return|;
 block|}
 name|bool
+name|disableMadd4
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DisableMadd4
+return|;
+block|}
+name|bool
 name|hasEVA
 argument_list|()
 specifier|const
 block|{
 return|return
 name|HasEVA
+return|;
+block|}
+name|bool
+name|hasMT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMT
 return|;
 block|}
 name|bool
@@ -984,6 +1049,15 @@ specifier|const
 block|{
 return|return
 name|IsSoftFloat
+return|;
+block|}
+name|bool
+name|useLongCalls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseLongCalls
 return|;
 block|}
 name|bool
@@ -1055,6 +1129,16 @@ name|TargetTriple
 operator|.
 name|isOSNaCl
 argument_list|()
+return|;
+block|}
+name|bool
+name|isXRaySupported
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
 return|;
 block|}
 comment|// for now constant islands are on for the whole compilation unit but we only

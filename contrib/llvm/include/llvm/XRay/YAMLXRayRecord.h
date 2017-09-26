@@ -110,7 +110,7 @@ block|{
 name|uint16_t
 name|RecordType
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|CPU
 decl_stmt|;
 name|RecordTypes

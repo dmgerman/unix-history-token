@@ -469,12 +469,11 @@ modifier|&
 name|SubMultiClass
 parameter_list|)
 function_decl|;
-name|std
-operator|::
-name|string
+name|Init
+modifier|*
 name|GetNewAnonymousName
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|// IterRecord: Map an iterator name to a value.
 struct|struct
 name|IterRecord

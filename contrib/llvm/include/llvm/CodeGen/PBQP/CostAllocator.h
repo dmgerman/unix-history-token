@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===---------- CostAllocator.h - PBQP Cost Allocator -----------*- C++ -*-===//
+comment|//===- CostAllocator.h - PBQP Cost Allocator --------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -84,13 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<memory>
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<type_traits>
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -110,7 +116,9 @@ name|ValuePool
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|PoolRef
+operator|=
 name|std
 operator|::
 name|shared_ptr
@@ -118,8 +126,7 @@ operator|<
 specifier|const
 name|ValueT
 operator|>
-name|PoolRef
-expr_stmt|;
+block|;
 name|private
 operator|:
 name|class
@@ -188,18 +195,18 @@ block|;
 name|ValueT
 name|Value
 block|;   }
-expr_stmt|;
+block|;
 name|class
 name|PoolEntryDSInfo
 block|{
 name|public
-label|:
+operator|:
 specifier|static
 specifier|inline
 name|PoolEntry
-modifier|*
+operator|*
 name|getEmptyKey
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|nullptr
@@ -208,9 +215,9 @@ block|}
 specifier|static
 specifier|inline
 name|PoolEntry
-modifier|*
+operator|*
 name|getTombstoneKey
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|reinterpret_cast
@@ -251,11 +258,9 @@ block|}
 specifier|static
 name|unsigned
 name|getHashValue
-parameter_list|(
-name|PoolEntry
-modifier|*
-name|P
-parameter_list|)
+argument_list|(
+argument|PoolEntry *P
+argument_list|)
 block|{
 return|return
 name|getHashValue
@@ -270,12 +275,9 @@ block|}
 specifier|static
 name|unsigned
 name|getHashValue
-parameter_list|(
-specifier|const
-name|PoolEntry
-modifier|*
-name|P
-parameter_list|)
+argument_list|(
+argument|const PoolEntry *P
+argument_list|)
 block|{
 return|return
 name|getHashValue
@@ -291,7 +293,7 @@ name|template
 operator|<
 name|typename
 name|ValueKeyT1
-operator|,
+block|,
 name|typename
 name|ValueKeyT2
 operator|>
@@ -354,15 +356,11 @@ block|}
 specifier|static
 name|bool
 name|isEqual
-parameter_list|(
-name|PoolEntry
-modifier|*
-name|P1
-parameter_list|,
-name|PoolEntry
-modifier|*
-name|P2
-parameter_list|)
+argument_list|(
+argument|PoolEntry *P1
+argument_list|,
+argument|PoolEntry *P2
+argument_list|)
 block|{
 if|if
 condition|(
@@ -395,16 +393,17 @@ return|;
 block|}
 block|}
 empty_stmt|;
-typedef|typedef
+name|using
+name|EntrySetT
+init|=
 name|DenseSet
 operator|<
 name|PoolEntry
 operator|*
-operator|,
+decl_stmt|,
 name|PoolEntryDSInfo
-operator|>
-name|EntrySetT
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|EntrySetT
 name|EntrySet
 decl_stmt|;
@@ -546,65 +545,50 @@ name|PoolCostAllocator
 block|{
 name|private
 operator|:
-typedef|typedef
+name|using
+name|VectorCostPool
+operator|=
 name|ValuePool
 operator|<
 name|VectorT
 operator|>
-name|VectorCostPool
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|MatrixCostPool
+operator|=
 name|ValuePool
 operator|<
 name|MatrixT
 operator|>
-name|MatrixCostPool
-expr_stmt|;
-end_typedef
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_typedef
-typedef|typedef
-name|VectorT
+operator|:
+name|using
 name|Vector
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|MatrixT
+operator|=
+name|VectorT
+block|;
+name|using
 name|Matrix
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+operator|=
+name|MatrixT
+block|;
+name|using
+name|VectorPtr
+operator|=
 name|typename
 name|VectorCostPool
 operator|::
 name|PoolRef
-name|VectorPtr
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|MatrixPtr
+operator|=
 name|typename
 name|MatrixCostPool
 operator|::
 name|PoolRef
-name|MatrixPtr
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -630,9 +614,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -679,18 +660,22 @@ end_decl_stmt
 
 begin_comment
 unit|};  }
-comment|// namespace PBQP
+comment|// end namespace PBQP
 end_comment
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_PBQP_COSTALLOCATOR_H
+end_comment
 
 end_unit
 

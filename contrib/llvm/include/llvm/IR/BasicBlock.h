@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/BasicBlock.h - Represent a basic block in the VM ---*- C++ -*-===//
+comment|//===- llvm/BasicBlock.h - Represent a basic block in the VM ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist.h"
 end_include
 
@@ -74,7 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Twine.h"
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -104,7 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm-c/Types.h"
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -117,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_decl_stmt
@@ -136,7 +166,16 @@ name|class
 name|LLVMContext
 decl_stmt|;
 name|class
+name|Module
+decl_stmt|;
+name|class
+name|PHINode
+decl_stmt|;
+name|class
 name|TerminatorInst
+decl_stmt|;
+name|class
+name|ValueSymbolTable
 decl_stmt|;
 comment|/// \brief LLVM Basic Block Representation
 comment|///
@@ -155,6 +194,7 @@ comment|/// modifying a program. However, the verifier will ensure that basic bl
 comment|/// are "well formed".
 name|class
 name|BasicBlock
+name|final
 range|:
 name|public
 name|Value
@@ -170,13 +210,14 @@ decl|>
 block|{
 name|public
 label|:
-typedef|typedef
+name|using
+name|InstListType
+init|=
 name|SymbolTableList
 operator|<
 name|Instruction
 operator|>
-name|InstListType
-expr_stmt|;
+decl_stmt|;
 name|private
 label|:
 name|friend
@@ -263,7 +304,6 @@ decl_stmt|;
 operator|~
 name|BasicBlock
 argument_list|()
-name|override
 expr_stmt|;
 comment|/// \brief Get the context in which this basic block lives.
 name|LLVMContext
@@ -273,30 +313,34 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// Instruction iterators...
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|InstListType
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
 name|InstListType
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|reverse_iterator
+init|=
 name|InstListType
 operator|::
 name|reverse_iterator
-name|reverse_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_reverse_iterator
+init|=
 name|InstListType
 operator|::
 name|const_reverse_iterator
-name|const_reverse_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// \brief Creates a new BasicBlock.
 comment|///
 comment|/// If the Parent parameter is specified, the basic block is automatically
@@ -381,39 +425,91 @@ name|Module
 modifier|*
 name|getModule
 parameter_list|()
-function_decl|;
-comment|/// \brief Returns the terminator instruction if the block is well formed or
-comment|/// null if the block is not well formed.
-name|TerminatorInst
-modifier|*
-name|getTerminator
-parameter_list|()
-function_decl|;
-specifier|const
-name|TerminatorInst
-operator|*
-name|getTerminator
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief Returns the call instruction calling @llvm.experimental.deoptimize
-comment|/// prior to the terminating return instruction of this basic block, if such a
-comment|/// call is present.  Otherwise, returns null.
-name|CallInst
-modifier|*
-name|getTerminatingDeoptimizeCall
-parameter_list|()
-function_decl|;
-specifier|const
-name|CallInst
-operator|*
-name|getTerminatingDeoptimizeCall
-argument_list|()
-specifier|const
 block|{
 return|return
 name|const_cast
 operator|<
+name|Module
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getModule
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the terminator instruction if the block is well formed or
+comment|/// null if the block is not well formed.
+specifier|const
+name|TerminatorInst
+operator|*
+name|getTerminator
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+expr_stmt|;
+name|TerminatorInst
+modifier|*
+name|getTerminator
+parameter_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|TerminatorInst
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getTerminator
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the call instruction calling @llvm.experimental.deoptimize
+comment|/// prior to the terminating return instruction of this basic block, if such a
+comment|/// call is present.  Otherwise, returns null.
+specifier|const
+name|CallInst
+operator|*
+name|getTerminatingDeoptimizeCall
+argument_list|()
+specifier|const
+expr_stmt|;
+name|CallInst
+modifier|*
+name|getTerminatingDeoptimizeCall
+parameter_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|CallInst
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -423,26 +519,34 @@ operator|)
 operator|->
 name|getTerminatingDeoptimizeCall
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns the call instruction marked 'musttail' prior to the
 comment|/// terminating return instruction of this basic block, if such a call is
 comment|/// present.  Otherwise, returns null.
-name|CallInst
-modifier|*
-name|getTerminatingMustTailCall
-parameter_list|()
-function_decl|;
 specifier|const
 name|CallInst
 operator|*
 name|getTerminatingMustTailCall
 argument_list|()
 specifier|const
+expr_stmt|;
+name|CallInst
+modifier|*
+name|getTerminatingMustTailCall
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|CallInst
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -452,6 +556,7 @@ operator|)
 operator|->
 name|getTerminatingMustTailCall
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns a pointer to the first instruction in this block that is
@@ -460,21 +565,28 @@ comment|///
 comment|/// When adding instructions to the beginning of the basic block, they should
 comment|/// be added before the returned value, not before the first instruction,
 comment|/// which might be PHI. Returns 0 is there's no non-PHI instruction.
-name|Instruction
-modifier|*
-name|getFirstNonPHI
-parameter_list|()
-function_decl|;
 specifier|const
 name|Instruction
 operator|*
 name|getFirstNonPHI
 argument_list|()
 specifier|const
+expr_stmt|;
+name|Instruction
+modifier|*
+name|getFirstNonPHI
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|Instruction
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -484,25 +596,33 @@ operator|)
 operator|->
 name|getFirstNonPHI
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns a pointer to the first instruction in this block that is not
 comment|/// a PHINode or a debug intrinsic.
-name|Instruction
-modifier|*
-name|getFirstNonPHIOrDbg
-parameter_list|()
-function_decl|;
 specifier|const
 name|Instruction
 operator|*
 name|getFirstNonPHIOrDbg
 argument_list|()
 specifier|const
+expr_stmt|;
+name|Instruction
+modifier|*
+name|getFirstNonPHIOrDbg
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|Instruction
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -512,25 +632,33 @@ operator|)
 operator|->
 name|getFirstNonPHIOrDbg
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns a pointer to the first instruction in this block that is not
 comment|/// a PHINode, a debug intrinsic, or a lifetime intrinsic.
-name|Instruction
-modifier|*
-name|getFirstNonPHIOrDbgOrLifetime
-parameter_list|()
-function_decl|;
 specifier|const
 name|Instruction
 operator|*
 name|getFirstNonPHIOrDbgOrLifetime
 argument_list|()
 specifier|const
+expr_stmt|;
+name|Instruction
+modifier|*
+name|getFirstNonPHIOrDbgOrLifetime
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|Instruction
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -540,24 +668,26 @@ operator|)
 operator|->
 name|getFirstNonPHIOrDbgOrLifetime
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Returns an iterator to the first instruction in this block that is
 comment|/// suitable for inserting a non-PHI instruction.
 comment|///
 comment|/// In particular, it skips all PHIs and LandingPad instructions.
-name|iterator
-name|getFirstInsertionPt
-parameter_list|()
-function_decl|;
 name|const_iterator
 name|getFirstInsertionPt
 argument_list|()
 specifier|const
+expr_stmt|;
+name|iterator
+name|getFirstInsertionPt
+parameter_list|()
 block|{
 return|return
-name|const_cast
+name|static_cast
 operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -566,6 +696,9 @@ name|this
 operator|)
 operator|->
 name|getFirstInsertionPt
+argument_list|()
+operator|.
+name|getNonConst
 argument_list|()
 return|;
 block|}
@@ -628,21 +761,28 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Return the predecessor of this block if it has a single predecessor
 comment|/// block. Otherwise return a null pointer.
-name|BasicBlock
-modifier|*
-name|getSinglePredecessor
-parameter_list|()
-function_decl|;
 specifier|const
 name|BasicBlock
 operator|*
 name|getSinglePredecessor
 argument_list|()
 specifier|const
+expr_stmt|;
+name|BasicBlock
+modifier|*
+name|getSinglePredecessor
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -652,6 +792,7 @@ operator|)
 operator|->
 name|getSinglePredecessor
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Return the predecessor of this block if it has a unique predecessor
@@ -660,21 +801,28 @@ comment|///
 comment|/// Note that unique predecessor doesn't mean single edge, there can be
 comment|/// multiple edges from the unique predecessor to this block (for example a
 comment|/// switch statement with multiple cases having the same destination).
-name|BasicBlock
-modifier|*
-name|getUniquePredecessor
-parameter_list|()
-function_decl|;
 specifier|const
 name|BasicBlock
 operator|*
 name|getUniquePredecessor
 argument_list|()
 specifier|const
+expr_stmt|;
+name|BasicBlock
+modifier|*
+name|getUniquePredecessor
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -684,27 +832,35 @@ operator|)
 operator|->
 name|getUniquePredecessor
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Return the successor of this block if it has a single successor.
 comment|/// Otherwise return a null pointer.
 comment|///
 comment|/// This method is analogous to getSinglePredecessor above.
-name|BasicBlock
-modifier|*
-name|getSingleSuccessor
-parameter_list|()
-function_decl|;
 specifier|const
 name|BasicBlock
 operator|*
 name|getSingleSuccessor
 argument_list|()
 specifier|const
+expr_stmt|;
+name|BasicBlock
+modifier|*
+name|getSingleSuccessor
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -714,27 +870,35 @@ operator|)
 operator|->
 name|getSingleSuccessor
 argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Return the successor of this block if it has a unique successor.
 comment|/// Otherwise return a null pointer.
 comment|///
 comment|/// This method is analogous to getUniquePredecessor above.
-name|BasicBlock
-modifier|*
-name|getUniqueSuccessor
-parameter_list|()
-function_decl|;
 specifier|const
 name|BasicBlock
 operator|*
 name|getUniqueSuccessor
 argument_list|()
 specifier|const
+expr_stmt|;
+name|BasicBlock
+modifier|*
+name|getUniqueSuccessor
+parameter_list|()
 block|{
 return|return
 name|const_cast
 operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|BasicBlock
 operator|*
 operator|>
@@ -744,6 +908,7 @@ operator|)
 operator|->
 name|getUniqueSuccessor
 argument_list|()
+operator|)
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -931,6 +1096,225 @@ name|back
 argument_list|()
 return|;
 block|}
+comment|/// Iterator to walk just the phi nodes in the basic block.
+name|template
+operator|<
+name|typename
+name|PHINodeT
+operator|=
+name|PHINode
+operator|,
+name|typename
+name|BBIteratorT
+operator|=
+name|iterator
+operator|>
+name|class
+name|phi_iterator_impl
+operator|:
+name|public
+name|iterator_facade_base
+operator|<
+name|phi_iterator_impl
+operator|<
+name|PHINodeT
+operator|,
+name|BBIteratorT
+operator|>
+operator|,
+name|std
+operator|::
+name|forward_iterator_tag
+operator|,
+name|PHINodeT
+operator|>
+block|{
+name|friend
+name|BasicBlock
+block|;
+name|PHINodeT
+operator|*
+name|PN
+block|;
+name|phi_iterator_impl
+argument_list|(
+name|PHINodeT
+operator|*
+name|PN
+argument_list|)
+operator|:
+name|PN
+argument_list|(
+argument|PN
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|// Allow default construction to build variables, but this doesn't build
+comment|// a useful iterator.
+name|phi_iterator_impl
+argument_list|()
+operator|=
+expr|default
+block|;
+comment|// Allow conversion between instantiations where valid.
+name|template
+operator|<
+name|typename
+name|PHINodeU
+block|,
+name|typename
+name|BBIteratorU
+operator|>
+name|phi_iterator_impl
+argument_list|(
+specifier|const
+name|phi_iterator_impl
+operator|<
+name|PHINodeU
+argument_list|,
+name|BBIteratorU
+operator|>
+operator|&
+name|Arg
+argument_list|)
+operator|:
+name|PN
+argument_list|(
+argument|Arg.PN
+argument_list|)
+block|{}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|phi_iterator_impl
+operator|&
+name|Arg
+operator|)
+specifier|const
+block|{
+return|return
+name|PN
+operator|==
+name|Arg
+operator|.
+name|PN
+return|;
+block|}
+name|PHINodeT
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+operator|*
+name|PN
+return|;
+block|}
+name|using
+name|phi_iterator_impl
+operator|::
+name|iterator_facade_base
+operator|::
+name|operator
+operator|++
+block|;
+name|phi_iterator_impl
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+name|assert
+argument_list|(
+name|PN
+operator|&&
+literal|"Cannot increment the end iterator!"
+argument_list|)
+block|;
+name|PN
+operator|=
+name|dyn_cast
+operator|<
+name|PHINodeT
+operator|>
+operator|(
+name|std
+operator|::
+name|next
+argument_list|(
+name|BBIteratorT
+argument_list|(
+name|PN
+argument_list|)
+argument_list|)
+operator|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+expr|}
+block|;
+name|using
+name|phi_iterator
+operator|=
+name|phi_iterator_impl
+operator|<
+operator|>
+block|;
+name|using
+name|const_phi_iterator
+operator|=
+name|phi_iterator_impl
+operator|<
+specifier|const
+name|PHINode
+block|,
+name|BasicBlock
+operator|::
+name|const_iterator
+operator|>
+block|;
+comment|/// Returns a range that iterates over the phis in the basic block.
+comment|///
+comment|/// Note that this cannot be used with basic blocks that have no terminator.
+name|iterator_range
+operator|<
+name|const_phi_iterator
+operator|>
+name|phis
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|phis
+argument_list|()
+return|;
+block|}
+name|iterator_range
+operator|<
+name|phi_iterator
+operator|>
+name|phis
+argument_list|()
+block|;
 comment|/// \brief Return the underlying instruction list container.
 comment|///
 comment|/// Currently you need to access the underlying instruction list container
@@ -947,9 +1331,9 @@ name|InstList
 return|;
 block|}
 name|InstListType
-modifier|&
+operator|&
 name|getInstList
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|InstList
@@ -975,21 +1359,17 @@ return|;
 block|}
 comment|/// \brief Returns a pointer to the symbol table if one exists.
 name|ValueSymbolTable
-modifier|*
+operator|*
 name|getValueSymbolTable
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// \brief Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|V
@@ -1012,8 +1392,8 @@ comment|/// operations are valid on an object that has "dropped all references",
 comment|/// except operator delete.
 name|void
 name|dropAllReferences
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// \brief Notify the BasicBlock that the predecessor \p Pred is no longer
 comment|/// able to reach it.
 comment|///
@@ -1022,22 +1402,17 @@ comment|/// used to update the PHI nodes that reside in the block.  Note that th
 comment|/// should be called while the predecessor still refers to this block.
 name|void
 name|removePredecessor
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|Pred
-parameter_list|,
-name|bool
-name|DontDeleteUselessPHIs
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|BasicBlock *Pred
+argument_list|,
+argument|bool DontDeleteUselessPHIs = false
+argument_list|)
+block|;
 name|bool
 name|canSplitPredecessors
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Split the basic block into two basic blocks at the specified
 comment|/// instruction.
 comment|///
@@ -1055,35 +1430,24 @@ comment|///
 comment|/// Also note that this doesn't preserve any passes. To split blocks while
 comment|/// keeping loop information consistent, use the SplitBlock utility function.
 name|BasicBlock
-modifier|*
+operator|*
 name|splitBasicBlock
-parameter_list|(
-name|iterator
-name|I
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|BBName
-init|=
+argument_list|(
+argument|iterator I
+argument_list|,
+argument|const Twine&BBName =
 literal|""
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|BasicBlock
-modifier|*
+operator|*
 name|splitBasicBlock
-parameter_list|(
-name|Instruction
-modifier|*
-name|I
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|BBName
-init|=
+argument_list|(
+argument|Instruction *I
+argument_list|,
+argument|const Twine&BBName =
 literal|""
-parameter_list|)
+argument_list|)
 block|{
 return|return
 name|splitBasicBlock
@@ -1115,12 +1479,12 @@ comment|/// \brief Update all phi nodes in this basic block's successors to refe
 comment|/// basic block \p New instead of to it.
 name|void
 name|replaceSuccessorsPhiUsesWith
-parameter_list|(
+argument_list|(
 name|BasicBlock
-modifier|*
+operator|*
 name|New
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Return true if this basic block is an exception handling block.
 name|bool
 name|isEHPad
@@ -1143,22 +1507,50 @@ name|bool
 name|isLandingPad
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Return the landingpad instruction associated with the landing pad.
-name|LandingPadInst
-modifier|*
-name|getLandingPadInst
-parameter_list|()
-function_decl|;
 specifier|const
 name|LandingPadInst
 operator|*
 name|getLandingPadInst
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
+name|LandingPadInst
+operator|*
+name|getLandingPadInst
+argument_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|LandingPadInst
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getLandingPadInst
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Return true if it is legal to hoist instructions into this block.
+name|bool
+name|isLegalToHoistInto
+argument_list|()
+specifier|const
+block|;
 name|private
-label|:
+operator|:
 comment|/// \brief Increment the internal refcount of the number of BlockAddresses
 comment|/// referencing this BasicBlock by \p Amt.
 comment|///
@@ -1166,10 +1558,9 @@ comment|/// This is almost always 0, sometimes one possibly, but almost never 2,
 comment|/// inconceivably 3 or more.
 name|void
 name|AdjustBlockAddressRefCount
-parameter_list|(
-name|int
-name|Amt
-parameter_list|)
+argument_list|(
+argument|int Amt
+argument_list|)
 block|{
 name|setValueSubclassData
 argument_list|(
@@ -1178,7 +1569,7 @@ argument_list|()
 operator|+
 name|Amt
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 operator|(
@@ -1195,17 +1586,14 @@ literal|0
 operator|&&
 literal|"Refcount wrap-around"
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Shadow Value::setValueSubclassData with a private forwarding method
 comment|/// so that any future subclasses cannot accidentally use it.
 name|void
 name|setValueSubclassData
-parameter_list|(
-name|unsigned
-name|short
-name|D
-parameter_list|)
+argument_list|(
+argument|unsigned short D
+argument_list|)
 block|{
 name|Value
 operator|::
@@ -1213,10 +1601,9 @@ name|setValueSubclassData
 argument_list|(
 name|D
 argument_list|)
+block|;   }
+block|}
 expr_stmt|;
-block|}
-block|}
-empty_stmt|;
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
 name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
 argument_list|(

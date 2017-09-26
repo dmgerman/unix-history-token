@@ -375,6 +375,22 @@ argument_list|(
 argument|Instruction&I
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|is_base_of
+operator|<
+name|InstVisitor
+argument_list|,
+name|SubClass
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"Must pass the derived type to this template!"
+argument_list|)
+block|;
 switch|switch
 condition|(
 name|I

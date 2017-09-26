@@ -261,7 +261,7 @@ name|Parent
 decl_stmt|;
 comment|/// OperandValToReplace - The Value of the operand in the user instruction
 comment|/// that this IVStrideUse is representing.
-name|WeakVH
+name|WeakTrackingVH
 name|OperandValToReplace
 decl_stmt|;
 comment|/// PostIncLoops - The set of loops for which Expr has been adjusted to

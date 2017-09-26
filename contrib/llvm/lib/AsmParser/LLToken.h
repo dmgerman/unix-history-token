@@ -224,7 +224,7 @@ name|kw_acq_rel
 block|,
 name|kw_seq_cst
 block|,
-name|kw_singlethread
+name|kw_syncscope
 block|,
 name|kw_nnan
 block|,
@@ -233,6 +233,8 @@ block|,
 name|kw_nsz
 block|,
 name|kw_arcp
+block|,
+name|kw_contract
 block|,
 name|kw_fast
 block|,
@@ -316,7 +318,7 @@ name|kw_spir_func
 block|,
 name|kw_x86_64_sysvcc
 block|,
-name|kw_x86_64_win64cc
+name|kw_win64cc
 block|,
 name|kw_webkit_jscc
 block|,
@@ -339,6 +341,8 @@ block|,
 name|kw_cxx_fast_tlscc
 block|,
 name|kw_amdgpu_vs
+block|,
+name|kw_amdgpu_hs
 block|,
 name|kw_amdgpu_gs
 block|,
@@ -426,6 +430,8 @@ block|,
 name|kw_returns_twice
 block|,
 name|kw_signext
+block|,
+name|kw_speculatable
 block|,
 name|kw_ssp
 block|,

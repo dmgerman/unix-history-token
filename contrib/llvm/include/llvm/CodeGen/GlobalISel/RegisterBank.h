@@ -126,6 +126,8 @@ argument_list|,
 argument|unsigned Size
 argument_list|,
 argument|const uint32_t *ContainedRegClasses
+argument_list|,
+argument|unsigned NumRegClasses
 argument_list|)
 empty_stmt|;
 comment|/// Get the identifier of this register bank.

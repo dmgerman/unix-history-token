@@ -254,6 +254,22 @@ return|return
 name|m_jit_start_addr
 return|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Called to notify the expression that it is about to be executed.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|WillStartExecuting
+parameter_list|()
+block|{}
+comment|//------------------------------------------------------------------
+comment|/// Called to notify the expression that its execution has finished.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|DidFinishExecuting
+parameter_list|()
+block|{}
 name|virtual
 name|ExpressionTypeSystemHelper
 modifier|*

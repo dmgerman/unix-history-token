@@ -108,7 +108,7 @@ name|public
 label|:
 comment|// Documents the level of support for response files in this tool.
 comment|// Response files are necessary if the command line gets too large,
-comment|// requiring the arguments to be transfered to a file.
+comment|// requiring the arguments to be transferred to a file.
 enum|enum
 name|ResponseFileSupport
 block|{

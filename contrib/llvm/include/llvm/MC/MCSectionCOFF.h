@@ -71,6 +71,18 @@ directive|include
 file|"llvm/MC/MCSection.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/SectionKind.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -251,6 +263,8 @@ name|PrintSwitchToSection
 argument_list|(
 argument|const MCAsmInfo&MAI
 argument_list|,
+argument|const Triple&T
+argument_list|,
 argument|raw_ostream&OS
 argument_list|,
 argument|const MCExpr *Subsection
@@ -348,6 +362,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCSECTIONCOFF_H
+end_comment
 
 end_unit
 

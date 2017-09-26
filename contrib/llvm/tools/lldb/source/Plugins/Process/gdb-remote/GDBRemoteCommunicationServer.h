@@ -134,7 +134,7 @@ name|StringExtractorGDBRemote
 operator|&
 name|packet
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -185,7 +185,7 @@ name|micro
 operator|>
 name|timeout
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|,
@@ -223,6 +223,28 @@ name|m_exit_now
 block|;
 comment|// use in asynchronous handling to indicate process should
 comment|// exit.
+name|bool
+name|m_send_error_strings
+block|;
+comment|// If the client enables this then
+comment|// we will send error strings as well.
+name|PacketResult
+name|Handle_QErrorStringEnable
+argument_list|(
+name|StringExtractorGDBRemote
+operator|&
+name|packet
+argument_list|)
+block|;
+name|PacketResult
+name|SendErrorResponse
+argument_list|(
+specifier|const
+name|Status
+operator|&
+name|error
+argument_list|)
+block|;
 name|PacketResult
 name|SendUnimplementedResponse
 argument_list|(

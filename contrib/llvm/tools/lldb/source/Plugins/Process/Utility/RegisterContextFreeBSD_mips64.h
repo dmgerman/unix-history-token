@@ -79,6 +79,22 @@ block|;
 specifier|const
 name|lldb_private
 operator|::
+name|RegisterSet
+operator|*
+name|GetRegisterSet
+argument_list|(
+argument|size_t set
+argument_list|)
+specifier|const
+block|;
+name|size_t
+name|GetRegisterSetCount
+argument_list|()
+specifier|const
+block|;
+specifier|const
+name|lldb_private
+operator|::
 name|RegisterInfo
 operator|*
 name|GetRegisterInfo

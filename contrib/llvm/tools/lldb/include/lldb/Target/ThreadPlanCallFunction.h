@@ -360,6 +360,7 @@ operator|&
 name|function_load_addr
 argument_list|)
 block|;
+name|virtual
 name|void
 name|DoTakedown
 argument_list|(

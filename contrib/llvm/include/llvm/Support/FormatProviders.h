@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/FormatVariadicDetails.h"
 end_include
 
@@ -240,24 +246,15 @@ name|integral_constant
 operator|<
 name|bool
 operator|,
-name|is_one_of
+name|std
+operator|::
+name|is_convertible
 operator|<
 name|T
 operator|,
 name|llvm
 operator|::
 name|StringRef
-operator|,
-name|std
-operator|::
-name|string
-operator|>
-operator|::
-name|value
-operator|||
-name|is_cstring
-operator|<
-name|T
 operator|>
 operator|::
 name|value
@@ -1070,9 +1067,8 @@ name|llvm
 operator|::
 name|StringRef
 name|S
-argument_list|(
+operator|=
 name|V
-argument_list|)
 block|;
 name|Stream
 operator|<<
@@ -1089,6 +1085,62 @@ end_expr_stmt
 
 begin_comment
 unit|};
+comment|/// Implementation of format_provider<T> for llvm::Twine.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This follows the same rules as the string formatter.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|format_provider
+operator|<
+name|Twine
+operator|>
+block|{
+specifier|static
+name|void
+name|format
+argument_list|(
+argument|const Twine&V
+argument_list|,
+argument|llvm::raw_ostream&Stream
+argument_list|,
+argument|StringRef Style
+argument_list|)
+block|{
+name|format_provider
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|::
+name|format
+argument_list|(
+name|V
+operator|.
+name|str
+argument_list|()
+argument_list|,
+name|Stream
+argument_list|,
+name|Style
+argument_list|)
+block|;   }
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Implementation of format_provider<T> for characters.
 end_comment
 
@@ -1890,27 +1942,6 @@ return|;
 block|}
 end_if
 
-begin_expr_stmt
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|char
-operator|*
-operator|>
-name|Delims
-operator|=
-block|{
-literal|"[]"
-block|,
-literal|"<>"
-block|,
-literal|"()"
-block|}
-expr_stmt|;
-end_expr_stmt
-
 begin_for
 for|for
 control|(
@@ -1919,7 +1950,13 @@ name|char
 modifier|*
 name|D
 range|:
-name|Delims
+block|{
+literal|"[]"
+block|,
+literal|"<>"
+block|,
+literal|"()"
+block|}
 control|)
 block|{
 if|if

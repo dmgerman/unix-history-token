@@ -149,6 +149,9 @@ comment|// MIPS64EL: mips64el
 name|msp430
 block|,
 comment|// MSP430: msp430
+name|nios2
+block|,
+comment|// NIOSII: nios2
 name|ppc
 block|,
 comment|// PPC: powerpc
@@ -286,6 +289,8 @@ name|ARMSubArch_v7s
 block|,
 name|ARMSubArch_v7k
 block|,
+name|ARMSubArch_v7ve
+block|,
 name|ARMSubArch_v6
 block|,
 name|ARMSubArch_v6m
@@ -340,15 +345,19 @@ name|AMD
 block|,
 name|Mesa
 block|,
+name|SUSE
+block|,
 name|LastVendorType
 init|=
-name|Mesa
+name|SUSE
 block|}
 enum|;
 enum|enum
 name|OSType
 block|{
 name|UnknownOS
+block|,
+name|Ananas
 block|,
 name|CloudABI
 block|,
@@ -479,6 +488,8 @@ block|,
 name|ELF
 block|,
 name|MachO
+block|,
+name|Wasm
 block|,   }
 enum|;
 name|private
@@ -525,6 +536,9 @@ name|Data
 argument_list|()
 operator|,
 name|Arch
+argument_list|()
+operator|,
+name|SubArch
 argument_list|()
 operator|,
 name|Vendor
@@ -636,6 +650,27 @@ operator|==
 name|Other
 operator|.
 name|ObjectFormat
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|Triple
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|Other
+operator|)
 return|;
 block|}
 comment|/// @}
@@ -1710,6 +1745,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|getOS
 argument_list|()
 operator|==
@@ -1723,6 +1759,11 @@ operator|==
 name|Triple
 operator|::
 name|KFreeBSD
+operator|)
+operator|&&
+operator|!
+name|isAndroid
+argument_list|()
 return|;
 block|}
 comment|/// Tests whether the OS uses the ELF binary format.
@@ -1768,6 +1809,21 @@ operator|==
 name|Triple
 operator|::
 name|MachO
+return|;
+block|}
+comment|/// Tests whether the OS uses the Wasm binary format.
+name|bool
+name|isOSBinFormatWasm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectFormat
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Wasm
 return|;
 block|}
 comment|/// Tests whether the target is the PS4 CPU
@@ -1834,6 +1890,75 @@ operator|==
 name|Triple
 operator|::
 name|Android
+return|;
+block|}
+name|bool
+name|isAndroidVersionLT
+argument_list|(
+name|unsigned
+name|Major
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|isAndroid
+argument_list|()
+operator|&&
+literal|"Not an Android triple!"
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|Env
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|getEnvironmentVersion
+argument_list|(
+name|Env
+index|[
+literal|0
+index|]
+argument_list|,
+name|Env
+index|[
+literal|1
+index|]
+argument_list|,
+name|Env
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+comment|// 64-bit targets did not exist before API level 21 (Lollipop).
+if|if
+condition|(
+name|isArch64Bit
+argument_list|()
+operator|&&
+name|Env
+index|[
+literal|0
+index|]
+operator|<
+literal|21
+condition|)
+name|Env
+index|[
+literal|0
+index|]
+operator|=
+literal|21
+expr_stmt|;
+return|return
+name|Env
+index|[
+literal|0
+index|]
+operator|<
+name|Major
 return|;
 block|}
 comment|/// Tests whether the environment is musl-libc
@@ -2077,6 +2202,27 @@ comment|/// \returns true if the triple is little endian, false otherwise.
 name|bool
 name|isLittleEndian
 argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Test whether target triples are compatible.
+name|bool
+name|isCompatibleWith
+argument_list|(
+specifier|const
+name|Triple
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Merge target triples.
+name|std
+operator|::
+name|string
+name|merge
+argument_list|(
+argument|const Triple&Other
+argument_list|)
 specifier|const
 expr_stmt|;
 comment|/// @}

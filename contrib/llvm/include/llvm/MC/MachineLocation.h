@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MachineLocation.h -------------------------------*- C++ -*-===//
+comment|//===- llvm/MC/MachineLocation.h --------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,13 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -80,23 +74,26 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCSymbol
-decl_stmt|;
-name|class
 name|MachineLocation
 block|{
 name|private
 label|:
 name|bool
 name|IsRegister
+init|=
+name|false
 decl_stmt|;
 comment|// True if location is a register.
 name|unsigned
 name|Register
+init|=
+literal|0
 decl_stmt|;
 comment|// gcc/gdb register number.
 name|int
 name|Offset
+init|=
+literal|0
 decl_stmt|;
 comment|// Displacement if not register.
 name|public
@@ -114,29 +111,16 @@ block|}
 enum_decl|;
 name|MachineLocation
 argument_list|()
-operator|:
-name|IsRegister
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Register
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Offset
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Create a direct register location.
 name|explicit
 name|MachineLocation
 argument_list|(
 argument|unsigned R
 argument_list|)
-operator|:
+block|:
 name|IsRegister
 argument_list|(
 name|true
@@ -144,12 +128,7 @@ argument_list|)
 operator|,
 name|Register
 argument_list|(
-name|R
-argument_list|)
-operator|,
-name|Offset
-argument_list|(
-literal|0
+argument|R
 argument_list|)
 block|{}
 comment|/// Create a register-indirect location with an offset.
@@ -160,11 +139,6 @@ argument_list|,
 argument|int O
 argument_list|)
 operator|:
-name|IsRegister
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|Register
 argument_list|(
 name|R
@@ -357,13 +331,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MACHINELOCATION_H
+end_comment
 
 end_unit
 

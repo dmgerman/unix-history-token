@@ -46,8 +46,32 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Utility/Status.h"
 end_include
+
+begin_comment
+comment|// for Status
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_comment
+comment|// for Encoding, ByteOrder
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-types.h"
+end_include
+
+begin_comment
+comment|// for type128
+end_comment
 
 begin_include
 include|#
@@ -60,6 +84,46 @@ include|#
 directive|include
 file|"llvm/ADT/APInt.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_comment
+comment|// for size_t
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_comment
+comment|// for uint32_t, uint64_t, int64_t
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|DataExtractor
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_define
 define|#
@@ -714,7 +778,7 @@ operator|::
 name|ByteOrder
 name|dst_byte_order
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -1251,7 +1315,7 @@ literal|0.0
 argument_list|)
 decl|const
 decl_stmt|;
-name|Error
+name|Status
 name|SetValueFromCString
 argument_list|(
 specifier|const
@@ -1268,7 +1332,7 @@ name|size_t
 name|byte_size
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|SetValueFromData
 argument_list|(
 name|DataExtractor

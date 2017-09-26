@@ -155,6 +155,29 @@ argument_list|(
 argument|k
 argument_list|)
 block|{}
+specifier|static
+name|bool
+name|isValidTypeForSymbol
+argument_list|(
+argument|QualType T
+argument_list|)
+block|{
+comment|// FIXME: Depending on whether we choose to deprecate structural symbols,
+comment|// this may become much stricter.
+return|return
+operator|!
+name|T
+operator|.
+name|isNull
+argument_list|()
+operator|&&
+operator|!
+name|T
+operator|->
+name|isVoidType
+argument_list|()
+return|;
+block|}
 name|public
 operator|:
 name|virtual
@@ -384,7 +407,15 @@ name|Sym
 argument_list|(
 argument|sym
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|classof
+argument_list|(
+name|this
+argument_list|)
+argument_list|)
+block|;   }
 name|public
 operator|:
 operator|~

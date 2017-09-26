@@ -516,7 +516,7 @@ name|function
 operator|<
 name|lldb_private
 operator|::
-name|Error
+name|Status
 argument_list|(
 specifier|const
 name|lldb

@@ -503,6 +503,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|isCallerPreservedPhysReg
+argument_list|(
+argument|unsigned PhysReg
+argument_list|,
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// We require the register scavenger.
 name|bool
 name|requiresRegisterScavenging

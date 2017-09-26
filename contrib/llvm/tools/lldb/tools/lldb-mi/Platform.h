@@ -49,12 +49,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<eh.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<inttypes.h>
 end_include
 

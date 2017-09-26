@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- StringPool.h - Interned string pool ---------------------*- C++ -*-===//
+comment|//===- StringPool.h - Interned string pool ----------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -152,47 +158,45 @@ block|{
 name|StringPool
 modifier|*
 name|Pool
+init|=
+name|nullptr
 decl_stmt|;
 comment|///< So the string can remove itself.
 name|unsigned
 name|Refcount
+init|=
+literal|0
 decl_stmt|;
 comment|///< Number of referencing PooledStringPtrs.
 name|public
 label|:
 name|PooledString
 argument_list|()
-operator|:
-name|Pool
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Refcount
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 block|}
 struct|;
 name|friend
 name|class
 name|PooledStringPtr
 decl_stmt|;
-typedef|typedef
+name|using
+name|table_t
+init|=
 name|StringMap
 operator|<
 name|PooledString
 operator|>
-name|table_t
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|entry_t
+init|=
 name|StringMapEntry
 operator|<
 name|PooledString
 operator|>
-name|entry_t
-expr_stmt|;
+decl_stmt|;
 name|table_t
 name|InternTable
 decl_stmt|;
@@ -240,26 +244,26 @@ comment|/// copied.
 name|class
 name|PooledStringPtr
 block|{
-typedef|typedef
+name|using
+name|entry_t
+init|=
 name|StringPool
 operator|::
 name|entry_t
-name|entry_t
-expr_stmt|;
+decl_stmt|;
 name|entry_t
 modifier|*
 name|S
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|PooledStringPtr
 argument_list|()
-operator|:
-name|S
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|PooledStringPtr
 argument_list|(
@@ -560,13 +564,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_STRINGPOOL_H
+end_comment
 
 end_unit
 

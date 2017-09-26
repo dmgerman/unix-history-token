@@ -43,22 +43,20 @@ directive|define
 name|lldb_Opcode_h
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Endian.h"
+end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|"lldb/lldb-enumerations.h"
 end_include
 
 begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
+comment|// for ByteOrder, ByteOrder::eByteOrde...
 end_comment
 
 begin_include
@@ -67,21 +65,51 @@ directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
 begin_comment
-comment|// Project includes
+comment|// for assert
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Endian.h"
+file|<stdint.h>
 end_include
+
+begin_comment
+comment|// for uint32_t, uint8_t, uint16_t
+end_comment
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|<string.h>
 end_include
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|DataExtractor
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -92,10 +120,6 @@ name|SBInstruction
 decl_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace lldb
-end_comment
 
 begin_decl_stmt
 name|namespace

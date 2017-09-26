@@ -157,7 +157,7 @@ argument|const StructuredData::ObjectSP&object_sp
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|GetDescription
 argument_list|(
 argument|const StructuredData::ObjectSP&object_sp
@@ -239,7 +239,7 @@ argument|lldb::user_id_t break_loc_id
 argument_list|)
 block|;
 specifier|static
-name|Error
+name|Status
 name|FilterLaunchInfo
 argument_list|(
 name|ProcessLaunchInfo

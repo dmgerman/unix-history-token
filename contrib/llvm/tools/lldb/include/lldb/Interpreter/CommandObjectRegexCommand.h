@@ -68,13 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/RegularExpression.h"
+file|"lldb/Interpreter/CommandObject.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/CommandObject.h"
+file|"lldb/Utility/RegularExpression.h"
 end_include
 
 begin_decl_stmt

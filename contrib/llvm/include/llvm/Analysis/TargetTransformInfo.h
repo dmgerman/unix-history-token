@@ -171,58 +171,6 @@ comment|/// \brief Information about a load/store intrinsic defined by the targe
 struct|struct
 name|MemIntrinsicInfo
 block|{
-name|MemIntrinsicInfo
-argument_list|()
-operator|:
-name|ReadMem
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|WriteMem
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IsSimple
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|MatchingId
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumMemRefs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|PtrVal
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
-name|bool
-name|ReadMem
-expr_stmt|;
-name|bool
-name|WriteMem
-decl_stmt|;
-comment|/// True only if this memory operation is non-volatile, non-atomic, and
-comment|/// unordered.  (See LoadInst/StoreInst for details on each)
-name|bool
-name|IsSimple
-decl_stmt|;
-comment|// Same Id is set by the target for corresponding load/store intrinsics.
-name|unsigned
-name|short
-name|MatchingId
-decl_stmt|;
-name|int
-name|NumMemRefs
-decl_stmt|;
 comment|/// This is the pointer that the intrinsic is loading from or storing to.
 comment|/// If this is non-null, then analysis/optimization passes can assume that
 comment|/// this intrinsic is functionally equivalent to a load/store from this
@@ -230,7 +178,63 @@ comment|/// pointer.
 name|Value
 modifier|*
 name|PtrVal
+init|=
+name|nullptr
 decl_stmt|;
+comment|// Ordering for atomic operations.
+name|AtomicOrdering
+name|Ordering
+init|=
+name|AtomicOrdering
+operator|::
+name|NotAtomic
+decl_stmt|;
+comment|// Same Id is set by the target for corresponding load/store intrinsics.
+name|unsigned
+name|short
+name|MatchingId
+init|=
+literal|0
+decl_stmt|;
+name|bool
+name|ReadMem
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|WriteMem
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|IsVolatile
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|isUnordered
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Ordering
+operator|==
+name|AtomicOrdering
+operator|::
+name|NotAtomic
+operator|||
+name|Ordering
+operator|==
+name|AtomicOrdering
+operator|::
+name|Unordered
+operator|)
+operator|&&
+operator|!
+name|IsVolatile
+return|;
+block|}
 block|}
 struct|;
 comment|/// \brief This pass provides access to the codegen interfaces that are needed
@@ -418,6 +422,26 @@ name|Operands
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Estimate the cost of a EXT operation when lowered.
+comment|///
+comment|/// The contract for this function is the same as \c getOperationCost except
+comment|/// that it supports an interface that provides extra information specific to
+comment|/// the EXT operation.
+name|int
+name|getExtCost
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|,
+specifier|const
+name|Value
+operator|*
+name|Src
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Estimate the cost of a function call when lowered.
 comment|///
 comment|/// The contract for this is the same as \c getOperationCost except that it
@@ -543,6 +567,23 @@ name|Arguments
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \return The estimated number of case clusters when lowering \p 'SI'.
+comment|/// \p JTSize Set a jump table size only when \p SI is suitable for a jump
+comment|/// table.
+name|unsigned
+name|getEstimatedNumberOfCaseClusters
+argument_list|(
+specifier|const
+name|SwitchInst
+operator|&
+name|SI
+argument_list|,
+name|unsigned
+operator|&
+name|JTSize
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Estimate the cost of a given IR user when lowered.
 comment|///
 comment|/// This can estimate the cost of either a ConstantExpr or Instruction when
@@ -556,6 +597,12 @@ comment|/// folded into a load or other instruction, but if they are used in som
 comment|/// other context they may not be folded. This routine can distinguish such
 comment|/// cases.
 comment|///
+comment|/// \p Operands is a list of operands which can be a result of transformations
+comment|/// of the current operands. The number of the operands on the list must equal
+comment|/// to the number of the current operands the IR user has. Their order on the
+comment|/// list must be the same as the order of the current operands the IR user
+comment|/// has.
+comment|///
 comment|/// The returned cost is defined in terms of \c TargetCostConstants, see its
 comment|/// comments for a detailed explanation of the cost values.
 name|int
@@ -565,9 +612,59 @@ specifier|const
 name|User
 operator|*
 name|U
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Operands
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief This is a helper function which calls the two-argument getUserCost
+comment|/// with \p Operands which are the current operands U has.
+name|int
+name|getUserCost
+argument_list|(
+specifier|const
+name|User
+operator|*
+name|U
+argument_list|)
+decl|const
+block|{
+name|SmallVector
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+literal|4
+operator|>
+name|Operands
+argument_list|(
+name|U
+operator|->
+name|value_op_begin
+argument_list|()
+argument_list|,
+name|U
+operator|->
+name|value_op_end
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|getUserCost
+argument_list|(
+name|U
+argument_list|,
+name|Operands
+argument_list|)
+return|;
+block|}
 comment|/// \brief Return true if branch divergence exists.
 comment|///
 comment|/// Branch divergence has a significantly negative impact on GPU performance
@@ -594,6 +691,40 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
+comment|// \brief Returns true for the target specific
+comment|// set of operations which produce uniform result
+comment|// even taking non-unform arguments
+name|bool
+name|isAlwaysUniform
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Returns the address space ID for a target's 'flat' address space. Note
+comment|/// this is not necessarily the same as addrspace(0), which LLVM sometimes
+comment|/// refers to as the generic address space. The flat address space is a
+comment|/// generic address space that can be used access multiple segments of memory
+comment|/// with different address spaces. Access of a memory location through a
+comment|/// pointer with this address space is expected to be legal but slower
+comment|/// compared to the same memory location accessed through a pointer with a
+comment|/// different address space.
+comment|//
+comment|/// This is for for targets with different pointer representations which can
+comment|/// be converted with the addrspacecast instruction. If a pointer is converted
+comment|/// to this address space, optimizations should attempt to replace the access
+comment|/// with the source address space.
+comment|///
+comment|/// \returns ~0u if the target does not have such a flat address space to
+comment|/// optimize away.
+name|unsigned
+name|getFlatAddressSpace
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Test whether calls to a function lower to actual program function
 comment|/// calls.
 comment|///
@@ -616,6 +747,37 @@ name|F
 argument_list|)
 decl|const
 decl_stmt|;
+struct|struct
+name|LSRCost
+block|{
+comment|/// TODO: Some of these could be merged. Also, a lexical ordering
+comment|/// isn't always optimal.
+name|unsigned
+name|Insns
+decl_stmt|;
+name|unsigned
+name|NumRegs
+decl_stmt|;
+name|unsigned
+name|AddRecCost
+decl_stmt|;
+name|unsigned
+name|NumIVMuls
+decl_stmt|;
+name|unsigned
+name|NumBaseAdds
+decl_stmt|;
+name|unsigned
+name|ImmCost
+decl_stmt|;
+name|unsigned
+name|SetupCost
+decl_stmt|;
+name|unsigned
+name|ScaleCost
+decl_stmt|;
+block|}
+struct|;
 comment|/// Parameters that control the generic loop unrolling transformation.
 struct|struct
 name|UnrollingPreferences
@@ -742,6 +904,9 @@ name|Loop
 operator|*
 name|L
 argument_list|,
+name|ScalarEvolution
+operator|&
+argument_list|,
 name|UnrollingPreferences
 operator|&
 name|UP
@@ -824,6 +989,24 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return true if LSR cost of C1 is lower than C1.
+name|bool
+name|isLSRCostLess
+argument_list|(
+name|TargetTransformInfo
+operator|::
+name|LSRCost
+operator|&
+name|C1
+argument_list|,
+name|TargetTransformInfo
+operator|::
+name|LSRCost
+operator|&
+name|C2
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return true if the target supports masked load/store
 comment|/// AVX2 and AVX-512 targets allow masks for consecutive load and store
 name|bool
@@ -865,6 +1048,12 @@ name|DataType
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Return true if target doesn't mind addresses in vectors.
+name|bool
+name|prefersVectorizedAddressing
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Return the cost of the scaling factor used in the addressing
 comment|/// mode represented by AM for this target, for a load/store
 comment|/// of the specified type.
@@ -981,12 +1170,65 @@ name|C
 argument_list|)
 decl|const
 decl_stmt|;
+name|unsigned
+name|getScalarizationOverhead
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|bool
+name|Insert
+argument_list|,
+name|bool
+name|Extract
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getOperandsScalarizationOverhead
+argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Args
+argument_list|,
+name|unsigned
+name|VF
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// If target has efficient vector element load/store instructions, it can
+comment|/// return true here so that insertion/extraction costs are not added to
+comment|/// the scalarization cost of a load/store.
+name|bool
+name|supportsEfficientVectorElementLoadStore
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Don't restrict interleaved unrolling to small loops.
 name|bool
 name|enableAggressiveInterleaving
 argument_list|(
 name|bool
 name|LoopHasReductions
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Enable inline expansion of memcmp
+name|bool
+name|expandMemCmp
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+name|unsigned
+operator|&
+name|MaxLoadSize
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1236,6 +1478,29 @@ name|Vector
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \return The width of the smallest vector register type.
+name|unsigned
+name|getMinVectorRegisterBitWidth
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \return True if it should be considered for address type promotion.
+comment|/// \p AllowPromotionWithoutCommonHeader Set true if promoting \p I is
+comment|/// profitable without finding other extensions fed by the same input.
+name|bool
+name|shouldConsiderAddressTypePromotion
+argument_list|(
+specifier|const
+name|Instruction
+operator|&
+name|I
+argument_list|,
+name|bool
+operator|&
+name|AllowPromotionWithoutCommonHeader
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \return The size of a cache line in bytes.
 name|unsigned
 name|getCacheLineSize
@@ -1356,7 +1621,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \return The expected cost of cast instructions, such as bitcast, trunc,
-comment|/// zext, etc.
+comment|/// zext, etc. If there is an existing instruction that holds Opcode, it
+comment|/// may be passed in the 'I' parameter.
 name|int
 name|getCastInstrCost
 argument_list|(
@@ -1370,6 +1636,13 @@ argument_list|,
 name|Type
 operator|*
 name|Src
+argument_list|,
+specifier|const
+name|Instruction
+operator|*
+name|I
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1407,7 +1680,9 @@ name|Opcode
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \returns The expected cost of compare and select instructions.
+comment|/// \returns The expected cost of compare and select instructions. If there
+comment|/// is an existing instruction that holds Opcode, it may be passed in the
+comment|/// 'I' parameter.
 name|int
 name|getCmpSelInstrCost
 argument_list|(
@@ -1421,6 +1696,13 @@ argument_list|,
 name|Type
 operator|*
 name|CondTy
+operator|=
+name|nullptr
+argument_list|,
+specifier|const
+name|Instruction
+operator|*
+name|I
 operator|=
 name|nullptr
 argument_list|)
@@ -1462,6 +1744,13 @@ name|Alignment
 argument_list|,
 name|unsigned
 name|AddressSpace
+argument_list|,
+specifier|const
+name|Instruction
+operator|*
+name|I
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1576,32 +1865,9 @@ name|IsPairwiseForm
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \returns The cost of Intrinsic instructions. Types analysis only.
-name|int
-name|getIntrinsicInstrCost
-argument_list|(
-name|Intrinsic
-operator|::
-name|ID
-name|ID
-argument_list|,
-name|Type
-operator|*
-name|RetTy
-argument_list|,
-name|ArrayRef
-operator|<
-name|Type
-operator|*
-operator|>
-name|Tys
-argument_list|,
-name|FastMathFlags
-name|FMF
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// \returns The cost of Intrinsic instructions. Analyses the real arguments.
+comment|/// Three cases are handled: 1. scalar instruction 2. vector instruction
+comment|/// 3. scalar instruction which is to be vectorized with VF.
 name|int
 name|getIntrinsicInstrCost
 argument_list|(
@@ -1623,6 +1889,43 @@ name|Args
 argument_list|,
 name|FastMathFlags
 name|FMF
+argument_list|,
+name|unsigned
+name|VF
+operator|=
+literal|1
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns The cost of Intrinsic instructions. Types analysis only.
+comment|/// If ScalarizationCostPassed is UINT_MAX, the cost of scalarizing the
+comment|/// arguments and the return value will be computed based on types.
+name|int
+name|getIntrinsicInstrCost
+argument_list|(
+name|Intrinsic
+operator|::
+name|ID
+name|ID
+argument_list|,
+name|Type
+operator|*
+name|RetTy
+argument_list|,
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|Tys
+argument_list|,
+name|FastMathFlags
+name|FMF
+argument_list|,
+name|unsigned
+name|ScalarizationCostPassed
+operator|=
+name|UINT_MAX
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1721,6 +2024,13 @@ name|Info
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \returns The maximum element size, in bytes, for an element
+comment|/// unordered-atomic memory intrinsic.
+name|unsigned
+name|getAtomicMemIntrinsicMaxElementSize
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \returns A value which is the result of the given memory intrinsic.  New
 comment|/// instructions may be created to extract the result from the given intrinsic
 comment|/// memory operation.  Returns nullptr if the target cannot create a result
@@ -1739,6 +2049,68 @@ name|ExpectedType
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \returns The type to use in a loop expansion of a memcpy call.
+name|Type
+modifier|*
+name|getMemcpyLoopLoweringType
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|Value
+operator|*
+name|Length
+argument_list|,
+name|unsigned
+name|SrcAlign
+argument_list|,
+name|unsigned
+name|DestAlign
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \param[out] OpsOut The operand types to copy RemainingBytes of memory.
+comment|/// \param RemainingBytes The number of bytes to copy.
+comment|///
+comment|/// Calculates the operand types to use when copying \p RemainingBytes of
+comment|/// memory, where source and destination alignments are \p SrcAlign and
+comment|/// \p DestAlign respectively.
+name|void
+name|getMemcpyLoopResidualLoweringType
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|Type
+operator|*
+operator|>
+operator|&
+name|OpsOut
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|unsigned
+name|RemainingBytes
+argument_list|,
+name|unsigned
+name|SrcAlign
+argument_list|,
+name|unsigned
+name|DestAlign
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns True if we want to test the new memcpy lowering functionality in
+comment|/// Transform/Utils.
+comment|/// Temporary. Will be removed once we move to the new functionality and
+comment|/// remove the old.
+name|bool
+name|useWideIRMemcpyLoopLowering
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \returns True if the two functions have compatible attributes for inlining
 comment|/// purposes.
 name|bool
@@ -1856,6 +2228,71 @@ name|VecTy
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Flags describing the kind of vector reduction.
+struct|struct
+name|ReductionFlags
+block|{
+name|ReductionFlags
+argument_list|()
+operator|:
+name|IsMaxOp
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IsSigned
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|NoNaN
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|bool
+name|IsMaxOp
+expr_stmt|;
+comment|///< If the op a min/max kind, true if it's a max operation.
+name|bool
+name|IsSigned
+decl_stmt|;
+comment|///< Whether the operation is a signed int reduction.
+name|bool
+name|NoNaN
+decl_stmt|;
+comment|///< If op is an fp min/max, whether NaNs may be present.
+block|}
+struct|;
+comment|/// \returns True if the target wants to handle the given reduction idiom in
+comment|/// the intrinsics form instead of the shuffle form.
+name|bool
+name|useReductionIntrinsic
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|ReductionFlags
+name|Flags
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns True if the target wants to expand the given reduction intrinsic
+comment|/// into a shuffle sequence.
+name|bool
+name|shouldExpandReduction
+argument_list|(
+specifier|const
+name|IntrinsicInst
+operator|*
+name|II
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 name|private
 label|:
@@ -1947,6 +2384,23 @@ literal|0
 block|;
 name|virtual
 name|int
+name|getExtCost
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|,
+specifier|const
+name|Value
+operator|*
+name|Src
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|int
 name|getCallCost
 argument_list|(
 argument|FunctionType *FTy
@@ -2021,6 +2475,22 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|unsigned
+name|getEstimatedNumberOfCaseClusters
+argument_list|(
+specifier|const
+name|SwitchInst
+operator|&
+name|SI
+argument_list|,
+name|unsigned
+operator|&
+name|JTSize
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
 name|int
 name|getUserCost
 argument_list|(
@@ -2028,6 +2498,14 @@ specifier|const
 name|User
 operator|*
 name|U
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Operands
 argument_list|)
 operator|=
 literal|0
@@ -2053,6 +2531,25 @@ literal|0
 block|;
 name|virtual
 name|bool
+name|isAlwaysUniform
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getFlatAddressSpace
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
 name|isLoweredToCall
 argument_list|(
 specifier|const
@@ -2070,6 +2567,9 @@ argument_list|(
 name|Loop
 operator|*
 name|L
+argument_list|,
+name|ScalarEvolution
+operator|&
 argument_list|,
 name|UnrollingPreferences
 operator|&
@@ -2117,6 +2617,25 @@ literal|0
 block|;
 name|virtual
 name|bool
+name|isLSRCostLess
+argument_list|(
+name|TargetTransformInfo
+operator|::
+name|LSRCost
+operator|&
+name|C1
+argument_list|,
+name|TargetTransformInfo
+operator|::
+name|LSRCost
+operator|&
+name|C2
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
 name|isLegalMaskedStore
 argument_list|(
 name|Type
@@ -2156,6 +2675,13 @@ name|Type
 operator|*
 name|DataType
 argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|prefersVectorizedAddressing
+argument_list|()
 operator|=
 literal|0
 block|;
@@ -2259,10 +2785,56 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|unsigned
+name|getScalarizationOverhead
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|bool Insert
+argument_list|,
+argument|bool Extract
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getOperandsScalarizationOverhead
+argument_list|(
+argument|ArrayRef<const Value *> Args
+argument_list|,
+argument|unsigned VF
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|supportsEfficientVectorElementLoadStore
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
 name|bool
 name|enableAggressiveInterleaving
 argument_list|(
 argument|bool LoopHasReductions
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|expandMemCmp
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+name|unsigned
+operator|&
+name|MaxLoadSize
 argument_list|)
 operator|=
 literal|0
@@ -2405,6 +2977,30 @@ name|getRegisterBitWidth
 argument_list|(
 argument|bool Vector
 argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getMinVectorRegisterBitWidth
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|shouldConsiderAddressTypePromotion
+argument_list|(
+specifier|const
+name|Instruction
+operator|&
+name|I
+argument_list|,
+name|bool
+operator|&
+name|AllowPromotionWithoutCommonHeader
+argument_list|)
 operator|=
 literal|0
 block|;
@@ -2490,6 +3086,8 @@ argument_list|,
 argument|Type *Dst
 argument_list|,
 argument|Type *Src
+argument_list|,
+argument|const Instruction *I
 argument_list|)
 operator|=
 literal|0
@@ -2527,6 +3125,8 @@ argument_list|,
 argument|Type *ValTy
 argument_list|,
 argument|Type *CondTy
+argument_list|,
+argument|const Instruction *I
 argument_list|)
 operator|=
 literal|0
@@ -2555,6 +3155,8 @@ argument_list|,
 argument|unsigned Alignment
 argument_list|,
 argument|unsigned AddressSpace
+argument_list|,
+argument|const Instruction *I
 argument_list|)
 operator|=
 literal|0
@@ -2634,6 +3236,8 @@ argument_list|,
 argument|ArrayRef<Type *> Tys
 argument_list|,
 argument|FastMathFlags FMF
+argument_list|,
+argument|unsigned ScalarizationCostPassed
 argument_list|)
 operator|=
 literal|0
@@ -2649,6 +3253,8 @@ argument_list|,
 argument|ArrayRef<Value *> Args
 argument_list|,
 argument|FastMathFlags FMF
+argument_list|,
+argument|unsigned VF
 argument_list|)
 operator|=
 literal|0
@@ -2736,6 +3342,14 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|unsigned
+name|getAtomicMemIntrinsicMaxElementSize
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
 name|Value
 operator|*
 name|getOrCreateResultFromMemIntrinsic
@@ -2748,6 +3362,41 @@ name|Type
 operator|*
 name|ExpectedType
 argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|Type
+operator|*
+name|getMemcpyLoopLoweringType
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|Value *Length
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|unsigned DestAlign
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|getMemcpyLoopResidualLoweringType
+argument_list|(
+argument|SmallVectorImpl<Type *>&OpsOut
+argument_list|,
+argument|LLVMContext&Context
+argument_list|,
+argument|unsigned RemainingBytes
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|unsigned DestAlign
+argument_list|)
+specifier|const
 operator|=
 literal|0
 block|;
@@ -2852,6 +3501,30 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
+block|;
+name|virtual
+name|bool
+name|useReductionIntrinsic
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|ReductionFlags
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|shouldExpandReduction
+argument_list|(
+argument|const IntrinsicInst *II
+argument_list|)
+specifier|const
+operator|=
+literal|0
 block|; }
 expr_stmt|;
 name|template
@@ -2950,6 +3623,26 @@ argument_list|,
 name|Ptr
 argument_list|,
 name|Operands
+argument_list|)
+return|;
+block|}
+name|int
+name|getExtCost
+argument_list|(
+argument|const Instruction *I
+argument_list|,
+argument|const Value *Src
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getExtCost
+argument_list|(
+name|I
+argument_list|,
+name|Src
 argument_list|)
 return|;
 block|}
@@ -3077,6 +3770,8 @@ name|int
 name|getUserCost
 argument_list|(
 argument|const User *U
+argument_list|,
+argument|ArrayRef<const Value *> Operands
 argument_list|)
 name|override
 block|{
@@ -3086,6 +3781,8 @@ operator|.
 name|getUserCost
 argument_list|(
 name|U
+argument_list|,
+name|Operands
 argument_list|)
 return|;
 block|}
@@ -3118,6 +3815,34 @@ argument_list|)
 return|;
 block|}
 name|bool
+name|isAlwaysUniform
+argument_list|(
+argument|const Value *V
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isAlwaysUniform
+argument_list|(
+name|V
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getFlatAddressSpace
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getFlatAddressSpace
+argument_list|()
+return|;
+block|}
+name|bool
 name|isLoweredToCall
 argument_list|(
 argument|const Function *F
@@ -3138,6 +3863,8 @@ name|getUnrollingPreferences
 argument_list|(
 argument|Loop *L
 argument_list|,
+argument|ScalarEvolution&SE
+argument_list|,
 argument|UnrollingPreferences&UP
 argument_list|)
 name|override
@@ -3148,6 +3875,8 @@ operator|.
 name|getUnrollingPreferences
 argument_list|(
 name|L
+argument_list|,
+name|SE
 argument_list|,
 name|UP
 argument_list|)
@@ -3222,6 +3951,26 @@ argument_list|)
 return|;
 block|}
 name|bool
+name|isLSRCostLess
+argument_list|(
+argument|TargetTransformInfo::LSRCost&C1
+argument_list|,
+argument|TargetTransformInfo::LSRCost&C2
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLSRCostLess
+argument_list|(
+name|C1
+argument_list|,
+name|C2
+argument_list|)
+return|;
+block|}
+name|bool
 name|isLegalMaskedStore
 argument_list|(
 argument|Type *DataType
@@ -3283,6 +4032,18 @@ name|isLegalMaskedGather
 argument_list|(
 name|DataType
 argument_list|)
+return|;
+block|}
+name|bool
+name|prefersVectorizedAddressing
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|prefersVectorizedAddressing
+argument_list|()
 return|;
 block|}
 name|int
@@ -3445,6 +4206,62 @@ name|C
 argument_list|)
 return|;
 block|}
+name|unsigned
+name|getScalarizationOverhead
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|bool Insert
+argument_list|,
+argument|bool Extract
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getScalarizationOverhead
+argument_list|(
+name|Ty
+argument_list|,
+name|Insert
+argument_list|,
+name|Extract
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getOperandsScalarizationOverhead
+argument_list|(
+argument|ArrayRef<const Value *> Args
+argument_list|,
+argument|unsigned VF
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getOperandsScalarizationOverhead
+argument_list|(
+name|Args
+argument_list|,
+name|VF
+argument_list|)
+return|;
+block|}
+name|bool
+name|supportsEfficientVectorElementLoadStore
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|supportsEfficientVectorElementLoadStore
+argument_list|()
+return|;
+block|}
 name|bool
 name|enableAggressiveInterleaving
 argument_list|(
@@ -3458,6 +4275,26 @@ operator|.
 name|enableAggressiveInterleaving
 argument_list|(
 name|LoopHasReductions
+argument_list|)
+return|;
+block|}
+name|bool
+name|expandMemCmp
+argument_list|(
+argument|Instruction *I
+argument_list|,
+argument|unsigned&MaxLoadSize
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|expandMemCmp
+argument_list|(
+name|I
+argument_list|,
+name|MaxLoadSize
 argument_list|)
 return|;
 block|}
@@ -3690,6 +4527,7 @@ name|getRegisterBitWidth
 argument_list|(
 argument|bool Vector
 argument_list|)
+specifier|const
 name|override
 block|{
 return|return
@@ -3698,6 +4536,38 @@ operator|.
 name|getRegisterBitWidth
 argument_list|(
 name|Vector
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getMinVectorRegisterBitWidth
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getMinVectorRegisterBitWidth
+argument_list|()
+return|;
+block|}
+name|bool
+name|shouldConsiderAddressTypePromotion
+argument_list|(
+argument|const Instruction&I
+argument_list|,
+argument|bool&AllowPromotionWithoutCommonHeader
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|shouldConsiderAddressTypePromotion
+argument_list|(
+name|I
+argument_list|,
+name|AllowPromotionWithoutCommonHeader
 argument_list|)
 return|;
 block|}
@@ -3762,6 +4632,26 @@ operator|.
 name|getMaxInterleaveFactor
 argument_list|(
 name|VF
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getEstimatedNumberOfCaseClusters
+argument_list|(
+argument|const SwitchInst&SI
+argument_list|,
+argument|unsigned&JTSize
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getEstimatedNumberOfCaseClusters
+argument_list|(
+name|SI
+argument_list|,
+name|JTSize
 argument_list|)
 return|;
 block|}
@@ -3841,6 +4731,8 @@ argument_list|,
 argument|Type *Dst
 argument_list|,
 argument|Type *Src
+argument_list|,
+argument|const Instruction *I
 argument_list|)
 name|override
 block|{
@@ -3854,6 +4746,8 @@ argument_list|,
 name|Dst
 argument_list|,
 name|Src
+argument_list|,
+name|I
 argument_list|)
 return|;
 block|}
@@ -3909,6 +4803,8 @@ argument_list|,
 argument|Type *ValTy
 argument_list|,
 argument|Type *CondTy
+argument_list|,
+argument|const Instruction *I
 argument_list|)
 name|override
 block|{
@@ -3922,6 +4818,8 @@ argument_list|,
 name|ValTy
 argument_list|,
 name|CondTy
+argument_list|,
+name|I
 argument_list|)
 return|;
 block|}
@@ -3959,6 +4857,8 @@ argument_list|,
 argument|unsigned Alignment
 argument_list|,
 argument|unsigned AddressSpace
+argument_list|,
+argument|const Instruction *I
 argument_list|)
 name|override
 block|{
@@ -3974,6 +4874,8 @@ argument_list|,
 name|Alignment
 argument_list|,
 name|AddressSpace
+argument_list|,
+name|I
 argument_list|)
 return|;
 block|}
@@ -4107,6 +5009,8 @@ argument_list|,
 argument|ArrayRef<Type *> Tys
 argument_list|,
 argument|FastMathFlags FMF
+argument_list|,
+argument|unsigned ScalarizationCostPassed
 argument_list|)
 name|override
 block|{
@@ -4122,6 +5026,8 @@ argument_list|,
 name|Tys
 argument_list|,
 name|FMF
+argument_list|,
+name|ScalarizationCostPassed
 argument_list|)
 return|;
 block|}
@@ -4135,6 +5041,8 @@ argument_list|,
 argument|ArrayRef<Value *> Args
 argument_list|,
 argument|FastMathFlags FMF
+argument_list|,
+argument|unsigned VF
 argument_list|)
 name|override
 block|{
@@ -4150,6 +5058,8 @@ argument_list|,
 name|Args
 argument_list|,
 name|FMF
+argument_list|,
+name|VF
 argument_list|)
 return|;
 block|}
@@ -4253,6 +5163,19 @@ name|Info
 argument_list|)
 return|;
 block|}
+name|unsigned
+name|getAtomicMemIntrinsicMaxElementSize
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getAtomicMemIntrinsicMaxElementSize
+argument_list|()
+return|;
+block|}
 name|Value
 operator|*
 name|getOrCreateResultFromMemIntrinsic
@@ -4274,6 +5197,67 @@ name|ExpectedType
 argument_list|)
 return|;
 block|}
+name|Type
+operator|*
+name|getMemcpyLoopLoweringType
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|Value *Length
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|unsigned DestAlign
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getMemcpyLoopLoweringType
+argument_list|(
+name|Context
+argument_list|,
+name|Length
+argument_list|,
+name|SrcAlign
+argument_list|,
+name|DestAlign
+argument_list|)
+return|;
+block|}
+name|void
+name|getMemcpyLoopResidualLoweringType
+argument_list|(
+argument|SmallVectorImpl<Type *>&OpsOut
+argument_list|,
+argument|LLVMContext&Context
+argument_list|,
+argument|unsigned RemainingBytes
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|unsigned DestAlign
+argument_list|)
+specifier|const
+name|override
+block|{
+name|Impl
+operator|.
+name|getMemcpyLoopResidualLoweringType
+argument_list|(
+name|OpsOut
+argument_list|,
+name|Context
+argument_list|,
+name|RemainingBytes
+argument_list|,
+name|SrcAlign
+argument_list|,
+name|DestAlign
+argument_list|)
+block|;   }
 name|bool
 name|areInlineCompatible
 argument_list|(
@@ -4451,6 +5435,48 @@ argument_list|,
 name|ChainSizeInBytes
 argument_list|,
 name|VecTy
+argument_list|)
+return|;
+block|}
+name|bool
+name|useReductionIntrinsic
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|ReductionFlags Flags
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|useReductionIntrinsic
+argument_list|(
+name|Opcode
+argument_list|,
+name|Ty
+argument_list|,
+name|Flags
+argument_list|)
+return|;
+block|}
+name|bool
+name|shouldExpandReduction
+argument_list|(
+argument|const IntrinsicInst *II
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|shouldExpandReduction
+argument_list|(
+name|II
 argument_list|)
 return|;
 block|}

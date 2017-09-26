@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"Plugins/Process/Utility/lldb-mips-freebsd-register-enums.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"RegisterContextPOSIX.h"
 end_include
 
@@ -277,6 +283,13 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
+name|uint64_t
+name|m_gpr_mips64
+index|[
+name|k_num_gpr_registers_mips64
+index|]
+decl_stmt|;
+comment|// general purpose registers.
 name|ProcessMonitor
 modifier|&
 name|GetMonitor

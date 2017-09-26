@@ -206,6 +206,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/MachO.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -219,12 +225,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorOr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/MachO.h"
 end_include
 
 begin_include

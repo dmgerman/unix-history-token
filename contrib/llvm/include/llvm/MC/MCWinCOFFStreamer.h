@@ -69,9 +69,6 @@ name|class
 name|MCCodeEmitter
 decl_stmt|;
 name|class
-name|MCExpr
-decl_stmt|;
-name|class
 name|MCInst
 decl_stmt|;
 name|class
@@ -85,9 +82,6 @@ name|MCSymbol
 decl_stmt|;
 name|class
 name|StringRef
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 name|class
 name|raw_pwrite_stream
@@ -147,6 +141,8 @@ name|void
 name|EmitLabel
 argument_list|(
 argument|MCSymbol *Symbol
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 name|override
 block|;
@@ -280,13 +276,6 @@ argument_list|)
 name|override
 block|;
 name|void
-name|EmitFileDirective
-argument_list|(
-argument|StringRef Filename
-argument_list|)
-name|override
-block|;
-name|void
 name|EmitIdent
 argument_list|(
 argument|StringRef IdentString
@@ -333,10 +322,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCWINCOFFSTREAMER_H
+end_comment
 
 end_unit
 

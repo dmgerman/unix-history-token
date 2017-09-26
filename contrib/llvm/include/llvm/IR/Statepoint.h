@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/IR/Statepoint.h - gc.statepoint utilities ----------*- C++ -*-===//
+comment|//===- llvm/IR/Statepoint.h - gc.statepoint utilities -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -74,13 +74,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm/ADT/Optional.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instructions.h"
 end_include
 
@@ -135,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
 end_include
 
 begin_include
@@ -236,10 +248,28 @@ name|CS
 parameter_list|)
 function_decl|;
 name|bool
+name|isGCRelocate
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
+name|bool
 name|isGCResult
 parameter_list|(
 name|ImmutableCallSite
 name|CS
+parameter_list|)
+function_decl|;
+name|bool
+name|isGCResult
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
 parameter_list|)
 function_decl|;
 comment|/// Analogous to CallSiteBase, this provides most of the actual
@@ -320,14 +350,14 @@ expr_stmt|;
 block|}
 name|public
 operator|:
-typedef|typedef
+name|using
+name|arg_iterator
+operator|=
 name|typename
 name|CallSiteTy
 operator|::
 name|arg_iterator
-name|arg_iterator
-expr_stmt|;
-block|enum
+block|;    enum
 block|{
 name|IDPos
 operator|=
@@ -353,30 +383,29 @@ name|CallArgsBeginPos
 operator|=
 literal|5
 block|,   }
-expr_stmt|;
+block|;
 name|void
-modifier|*
+operator|*
 name|operator
 name|new
-parameter_list|(
+argument_list|(
 name|size_t
-parameter_list|,
+argument_list|,
 name|unsigned
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 name|delete
-function_decl|;
+block|;
 name|void
-modifier|*
+operator|*
 name|operator
 name|new
-parameter_list|(
-name|size_t
-name|s
-parameter_list|)
-init|=
+argument_list|(
+argument|size_t s
+argument_list|)
+operator|=
 name|delete
-function_decl|;
+block|;
 name|explicit
 name|operator
 name|bool
@@ -763,12 +792,11 @@ name|I
 return|;
 block|}
 name|ValueTy
-modifier|*
+operator|*
 name|getArgument
-parameter_list|(
-name|unsigned
-name|Index
-parameter_list|)
+argument_list|(
+argument|unsigned Index
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -779,7 +807,7 @@ argument_list|()
 operator|&&
 literal|"out of bounds!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 operator|*
 operator|(
@@ -814,23 +842,19 @@ comment|/// \brief Return true if the call or the callee has the given attribute
 name|bool
 name|paramHasAttr
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|A
+argument|Attribute::AttrKind A
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|Function
-modifier|*
+operator|*
 name|F
-init|=
+operator|=
 name|getCalledFunction
 argument_list|()
-decl_stmt|;
+block|;
 return|return
 name|getCallSite
 argument_list|()
@@ -1015,7 +1039,7 @@ name|typename
 name|CallSiteTy
 operator|::
 name|arg_iterator
-name|vm_state_begin
+name|deopt_begin
 argument_list|()
 specifier|const
 block|{
@@ -1050,14 +1074,14 @@ name|typename
 name|CallSiteTy
 operator|::
 name|arg_iterator
-name|vm_state_end
+name|deopt_end
 argument_list|()
 specifier|const
 block|{
 name|auto
 name|I
 operator|=
-name|vm_state_begin
+name|deopt_begin
 argument_list|()
 operator|+
 name|getNumTotalVMSArgs
@@ -1087,17 +1111,17 @@ name|iterator_range
 operator|<
 name|arg_iterator
 operator|>
-name|vm_state_args
+name|deopt_operands
 argument_list|()
 specifier|const
 block|{
 return|return
 name|make_range
 argument_list|(
-name|vm_state_begin
+name|deopt_begin
 argument_list|()
 argument_list|,
-name|vm_state_end
+name|deopt_end
 argument_list|()
 argument_list|)
 return|;
@@ -1111,7 +1135,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|vm_state_end
+name|deopt_end
 argument_list|()
 return|;
 block|}
@@ -1182,7 +1206,7 @@ operator|>
 name|getRelocates
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Get the experimental_gc_result call tied to this statepoint.  Can be
 comment|/// nullptr if there isn't a gc_result tied to this statepoint.  Guaranteed to
 comment|/// be a CallInst if non-null.
@@ -1226,27 +1250,12 @@ return|return
 name|nullptr
 return|;
 block|}
-end_decl_stmt
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|NDEBUG
-end_ifndef
-
-begin_comment
 comment|/// Asserts if this statepoint is malformed.  Common cases for failure
-end_comment
-
-begin_comment
 comment|/// include incorrect length prefixes for variable length sections or
-end_comment
-
-begin_comment
 comment|/// illegal values for parameters.
-end_comment
-
-begin_function
 name|void
 name|verify
 parameter_list|()
@@ -1289,13 +1298,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|vm_state_begin
+name|deopt_begin
 argument_list|()
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|vm_state_end
+name|deopt_end
 argument_list|()
 expr_stmt|;
 operator|(
@@ -1311,15 +1320,16 @@ name|gc_args_end
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// A specialization of it's base class for read only access
 end_comment
 
@@ -1344,22 +1354,21 @@ decl_stmt|,
 name|ImmutableCallSite
 decl|>
 block|{
-typedef|typedef
+name|using
+name|Base
+init|=
 name|StatepointBase
 operator|<
 specifier|const
 name|Function
-operator|,
-specifier|const
+decl_stmt|, const
 name|Instruction
-operator|,
-specifier|const
+decl_stmt|, const
 name|Value
-operator|,
+decl_stmt|,
 name|ImmutableCallSite
-operator|>
-name|Base
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -1418,19 +1427,20 @@ decl_stmt|,
 name|CallSite
 decl|>
 block|{
-typedef|typedef
+name|using
+name|Base
+init|=
 name|StatepointBase
 operator|<
 name|Function
-operator|,
+decl_stmt|,
 name|Instruction
-operator|,
+decl_stmt|,
 name|Value
-operator|,
+decl_stmt|,
 name|CallSite
-operator|>
-name|Base
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -1482,7 +1492,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1510,7 +1519,6 @@ name|experimental_gc_result
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1695,7 +1703,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1714,7 +1721,6 @@ name|experimental_gc_relocate
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1853,7 +1859,6 @@ block|{
 name|public
 operator|:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1872,7 +1877,6 @@ name|experimental_gc_result
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2124,7 +2128,7 @@ begin_function_decl
 name|StatepointDirectives
 name|parseStatepointDirectivesFromAttrs
 parameter_list|(
-name|AttributeSet
+name|AttributeList
 name|AS
 parameter_list|)
 function_decl|;

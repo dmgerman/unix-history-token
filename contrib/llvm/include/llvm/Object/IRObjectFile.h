@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Object/IRSymtab.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/ModuleSymbolTable.h"
 end_include
 
@@ -81,6 +87,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|BitcodeModule
+decl_stmt|;
 name|class
 name|Mangler
 decl_stmt|;
@@ -180,7 +189,6 @@ argument_list|()
 specifier|const
 block|;
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -239,6 +247,46 @@ argument|LLVMContext&Context
 argument_list|)
 block|; }
 decl_stmt|;
+comment|/// The contents of a bitcode file and its irsymtab. Any underlying data
+comment|/// for the irsymtab are owned by Symtab and Strtab.
+struct|struct
+name|IRSymtabFile
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|BitcodeModule
+operator|>
+name|Mods
+expr_stmt|;
+name|SmallVector
+operator|<
+name|char
+operator|,
+literal|0
+operator|>
+name|Symtab
+operator|,
+name|Strtab
+expr_stmt|;
+name|irsymtab
+operator|::
+name|Reader
+name|TheReader
+expr_stmt|;
+block|}
+struct|;
+comment|/// Reads a bitcode file, creating its irsymtab if necessary.
+name|Expected
+operator|<
+name|IRSymtabFile
+operator|>
+name|readIRSymtab
+argument_list|(
+argument|MemoryBufferRef MBRef
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt

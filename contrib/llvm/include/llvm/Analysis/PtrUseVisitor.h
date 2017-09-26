@@ -558,7 +558,23 @@ name|PtrUseVisitorBase
 argument_list|(
 argument|DL
 argument_list|)
-block|{}
+block|{
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|is_base_of
+operator|<
+name|PtrUseVisitor
+argument_list|,
+name|DerivedT
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"Must pass the derived type to this template!"
+argument_list|)
+block|;   }
 comment|/// \brief Recursively visit the uses of the given pointer.
 comment|/// \returns An info struct about the pointer. See \c PtrInfo for details.
 name|PtrInfo

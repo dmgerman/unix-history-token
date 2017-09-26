@@ -1215,7 +1215,13 @@ comment|/// MO_OPTION_MASK - Most flags are mutually exclusive; this mask select
 comment|/// just that part of the flag set.
 name|MO_OPTION_MASK
 init|=
-literal|0x1f
+literal|0x0f
+block|,
+comment|/// MO_SBREL - On a symbol operand, this represents a static base relative
+comment|/// relocation. Used in movw and movt instructions.
+name|MO_SBREL
+init|=
+literal|0x10
 block|,
 comment|/// MO_DLLIMPORT - On a symbol operand, this represents that the reference
 comment|/// to the symbol is for an import stub.  This is used for DLL import

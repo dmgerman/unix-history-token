@@ -72,29 +72,31 @@ name|IPDBEnumChildren
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|ChildTypePtr
+operator|=
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|ChildType
 operator|>
-name|ChildTypePtr
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|MyType
+operator|=
 name|IPDBEnumChildren
 operator|<
 name|ChildType
 operator|>
-name|MyType
-expr_stmt|;
+block|;
 name|virtual
 operator|~
 name|IPDBEnumChildren
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|virtual
 name|uint32_t
 name|getChildCount
@@ -102,32 +104,31 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|virtual
 name|ChildTypePtr
 name|getChildAtIndex
 argument_list|(
-name|uint32_t
-name|Index
+argument|uint32_t Index
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 name|virtual
 name|ChildTypePtr
 name|getNext
-parameter_list|()
-init|=
+argument_list|()
+operator|=
 literal|0
-function_decl|;
+block|;
 name|virtual
 name|void
 name|reset
-parameter_list|()
-init|=
+argument_list|()
+operator|=
 literal|0
-function_decl|;
+block|;
 name|virtual
 name|MyType
 operator|*
@@ -136,18 +137,14 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
+block|; }
 expr_stmt|;
 block|}
-empty_stmt|;
+comment|// end namespace pdb
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace pdb
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

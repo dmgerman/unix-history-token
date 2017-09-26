@@ -314,9 +314,7 @@ specifier|const
 expr_stmt|;
 comment|/// getInstNamespace - Return the target-specific instruction namespace.
 comment|///
-name|std
-operator|::
-name|string
+name|StringRef
 name|getInstNamespace
 argument_list|()
 specifier|const

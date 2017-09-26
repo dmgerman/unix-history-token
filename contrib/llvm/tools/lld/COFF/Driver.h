@@ -161,9 +161,6 @@ name|llvm
 operator|::
 name|Optional
 expr_stmt|;
-name|class
-name|InputFile
-decl_stmt|;
 comment|// Implemented in MarkLive.cpp.
 name|void
 name|markLive
@@ -228,9 +225,9 @@ operator|::
 name|InputArgList
 name|parseLINK
 argument_list|(
-name|llvm
+name|std
 operator|::
-name|ArrayRef
+name|vector
 operator|<
 specifier|const
 name|char
@@ -477,6 +474,18 @@ name|WindowsSubsystem
 name|inferSubsystem
 parameter_list|()
 function_decl|;
+name|void
+name|invokeMSVC
+argument_list|(
+name|llvm
+operator|::
+name|opt
+operator|::
+name|InputArgList
+operator|&
+name|Args
+argument_list|)
+decl_stmt|;
 name|MemoryBufferRef
 name|takeBuffer
 argument_list|(
@@ -538,20 +547,6 @@ name|bool
 name|run
 parameter_list|()
 function_decl|;
-comment|// Driver is the owner of all opened files.
-comment|// InputFiles have MemoryBufferRefs to them.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MemoryBuffer
-operator|>>
-name|OwningMBs
-expr_stmt|;
 name|std
 operator|::
 name|list
@@ -583,17 +578,6 @@ name|Resources
 expr_stmt|;
 block|}
 empty_stmt|;
-name|void
-name|parseModuleDefs
-parameter_list|(
-name|MemoryBufferRef
-name|MB
-parameter_list|)
-function_decl|;
-name|void
-name|writeImportLibrary
-parameter_list|()
-function_decl|;
 comment|// Functions below this line are defined in DriverUtils.cpp.
 name|void
 name|printHelp
@@ -770,6 +754,21 @@ operator|&
 name|MBs
 argument_list|)
 expr_stmt|;
+name|void
+name|runMSVCLinker
+argument_list|(
+name|std
+operator|::
+name|string
+name|Rsp
+argument_list|,
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
+name|Objects
+argument_list|)
+decl_stmt|;
 comment|// Create enum with OPT_xxx values for each option in Options.td
 enum|enum
 block|{
@@ -802,6 +801,8 @@ parameter_list|,
 name|_10
 parameter_list|,
 name|_11
+parameter_list|,
+name|_12
 parameter_list|)
 value|OPT_##ID,
 include|#

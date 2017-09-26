@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/PseudoTerminal.h"
+file|"lldb/Host/PseudoTerminal.h"
 end_include
 
 begin_include

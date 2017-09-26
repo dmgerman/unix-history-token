@@ -123,9 +123,12 @@ specifier|static
 name|CMIUtilString
 name|Format
 argument_list|(
-argument|const CMIUtilString vFormating
+specifier|const
+name|char
+operator|*
+name|vFormating
 argument_list|,
-argument|...
+operator|...
 argument_list|)
 decl_stmt|;
 end_decl_stmt

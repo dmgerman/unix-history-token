@@ -98,19 +98,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/FormatEntity.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
+file|"lldb/Utility/Status.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/StructuredData.h"
 end_include
 
 begin_decl_stmt
@@ -1210,7 +1210,7 @@ operator|::
 name|Entry
 name|m_format
 block|;
-name|Error
+name|Status
 name|m_error
 block|;
 name|StringSummaryFormat

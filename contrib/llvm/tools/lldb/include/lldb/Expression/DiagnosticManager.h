@@ -473,6 +473,14 @@ name|diagnostic
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|CopyDiagnostics
+parameter_list|(
+name|DiagnosticManager
+modifier|&
+name|otherDiagnostics
+parameter_list|)
+function_decl|;
 name|size_t
 name|Printf
 parameter_list|(

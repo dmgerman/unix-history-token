@@ -132,15 +132,6 @@ begin_extern
 extern|extern
 literal|"C++"
 block|{
-ifdef|#
-directive|ifdef
-name|_LIBCPP_MSVCRT
-include|#
-directive|include
-file|"support/win32/locale_win32.h"
-endif|#
-directive|endif
-comment|// _LIBCPP_MSVCRT
 undef|#
 directive|undef
 name|abs

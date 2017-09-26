@@ -64,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -100,25 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamArray.h"
+file|"llvm/Support/BinaryStreamArray.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/Endian.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cstddef>
 end_include
 
 begin_include
@@ -167,8 +155,6 @@ return|return
 name|Kind
 return|;
 block|}
-name|private
-label|:
 name|SymbolRecordKind
 name|Kind
 decl_stmt|;
@@ -646,6 +632,11 @@ decl_stmt|;
 block|}
 struct|;
 name|BinaryAnnotationIterator
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|BinaryAnnotationIterator
 argument_list|(
 name|ArrayRef
 operator|<
@@ -659,11 +650,6 @@ argument_list|(
 argument|Annotations
 argument_list|)
 block|{}
-name|BinaryAnnotationIterator
-argument_list|()
-operator|=
-expr|default
-expr_stmt|;
 name|BinaryAnnotationIterator
 argument_list|(
 specifier|const
@@ -698,7 +684,9 @@ name|bool
 name|operator
 operator|!=
 operator|(
+specifier|const
 name|BinaryAnnotationIterator
+operator|&
 name|Other
 operator|)
 specifier|const
@@ -1513,8 +1501,6 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|llvm
-operator|::
 name|iterator_range
 operator|<
 name|BinaryAnnotationIterator
@@ -1524,8 +1510,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|make_range
 argument_list|(
 name|BinaryAnnotationIterator
@@ -1603,8 +1587,8 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|uint32_t
-name|Index
+name|PublicSymFlags
+name|Flags
 block|;
 name|uint32_t
 name|Offset
@@ -1662,7 +1646,7 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|uint32_t
+name|TypeIndex
 name|Index
 block|;
 name|RegisterId
@@ -2800,7 +2784,7 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|uint32_t
+name|TypeIndex
 name|Index
 block|;
 name|uint32_t
@@ -3009,6 +2993,31 @@ block|;
 name|StringRef
 name|Version
 block|;
+name|void
+name|setLanguage
+argument_list|(
+argument|SourceLanguage Lang
+argument_list|)
+block|{
+name|Flags
+operator|=
+name|CompileSym3Flags
+argument_list|(
+operator|(
+name|uint32_t
+argument_list|(
+name|Flags
+argument_list|)
+operator|&
+literal|0xFFFFFF00
+operator|)
+operator||
+name|uint32_t
+argument_list|(
+name|Lang
+argument_list|)
+argument_list|)
+block|;   }
 name|uint8_t
 name|getLanguage
 argument_list|()
@@ -3324,7 +3333,7 @@ block|;
 name|uint16_t
 name|Register
 block|;
-name|uint8_t
+name|FrameCookieKind
 name|CookieKind
 block|;
 name|uint8_t
@@ -3424,7 +3433,7 @@ argument_list|(
 argument|RecordOffset
 argument_list|)
 block|{}
-name|uint32_t
+name|TypeIndex
 name|BuildId
 block|;
 name|uint32_t
@@ -3538,7 +3547,7 @@ block|;
 name|TypeIndex
 name|Type
 block|;
-name|uint16_t
+name|RegisterId
 name|Register
 block|;
 name|StringRef
@@ -3761,27 +3770,27 @@ block|; }
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|CVSymbol
+init|=
 name|CVRecord
 operator|<
 name|SymbolKind
 operator|>
-name|CVSymbol
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
-begin_typedef
-typedef|typedef
-name|msf
-operator|::
+begin_decl_stmt
+name|using
+name|CVSymbolArray
+init|=
 name|VarStreamArray
 operator|<
 name|CVSymbol
 operator|>
-name|CVSymbolArray
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|}

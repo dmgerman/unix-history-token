@@ -193,6 +193,82 @@ literal|2
 operator|>
 name|ModuleId
 expr_stmt|;
+comment|/// The signature of a module, which is a hash of the AST content.
+name|struct
+name|ASTFileSignature
+range|:
+name|std
+operator|::
+name|array
+operator|<
+name|uint32_t
+decl_stmt|, 5>
+block|{
+name|ASTFileSignature
+argument_list|(
+name|std
+operator|::
+name|array
+operator|<
+name|uint32_t
+argument_list|,
+literal|5
+operator|>
+name|S
+operator|=
+block|{
+block|{
+literal|0
+block|}
+block|}
+argument_list|)
+operator|:
+name|std
+operator|::
+name|array
+operator|<
+name|uint32_t
+operator|,
+literal|5
+operator|>
+operator|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|S
+argument_list|)
+operator|)
+block|{}
+name|explicit
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|this
+operator|!=
+name|std
+operator|::
+name|array
+operator|<
+name|uint32_t
+operator|,
+literal|5
+operator|>
+operator|(
+block|{
+block|{
+literal|0
+block|}
+block|}
+operator|)
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief Describes a module or submodule.
 name|class
 name|Module
@@ -209,6 +285,23 @@ comment|/// \brief The location of the module definition.
 name|SourceLocation
 name|DefinitionLoc
 decl_stmt|;
+enum|enum
+name|ModuleKind
+block|{
+comment|/// \brief This is a module that was defined by a module map and built out
+comment|/// of header files.
+name|ModuleMapModule
+block|,
+comment|/// \brief This is a C++ Modules TS module interface unit.
+name|ModuleInterfaceUnit
+block|}
+enum|;
+comment|/// \brief The kind of this module.
+name|ModuleKind
+name|Kind
+init|=
+name|ModuleMapModule
+decl_stmt|;
 comment|/// \brief The parent of this module. This will be NULL for the top-level
 comment|/// module.
 name|Module
@@ -223,6 +316,13 @@ name|DirectoryEntry
 modifier|*
 name|Directory
 decl_stmt|;
+comment|/// \brief The presumed file name for the module map defining this module.
+comment|/// Only non-empty when building from preprocessed source.
+name|std
+operator|::
+name|string
+name|PresumedModuleMapFile
+expr_stmt|;
 comment|/// \brief The umbrella header or directory.
 name|llvm
 operator|::
@@ -239,7 +339,7 @@ operator|>
 name|Umbrella
 expr_stmt|;
 comment|/// \brief The module signature.
-name|uint64_t
+name|ASTFileSignature
 name|Signature
 decl_stmt|;
 comment|/// \brief The name of the umbrella entry, as written in the module map.
@@ -411,6 +511,11 @@ comment|/// module map file but has not been resolved to a file.
 struct|struct
 name|UnresolvedHeaderDirective
 block|{
+name|HeaderKind
+name|Kind
+init|=
+name|HK_Normal
+decl_stmt|;
 name|SourceLocation
 name|FileNameLoc
 decl_stmt|;
@@ -421,9 +526,38 @@ name|FileName
 expr_stmt|;
 name|bool
 name|IsUmbrella
+init|=
+name|false
 decl_stmt|;
+name|bool
+name|HasBuiltinHeader
+init|=
+name|false
+decl_stmt|;
+name|Optional
+operator|<
+name|off_t
+operator|>
+name|Size
+expr_stmt|;
+name|Optional
+operator|<
+name|time_t
+operator|>
+name|ModTime
+expr_stmt|;
 block|}
 struct|;
+comment|/// Headers that are mentioned in the module map file but that we have not
+comment|/// yet attempted to resolve to a file on the file system.
+name|SmallVector
+operator|<
+name|UnresolvedHeaderDirective
+operator|,
+literal|1
+operator|>
+name|UnresolvedHeaders
+expr_stmt|;
 comment|/// \brief Headers that are mentioned in the module map file but could not be
 comment|/// found on the file system.
 name|SmallVector
@@ -938,11 +1072,15 @@ return|;
 block|}
 comment|/// \brief Retrieve the full name of this module, including the path from
 comment|/// its top-level module.
+comment|/// \param AllowStringLiterals If \c true, components that might not be
+comment|///        lexically valid as identifiers will be emitted as string literals.
 name|std
 operator|::
 name|string
 name|getFullModuleName
-argument_list|()
+argument_list|(
+argument|bool AllowStringLiterals = false
+argument_list|)
 specifier|const
 expr_stmt|;
 comment|/// \brief Whether the full name of this module is equal to joining

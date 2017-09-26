@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-------- StackMapParser.h - StackMap Parsing Support -------*- C++ -*-===//
+comment|//===- StackMapParser.h - StackMap Parsing Support --------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -52,7 +52,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -400,10 +424,6 @@ name|P
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|// Forward-declare RecordAccessor so we can friend it below.
-name|class
-name|RecordAccessor
-decl_stmt|;
 name|enum
 name|class
 name|LocationKind
@@ -785,20 +805,22 @@ name|StackMapV2Parser
 decl_stmt|;
 name|public
 label|:
-typedef|typedef
+name|using
+name|location_iterator
+init|=
 name|AccessorIterator
 operator|<
 name|LocationAccessor
 operator|>
-name|location_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|liveout_iterator
+init|=
 name|AccessorIterator
 operator|<
 name|LiveOutAccessor
 operator|>
-name|liveout_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// Get the patchpoint/stackmap ID for this record.
 name|uint64_t
 name|getID
@@ -1285,27 +1307,30 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-typedef|typedef
+name|using
+name|function_iterator
+operator|=
 name|AccessorIterator
 operator|<
 name|FunctionAccessor
 operator|>
-name|function_iterator
 expr_stmt|;
-typedef|typedef
+name|using
+name|constant_iterator
+init|=
 name|AccessorIterator
 operator|<
 name|ConstantAccessor
 operator|>
-name|constant_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|record_iterator
+init|=
 name|AccessorIterator
 operator|<
 name|RecordAccessor
 operator|>
-name|record_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// Get the version number of this stackmap. (Always returns 2).
 name|unsigned
 name|getVersion
@@ -1889,11 +1914,19 @@ name|StackMapRecordOffsets
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|};  }
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_STACKMAPPARSER_H
+end_comment
 
 end_unit
 

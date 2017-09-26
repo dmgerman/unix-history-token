@@ -381,7 +381,7 @@ operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
-comment|// Consider having this return an lldb_private::Error.
+comment|// Consider having this return an lldb_private::Status.
 name|uint32_t
 name|UpdateThreadList
 parameter_list|(

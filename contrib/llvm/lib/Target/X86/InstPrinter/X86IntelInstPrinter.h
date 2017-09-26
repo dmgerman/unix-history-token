@@ -879,10 +879,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_X86_INSTPRINTER_X86INTELINSTPRINTER_H
+end_comment
 
 end_unit
 

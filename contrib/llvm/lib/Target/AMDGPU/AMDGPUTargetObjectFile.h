@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"AMDGPU.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 end_include
 

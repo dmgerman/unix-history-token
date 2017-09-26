@@ -168,7 +168,7 @@ block|}
 comment|//------------------------------------------------------------
 comment|// lldb_private::Platform functions
 comment|//------------------------------------------------------------
-name|Error
+name|Status
 name|ResolveExecutable
 argument_list|(
 argument|const ModuleSpec&module_spec
@@ -197,7 +197,7 @@ name|GetDescription
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|GetFileWithUUID
 argument_list|(
 argument|const FileSpec&platform_file
@@ -226,14 +226,14 @@ argument|ProcessInstanceInfoList&process_infos
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|(
 argument|ProcessLaunchInfo&launch_info
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|KillProcess
 argument_list|(
 argument|const lldb::pid_t pid
@@ -254,7 +254,7 @@ argument_list|,
 comment|// Can be NULL, if NULL create a
 comment|// new target, else use existing
 comment|// one
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -271,7 +271,7 @@ argument|Target *target
 argument_list|,
 comment|// Can be NULL, if NULL create a new
 comment|// target, else use existing one
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -363,19 +363,19 @@ argument_list|()
 specifier|const
 name|override
 block|;
-name|Error
+name|Status
 name|ConnectRemote
 argument_list|(
 argument|Args&args
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|DisconnectRemote
 argument_list|()
 name|override
 block|;
-name|Error
+name|Status
 name|MakeDirectory
 argument_list|(
 argument|const FileSpec&file_spec
@@ -384,7 +384,7 @@ argument|uint32_t file_permissions
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|GetFilePermissions
 argument_list|(
 argument|const FileSpec&file_spec
@@ -393,7 +393,7 @@ argument|uint32_t&file_permissions
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetFilePermissions
 argument_list|(
 argument|const FileSpec&file_spec
@@ -413,7 +413,7 @@ argument|uint32_t flags
 argument_list|,
 argument|uint32_t mode
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -422,7 +422,7 @@ name|CloseFile
 argument_list|(
 argument|lldb::user_id_t fd
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -437,7 +437,7 @@ argument|void *data_ptr
 argument_list|,
 argument|uint64_t len
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -452,7 +452,7 @@ argument|const void *data
 argument_list|,
 argument|uint64_t len
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 name|override
 block|;
@@ -465,7 +465,7 @@ argument|const FileSpec&file_spec
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|PutFile
 argument_list|(
 argument|const FileSpec&source
@@ -478,7 +478,7 @@ argument|uint32_t gid = UINT32_MAX
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|CreateSymlink
 argument_list|(
 argument|const FileSpec&src
@@ -494,14 +494,14 @@ argument|const FileSpec&file_spec
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|Unlink
 argument_list|(
 argument|const FileSpec&path
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|RunShellCommand
 argument_list|(
 argument|const char *command
@@ -553,7 +553,7 @@ argument|lldb_private::Debugger&debugger
 argument_list|,
 argument|lldb_private::Target *target
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -562,7 +562,7 @@ name|ConnectToWaitingProcesses
 argument_list|(
 argument|lldb_private::Debugger&debugger
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;

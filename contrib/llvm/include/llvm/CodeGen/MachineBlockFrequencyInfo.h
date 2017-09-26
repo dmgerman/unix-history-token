@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MachineBlockFrequencyInfo.h - MBB Frequency Analysis -*- C++ -*-----===//
+comment|//===- MachineBlockFrequencyInfo.h - MBB Frequency Analysis -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -80,19 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<climits>
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MachineBasicBlock
-decl_stmt|;
-name|class
-name|MachineBranchProbabilityInfo
-decl_stmt|;
 name|template
 operator|<
 name|class
@@ -101,6 +101,21 @@ operator|>
 name|class
 name|BlockFrequencyInfoImpl
 expr_stmt|;
+name|class
+name|MachineBasicBlock
+decl_stmt|;
+name|class
+name|MachineBranchProbabilityInfo
+decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineLoopInfo
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|/// MachineBlockFrequencyInfo pass uses BlockFrequencyInfoImpl implementation
 comment|/// to estimate machine basic block frequencies.
 name|class
@@ -109,13 +124,14 @@ range|:
 name|public
 name|MachineFunctionPass
 block|{
-typedef|typedef
+name|using
+name|ImplType
+operator|=
 name|BlockFrequencyInfoImpl
 operator|<
 name|MachineBasicBlock
 operator|>
-name|ImplType
-expr_stmt|;
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -123,45 +139,61 @@ operator|<
 name|ImplType
 operator|>
 name|MBFI
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 specifier|static
 name|char
 name|ID
-decl_stmt|;
+block|;
 name|MachineBlockFrequencyInfo
 argument_list|()
-expr_stmt|;
+block|;
 operator|~
 name|MachineBlockFrequencyInfo
 argument_list|()
 name|override
-expr_stmt|;
+block|;
 name|void
 name|getAnalysisUsage
 argument_list|(
-name|AnalysisUsage
-operator|&
-name|AU
+argument|AnalysisUsage&AU
 argument_list|)
-decl|const
+specifier|const
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|runOnMachineFunction
 argument_list|(
+argument|MachineFunction&F
+argument_list|)
+name|override
+block|;
+comment|/// calculate - compute block frequency info for the given function.
+name|void
+name|calculate
+argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|F
+argument_list|,
+specifier|const
+name|MachineBranchProbabilityInfo
+operator|&
+name|MBPI
+argument_list|,
+specifier|const
+name|MachineLoopInfo
+operator|&
+name|MLI
 argument_list|)
-name|override
-decl_stmt|;
+block|;
 name|void
 name|releaseMemory
 argument_list|()
 name|override
-expr_stmt|;
+block|;
 comment|/// getblockFreq - Return block frequency. Return 0 if we don't have the
 comment|/// information. Please note that initial frequency is equal to 1024. It means
 comment|/// that we should not rely on the value itself, but only on the comparison to
@@ -170,13 +202,10 @@ comment|///
 name|BlockFrequency
 name|getBlockFreq
 argument_list|(
-specifier|const
-name|MachineBasicBlock
-operator|*
-name|MBB
+argument|const MachineBasicBlock *MBB
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|Optional
 operator|<
 name|uint64_t
@@ -186,7 +215,7 @@ argument_list|(
 argument|const MachineBasicBlock *MBB
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 name|Optional
 operator|<
 name|uint64_t
@@ -196,76 +225,75 @@ argument_list|(
 argument|uint64_t Freq
 argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 specifier|const
 name|MachineFunction
 operator|*
 name|getFunction
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 specifier|const
 name|MachineBranchProbabilityInfo
 operator|*
 name|getMBPI
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|void
 name|view
-argument_list|()
+argument_list|(
+argument|const Twine&Name
+argument_list|,
+argument|bool isSimple = true
+argument_list|)
 specifier|const
-expr_stmt|;
+block|;
 comment|// Print the block frequency Freq to OS using the current functions entry
 comment|// frequency to convert freq into a relative decimal form.
 name|raw_ostream
-modifier|&
+operator|&
 name|printBlockFreq
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
 argument_list|,
-specifier|const
-name|BlockFrequency
-name|Freq
+argument|const BlockFrequency Freq
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|// Convenience method that attempts to look up the frequency associated with
 comment|// BB and print it to OS.
 name|raw_ostream
-modifier|&
+operator|&
 name|printBlockFreq
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
 argument_list|,
-specifier|const
-name|MachineBasicBlock
-operator|*
-name|MBB
+argument|const MachineBasicBlock *MBB
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 name|uint64_t
 name|getEntryFreq
 argument_list|()
 specifier|const
-expr_stmt|;
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEBLOCKFREQUENCYINFO_H
+end_comment
 
 end_unit
 

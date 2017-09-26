@@ -43,10 +43,6 @@ directive|define
 name|liblldb_AddressResolverName_h_
 end_define
 
-begin_comment
-comment|// Project includes
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -56,8 +52,68 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/RegularExpression.h"
+file|"lldb/Core/SearchFilter.h"
 end_include
+
+begin_comment
+comment|// for Searcher, Searcher::Call...
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_comment
+comment|// for ConstString
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/RegularExpression.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_comment
+comment|// for DISALLOW_COPY_AND_ASSIGN
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Address
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|Stream
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+name|class
+name|SymbolContext
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace

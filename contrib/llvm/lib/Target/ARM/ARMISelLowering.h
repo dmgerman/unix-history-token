@@ -447,6 +447,12 @@ comment|// ...signed
 name|VMULLu
 block|,
 comment|// ...unsigned
+name|SMULWB
+block|,
+comment|// Signed multiply word by half word, bottom
+name|SMULWT
+block|,
+comment|// Signed multiply word by half word, top
 name|UMLAL
 block|,
 comment|// 64bit Unsigned Accumulate Multiply
@@ -456,6 +462,30 @@ comment|// 64bit Signed Accumulate Multiply
 name|UMAAL
 block|,
 comment|// 64-bit Unsigned Accumulate Accumulate Multiply
+name|SMLALBB
+block|,
+comment|// 64-bit signed accumulate multiply bottom, bottom 16
+name|SMLALBT
+block|,
+comment|// 64-bit signed accumulate multiply bottom, top 16
+name|SMLALTB
+block|,
+comment|// 64-bit signed accumulate multiply top, bottom 16
+name|SMLALTT
+block|,
+comment|// 64-bit signed accumulate multiply top, top 16
+name|SMLALD
+block|,
+comment|// Signed multiply accumulate long dual
+name|SMLALDX
+block|,
+comment|// Signed multiply accumulate long dual exchange
+name|SMLSLD
+block|,
+comment|// Signed multiply subtract long dual
+name|SMLSLDX
+block|,
+comment|// Signed multiply subtract long dual exchange
 comment|// Operands of the standard BUILD_VECTOR node are not legalized, which
 comment|// is fine if BUILD_VECTORs are always lowered to shuffles or other
 comment|// operations, but for ARM some BUILD_VECTORs are legal as-is and their
@@ -897,9 +927,9 @@ name|computeKnownBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
-argument|APInt&KnownZero
+argument|KnownBits&Known
 argument_list|,
-argument|APInt&KnownOne
+argument|const APInt&DemandedElts
 argument_list|,
 argument|const SelectionDAG&DAG
 argument_list|,
@@ -1342,11 +1372,9 @@ name|emitLeadingFence
 argument_list|(
 argument|IRBuilder<>&Builder
 argument_list|,
+argument|Instruction *Inst
+argument_list|,
 argument|AtomicOrdering Ord
-argument_list|,
-argument|bool IsStore
-argument_list|,
-argument|bool IsLoad
 argument_list|)
 specifier|const
 name|override
@@ -1357,11 +1385,9 @@ name|emitTrailingFence
 argument_list|(
 argument|IRBuilder<>&Builder
 argument_list|,
+argument|Instruction *Inst
+argument_list|,
 argument|AtomicOrdering Ord
-argument_list|,
-argument|bool IsStore
-argument_list|,
-argument|bool IsLoad
 argument_list|)
 specifier|const
 name|override
@@ -1465,6 +1491,30 @@ specifier|const
 name|override
 block|;
 name|bool
+name|canMergeStoresTo
+argument_list|(
+argument|unsigned AddressSpace
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|const SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// Do not merge to larger than i32.
+return|return
+operator|(
+name|MemVT
+operator|.
+name|getSizeInBits
+argument_list|()
+operator|<=
+literal|32
+operator|)
+return|;
+block|}
+name|bool
 name|isCheapToSpeculateCttz
 argument_list|()
 specifier|const
@@ -1476,6 +1526,21 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|bool
+name|convertSetCCLogicToBitwiseLogic
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|VT
+operator|.
+name|isScalarInteger
+argument_list|()
+return|;
+block|}
 name|bool
 name|supportSwiftError
 argument_list|()
@@ -1517,6 +1582,37 @@ argument_list|,
 argument|bool isVarArg
 argument_list|)
 specifier|const
+block|;
+comment|/// Returns true if \p VecTy is a legal interleaved access type. This
+comment|/// function checks the vector element type and the overall width of the
+comment|/// vector.
+name|bool
+name|isLegalInterleavedAccessType
+argument_list|(
+argument|VectorType *VecTy
+argument_list|,
+argument|const DataLayout&DL
+argument_list|)
+specifier|const
+block|;
+comment|/// Returns the number of interleaved accesses that will be generated when
+comment|/// lowering accesses of the given type.
+name|unsigned
+name|getNumInterleavedAccesses
+argument_list|(
+argument|VectorType *VecTy
+argument_list|,
+argument|const DataLayout&DL
+argument_list|)
+specifier|const
+block|;
+name|void
+name|finalizeLowering
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
 block|;
 name|protected
 operator|:
@@ -1796,6 +1892,30 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|LowerBlockAddress
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerConstantPool
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerGlobalAddress
 argument_list|(
 name|SDValue
 name|Op
@@ -2704,6 +2824,7 @@ decl_stmt|;
 name|bool
 name|mayBeEmittedAsTailCall
 argument_list|(
+specifier|const
 name|CallInst
 operator|*
 name|CI
@@ -2789,6 +2910,9 @@ specifier|const
 name|SDLoc
 operator|&
 name|dl
+argument_list|,
+name|bool
+name|InvalidOnQNaN
 argument_list|)
 decl|const
 decl_stmt|;

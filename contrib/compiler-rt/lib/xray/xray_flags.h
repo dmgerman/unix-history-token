@@ -96,7 +96,7 @@ undef|#
 directive|undef
 name|XRAY_FLAG
 name|void
-name|SetDefaults
+name|setDefaults
 parameter_list|()
 function_decl|;
 block|}
@@ -117,7 +117,7 @@ name|xray_flags_dont_use_directly
 return|;
 block|}
 name|void
-name|InitializeFlags
+name|initializeFlags
 parameter_list|()
 function_decl|;
 block|}

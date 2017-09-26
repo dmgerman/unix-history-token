@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
+file|"lldb/Utility/StructuredData.h"
 end_include
 
 begin_decl_stmt
@@ -215,7 +215,7 @@ comment|///     The error if formatting the object contents failed; otherwise,
 comment|///     success.
 comment|// -------------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|GetDescription
 argument_list|(
 specifier|const

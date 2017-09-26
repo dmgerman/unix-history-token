@@ -62,13 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ScheduleDAG.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -83,15 +101,6 @@ name|llvm
 block|{
 name|class
 name|raw_ostream
-decl_stmt|;
-name|class
-name|IntEqClasses
-decl_stmt|;
-name|class
-name|ScheduleDAGInstrs
-decl_stmt|;
-name|class
-name|SUnit
 decl_stmt|;
 comment|/// \brief Represent the ILP of the subDAG rooted at a DAG node.
 comment|///
@@ -262,23 +271,19 @@ name|NodeData
 block|{
 name|unsigned
 name|InstrCount
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|SubtreeID
+init|=
+name|InvalidSubtreeID
 decl_stmt|;
 name|NodeData
 argument_list|()
-operator|:
-name|InstrCount
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|SubtreeID
-argument_list|(
-argument|InvalidSubtreeID
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 block|}
 struct|;
 comment|/// \brief Per-Subtree data computed during DFS.
@@ -287,23 +292,19 @@ name|TreeData
 block|{
 name|unsigned
 name|ParentTreeID
+init|=
+name|InvalidSubtreeID
 decl_stmt|;
 name|unsigned
 name|SubInstrCount
+init|=
+literal|0
 decl_stmt|;
 name|TreeData
 argument_list|()
-operator|:
-name|ParentTreeID
-argument_list|(
-name|InvalidSubtreeID
-argument_list|)
-operator|,
-name|SubInstrCount
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 block|}
 struct|;
 comment|/// \brief Record a connection between subtrees and the connection level.
@@ -370,8 +371,7 @@ operator|<
 name|Connection
 operator|,
 literal|4
-operator|>
-expr|>
+operator|>>
 name|SubtreeConnections
 expr_stmt|;
 comment|/// Cache the current connection level of each subtree.
@@ -666,13 +666,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_SCHEDULEDFS_H
+end_comment
 
 end_unit
 

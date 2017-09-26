@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===------ IRCompileLayer.h -- Eagerly compile IR for JIT ------*- C++ -*-===//
+comment|//===- IRCompileLayer.h -- Eagerly compile IR for JIT -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/ObjectCache.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Object/ObjectFile.h"
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
@@ -83,65 +83,49 @@ directive|include
 file|<memory>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Module
+decl_stmt|;
 name|namespace
 name|orc
 block|{
 comment|/// @brief Eager IR compiling layer.
 comment|///
-comment|///   This layer accepts sets of LLVM IR Modules (via addModuleSet). It
-comment|/// immediately compiles each IR module to an object file (each IR Module is
-comment|/// compiled separately). The resulting set of object files is then added to
-comment|/// the layer below, which must implement the object layer concept.
+comment|///   This layer immediately compiles each IR module added via addModule to an
+comment|/// object file and adds this module file to the layer below, which must
+comment|/// implement the object layer concept.
 name|template
 operator|<
 name|typename
 name|BaseLayerT
+operator|,
+name|typename
+name|CompileFtor
 operator|>
 name|class
 name|IRCompileLayer
 block|{
 name|public
 operator|:
-typedef|typedef
-name|std
-operator|::
-name|function
-operator|<
-name|object
-operator|::
-name|OwningBinary
-operator|<
-name|object
-operator|::
-name|ObjectFile
-operator|>
-operator|(
-name|Module
-operator|&
-operator|)
-operator|>
-name|CompileFtor
-expr_stmt|;
-name|private
-operator|:
-typedef|typedef
+comment|/// @brief Handle to a compiled module.
+name|using
+name|ModuleHandleT
+operator|=
 name|typename
 name|BaseLayerT
 operator|::
-name|ObjSetHandleT
-name|ObjSetHandleT
-expr_stmt|;
-name|public
-label|:
-comment|/// @brief Handle to a set of compiled modules.
-typedef|typedef
-name|ObjSetHandleT
-name|ModuleSetHandleT
-typedef|;
+name|ObjHandleT
+block|;
 comment|/// @brief Construct an IRCompileLayer with the given BaseLayer, which must
 comment|///        implement the ObjectLayer concept.
 name|IRCompileLayer
@@ -150,195 +134,81 @@ argument|BaseLayerT&BaseLayer
 argument_list|,
 argument|CompileFtor Compile
 argument_list|)
-block|:
+operator|:
 name|BaseLayer
 argument_list|(
 name|BaseLayer
 argument_list|)
-operator|,
+block|,
 name|Compile
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Compile
-argument_list|)
-argument_list|)
-operator|,
-name|ObjCache
-argument_list|(
-argument|nullptr
+argument|std::move(Compile)
 argument_list|)
 block|{}
-comment|/// @brief Set an ObjectCache to query before compiling.
-name|void
-name|setObjectCache
-argument_list|(
-argument|ObjectCache *NewCache
-argument_list|)
-block|{
-name|ObjCache
-operator|=
-name|NewCache
-block|; }
-comment|/// @brief Compile each module in the given module set, then add the resulting
-comment|///        set of objects to the base layer along with the memory manager and
-comment|///        symbol resolver.
-comment|///
-comment|/// @return A handle for the added modules.
-name|template
-operator|<
-name|typename
-name|ModuleSetT
-operator|,
-name|typename
-name|MemoryManagerPtrT
-operator|,
-name|typename
-name|SymbolResolverPtrT
-operator|>
-name|ModuleSetHandleT
-name|addModuleSet
-argument_list|(
-argument|ModuleSetT Ms
-argument_list|,
-argument|MemoryManagerPtrT MemMgr
-argument_list|,
-argument|SymbolResolverPtrT Resolver
-argument_list|)
-block|{
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|object
-operator|::
-name|OwningBinary
-operator|<
-name|object
-operator|::
-name|ObjectFile
-operator|>>>
-name|Objects
-block|;
-for|for
-control|(
-specifier|const
-specifier|auto
-modifier|&
-name|M
-range|:
-name|Ms
-control|)
-block|{
-name|auto
-name|Object
-init|=
-name|llvm
-operator|::
-name|make_unique
-operator|<
-name|object
-operator|::
-name|OwningBinary
-operator|<
-name|object
-operator|::
-name|ObjectFile
-operator|>>
-operator|(
-operator|)
-decl_stmt|;
-if|if
-condition|(
-name|ObjCache
-condition|)
-operator|*
-name|Object
-operator|=
-name|tryToLoadFromObjectCache
-argument_list|(
-operator|*
-name|M
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Object
-operator|->
-name|getBinary
+comment|/// @brief Get a reference to the compiler functor.
+name|CompileFtor
+operator|&
+name|getCompiler
 argument_list|()
-condition|)
 block|{
-operator|*
-name|Object
+return|return
+name|Compile
+return|;
+block|}
+comment|/// @brief Compile the module, and add the resulting object to the base layer
+comment|///        along with the given memory manager and symbol resolver.
+comment|///
+comment|/// @return A handle for the added module.
+name|Expected
+operator|<
+name|ModuleHandleT
+operator|>
+name|addModule
+argument_list|(
+argument|std::shared_ptr<Module> M
+argument_list|,
+argument|std::shared_ptr<JITSymbolResolver> Resolver
+argument_list|)
+block|{
+name|using
+name|CompileResult
 operator|=
+name|decltype
+argument_list|(
 name|Compile
 argument_list|(
 operator|*
 name|M
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ObjCache
-condition|)
-name|ObjCache
-operator|->
-name|notifyObjectCompiled
+argument_list|)
+block|;
+name|auto
+name|Obj
+operator|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|CompileResult
+operator|>
+operator|(
+name|Compile
 argument_list|(
-operator|&
 operator|*
 name|M
-argument_list|,
-name|Object
-operator|->
-name|getBinary
-argument_list|()
-operator|->
-name|getMemoryBufferRef
-argument_list|()
 argument_list|)
-expr_stmt|;
-block|}
-name|Objects
-operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Object
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|ModuleSetHandleT
-name|H
-init|=
+operator|)
+block|;
+return|return
 name|BaseLayer
 operator|.
-name|addObjectSet
+name|addObject
 argument_list|(
 name|std
 operator|::
 name|move
 argument_list|(
-name|Objects
-argument_list|)
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|MemMgr
+name|Obj
 argument_list|)
 argument_list|,
 name|std
@@ -348,26 +218,23 @@ argument_list|(
 name|Resolver
 argument_list|)
 argument_list|)
-decl_stmt|;
-return|return
-name|H
 return|;
 block|}
-comment|/// @brief Remove the module set associated with the handle H.
-name|void
-name|removeModuleSet
-parameter_list|(
-name|ModuleSetHandleT
-name|H
-parameter_list|)
+comment|/// @brief Remove the module associated with the handle H.
+name|Error
+name|removeModule
+argument_list|(
+argument|ModuleHandleT H
+argument_list|)
 block|{
+return|return
 name|BaseLayer
 operator|.
-name|removeObjectSet
+name|removeObject
 argument_list|(
 name|H
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 comment|/// @brief Search for the given named symbol.
 comment|/// @param Name The name of the symbol to search for.
@@ -376,15 +243,9 @@ comment|/// @return A handle for the given named symbol, if it exists.
 name|JITSymbol
 name|findSymbol
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|bool
-name|ExportedSymbolsOnly
+argument|bool ExportedSymbolsOnly
 argument_list|)
 block|{
 return|return
@@ -398,29 +259,22 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-comment|/// @brief Get the address of the given symbol in the context of the set of
-comment|///        compiled modules represented by the handle H. This call is
-comment|///        forwarded to the base layer's implementation.
-comment|/// @param H The handle for the module set to search in.
+comment|/// @brief Get the address of the given symbol in compiled module represented
+comment|///        by the handle H. This call is forwarded to the base layer's
+comment|///        implementation.
+comment|/// @param H The handle for the module to search in.
 comment|/// @param Name The name of the symbol to search for.
 comment|/// @param ExportedSymbolsOnly If true, search only for exported symbols.
 comment|/// @return A handle for the given named symbol, if it is found in the
-comment|///         given module set.
+comment|///         given module.
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
-name|ModuleSetHandleT
-name|H
+argument|ModuleHandleT H
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|bool
-name|ExportedSymbolsOnly
+argument|bool ExportedSymbolsOnly
 argument_list|)
 block|{
 return|return
@@ -436,181 +290,41 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-comment|/// @brief Immediately emit and finalize the moduleOB set represented by the
-comment|///        given handle.
-comment|/// @param H Handle for module set to emit/finalize.
-name|void
+comment|/// @brief Immediately emit and finalize the module represented by the given
+comment|///        handle.
+comment|/// @param H Handle for module to emit/finalize.
+name|Error
 name|emitAndFinalize
-parameter_list|(
-name|ModuleSetHandleT
-name|H
-parameter_list|)
+argument_list|(
+argument|ModuleHandleT H
+argument_list|)
 block|{
+return|return
 name|BaseLayer
 operator|.
 name|emitAndFinalize
 argument_list|(
 name|H
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|private
-label|:
-name|object
-operator|::
-name|OwningBinary
-operator|<
-name|object
-operator|::
-name|ObjectFile
-operator|>
-name|tryToLoadFromObjectCache
-argument_list|(
-argument|const Module&M
-argument_list|)
-block|{
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MemoryBuffer
-operator|>
-name|ObjBuffer
-operator|=
-name|ObjCache
-operator|->
-name|getObject
-argument_list|(
-operator|&
-name|M
-argument_list|)
-block|;
-if|if
-condition|(
-operator|!
-name|ObjBuffer
-condition|)
-return|return
-name|object
-operator|::
-name|OwningBinary
-operator|<
-name|object
-operator|::
-name|ObjectFile
-operator|>
-operator|(
-operator|)
-return|;
-name|Expected
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|object
-operator|::
-name|ObjectFile
-operator|>>
-name|Obj
-operator|=
-name|object
-operator|::
-name|ObjectFile
-operator|::
-name|createObjectFile
-argument_list|(
-name|ObjBuffer
-operator|->
-name|getMemBufferRef
-argument_list|()
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Obj
-condition|)
-block|{
-comment|// TODO: Actually report errors helpfully.
-name|consumeError
-argument_list|(
-name|Obj
-operator|.
-name|takeError
-argument_list|()
-argument_list|)
-expr_stmt|;
-return|return
-name|object
-operator|::
-name|OwningBinary
-operator|<
-name|object
-operator|::
-name|ObjectFile
-operator|>
-operator|(
-operator|)
-return|;
-block|}
-return|return
-name|object
-operator|::
-name|OwningBinary
-operator|<
-name|object
-operator|::
-name|ObjectFile
-operator|>
-operator|(
-name|std
-operator|::
-name|move
-argument_list|(
-operator|*
-name|Obj
-argument_list|)
-operator|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|ObjBuffer
-argument_list|)
-operator|)
-return|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
+operator|:
 name|BaseLayerT
-modifier|&
+operator|&
 name|BaseLayer
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|CompileFtor
 name|Compile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ObjectCache
-modifier|*
-name|ObjCache
-decl_stmt|;
+block|; }
+expr_stmt|;
+block|}
+comment|// end namespace orc
+block|}
 end_decl_stmt
 
 begin_comment
-unit|};  }
-comment|// End namespace orc.
-end_comment
-
-begin_comment
-unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif

@@ -81,6 +81,12 @@ directive|include
 file|"clang/Basic/OpenCLOptions.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetOptions.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -91,8 +97,7 @@ name|TargetOptions
 block|{
 name|public
 label|:
-comment|/// If given, the name of the target triple to compile for. If not given the
-comment|/// target will be selected to match the host.
+comment|/// The name of the target triple to compile for.
 name|std
 operator|::
 name|string
@@ -124,9 +129,9 @@ name|string
 name|ABI
 expr_stmt|;
 comment|/// The EABI version to use
-name|std
+name|llvm
 operator|::
-name|string
+name|EABI
 name|EABIVersion
 expr_stmt|;
 comment|/// If given, the version string of the linker in use.

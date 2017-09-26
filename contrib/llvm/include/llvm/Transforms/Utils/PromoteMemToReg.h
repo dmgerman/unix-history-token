@@ -109,8 +109,6 @@ comment|/// This function makes use of DominanceFrontier information.  This func
 comment|/// does not modify the CFG of the function at all.  All allocas must be from
 comment|/// the same function.
 comment|///
-comment|/// If AST is specified, the specified tracker is updated to reflect changes
-comment|/// made to the IR.
 name|void
 name|PromoteMemToReg
 argument_list|(
@@ -124,12 +122,6 @@ argument_list|,
 name|DominatorTree
 operator|&
 name|DT
-argument_list|,
-name|AliasSetTracker
-operator|*
-name|AST
-operator|=
-name|nullptr
 argument_list|,
 name|AssumptionCache
 operator|*

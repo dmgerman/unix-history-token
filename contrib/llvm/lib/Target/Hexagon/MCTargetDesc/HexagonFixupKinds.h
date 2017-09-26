@@ -252,6 +252,16 @@ name|fixup_Hexagon_TPREL_11_X
 block|,
 name|fixup_Hexagon_23_REG
 block|,
+name|fixup_Hexagon_27_REG
+block|,
+name|fixup_Hexagon_GD_PLT_B22_PCREL_X
+block|,
+name|fixup_Hexagon_GD_PLT_B32_PCREL_X
+block|,
+name|fixup_Hexagon_LD_PLT_B22_PCREL_X
+block|,
+name|fixup_Hexagon_LD_PLT_B32_PCREL_X
+block|,
 name|LastTargetFixupKind
 block|,
 name|NumTargetFixupKinds

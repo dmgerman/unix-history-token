@@ -249,6 +249,9 @@ block|,
 comment|// resulting in - R_MICROMIPS_TLS_DTPREL_LO16
 name|fixup_MICROMIPS_TLS_DTPREL_LO16
 block|,
+comment|// resulting in - R_MICROMIPS_TLS_GOTTPREL.
+name|fixup_MICROMIPS_GOTTPREL
+block|,
 comment|// resulting in - R_MICROMIPS_TLS_TPREL_HI16
 name|fixup_MICROMIPS_TLS_TPREL_HI16
 block|,

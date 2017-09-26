@@ -40,13 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<algorithm>
+file|<vector>
 end_include
 
 begin_decl_stmt

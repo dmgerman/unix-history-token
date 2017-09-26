@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/CharUnits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -86,6 +92,9 @@ name|clang
 block|{
 name|class
 name|ASTContext
+decl_stmt|;
+name|class
+name|CodeGenOptions
 decl_stmt|;
 name|class
 name|TargetInfo
@@ -234,6 +243,13 @@ specifier|const
 name|TargetInfo
 operator|&
 name|getTarget
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|CodeGenOptions
+operator|&
+name|getCodeGenOpts
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -490,7 +506,7 @@ argument_list|()
 return|;
 block|}
 expr|}
-block|;  }
+block|; }
 comment|// end namespace CodeGen
 block|}
 end_decl_stmt

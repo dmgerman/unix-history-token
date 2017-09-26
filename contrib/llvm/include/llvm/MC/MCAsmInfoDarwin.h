@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===---- MCAsmInfoDarwin.h - Darwin asm properties -------------*- C++ -*-===//
+comment|//===- MCAsmInfoDarwin.h - Darwin asm properties ----------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -92,10 +92,14 @@ argument|const MCSection&Section
 argument_list|)
 specifier|const
 name|override
-block|;   }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

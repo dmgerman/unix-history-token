@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCSymbolizer.h - MCSymbolizer class -------------*- C++ -*-===//
+comment|//===- llvm/MC/MCSymbolizer.h - MCSymbolizer class --------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -76,19 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cassert>
+file|<cstdint>
 end_include
 
 begin_include
@@ -122,26 +116,6 @@ comment|/// information exists right now.
 name|class
 name|MCSymbolizer
 block|{
-name|MCSymbolizer
-argument_list|(
-specifier|const
-name|MCSymbolizer
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCSymbolizer
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|protected
 label|:
 name|MCContext
@@ -184,6 +158,27 @@ argument_list|(
 argument|std::move(RelInfo)
 argument_list|)
 block|{   }
+name|MCSymbolizer
+argument_list|(
+specifier|const
+name|MCSymbolizer
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCSymbolizer
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCSymbolizer
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|virtual
 operator|~
 name|MCSymbolizer
@@ -258,10 +253,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCDISASSEMBLER_MCSYMBOLIZER_H
+end_comment
 
 end_unit
 

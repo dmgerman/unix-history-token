@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Function.h - Class to represent a single function --*- C++ -*-===//
+comment|//===- llvm/Function.h - Class to represent a single function ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -78,6 +78,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist_node.h"
 end_include
 
@@ -85,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -120,7 +132,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DerivedTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/GlobalObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/GlobalValue.h"
 end_include
 
 begin_include
@@ -145,6 +169,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -187,6 +217,21 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|AssemblyAnnotationWriter
+decl_stmt|;
+name|class
+name|Constant
+decl_stmt|;
+name|class
+name|DISubprogram
+decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -196,16 +241,13 @@ name|class
 name|Optional
 expr_stmt|;
 name|class
-name|AssemblyAnnotationWriter
+name|raw_ostream
 decl_stmt|;
 name|class
-name|FunctionType
+name|Type
 decl_stmt|;
 name|class
-name|LLVMContext
-decl_stmt|;
-name|class
-name|DISubprogram
+name|User
 decl_stmt|;
 name|class
 name|Function
@@ -221,45 +263,42 @@ decl|>
 block|{
 name|public
 label|:
-typedef|typedef
-name|SymbolTableList
-operator|<
-name|Argument
-operator|>
-name|ArgumentListType
-expr_stmt|;
-typedef|typedef
+name|using
+name|BasicBlockListType
+init|=
 name|SymbolTableList
 operator|<
 name|BasicBlock
 operator|>
-name|BasicBlockListType
-expr_stmt|;
+decl_stmt|;
 comment|// BasicBlock iterators...
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|BasicBlockListType
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
 name|BasicBlockListType
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
-typedef|typedef
-name|ArgumentListType
-operator|::
-name|iterator
+decl_stmt|;
+name|using
 name|arg_iterator
-expr_stmt|;
-typedef|typedef
-name|ArgumentListType
-operator|::
-name|const_iterator
+init|=
+name|Argument
+operator|*
+decl_stmt|;
+name|using
 name|const_arg_iterator
-expr_stmt|;
+init|=
+specifier|const
+name|Argument
+operator|*
+decl_stmt|;
 name|private
 label|:
 comment|// Important things that make up a function!
@@ -268,10 +307,16 @@ name|BasicBlocks
 decl_stmt|;
 comment|///< The basic blocks
 name|mutable
-name|ArgumentListType
-name|ArgumentList
+name|Argument
+modifier|*
+name|Arguments
+init|=
+name|nullptr
 decl_stmt|;
 comment|///< The formal arguments
+name|size_t
+name|NumArgs
+decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -281,7 +326,7 @@ operator|>
 name|SymTab
 expr_stmt|;
 comment|///< Symbol table of args/instructions
-name|AttributeSet
+name|AttributeList
 name|AttributeSets
 decl_stmt|;
 comment|///< Parameter attributes
@@ -344,6 +389,10 @@ name|void
 name|BuildLazyArguments
 parameter_list|()
 function_decl|const;
+name|void
+name|clearArguments
+parameter_list|()
+function_decl|;
 comment|/// Function ctor - If the (optional) Module argument is specified, the
 comment|/// function is automatically inserted into the end of the function list for
 comment|/// the module.
@@ -385,7 +434,6 @@ decl_stmt|;
 operator|~
 name|Function
 argument_list|()
-name|override
 expr_stmt|;
 specifier|static
 name|Function
@@ -433,20 +481,39 @@ argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
-comment|/// Returns the type of the ret val.
-name|Type
-operator|*
-name|getReturnType
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// Returns the FunctionType for me.
 name|FunctionType
 operator|*
 name|getFunctionType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|getValueType
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Returns the type of the ret val.
+name|Type
+operator|*
+name|getReturnType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFunctionType
+argument_list|()
+operator|->
+name|getReturnType
+argument_list|()
+return|;
+block|}
 comment|/// getContext - Return a reference to the LLVMContext associated with this
 comment|/// function.
 name|LLVMContext
@@ -461,19 +528,65 @@ name|bool
 name|isVarArg
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|getFunctionType
+argument_list|()
+operator|->
+name|isVarArg
+argument_list|()
+return|;
+block|}
 name|bool
 name|isMaterializable
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|getGlobalObjectSubClassData
+argument_list|()
+operator|&
+operator|(
+literal|1
+operator|<<
+name|IsMaterializableBit
+operator|)
+return|;
+block|}
 name|void
 name|setIsMaterializable
 parameter_list|(
 name|bool
 name|V
 parameter_list|)
-function_decl|;
+block|{
+name|unsigned
+name|Mask
+init|=
+literal|1
+operator|<<
+name|IsMaterializableBit
+decl_stmt|;
+name|setGlobalObjectSubClassData
+argument_list|(
+operator|(
+operator|~
+name|Mask
+operator|&
+name|getGlobalObjectSubClassData
+argument_list|()
+operator|)
+operator||
+operator|(
+name|V
+condition|?
+name|Mask
+else|:
+literal|0u
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// getIntrinsicID - This method returns the ID number of the specified
 comment|/// function, or Intrinsic::not_intrinsic if the function is not an
 comment|/// intrinsic, or if the pointer is null.  This value is always defined to be
@@ -606,7 +719,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// @brief Return the attribute list for this Function.
-name|AttributeSet
+name|AttributeList
 name|getAttributes
 argument_list|()
 specifier|const
@@ -619,7 +732,7 @@ comment|/// @brief Set the attribute list for this Function.
 name|void
 name|setAttributes
 parameter_list|(
-name|AttributeSet
+name|AttributeList
 name|Attrs
 parameter_list|)
 block|{
@@ -640,7 +753,7 @@ argument_list|)
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -664,7 +777,7 @@ parameter_list|)
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -691,7 +804,7 @@ parameter_list|)
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -711,7 +824,7 @@ argument_list|)
 block|{
 name|removeAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -729,14 +842,15 @@ parameter_list|)
 block|{
 name|setAttributes
 argument_list|(
-name|AttributeSets
+name|getAttributes
+argument_list|()
 operator|.
 name|removeAttribute
 argument_list|(
 name|getContext
 argument_list|()
 argument_list|,
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -748,14 +862,28 @@ block|}
 comment|/// \brief Set the entry count for this function.
 comment|///
 comment|/// Entry count is the number of times this function was executed based on
-comment|/// pgo data.
+comment|/// pgo data. \p Imports points to a set of GUIDs that needs to be imported
+comment|/// by the function for sample PGO, to enable the same inlines as the
+comment|/// profiled optimized binary.
 name|void
 name|setEntryCount
-parameter_list|(
+argument_list|(
 name|uint64_t
 name|Count
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|DenseSet
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
+operator|>
+operator|*
+name|Imports
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 comment|/// \brief Get the entry count for this function.
 comment|///
 comment|/// Entry count is the number of times the function was executed based on
@@ -765,6 +893,18 @@ operator|<
 name|uint64_t
 operator|>
 name|getEntryCount
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns the set of GUIDs that needs to be imported to the function for
+comment|/// sample PGO, to enable the same inlines as the profiled optimized binary.
+name|DenseSet
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
+operator|>
+name|getImportGUIDs
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -836,7 +976,7 @@ block|{
 return|return
 name|getAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -855,7 +995,7 @@ block|{
 return|return
 name|getAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -887,7 +1027,7 @@ name|AttributeSets
 operator|.
 name|getStackAlignment
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|)
@@ -964,7 +1104,46 @@ parameter_list|(
 name|unsigned
 name|i
 parameter_list|,
-name|AttributeSet
+specifier|const
+name|AttrBuilder
+modifier|&
+name|Attrs
+parameter_list|)
+function_decl|;
+comment|/// @brief adds the attribute to the list of attributes for the given arg.
+name|void
+name|addParamAttr
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl_stmt|;
+comment|/// @brief adds the attribute to the list of attributes for the given arg.
+name|void
+name|addParamAttr
+parameter_list|(
+name|unsigned
+name|ArgNo
+parameter_list|,
+name|Attribute
+name|Attr
+parameter_list|)
+function_decl|;
+comment|/// @brief adds the attributes to the list of attributes for the given arg.
+name|void
+name|addParamAttrs
+parameter_list|(
+name|unsigned
+name|ArgNo
+parameter_list|,
+specifier|const
+name|AttrBuilder
+modifier|&
 name|Attrs
 parameter_list|)
 function_decl|;
@@ -999,7 +1178,46 @@ parameter_list|(
 name|unsigned
 name|i
 parameter_list|,
-name|AttributeSet
+specifier|const
+name|AttrBuilder
+modifier|&
+name|Attrs
+parameter_list|)
+function_decl|;
+comment|/// @brief removes the attribute from the list of attributes.
+name|void
+name|removeParamAttr
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl_stmt|;
+comment|/// @brief removes the attribute from the list of attributes.
+name|void
+name|removeParamAttr
+parameter_list|(
+name|unsigned
+name|ArgNo
+parameter_list|,
+name|StringRef
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// @brief removes the attribute from the list of attributes.
+name|void
+name|removeParamAttrs
+parameter_list|(
+name|unsigned
+name|ArgNo
+parameter_list|,
+specifier|const
+name|AttrBuilder
+modifier|&
 name|Attrs
 parameter_list|)
 function_decl|;
@@ -1024,6 +1242,32 @@ operator|.
 name|hasAttribute
 argument_list|(
 name|i
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// @brief check if an attributes is in the list of attributes.
+name|bool
+name|hasParamAttribute
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl|const
+block|{
+return|return
+name|getAttributes
+argument_list|()
+operator|.
+name|hasParamAttribute
+argument_list|(
+name|ArgNo
 argument_list|,
 name|Kind
 argument_list|)
@@ -1086,6 +1330,18 @@ name|uint64_t
 name|Bytes
 parameter_list|)
 function_decl|;
+comment|/// @brief adds the dereferenceable attribute to the list of attributes for
+comment|/// the given arg.
+name|void
+name|addDereferenceableParamAttr
+parameter_list|(
+name|unsigned
+name|ArgNo
+parameter_list|,
+name|uint64_t
+name|Bytes
+parameter_list|)
+function_decl|;
 comment|/// @brief adds the dereferenceable_or_null attribute to the list of
 comment|/// attributes.
 name|void
@@ -1098,12 +1354,24 @@ name|uint64_t
 name|Bytes
 parameter_list|)
 function_decl|;
+comment|/// @brief adds the dereferenceable_or_null attribute to the list of
+comment|/// attributes for the given arg.
+name|void
+name|addDereferenceableOrNullParamAttr
+parameter_list|(
+name|unsigned
+name|ArgNo
+parameter_list|,
+name|uint64_t
+name|Bytes
+parameter_list|)
+function_decl|;
 comment|/// @brief Extract the alignment for a call or parameter (0=unknown).
 name|unsigned
 name|getParamAlignment
 argument_list|(
 name|unsigned
-name|i
+name|ArgNo
 argument_list|)
 decl|const
 block|{
@@ -1112,12 +1380,13 @@ name|AttributeSets
 operator|.
 name|getParamAlignment
 argument_list|(
-name|i
+name|ArgNo
 argument_list|)
 return|;
 block|}
 comment|/// @brief Extract the number of dereferenceable bytes for a call or
 comment|/// parameter (0=unknown).
+comment|/// @param i AttributeList index, referring to a return value or argument.
 name|uint64_t
 name|getDereferenceableBytes
 argument_list|(
@@ -1135,8 +1404,28 @@ name|i
 argument_list|)
 return|;
 block|}
+comment|/// @brief Extract the number of dereferenceable bytes for a parameter.
+comment|/// @param ArgNo Index of an argument, with 0 being the first function arg.
+name|uint64_t
+name|getParamDereferenceableBytes
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|getParamDereferenceableBytes
+argument_list|(
+name|ArgNo
+argument_list|)
+return|;
+block|}
 comment|/// @brief Extract the number of dereferenceable_or_null bytes for a call or
 comment|/// parameter (0=unknown).
+comment|/// @param i AttributeList index, referring to a return value or argument.
 name|uint64_t
 name|getDereferenceableOrNullBytes
 argument_list|(
@@ -1151,6 +1440,26 @@ operator|.
 name|getDereferenceableOrNullBytes
 argument_list|(
 name|i
+argument_list|)
+return|;
+block|}
+comment|/// @brief Extract the number of dereferenceable_or_null bytes for a
+comment|/// parameter.
+comment|/// @param ArgNo AttributeList ArgNo, referring to an argument.
+name|uint64_t
+name|getParamDereferenceableOrNullBytes
+argument_list|(
+name|unsigned
+name|ArgNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|getParamDereferenceableOrNullBytes
+argument_list|(
+name|ArgNo
 argument_list|)
 return|;
 block|}
@@ -1445,6 +1754,33 @@ name|Convergent
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// @brief Determine if the call has sideeffects.
+name|bool
+name|isSpeculatable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasFnAttribute
+argument_list|(
+name|Attribute
+operator|::
+name|Speculatable
+argument_list|)
+return|;
+block|}
+name|void
+name|setSpeculatable
+parameter_list|()
+block|{
+name|addFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|Speculatable
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// Determine if the function is known not to recurse, directly or
 comment|/// indirectly.
 name|bool
@@ -1517,7 +1853,7 @@ argument_list|()
 return|;
 block|}
 comment|/// @brief Determine if the function returns a structure through first
-comment|/// pointer argument.
+comment|/// or second pointer argument.
 name|bool
 name|hasStructRetAttr
 argument_list|()
@@ -1526,9 +1862,9 @@ block|{
 return|return
 name|AttributeSets
 operator|.
-name|hasAttribute
+name|hasParamAttribute
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|Attribute
 operator|::
@@ -1537,9 +1873,9 @@ argument_list|)
 operator|||
 name|AttributeSets
 operator|.
-name|hasAttribute
+name|hasParamAttribute
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 name|Attribute
 operator|::
@@ -1549,21 +1885,19 @@ return|;
 block|}
 comment|/// @brief Determine if the parameter or return value is marked with NoAlias
 comment|/// attribute.
-comment|/// @param n The parameter to check. 1 is the first parameter, 0 is the return
 name|bool
-name|doesNotAlias
-argument_list|(
-name|unsigned
-name|n
-argument_list|)
-decl|const
+name|returnDoesNotAlias
+argument_list|()
+specifier|const
 block|{
 return|return
 name|AttributeSets
 operator|.
 name|hasAttribute
 argument_list|(
-name|n
+name|AttributeList
+operator|::
+name|ReturnIndex
 argument_list|,
 name|Attribute
 operator|::
@@ -1572,140 +1906,18 @@ argument_list|)
 return|;
 block|}
 name|void
-name|setDoesNotAlias
-parameter_list|(
-name|unsigned
-name|n
-parameter_list|)
+name|setReturnDoesNotAlias
+parameter_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|n
+name|AttributeList
+operator|::
+name|ReturnIndex
 argument_list|,
 name|Attribute
 operator|::
 name|NoAlias
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// @brief Determine if the parameter can be captured.
-comment|/// @param n The parameter to check. 1 is the first parameter, 0 is the return
-name|bool
-name|doesNotCapture
-argument_list|(
-name|unsigned
-name|n
-argument_list|)
-decl|const
-block|{
-return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
-argument_list|(
-name|n
-argument_list|,
-name|Attribute
-operator|::
-name|NoCapture
-argument_list|)
-return|;
-block|}
-name|void
-name|setDoesNotCapture
-parameter_list|(
-name|unsigned
-name|n
-parameter_list|)
-block|{
-name|addAttribute
-argument_list|(
-name|n
-argument_list|,
-name|Attribute
-operator|::
-name|NoCapture
-argument_list|)
-expr_stmt|;
-block|}
-name|bool
-name|doesNotAccessMemory
-argument_list|(
-name|unsigned
-name|n
-argument_list|)
-decl|const
-block|{
-return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
-argument_list|(
-name|n
-argument_list|,
-name|Attribute
-operator|::
-name|ReadNone
-argument_list|)
-return|;
-block|}
-name|void
-name|setDoesNotAccessMemory
-parameter_list|(
-name|unsigned
-name|n
-parameter_list|)
-block|{
-name|addAttribute
-argument_list|(
-name|n
-argument_list|,
-name|Attribute
-operator|::
-name|ReadNone
-argument_list|)
-expr_stmt|;
-block|}
-name|bool
-name|onlyReadsMemory
-argument_list|(
-name|unsigned
-name|n
-argument_list|)
-decl|const
-block|{
-return|return
-name|doesNotAccessMemory
-argument_list|(
-name|n
-argument_list|)
-operator|||
-name|AttributeSets
-operator|.
-name|hasAttribute
-argument_list|(
-name|n
-argument_list|,
-name|Attribute
-operator|::
-name|ReadOnly
-argument_list|)
-return|;
-block|}
-name|void
-name|setOnlyReadsMemory
-parameter_list|(
-name|unsigned
-name|n
-parameter_list|)
-block|{
-name|addAttribute
-argument_list|(
-name|n
-argument_list|,
-name|Attribute
-operator|::
-name|ReadOnly
 argument_list|)
 expr_stmt|;
 block|}
@@ -1746,14 +1958,13 @@ comment|/// copyAttributesFrom - copy all additional attributes (those not neede
 comment|/// create a Function) from the Function Src to this one.
 name|void
 name|copyAttributesFrom
-argument_list|(
+parameter_list|(
 specifier|const
-name|GlobalValue
-operator|*
+name|Function
+modifier|*
 name|Src
-argument_list|)
-name|override
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// deleteBody - This method deletes the body of the function, and converts
 comment|/// the linkage to external.
 comment|///
@@ -1775,17 +1986,15 @@ comment|/// but does not delete it.
 comment|///
 name|void
 name|removeFromParent
-argument_list|()
-name|override
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// eraseFromParent - This method unlinks 'this' from the containing module
 comment|/// and deletes it.
 comment|///
 name|void
 name|eraseFromParent
-argument_list|()
-name|override
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// Steal arguments from another function.
 comment|///
 comment|/// Drop this function's arguments and splice in the ones from \c Src.
@@ -1801,49 +2010,6 @@ function_decl|;
 comment|/// Get the underlying elements of the Function... the basic block list is
 comment|/// empty for external functions.
 comment|///
-specifier|const
-name|ArgumentListType
-operator|&
-name|getArgumentList
-argument_list|()
-specifier|const
-block|{
-name|CheckLazyArguments
-argument_list|()
-block|;
-return|return
-name|ArgumentList
-return|;
-block|}
-name|ArgumentListType
-modifier|&
-name|getArgumentList
-parameter_list|()
-block|{
-name|CheckLazyArguments
-argument_list|()
-expr_stmt|;
-return|return
-name|ArgumentList
-return|;
-block|}
-specifier|static
-name|ArgumentListType
-name|Function
-operator|::
-operator|*
-name|getSublistAccess
-argument_list|(
-argument|Argument*
-argument_list|)
-block|{
-return|return
-operator|&
-name|Function
-operator|::
-name|ArgumentList
-return|;
-block|}
 specifier|const
 name|BasicBlockListType
 operator|&
@@ -2070,10 +2236,7 @@ name|CheckLazyArguments
 argument_list|()
 expr_stmt|;
 return|return
-name|ArgumentList
-operator|.
-name|begin
-argument_list|()
+name|Arguments
 return|;
 block|}
 name|const_arg_iterator
@@ -2085,10 +2248,7 @@ name|CheckLazyArguments
 argument_list|()
 block|;
 return|return
-name|ArgumentList
-operator|.
-name|begin
-argument_list|()
+name|Arguments
 return|;
 block|}
 name|arg_iterator
@@ -2099,10 +2259,9 @@ name|CheckLazyArguments
 argument_list|()
 expr_stmt|;
 return|return
-name|ArgumentList
-operator|.
-name|end
-argument_list|()
+name|Arguments
+operator|+
+name|NumArgs
 return|;
 block|}
 name|const_arg_iterator
@@ -2114,10 +2273,9 @@ name|CheckLazyArguments
 argument_list|()
 block|;
 return|return
-name|ArgumentList
-operator|.
-name|end
-argument_list|()
+name|Arguments
+operator|+
+name|NumArgs
 return|;
 block|}
 name|iterator_range
@@ -2162,12 +2320,23 @@ name|size_t
 name|arg_size
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|NumArgs
+return|;
+block|}
 name|bool
 name|arg_empty
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|arg_size
+argument_list|()
+operator|==
+literal|0
+return|;
+block|}
 comment|/// \brief Check whether this function has a personality function.
 name|bool
 name|hasPersonalityFn
@@ -2314,7 +2483,6 @@ specifier|const
 expr_stmt|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(
@@ -2401,6 +2569,12 @@ comment|/// to \a DISubprogram.
 name|DISubprogram
 operator|*
 name|getSubprogram
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns true if we should emit debug info for profiling.
+name|bool
+name|isDebugInfoForProfiling
 argument_list|()
 specifier|const
 expr_stmt|;

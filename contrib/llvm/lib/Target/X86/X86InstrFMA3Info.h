@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- X86InstrFMA3Info.h - X86 FMA3 Instruction Information -------------===//
+comment|//===- X86InstrFMA3Info.h - X86 FMA3 Instruction Information ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -670,7 +676,9 @@ function_decl|;
 comment|/// Constructor. Just creates an object of the class.
 name|X86InstrFMA3Info
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Destructor. Deallocates the memory used for FMA3 Groups.
 operator|~
 name|X86InstrFMA3Info
@@ -1174,14 +1182,18 @@ block|}
 end_function
 
 begin_comment
-unit|}; }
-comment|// namespace llvm
+unit|};  }
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_X86_UTILS_X86INSTRFMA3INFO_H
+end_comment
 
 end_unit
 

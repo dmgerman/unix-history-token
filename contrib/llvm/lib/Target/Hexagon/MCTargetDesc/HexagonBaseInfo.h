@@ -74,6 +74,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"HexagonDepITypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"HexagonMCTargetDesc.h"
 end_include
 
@@ -99,190 +105,37 @@ comment|///
 name|namespace
 name|HexagonII
 block|{
-comment|// *** The code below must match HexagonInstrFormat*.td *** //
-comment|// Insn types.
-comment|// *** Must match HexagonInstrFormat*.td ***
-enum|enum
-name|Type
-block|{
-name|TypePSEUDO
-init|=
-literal|0
-block|,
-name|TypeALU32
-init|=
-literal|1
-block|,
-name|TypeCR
-init|=
-literal|2
-block|,
-name|TypeJR
-init|=
-literal|3
-block|,
-name|TypeJ
-init|=
-literal|4
-block|,
-name|TypeLD
-init|=
-literal|5
-block|,
-name|TypeST
-init|=
-literal|6
-block|,
-name|TypeSYSTEM
-init|=
-literal|7
-block|,
-name|TypeXTYPE
-init|=
-literal|8
-block|,
-name|TypeV4LDST
-init|=
-literal|9
-block|,
-name|TypeNV
-init|=
-literal|10
-block|,
-name|TypeDUPLEX
-init|=
-literal|11
-block|,
-name|TypeCOMPOUND
-init|=
-literal|12
-block|,
+name|unsigned
+specifier|const
 name|TypeCVI_FIRST
 init|=
-literal|13
-block|,
-name|TypeCVI_VA
-init|=
-name|TypeCVI_FIRST
-block|,
-name|TypeCVI_VA_DV
-init|=
-literal|14
-block|,
-name|TypeCVI_VX
-init|=
-literal|15
-block|,
-name|TypeCVI_VX_DV
-init|=
-literal|16
-block|,
-name|TypeCVI_VP
-init|=
-literal|17
-block|,
-name|TypeCVI_VP_VS
-init|=
-literal|18
-block|,
-name|TypeCVI_VS
-init|=
-literal|19
-block|,
-name|TypeCVI_VINLANESAT
-init|=
-literal|20
-block|,
-name|TypeCVI_VM_LD
-init|=
-literal|21
-block|,
-name|TypeCVI_VM_TMP_LD
-init|=
-literal|22
-block|,
-name|TypeCVI_VM_CUR_LD
-init|=
-literal|23
-block|,
-name|TypeCVI_VM_VP_LDU
-init|=
-literal|24
-block|,
-name|TypeCVI_VM_ST
-init|=
-literal|25
-block|,
-name|TypeCVI_VM_NEW_ST
-init|=
-literal|26
-block|,
-name|TypeCVI_VM_STU
-init|=
-literal|27
-block|,
 name|TypeCVI_HIST
-init|=
-literal|28
-block|,
+decl_stmt|;
+name|unsigned
+specifier|const
 name|TypeCVI_LAST
 init|=
-name|TypeCVI_HIST
-block|,
-name|TypePREFIX
-init|=
-literal|30
-block|,
-comment|// Such as extenders.
-name|TypeENDLOOP
-init|=
-literal|31
-comment|// Such as end of a HW loop.
-block|}
-enum|;
+name|TypeCVI_VX_LATE
+decl_stmt|;
 enum|enum
 name|SubTarget
 block|{
-name|HasV2SubT
-init|=
-literal|0xf
-block|,
-name|HasV2SubTOnly
-init|=
-literal|0x1
-block|,
-name|NoV2SubT
-init|=
-literal|0x0
-block|,
-name|HasV3SubT
-init|=
-literal|0xe
-block|,
-name|HasV3SubTOnly
-init|=
-literal|0x2
-block|,
-name|NoV3SubT
-init|=
-literal|0x1
-block|,
 name|HasV4SubT
 init|=
-literal|0xc
-block|,
-name|NoV4SubT
-init|=
-literal|0x3
+literal|0x3f
 block|,
 name|HasV5SubT
 init|=
-literal|0x8
+literal|0x3e
 block|,
-name|NoV5SubT
+name|HasV55SubT
 init|=
-literal|0x7
-block|}
+literal|0x3c
+block|,
+name|HasV60SubT
+init|=
+literal|0x38
+block|,   }
 enum|;
 enum|enum
 name|AddrMode
@@ -376,12 +229,12 @@ literal|0
 block|,
 name|TypeMask
 init|=
-literal|0x1f
+literal|0x3f
 block|,
 comment|// Solo instructions.
 name|SoloPos
 init|=
-literal|5
+literal|6
 block|,
 name|SoloMask
 init|=
@@ -390,7 +243,7 @@ block|,
 comment|// Packed only with A or X-type instructions.
 name|SoloAXPos
 init|=
-literal|6
+literal|7
 block|,
 name|SoloAXMask
 init|=
@@ -399,7 +252,7 @@ block|,
 comment|// Only A-type instruction in first slot or nothing.
 name|SoloAin1Pos
 init|=
-literal|7
+literal|8
 block|,
 name|SoloAin1Mask
 init|=
@@ -408,7 +261,7 @@ block|,
 comment|// Predicated instructions.
 name|PredicatedPos
 init|=
-literal|8
+literal|9
 block|,
 name|PredicatedMask
 init|=
@@ -416,7 +269,7 @@ literal|0x1
 block|,
 name|PredicatedFalsePos
 init|=
-literal|9
+literal|10
 block|,
 name|PredicatedFalseMask
 init|=
@@ -424,7 +277,7 @@ literal|0x1
 block|,
 name|PredicatedNewPos
 init|=
-literal|10
+literal|11
 block|,
 name|PredicatedNewMask
 init|=
@@ -432,7 +285,7 @@ literal|0x1
 block|,
 name|PredicateLatePos
 init|=
-literal|11
+literal|12
 block|,
 name|PredicateLateMask
 init|=
@@ -441,7 +294,7 @@ block|,
 comment|// New-Value consumer instructions.
 name|NewValuePos
 init|=
-literal|12
+literal|13
 block|,
 name|NewValueMask
 init|=
@@ -450,7 +303,7 @@ block|,
 comment|// New-Value producer instructions.
 name|hasNewValuePos
 init|=
-literal|13
+literal|14
 block|,
 name|hasNewValueMask
 init|=
@@ -459,7 +312,7 @@ block|,
 comment|// Which operand consumes or produces a new value.
 name|NewValueOpPos
 init|=
-literal|14
+literal|15
 block|,
 name|NewValueOpMask
 init|=
@@ -468,7 +321,7 @@ block|,
 comment|// Stores that can become new-value stores.
 name|mayNVStorePos
 init|=
-literal|17
+literal|18
 block|,
 name|mayNVStoreMask
 init|=
@@ -477,7 +330,7 @@ block|,
 comment|// New-value store instructions.
 name|NVStorePos
 init|=
-literal|18
+literal|19
 block|,
 name|NVStoreMask
 init|=
@@ -486,7 +339,7 @@ block|,
 comment|// Loads that can become current-value loads.
 name|mayCVLoadPos
 init|=
-literal|19
+literal|20
 block|,
 name|mayCVLoadMask
 init|=
@@ -495,7 +348,7 @@ block|,
 comment|// Current-value load instructions.
 name|CVLoadPos
 init|=
-literal|20
+literal|21
 block|,
 name|CVLoadMask
 init|=
@@ -504,7 +357,7 @@ block|,
 comment|// Extendable insns.
 name|ExtendablePos
 init|=
-literal|21
+literal|22
 block|,
 name|ExtendableMask
 init|=
@@ -513,7 +366,7 @@ block|,
 comment|// Insns must be extended.
 name|ExtendedPos
 init|=
-literal|22
+literal|23
 block|,
 name|ExtendedMask
 init|=
@@ -522,7 +375,7 @@ block|,
 comment|// Which operand may be extended.
 name|ExtendableOpPos
 init|=
-literal|23
+literal|24
 block|,
 name|ExtendableOpMask
 init|=
@@ -531,7 +384,7 @@ block|,
 comment|// Signed or unsigned range.
 name|ExtentSignedPos
 init|=
-literal|26
+literal|27
 block|,
 name|ExtentSignedMask
 init|=
@@ -540,7 +393,7 @@ block|,
 comment|// Number of bits of range before extending operand.
 name|ExtentBitsPos
 init|=
-literal|27
+literal|28
 block|,
 name|ExtentBitsMask
 init|=
@@ -549,25 +402,16 @@ block|,
 comment|// Alignment power-of-two before extending operand.
 name|ExtentAlignPos
 init|=
-literal|32
+literal|33
 block|,
 name|ExtentAlignMask
 init|=
 literal|0x3
 block|,
-comment|// Valid subtargets
-name|validSubTargetPos
-init|=
-literal|34
-block|,
-name|validSubTargetMask
-init|=
-literal|0xf
-block|,
 comment|// Addressing mode for load/store instructions.
 name|AddrModePos
 init|=
-literal|40
+literal|41
 block|,
 name|AddrModeMask
 init|=
@@ -576,7 +420,7 @@ block|,
 comment|// Access size for load/store instructions.
 name|MemAccessSizePos
 init|=
-literal|43
+literal|44
 block|,
 name|MemAccesSizeMask
 init|=
@@ -585,7 +429,7 @@ block|,
 comment|// Branch predicted taken.
 name|TakenPos
 init|=
-literal|47
+literal|48
 block|,
 name|TakenMask
 init|=
@@ -594,7 +438,7 @@ block|,
 comment|// Floating-point instructions.
 name|FPPos
 init|=
-literal|48
+literal|49
 block|,
 name|FPMask
 init|=
@@ -603,7 +447,7 @@ block|,
 comment|// New-Value producer-2 instructions.
 name|hasNewValuePos2
 init|=
-literal|50
+literal|51
 block|,
 name|hasNewValueMask2
 init|=
@@ -612,7 +456,7 @@ block|,
 comment|// Which operand consumes or produces a new value.
 name|NewValueOpPos2
 init|=
-literal|51
+literal|52
 block|,
 name|NewValueOpMask2
 init|=
@@ -621,7 +465,7 @@ block|,
 comment|// Accumulator instructions.
 name|AccumulatorPos
 init|=
-literal|54
+literal|55
 block|,
 name|AccumulatorMask
 init|=
@@ -630,7 +474,7 @@ block|,
 comment|// Complex XU, prevent xu competition by preferring slot3
 name|PrefersSlot3Pos
 init|=
-literal|55
+literal|56
 block|,
 name|PrefersSlot3Mask
 init|=
@@ -643,6 +487,14 @@ block|,
 name|CofMax1Mask
 init|=
 literal|0x1
+block|,
+name|CVINewPos
+init|=
+literal|61
+block|,
+name|CVINewMask
+init|=
+literal|0x1
 block|}
 enum|;
 comment|// *** The code above must match HexagonInstrFormat*.td *** //
@@ -650,13 +502,12 @@ comment|// Hexagon specific MO operand flag mask.
 enum|enum
 name|HexagonMOTargetFlagVal
 block|{
-comment|//===------------------------------------------------------------------===//
-comment|// Hexagon Specific MachineOperand flags.
+comment|// Hexagon-specific MachineOperand target flags.
+comment|//
+comment|// When chaning these, make sure to update
+comment|// getSerializableDirectMachineOperandTargetFlags and
+comment|// getSerializableBitmaskMachineOperandTargetFlags if needed.
 name|MO_NO_FLAG
-block|,
-name|HMOTF_ConstExtended
-init|=
-literal|1
 block|,
 comment|/// MO_PCREL - On a symbol operand, indicates a PC-relative relocation
 comment|/// Used for computing a global address for PIC compilations
@@ -692,6 +543,18 @@ block|,
 comment|// MO_TPREL - indicates relocation for TLS
 comment|// local Executable method
 name|MO_TPREL
+block|,
+comment|// HMOTF_ConstExtended
+comment|// Addendum to above, indicates a const extended op
+comment|// Can be used as a mask.
+name|HMOTF_ConstExtended
+init|=
+literal|0x80
+block|,
+comment|// Union of all bitmasks (currently only HMOTF_ConstExtended).
+name|MO_Bitmasks
+init|=
+name|HMOTF_ConstExtended
 block|}
 enum|;
 comment|// Hexagon Sub-instruction classes.

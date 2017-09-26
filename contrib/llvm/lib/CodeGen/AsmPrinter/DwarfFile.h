@@ -202,6 +202,20 @@ operator|*
 operator|>
 name|AbstractSPDies
 expr_stmt|;
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DbgVariable
+operator|>>
+name|AbstractVariables
+expr_stmt|;
 comment|/// Maps MDNodes for type system with the corresponding DIEs. These DIEs can
 comment|/// be shared across CUs, that is why we keep the map here instead
 comment|/// of in DwarfCompileUnit.
@@ -386,6 +400,26 @@ argument_list|()
 block|{
 return|return
 name|AbstractSPDies
+return|;
+block|}
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DbgVariable
+operator|>>
+operator|&
+name|getAbstractVariables
+argument_list|()
+block|{
+return|return
+name|AbstractVariables
 return|;
 block|}
 name|void

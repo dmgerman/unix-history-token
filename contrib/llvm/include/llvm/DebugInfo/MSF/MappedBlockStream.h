@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MappedBlockStream.h - Discontiguous stream data in an MSF -*- C++
-end_comment
-
-begin_comment
-comment|//-*-===//
+comment|//==- MappedBlockStream.h - Discontiguous stream data in an MSF --*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -62,25 +58,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/MSF/MSFStreamLayout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamInterface.h"
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|"llvm/Support/BinaryStream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/BinaryStreamRef.h"
 end_include
 
 begin_include
@@ -99,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -131,7 +133,7 @@ name|class
 name|MappedBlockStream
 range|:
 name|public
-name|ReadableStream
+name|BinaryStream
 block|{
 name|friend
 name|class
@@ -150,11 +152,11 @@ name|createStream
 argument_list|(
 argument|uint32_t BlockSize
 argument_list|,
-argument|uint32_t NumBlocks
-argument_list|,
 argument|const MSFStreamLayout&Layout
 argument_list|,
-argument|const ReadableStream&MsfData
+argument|BinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -168,9 +170,11 @@ name|createIndexedStream
 argument_list|(
 argument|const MSFLayout&Layout
 argument_list|,
-argument|const ReadableStream&MsfData
+argument|BinaryStreamRef MsfData
 argument_list|,
 argument|uint32_t StreamIndex
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -182,15 +186,11 @@ name|MappedBlockStream
 operator|>
 name|createFpmStream
 argument_list|(
-specifier|const
-name|MSFLayout
-operator|&
-name|Layout
+argument|const MSFLayout&Layout
 argument_list|,
-specifier|const
-name|ReadableStream
-operator|&
-name|MsfData
+argument|BinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -202,17 +202,27 @@ name|MappedBlockStream
 operator|>
 name|createDirectoryStream
 argument_list|(
-specifier|const
-name|MSFLayout
-operator|&
-name|Layout
+argument|const MSFLayout&Layout
 argument_list|,
-specifier|const
-name|ReadableStream
-operator|&
-name|MsfData
+argument|BinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
+name|support
+operator|::
+name|endianness
+name|getEndian
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|support
+operator|::
+name|little
+return|;
+block|}
 name|Error
 name|readBytes
 argument_list|(
@@ -222,7 +232,6 @@ argument|uint32_t Size
 argument_list|,
 argument|ArrayRef<uint8_t>&Buffer
 argument_list|)
-specifier|const
 name|override
 block|;
 name|Error
@@ -232,29 +241,20 @@ argument|uint32_t Offset
 argument_list|,
 argument|ArrayRef<uint8_t>&Buffer
 argument_list|)
-specifier|const
 name|override
 block|;
 name|uint32_t
 name|getLength
 argument_list|()
-specifier|const
 name|override
 block|;
-name|uint32_t
-name|getNumBytesCopied
-argument_list|()
-specifier|const
-block|;
-name|llvm
-operator|::
 name|BumpPtrAllocator
 operator|&
 name|getAllocator
 argument_list|()
 block|{
 return|return
-name|Pool
+name|Allocator
 return|;
 block|}
 name|void
@@ -276,7 +276,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NumBlocks
+name|StreamLayout
+operator|.
+name|Blocks
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 name|uint32_t
@@ -296,11 +301,11 @@ name|MappedBlockStream
 argument_list|(
 argument|uint32_t BlockSize
 argument_list|,
-argument|uint32_t NumBlocks
-argument_list|,
 argument|const MSFStreamLayout&StreamLayout
 argument_list|,
-argument|const ReadableStream&MsfData
+argument|BinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 name|private
@@ -332,7 +337,6 @@ argument|uint32_t Offset
 argument_list|,
 argument|MutableArrayRef<uint8_t> Buffer
 argument_list|)
-specifier|const
 block|;
 name|bool
 name|tryReadContiguously
@@ -343,43 +347,41 @@ argument|uint32_t Size
 argument_list|,
 argument|ArrayRef<uint8_t>&Buffer
 argument_list|)
-specifier|const
 block|;
 specifier|const
 name|uint32_t
 name|BlockSize
 block|;
 specifier|const
-name|uint32_t
-name|NumBlocks
-block|;
-specifier|const
 name|MSFStreamLayout
 name|StreamLayout
 block|;
-specifier|const
-name|ReadableStream
-operator|&
+name|BinaryStreamRef
 name|MsfData
 block|;
-typedef|typedef
+name|using
+name|CacheEntry
+operator|=
 name|MutableArrayRef
 operator|<
 name|uint8_t
 operator|>
-name|CacheEntry
-expr_stmt|;
-name|mutable
-name|llvm
-operator|::
+block|;
+comment|// We just store the allocator by reference.  We use this to allocate
+comment|// contiguous memory for things like arrays or strings that cross a block
+comment|// boundary, and this memory is expected to outlive the stream.  For example,
+comment|// someone could create a stream, read some stuff, then close the stream, and
+comment|// we would like outstanding references to fields to remain valid since the
+comment|// entire file is mapped anyway.  Because of that, the user must supply the
+comment|// allocator to allocate broken records from.
 name|BumpPtrAllocator
-name|Pool
-decl_stmt|;
-name|mutable
+operator|&
+name|Allocator
+block|;
 name|DenseMap
 operator|<
 name|uint32_t
-operator|,
+block|,
 name|std
 operator|::
 name|vector
@@ -387,14 +389,13 @@ operator|<
 name|CacheEntry
 operator|>>
 name|CacheMap
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 name|class
 name|WritableMappedBlockStream
 range|:
 name|public
-name|WritableStream
+name|WritableBinaryStream
 block|{
 name|public
 operator|:
@@ -409,11 +410,11 @@ name|createStream
 argument_list|(
 argument|uint32_t BlockSize
 argument_list|,
-argument|uint32_t NumBlocks
-argument_list|,
 argument|const MSFStreamLayout&Layout
 argument_list|,
-argument|const WritableStream&MsfData
+argument|WritableBinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -427,9 +428,11 @@ name|createIndexedStream
 argument_list|(
 argument|const MSFLayout&Layout
 argument_list|,
-argument|const WritableStream&MsfData
+argument|WritableBinaryStreamRef MsfData
 argument_list|,
 argument|uint32_t StreamIndex
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -441,15 +444,11 @@ name|WritableMappedBlockStream
 operator|>
 name|createDirectoryStream
 argument_list|(
-specifier|const
-name|MSFLayout
-operator|&
-name|Layout
+argument|const MSFLayout&Layout
 argument_list|,
-specifier|const
-name|WritableStream
-operator|&
-name|MsfData
+argument|WritableBinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 specifier|static
@@ -461,17 +460,27 @@ name|WritableMappedBlockStream
 operator|>
 name|createFpmStream
 argument_list|(
-specifier|const
-name|MSFLayout
-operator|&
-name|Layout
+argument|const MSFLayout&Layout
 argument_list|,
-specifier|const
-name|WritableStream
-operator|&
-name|MsfData
+argument|WritableBinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
+name|support
+operator|::
+name|endianness
+name|getEndian
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|support
+operator|::
+name|little
+return|;
+block|}
 name|Error
 name|readBytes
 argument_list|(
@@ -481,7 +490,6 @@ argument|uint32_t Size
 argument_list|,
 argument|ArrayRef<uint8_t>&Buffer
 argument_list|)
-specifier|const
 name|override
 block|;
 name|Error
@@ -491,13 +499,11 @@ argument|uint32_t Offset
 argument_list|,
 argument|ArrayRef<uint8_t>&Buffer
 argument_list|)
-specifier|const
 name|override
 block|;
 name|uint32_t
 name|getLength
 argument_list|()
-specifier|const
 name|override
 block|;
 name|Error
@@ -507,13 +513,11 @@ argument|uint32_t Offset
 argument_list|,
 argument|ArrayRef<uint8_t> Buffer
 argument_list|)
-specifier|const
 name|override
 block|;
 name|Error
 name|commit
 argument_list|()
-specifier|const
 name|override
 block|;
 specifier|const
@@ -572,11 +576,11 @@ name|WritableMappedBlockStream
 argument_list|(
 argument|uint32_t BlockSize
 argument_list|,
-argument|uint32_t NumBlocks
-argument_list|,
 argument|const MSFStreamLayout&StreamLayout
 argument_list|,
-argument|const WritableStream&MsfData
+argument|WritableBinaryStreamRef MsfData
+argument_list|,
+argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|;
 name|private
@@ -584,21 +588,16 @@ operator|:
 name|MappedBlockStream
 name|ReadInterface
 block|;
-specifier|const
-name|WritableStream
-operator|&
+name|WritableBinaryStreamRef
 name|WriteInterface
 block|; }
 decl_stmt|;
 block|}
+comment|// end namespace pdb
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace pdb
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

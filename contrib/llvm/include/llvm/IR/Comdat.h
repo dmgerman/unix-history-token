@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/IR/Comdat.h - Comdat definitions -------------------*- C++ -*-===//
+comment|//===- llvm/IR/Comdat.h - Comdat definitions --------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -191,9 +191,13 @@ name|Comdat
 operator|>
 operator|*
 name|Name
+operator|=
+name|nullptr
 expr_stmt|;
 name|SelectionKind
 name|SK
+init|=
+name|Any
 decl_stmt|;
 block|}
 empty_stmt|;

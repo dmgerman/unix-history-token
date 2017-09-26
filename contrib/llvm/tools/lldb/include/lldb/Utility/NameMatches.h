@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-enumerations.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -59,6 +53,23 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+name|enum
+name|class
+name|NameMatch
+block|{
+name|Ignore
+operator|,
+name|Equals
+operator|,
+name|Contains
+operator|,
+name|StartsWith
+operator|,
+name|EndsWith
+operator|,
+name|RegularExpression
+block|}
+empty_stmt|;
 name|bool
 name|NameMatches
 argument_list|(
@@ -67,7 +78,7 @@ operator|::
 name|StringRef
 name|name
 argument_list|,
-name|NameMatchType
+name|NameMatch
 name|match_type
 argument_list|,
 name|llvm

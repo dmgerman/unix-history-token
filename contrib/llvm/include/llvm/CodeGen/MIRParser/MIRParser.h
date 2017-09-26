@@ -78,12 +78,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunctionInitializer.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Module.h"
 end_include
 
@@ -110,15 +104,15 @@ name|class
 name|MIRParserImpl
 decl_stmt|;
 name|class
+name|MachineModuleInfo
+decl_stmt|;
+name|class
 name|SMDiagnostic
 decl_stmt|;
 comment|/// This class initializes machine functions by applying the state loaded from
 comment|/// a MIR file.
 name|class
 name|MIRParser
-range|:
-name|public
-name|MachineFunctionInitializer
 block|{
 name|std
 operator|::
@@ -127,9 +121,9 @@ operator|<
 name|MIRParserImpl
 operator|>
 name|Impl
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 name|MIRParser
 argument_list|(
 name|std
@@ -140,7 +134,7 @@ name|MIRParserImpl
 operator|>
 name|Impl
 argument_list|)
-block|;
+expr_stmt|;
 name|MIRParser
 argument_list|(
 specifier|const
@@ -149,37 +143,42 @@ operator|&
 argument_list|)
 operator|=
 name|delete
-block|;
+expr_stmt|;
 operator|~
 name|MIRParser
 argument_list|()
-name|override
-block|;
-comment|/// Parse the optional LLVM IR module that's embedded in the MIR file.
+expr_stmt|;
+comment|/// Parses the optional LLVM IR module in the MIR file.
 comment|///
 comment|/// A new, empty module is created if the LLVM IR isn't present.
-comment|/// Returns null if a parsing error occurred.
+comment|/// \returns nullptr if a parsing error occurred.
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|Module
 operator|>
-name|parseLLVMModule
+name|parseIRModule
 argument_list|()
-block|;
-comment|/// Initialize the machine function to the state that's described in the MIR
-comment|/// file.
+expr_stmt|;
+comment|/// \brief Parses MachineFunctions in the MIR file and add them to the given
+comment|/// MachineModuleInfo \p MMI.
 comment|///
-comment|/// Return true if error occurred.
+comment|/// \returns true if an error occurred.
 name|bool
-name|initializeMachineFunction
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-name|override
-block|; }
-decl_stmt|;
+name|parseMachineFunctions
+parameter_list|(
+name|Module
+modifier|&
+name|M
+parameter_list|,
+name|MachineModuleInfo
+modifier|&
+name|MMI
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
 comment|/// This function is the main interface to the MIR serialization format parser.
 comment|///
 comment|/// It reads in a MIR file and returns a MIR parser that can parse the embedded

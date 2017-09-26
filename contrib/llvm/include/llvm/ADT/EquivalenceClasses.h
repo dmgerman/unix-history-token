@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/ADT/EquivalenceClasses.h - Generic Equiv. Classes --*- C++ -*-===//
+comment|//===- llvm/ADT/EquivalenceClasses.h - Generic Equiv. Classes ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -615,8 +615,10 @@ begin_comment
 comment|/// iterator* - Provides a way to iterate over all values in the set.
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|iterator
+init|=
 name|typename
 name|std
 operator|::
@@ -626,9 +628,8 @@ name|ECValue
 operator|>
 operator|::
 name|const_iterator
-name|iterator
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|iterator
@@ -677,10 +678,6 @@ end_expr_stmt
 
 begin_comment
 comment|/// member_* Iterate over the members of an equivalence class.
-end_comment
-
-begin_comment
-comment|///
 end_comment
 
 begin_decl_stmt
@@ -980,10 +977,6 @@ begin_comment
 comment|/// is not in the equivalence class.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
 begin_decl_stmt
 name|member_iterator
 name|findLeader
@@ -1217,7 +1210,13 @@ decl_stmt|,
 name|ptrdiff_t
 decl|>
 block|{
-typedef|typedef
+name|friend
+name|class
+name|EquivalenceClasses
+decl_stmt|;
+name|using
+name|super
+init|=
 name|std
 operator|::
 name|iterator
@@ -1225,43 +1224,40 @@ operator|<
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
-specifier|const
+decl_stmt|,                                 const
 name|ElemTy
-operator|,
+decl_stmt|,
 name|ptrdiff_t
-operator|>
-name|super
-expr_stmt|;
+decl|>
+decl_stmt|;
 specifier|const
 name|ECValue
 modifier|*
 name|Node
 decl_stmt|;
-name|friend
-name|class
-name|EquivalenceClasses
-decl_stmt|;
 name|public
 label|:
-typedef|typedef
-name|size_t
+name|using
 name|size_type
-typedef|;
-typedef|typedef
+init|=
+name|size_t
+decl_stmt|;
+name|using
+name|pointer
+init|=
 name|typename
 name|super
 operator|::
 name|pointer
-name|pointer
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|reference
+init|=
 name|typename
 name|super
 operator|::
 name|reference
-name|reference
-expr_stmt|;
+decl_stmt|;
 name|explicit
 name|member_iterator
 parameter_list|()

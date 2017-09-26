@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -220,17 +226,16 @@ name|MSFLayout
 block|{
 name|MSFLayout
 argument_list|()
-operator|:
-name|SB
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 specifier|const
 name|SuperBlock
-operator|*
+modifier|*
 name|SB
-expr_stmt|;
+init|=
+name|nullptr
+decl_stmt|;
 name|BitVector
 name|FreePageMap
 decl_stmt|;
@@ -394,8 +399,6 @@ name|L
 argument_list|)
 decl_stmt|;
 return|return
-name|llvm
-operator|::
 name|alignTo
 argument_list|(
 name|L
@@ -421,8 +424,6 @@ name|L
 parameter_list|)
 block|{
 return|return
-name|llvm
-operator|::
 name|alignTo
 argument_list|(
 name|L
@@ -447,12 +448,12 @@ name|SB
 parameter_list|)
 function_decl|;
 block|}
-comment|// namespace msf
+comment|// end namespace msf
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

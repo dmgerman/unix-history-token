@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=== Target/TargetRegisterInfo.h - Target Register Information -*- C++ -*-===//
+comment|//==- Target/TargetRegisterInfo.h - Target Register Information --*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -76,6 +76,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
 end_include
 
@@ -100,7 +112,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/LaneBitmask.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
 end_include
 
 begin_include
@@ -118,6 +148,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<functional>
 end_include
 
@@ -129,61 +165,48 @@ name|class
 name|BitVector
 decl_stmt|;
 name|class
+name|LiveRegMatrix
+decl_stmt|;
+name|class
 name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineInstr
 decl_stmt|;
 name|class
 name|RegScavenger
 decl_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
 name|class
 name|VirtRegMap
-decl_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
-name|LiveRegMatrix
 decl_stmt|;
 name|class
 name|TargetRegisterClass
 block|{
 name|public
 label|:
-typedef|typedef
-specifier|const
-name|MCPhysReg
-modifier|*
+name|using
 name|iterator
-typedef|;
-typedef|typedef
+init|=
 specifier|const
 name|MCPhysReg
-modifier|*
-name|const_iterator
-typedef|;
-typedef|typedef
-specifier|const
-name|MVT
-operator|::
-name|SimpleValueType
 operator|*
-name|vt_iterator
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|const_iterator
+init|=
+specifier|const
+name|MCPhysReg
+operator|*
+decl_stmt|;
+name|using
+name|sc_iterator
+init|=
 specifier|const
 name|TargetRegisterClass
-modifier|*
+operator|*
 specifier|const
-modifier|*
-name|sc_iterator
-typedef|;
+operator|*
+decl_stmt|;
 comment|// Instance variables filled by tablegen, do not use!
 specifier|const
 name|MCRegisterClass
@@ -191,9 +214,18 @@ modifier|*
 name|MC
 decl_stmt|;
 specifier|const
-name|vt_iterator
-name|VTs
+name|uint16_t
+name|SpillSize
+decl_stmt|,
+name|SpillAlignment
 decl_stmt|;
+specifier|const
+name|MVT
+operator|::
+name|SimpleValueType
+operator|*
+name|VTs
+expr_stmt|;
 specifier|const
 name|uint32_t
 modifier|*
@@ -383,33 +415,6 @@ name|Reg2
 argument_list|)
 return|;
 block|}
-comment|/// Return the size of the register in bytes, which is also the size
-comment|/// of a stack slot allocated to hold a spilled copy of this register.
-name|unsigned
-name|getSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MC
-operator|->
-name|getSize
-argument_list|()
-return|;
-block|}
-comment|/// Return the minimum required alignment for a register of this class.
-name|unsigned
-name|getAlignment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MC
-operator|->
-name|getAlignment
-argument_list|()
-return|;
-block|}
 comment|/// Return the cost of copying a value between two registers in this class.
 comment|/// A negative number means the register class is very expensive
 comment|/// to copy e.g. status flag register classes.
@@ -437,90 +442,6 @@ name|MC
 operator|->
 name|isAllocatable
 argument_list|()
-return|;
-block|}
-comment|/// Return true if this TargetRegisterClass has the ValueType vt.
-name|bool
-name|hasType
-argument_list|(
-name|MVT
-name|vt
-argument_list|)
-decl|const
-block|{
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|;
-name|VTs
-index|[
-name|i
-index|]
-operator|!=
-name|MVT
-operator|::
-name|Other
-condition|;
-operator|++
-name|i
-control|)
-if|if
-condition|(
-name|MVT
-argument_list|(
-name|VTs
-index|[
-name|i
-index|]
-argument_list|)
-operator|==
-name|vt
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
-return|;
-block|}
-comment|/// vt_begin / vt_end - Loop over all of the value types that can be
-comment|/// represented by values in this register class.
-name|vt_iterator
-name|vt_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|VTs
-return|;
-block|}
-name|vt_iterator
-name|vt_end
-argument_list|()
-specifier|const
-block|{
-name|vt_iterator
-name|I
-operator|=
-name|VTs
-block|;
-while|while
-condition|(
-operator|*
-name|I
-operator|!=
-name|MVT
-operator|::
-name|Other
-condition|)
-operator|++
-name|I
-expr_stmt|;
-return|return
-name|I
 return|;
 block|}
 comment|/// Return true if the specified TargetRegisterClass
@@ -658,7 +579,6 @@ comment|///
 comment|///   There exists SuperRC where:
 comment|///     For all Reg in SuperRC:
 comment|///       this->contains(Reg:Idx)
-comment|///
 specifier|const
 name|uint16_t
 operator|*
@@ -711,7 +631,6 @@ comment|/// registers based on the characteristics of the function, subtarget, o
 comment|/// other criteria.
 comment|///
 comment|/// By default, this method returns all registers in the class.
-comment|///
 name|ArrayRef
 operator|<
 name|MCPhysReg
@@ -753,21 +672,9 @@ name|LaneMask
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// Extra information, not in MCRegisterDesc, about registers.
-end_comment
-
-begin_comment
 comment|/// These are used by codegen, not by MC.
-end_comment
-
-begin_struct
 struct|struct
 name|TargetRegisterInfoDesc
 block|{
@@ -781,17 +688,8 @@ decl_stmt|;
 comment|// Register belongs to an allocatable regclass.
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/// Each TargetRegisterClass has a per register weight, and weight
-end_comment
-
-begin_comment
 comment|/// limit which must be less than the limits of its pressure sets.
-end_comment
-
-begin_struct
 struct|struct
 name|RegClassWeight
 block|{
@@ -803,33 +701,12 @@ name|WeightLimit
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/// TargetRegisterInfo base class - We assume that the target defines a static
-end_comment
-
-begin_comment
 comment|/// array of TargetRegisterDesc objects that represent all of the machine
-end_comment
-
-begin_comment
 comment|/// registers that the target has.  As such, we simply have to track a pointer
-end_comment
-
-begin_comment
 comment|/// to this array so that we can turn register number into a register
-end_comment
-
-begin_comment
 comment|/// descriptor.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|TargetRegisterInfo
 range|:
@@ -838,77 +715,57 @@ name|MCRegisterInfo
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|regclass_iterator
+operator|=
 specifier|const
 name|TargetRegisterClass
-modifier|*
+operator|*
 specifier|const
-modifier|*
-name|regclass_iterator
-typedef|;
+operator|*
+block|;
+name|using
+name|vt_iterator
+operator|=
+specifier|const
+name|MVT
+operator|::
+name|SimpleValueType
+operator|*
+block|;
 name|private
 operator|:
 specifier|const
 name|TargetRegisterInfoDesc
 operator|*
 name|InfoDesc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// Extra desc array for codegen
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|char
-modifier|*
+operator|*
 specifier|const
-modifier|*
+operator|*
 name|SubRegIndexNames
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// Names of subreg indexes.
-end_comment
-
-begin_comment
 comment|// Pointer to array of lane masks, one per sub-reg index.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|LaneBitmask
-modifier|*
+operator|*
 name|SubRegIndexLaneMasks
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|regclass_iterator
 name|RegClassBegin
-decl_stmt|,
+block|,
 name|RegClassEnd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// List of regclasses
-end_comment
-
-begin_decl_stmt
 name|LaneBitmask
 name|CoveringLanes
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+block|;
 name|protected
-label|:
-end_label
-
-begin_macro
+operator|:
 name|TargetRegisterInfo
 argument_list|(
 argument|const TargetRegisterInfoDesc *ID
@@ -923,105 +780,38 @@ argument|const LaneBitmask *SRILaneMasks
 argument_list|,
 argument|LaneBitmask CoveringLanes
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+block|;
 name|virtual
 operator|~
 name|TargetRegisterInfo
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|// Register numbers can represent physical registers, virtual registers, and
-end_comment
-
-begin_comment
 comment|// sometimes stack slots. The unsigned values are divided into these ranges:
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|//   0           Not a register, can be used as a sentinel.
-end_comment
-
-begin_comment
 comment|//   [1;2^30)    Physical registers assigned by TableGen.
-end_comment
-
-begin_comment
 comment|//   [2^30;2^31) Stack slots. (Rarely used.)
-end_comment
-
-begin_comment
 comment|//   [2^31;2^32) Virtual registers assigned by MachineRegisterInfo.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Further sentinels can be allocated from the small negative integers.
-end_comment
-
-begin_comment
 comment|// DenseMapInfo<unsigned> uses -1u and -2u.
-end_comment
-
-begin_comment
 comment|/// isStackSlot - Sometimes it is useful the be able to store a non-negative
-end_comment
-
-begin_comment
 comment|/// frame index in a variable that normally holds a register. isStackSlot()
-end_comment
-
-begin_comment
 comment|/// returns true if Reg is in the range used for stack slots.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note that isVirtualRegister() and isPhysicalRegister() cannot handle stack
-end_comment
-
-begin_comment
 comment|/// slots, so if a variable may contains a stack slot, always check
-end_comment
-
-begin_comment
 comment|/// isStackSlot() first.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_function
 specifier|static
 name|bool
 name|isStackSlot
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 return|return
 name|int
@@ -1036,20 +826,13 @@ literal|30
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Compute the frame index from a register value representing a stack slot.
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|stackSlot2Index
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1060,7 +843,7 @@ argument_list|)
 operator|&&
 literal|"Not a stack slot"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|int
 argument_list|(
@@ -1074,20 +857,13 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Convert a non-negative frame index to a stack slot register value.
-end_comment
-
-begin_function
 specifier|static
 name|unsigned
 name|index2StackSlot
-parameter_list|(
-name|int
-name|FI
-parameter_list|)
+argument_list|(
+argument|int FI
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1097,7 +873,7 @@ literal|0
 operator|&&
 literal|"Cannot hold a negative frame index."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|FI
 operator|+
@@ -1108,24 +884,14 @@ literal|30
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Return true if the specified register number is in
-end_comment
-
-begin_comment
 comment|/// the physical register namespace.
-end_comment
-
-begin_function
 specifier|static
 name|bool
 name|isPhysicalRegister
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1137,7 +903,7 @@ argument_list|)
 operator|&&
 literal|"Not a register! Check isStackSlot() first."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|int
 argument_list|(
@@ -1147,24 +913,14 @@ operator|>
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Return true if the specified register number is in
-end_comment
-
-begin_comment
 comment|/// the virtual register namespace.
-end_comment
-
-begin_function
 specifier|static
 name|bool
 name|isVirtualRegister
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1176,7 +932,7 @@ argument_list|)
 operator|&&
 literal|"Not a register! Check isStackSlot() first."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|int
 argument_list|(
@@ -1186,24 +942,14 @@ operator|<
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Convert a virtual register number to a 0-based index.
-end_comment
-
-begin_comment
 comment|/// The first virtual register in a function will get the index 0.
-end_comment
-
-begin_function
 specifier|static
 name|unsigned
 name|virtReg2Index
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1214,7 +960,7 @@ argument_list|)
 operator|&&
 literal|"Not a virtual register"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|Reg
 operator|&
@@ -1226,24 +972,14 @@ literal|31
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Convert a 0-based index to a virtual register number.
-end_comment
-
-begin_comment
 comment|/// This is the inverse operation of VirtReg2IndexFunctor below.
-end_comment
-
-begin_function
 specifier|static
 name|unsigned
 name|index2VirtReg
-parameter_list|(
-name|unsigned
-name|Index
-parameter_list|)
+argument_list|(
+argument|unsigned Index
+argument_list|)
 block|{
 return|return
 name|Index
@@ -1255,21 +991,158 @@ literal|31
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
+comment|/// Return the size in bits of a register from class RC.
+name|unsigned
+name|getRegSizeInBits
+argument_list|(
+argument|const TargetRegisterClass&RC
+argument_list|)
+specifier|const
+block|{
+return|return
+name|RC
+operator|.
+name|SpillSize
+operator|*
+literal|8
+return|;
+block|}
+comment|/// Return the size in bytes of the stack slot allocated to hold a spilled
+comment|/// copy of a register from class RC.
+name|unsigned
+name|getSpillSize
+argument_list|(
+argument|const TargetRegisterClass&RC
+argument_list|)
+specifier|const
+block|{
+return|return
+name|RC
+operator|.
+name|SpillSize
+return|;
+block|}
+comment|/// Return the minimum required alignment for a spill slot for a register
+comment|/// of this class.
+name|unsigned
+name|getSpillAlignment
+argument_list|(
+argument|const TargetRegisterClass&RC
+argument_list|)
+specifier|const
+block|{
+return|return
+name|RC
+operator|.
+name|SpillAlignment
+return|;
+block|}
+comment|/// Return true if the given TargetRegisterClass has the ValueType T.
+name|bool
+name|isTypeLegalForClass
+argument_list|(
+argument|const TargetRegisterClass&RC
+argument_list|,
+argument|MVT T
+argument_list|)
+specifier|const
+block|{
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|RC
+operator|.
+name|VTs
+index|[
+name|i
+index|]
+operator|!=
+name|MVT
+operator|::
+name|Other
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|MVT
+argument_list|(
+name|RC
+operator|.
+name|VTs
+index|[
+name|i
+index|]
+argument_list|)
+operator|==
+name|T
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+comment|/// Loop over all of the value types that can be represented by values
+comment|// in the given register class.
+name|vt_iterator
+name|legalclasstypes_begin
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|&
+name|RC
+argument_list|)
+decl|const
+block|{
+return|return
+name|RC
+operator|.
+name|VTs
+return|;
+block|}
+name|vt_iterator
+name|legalclasstypes_end
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|&
+name|RC
+argument_list|)
+decl|const
+block|{
+name|vt_iterator
+name|I
+init|=
+name|RC
+operator|.
+name|VTs
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|I
+operator|!=
+name|MVT
+operator|::
+name|Other
+condition|)
+operator|++
+name|I
+expr_stmt|;
+return|return
+name|I
+return|;
+block|}
 comment|/// Returns the Register Class of a physical register of the given type,
-end_comment
-
-begin_comment
 comment|/// picking the most sub register class of the right type that contains this
-end_comment
-
-begin_comment
 comment|/// physreg.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -1287,17 +1160,8 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Return the maximal subclass of the given register class that is
-end_comment
-
-begin_comment
 comment|/// allocatable or NULL.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -1310,21 +1174,9 @@ name|RC
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Returns a bitset indexed by register number indicating if a register is
-end_comment
-
-begin_comment
 comment|/// allocatable or not. If a register class is specified, returns the subset
-end_comment
-
-begin_comment
 comment|/// for the class.
-end_comment
-
-begin_decl_stmt
 name|BitVector
 name|getAllocatableSet
 argument_list|(
@@ -1342,17 +1194,8 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Return the additional cost of using this register instead
-end_comment
-
-begin_comment
 comment|/// of other registers in its class.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|getCostPerUse
 argument_list|(
@@ -1370,13 +1213,7 @@ operator|.
 name|CostPerUse
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return true if the register is in the allocation of any register class.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isInAllocatableClass
 argument_list|(
@@ -1394,17 +1231,8 @@ operator|.
 name|inAllocatableClass
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return the human-readable symbolic target-specific
-end_comment
-
-begin_comment
 comment|/// name for the specified SubRegIndex.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|char
 modifier|*
@@ -1436,25 +1264,10 @@ literal|1
 index|]
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return a bitmask representing the parts of a register that are covered by
-end_comment
-
-begin_comment
 comment|/// SubIdx \see LaneBitmask.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// SubIdx == 0 is allowed, it has the lane mask ~0u.
-end_comment
-
-begin_decl_stmt
 name|LaneBitmask
 name|getSubRegIndexLaneMask
 argument_list|(
@@ -1480,101 +1293,29 @@ name|SubIdx
 index|]
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// The lane masks returned by getSubRegIndexLaneMask() above can only be
-end_comment
-
-begin_comment
 comment|/// used to determine if sub-registers overlap - they can't be used to
-end_comment
-
-begin_comment
 comment|/// determine if a set of sub-registers completely cover another
-end_comment
-
-begin_comment
 comment|/// sub-register.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The X86 general purpose registers have two lanes corresponding to the
-end_comment
-
-begin_comment
 comment|/// sub_8bit and sub_8bit_hi sub-registers. Both sub_32bit and sub_16bit have
-end_comment
-
-begin_comment
 comment|/// lane masks '3', but the sub_16bit sub-register doesn't fully cover the
-end_comment
-
-begin_comment
 comment|/// sub_32bit sub-register.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// On the other hand, the ARM NEON lanes fully cover their registers: The
-end_comment
-
-begin_comment
 comment|/// dsub_0 sub-register is completely covered by the ssub_0 and ssub_1 lanes.
-end_comment
-
-begin_comment
 comment|/// This is related to the CoveredBySubRegs property on register definitions.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This function returns a bit mask of lanes that completely cover their
-end_comment
-
-begin_comment
 comment|/// sub-registers. More precisely, given:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   Covering = getCoveringLanes();
-end_comment
-
-begin_comment
 comment|///   MaskA = getSubRegIndexLaneMask(SubA);
-end_comment
-
-begin_comment
 comment|///   MaskB = getSubRegIndexLaneMask(SubB);
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If (MaskA& ~(MaskB& Covering)) == 0, then SubA is completely covered by
-end_comment
-
-begin_comment
 comment|/// SubB.
-end_comment
-
-begin_expr_stmt
 name|LaneBitmask
 name|getCoveringLanes
 argument_list|()
@@ -1584,17 +1325,8 @@ return|return
 name|CoveringLanes
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Returns true if the two registers are equal or alias each other.
-end_comment
-
-begin_comment
 comment|/// The registers may be virtual registers.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|regsOverlap
 argument_list|(
@@ -1693,13 +1425,7 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns true if Reg contains RegUnit.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|hasRegUnit
 argument_list|(
@@ -1743,29 +1469,13 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return a null-terminated list of all of the callee-saved registers on
-end_comment
-
-begin_comment
 comment|/// this target. The register should be in the order of desired callee-save
-end_comment
-
-begin_comment
 comment|/// stack frame offset. The first register is closest to the incoming stack
-end_comment
-
-begin_comment
 comment|/// pointer if stack grows down, and vice versa.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
+comment|/// Notice: This function does not take into account disabled CSRs.
+comment|///         In most cases you will want to use instead the function
+comment|///         getCalleeSavedRegs that is implemented in MachineRegisterInfo.
 name|virtual
 specifier|const
 name|MCPhysReg
@@ -1781,81 +1491,24 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Return a mask of call-preserved registers for the given calling convention
-end_comment
-
-begin_comment
 comment|/// on the current function. The mask should include all call-preserved
-end_comment
-
-begin_comment
 comment|/// aliases. This is used by the register allocator to determine which
-end_comment
-
-begin_comment
 comment|/// registers can be live across a call.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The mask is an array containing (TRI::getNumRegs()+31)/32 entries.
-end_comment
-
-begin_comment
 comment|/// A set bit indicates that all bits of the corresponding register are
-end_comment
-
-begin_comment
 comment|/// preserved across the function call.  The bit mask is expected to be
-end_comment
-
-begin_comment
 comment|/// sub-register complete, i.e. if A is preserved, so are all its
-end_comment
-
-begin_comment
 comment|/// sub-registers.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Bits are numbered from the LSB, so the bit for physical register Reg can
-end_comment
-
-begin_comment
 comment|/// be found as (Mask[Reg / 32]>> Reg % 32)& 1.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// A NULL pointer means that no register mask will be used, and call
-end_comment
-
-begin_comment
 comment|/// instructions should use implicit-def operands to indicate call clobbered
-end_comment
-
-begin_comment
 comment|/// registers.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|uint32_t
@@ -1878,13 +1531,7 @@ return|return
 name|nullptr
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return a register mask that clobbers everything.
-end_comment
-
-begin_expr_stmt
 name|virtual
 specifier|const
 name|uint32_t
@@ -1909,13 +1556,7 @@ argument|const uint32_t *mask1
 argument_list|)
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Return all the call-preserved register masks defined for this target.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|ArrayRef
 operator|<
@@ -1929,9 +1570,6 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|virtual
 name|ArrayRef
 operator|<
@@ -1945,49 +1583,16 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Returns a bitset indexed by physical register number indicating if a
-end_comment
-
-begin_comment
 comment|/// register is a special register that has particular uses and should be
-end_comment
-
-begin_comment
 comment|/// considered unavailable at all times, e.g. stack pointer, return address.
-end_comment
-
-begin_comment
 comment|/// A reserved register:
-end_comment
-
-begin_comment
 comment|/// - is not allocatable
-end_comment
-
-begin_comment
 comment|/// - is considered always live
-end_comment
-
-begin_comment
 comment|/// - is ignored by liveness tracking
-end_comment
-
-begin_comment
 comment|/// It is often necessary to reserve the super registers of a reserved
-end_comment
-
-begin_comment
 comment|/// register as well, to avoid them getting allocated indirectly. You may use
-end_comment
-
-begin_comment
 comment|/// markSuperRegs() and checkAllSuperRegsMarked() in this case.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|BitVector
 name|getReservedRegs
@@ -2001,17 +1606,8 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Returns true if PhysReg is unallocatable and constant throughout the
-end_comment
-
-begin_comment
 comment|/// function.  Used by MachineRegisterInfo::isConstantPhysReg().
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|isConstantPhysReg
@@ -2025,21 +1621,32 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
+comment|/// Physical registers that may be modified within a function but are
+comment|/// guaranteed to be restored before any uses. This is useful for targets that
+comment|/// have call sequences where a GOT register may be updated by the caller
+comment|/// prior to a call and is guaranteed to be restored (also by the caller)
+comment|/// after the call.
+name|virtual
+name|bool
+name|isCallerPreservedPhysReg
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|,
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Prior to adding the live-out mask to a stackmap or patchpoint
-end_comment
-
-begin_comment
 comment|/// instruction, provide the target the opportunity to adjust it (mainly to
-end_comment
-
-begin_comment
 comment|/// remove pseudo-registers that should be ignored).
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|adjustStackMapLiveOutMask
@@ -2049,18 +1656,9 @@ operator|*
 name|Mask
 argument_list|)
 decl|const
-block|{ }
-end_decl_stmt
-
-begin_comment
+block|{}
 comment|/// Return a super-register of the specified register
-end_comment
-
-begin_comment
 comment|/// Reg so its sub-register of index SubIdx is Reg.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|getMatchingSuperReg
 argument_list|(
@@ -2092,29 +1690,11 @@ name|MC
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return a subclass of the specified register
-end_comment
-
-begin_comment
 comment|/// class A so that each register in it has a sub-register of the
-end_comment
-
-begin_comment
 comment|/// specified sub-register index which is in the specified register class B.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// TableGen will synthesize missing A sub-classes.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|TargetRegisterClass
@@ -2136,25 +1716,10 @@ name|Idx
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// For a copy-like instruction that defines a register of class DefRC with
-end_comment
-
-begin_comment
 comment|// subreg index DefSubReg, reading from another source with class SrcRC and
-end_comment
-
-begin_comment
 comment|// subregister SrcSubReg return true if this is a preferable copy
-end_comment
-
-begin_comment
 comment|// instruction or an earlier use should be used.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|shouldRewriteCopySrc
@@ -2177,57 +1742,18 @@ name|SrcSubReg
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Returns the largest legal sub-class of RC that
-end_comment
-
-begin_comment
 comment|/// supports the sub-register index Idx.
-end_comment
-
-begin_comment
 comment|/// If no such sub-class exists, return NULL.
-end_comment
-
-begin_comment
 comment|/// If all registers in RC already have an Idx sub-register, return RC.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// TableGen generates a version of this function that is good enough in most
-end_comment
-
-begin_comment
 comment|/// cases.  Targets can override if they have constraints that TableGen
-end_comment
-
-begin_comment
 comment|/// doesn't understand.  For example, the x86 sub_8bit sub-register index is
-end_comment
-
-begin_comment
 comment|/// supported by the full GR32 register class in 64-bit mode, but only by the
-end_comment
-
-begin_comment
 comment|/// GR32_ABCD regiister class in 32-bit mode.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// TableGen will synthesize missing RC sub-classes.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|TargetRegisterClass
@@ -2257,65 +1783,19 @@ return|return
 name|RC
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return the subregister index you get from composing
-end_comment
-
-begin_comment
 comment|/// two subregister indices.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The special null sub-register index composes as the identity.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If R:a:b is the same register as R:c, then composeSubRegIndices(a, b)
-end_comment
-
-begin_comment
 comment|/// returns c. Note that composeSubRegIndices does not tell you about illegal
-end_comment
-
-begin_comment
 comment|/// compositions. If R does not have a subreg a, or R:a does not have a subreg
-end_comment
-
-begin_comment
 comment|/// b, composeSubRegIndices doesn't tell you.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The ARM register Q0 has two D subregs dsub_0:D0 and dsub_1:D1. It also has
-end_comment
-
-begin_comment
 comment|/// ssub_0:S0 - ssub_3:S3 subregs.
-end_comment
-
-begin_comment
 comment|/// If you compose subreg indices dsub_1, ssub_0 you get ssub_2.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|composeSubRegIndices
 argument_list|(
@@ -2352,21 +1832,9 @@ name|b
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Transforms a LaneMask computed for one subregister to the lanemask that
-end_comment
-
-begin_comment
 comment|/// would have been computed when composing the subsubregisters with IdxA
-end_comment
-
-begin_comment
 comment|/// first. @sa composeSubRegIndices()
-end_comment
-
-begin_decl_stmt
 name|LaneBitmask
 name|composeSubRegIndexLaneMask
 argument_list|(
@@ -2395,37 +1863,13 @@ name|Mask
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Transform a lanemask given for a virtual register to the corresponding
-end_comment
-
-begin_comment
 comment|/// lanemask before using subregister with index \p IdxA.
-end_comment
-
-begin_comment
 comment|/// This is the reverse of composeSubRegIndexLaneMask(), assuming Mask is a
-end_comment
-
-begin_comment
 comment|/// valie lane mask (no invalid bits set) the following holds:
-end_comment
-
-begin_comment
 comment|/// X0 = composeSubRegIndexLaneMask(Idx, Mask)
-end_comment
-
-begin_comment
 comment|/// X1 = reverseComposeSubRegIndexLaneMask(Idx, X0)
-end_comment
-
-begin_comment
 comment|/// => X1 == Mask
-end_comment
-
-begin_decl_stmt
 name|LaneBitmask
 name|reverseComposeSubRegIndexLaneMask
 argument_list|(
@@ -2454,13 +1898,7 @@ name|LaneMask
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Debugging helper: dump register in human readable form to dbgs() stream.
-end_comment
-
-begin_function_decl
 specifier|static
 name|void
 name|dumpReg
@@ -2481,18 +1919,9 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_label
 name|protected
 label|:
-end_label
-
-begin_comment
 comment|/// Overridden by TableGen in targets that have sub-registers.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|unsigned
 name|composeSubRegIndicesImpl
@@ -2509,13 +1938,7 @@ literal|"Target has no sub-registers"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Overridden by TableGen in targets that have sub-registers.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|LaneBitmask
 name|composeSubRegIndexLaneMaskImpl
@@ -2532,9 +1955,6 @@ literal|"Target has no sub-registers"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|virtual
 name|LaneBitmask
 name|reverseComposeSubRegIndexLaneMaskImpl
@@ -2551,106 +1971,30 @@ literal|"Target has no sub-registers"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_comment
 comment|/// Find a common super-register class if it exists.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Find a register class, SuperRC and two sub-register indices, PreA and
-end_comment
-
-begin_comment
 comment|/// PreB, such that:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   1. PreA + SubA == PreB + SubB  (using composeSubRegIndices()), and
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   2. For all Reg in SuperRC: Reg:PreA in RCA and Reg:PreB in RCB, and
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   3. SuperRC->getSize()>= max(RCA->getSize(), RCB->getSize()).
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// SuperRC will be chosen such that no super-class of SuperRC satisfies the
-end_comment
-
-begin_comment
 comment|/// requirements, and there is no register class with a smaller spill size
-end_comment
-
-begin_comment
 comment|/// that satisfies the requirements.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// SubA and SubB must not be 0. Use getMatchingSuperRegClass() instead.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Either of the PreA and PreB sub-register indices may be returned as 0. In
-end_comment
-
-begin_comment
 comment|/// that case, the returned register class will be a sub-class of the
-end_comment
-
-begin_comment
 comment|/// corresponding argument register class.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The function returns NULL if no register class can be found.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -2682,29 +2026,10 @@ name|PreB
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Register Class Information
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|/// Register class iterators
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_expr_stmt
 name|regclass_iterator
 name|regclass_begin
 argument_list|()
@@ -2714,9 +2039,6 @@ return|return
 name|RegClassBegin
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|regclass_iterator
 name|regclass_end
 argument_list|()
@@ -2726,9 +2048,25 @@ return|return
 name|RegClassEnd
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
+name|iterator_range
+operator|<
+name|regclass_iterator
+operator|>
+name|regclasses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|regclass_begin
+argument_list|()
+argument_list|,
+name|regclass_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|unsigned
 name|getNumRegClasses
 argument_list|()
@@ -2747,17 +2085,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Returns the register class associated with the enumeration value.
-end_comment
-
-begin_comment
 comment|/// See class MCOperandInfo.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -2785,13 +2114,7 @@ name|i
 index|]
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns the name of the register class.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|char
 modifier|*
@@ -2815,25 +2138,10 @@ name|MC
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Find the largest common subclass of A and B.
-end_comment
-
-begin_comment
 comment|/// Return NULL if there is no common subclass.
-end_comment
-
-begin_comment
 comment|/// The common subclass should contain
-end_comment
-
-begin_comment
 comment|/// simple value type SVT if it is not the Any type.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -2863,21 +2171,9 @@ name|Any
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Returns a TargetRegisterClass used for pointer values.
-end_comment
-
-begin_comment
 comment|/// If a target supports multiple different pointer register classes,
-end_comment
-
-begin_comment
 comment|/// kind specifies which one is indicated.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|TargetRegisterClass
@@ -2902,25 +2198,10 @@ literal|"Target didn't implement getPointerRegClass!"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns a legal register class to copy a register in the specified class
-end_comment
-
-begin_comment
 comment|/// to or from. If it is possible to copy the register directly without using
-end_comment
-
-begin_comment
 comment|/// a cross register class copy, return the specified RC. Returns NULL if it
-end_comment
-
-begin_comment
 comment|/// is not possible to copy between two registers of the specified class.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|TargetRegisterClass
@@ -2938,25 +2219,10 @@ return|return
 name|RC
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns the largest super class of RC that is legal to use in the current
-end_comment
-
-begin_comment
 comment|/// sub-target and has the same spill size.
-end_comment
-
-begin_comment
 comment|/// The returned register class can be used to create virtual registers which
-end_comment
-
-begin_comment
 comment|/// means that all its registers can be copied and spilled.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|TargetRegisterClass
@@ -2980,33 +2246,12 @@ return|return
 name|RC
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return the register pressure "high water mark" for the specific register
-end_comment
-
-begin_comment
 comment|/// class. The scheduler is in high register pressure mode (for the specific
-end_comment
-
-begin_comment
 comment|/// register class) if it goes over the limit.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note: this is the old register pressure model that relies on a manually
-end_comment
-
-begin_comment
 comment|/// specified representative register class per value type.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|unsigned
 name|getRegPressureLimit
@@ -3026,25 +2271,10 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return a heuristic for the machine scheduler to compare the profitability
-end_comment
-
-begin_comment
 comment|/// of increasing one register pressure set versus another.  The scheduler
-end_comment
-
-begin_comment
 comment|/// will prefer increasing the register pressure of the set which returns
-end_comment
-
-begin_comment
 comment|/// the largest value for this function.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|unsigned
 name|getRegPressureSetScore
@@ -3063,13 +2293,7 @@ return|return
 name|PSetID
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Get the weight in units of pressure for this register class.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|RegClassWeight
@@ -3085,13 +2309,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Get the weight in units of pressure for this register unit.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|unsigned
 name|getRegUnitWeight
@@ -3103,13 +2321,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Get the number of dimensions of register pressure.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|unsigned
 name|getNumRegPressureSets
@@ -3118,13 +2330,7 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Get the name of this register unit pressure set.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|char
@@ -3138,17 +2344,8 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Get the register unit pressure limit for this dimension.
-end_comment
-
-begin_comment
 comment|/// This limit must be adjusted dynamically for reserved registers.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|unsigned
 name|getRegPressureSetLimit
@@ -3165,17 +2362,8 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Get the dimensions of register pressure impacted by this register class.
-end_comment
-
-begin_comment
 comment|/// Returns a -1 terminated array of pressure set IDs.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|int
@@ -3191,17 +2379,8 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Get the dimensions of register pressure impacted by this register unit.
-end_comment
-
-begin_comment
 comment|/// Returns a -1 terminated array of pressure set IDs.
-end_comment
-
-begin_decl_stmt
 name|virtual
 specifier|const
 name|int
@@ -3215,65 +2394,20 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Get a list of 'hint' registers that the register allocator should try
-end_comment
-
-begin_comment
 comment|/// first when allocating a physical register for the virtual register
-end_comment
-
-begin_comment
 comment|/// VirtReg. These registers are effectively moved to the front of the
-end_comment
-
-begin_comment
 comment|/// allocation order.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The Order argument is the allocation order for VirtReg's register class
-end_comment
-
-begin_comment
 comment|/// as returned from RegisterClassInfo::getOrder(). The hint registers must
-end_comment
-
-begin_comment
 comment|/// come from Order, and they must not be reserved.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The default implementation of this function can resolve
-end_comment
-
-begin_comment
 comment|/// target-independent hints provided to MRI::setRegAllocationHint with
-end_comment
-
-begin_comment
 comment|/// HintType == 0. Targets that override this function should defer to the
-end_comment
-
-begin_comment
 comment|/// default implementation if they have no reason to change the allocation
-end_comment
-
-begin_comment
 comment|/// order for VirtReg. There may be target-independent hints.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|getRegAllocationHints
@@ -3315,29 +2449,11 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// A callback to allow target a chance to update register allocation hints
-end_comment
-
-begin_comment
 comment|/// when a register is "changed" (e.g. coalesced) to another register.
-end_comment
-
-begin_comment
 comment|/// e.g. On ARM, some virtual registers should target register pairs,
-end_comment
-
-begin_comment
 comment|/// if one of pair is coalesced to another register, the allocation hint of
-end_comment
-
-begin_comment
 comment|/// the other half of the pair should be changed to point to the new register.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|updateRegAllocHint
@@ -3356,45 +2472,15 @@ decl|const
 block|{
 comment|// Do nothing.
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Allow the target to reverse allocation order of local live ranges. This
-end_comment
-
-begin_comment
 comment|/// will generally allocate shorter local live ranges first. For targets with
-end_comment
-
-begin_comment
 comment|/// many registers, this could reduce regalloc compile time by a large
-end_comment
-
-begin_comment
 comment|/// factor. It is disabled by default for three reasons:
-end_comment
-
-begin_comment
 comment|/// (1) Top-down allocation is simpler and easier to debug for targets that
-end_comment
-
-begin_comment
 comment|/// don't benefit from reversing the order.
-end_comment
-
-begin_comment
 comment|/// (2) Bottom-up allocation could result in poor evicition decisions on some
-end_comment
-
-begin_comment
 comment|/// targets affecting the performance of compiled code.
-end_comment
-
-begin_comment
 comment|/// (3) Bottom-up allocation is no longer guaranteed to optimally color.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|bool
 name|reverseLocalAssignment
@@ -3405,21 +2491,9 @@ return|return
 name|false
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Allow the target to override the cost of using a callee-saved register for
-end_comment
-
-begin_comment
 comment|/// the first time. Default value of 0 means we will use a callee-saved
-end_comment
-
-begin_comment
 comment|/// register if it is available.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|unsigned
 name|getCSRFirstUseCost
@@ -3430,17 +2504,8 @@ return|return
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Returns true if the target requires (and can make use of) the register
-end_comment
-
-begin_comment
 comment|/// scavenger.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|requiresRegisterScavenging
@@ -3456,17 +2521,8 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns true if the target wants to use frame pointer based accesses to
-end_comment
-
-begin_comment
 comment|/// spill to the scavenger emergency spill slot.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|useFPForScavengingIndex
@@ -3482,17 +2538,8 @@ return|return
 name|true
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns true if the target requires post PEI scavenging of registers for
-end_comment
-
-begin_comment
 comment|/// materializing frame index constants.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|requiresFrameIndexScavenging
@@ -3508,17 +2555,8 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns true if the target requires using the RegScavenger directly for
-end_comment
-
-begin_comment
 comment|/// frame elimination despite using requiresFrameIndexScavenging.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|requiresFrameIndexReplacementScavenging
@@ -3534,17 +2572,8 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns true if the target wants the LocalStackAllocation pass to be run
-end_comment
-
-begin_comment
 comment|/// and virtual base registers used for more efficient stack access.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|requiresVirtualBaseRegisters
@@ -3560,33 +2589,12 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return true if target has reserved a spill slot in the stack frame of
-end_comment
-
-begin_comment
 comment|/// the given function for the specified register. e.g. On x86, if the frame
-end_comment
-
-begin_comment
 comment|/// register is required, the first fixed stack object is reserved as its
-end_comment
-
-begin_comment
 comment|/// spill slot. This tells PEI not to create a new stack frame
-end_comment
-
-begin_comment
 comment|/// object for the given register. It should be called only after
-end_comment
-
-begin_comment
 comment|/// determineCalleeSaves().
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|hasReservedSpillSlot
@@ -3609,13 +2617,7 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns true if the live-ins should be tracked after register allocation.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|trackLivenessAfterRegAlloc
@@ -3631,13 +2633,7 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// True if the stack can be realigned for the target.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|canRealignStack
@@ -3649,25 +2645,10 @@ name|MF
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// True if storage within the function requires the stack pointer to be
-end_comment
-
-begin_comment
 comment|/// aligned more than the normal calling convention calls for.
-end_comment
-
-begin_comment
 comment|/// This cannot be overriden by the target, but canRealignStack can be
-end_comment
-
-begin_comment
 comment|/// overridden.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|needsStackRealignment
 argument_list|(
@@ -3678,17 +2659,8 @@ name|MF
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Get the offset from the referenced frame index in the instruction,
-end_comment
-
-begin_comment
 comment|/// if there is one.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|int64_t
 name|getFrameIndexInstrOffset
@@ -3707,25 +2679,10 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Returns true if the instruction's frame index reference would be better
-end_comment
-
-begin_comment
 comment|/// served by a base register other than FP or SP.
-end_comment
-
-begin_comment
 comment|/// Used by LocalStackFrameAllocation to determine which frame index
-end_comment
-
-begin_comment
 comment|/// references it should create new base registers for.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|needsFrameBaseReg
@@ -3743,17 +2700,8 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Insert defining instruction(s) for BaseReg to be a pointer to FrameIdx
-end_comment
-
-begin_comment
 comment|/// before insertion point I.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|materializeFrameBaseRegister
@@ -3780,17 +2728,8 @@ literal|"target"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Resolve a frame index operand of an instruction
-end_comment
-
-begin_comment
 comment|/// to reference the indicated base register plus offset instead.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|resolveFrameIndex
@@ -3813,17 +2752,8 @@ literal|"resolveFrameIndex does not exist on this target"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Determine whether a given base register plus offset immediate is
-end_comment
-
-begin_comment
 comment|/// encodable to resolve a frame index.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|isFrameOffsetLegal
@@ -3847,29 +2777,10 @@ literal|"isFrameOffsetLegal does not exist on this target"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Spill the register so it can be used by the register scavenger.
-end_comment
-
-begin_comment
 comment|/// Return true if the register was spilled, false otherwise.
-end_comment
-
-begin_comment
 comment|/// If this function does not spill the register, the scavenger
-end_comment
-
-begin_comment
 comment|/// will instead spill it to the emergency spill slot.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|saveScavengerRegister
@@ -3903,37 +2814,13 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// This method must be overriden to eliminate abstract frame indices from
-end_comment
-
-begin_comment
 comment|/// instructions which may use them. The instruction referenced by the
-end_comment
-
-begin_comment
 comment|/// iterator contains an MO_FrameIndex operand which must be eliminated by
-end_comment
-
-begin_comment
 comment|/// this method. This method may modify or replace the specified instruction,
-end_comment
-
-begin_comment
 comment|/// as long as it keeps the iterator pointing at the finished product.
-end_comment
-
-begin_comment
 comment|/// SPAdj is the SP adjustment due to call frame setup instruction.
-end_comment
-
-begin_comment
 comment|/// FIOperandNum is the FI operand number.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|void
 name|eliminateFrameIndex
@@ -3959,13 +2846,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Return the assembly name for \p Reg.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|StringRef
 name|getRegAsmName
@@ -3991,21 +2872,9 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// Subtarget Hooks
-end_comment
-
-begin_comment
 comment|/// \brief SrcRC and DstRC will be morphed into NewRC if this returns true.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|shouldCoalesce
@@ -4041,25 +2910,10 @@ return|return
 name|true
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// Debug information queries.
-end_comment
-
-begin_comment
 comment|/// getFrameRegister - This method should return the register used as a base
-end_comment
-
-begin_comment
 comment|/// for values allocated in the current stack frame.
-end_comment
-
-begin_decl_stmt
 name|virtual
 name|unsigned
 name|getFrameRegister
@@ -4073,13 +2927,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Mark a register and all its aliases as reserved in the given set.
-end_comment
-
-begin_decl_stmt
 name|void
 name|markSuperRegs
 argument_list|(
@@ -4092,17 +2940,8 @@ name|Reg
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Returns true if for every register in the set all super registers are part
-end_comment
-
-begin_comment
 comment|/// of the set as well.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|checkAllSuperRegsMarked
 argument_list|(
@@ -4126,10 +2965,14 @@ operator|)
 argument_list|)
 decl|const
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -4203,6 +3046,8 @@ name|RCMaskWords
 decl_stmt|;
 name|unsigned
 name|SubReg
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|uint16_t
@@ -4239,11 +3084,6 @@ literal|31
 operator|)
 operator|/
 literal|32
-argument_list|)
-operator|,
-name|SubReg
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|Idx
@@ -4387,15 +3227,21 @@ comment|/// In other words, the number of bit we read to get at the
 comment|/// beginning of that chunck.
 name|unsigned
 name|Base
+init|=
+literal|0
 decl_stmt|;
 comment|/// Adjust base index of CurrentChunk.
 comment|/// Base index + how many bit we read within CurrentChunk.
 name|unsigned
 name|Idx
+init|=
+literal|0
 decl_stmt|;
 comment|/// Current register class ID.
 name|unsigned
 name|ID
+init|=
+literal|0
 decl_stmt|;
 comment|/// Mask we are iterating over.
 specifier|const
@@ -4539,21 +3385,6 @@ name|TRI
 operator|.
 name|getNumRegClasses
 argument_list|()
-argument_list|)
-operator|,
-name|Base
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Idx
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ID
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|Mask
@@ -4795,13 +3626,17 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TARGET_TARGETREGISTERINFO_H
+end_comment
 
 end_unit
 

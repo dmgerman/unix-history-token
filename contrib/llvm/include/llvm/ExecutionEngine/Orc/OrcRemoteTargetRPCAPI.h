@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- OrcRemoteTargetRPCAPI.h - Orc Remote-target RPC API ----*- C++ -*-===//
+comment|//===- OrcRemoteTargetRPCAPI.h - Orc Remote-target RPC API ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,19 +70,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"RPCUtils.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"RawByteChannel.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ExecutionEngine/JITSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/Orc/RPCUtils.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/Orc/RawByteChannel.h"
 end_include
 
 begin_decl_stmt
@@ -382,7 +382,7 @@ name|remote
 operator|::
 name|DirectBufferWriter
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|Dst
 argument_list|,
@@ -427,10 +427,11 @@ name|ResourceIdMgr
 block|{
 name|public
 operator|:
-typedef|typedef
-name|uint64_t
+name|using
 name|ResourceId
-typedef|;
+operator|=
+name|uint64_t
+block|;
 specifier|static
 specifier|const
 name|ResourceId
@@ -502,9 +503,9 @@ name|ResourceId
 operator|>
 name|FreeIds
 block|;   }
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 comment|// FIXME: Remove constructors once MSVC supports synthesizing move-ops.
 name|OrcRemoteTargetRPCAPI
 argument_list|(
@@ -525,7 +526,7 @@ name|RawByteChannel
 operator|>
 operator|(
 name|C
-operator|,
+expr|,
 name|true
 operator|)
 block|{}
@@ -538,7 +539,7 @@ operator|::
 name|Function
 operator|<
 name|CallIntVoid
-operator|,
+block|,
 name|int32_t
 argument_list|(
 argument|JITTargetAddress Addr
@@ -807,7 +808,7 @@ name|ResourceIdMgr
 operator|::
 name|ResourceId
 name|StubsOwnerID
-operator|,
+expr|,
 name|uint32_t
 name|NumStubsRequired
 operator|)
@@ -992,7 +993,7 @@ operator|>
 operator|(
 name|JITTargetAddress
 name|Src
-operator|,
+expr|,
 name|uint64_t
 name|Size
 operator|)
@@ -1255,6 +1256,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_EXECUTIONENGINE_ORC_ORCREMOTETARGETRPCAPI_H
+end_comment
 
 end_unit
 

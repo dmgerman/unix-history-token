@@ -198,6 +198,10 @@ comment|/// \brief The entity being initialized is a field of block descriptor f
 comment|/// the copied-in c++ object.
 name|EK_BlockElement
 block|,
+comment|/// The entity being initialized is a field of block descriptor for the
+comment|/// copied-in lambda object that's used in the lambda to block conversion.
+name|EK_LambdaToBlockConversionBlockElement
+block|,
 comment|/// \brief The entity being initialized is the real or imaginary part of a
 comment|/// complex number.
 name|EK_ComplexElement
@@ -782,6 +786,33 @@ name|NRVO
 argument_list|)
 return|;
 block|}
+specifier|static
+name|InitializedEntity
+name|InitializeLambdaToBlock
+parameter_list|(
+name|SourceLocation
+name|BlockVarLoc
+parameter_list|,
+name|QualType
+name|Type
+parameter_list|,
+name|bool
+name|NRVO
+parameter_list|)
+block|{
+return|return
+name|InitializedEntity
+argument_list|(
+name|EK_LambdaToBlockConversionBlockElement
+argument_list|,
+name|BlockVarLoc
+argument_list|,
+name|Type
+argument_list|,
+name|NRVO
+argument_list|)
+return|;
+block|}
 comment|/// \brief Create the initialization entity for an exception object.
 specifier|static
 name|InitializedEntity
@@ -842,25 +873,13 @@ name|QualType
 name|Type
 parameter_list|)
 block|{
-name|InitializedEntity
-name|Result
+return|return
+name|InitializeTemporary
 argument_list|(
-name|EK_Temporary
-argument_list|,
-name|SourceLocation
-argument_list|()
+name|nullptr
 argument_list|,
 name|Type
 argument_list|)
-decl_stmt|;
-name|Result
-operator|.
-name|TypeInfo
-operator|=
-name|nullptr
-expr_stmt|;
-return|return
-name|Result
 return|;
 block|}
 comment|/// \brief Create the initialization entity for a temporary.
@@ -873,6 +892,31 @@ modifier|*
 name|TypeInfo
 parameter_list|)
 block|{
+return|return
+name|InitializeTemporary
+argument_list|(
+name|TypeInfo
+argument_list|,
+name|TypeInfo
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Create the initialization entity for a temporary.
+specifier|static
+name|InitializedEntity
+name|InitializeTemporary
+parameter_list|(
+name|TypeSourceInfo
+modifier|*
+name|TypeInfo
+parameter_list|,
+name|QualType
+name|Type
+parameter_list|)
+block|{
 name|InitializedEntity
 name|Result
 argument_list|(
@@ -881,10 +925,7 @@ argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|,
-name|TypeInfo
-operator|->
-name|getType
-argument_list|()
+name|Type
 argument_list|)
 decl_stmt|;
 name|Result
@@ -1995,6 +2036,83 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
+comment|/// \brief Create an initialization from an initializer (which, for direct
+comment|/// initialization from a parenthesized list, will be a ParenListExpr).
+specifier|static
+name|InitializationKind
+name|CreateForInit
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|bool
+name|DirectInit
+parameter_list|,
+name|Expr
+modifier|*
+name|Init
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Init
+condition|)
+return|return
+name|CreateDefault
+argument_list|(
+name|Loc
+argument_list|)
+return|;
+if|if
+condition|(
+operator|!
+name|DirectInit
+condition|)
+return|return
+name|CreateCopy
+argument_list|(
+name|Loc
+argument_list|,
+name|Init
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|)
+return|;
+if|if
+condition|(
+name|isa
+operator|<
+name|InitListExpr
+operator|>
+operator|(
+name|Init
+operator|)
+condition|)
+return|return
+name|CreateDirectList
+argument_list|(
+name|Loc
+argument_list|)
+return|;
+return|return
+name|CreateDirect
+argument_list|(
+name|Loc
+argument_list|,
+name|Init
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|Init
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// \brief Determine the initialization kind.
 name|InitKind
 name|getKind
@@ -2463,6 +2581,9 @@ block|{
 comment|/// \brief Too many initializers provided for a reference.
 name|FK_TooManyInitsForReference
 block|,
+comment|/// \brief Reference initialized from a parenthesized initializer list.
+name|FK_ParenthesizedListInitForReference
+block|,
 comment|/// \brief Array must be initialized with an initializer list.
 name|FK_ArrayNeedsInitList
 block|,
@@ -2527,6 +2648,9 @@ block|,
 comment|/// \brief Too many initializers for scalar
 name|FK_TooManyInitsForScalar
 block|,
+comment|/// \brief Scalar initialized from a parenthesized initializer list.
+name|FK_ParenthesizedListInitForScalar
+block|,
 comment|/// \brief Reference initialization from an initializer list
 name|FK_ReferenceBindingToInitList
 block|,
@@ -2565,7 +2689,7 @@ name|FK_AddressOfUnaddressableFunction
 block|,
 comment|/// \brief List-copy-initialization chose an explicit constructor.
 name|FK_ExplicitConstructor
-block|}
+block|,   }
 enum|;
 name|private
 label|:

@@ -319,6 +319,9 @@ comment|/// Carry-setting nodes for multiple precision addition and subtraction.
 comment|/// These nodes take two operands of the same value type, and produce two
 comment|/// results.  The first result is the normal add or sub result, the second
 comment|/// result is the carry flag result.
+comment|/// FIXME: These nodes are deprecated in favor of ADDCARRY and SUBCARRY.
+comment|/// They are kept around for now to provide a smooth transition path
+comment|/// toward the use of ADDCARRY/SUBCARRY and will eventually be removed.
 name|ADDC
 block|,
 name|SUBC
@@ -333,6 +336,18 @@ comment|/// values.
 name|ADDE
 block|,
 name|SUBE
+block|,
+comment|/// Carry-using nodes for multiple precision addition and subtraction.
+comment|/// These nodes take three operands: The first two are the normal lhs and
+comment|/// rhs to the add or sub, and the third is a boolean indicating if there
+comment|/// is an incoming carry. These nodes produce two results: the normal
+comment|/// result of the add or sub, and the output carry so they can be chained
+comment|/// together. The use of this opcode is preferable to adde/sube if the
+comment|/// target supports it, as the carry is a regular value rather than a
+comment|/// glue, which allows further optimisation.
+name|ADDCARRY
+block|,
+name|SUBCARRY
 block|,
 comment|/// RESULT, BOOL = [SU]ADDO(LHS, RHS) - Overflow-aware nodes for addition.
 comment|/// These nodes take two operands: the normal LHS and RHS to the add. They
@@ -365,6 +380,48 @@ block|,
 name|FDIV
 block|,
 name|FREM
+block|,
+comment|/// Constrained versions of the binary floating point operators.
+comment|/// These will be lowered to the simple operators before final selection.
+comment|/// They are used to limit optimizations while the DAG is being
+comment|/// optimized.
+name|STRICT_FADD
+block|,
+name|STRICT_FSUB
+block|,
+name|STRICT_FMUL
+block|,
+name|STRICT_FDIV
+block|,
+name|STRICT_FREM
+block|,
+comment|/// Constrained versions of libm-equivalent floating point intrinsics.
+comment|/// These will be lowered to the equivalent non-constrained pseudo-op
+comment|/// (or expanded to the equivalent library call) before final selection.
+comment|/// They are used to limit optimizations while the DAG is being optimized.
+name|STRICT_FSQRT
+block|,
+name|STRICT_FPOW
+block|,
+name|STRICT_FPOWI
+block|,
+name|STRICT_FSIN
+block|,
+name|STRICT_FCOS
+block|,
+name|STRICT_FEXP
+block|,
+name|STRICT_FEXP2
+block|,
+name|STRICT_FLOG
+block|,
+name|STRICT_FLOG10
+block|,
+name|STRICT_FLOG2
+block|,
+name|STRICT_FRINT
+block|,
+name|STRICT_FNEARBYINT
 block|,
 comment|/// FMA - Perform a * b + c with no intermediate rounding step.
 name|FMA
@@ -402,7 +459,8 @@ block|,
 comment|/// EXTRACT_VECTOR_ELT(VECTOR, IDX) - Returns a single element from VECTOR
 comment|/// identified by the (potentially variable) element number IDX.  If the
 comment|/// return type is an integer type larger than the element type of the
-comment|/// vector, the result is extended to the width of the return type.
+comment|/// vector, the result is extended to the width of the return type. In
+comment|/// that case, the high bits are undefined.
 name|EXTRACT_VECTOR_ELT
 block|,
 comment|/// CONCAT_VECTORS(VECTOR0, VECTOR1, ...) - Given a number of values of
@@ -464,6 +522,12 @@ block|,
 name|OR
 block|,
 name|XOR
+block|,
+comment|/// ABS - Determine the unsigned absolute value of a signed integer value of
+comment|/// the same bitwidth.
+comment|/// Note: A value of INT_MIN will return INT_MIN, no saturation or overflow
+comment|/// is performed.
+name|ABS
 block|,
 comment|/// Shift and rotation operations.  After legalization, the type of the
 comment|/// shift amount is known to be TLI.getShiftAmountTy().  Before legalization
@@ -527,11 +591,21 @@ comment|/// them with (op #2) as a CondCodeSDNode. If the operands are vector ty
 comment|/// then the result type must also be a vector type.
 name|SETCC
 block|,
-comment|/// Like SetCC, ops #0 and #1 are the LHS and RHS operands to compare, but
+comment|/// Like SetCC, ops #0 and #1 are the LHS and RHS operands to compare, and
 comment|/// op #2 is a *carry value*. This operator checks the result of
 comment|/// "LHS - RHS - Carry", and can be used to compare two wide integers:
 comment|/// (setcce lhshi rhshi (subc lhslo rhslo) cc). Only valid for integers.
+comment|/// FIXME: This node is deprecated in favor of SETCCCARRY.
+comment|/// It is kept around for now to provide a smooth transition path
+comment|/// toward the use of SETCCCARRY and will eventually be removed.
 name|SETCCE
+block|,
+comment|/// Like SetCC, ops #0 and #1 are the LHS and RHS operands to compare, but
+comment|/// op #2 is a boolean indicating if there is an incoming carry. This
+comment|/// operator checks the result of "LHS - RHS - Carry", and can be used to
+comment|/// compare two wide integers: (setcce lhshi rhshi (subc lhslo rhslo) cc).
+comment|/// Only valid for integers.
+name|SETCCCARRY
 block|,
 comment|/// SHL_PARTS/SRA_PARTS/SRL_PARTS - These operators are used for expanded
 comment|/// integer shift operations.  The operation ordering is:
@@ -815,6 +889,13 @@ comment|/// CALLSEQ_START/CALLSEQ_END - These operators mark the beginning and e
 comment|/// of a call sequence, and carry arbitrary information that target might
 comment|/// want to know.  The first operand is a chain, the rest are specified by
 comment|/// the target and not touched by the DAG optimizers.
+comment|/// Targets that may use stack to pass call arguments define additional
+comment|/// operands:
+comment|/// - size of the call frame part that must be set up within the
+comment|///   CALLSEQ_START..CALLSEQ_END pair,
+comment|/// - part of the call frame prepared prior to CALLSEQ_START.
+comment|/// Both these parameters must be constants, their sum is the total call
+comment|/// frame size.
 comment|/// CALLSEQ_START..CALLSEQ_END pairs may not be nested.
 name|CALLSEQ_START
 block|,
@@ -976,6 +1057,43 @@ comment|/// for some others (e.g. PowerPC, PowerPC64) that would be compile-time
 comment|/// known nonzero constant. The only operand here is the chain.
 name|GET_DYNAMIC_AREA_OFFSET
 block|,
+comment|/// Generic reduction nodes. These nodes represent horizontal vector
+comment|/// reduction operations, producing a scalar result.
+comment|/// The STRICT variants perform reductions in sequential order. The first
+comment|/// operand is an initial scalar accumulator value, and the second operand
+comment|/// is the vector to reduce.
+name|VECREDUCE_STRICT_FADD
+block|,
+name|VECREDUCE_STRICT_FMUL
+block|,
+comment|/// These reductions are non-strict, and have a single vector operand.
+name|VECREDUCE_FADD
+block|,
+name|VECREDUCE_FMUL
+block|,
+name|VECREDUCE_ADD
+block|,
+name|VECREDUCE_MUL
+block|,
+name|VECREDUCE_AND
+block|,
+name|VECREDUCE_OR
+block|,
+name|VECREDUCE_XOR
+block|,
+name|VECREDUCE_SMAX
+block|,
+name|VECREDUCE_SMIN
+block|,
+name|VECREDUCE_UMAX
+block|,
+name|VECREDUCE_UMIN
+block|,
+comment|/// FMIN/FMAX nodes can have flags, for NaN/NoNaN variants.
+name|VECREDUCE_FMAX
+block|,
+name|VECREDUCE_FMIN
+block|,
 comment|/// BUILTIN_OP_END - This must be the last enum value in this list.
 comment|/// The target-specific pre-isel opcode values start here.
 name|BUILTIN_OP_END
@@ -1036,10 +1154,17 @@ block|,
 name|POST_INC
 block|,
 name|POST_DEC
-block|,
-name|LAST_INDEXED_MODE
 block|}
 enum|;
+specifier|static
+specifier|const
+name|int
+name|LAST_INDEXED_MODE
+init|=
+name|POST_DEC
+operator|+
+literal|1
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// LoadExtType enum - This enum defines the three variants of LOADEXT
 comment|/// (load with extension).
@@ -1062,10 +1187,17 @@ block|,
 name|SEXTLOAD
 block|,
 name|ZEXTLOAD
-block|,
-name|LAST_LOADEXT_TYPE
 block|}
 enum|;
+specifier|static
+specifier|const
+name|int
+name|LAST_LOADEXT_TYPE
+init|=
+name|ZEXTLOAD
+operator|+
+literal|1
+decl_stmt|;
 name|NodeType
 name|getExtForLoadExtType
 parameter_list|(

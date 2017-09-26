@@ -273,7 +273,7 @@ comment|// Should be called from the thread itself.
 name|thread_return_t
 name|ThreadStart
 parameter_list|(
-name|uptr
+name|tid_t
 name|os_id
 parameter_list|,
 name|atomic_uintptr_t

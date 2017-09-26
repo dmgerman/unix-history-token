@@ -148,6 +148,50 @@ decl_stmt|;
 name|class
 name|SValBuilder
 decl_stmt|;
+name|namespace
+name|nonloc
+block|{
+comment|/// Sub-kinds for NonLoc values.
+enum|enum
+name|Kind
+block|{
+define|#
+directive|define
+name|NONLOC_SVAL
+parameter_list|(
+name|Id
+parameter_list|,
+name|Parent
+parameter_list|)
+value|Id ## Kind,
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.def"
+block|}
+enum|;
+block|}
+name|namespace
+name|loc
+block|{
+comment|/// Sub-kinds for Loc values.
+enum|enum
+name|Kind
+block|{
+define|#
+directive|define
+name|LOC_SVAL
+parameter_list|(
+name|Id
+parameter_list|,
+name|Parent
+parameter_list|)
+value|Id ## Kind,
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.def"
+block|}
+enum|;
+block|}
 comment|/// SVal - This represents a symbolic expression, which can be either
 comment|///  an L-value or an R-value.
 comment|///
@@ -283,22 +327,17 @@ name|this
 argument_list|)
 argument_list|)
 block|;
-name|T
-name|t
-block|;
-name|SVal
-operator|&
-name|sv
-operator|=
-name|t
-block|;
-name|sv
-operator|=
-operator|*
-name|this
-block|;
 return|return
-name|t
+operator|*
+name|static_cast
+operator|<
+specifier|const
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
 return|;
 block|}
 comment|/// \brief Convert to the specified SVal type, returning None if this SVal is
@@ -330,22 +369,17 @@ condition|)
 return|return
 name|None
 return|;
-name|T
-name|t
-expr_stmt|;
-name|SVal
-modifier|&
-name|sv
-init|=
-name|t
-decl_stmt|;
-name|sv
-operator|=
-operator|*
-name|this
-expr_stmt|;
 return|return
-name|t
+operator|*
+name|static_cast
+operator|<
+specifier|const
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
 return|;
 block|}
 comment|/// BufferTy - A temporary buffer to hold a set of SVals.
@@ -1036,6 +1070,36 @@ argument|raw_ostream&Out
 argument_list|)
 specifier|const
 block|;
+specifier|static
+specifier|inline
+name|bool
+name|isCompoundType
+argument_list|(
+argument|QualType T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|isArrayType
+argument_list|()
+operator|||
+name|T
+operator|->
+name|isRecordType
+argument_list|()
+operator|||
+name|T
+operator|->
+name|isComplexType
+argument_list|()
+operator|||
+name|T
+operator|->
+name|isVectorType
+argument_list|()
+return|;
+block|}
 name|private
 operator|:
 name|friend
@@ -1156,23 +1220,7 @@ comment|//  Subclasses of NonLoc.
 comment|//==------------------------------------------------------------------------==//
 name|namespace
 name|nonloc
-block|{  enum
-name|Kind
 block|{
-define|#
-directive|define
-name|NONLOC_SVAL
-parameter_list|(
-name|Id
-parameter_list|,
-name|Parent
-parameter_list|)
-value|Id ## Kind,
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.def"
-block|}
-block|;
 comment|/// \brief Represents symbolic expression.
 name|class
 name|SymbolVal
@@ -1182,6 +1230,11 @@ name|NonLoc
 block|{
 name|public
 operator|:
+name|SymbolVal
+argument_list|()
+operator|=
+name|delete
+block|;
 name|SymbolVal
 argument_list|(
 argument|SymbolRef sym
@@ -1193,7 +1246,12 @@ argument|SymbolValKind
 argument_list|,
 argument|sym
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|sym
+argument_list|)
+block|; }
 name|SymbolRef
 name|getSymbol
 argument_list|()
@@ -1231,9 +1289,6 @@ name|friend
 name|class
 name|SVal
 block|;
-name|SymbolVal
-argument_list|()
-block|{}
 specifier|static
 name|bool
 name|isKind
@@ -1437,17 +1492,41 @@ argument_list|,
 argument|&data
 argument_list|)
 block|{
+comment|// We do not need to represent loc::ConcreteInt as LocAsInteger,
+comment|// as it'd collapse into a nonloc::ConcreteInt instead.
 name|assert
 argument_list|(
 name|data
 operator|.
 name|first
 operator|.
-name|getAs
-operator|<
-name|Loc
-operator|>
+name|getBaseKind
+argument_list|()
+operator|==
+name|LocKind
+operator|&&
 operator|(
+name|data
+operator|.
+name|first
+operator|.
+name|getSubKind
+argument_list|()
+operator|==
+name|loc
+operator|::
+name|MemRegionValKind
+operator|||
+name|data
+operator|.
+name|first
+operator|.
+name|getSubKind
+argument_list|()
+operator|==
+name|loc
+operator|::
+name|GotoLabelKind
 operator|)
 argument_list|)
 block|;   }
@@ -2072,23 +2151,7 @@ comment|//  Subclasses of Loc.
 comment|//==------------------------------------------------------------------------==//
 name|namespace
 name|loc
-block|{  enum
-name|Kind
 block|{
-define|#
-directive|define
-name|LOC_SVAL
-parameter_list|(
-name|Id
-parameter_list|,
-name|Parent
-parameter_list|)
-value|Id ## Kind,
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.def"
-block|}
-block|;
 name|class
 name|GotoLabel
 operator|:
@@ -2100,6 +2163,7 @@ operator|:
 name|explicit
 name|GotoLabel
 argument_list|(
+specifier|const
 name|LabelDecl
 operator|*
 name|Label
@@ -2111,7 +2175,12 @@ argument|GotoLabelKind
 argument_list|,
 argument|Label
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|Label
+argument_list|)
+block|;   }
 specifier|const
 name|LabelDecl
 operator|*
@@ -2204,7 +2273,12 @@ argument|MemRegionValKind
 argument_list|,
 argument|r
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|r
+argument_list|)
+block|;   }
 comment|/// \brief Get the underlining region.
 specifier|const
 name|MemRegion

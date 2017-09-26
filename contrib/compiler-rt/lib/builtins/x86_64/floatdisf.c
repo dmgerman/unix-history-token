@@ -3,11 +3,19 @@ begin_comment
 comment|/* This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__x86_64__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_M_X64
+argument_list|)
+end_if
 
 begin_include
 include|#

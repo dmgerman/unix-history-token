@@ -522,12 +522,26 @@ comment|/// Controls which C++ member functions will be considered for inlining.
 name|CXXInlineableMemberKind
 name|CXXMemberInliningMode
 decl_stmt|;
+comment|/// \sa includeImplicitDtorsInCFG
+name|Optional
+operator|<
+name|bool
+operator|>
+name|IncludeImplicitDtorsInCFG
+expr_stmt|;
 comment|/// \sa includeTemporaryDtorsInCFG
 name|Optional
 operator|<
 name|bool
 operator|>
 name|IncludeTemporaryDtorsInCFG
+expr_stmt|;
+comment|/// \sa IncludeLifetimeInCFG
+name|Optional
+operator|<
+name|bool
+operator|>
+name|IncludeLifetimeInCFG
 expr_stmt|;
 comment|/// \sa mayInlineCXXStandardLibrary
 name|Optional
@@ -913,6 +927,24 @@ comment|/// This is controlled by the 'cfg-temporary-dtors' config option, which
 comment|/// accepts the values "true" and "false".
 name|bool
 name|includeTemporaryDtorsInCFG
+parameter_list|()
+function_decl|;
+comment|/// Returns whether or not implicit destructors for C++ objects should
+comment|/// be included in the CFG.
+comment|///
+comment|/// This is controlled by the 'cfg-implicit-dtors' config option, which
+comment|/// accepts the values "true" and "false".
+name|bool
+name|includeImplicitDtorsInCFG
+parameter_list|()
+function_decl|;
+comment|/// Returns whether or not end-of-lifetime information should be included in
+comment|/// the CFG.
+comment|///
+comment|/// This is controlled by the 'cfg-lifetime' config option, which accepts
+comment|/// the values "true" and "false".
+name|bool
+name|includeLifetimeInCFG
 parameter_list|()
 function_decl|;
 comment|/// Returns whether or not C++ standard library functions may be considered

@@ -125,6 +125,10 @@ block|}
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// namespace llvm
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|lld
@@ -150,19 +154,14 @@ operator|~
 name|BitcodeCompiler
 argument_list|()
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|void
 name|add
-argument_list|(
+parameter_list|(
 name|BitcodeFile
-operator|&
+modifier|&
 name|F
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|std
 operator|::
 name|vector
@@ -197,11 +196,28 @@ literal|0
 operator|>>
 name|Buff
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>>
+name|Files
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}
+comment|// namespace elf
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace lld
+end_comment
 
 begin_endif
 endif|#

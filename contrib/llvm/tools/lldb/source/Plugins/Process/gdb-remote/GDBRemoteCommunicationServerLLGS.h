@@ -138,6 +138,13 @@ argument_list|(
 name|MainLoop
 operator|&
 name|mainloop
+argument_list|,
+specifier|const
+name|NativeProcessProtocol
+operator|::
+name|Factory
+operator|&
+name|process_factory
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -150,10 +157,10 @@ comment|/// @param[in] argc
 comment|///     The number of elements in the args array of cstring pointers.
 comment|///
 comment|/// @return
-comment|///     An Error object indicating the success or failure of making
+comment|///     An Status object indicating the success or failure of making
 comment|///     the setting.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|SetLaunchArguments
 parameter_list|(
 specifier|const
@@ -174,10 +181,10 @@ comment|/// @param[in] launch_flags
 comment|///     The launch flags to use when launching this process.
 comment|///
 comment|/// @return
-comment|///     An Error object indicating the success or failure of making
+comment|///     An Status object indicating the success or failure of making
 comment|///     the setting.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|SetLaunchFlags
 parameter_list|(
 name|unsigned
@@ -193,10 +200,10 @@ comment|/// server in a situation where the startup code has been provided
 comment|/// with all the information for a child process to be launched.
 comment|///
 comment|/// @return
-comment|///     An Error object indicating the success or failure of the
+comment|///     An Status object indicating the success or failure of the
 comment|///     launch.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|()
 name|override
@@ -208,10 +215,10 @@ comment|/// This method supports attaching llgs to a process accessible via the
 comment|/// configured Platform.
 comment|///
 comment|/// @return
-comment|///     An Error object indicating the success or failure of the
+comment|///     An Status object indicating the success or failure of the
 comment|///     attach operation.
 comment|//------------------------------------------------------------------
-name|Error
+name|Status
 name|AttachToProcess
 argument_list|(
 name|lldb
@@ -255,7 +262,7 @@ name|process
 argument_list|)
 name|override
 decl_stmt|;
-name|Error
+name|Status
 name|InitializeConnection
 argument_list|(
 name|std
@@ -279,24 +286,40 @@ operator|::
 name|ReadHandleUP
 name|m_network_handle_up
 expr_stmt|;
+specifier|const
+name|NativeProcessProtocol
+operator|::
+name|Factory
+operator|&
+name|m_process_factory
+expr_stmt|;
 name|lldb
 operator|::
 name|tid_t
 name|m_current_tid
+operator|=
+name|LLDB_INVALID_THREAD_ID
 expr_stmt|;
 name|lldb
 operator|::
 name|tid_t
 name|m_continue_tid
+operator|=
+name|LLDB_INVALID_THREAD_ID
 expr_stmt|;
 name|std
 operator|::
 name|recursive_mutex
 name|m_debugged_process_mutex
 expr_stmt|;
-name|NativeProcessProtocolSP
-name|m_debugged_process_sp
-decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|NativeProcessProtocol
+operator|>
+name|m_debugged_process_up
+expr_stmt|;
 name|Communication
 name|m_stdio_communication
 decl_stmt|;
@@ -309,11 +332,22 @@ name|lldb
 operator|::
 name|StateType
 name|m_inferior_prev_state
-expr_stmt|;
+operator|=
 name|lldb
 operator|::
-name|DataBufferSP
-name|m_active_auxv_buffer_sp
+name|StateType
+operator|::
+name|eStateInvalid
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|>
+name|m_active_auxv_buffer_up
 expr_stmt|;
 name|std
 operator|::
@@ -334,11 +368,13 @@ name|m_saved_registers_map
 expr_stmt|;
 name|uint32_t
 name|m_next_saved_registers_id
+init|=
+literal|1
 decl_stmt|;
 name|bool
 name|m_handshake_completed
-range|:
-literal|1
+init|=
+name|false
 decl_stmt|;
 name|PacketResult
 name|SendONotification
@@ -604,6 +640,38 @@ name|packet
 parameter_list|)
 function_decl|;
 name|PacketResult
+name|Handle_jTraceStart
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
+name|PacketResult
+name|Handle_jTraceRead
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
+name|PacketResult
+name|Handle_jTraceStop
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
+name|PacketResult
+name|Handle_jTraceConfigRead
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
+name|PacketResult
 name|Handle_QRestoreRegisterState
 parameter_list|(
 name|StringExtractorGDBRemote
@@ -659,6 +727,14 @@ modifier|&
 name|packet
 parameter_list|)
 function_decl|;
+name|PacketResult
+name|Handle_QPassSignals
+parameter_list|(
+name|StringExtractorGDBRemote
+modifier|&
+name|packet
+parameter_list|)
+function_decl|;
 name|void
 name|SetCurrentThreadID
 argument_list|(
@@ -695,7 +771,7 @@ return|return
 name|m_continue_tid
 return|;
 block|}
-name|Error
+name|Status
 name|SetSTDIOFileDescriptor
 parameter_list|(
 name|int

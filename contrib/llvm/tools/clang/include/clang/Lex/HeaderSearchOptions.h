@@ -431,6 +431,11 @@ name|ModulesValidateDiagnosticOptions
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|ModulesHashContent
+range|:
+literal|1
+decl_stmt|;
 name|HeaderSearchOptions
 argument_list|(
 argument|StringRef _Sysroot =
@@ -531,7 +536,12 @@ argument_list|)
 operator|,
 name|ModulesValidateDiagnosticOptions
 argument_list|(
-argument|true
+name|true
+argument_list|)
+operator|,
+name|ModulesHashContent
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// AddPath - Add the \p Path path to the specified \p Group list.

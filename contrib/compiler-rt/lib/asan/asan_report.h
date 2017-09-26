@@ -90,6 +90,9 @@ decl_stmt|;
 name|uptr
 name|name_len
 decl_stmt|;
+name|uptr
+name|line
+decl_stmt|;
 block|}
 struct|;
 comment|// Returns the number of globals close to the provided address and copies

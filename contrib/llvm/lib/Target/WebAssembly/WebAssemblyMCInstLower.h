@@ -84,7 +84,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|AsmPrinter
+name|WebAssemblyAsmPrinter
 decl_stmt|;
 name|class
 name|MCContext
@@ -107,7 +107,7 @@ name|MCContext
 modifier|&
 name|Ctx
 decl_stmt|;
-name|AsmPrinter
+name|WebAssemblyAsmPrinter
 modifier|&
 name|Printer
 decl_stmt|;
@@ -156,7 +156,7 @@ name|MCContext
 operator|&
 name|ctx
 argument_list|,
-name|AsmPrinter
+name|WebAssemblyAsmPrinter
 operator|&
 name|printer
 argument_list|)

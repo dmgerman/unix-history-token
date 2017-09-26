@@ -1492,6 +1492,8 @@ argument|ArrayRef<const MemRegion *> Explicits
 argument_list|,
 argument|ArrayRef<const MemRegion *> Regions
 argument_list|,
+argument|const LocationContext *LCtx
+argument_list|,
 argument|const CallEvent *Call
 argument_list|)
 block|{
@@ -1514,6 +1516,8 @@ argument_list|,
 name|Explicits
 argument_list|,
 name|Regions
+argument_list|,
+name|LCtx
 argument_list|,
 name|Call
 argument_list|)

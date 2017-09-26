@@ -117,7 +117,7 @@ name|Dictionary
 operator|&
 name|data_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -214,6 +214,14 @@ name|override
 block|;
 name|protected
 operator|:
+name|void
+name|FilterContexts
+argument_list|(
+name|SymbolContextList
+operator|&
+name|sc_list
+argument_list|)
+block|;
 name|friend
 name|class
 name|Breakpoint

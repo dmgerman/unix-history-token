@@ -65,6 +65,18 @@ directive|include
 file|"llvm/CodeGen/GlobalISel/RegisterBankInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_REGBANK_DECLARATIONS
+end_define
+
+begin_include
+include|#
+directive|include
+file|"ARMGenRegisterBank.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -72,28 +84,27 @@ block|{
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
-name|namespace
-name|ARM
+name|class
+name|ARMGenRegisterBankInfo
+range|:
+name|public
+name|RegisterBankInfo
 block|{
-enum|enum
-block|{
-name|GPRRegBankID
-init|=
-literal|0
-block|,
-comment|// General purpose registers
-name|NumRegisterBanks
-block|, }
-enum|;
+define|#
+directive|define
+name|GET_TARGET_REGBANK_CLASS
+include|#
+directive|include
+file|"ARMGenRegisterBank.inc"
 block|}
-comment|// end namespace ARM
+decl_stmt|;
 comment|/// This class provides the information for the target register banks.
 name|class
 name|ARMRegisterBankInfo
 name|final
 range|:
 name|public
-name|RegisterBankInfo
+name|ARMGenRegisterBankInfo
 block|{
 name|public
 operator|:
@@ -115,7 +126,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|const
 name|InstructionMapping
+operator|&
 name|getInstrMapping
 argument_list|(
 argument|const MachineInstr&MI

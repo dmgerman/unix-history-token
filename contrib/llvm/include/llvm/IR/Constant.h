@@ -107,11 +107,6 @@ range|:
 name|public
 name|User
 block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|protected
 operator|:
 name|Constant
@@ -287,7 +282,6 @@ argument_list|()
 block|;
 comment|//// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -379,10 +373,12 @@ name|removeDeadConstantUsers
 argument_list|()
 specifier|const
 block|;
+specifier|const
 name|Constant
 operator|*
 name|stripPointerCasts
 argument_list|()
+specifier|const
 block|{
 return|return
 name|cast
@@ -397,16 +393,21 @@ argument_list|()
 operator|)
 return|;
 block|}
-specifier|const
 name|Constant
 operator|*
 name|stripPointerCasts
 argument_list|()
-specifier|const
 block|{
 return|return
 name|const_cast
 operator|<
+name|Constant
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|Constant
 operator|*
 operator|>
@@ -416,6 +417,7 @@ operator|)
 operator|->
 name|stripPointerCasts
 argument_list|()
+operator|)
 return|;
 block|}
 expr|}

@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_decl_stmt
@@ -127,7 +127,7 @@ name|Dictionary
 operator|&
 name|options_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

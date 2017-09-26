@@ -182,6 +182,62 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Return the default value bound to a region in a given store. The default
+comment|/// binding is the value of sub-regions that were not initialized separately
+comment|/// from their base region. For example, if the structure is zero-initialized
+comment|/// upon construction, this method retrieves the concrete zero value, even if
+comment|/// some or all fields were later overwritten manually. Default binding may be
+comment|/// an unknown, undefined, concrete, or symbolic value.
+comment|/// \param[in] store The store in which to make the lookup.
+comment|/// \param[in] R The region to find the default binding for.
+comment|/// \return The default value bound to the region in the store, if a default
+comment|/// binding exists.
+name|virtual
+name|Optional
+operator|<
+name|SVal
+operator|>
+name|getDefaultBinding
+argument_list|(
+argument|Store store
+argument_list|,
+argument|const MemRegion *R
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Return the default value bound to a LazyCompoundVal. The default binding
+comment|/// is used to represent the value of any fields or elements within the
+comment|/// structure represented by the LazyCompoundVal which were not initialized
+comment|/// explicitly separately from the whole structure. Default binding may be an
+comment|/// unknown, undefined, concrete, or symbolic value.
+comment|/// \param[in] lcv The lazy compound value.
+comment|/// \return The default value bound to the LazyCompoundVal \c lcv, if a
+comment|/// default binding exists.
+name|Optional
+operator|<
+name|SVal
+operator|>
+name|getDefaultBinding
+argument_list|(
+argument|nonloc::LazyCompoundVal lcv
+argument_list|)
+block|{
+return|return
+name|getDefaultBinding
+argument_list|(
+name|lcv
+operator|.
+name|getStore
+argument_list|()
+argument_list|,
+name|lcv
+operator|.
+name|getRegion
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// Return a state with the specified value bound to the given location.
 comment|/// \param[in] store The analysis state.
 comment|/// \param[in] loc The symbolic memory location.
@@ -482,7 +538,7 @@ modifier|*
 name|GetElementZeroRegion
 parameter_list|(
 specifier|const
-name|MemRegion
+name|SubRegion
 modifier|*
 name|R
 parameter_list|,
@@ -836,11 +892,11 @@ block|;
 name|protected
 operator|:
 specifier|const
-name|MemRegion
+name|ElementRegion
 operator|*
 name|MakeElementRegion
 argument_list|(
-argument|const MemRegion *baseRegion
+argument|const SubRegion *baseRegion
 argument_list|,
 argument|QualType pointeeTy
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/GCMetadataPrinter.h - Prints asm GC tables -*- C++ -*-===//
+comment|//===- llvm/CodeGen/GCMetadataPrinter.h - Prints asm GC tables --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -86,18 +86,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/GCMetadata.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/GCStrategy.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Registry.h"
 end_include
 
@@ -106,17 +94,30 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AsmPrinter
+decl_stmt|;
+name|class
 name|GCMetadataPrinter
+decl_stmt|;
+name|class
+name|GCModuleInfo
+decl_stmt|;
+name|class
+name|GCStrategy
+decl_stmt|;
+name|class
+name|Module
 decl_stmt|;
 comment|/// GCMetadataPrinterRegistry - The GC assembly printer registry uses all the
 comment|/// defaults from Registry.
-typedef|typedef
+name|using
+name|GCMetadataPrinterRegistry
+init|=
 name|Registry
 operator|<
 name|GCMetadataPrinter
 operator|>
-name|GCMetadataPrinterRegistry
-expr_stmt|;
+decl_stmt|;
 comment|/// GCMetadataPrinter - Emits GC metadata as assembly code.  Instances are
 comment|/// created, managed, and owned by the AsmPrinter.
 name|class
@@ -124,13 +125,13 @@ name|GCMetadataPrinter
 block|{
 name|private
 label|:
-name|GCStrategy
-modifier|*
-name|S
-decl_stmt|;
 name|friend
 name|class
 name|AsmPrinter
+decl_stmt|;
+name|GCStrategy
+modifier|*
+name|S
 decl_stmt|;
 name|protected
 label|:
@@ -138,7 +139,7 @@ comment|// May only be subclassed.
 name|GCMetadataPrinter
 argument_list|()
 expr_stmt|;
-name|private
+name|public
 label|:
 name|GCMetadataPrinter
 argument_list|(
@@ -161,8 +162,11 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|public
-label|:
+name|virtual
+operator|~
+name|GCMetadataPrinter
+argument_list|()
+expr_stmt|;
 name|GCStrategy
 modifier|&
 name|getStrategy
@@ -211,20 +215,23 @@ modifier|&
 name|AP
 parameter_list|)
 block|{}
-name|virtual
-operator|~
-name|GCMetadataPrinter
-argument_list|()
-expr_stmt|;
 block|}
 empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GCMETADATAPRINTER_H
+end_comment
 
 end_unit
 

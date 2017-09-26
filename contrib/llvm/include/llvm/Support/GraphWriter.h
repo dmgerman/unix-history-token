@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Support/GraphWriter.h - Write graph to a .dot file -*- C++ -*-===//
+comment|//===- llvm/Support/GraphWriter.h - Write graph to a .dot file --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -117,6 +123,36 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
 end_include
 
 begin_include
@@ -156,6 +192,7 @@ name|NodeNumber
 parameter_list|)
 function_decl|;
 block|}
+comment|// end namespace DOT
 name|namespace
 name|GraphProgram
 block|{
@@ -174,6 +211,7 @@ name|CIRCO
 block|}
 enum|;
 block|}
+comment|// end namespace GraphProgram
 name|bool
 name|DisplayGraph
 argument_list|(
@@ -212,44 +250,49 @@ name|GraphType
 operator|&
 name|G
 block|;
-typedef|typedef
+name|using
+name|DOTTraits
+operator|=
 name|DOTGraphTraits
 operator|<
 name|GraphType
 operator|>
-name|DOTTraits
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|GTraits
+operator|=
 name|GraphTraits
 operator|<
 name|GraphType
 operator|>
-name|GTraits
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|NodeRef
+operator|=
 name|typename
 name|GTraits
 operator|::
 name|NodeRef
-name|NodeRef
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|node_iterator
+operator|=
 name|typename
 name|GTraits
 operator|::
 name|nodes_iterator
-name|node_iterator
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|child_iterator
+operator|=
 name|typename
 name|GTraits
 operator|::
 name|ChildIteratorType
-name|child_iterator
-expr_stmt|;
+block|;
 name|DOTTraits
 name|DTraits
-decl_stmt|;
+block|;
 name|static_assert
 argument_list|(
 name|std
@@ -265,45 +308,42 @@ literal|"FIXME: Currently GraphWriter requires the NodeRef type to be "
 literal|"a pointer.\nThe pointer usage should be moved to "
 literal|"DOTGraphTraits, and removed from GraphWriter itself."
 argument_list|)
-expr_stmt|;
+block|;
 comment|// Writes the edge labels of the node to O and returns true if there are any
 comment|// edge labels not equal to the empty string "".
 name|bool
 name|getEdgeSourceLabels
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|O
-parameter_list|,
-name|NodeRef
-name|Node
-parameter_list|)
+argument_list|(
+argument|raw_ostream&O
+argument_list|,
+argument|NodeRef Node
+argument_list|)
 block|{
 name|child_iterator
 name|EI
-init|=
+operator|=
 name|GTraits
 operator|::
 name|child_begin
 argument_list|(
 name|Node
 argument_list|)
-decl_stmt|;
+block|;
 name|child_iterator
 name|EE
-init|=
+operator|=
 name|GTraits
 operator|::
 name|child_end
 argument_list|(
 name|Node
 argument_list|)
-decl_stmt|;
+block|;
 name|bool
 name|hasEdgeSourceLabels
-init|=
+operator|=
 name|false
-decl_stmt|;
+block|;
 for|for
 control|(
 name|unsigned
@@ -612,45 +652,29 @@ block|{
 comment|// Loop over the graph, printing it out...
 for|for
 control|(
-name|node_iterator
-name|I
-init|=
-name|GTraits
-operator|::
-name|nodes_begin
-argument_list|(
+specifier|const
+specifier|auto
+name|Node
+range|:
+name|nodes
+operator|<
+name|GraphType
+operator|>
+operator|(
 name|G
-argument_list|)
-init|,
-name|E
-init|=
-name|GTraits
-operator|::
-name|nodes_end
-argument_list|(
-name|G
-argument_list|)
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
+operator|)
 control|)
 if|if
 condition|(
 operator|!
 name|isNodeHidden
 argument_list|(
-operator|*
-name|I
+name|Node
 argument_list|)
 condition|)
 name|writeNode
 argument_list|(
-operator|*
-name|I
+name|Node
 argument_list|)
 expr_stmt|;
 block|}
@@ -1882,13 +1906,17 @@ end_expr_stmt
 
 begin_comment
 unit|}  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_GRAPHWRITER_H
+end_comment
 
 end_unit
 

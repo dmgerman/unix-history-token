@@ -70,13 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamReader.h"
+file|"llvm/DebugInfo/CodeView/TypeIndex.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/MSF/StreamRef.h"
+file|"llvm/Support/BinaryStreamReader.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/BinaryStreamRef.h"
 end_include
 
 begin_include
@@ -116,9 +122,14 @@ name|public
 operator|:
 name|CVRecord
 argument_list|()
-operator|=
-expr|default
-block|;
+operator|:
+name|Type
+argument_list|(
+argument|static_cast<Kind>(
+literal|0
+argument|)
+argument_list|)
+block|{}
 name|CVRecord
 argument_list|(
 argument|Kind K
@@ -136,6 +147,23 @@ argument_list|(
 argument|Data
 argument_list|)
 block|{}
+name|bool
+name|valid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Type
+operator|!=
+name|static_cast
+operator|<
+name|Kind
+operator|>
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|uint32_t
 name|length
 argument_list|()
@@ -167,6 +195,34 @@ specifier|const
 block|{
 return|return
 name|RecordData
+return|;
+block|}
+name|StringRef
+name|str_data
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StringRef
+argument_list|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+operator|(
+name|RecordData
+operator|.
+name|data
+argument_list|()
+operator|)
+argument_list|,
+name|RecordData
+operator|.
+name|size
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|ArrayRef
@@ -227,11 +283,55 @@ operator|>
 name|Hash
 block|; }
 expr_stmt|;
+name|template
+operator|<
+name|typename
+name|Kind
+operator|>
+expr|struct
+name|RemappedRecord
+block|{
+name|explicit
+name|RemappedRecord
+argument_list|(
+specifier|const
+name|CVRecord
+operator|<
+name|Kind
+operator|>
+operator|&
+name|R
+argument_list|)
+operator|:
+name|OriginalRecord
+argument_list|(
+argument|R
+argument_list|)
+block|{}
+name|CVRecord
+operator|<
+name|Kind
+operator|>
+name|OriginalRecord
+block|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|uint32_t
+block|,
+name|TypeIndex
+operator|>
+block|,
+literal|8
+operator|>
+name|Mappings
+block|; }
+expr_stmt|;
 block|}
 comment|// end namespace codeview
-name|namespace
-name|msf
-block|{
 name|template
 operator|<
 name|typename
@@ -251,7 +351,7 @@ name|Error
 name|operator
 argument_list|()
 operator|(
-name|ReadableStreamRef
+name|BinaryStreamRef
 name|Stream
 operator|,
 name|uint32_t
@@ -267,7 +367,6 @@ operator|>
 operator|&
 name|Item
 operator|)
-specifier|const
 block|{
 name|using
 name|namespace
@@ -280,7 +379,7 @@ name|Prefix
 operator|=
 name|nullptr
 block|;
-name|StreamReader
+name|BinaryStreamReader
 name|Reader
 argument_list|(
 name|Stream
@@ -409,20 +508,10 @@ name|success
 argument_list|()
 return|;
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
-comment|// end namespace msf
-end_comment
-
-begin_comment
-unit|}
+unit|};  }
 comment|// end namespace llvm
 end_comment
 

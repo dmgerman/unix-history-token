@@ -146,7 +146,7 @@ comment|// so if not set correctly, the dwarf data will be
 comment|// messed up in random places by 4 bytes. .debug_line
 comment|// section will be parsable, but with odd offsets and
 comment|// line numbers, etc.
-name|PointerSize
+name|CodePointerSize
 operator|=
 literal|8
 block|;   }

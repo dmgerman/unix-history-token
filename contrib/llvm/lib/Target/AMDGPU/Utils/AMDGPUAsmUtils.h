@@ -94,6 +94,20 @@ index|[]
 decl_stmt|;
 block|}
 comment|// namespace Hwreg
+name|namespace
+name|Swizzle
+block|{
+comment|// Symbolic names for the swizzle(...) syntax.
+specifier|extern
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|IdSymbolic
+index|[]
+decl_stmt|;
+block|}
+comment|// namespace Swizzle
 block|}
 comment|// namespace AMDGPU
 block|}

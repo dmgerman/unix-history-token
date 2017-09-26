@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_include
@@ -326,6 +326,14 @@ name|amount
 parameter_list|)
 function_decl|;
 name|bool
+name|lea_rbp_rsp_pattern_p
+parameter_list|(
+name|int
+modifier|&
+name|amount
+parameter_list|)
+function_decl|;
+name|bool
 name|push_reg_p
 parameter_list|(
 name|int
@@ -391,6 +399,9 @@ parameter_list|,
 name|int
 modifier|&
 name|length
+parameter_list|,
+name|uint32_t
+name|buffer_remaining_bytes
 parameter_list|)
 function_decl|;
 name|bool

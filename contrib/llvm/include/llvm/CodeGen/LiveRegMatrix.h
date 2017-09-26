@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- LiveRegMatrix.h - Track register interference ---------*- C++ -*---===//
+comment|//===- LiveRegMatrix.h - Track register interference ----------*- C++ -*---===//
 end_comment
 
 begin_comment
@@ -117,15 +117,27 @@ directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
+name|AnalysisUsage
+decl_stmt|;
+name|class
 name|LiveInterval
 decl_stmt|;
 name|class
-name|LiveIntervalAnalysis
+name|LiveIntervals
+decl_stmt|;
+name|class
+name|MachineFunction
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
@@ -155,6 +167,8 @@ block|;
 comment|// UserTag changes whenever virtual registers have been modified.
 name|unsigned
 name|UserTag
+operator|=
+literal|0
 block|;
 comment|// The matrix is represented as a LiveIntervalUnion per register unit.
 name|LiveIntervalUnion
@@ -182,9 +196,13 @@ block|;
 comment|// Cached register mask interference info.
 name|unsigned
 name|RegMaskTag
+operator|=
+literal|0
 block|;
 name|unsigned
 name|RegMaskVirtReg
+operator|=
+literal|0
 block|;
 name|BitVector
 name|RegMaskUsable
@@ -341,7 +359,7 @@ name|Query
 operator|&
 name|query
 argument_list|(
-argument|LiveInterval&VirtReg
+argument|const LiveRange&LR
 argument_list|,
 argument|unsigned RegUnit
 argument_list|)

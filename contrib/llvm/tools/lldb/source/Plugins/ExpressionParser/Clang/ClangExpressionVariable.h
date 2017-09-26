@@ -110,12 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Value.h"
 end_include
 
@@ -129,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/TaggedASTType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_include

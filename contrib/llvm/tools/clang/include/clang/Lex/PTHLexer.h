@@ -108,7 +108,7 @@ operator|*
 name|LastHashTokPtr
 block|;
 comment|/// PPCond - Pointer to a side table in the PTH file that provides a
-comment|///  a consise summary of the preproccessor conditional block structure.
+comment|///  a concise summary of the preprocessor conditional block structure.
 comment|///  This is used to perform quick skipping of conditional blocks.
 specifier|const
 name|unsigned

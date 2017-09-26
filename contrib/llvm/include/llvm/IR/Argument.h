@@ -87,16 +87,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|typename
-name|NodeTy
-operator|>
-name|class
-name|SymbolTableListTraits
-expr_stmt|;
-comment|/// \brief LLVM Argument representation
-comment|///
 comment|/// This class represents an incoming formal argument to a Function. A formal
 comment|/// argument, since it is ``formal'', does not contain an actual value but
 comment|/// instead represents the type, argument number, and attributes of an argument
@@ -105,67 +95,47 @@ comment|/// argument of course represents the value of the actual argument that 
 comment|/// function was called with.
 name|class
 name|Argument
+name|final
 range|:
 name|public
 name|Value
-decl_stmt|,
-name|public
-name|ilist_node
-decl|<
-name|Argument
-decl|>
 block|{
-name|virtual
-name|void
-name|anchor
-parameter_list|()
-function_decl|;
 name|Function
-modifier|*
+operator|*
 name|Parent
-decl_stmt|;
+block|;
+name|unsigned
+name|ArgNo
+block|;
 name|friend
 name|class
-name|SymbolTableListTraits
-operator|<
-name|Argument
-operator|>
-expr_stmt|;
+name|Function
+block|;
 name|void
 name|setParent
-parameter_list|(
+argument_list|(
 name|Function
-modifier|*
+operator|*
 name|parent
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|public
-label|:
-comment|/// \brief Constructor.
-comment|///
-comment|/// If \p F is specified, the argument is inserted at the end of the argument
-comment|/// list for \p F.
+operator|:
+comment|/// Argument constructor.
 name|explicit
 name|Argument
-parameter_list|(
-name|Type
-modifier|*
-name|Ty
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|Name
-init|=
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|const Twine&Name =
 literal|""
-parameter_list|,
-name|Function
-modifier|*
-name|F
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|,
+argument|Function *F = nullptr
+argument_list|,
+argument|unsigned ArgNo =
+literal|0
+argument_list|)
+block|;
 specifier|inline
 specifier|const
 name|Function
@@ -180,238 +150,183 @@ return|;
 block|}
 specifier|inline
 name|Function
-modifier|*
+operator|*
 name|getParent
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Parent
 return|;
 block|}
-comment|/// \brief Return the index of this formal argument in its containing
-comment|/// function.
+comment|/// Return the index of this formal argument in its containing function.
 comment|///
 comment|/// For example in "void foo(int a, float b)" a is 0 and b is 1.
 name|unsigned
 name|getArgNo
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the nonnull attribute on it in
-comment|/// its containing function. Also returns true if at least one byte is known
-comment|/// to be dereferenceable and the pointer is in addrspace(0).
+block|{
+name|assert
+argument_list|(
+name|Parent
+operator|&&
+literal|"can't get number of unparented arg"
+argument_list|)
+block|;
+return|return
+name|ArgNo
+return|;
+block|}
+comment|/// Return true if this argument has the nonnull attribute. Also returns true
+comment|/// if at least one byte is known to be dereferenceable and the pointer is in
+comment|/// addrspace(0).
 name|bool
 name|hasNonNullAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief If this argument has the dereferenceable attribute on it in its
-comment|/// containing function, return the number of bytes known to be
-comment|/// dereferenceable. Otherwise, zero is returned.
+block|;
+comment|/// If this argument has the dereferenceable attribute, return the number of
+comment|/// bytes known to be dereferenceable. Otherwise, zero is returned.
 name|uint64_t
 name|getDereferenceableBytes
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief If this argument has the dereferenceable_or_null attribute on
-comment|/// it in its containing function, return the number of bytes known to be
-comment|/// dereferenceable. Otherwise, zero is returned.
+block|;
+comment|/// If this argument has the dereferenceable_or_null attribute, return the
+comment|/// number of bytes known to be dereferenceable. Otherwise, zero is returned.
 name|uint64_t
 name|getDereferenceableOrNullBytes
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the byval attribute on it in its
-comment|/// containing function.
+block|;
+comment|/// Return true if this argument has the byval attribute.
 name|bool
 name|hasByValAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the swiftself attribute.
+block|;
+comment|/// Return true if this argument has the swiftself attribute.
 name|bool
 name|hasSwiftSelfAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the swifterror attribute.
+block|;
+comment|/// Return true if this argument has the swifterror attribute.
 name|bool
 name|hasSwiftErrorAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the byval attribute or inalloca
-comment|/// attribute on it in its containing function.  These attributes both
-comment|/// represent arguments being passed by value.
+block|;
+comment|/// Return true if this argument has the byval attribute or inalloca
+comment|/// attribute. These attributes represent arguments being passed by value.
 name|bool
 name|hasByValOrInAllocaAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief If this is a byval or inalloca argument, return its alignment.
+block|;
+comment|/// If this is a byval or inalloca argument, return its alignment.
 name|unsigned
 name|getParamAlignment
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the nest attribute on it in its
-comment|/// containing function.
+block|;
+comment|/// Return true if this argument has the nest attribute.
 name|bool
 name|hasNestAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the noalias attribute on it in its
-comment|/// containing function.
+block|;
+comment|/// Return true if this argument has the noalias attribute.
 name|bool
 name|hasNoAliasAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the nocapture attribute on it in
-comment|/// its containing function.
+block|;
+comment|/// Return true if this argument has the nocapture attribute.
 name|bool
 name|hasNoCaptureAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the sret attribute on it in its
-comment|/// containing function.
+block|;
+comment|/// Return true if this argument has the sret attribute.
 name|bool
 name|hasStructRetAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the returned attribute on it in
-comment|/// its containing function.
+block|;
+comment|/// Return true if this argument has the returned attribute.
 name|bool
 name|hasReturnedAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the readonly or readnone attribute
-comment|/// on it in its containing function.
+block|;
+comment|/// Return true if this argument has the readonly or readnone attribute.
 name|bool
 name|onlyReadsMemory
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the inalloca attribute on it in
-comment|/// its containing function.
+block|;
+comment|/// Return true if this argument has the inalloca attribute.
 name|bool
 name|hasInAllocaAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the zext attribute on it in its
-comment|/// containing function.
+block|;
+comment|/// Return true if this argument has the zext attribute.
 name|bool
 name|hasZExtAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Return true if this argument has the sext attribute on it in its
-comment|/// containing function.
+block|;
+comment|/// Return true if this argument has the sext attribute.
 name|bool
 name|hasSExtAttr
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// \brief Add a Attribute to an argument.
+block|;
+comment|/// Add attributes to an argument.
 name|void
-name|addAttr
-parameter_list|(
-name|AttributeSet
-name|AS
-parameter_list|)
-function_decl|;
+name|addAttrs
+argument_list|(
+name|AttrBuilder
+operator|&
+name|B
+argument_list|)
+block|;
 name|void
 name|addAttr
 argument_list|(
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
+argument|Attribute::AttrKind Kind
 argument_list|)
-block|{
+block|;
+name|void
 name|addAttr
 argument_list|(
-name|AttributeSet
-operator|::
-name|get
-argument_list|(
-name|getContext
-argument_list|()
-argument_list|,
-name|getArgNo
-argument_list|()
-operator|+
-literal|1
-argument_list|,
-name|Kind
+argument|Attribute Attr
 argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// \brief Remove a Attribute from an argument.
-name|void
-name|removeAttr
-parameter_list|(
-name|AttributeSet
-name|AS
-parameter_list|)
-function_decl|;
+block|;
+comment|/// Remove attributes from an argument.
 name|void
 name|removeAttr
 argument_list|(
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
+argument|Attribute::AttrKind Kind
 argument_list|)
-block|{
-name|removeAttr
-argument_list|(
-name|AttributeSet
-operator|::
-name|get
-argument_list|(
-name|getContext
-argument_list|()
-argument_list|,
-name|getArgNo
-argument_list|()
-operator|+
-literal|1
-argument_list|,
-name|Kind
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// \brief Checks if an argument has a given attribute.
+block|;
+comment|/// Check if an argument has a given attribute.
 name|bool
 name|hasAttribute
 argument_list|(
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
+argument|Attribute::AttrKind Kind
 argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Method for support type inquiry through isa, cast, and
-comment|/// dyn_cast.
+specifier|const
+block|;
+comment|/// Method for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|V
@@ -422,9 +337,8 @@ operator|==
 name|ArgumentVal
 return|;
 block|}
-block|}
-empty_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

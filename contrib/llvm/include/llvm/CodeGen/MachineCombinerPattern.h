@@ -124,6 +124,10 @@ name|FMULSUBD_OP1
 operator|,
 name|FMULSUBD_OP2
 operator|,
+name|FNMULSUBS_OP1
+operator|,
+name|FNMULSUBD_OP1
+operator|,
 name|FMLAv1i32_indexed_OP1
 operator|,
 name|FMLAv1i32_indexed_OP2

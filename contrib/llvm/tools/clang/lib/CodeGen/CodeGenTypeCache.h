@@ -197,6 +197,23 @@ name|Int8PtrPtrTy
 expr_stmt|;
 block|}
 union|;
+comment|/// void* in alloca address space
+union|union
+block|{
+name|llvm
+operator|::
+name|PointerType
+operator|*
+name|AllocaVoidPtrTy
+expr_stmt|;
+name|llvm
+operator|::
+name|PointerType
+operator|*
+name|AllocaInt8PtrTy
+expr_stmt|;
+block|}
+union|;
 comment|/// The size and alignment of the builtin C type 'int'.  This comes
 comment|/// up enough in various ABI lowering tasks to be worth pre-computing.
 union|union
@@ -271,6 +288,9 @@ name|SizeAlignInBytes
 decl_stmt|;
 block|}
 union|;
+name|unsigned
+name|ASTAllocaAddressSpace
+decl_stmt|;
 name|CharUnits
 name|getSizeSize
 argument_list|()
@@ -365,6 +385,15 @@ specifier|const
 block|{
 return|return
 name|BuiltinCC
+return|;
+block|}
+name|unsigned
+name|getASTAllocaAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ASTAllocaAddressSpace
 return|;
 block|}
 block|}

@@ -149,7 +149,7 @@ operator|&
 name|Roots
 argument_list|)
 block|;
-name|ConstantRange
+name|void
 name|seen
 argument_list|(
 argument|Instruction *I

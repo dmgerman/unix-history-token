@@ -258,17 +258,19 @@ name|ImmutableList
 block|{
 name|public
 operator|:
-typedef|typedef
-name|T
+name|using
 name|value_type
-typedef|;
-typedef|typedef
+operator|=
+name|T
+block|;
+name|using
+name|Factory
+operator|=
 name|ImmutableListFactory
 operator|<
 name|T
 operator|>
-name|Factory
-expr_stmt|;
+block|;
 name|private
 operator|:
 specifier|const
@@ -278,9 +280,9 @@ name|T
 operator|>
 operator|*
 name|X
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 comment|// This constructor should normally only be called by ImmutableListFactory<T>.
 comment|// There may be cases, however, when one needs to extract the internal pointer
 comment|// and reconstruct a list object from that pointer.
@@ -328,19 +330,19 @@ operator|*
 name|L
 operator|=
 name|nullptr
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|iterator
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 name|iterator
 argument_list|(
 argument|ImmutableList l
 argument_list|)
-block|:
+operator|:
 name|L
 argument_list|(
 argument|l.getInternalPointer()
@@ -428,8 +430,8 @@ return|return
 name|L
 return|;
 block|}
-block|}
-empty_stmt|;
+expr|}
+block|;
 comment|/// begin - Returns an iterator referring to the head of the list, or
 comment|///  an iterator denoting the end of the list if the list is empty.
 name|iterator
@@ -470,12 +472,9 @@ block|}
 name|bool
 name|contains
 argument_list|(
-specifier|const
-name|T
-operator|&
-name|V
+argument|const T& V
 argument_list|)
-decl|const
+specifier|const
 block|{
 for|for
 control|(
@@ -521,12 +520,9 @@ comment|///  ImmutableListFactory.
 name|bool
 name|isEqual
 argument_list|(
-specifier|const
-name|ImmutableList
-operator|&
-name|L
+argument|const ImmutableList& L
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|X
@@ -557,9 +553,9 @@ block|}
 comment|/// getHead - Returns the head of the list.
 specifier|const
 name|T
-modifier|&
+operator|&
 name|getHead
-parameter_list|()
+argument_list|()
 block|{
 name|assert
 argument_list|(
@@ -569,7 +565,7 @@ argument_list|()
 operator|&&
 literal|"Cannot get the head of an empty list."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|X
 operator|->
@@ -581,27 +577,25 @@ comment|/// getTail - Returns the tail of the list, which is another (possibly e
 comment|///  ImmutableList.
 name|ImmutableList
 name|getTail
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|X
-condition|?
+operator|?
 name|X
 operator|->
 name|getTail
 argument_list|()
-else|:
+operator|:
 name|nullptr
 return|;
 block|}
 name|void
 name|Profile
 argument_list|(
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|FoldingSetNodeID& ID
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|ID
 operator|.
@@ -609,16 +603,9 @@ name|AddPointer
 argument_list|(
 name|X
 argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+block|;   }
+expr|}
+block|;
 name|template
 operator|<
 name|typename
@@ -627,38 +614,28 @@ operator|>
 name|class
 name|ImmutableListFactory
 block|{
-typedef|typedef
+name|using
+name|ListTy
+operator|=
 name|ImmutableListImpl
 operator|<
 name|T
 operator|>
-name|ListTy
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|CacheTy
+operator|=
 name|FoldingSet
 operator|<
 name|ListTy
 operator|>
-name|CacheTy
-expr_stmt|;
-end_typedef
-
-begin_decl_stmt
+block|;
 name|CacheTy
 name|Cache
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|uintptr_t
 name|Allocator
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+block|;
 name|bool
 name|ownsAllocator
 argument_list|()
@@ -674,9 +651,6 @@ operator|==
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|BumpPtrAllocator
 operator|&
 name|getAllocator
@@ -698,14 +672,8 @@ literal|0x1
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_label
 name|public
-label|:
-end_label
-
-begin_expr_stmt
+operator|:
 name|ImmutableListFactory
 argument_list|()
 operator|:
@@ -742,9 +710,6 @@ name|getAllocator
 parameter_list|()
 function_decl|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|ImmutableList
 operator|<
 name|T
@@ -849,16 +814,11 @@ name|InsertPos
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_return
 return|return
 name|L
 return|;
-end_return
-
-begin_expr_stmt
-unit|}    ImmutableList
+block|}
+name|ImmutableList
 operator|<
 name|T
 operator|>
@@ -878,9 +838,6 @@ name|L
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|ImmutableList
 operator|<
 name|T
@@ -899,9 +856,6 @@ name|nullptr
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|ImmutableList
 operator|<
 name|T
@@ -921,22 +875,11 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Partially-specialized Traits.
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -944,10 +887,7 @@ name|T
 operator|>
 expr|struct
 name|DenseMapInfo
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -1009,23 +949,16 @@ literal|2
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 specifier|static
 name|unsigned
 name|getHashValue
 argument_list|(
-name|ImmutableList
-operator|<
-name|T
-operator|>
-name|X
+argument|ImmutableList<T> X
 argument_list|)
 block|{
 name|uintptr_t
 name|PtrVal
-init|=
+operator|=
 name|reinterpret_cast
 operator|<
 name|uintptr_t
@@ -1036,7 +969,7 @@ operator|.
 name|getInternalPointer
 argument_list|()
 operator|)
-decl_stmt|;
+block|;
 return|return
 operator|(
 name|unsigned
@@ -1063,24 +996,13 @@ literal|9
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|bool
 name|isEqual
 argument_list|(
-name|ImmutableList
-operator|<
-name|T
-operator|>
-name|X1
+argument|ImmutableList<T> X1
 argument_list|,
-name|ImmutableList
-operator|<
-name|T
-operator|>
-name|X2
+argument|ImmutableList<T> X2
 argument_list|)
 block|{
 return|return
@@ -1089,10 +1011,8 @@ operator|==
 name|X2
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 name|typename
@@ -1100,10 +1020,7 @@ name|T
 operator|>
 expr|struct
 name|isPodLike
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -1124,11 +1041,10 @@ name|value
 operator|=
 name|true
 block|; }
-expr_stmt|;
-end_expr_stmt
+block|;  }
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/BinaryFormat/Wasm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
@@ -85,6 +91,9 @@ name|llvm
 block|{
 name|class
 name|MCELFStreamer
+decl_stmt|;
+name|class
+name|MCWasmStreamer
 decl_stmt|;
 comment|/// WebAssembly-specific streamer interface, to implement support
 comment|/// WebAssembly-specific assembly directives.
@@ -109,6 +118,10 @@ name|virtual
 name|void
 name|emitParam
 argument_list|(
+name|MCSymbol
+operator|*
+name|Symbol
+argument_list|,
 name|ArrayRef
 operator|<
 name|MVT
@@ -123,6 +136,10 @@ name|virtual
 name|void
 name|emitResult
 argument_list|(
+name|MCSymbol
+operator|*
+name|Symbol
+argument_list|,
 name|ArrayRef
 operator|<
 name|MVT
@@ -146,6 +163,32 @@ argument_list|)
 operator|=
 literal|0
 block|;
+comment|/// .globalvar
+name|virtual
+name|void
+name|emitGlobal
+argument_list|(
+name|ArrayRef
+operator|<
+name|wasm
+operator|::
+name|Global
+operator|>
+name|Globals
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|/// .stack_pointer
+name|virtual
+name|void
+name|emitStackPointer
+argument_list|(
+argument|uint32_t Index
+argument_list|)
+operator|=
+literal|0
+block|;
 comment|/// .endfunc
 name|virtual
 name|void
@@ -159,18 +202,27 @@ name|virtual
 name|void
 name|emitIndirectFunctionType
 argument_list|(
-argument|StringRef name
+name|MCSymbol
+operator|*
+name|Symbol
 argument_list|,
-argument|SmallVectorImpl<MVT>&Params
+name|SmallVectorImpl
+operator|<
+name|MVT
+operator|>
+operator|&
+name|Params
 argument_list|,
-argument|SmallVectorImpl<MVT>&Results
+name|SmallVectorImpl
+operator|<
+name|MVT
+operator|>
+operator|&
+name|Results
 argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"emitIndirectFunctionType not implemented"
-argument_list|)
-block|;   }
+operator|=
+literal|0
+block|;
 comment|/// .indidx
 name|virtual
 name|void
@@ -193,6 +245,14 @@ argument|StringRef name
 argument_list|)
 operator|=
 literal|0
+block|;
+name|protected
+operator|:
+name|void
+name|emitValueType
+argument_list|(
+argument|wasm::ValType Type
+argument_list|)
 block|; }
 decl_stmt|;
 comment|/// This part is for ascii assembly output
@@ -223,6 +283,8 @@ block|;
 name|void
 name|emitParam
 argument_list|(
+argument|MCSymbol *Symbol
+argument_list|,
 argument|ArrayRef<MVT> Types
 argument_list|)
 name|override
@@ -230,6 +292,8 @@ block|;
 name|void
 name|emitResult
 argument_list|(
+argument|MCSymbol *Symbol
+argument_list|,
 argument|ArrayRef<MVT> Types
 argument_list|)
 name|override
@@ -242,6 +306,20 @@ argument_list|)
 name|override
 block|;
 name|void
+name|emitGlobal
+argument_list|(
+argument|ArrayRef<wasm::Global> Globals
+argument_list|)
+name|override
+block|;
+name|void
+name|emitStackPointer
+argument_list|(
+argument|uint32_t Index
+argument_list|)
+name|override
+block|;
+name|void
 name|emitEndFunc
 argument_list|()
 name|override
@@ -249,7 +327,7 @@ block|;
 name|void
 name|emitIndirectFunctionType
 argument_list|(
-argument|StringRef name
+argument|MCSymbol *Symbol
 argument_list|,
 argument|SmallVectorImpl<MVT>&Params
 argument_list|,
@@ -293,6 +371,8 @@ block|;
 name|void
 name|emitParam
 argument_list|(
+argument|MCSymbol *Symbol
+argument_list|,
 argument|ArrayRef<MVT> Types
 argument_list|)
 name|override
@@ -300,6 +380,8 @@ block|;
 name|void
 name|emitResult
 argument_list|(
+argument|MCSymbol *Symbol
+argument_list|,
 argument|ArrayRef<MVT> Types
 argument_list|)
 name|override
@@ -312,6 +394,20 @@ argument_list|)
 name|override
 block|;
 name|void
+name|emitGlobal
+argument_list|(
+argument|ArrayRef<wasm::Global> Globals
+argument_list|)
+name|override
+block|;
+name|void
+name|emitStackPointer
+argument_list|(
+argument|uint32_t Index
+argument_list|)
+name|override
+block|;
+name|void
 name|emitEndFunc
 argument_list|()
 name|override
@@ -319,7 +415,95 @@ block|;
 name|void
 name|emitIndirectFunctionType
 argument_list|(
+argument|MCSymbol *Symbol
+argument_list|,
+argument|SmallVectorImpl<MVT>&Params
+argument_list|,
+argument|SmallVectorImpl<MVT>&Results
+argument_list|)
+name|override
+block|;
+name|void
+name|emitIndIdx
+argument_list|(
+argument|const MCExpr *Value
+argument_list|)
+name|override
+block|;
+name|void
+name|emitGlobalImport
+argument_list|(
 argument|StringRef name
+argument_list|)
+name|override
+block|; }
+decl_stmt|;
+comment|/// This part is for Wasm object output
+name|class
+name|WebAssemblyTargetWasmStreamer
+name|final
+range|:
+name|public
+name|WebAssemblyTargetStreamer
+block|{
+name|public
+operator|:
+name|explicit
+name|WebAssemblyTargetWasmStreamer
+argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|)
+block|;
+name|void
+name|emitParam
+argument_list|(
+argument|MCSymbol *Symbol
+argument_list|,
+argument|ArrayRef<MVT> Types
+argument_list|)
+name|override
+block|;
+name|void
+name|emitResult
+argument_list|(
+argument|MCSymbol *Symbol
+argument_list|,
+argument|ArrayRef<MVT> Types
+argument_list|)
+name|override
+block|;
+name|void
+name|emitLocal
+argument_list|(
+argument|ArrayRef<MVT> Types
+argument_list|)
+name|override
+block|;
+name|void
+name|emitGlobal
+argument_list|(
+argument|ArrayRef<wasm::Global> Globals
+argument_list|)
+name|override
+block|;
+name|void
+name|emitStackPointer
+argument_list|(
+argument|uint32_t Index
+argument_list|)
+name|override
+block|;
+name|void
+name|emitEndFunc
+argument_list|()
+name|override
+block|;
+name|void
+name|emitIndirectFunctionType
+argument_list|(
+argument|MCSymbol *Symbol
 argument_list|,
 argument|SmallVectorImpl<MVT>&Params
 argument_list|,

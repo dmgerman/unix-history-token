@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Support/UniqueLock.h - Acquire/Release Mutex In Scope ---*- C++ -*-===//
+comment|//===- Support/UniqueLock.h - Acquire/Release Mutex In Scope ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Mutex.h"
+file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -90,45 +90,21 @@ block|{
 name|MutexT
 operator|*
 name|M
+operator|=
+name|nullptr
 block|;
 name|bool
 name|locked
-block|;
-name|unique_lock
-argument_list|(
-specifier|const
-name|unique_lock
-operator|&
-argument_list|)
 operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|unique_lock
-operator|&
-operator|)
-operator|=
-name|delete
+name|false
 block|;
 name|public
 operator|:
 name|unique_lock
 argument_list|()
-operator|:
-name|M
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|locked
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|explicit
 name|unique_lock
 argument_list|(
@@ -153,6 +129,27 @@ operator|->
 name|lock
 argument_list|()
 block|; }
+name|unique_lock
+argument_list|(
+specifier|const
+name|unique_lock
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|unique_lock
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|unique_lock
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 name|void
 name|operator
 operator|=
@@ -283,8 +280,12 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

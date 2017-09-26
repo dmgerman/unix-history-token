@@ -65,7 +65,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|struct
+name|class
 name|LoopUnrollPass
 range|:
 name|public
@@ -74,36 +74,79 @@ operator|<
 name|LoopUnrollPass
 operator|>
 block|{
-name|Optional
-operator|<
-name|unsigned
-operator|>
-name|ProvidedCount
-block|;
-name|Optional
-operator|<
-name|unsigned
-operator|>
-name|ProvidedThreshold
-block|;
-name|Optional
-operator|<
+specifier|const
 name|bool
-operator|>
-name|ProvidedAllowPartial
+name|AllowPartialUnrolling
 block|;
-name|Optional
-operator|<
-name|bool
-operator|>
-name|ProvidedRuntime
+specifier|const
+name|int
+name|OptLevel
 block|;
-name|Optional
-operator|<
-name|bool
-operator|>
-name|ProvidedUpperBound
-block|;
+name|explicit
+name|LoopUnrollPass
+argument_list|(
+argument|bool AllowPartialUnrolling
+argument_list|,
+argument|int OptLevel
+argument_list|)
+operator|:
+name|AllowPartialUnrolling
+argument_list|(
+name|AllowPartialUnrolling
+argument_list|)
+block|,
+name|OptLevel
+argument_list|(
+argument|OptLevel
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Create an instance of the loop unroll pass that will support both full
+comment|/// and partial unrolling.
+comment|///
+comment|/// This uses the target information (or flags) to control the thresholds for
+comment|/// different unrolling stategies but supports all of them.
+specifier|static
+name|LoopUnrollPass
+name|create
+argument_list|(
+argument|int OptLevel =
+literal|2
+argument_list|)
+block|{
+return|return
+name|LoopUnrollPass
+argument_list|(
+comment|/*AllowPartialUnrolling*/
+name|true
+argument_list|,
+name|OptLevel
+argument_list|)
+return|;
+block|}
+comment|/// Create an instance of the loop unroll pass that only does full loop
+comment|/// unrolling.
+comment|///
+comment|/// This will disable any runtime or partial unrolling.
+specifier|static
+name|LoopUnrollPass
+name|createFull
+argument_list|(
+argument|int OptLevel =
+literal|2
+argument_list|)
+block|{
+return|return
+name|LoopUnrollPass
+argument_list|(
+comment|/*AllowPartialUnrolling*/
+name|false
+argument_list|,
+name|OptLevel
+argument_list|)
+return|;
+block|}
 name|PreservedAnalyses
 name|run
 argument_list|(

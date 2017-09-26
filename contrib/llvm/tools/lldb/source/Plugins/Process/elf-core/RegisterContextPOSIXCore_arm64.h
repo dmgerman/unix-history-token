@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataBufferHeap.h"
+file|"lldb/Utility/DataBufferHeap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataExtractor.h"
+file|"lldb/Utility/DataExtractor.h"
 end_include
 
 begin_decl_stmt

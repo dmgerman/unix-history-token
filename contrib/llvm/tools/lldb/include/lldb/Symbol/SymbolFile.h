@@ -671,6 +671,11 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|void
+name|PreloadSymbols
+argument_list|()
+block|;
+name|virtual
 name|lldb_private
 operator|::
 name|TypeSystem

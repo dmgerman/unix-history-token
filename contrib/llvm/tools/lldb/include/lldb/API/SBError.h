@@ -269,6 +269,13 @@ end_decl_stmt
 begin_decl_stmt
 name|friend
 name|class
+name|SBTrace
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
 name|SBTarget
 decl_stmt|;
 end_decl_stmt
@@ -304,7 +311,7 @@ end_decl_stmt
 begin_expr_stmt
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|*
 name|get
 argument_list|()
@@ -314,7 +321,7 @@ end_expr_stmt
 begin_expr_stmt
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|*
 name|operator
 operator|->
@@ -330,7 +337,7 @@ begin_expr_stmt
 specifier|const
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|operator
 operator|*
@@ -343,7 +350,7 @@ end_expr_stmt
 begin_expr_stmt
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|ref
 argument_list|()
@@ -357,7 +364,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|lldb_error
 argument_list|)
@@ -376,7 +383,7 @@ name|unique_ptr
 operator|<
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|>
 name|m_opaque_ap
 expr_stmt|;

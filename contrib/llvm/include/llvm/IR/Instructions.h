@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Instructions.h - Instruction subclass definitions --*- C++ -*-===//
+comment|//===- llvm/Instructions.h - Instruction subclass definitions ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -76,25 +76,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/None.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -112,7 +106,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Attributes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/BasicBlock.h"
 end_include
 
 begin_include
@@ -148,6 +160,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/OperandTraits.h"
 end_include
 
@@ -167,6 +185,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/User.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
 end_include
 
 begin_include
@@ -205,6 +229,12 @@ directive|include
 file|<cstdint>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -221,18 +251,6 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
-enum|enum
-name|SynchronizationScope
-block|{
-name|SingleThread
-init|=
-literal|0
-block|,
-name|CrossThread
-init|=
-literal|1
-block|}
-enum|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                AllocaInst Class
 comment|//===----------------------------------------------------------------------===//
@@ -265,87 +283,58 @@ operator|:
 name|explicit
 name|AllocaInst
 argument_list|(
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
 argument_list|,
-name|Value
-operator|*
-name|ArraySize
-operator|=
-name|nullptr
+argument|unsigned AddrSpace
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|Name
-operator|=
+argument|Value *ArraySize = nullptr
+argument_list|,
+argument|const Twine&Name =
 literal|""
 argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
-name|nullptr
-argument_list|)
-block|;
-name|AllocaInst
-argument_list|(
-name|Type
-operator|*
-name|Ty
-argument_list|,
-name|Value
-operator|*
-name|ArraySize
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|Name
-argument_list|,
-name|BasicBlock
-operator|*
-name|InsertAtEnd
-argument_list|)
-block|;
-name|AllocaInst
-argument_list|(
-name|Type
-operator|*
-name|Ty
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|Name
-argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
-name|nullptr
-argument_list|)
-block|;
-name|AllocaInst
-argument_list|(
-name|Type
-operator|*
-name|Ty
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|Name
-argument_list|,
-name|BasicBlock
-operator|*
-name|InsertAtEnd
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|AllocaInst
 argument_list|(
 argument|Type *Ty
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|,
+argument|Value *ArraySize
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|;
+name|AllocaInst
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|Instruction *InsertBefore = nullptr
+argument_list|)
+block|;
+name|AllocaInst
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|;
+name|AllocaInst
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|unsigned AddrSpace
 argument_list|,
 argument|Value *ArraySize
 argument_list|,
@@ -361,6 +350,8 @@ name|AllocaInst
 argument_list|(
 argument|Type *Ty
 argument_list|,
+argument|unsigned AddrSpace
+argument_list|,
 argument|Value *ArraySize
 argument_list|,
 argument|unsigned Align
@@ -369,12 +360,6 @@ argument|const Twine&Name
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
-block|;
-comment|// Out of line virtual method, so the vtable, etc. has a home.
-operator|~
-name|AllocaInst
-argument_list|()
-name|override
 block|;
 comment|/// Return true if there is an allocation size parameter to the allocation
 comment|/// instruction that is not 1.
@@ -571,7 +556,6 @@ argument_list|)
 block|;   }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -592,7 +576,6 @@ operator|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -817,7 +800,7 @@ argument|unsigned Align
 argument_list|,
 argument|AtomicOrdering Order
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -836,7 +819,7 @@ argument|Align
 argument_list|,
 argument|Order
 argument_list|,
-argument|SynchScope
+argument|SSID
 argument_list|,
 argument|InsertBefore
 argument_list|)
@@ -855,7 +838,7 @@ argument|unsigned Align
 argument_list|,
 argument|AtomicOrdering Order
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -872,7 +855,7 @@ argument|unsigned Align
 argument_list|,
 argument|AtomicOrdering Order
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -1028,7 +1011,7 @@ argument_list|(
 argument|unsigned Align
 argument_list|)
 block|;
-comment|/// Returns the ordering effect of this fence.
+comment|/// Returns the ordering constraint of this load instruction.
 name|AtomicOrdering
 name|getOrdering
 argument_list|()
@@ -1048,8 +1031,8 @@ literal|7
 argument_list|)
 return|;
 block|}
-comment|/// Set the ordering constraint on this load. May not be Release or
-comment|/// AcquireRelease.
+comment|/// Sets the ordering constraint of this load instruction.  May not be Release
+comment|/// or AcquireRelease.
 name|void
 name|setOrdering
 argument_list|(
@@ -1080,61 +1063,39 @@ literal|7
 operator|)
 argument_list|)
 block|;   }
-name|SynchronizationScope
-name|getSynchScope
+comment|/// Returns the synchronization scope ID of this load instruction.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SynchronizationScope
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|>>
-literal|6
-operator|)
-operator|&
-literal|1
-argument_list|)
+name|SSID
 return|;
 block|}
-comment|/// Specify whether this load is ordered with respect to all
-comment|/// concurrently executing threads, or only with respect to signal handlers
-comment|/// executing in the same thread.
+comment|/// Sets the synchronization scope ID of this load instruction.
 name|void
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-argument|SynchronizationScope xthread
+argument|SyncScope::ID SSID
 argument_list|)
 block|{
-name|setInstructionSubclassData
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-operator|)
-operator||
-operator|(
-name|xthread
-operator|<<
-literal|6
-operator|)
-argument_list|)
+name|this
+operator|->
+name|SSID
+operator|=
+name|SSID
 block|;   }
+comment|/// Sets the ordering constraint and the synchronization scope ID of this load
+comment|/// instruction.
 name|void
 name|setAtomic
 argument_list|(
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|)
 block|{
 name|setOrdering
@@ -1142,9 +1103,9 @@ argument_list|(
 name|Ordering
 argument_list|)
 block|;
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-name|SynchScope
+name|SSID
 argument_list|)
 block|;   }
 name|bool
@@ -1224,9 +1185,9 @@ return|return
 literal|0U
 return|;
 block|}
-comment|/// Returns the address space of the pointer operand.
-name|unsigned
-name|getPointerAddressSpace
+name|Type
+operator|*
+name|getPointerOperandType
 argument_list|()
 specifier|const
 block|{
@@ -1236,6 +1197,17 @@ argument_list|()
 operator|->
 name|getType
 argument_list|()
+return|;
+block|}
+comment|/// Returns the address space of the pointer operand.
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointerOperandType
+argument_list|()
 operator|->
 name|getPointerAddressSpace
 argument_list|()
@@ -1243,7 +1215,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1262,7 +1233,6 @@ name|Load
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1307,7 +1277,14 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-expr|}
+comment|/// The synchronization scope ID of this load instruction.  Not quite enough
+comment|/// room in SubClassData for everything, so synchronization scope ID gets its
+comment|/// own field.
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+block|; }
 block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                StoreInst Class
@@ -1428,7 +1405,7 @@ argument|unsigned Align
 argument_list|,
 argument|AtomicOrdering Order
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -1445,7 +1422,7 @@ argument|unsigned Align
 argument_list|,
 argument|AtomicOrdering Order
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -1471,18 +1448,6 @@ literal|2
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Return true if this is a store to a volatile memory location.
 name|bool
 name|isVolatile
@@ -1559,7 +1524,7 @@ argument_list|(
 argument|unsigned Align
 argument_list|)
 block|;
-comment|/// Returns the ordering effect of this store.
+comment|/// Returns the ordering constraint of this store instruction.
 name|AtomicOrdering
 name|getOrdering
 argument_list|()
@@ -1579,8 +1544,8 @@ literal|7
 argument_list|)
 return|;
 block|}
-comment|/// Set the ordering constraint on this store.  May not be Acquire or
-comment|/// AcquireRelease.
+comment|/// Sets the ordering constraint of this store instruction.  May not be
+comment|/// Acquire or AcquireRelease.
 name|void
 name|setOrdering
 argument_list|(
@@ -1611,61 +1576,39 @@ literal|7
 operator|)
 argument_list|)
 block|;   }
-name|SynchronizationScope
-name|getSynchScope
+comment|/// Returns the synchronization scope ID of this store instruction.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SynchronizationScope
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|>>
-literal|6
-operator|)
-operator|&
-literal|1
-argument_list|)
+name|SSID
 return|;
 block|}
-comment|/// Specify whether this store instruction is ordered with respect to all
-comment|/// concurrently executing threads, or only with respect to signal handlers
-comment|/// executing in the same thread.
+comment|/// Sets the synchronization scope ID of this store instruction.
 name|void
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-argument|SynchronizationScope xthread
+argument|SyncScope::ID SSID
 argument_list|)
 block|{
-name|setInstructionSubclassData
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-operator|)
-operator||
-operator|(
-name|xthread
-operator|<<
-literal|6
-operator|)
-argument_list|)
+name|this
+operator|->
+name|SSID
+operator|=
+name|SSID
 block|;   }
+comment|/// Sets the ordering constraint and the synchronization scope ID of this
+comment|/// store instruction.
 name|void
 name|setAtomic
 argument_list|(
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|)
 block|{
 name|setOrdering
@@ -1673,9 +1616,9 @@ argument_list|(
 name|Ordering
 argument_list|)
 block|;
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-name|SynchScope
+name|SSID
 argument_list|)
 block|;   }
 name|bool
@@ -1781,9 +1724,9 @@ return|return
 literal|1U
 return|;
 block|}
-comment|/// Returns the address space of the pointer operand.
-name|unsigned
-name|getPointerAddressSpace
+name|Type
+operator|*
+name|getPointerOperandType
 argument_list|()
 specifier|const
 block|{
@@ -1793,6 +1736,17 @@ argument_list|()
 operator|->
 name|getType
 argument_list|()
+return|;
+block|}
+comment|/// Returns the address space of the pointer operand.
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointerOperandType
+argument_list|()
 operator|->
 name|getPointerAddressSpace
 argument_list|()
@@ -1800,7 +1754,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1819,7 +1772,6 @@ name|Store
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -1864,7 +1816,14 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-expr|}
+comment|/// The synchronization scope ID of this store instruction.  Not quite enough
+comment|/// room in SubClassData for everything, so synchronization scope ID gets its
+comment|/// own field.
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+block|; }
 block|;
 name|template
 operator|<
@@ -1905,7 +1864,7 @@ name|Init
 argument_list|(
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|)
 block|;
 name|protected
@@ -1931,7 +1890,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope = CrossThread
+argument|SyncScope::ID SSID = SyncScope::System
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -1942,7 +1901,7 @@ argument|LLVMContext&C
 argument_list|,
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -1968,19 +1927,7 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
-comment|/// Returns the ordering effect of this fence.
+comment|/// Returns the ordering constraint of this fence instruction.
 name|AtomicOrdering
 name|getOrdering
 argument_list|()
@@ -1996,8 +1943,8 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// Set the ordering constraint on this fence.  May only be Acquire, Release,
-comment|/// AcquireRelease, or SequentiallyConsistent.
+comment|/// Sets the ordering constraint of this fence instruction.  May only be
+comment|/// Acquire, Release, AcquireRelease, or SequentiallyConsistent.
 name|void
 name|setOrdering
 argument_list|(
@@ -2023,46 +1970,33 @@ literal|1
 operator|)
 argument_list|)
 block|;   }
-name|SynchronizationScope
-name|getSynchScope
+comment|/// Returns the synchronization scope ID of this fence instruction.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SynchronizationScope
-argument_list|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-literal|1
-argument_list|)
+name|SSID
 return|;
 block|}
-comment|/// Specify whether this fence orders other operations with respect to all
-comment|/// concurrently executing threads, or only with respect to signal handlers
-comment|/// executing in the same thread.
+comment|/// Sets the synchronization scope ID of this fence instruction.
 name|void
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-argument|SynchronizationScope xthread
+argument|SyncScope::ID SSID
 argument_list|)
 block|{
-name|setInstructionSubclassData
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-operator|~
-literal|1
-operator|)
-operator||
-name|xthread
-argument_list|)
+name|this
+operator|->
+name|SSID
+operator|=
+name|SSID
 block|;   }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2081,7 +2015,6 @@ name|Fence
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2126,7 +2059,14 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-expr|}
+comment|/// The synchronization scope ID of this fence instruction.  Not quite enough
+comment|/// room in SubClassData for everything, so synchronization scope ID gets its
+comment|/// own field.
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+block|; }
 block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                AtomicCmpXchgInst Class
@@ -2154,7 +2094,7 @@ argument|AtomicOrdering SuccessOrdering
 argument_list|,
 argument|AtomicOrdering FailureOrdering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|)
 block|;
 name|protected
@@ -2184,7 +2124,7 @@ argument|AtomicOrdering SuccessOrdering
 argument_list|,
 argument|AtomicOrdering FailureOrdering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -2201,7 +2141,7 @@ argument|AtomicOrdering SuccessOrdering
 argument_list|,
 argument|AtomicOrdering FailureOrdering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -2227,18 +2167,6 @@ literal|3
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Return true if this is a cmpxchg from a volatile memory
 comment|/// location.
 comment|///
@@ -2320,7 +2248,27 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
-comment|/// Set the ordering constraint on this cmpxchg.
+comment|/// Returns the success ordering constraint of this cmpxchg instruction.
+name|AtomicOrdering
+name|getSuccessOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtomicOrdering
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|>>
+literal|2
+operator|)
+operator|&
+literal|7
+argument_list|)
+return|;
+block|}
+comment|/// Sets the success ordering constraint of this cmpxchg instruction.
 name|void
 name|setSuccessOrdering
 argument_list|(
@@ -2358,6 +2306,27 @@ literal|2
 operator|)
 argument_list|)
 block|;   }
+comment|/// Returns the failure ordering constraint of this cmpxchg instruction.
+name|AtomicOrdering
+name|getFailureOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtomicOrdering
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|>>
+literal|5
+operator|)
+operator|&
+literal|7
+argument_list|)
+return|;
+block|}
+comment|/// Sets the failure ordering constraint of this cmpxchg instruction.
 name|void
 name|setFailureOrdering
 argument_list|(
@@ -2395,93 +2364,31 @@ literal|5
 operator|)
 argument_list|)
 block|;   }
-comment|/// Specify whether this cmpxchg is atomic and orders other operations with
-comment|/// respect to all concurrently executing threads, or only with respect to
-comment|/// signal handlers executing in the same thread.
+comment|/// Returns the synchronization scope ID of this cmpxchg instruction.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SSID
+return|;
+block|}
+comment|/// Sets the synchronization scope ID of this cmpxchg instruction.
 name|void
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|)
 block|{
-name|setInstructionSubclassData
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-operator|~
-literal|2
-operator|)
-operator||
-operator|(
-name|SynchScope
-operator|<<
-literal|1
-operator|)
-argument_list|)
+name|this
+operator|->
+name|SSID
+operator|=
+name|SSID
 block|;   }
-comment|/// Returns the ordering constraint on this cmpxchg.
-name|AtomicOrdering
-name|getSuccessOrdering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AtomicOrdering
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|>>
-literal|2
-operator|)
-operator|&
-literal|7
-argument_list|)
-return|;
-block|}
-comment|/// Returns the ordering constraint on this cmpxchg.
-name|AtomicOrdering
-name|getFailureOrdering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AtomicOrdering
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|>>
-literal|5
-operator|)
-operator|&
-literal|7
-argument_list|)
-return|;
-block|}
-comment|/// Returns whether this cmpxchg is atomic between threads or only within a
-comment|/// single thread.
-name|SynchronizationScope
-name|getSynchScope
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SynchronizationScope
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-literal|2
-operator|)
-operator|>>
-literal|1
-argument_list|)
-return|;
-block|}
 name|Value
 operator|*
 name|getPointerOperand
@@ -2655,7 +2562,6 @@ block|}
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2674,7 +2580,6 @@ name|AtomicCmpXchg
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -2719,7 +2624,14 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-expr|}
+comment|/// The synchronization scope ID of this cmpxchg instruction.  Not quite
+comment|/// enough room in SubClassData for everything, so synchronization scope ID
+comment|/// gets its own field.
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+block|; }
 block|;
 name|template
 operator|<
@@ -2834,7 +2746,7 @@ argument|Value *Val
 argument_list|,
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
@@ -2849,7 +2761,7 @@ argument|Value *Val
 argument_list|,
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
@@ -2875,18 +2787,6 @@ literal|2
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|BinOp
 name|getOperation
 argument_list|()
@@ -2977,7 +2877,27 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
-comment|/// Set the ordering constraint on this RMW.
+comment|/// Returns the ordering constraint of this rmw instruction.
+name|AtomicOrdering
+name|getOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtomicOrdering
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|>>
+literal|2
+operator|)
+operator|&
+literal|7
+argument_list|)
+return|;
+block|}
+comment|/// Sets the ordering constraint of this rmw instruction.
 name|void
 name|setOrdering
 argument_list|(
@@ -3019,73 +2939,31 @@ literal|2
 operator|)
 argument_list|)
 block|;   }
-comment|/// Specify whether this RMW orders other operations with respect to all
-comment|/// concurrently executing threads, or only with respect to signal handlers
-comment|/// executing in the same thread.
+comment|/// Returns the synchronization scope ID of this rmw instruction.
+name|SyncScope
+operator|::
+name|ID
+name|getSyncScopeID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SSID
+return|;
+block|}
+comment|/// Sets the synchronization scope ID of this rmw instruction.
 name|void
-name|setSynchScope
+name|setSyncScopeID
 argument_list|(
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|)
 block|{
-name|setInstructionSubclassData
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-operator|~
-literal|2
-operator|)
-operator||
-operator|(
-name|SynchScope
-operator|<<
-literal|1
-operator|)
-argument_list|)
+name|this
+operator|->
+name|SSID
+operator|=
+name|SSID
 block|;   }
-comment|/// Returns the ordering constraint on this RMW.
-name|AtomicOrdering
-name|getOrdering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AtomicOrdering
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|>>
-literal|2
-operator|)
-operator|&
-literal|7
-argument_list|)
-return|;
-block|}
-comment|/// Returns whether this RMW is atomic between threads or only within a
-comment|/// single thread.
-name|SynchronizationScope
-name|getSynchScope
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SynchronizationScope
-argument_list|(
-operator|(
-name|getSubclassDataFromInstruction
-argument_list|()
-operator|&
-literal|2
-operator|)
-operator|>>
-literal|1
-argument_list|)
-return|;
-block|}
 name|Value
 operator|*
 name|getPointerOperand
@@ -3166,7 +3044,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3185,7 +3062,6 @@ name|AtomicRMW
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -3226,7 +3102,7 @@ argument|Value *Val
 argument_list|,
 argument|AtomicOrdering Ordering
 argument_list|,
-argument|SynchronizationScope SynchScope
+argument|SyncScope::ID SSID
 argument_list|)
 block|;
 comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
@@ -3244,7 +3120,14 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-block|}
+comment|/// The synchronization scope ID of this rmw instruction.  Not quite enough
+comment|/// room in SubClassData for everything, so synchronization scope ID gets its
+comment|/// own field.
+name|SyncScope
+operator|::
+name|ID
+name|SSID
+block|; }
 block|;
 name|template
 operator|<
@@ -3312,37 +3195,12 @@ name|Type
 operator|*
 name|ResultElementType
 block|;
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|GetElementPtrInst
 argument_list|(
 specifier|const
 name|GetElementPtrInst
 operator|&
 name|GEPI
-argument_list|)
-block|;
-name|void
-name|init
-argument_list|(
-name|Value
-operator|*
-name|Ptr
-argument_list|,
-name|ArrayRef
-operator|<
-name|Value
-operator|*
-operator|>
-name|IdxList
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
 argument_list|)
 block|;
 comment|/// Constructors - Create a getelementptr instruction with a base pointer an
@@ -3379,6 +3237,26 @@ argument_list|,
 argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|;
+name|void
+name|init
+argument_list|(
+name|Value
+operator|*
+name|Ptr
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|)
 block|;
 name|protected
@@ -3595,17 +3473,32 @@ comment|/// Create an "inbounds" getelementptr. See the documentation for the
 comment|/// "inbounds" flag in LangRef.html for details.
 specifier|static
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|CreateInBounds
 argument_list|(
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|,
-argument|const Twine&NameStr =
+specifier|const
+name|Twine
+operator|&
+name|NameStr
+operator|=
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore = nullptr
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+name|nullptr
 argument_list|)
 block|{
 return|return
@@ -3625,25 +3518,42 @@ return|;
 block|}
 specifier|static
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|CreateInBounds
 argument_list|(
-argument|Type *PointeeType
+name|Type
+operator|*
+name|PointeeType
 argument_list|,
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|,
-argument|const Twine&NameStr =
+specifier|const
+name|Twine
+operator|&
+name|NameStr
+operator|=
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore = nullptr
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+name|nullptr
 argument_list|)
 block|{
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|GEP
-operator|=
+init|=
 name|Create
 argument_list|(
 name|PointeeType
@@ -3656,30 +3566,42 @@ name|NameStr
 argument_list|,
 name|InsertBefore
 argument_list|)
-block|;
+decl_stmt|;
 name|GEP
 operator|->
 name|setIsInBounds
 argument_list|(
 name|true
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|GEP
 return|;
 block|}
 specifier|static
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|CreateInBounds
 argument_list|(
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|,
-argument|const Twine&NameStr
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|BasicBlock *InsertAtEnd
+name|BasicBlock
+operator|*
+name|InsertAtEnd
 argument_list|)
 block|{
 return|return
@@ -3699,24 +3621,38 @@ return|;
 block|}
 specifier|static
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|CreateInBounds
 argument_list|(
-argument|Type *PointeeType
+name|Type
+operator|*
+name|PointeeType
 argument_list|,
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|,
-argument|const Twine&NameStr
+specifier|const
+name|Twine
+operator|&
+name|NameStr
 argument_list|,
-argument|BasicBlock *InsertAtEnd
+name|BasicBlock
+operator|*
+name|InsertAtEnd
 argument_list|)
 block|{
 name|GetElementPtrInst
-operator|*
+modifier|*
 name|GEP
-operator|=
+init|=
 name|Create
 argument_list|(
 name|PointeeType
@@ -3729,14 +3665,14 @@ name|NameStr
 argument_list|,
 name|InsertAtEnd
 argument_list|)
-block|;
+decl_stmt|;
 name|GEP
 operator|->
 name|setIsInBounds
 argument_list|(
 name|true
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|GEP
 return|;
@@ -3746,7 +3682,7 @@ name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
 argument_list|)
-block|;
+expr_stmt|;
 name|Type
 operator|*
 name|getSourceElementType
@@ -3759,24 +3695,30 @@ return|;
 block|}
 name|void
 name|setSourceElementType
-argument_list|(
-argument|Type *Ty
-argument_list|)
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|)
 block|{
 name|SourceElementType
 operator|=
 name|Ty
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setResultElementType
-argument_list|(
-argument|Type *Ty
-argument_list|)
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|)
 block|{
 name|ResultElementType
 operator|=
 name|Ty
-block|; }
+expr_stmt|;
+block|}
 name|Type
 operator|*
 name|getResultElementType
@@ -3828,7 +3770,7 @@ comment|/// pointer type.
 comment|///
 specifier|static
 name|Type
-operator|*
+modifier|*
 name|getIndexedType
 argument_list|(
 name|Type
@@ -3842,10 +3784,10 @@ operator|*
 operator|>
 name|IdxList
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|Type
-operator|*
+modifier|*
 name|getIndexedType
 argument_list|(
 name|Type
@@ -3859,10 +3801,10 @@ operator|*
 operator|>
 name|IdxList
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|Type
-operator|*
+modifier|*
 name|getIndexedType
 argument_list|(
 name|Type
@@ -3875,11 +3817,11 @@ name|uint64_t
 operator|>
 name|IdxList
 argument_list|)
-block|;
+decl_stmt|;
 specifier|inline
 name|op_iterator
 name|idx_begin
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|op_begin
@@ -3904,7 +3846,7 @@ block|}
 specifier|inline
 name|op_iterator
 name|idx_end
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|op_end
@@ -3920,12 +3862,51 @@ block|{
 return|return
 name|op_end
 argument_list|()
+return|;
+block|}
+specifier|inline
+name|iterator_range
+operator|<
+name|op_iterator
+operator|>
+name|indices
+argument_list|()
+block|{
+return|return
+name|make_range
+argument_list|(
+name|idx_begin
+argument_list|()
+argument_list|,
+name|idx_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|iterator_range
+operator|<
+name|const_op_iterator
+operator|>
+name|indices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|idx_begin
+argument_list|()
+argument_list|,
+name|idx_end
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|Value
-operator|*
+modifier|*
 name|getPointerOperand
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|getOperand
@@ -3951,7 +3932,7 @@ block|}
 specifier|static
 name|unsigned
 name|getPointerOperandIndex
-argument_list|()
+parameter_list|()
 block|{
 return|return
 literal|0U
@@ -3992,12 +3973,19 @@ comment|/// Returns the pointer type returned by the GEP
 comment|/// instruction, which may be a vector of pointers.
 specifier|static
 name|Type
-operator|*
+modifier|*
 name|getGEPReturnType
 argument_list|(
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|)
 block|{
 return|return
@@ -4028,20 +4016,29 @@ return|;
 block|}
 specifier|static
 name|Type
-operator|*
+modifier|*
 name|getGEPReturnType
 argument_list|(
-argument|Type *ElTy
+name|Type
+operator|*
+name|ElTy
 argument_list|,
-argument|Value *Ptr
+name|Value
+operator|*
+name|Ptr
 argument_list|,
-argument|ArrayRef<Value *> IdxList
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|IdxList
 argument_list|)
 block|{
 name|Type
-operator|*
+modifier|*
 name|PtrTy
-operator|=
+init|=
 name|PointerType
 operator|::
 name|get
@@ -4064,7 +4061,7 @@ operator|->
 name|getPointerAddressSpace
 argument_list|()
 argument_list|)
-block|;
+decl_stmt|;
 comment|// Vector GEP
 if|if
 condition|(
@@ -4177,7 +4174,7 @@ name|bool
 name|hasAllZeroIndices
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Return true if all of the indices of this GEP are
 comment|/// constant integers.  If so, the result pointer and the first operand have
 comment|/// a constant offset between them.
@@ -4185,21 +4182,24 @@ name|bool
 name|hasAllConstantIndices
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Set or clear the inbounds flag on this GEP instruction.
 comment|/// See LangRef.html for the meaning of inbounds on a getelementptr.
 name|void
 name|setIsInBounds
-argument_list|(
-argument|bool b = true
-argument_list|)
-block|;
+parameter_list|(
+name|bool
+name|b
+init|=
+name|true
+parameter_list|)
+function_decl|;
 comment|/// Determine whether the GEP has the inbounds flag.
 name|bool
 name|isInBounds
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// Accumulate the constant address offset of this GEP if possible.
 comment|///
 comment|/// This routine accepts an APInt into which it will accumulate the constant
@@ -4211,20 +4211,27 @@ comment|/// the base GEP pointer.
 name|bool
 name|accumulateConstantOffset
 argument_list|(
-argument|const DataLayout&DL
-argument_list|,
-argument|APInt&Offset
-argument_list|)
 specifier|const
-block|;
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+name|APInt
+operator|&
+name|Offset
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -4240,12 +4247,14 @@ operator|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 return|return
 name|isa
@@ -4268,8 +4277,14 @@ operator|)
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -4283,11 +4298,14 @@ name|public
 name|VariadicOperandTraits
 operator|<
 name|GetElementPtrInst
-block|,
+operator|,
 literal|1
 operator|>
 block|{ }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|GetElementPtrInst
 operator|::
 name|GetElementPtrInst
@@ -4334,12 +4352,12 @@ name|Values
 argument_list|,
 name|InsertBefore
 argument_list|)
-block|,
+operator|,
 name|SourceElementType
 argument_list|(
 name|PointeeType
 argument_list|)
-block|,
+operator|,
 name|ResultElementType
 argument_list|(
 argument|getIndexedType(PointeeType, IdxList)
@@ -4420,12 +4438,12 @@ name|Values
 argument_list|,
 name|InsertAtEnd
 argument_list|)
-block|,
+operator|,
 name|SourceElementType
 argument_list|(
 name|PointeeType
 argument_list|)
-block|,
+operator|,
 name|ResultElementType
 argument_list|(
 argument|getIndexedType(PointeeType, IdxList)
@@ -4480,29 +4498,13 @@ name|public
 name|CmpInst
 block|{
 name|void
-name|anchor
-argument_list|()
-name|override
-block|;
-name|void
 name|AssertOK
 argument_list|()
 block|{
 name|assert
 argument_list|(
-name|getPredicate
+name|isIntPredicate
 argument_list|()
-operator|>=
-name|CmpInst
-operator|::
-name|FIRST_ICMP_PREDICATE
-operator|&&
-name|getPredicate
-argument_list|()
-operator|<=
-name|CmpInst
-operator|::
-name|LAST_ICMP_PREDICATE
 operator|&&
 literal|"Invalid ICmp predicate value"
 argument_list|)
@@ -4732,11 +4734,26 @@ name|getSignedPredicate
 argument_list|(
 argument|Predicate pred
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// For example, EQ->EQ, SLE->ULE, UGT->UGT, etc.
+end_comment
+
+begin_comment
 comment|/// @returns the predicate that would be the result if the operand were
+end_comment
+
+begin_comment
 comment|/// regarded as unsigned.
+end_comment
+
+begin_comment
 comment|/// Return the unsigned version of the predicate
+end_comment
+
+begin_expr_stmt
 name|Predicate
 name|getUnsignedPredicate
 argument_list|()
@@ -4750,23 +4767,43 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// This is a static version that you can use without an instruction.
+end_comment
+
+begin_comment
 comment|/// Return the unsigned version of the predicate.
+end_comment
+
+begin_function_decl
 specifier|static
 name|Predicate
 name|getUnsignedPredicate
-argument_list|(
-argument|Predicate pred
-argument_list|)
-block|;
+parameter_list|(
+name|Predicate
+name|pred
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Return true if this predicate is either EQ or NE.  This also
+end_comment
+
+begin_comment
 comment|/// tests for commutativity.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|isEquality
-argument_list|(
-argument|Predicate P
-argument_list|)
+parameter_list|(
+name|Predicate
+name|P
+parameter_list|)
 block|{
 return|return
 name|P
@@ -4778,8 +4815,17 @@ operator|==
 name|ICMP_NE
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Return true if this predicate is either EQ or NE.  This also
+end_comment
+
+begin_comment
 comment|/// tests for commutativity.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isEquality
 argument_list|()
@@ -4793,8 +4839,17 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @returns true if the predicate of this ICmpInst is commutative
+end_comment
+
+begin_comment
 comment|/// Determine if this relation is commutative.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isCommutative
 argument_list|()
@@ -4805,8 +4860,17 @@ name|isEquality
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Return true if the predicate is relational (not EQ or NE).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isRelational
 argument_list|()
@@ -4818,14 +4882,24 @@ name|isEquality
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Return true if the predicate is relational (not EQ or NE).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|isRelational
-argument_list|(
-argument|Predicate P
-argument_list|)
+parameter_list|(
+name|Predicate
+name|P
+parameter_list|)
 block|{
 return|return
 operator|!
@@ -4835,21 +4909,39 @@ name|P
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Exchange the two operands to this instruction in such a way that it does
+end_comment
+
+begin_comment
 comment|/// not modify the semantics of the instruction. The predicate value may be
+end_comment
+
+begin_comment
 comment|/// changed to retain the same result if the predicate is order dependent
+end_comment
+
+begin_comment
 comment|/// (e.g. ult).
+end_comment
+
+begin_comment
 comment|/// Swap operands and adjust predicate.
+end_comment
+
+begin_function
 name|void
 name|swapOperands
-argument_list|()
+parameter_list|()
 block|{
 name|setPredicate
 argument_list|(
 name|getSwappedPredicate
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
 name|Op
 operator|<
 literal|0
@@ -4866,15 +4958,24 @@ operator|>
 operator|(
 operator|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+end_comment
+
+begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
 block|{
 return|return
 name|I
@@ -4887,13 +4988,18 @@ operator|::
 name|ICmp
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 return|return
 name|isa
@@ -4916,21 +5022,94 @@ operator|)
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                               FCmpInst Class
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// This instruction compares its operands according to the predicate given
+end_comment
+
+begin_comment
 comment|/// to the constructor. It only operates on floating point values or packed
+end_comment
+
+begin_comment
 comment|/// vectors of floating point values. The operands must be identical types.
+end_comment
+
+begin_comment
 comment|/// Represents a floating point comparison operator.
+end_comment
+
+begin_decl_stmt
 name|class
 name|FCmpInst
-operator|:
+range|:
 name|public
 name|CmpInst
 block|{
+name|void
+name|AssertOK
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|isFPPredicate
+argument_list|()
+operator|&&
+literal|"Invalid FCmp predicate value"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|==
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|&&
+literal|"Both operands to FCmp instruction are not of the same type!"
+argument_list|)
+block|;
+comment|// Check that the operands are the right type
+name|assert
+argument_list|(
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isFPOrFPVectorTy
+argument_list|()
+operator|&&
+literal|"Invalid operand types for FCmp instruction"
+argument_list|)
+block|;   }
 name|protected
 operator|:
 comment|// Note: Instruction needs to be a friend here to call cloneImpl.
@@ -4984,54 +5163,8 @@ argument_list|,
 argument|InsertBefore
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|pred
-operator|<=
-name|FCmpInst
-operator|::
-name|LAST_FCMP_PREDICATE
-operator|&&
-literal|"Invalid FCmp predicate value"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
+name|AssertOK
 argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to FCmp instruction are not of the same type!"
-argument_list|)
-block|;
-comment|// Check that the operands are the right type
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isFPOrFPVectorTy
-argument_list|()
-operator|&&
-literal|"Invalid operand types for FCmp instruction"
-argument_list|)
 block|;   }
 comment|/// Constructor with insert-at-end semantics.
 name|FCmpInst
@@ -5070,54 +5203,8 @@ argument_list|,
 argument|&InsertAtEnd
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|pred
-operator|<=
-name|FCmpInst
-operator|::
-name|LAST_FCMP_PREDICATE
-operator|&&
-literal|"Invalid FCmp predicate value"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
+name|AssertOK
 argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to FCmp instruction are not of the same type!"
-argument_list|)
-block|;
-comment|// Check that the operands are the right type
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isFPOrFPVectorTy
-argument_list|()
-operator|&&
-literal|"Invalid operand types for FCmp instruction"
-argument_list|)
 block|;   }
 comment|/// Constructor with no-insertion semantics
 name|FCmpInst
@@ -5151,54 +5238,8 @@ argument_list|,
 argument|NameStr
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|pred
-operator|<=
-name|FCmpInst
-operator|::
-name|LAST_FCMP_PREDICATE
-operator|&&
-literal|"Invalid FCmp predicate value"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
+name|AssertOK
 argument_list|()
-operator|==
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|&&
-literal|"Both operands to FCmp instruction are not of the same type!"
-argument_list|)
-block|;
-comment|// Check that the operands are the right type
-name|assert
-argument_list|(
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|isFPOrFPVectorTy
-argument_list|()
-operator|&&
-literal|"Invalid operand types for FCmp instruction"
-argument_list|)
 block|;   }
 comment|/// @returns true if the predicate of this instruction is EQ or NE.
 comment|/// Determine if this is an equality predicate.
@@ -5321,7 +5362,6 @@ argument_list|)
 block|;   }
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -5340,7 +5380,6 @@ name|FCmp
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -5403,8 +5442,8 @@ operator|::
 name|op_iterator
 operator|>
 block|;
-name|AttributeSet
 name|AttributeList
+name|Attrs
 block|;
 comment|///< parameter attributes for call
 name|FunctionType
@@ -5712,11 +5751,6 @@ specifier|const
 block|;
 name|public
 operator|:
-operator|~
-name|CallInst
-argument_list|()
-name|override
-block|;
 specifier|static
 name|CallInst
 operator|*
@@ -6845,13 +6879,13 @@ argument_list|)
 block|;   }
 comment|/// Return the parameter attributes for this call.
 comment|///
-name|AttributeSet
+name|AttributeList
 name|getAttributes
 argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 return|;
 block|}
 comment|/// Set the parameter attributes for this call.
@@ -6859,12 +6893,12 @@ comment|///
 name|void
 name|setAttributes
 argument_list|(
-argument|AttributeSet Attrs
+argument|AttributeList A
 argument_list|)
 block|{
-name|AttributeList
-operator|=
 name|Attrs
+operator|=
+name|A
 block|; }
 comment|/// adds the attribute to the list of attributes.
 name|void
@@ -6884,6 +6918,24 @@ argument_list|,
 argument|Attribute Attr
 argument_list|)
 block|;
+comment|/// Adds the attribute to the indicated argument
+name|void
+name|addParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|;
+comment|/// Adds the attribute to the indicated argument
+name|void
+name|addParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute Attr
+argument_list|)
+block|;
 comment|/// removes the attribute from the list of attributes.
 name|void
 name|removeAttribute
@@ -6898,6 +6950,24 @@ name|void
 name|removeAttribute
 argument_list|(
 argument|unsigned i
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+block|;
+comment|/// Removes the attribute from the given argument
+name|void
+name|removeParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|;
+comment|/// Removes the attribute from the given argument
+name|void
+name|removeParamAttr
+argument_list|(
+argument|unsigned ArgNo
 argument_list|,
 argument|StringRef Kind
 argument_list|)
@@ -6962,11 +7032,19 @@ name|Kind
 argument_list|)
 return|;
 block|}
-comment|/// Determine whether the call or the callee has the given attributes.
+comment|/// Determine whether the return value has the given attribute.
+name|bool
+name|hasRetAttr
+argument_list|(
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// Determine whether the argument or parameter has the given attribute.
 name|bool
 name|paramHasAttr
 argument_list|(
-argument|unsigned i
+argument|unsigned ArgNo
 argument_list|,
 argument|Attribute::AttrKind Kind
 argument_list|)
@@ -7016,6 +7094,70 @@ name|Kind
 argument_list|)
 return|;
 block|}
+comment|/// Get the attribute of a given kind from a given arg
+name|Attribute
+name|getParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ArgNo
+operator|<
+name|getNumArgOperands
+argument_list|()
+operator|&&
+literal|"Out of bounds"
+argument_list|)
+block|;
+return|return
+name|getAttributes
+argument_list|()
+operator|.
+name|getParamAttr
+argument_list|(
+name|ArgNo
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+comment|/// Get the attribute of a given kind from a given arg
+name|Attribute
+name|getParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ArgNo
+operator|<
+name|getNumArgOperands
+argument_list|()
+operator|&&
+literal|"Out of bounds"
+argument_list|)
+block|;
+return|return
+name|getAttributes
+argument_list|()
+operator|.
+name|getParamAttr
+argument_list|(
+name|ArgNo
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
 comment|/// Return true if the data operand at index \p i has the attribute \p
 comment|/// A.
 comment|///
@@ -7038,20 +7180,33 @@ argument|Attribute::AttrKind Kind
 argument_list|)
 specifier|const
 block|;
+comment|/// Extract the alignment of the return value.
+name|unsigned
+name|getRetAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Attrs
+operator|.
+name|getRetAlignment
+argument_list|()
+return|;
+block|}
 comment|/// Extract the alignment for a call or parameter (0=unknown).
 name|unsigned
 name|getParamAlignment
 argument_list|(
-argument|unsigned i
+argument|unsigned ArgNo
 argument_list|)
 specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 operator|.
 name|getParamAlignment
 argument_list|(
-name|i
+name|ArgNo
 argument_list|)
 return|;
 block|}
@@ -7065,7 +7220,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 operator|.
 name|getDereferenceableBytes
 argument_list|(
@@ -7083,7 +7238,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 operator|.
 name|getDereferenceableOrNullBytes
 argument_list|(
@@ -7091,22 +7246,20 @@ name|i
 argument_list|)
 return|;
 block|}
-comment|/// @brief Determine if the parameter or return value is marked with NoAlias
-comment|/// attribute.
-comment|/// @param n The parameter to check. 1 is the first parameter, 0 is the return
+comment|/// @brief Determine if the return value is marked with NoAlias attribute.
 name|bool
-name|doesNotAlias
-argument_list|(
-argument|unsigned n
-argument_list|)
+name|returnDoesNotAlias
+argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 operator|.
 name|hasAttribute
 argument_list|(
-name|n
+name|AttributeList
+operator|::
+name|ReturnIndex
 argument_list|,
 name|Attribute
 operator|::
@@ -7159,7 +7312,7 @@ argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7189,7 +7342,7 @@ argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7219,7 +7372,7 @@ argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7252,7 +7405,7 @@ argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7285,7 +7438,7 @@ argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7316,7 +7469,7 @@ argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7346,7 +7499,7 @@ argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7376,7 +7529,7 @@ argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7406,7 +7559,7 @@ argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7436,7 +7589,7 @@ argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7451,7 +7604,7 @@ argument_list|()
 block|{
 name|removeAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7481,7 +7634,7 @@ comment|// Be friendly and also check the callee.
 return|return
 name|paramHasAttr
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|Attribute
 operator|::
@@ -7496,7 +7649,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 operator|.
 name|hasAttrSomewhere
 argument_list|(
@@ -7670,7 +7823,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -7689,7 +7841,6 @@ name|Call
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -7733,11 +7884,11 @@ specifier|const
 block|{
 if|if
 condition|(
-name|AttributeList
+name|Attrs
 operator|.
 name|hasAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -7759,6 +7910,9 @@ condition|)
 return|return
 name|false
 return|;
+end_decl_stmt
+
+begin_if
 if|if
 condition|(
 specifier|const
@@ -7777,24 +7931,39 @@ argument_list|()
 operator|.
 name|hasAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
 name|Kind
 argument_list|)
 return|;
+end_if
+
+begin_return
 return|return
 name|false
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
+end_comment
+
+begin_comment
 comment|// method so that subclasses cannot accidentally use it.
-name|void
+end_comment
+
+begin_macro
+unit|void
 name|setInstructionSubclassData
 argument_list|(
 argument|unsigned short D
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|Instruction
 operator|::
@@ -7802,9 +7971,12 @@ name|setInstructionSubclassData
 argument_list|(
 name|D
 argument_list|)
-block|;   }
-expr|}
-block|;
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -7818,11 +7990,14 @@ name|public
 name|VariadicOperandTraits
 operator|<
 name|CallInst
-block|,
+operator|,
 literal|1
 operator|>
 block|{ }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|CallInst
 operator|::
 name|CallInst
@@ -8196,21 +8371,35 @@ return|return
 name|Sel
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|SelectInst
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|Value *C
-argument_list|,
-argument|Value *S1
-argument_list|,
-argument|Value *S2
-argument_list|,
-argument|const Twine&NameStr
-argument_list|,
-argument|BasicBlock *InsertAtEnd
-argument_list|)
+parameter_list|(
+name|Value
+modifier|*
+name|C
+parameter_list|,
+name|Value
+modifier|*
+name|S1
+parameter_list|,
+name|Value
+modifier|*
+name|S2
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|NameStr
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|InsertAtEnd
+parameter_list|)
 block|{
 return|return
 name|new
@@ -8231,6 +8420,9 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -8247,6 +8439,9 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -8263,6 +8458,9 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -8279,10 +8477,13 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|Value
-operator|*
+modifier|*
 name|getCondition
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Op
@@ -8293,10 +8494,13 @@ operator|(
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|Value
-operator|*
+modifier|*
 name|getTrueValue
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Op
@@ -8307,10 +8511,13 @@ operator|(
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|Value
-operator|*
+modifier|*
 name|getFalseValue
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Op
@@ -8321,11 +8528,16 @@ operator|(
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setCondition
-argument_list|(
-argument|Value *V
-argument_list|)
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 name|Op
 operator|<
@@ -8335,12 +8547,18 @@ operator|(
 operator|)
 operator|=
 name|V
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setTrueValue
-argument_list|(
-argument|Value *V
-argument_list|)
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 name|Op
 operator|<
@@ -8350,12 +8568,18 @@ operator|(
 operator|)
 operator|=
 name|V
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setFalseValue
-argument_list|(
-argument|Value *V
-argument_list|)
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 name|Op
 operator|<
@@ -8365,34 +8589,53 @@ operator|(
 operator|)
 operator|=
 name|V
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// Return a string if the specified operands are invalid
+end_comment
+
+begin_comment
 comment|/// for a select operation, otherwise return null.
+end_comment
+
+begin_function_decl
 specifier|static
 specifier|const
 name|char
-operator|*
+modifier|*
 name|areInvalidOperands
-argument_list|(
+parameter_list|(
 name|Value
-operator|*
+modifier|*
 name|Cond
-argument_list|,
+parameter_list|,
 name|Value
-operator|*
+modifier|*
 name|True
-argument_list|,
+parameter_list|,
 name|Value
-operator|*
+modifier|*
 name|False
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Transparently provide more efficient getOperand methods.
+end_comment
+
+begin_expr_stmt
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|OtherOps
 name|getOpcode
 argument_list|()
@@ -8411,14 +8654,22 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+end_comment
+
+begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const Instruction *I
-argument_list|)
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
 block|{
 return|return
 name|I
@@ -8431,13 +8682,18 @@ operator|::
 name|Select
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 return|return
 name|isa
@@ -8460,8 +8716,10 @@ operator|)
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -8475,26 +8733,50 @@ name|public
 name|FixedNumOperandTraits
 operator|<
 name|SelectInst
-block|,
+operator|,
 literal|3
 operator|>
 block|{ }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|SelectInst
 argument_list|,
 argument|Value
 argument_list|)
+end_macro
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//                                VAArgInst Class
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// This class represents the va_arg llvm instruction, which returns
+end_comment
+
+begin_comment
 comment|/// an argument of the specified type given a va_list and increments that list
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|VAArgInst
-operator|:
+range|:
 name|public
 name|UnaryInstruction
 block|{
@@ -8626,7 +8908,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -8643,7 +8924,6 @@ name|VAArg
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -8912,7 +9192,6 @@ argument_list|)
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -8931,7 +9210,6 @@ name|ExtractElement
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -9186,7 +9464,6 @@ argument_list|)
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -9205,7 +9482,6 @@ name|InsertElement
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -9521,9 +9797,73 @@ return|return
 name|Mask
 return|;
 block|}
+comment|/// Change values in a shuffle permute mask assuming the two vector operands
+comment|/// of length InVecNumElts have swapped position.
+specifier|static
+name|void
+name|commuteShuffleMask
+argument_list|(
+argument|MutableArrayRef<int> Mask
+argument_list|,
+argument|unsigned InVecNumElts
+argument_list|)
+block|{
+for|for
+control|(
+name|int
+modifier|&
+name|Idx
+range|:
+name|Mask
+control|)
+block|{
+if|if
+condition|(
+name|Idx
+operator|==
+operator|-
+literal|1
+condition|)
+continue|continue;
+name|Idx
+operator|=
+name|Idx
+operator|<
+operator|(
+name|int
+operator|)
+name|InVecNumElts
+condition|?
+name|Idx
+operator|+
+name|InVecNumElts
+else|:
+name|Idx
+operator|-
+name|InVecNumElts
+expr_stmt|;
+name|assert
+argument_list|(
+name|Idx
+operator|>=
+literal|0
+operator|&&
+name|Idx
+operator|<
+operator|(
+name|int
+operator|)
+name|InVecNumElts
+operator|*
+literal|2
+operator|&&
+literal|"shufflevector mask index out of range"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -9542,7 +9882,6 @@ name|ShuffleVector
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -9674,27 +10013,6 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
-comment|// allocate space for exactly one operand
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|1
-argument_list|)
-return|;
-block|}
 name|void
 name|init
 argument_list|(
@@ -9802,12 +10120,13 @@ operator|>
 name|Idxs
 argument_list|)
 block|;
-typedef|typedef
+name|using
+name|idx_iterator
+operator|=
 specifier|const
 name|unsigned
-modifier|*
-name|idx_iterator
-typedef|;
+operator|*
+block|;
 specifier|inline
 name|idx_iterator
 name|idx_begin
@@ -9928,7 +10247,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -9947,7 +10265,6 @@ name|ExtractValue
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -10235,18 +10552,6 @@ literal|2
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 specifier|static
 name|InsertValueInst
 operator|*
@@ -10318,12 +10623,13 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
-typedef|typedef
+name|using
+name|idx_iterator
+operator|=
 specifier|const
 name|unsigned
-modifier|*
-name|idx_iterator
-typedef|;
+operator|*
+block|;
 specifier|inline
 name|idx_iterator
 name|idx_begin
@@ -10480,7 +10786,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -10499,7 +10804,6 @@ name|InsertValue
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -10683,7 +10987,6 @@ operator|&
 name|PN
 argument_list|)
 block|;
-comment|// allocate space for exactly zero operands
 name|explicit
 name|PHINode
 argument_list|(
@@ -10768,29 +11071,6 @@ argument_list|(
 name|ReservedSpace
 argument_list|)
 block|;   }
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|)
-return|;
-block|}
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|protected
 operator|:
 comment|// Note: Instruction needs to be a friend here to call cloneImpl.
@@ -10825,18 +11105,6 @@ argument_list|)
 block|;   }
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Constructors - NumReservedValues is a hint for the number of incoming
 comment|/// edges that this phi node will have (use 0 if you really have no idea).
 specifier|static
@@ -10904,19 +11172,21 @@ argument_list|)
 block|;
 comment|// Block iterator interface. This provides access to the list of incoming
 comment|// basic blocks, which parallels the list of incoming values.
-typedef|typedef
-name|BasicBlock
-modifier|*
-modifier|*
+name|using
 name|block_iterator
-typedef|;
-typedef|typedef
+operator|=
 name|BasicBlock
-modifier|*
-specifier|const
-modifier|*
+operator|*
+operator|*
+block|;
+name|using
 name|const_block_iterator
-typedef|;
+operator|=
+name|BasicBlock
+operator|*
+specifier|const
+operator|*
+block|;
 name|block_iterator
 name|block_begin
 argument_list|()
@@ -11457,7 +11727,6 @@ specifier|const
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -11476,7 +11745,6 @@ name|PHI
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -11647,18 +11915,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|/// Constructors - NumReservedClauses is a hint for the number of incoming
 comment|/// clauses that this landingpad will have (use 0 if you really have no idea).
 specifier|static
@@ -11847,7 +12103,6 @@ argument_list|)
 block|; }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -11866,7 +12121,6 @@ name|LandingPad
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -12014,11 +12268,6 @@ specifier|const
 block|;
 name|public
 operator|:
-operator|~
-name|ReturnInst
-argument_list|()
-name|override
-block|;
 specifier|static
 name|ReturnInst
 operator|*
@@ -12134,7 +12383,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -12155,7 +12403,6 @@ operator|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -12185,30 +12432,36 @@ return|;
 block|}
 name|private
 operator|:
+name|friend
+name|TerminatorInst
+block|;
 name|BasicBlock
 operator|*
-name|getSuccessorV
+name|getSuccessor
 argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
-name|override
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-name|override
-block|;
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"ReturnInst has no successors!"
+argument_list|)
+block|;   }
 name|void
-name|setSuccessorV
+name|setSuccessor
 argument_list|(
 argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
-name|override
-block|; }
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"ReturnInst has no successors!"
+argument_list|)
+block|;   }
+block|}
 block|;
 name|template
 operator|<
@@ -12632,7 +12885,6 @@ argument_list|()
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -12653,7 +12905,6 @@ operator|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -12681,32 +12932,7 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|private
-operator|:
-name|BasicBlock
-operator|*
-name|getSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|)
-specifier|const
-name|override
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-name|override
-block|;
-name|void
-name|setSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|,
-argument|BasicBlock *B
-argument_list|)
-name|override
-block|; }
+expr|}
 block|;
 name|template
 operator|<
@@ -12837,18 +13063,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 comment|// -2
 specifier|static
 specifier|const
@@ -12868,112 +13082,98 @@ operator|)
 block|;
 name|template
 operator|<
-name|class
-name|SwitchInstTy
-block|,
-name|class
-name|ConstantIntTy
-block|,
-name|class
-name|BasicBlockTy
+name|typename
+name|CaseHandleT
 operator|>
 name|class
-name|CaseIteratorT
+name|CaseIteratorImpl
+block|;
+comment|/// A handle to a particular switch case. It exposes a convenient interface
+comment|/// to both the case value and the successor block.
+comment|///
+comment|/// We define this as a template and instantiate it to form both a const and
+comment|/// non-const handle.
+name|template
+operator|<
+name|typename
+name|SwitchInstT
+block|,
+name|typename
+name|ConstantIntT
+block|,
+name|typename
+name|BasicBlockT
+operator|>
+name|class
+name|CaseHandleImpl
 block|{
+comment|// Directly befriend both const and non-const iterators.
+name|friend
+name|class
+name|SwitchInst
+operator|::
+name|CaseIteratorImpl
+operator|<
+name|CaseHandleImpl
+operator|<
+name|SwitchInstT
+block|,
+name|ConstantIntT
+block|,
+name|BasicBlockT
+operator|>>
+block|;
 name|protected
 operator|:
-name|SwitchInstTy
+comment|// Expose the switch type we're parameterized with to the iterator.
+name|using
+name|SwitchInstType
+operator|=
+name|SwitchInstT
+block|;
+name|SwitchInstT
 operator|*
 name|SI
 block|;
-name|unsigned
+name|ptrdiff_t
 name|Index
 block|;
+name|CaseHandleImpl
+argument_list|()
+operator|=
+expr|default
+block|;
+name|CaseHandleImpl
+argument_list|(
+argument|SwitchInstT *SI
+argument_list|,
+argument|ptrdiff_t Index
+argument_list|)
+operator|:
+name|SI
+argument_list|(
+name|SI
+argument_list|)
+block|,
+name|Index
+argument_list|(
+argument|Index
+argument_list|)
+block|{}
 name|public
 operator|:
-typedef|typedef
-name|CaseIteratorT
-operator|<
-name|SwitchInstTy
-operator|,
-name|ConstantIntTy
-operator|,
-name|BasicBlockTy
-operator|>
-name|Self
-expr_stmt|;
-comment|/// Initializes case iterator for given SwitchInst and for given
-comment|/// case number.
-name|CaseIteratorT
-argument_list|(
-argument|SwitchInstTy *SI
-argument_list|,
-argument|unsigned CaseNum
-argument_list|)
-block|{
-name|this
-operator|->
-name|SI
-operator|=
-name|SI
-block|;
-name|Index
-operator|=
-name|CaseNum
-block|;     }
-comment|/// Initializes case iterator for given SwitchInst and for given
-comment|/// TerminatorInst's successor index.
-specifier|static
-name|Self
-name|fromSuccessorIndex
-argument_list|(
-argument|SwitchInstTy *SI
-argument_list|,
-argument|unsigned SuccessorIndex
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|SuccessorIndex
-operator|<
-name|SI
-operator|->
-name|getNumSuccessors
-argument_list|()
-operator|&&
-literal|"Successor index # out of range!"
-argument_list|)
-block|;
-return|return
-name|SuccessorIndex
-operator|!=
-literal|0
-condition|?
-name|Self
-argument_list|(
-name|SI
-argument_list|,
-name|SuccessorIndex
-operator|-
-literal|1
-argument_list|)
-else|:
-name|Self
-argument_list|(
-name|SI
-argument_list|,
-name|DefaultPseudoIndex
-argument_list|)
-return|;
-block|}
 comment|/// Resolves case value for current case.
-name|ConstantIntTy
+name|ConstantIntT
 operator|*
 name|getCaseValue
 argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|Index
 operator|<
 name|SI
@@ -12987,7 +13187,7 @@ block|;
 return|return
 name|reinterpret_cast
 operator|<
-name|ConstantIntTy
+name|ConstantIntT
 operator|*
 operator|>
 operator|(
@@ -13005,14 +13205,18 @@ operator|)
 return|;
 block|}
 comment|/// Resolves successor for current case.
-name|BasicBlockTy
+name|BasicBlockT
 operator|*
 name|getCaseSuccessor
 argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
 operator|(
+operator|(
+name|unsigned
+operator|)
 name|Index
 operator|<
 name|SI
@@ -13020,6 +13224,9 @@ operator|->
 name|getNumCases
 argument_list|()
 operator|||
+operator|(
+name|unsigned
+operator|)
 name|Index
 operator|==
 name|DefaultPseudoIndex
@@ -13057,10 +13264,16 @@ block|{
 name|assert
 argument_list|(
 operator|(
+operator|(
+name|unsigned
+operator|)
 name|Index
 operator|==
 name|DefaultPseudoIndex
 operator|||
+operator|(
+name|unsigned
+operator|)
 name|Index
 operator|<
 name|SI
@@ -13073,6 +13286,9 @@ literal|"Index out the number of cases."
 argument_list|)
 block|;
 return|return
+operator|(
+name|unsigned
+operator|)
 name|Index
 operator|!=
 name|DefaultPseudoIndex
@@ -13084,125 +13300,12 @@ else|:
 literal|0
 return|;
 block|}
-name|Self
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-comment|// Check index correctness after increment.
-comment|// Note: Index == getNumCases() means end().
-name|assert
-argument_list|(
-name|Index
-operator|+
-literal|1
-operator|<=
-name|SI
-operator|->
-name|getNumCases
-argument_list|()
-operator|&&
-literal|"Index out the number of cases."
-argument_list|)
-block|;
-operator|++
-name|Index
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|Self
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-block|{
-name|Self
-name|tmp
-operator|=
-operator|*
-name|this
-block|;
-operator|++
-operator|(
-operator|*
-name|this
-operator|)
-block|;
-return|return
-name|tmp
-return|;
-block|}
-name|Self
-name|operator
-operator|--
-operator|(
-operator|)
-block|{
-comment|// Check index correctness after decrement.
-comment|// Note: Index == getNumCases() means end().
-comment|// Also allow "-1" iterator here. That will became valid after ++.
-name|assert
-argument_list|(
-operator|(
-name|Index
-operator|==
-literal|0
-operator|||
-name|Index
-operator|-
-literal|1
-operator|<=
-name|SI
-operator|->
-name|getNumCases
-argument_list|()
-operator|)
-operator|&&
-literal|"Index out the number of cases."
-argument_list|)
-block|;
-operator|--
-name|Index
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|Self
-name|operator
-operator|--
-operator|(
-name|int
-operator|)
-block|{
-name|Self
-name|tmp
-operator|=
-operator|*
-name|this
-block|;
-operator|--
-operator|(
-operator|*
-name|this
-operator|)
-block|;
-return|return
-name|tmp
-return|;
-block|}
 name|bool
 name|operator
 operator|==
 operator|(
 specifier|const
-name|Self
+name|CaseHandleImpl
 operator|&
 name|RHS
 operator|)
@@ -13210,86 +13313,45 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|RHS
-operator|.
 name|SI
 operator|==
+name|RHS
+operator|.
 name|SI
 operator|&&
 literal|"Incompatible operators."
 argument_list|)
 block|;
 return|return
-name|RHS
-operator|.
 name|Index
 operator|==
-name|Index
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|Self
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|RHS
-operator|.
-name|SI
-operator|==
-name|SI
-operator|&&
-literal|"Incompatible operators."
-argument_list|)
-block|;
-return|return
 name|RHS
 operator|.
 name|Index
-operator|!=
-name|Index
-return|;
-block|}
-name|Self
-operator|&
-name|operator
-operator|*
-operator|(
-operator|)
-block|{
-return|return
-operator|*
-name|this
 return|;
 block|}
 expr|}
 block|;
-typedef|typedef
-name|CaseIteratorT
+name|using
+name|ConstCaseHandle
+operator|=
+name|CaseHandleImpl
 operator|<
 specifier|const
 name|SwitchInst
-operator|,
+block|,
 specifier|const
 name|ConstantInt
-operator|,
+block|,
 specifier|const
 name|BasicBlock
 operator|>
-name|ConstCaseIt
-expr_stmt|;
+block|;
 name|class
-name|CaseIt
+name|CaseHandle
 operator|:
 name|public
-name|CaseIteratorT
+name|CaseHandleImpl
 operator|<
 name|SwitchInst
 block|,
@@ -13298,44 +13360,29 @@ block|,
 name|BasicBlock
 operator|>
 block|{
-typedef|typedef
-name|CaseIteratorT
-operator|<
+name|friend
+name|class
 name|SwitchInst
-operator|,
-name|ConstantInt
-operator|,
-name|BasicBlock
+operator|::
+name|CaseIteratorImpl
+operator|<
+name|CaseHandle
 operator|>
-name|ParentTy
-expr_stmt|;
+block|;
 name|public
 operator|:
-name|CaseIt
-argument_list|(
-specifier|const
-name|ParentTy
-operator|&
-name|Src
-argument_list|)
-operator|:
-name|ParentTy
-argument_list|(
-argument|Src
-argument_list|)
-block|{}
-name|CaseIt
+name|CaseHandle
 argument_list|(
 argument|SwitchInst *SI
 argument_list|,
-argument|unsigned CaseNum
+argument|ptrdiff_t Index
 argument_list|)
 operator|:
-name|ParentTy
+name|CaseHandleImpl
 argument_list|(
 argument|SI
 argument_list|,
-argument|CaseNum
+argument|Index
 argument_list|)
 block|{}
 comment|/// Sets the new value for current case.
@@ -13347,6 +13394,9 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|Index
 operator|<
 name|SI
@@ -13395,6 +13445,380 @@ name|S
 argument_list|)
 block|;     }
 block|}
+block|;
+name|template
+operator|<
+name|typename
+name|CaseHandleT
+operator|>
+name|class
+name|CaseIteratorImpl
+operator|:
+name|public
+name|iterator_facade_base
+operator|<
+name|CaseIteratorImpl
+operator|<
+name|CaseHandleT
+operator|>
+block|,
+name|std
+operator|::
+name|random_access_iterator_tag
+block|,
+name|CaseHandleT
+operator|>
+block|{
+name|using
+name|SwitchInstT
+operator|=
+name|typename
+name|CaseHandleT
+operator|::
+name|SwitchInstType
+block|;
+name|CaseHandleT
+name|Case
+block|;
+name|public
+operator|:
+comment|/// Default constructed iterator is in an invalid state until assigned to
+comment|/// a case for a particular switch.
+name|CaseIteratorImpl
+argument_list|()
+operator|=
+expr|default
+block|;
+comment|/// Initializes case iterator for given SwitchInst and for given
+comment|/// case number.
+name|CaseIteratorImpl
+argument_list|(
+argument|SwitchInstT *SI
+argument_list|,
+argument|unsigned CaseNum
+argument_list|)
+operator|:
+name|Case
+argument_list|(
+argument|SI
+argument_list|,
+argument|CaseNum
+argument_list|)
+block|{}
+comment|/// Initializes case iterator for given SwitchInst and for given
+comment|/// TerminatorInst's successor index.
+specifier|static
+name|CaseIteratorImpl
+name|fromSuccessorIndex
+argument_list|(
+argument|SwitchInstT *SI
+argument_list|,
+argument|unsigned SuccessorIndex
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|SuccessorIndex
+operator|<
+name|SI
+operator|->
+name|getNumSuccessors
+argument_list|()
+operator|&&
+literal|"Successor index # out of range!"
+argument_list|)
+block|;
+return|return
+name|SuccessorIndex
+operator|!=
+literal|0
+condition|?
+name|CaseIteratorImpl
+argument_list|(
+name|SI
+argument_list|,
+name|SuccessorIndex
+operator|-
+literal|1
+argument_list|)
+else|:
+name|CaseIteratorImpl
+argument_list|(
+name|SI
+argument_list|,
+name|DefaultPseudoIndex
+argument_list|)
+return|;
+block|}
+comment|/// Support converting to the const variant. This will be a no-op for const
+comment|/// variant.
+name|operator
+name|CaseIteratorImpl
+operator|<
+name|ConstCaseHandle
+operator|>
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|CaseIteratorImpl
+operator|<
+name|ConstCaseHandle
+operator|>
+operator|(
+name|Case
+operator|.
+name|SI
+expr|,
+name|Case
+operator|.
+name|Index
+operator|)
+return|;
+block|}
+name|CaseIteratorImpl
+operator|&
+name|operator
+operator|+=
+operator|(
+name|ptrdiff_t
+name|N
+operator|)
+block|{
+comment|// Check index correctness after addition.
+comment|// Note: Index == getNumCases() means end().
+name|assert
+argument_list|(
+name|Case
+operator|.
+name|Index
+operator|+
+name|N
+operator|>=
+literal|0
+operator|&&
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|Case
+operator|.
+name|Index
+operator|+
+name|N
+argument_list|)
+operator|<=
+name|Case
+operator|.
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|&&
+literal|"Case.Index out the number of cases."
+argument_list|)
+block|;
+name|Case
+operator|.
+name|Index
+operator|+=
+name|N
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|CaseIteratorImpl
+operator|&
+name|operator
+operator|-=
+operator|(
+name|ptrdiff_t
+name|N
+operator|)
+block|{
+comment|// Check index correctness after subtraction.
+comment|// Note: Case.Index == getNumCases() means end().
+name|assert
+argument_list|(
+name|Case
+operator|.
+name|Index
+operator|-
+name|N
+operator|>=
+literal|0
+operator|&&
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|Case
+operator|.
+name|Index
+operator|-
+name|N
+argument_list|)
+operator|<=
+name|Case
+operator|.
+name|SI
+operator|->
+name|getNumCases
+argument_list|()
+operator|&&
+literal|"Case.Index out the number of cases."
+argument_list|)
+block|;
+name|Case
+operator|.
+name|Index
+operator|-=
+name|N
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|ptrdiff_t
+name|operator
+operator|-
+operator|(
+specifier|const
+name|CaseIteratorImpl
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Case
+operator|.
+name|SI
+operator|==
+name|RHS
+operator|.
+name|Case
+operator|.
+name|SI
+operator|&&
+literal|"Incompatible operators."
+argument_list|)
+block|;
+return|return
+name|Case
+operator|.
+name|Index
+operator|-
+name|RHS
+operator|.
+name|Case
+operator|.
+name|Index
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|CaseIteratorImpl
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|Case
+operator|==
+name|RHS
+operator|.
+name|Case
+return|;
+block|}
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|CaseIteratorImpl
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Case
+operator|.
+name|SI
+operator|==
+name|RHS
+operator|.
+name|Case
+operator|.
+name|SI
+operator|&&
+literal|"Incompatible operators."
+argument_list|)
+block|;
+return|return
+name|Case
+operator|.
+name|Index
+operator|<
+name|RHS
+operator|.
+name|Case
+operator|.
+name|Index
+return|;
+block|}
+name|CaseHandleT
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+block|{
+return|return
+name|Case
+return|;
+block|}
+specifier|const
+name|CaseHandleT
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Case
+return|;
+block|}
+expr|}
+block|;
+name|using
+name|CaseIt
+operator|=
+name|CaseIteratorImpl
+operator|<
+name|CaseHandle
+operator|>
+block|;
+name|using
+name|ConstCaseIt
+operator|=
+name|CaseIteratorImpl
+operator|<
+name|ConstCaseHandle
+operator|>
 block|;
 specifier|static
 name|SwitchInst
@@ -13685,37 +14109,45 @@ argument_list|(
 argument|const ConstantInt *C
 argument_list|)
 block|{
-for|for
-control|(
 name|CaseIt
-name|i
-init|=
-name|case_begin
+name|I
+operator|=
+name|llvm
+operator|::
+name|find_if
+argument_list|(
+name|cases
 argument_list|()
-init|,
-name|e
-init|=
-name|case_end
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-if|if
-condition|(
-name|i
+argument_list|,
+index|[
+name|C
+index|]
+operator|(
+name|CaseHandle
+operator|&
+name|Case
+operator|)
+block|{
+return|return
+name|Case
 operator|.
 name|getCaseValue
 argument_list|()
 operator|==
 name|C
+return|;
+block|}
+argument_list|)
+block|;
+if|if
+condition|(
+name|I
+operator|!=
+name|case_end
+argument_list|()
 condition|)
 return|return
-name|i
+name|I
 return|;
 return|return
 name|case_default
@@ -13729,37 +14161,45 @@ argument|const ConstantInt *C
 argument_list|)
 specifier|const
 block|{
-for|for
-control|(
 name|ConstCaseIt
-name|i
-init|=
-name|case_begin
+name|I
+operator|=
+name|llvm
+operator|::
+name|find_if
+argument_list|(
+name|cases
 argument_list|()
-init|,
-name|e
-init|=
-name|case_end
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-if|if
-condition|(
-name|i
+argument_list|,
+index|[
+name|C
+index|]
+operator|(
+name|ConstCaseHandle
+operator|&
+name|Case
+operator|)
+block|{
+return|return
+name|Case
 operator|.
 name|getCaseValue
 argument_list|()
 operator|==
 name|C
+return|;
+block|}
+argument_list|)
+block|;
+if|if
+condition|(
+name|I
+operator|!=
+name|case_end
+argument_list|()
 condition|)
 return|return
-name|i
+name|I
 return|;
 return|return
 name|case_default
@@ -13793,35 +14233,23 @@ name|nullptr
 block|;
 for|for
 control|(
-name|CaseIt
-name|i
-init|=
-name|case_begin
+name|auto
+name|Case
+range|:
+name|cases
 argument_list|()
-init|,
-name|e
-init|=
-name|case_end
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
 block|{
 if|if
 condition|(
-name|i
+name|Case
 operator|.
 name|getCaseSuccessor
 argument_list|()
-operator|==
+operator|!=
 name|BB
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
 name|CI
@@ -13830,15 +14258,13 @@ return|return
 name|nullptr
 return|;
 comment|// Multiple cases lead to BB.
-else|else
 name|CI
 operator|=
-name|i
+name|Case
 operator|.
 name|getCaseValue
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 return|return
 name|CI
@@ -13850,29 +14276,29 @@ comment|/// This action invalidates case_end(). Old case_end() iterator will
 comment|/// point to the added case.
 name|void
 name|addCase
-parameter_list|(
+argument_list|(
 name|ConstantInt
-modifier|*
+operator|*
 name|OnVal
-parameter_list|,
+argument_list|,
 name|BasicBlock
-modifier|*
+operator|*
 name|Dest
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// This method removes the specified case and its successor from the switch
 comment|/// instruction. Note that this operation may reorder the remaining cases at
 comment|/// index idx and above.
 comment|/// Note:
 comment|/// This action invalidates iterators for all cases following the one removed,
-comment|/// including the case_end() iterator.
-name|void
-name|removeCase
-parameter_list|(
+comment|/// including the case_end() iterator. It returns an iterator for the next
+comment|/// case.
 name|CaseIt
-name|i
-parameter_list|)
-function_decl|;
+name|removeCase
+argument_list|(
+argument|CaseIt I
+argument_list|)
+block|;
 name|unsigned
 name|getNumSuccessors
 argument_list|()
@@ -13886,13 +14312,12 @@ literal|2
 return|;
 block|}
 name|BasicBlock
-modifier|*
+operator|*
 name|getSuccessor
 argument_list|(
-name|unsigned
-name|idx
+argument|unsigned idx
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -13903,7 +14328,7 @@ argument_list|()
 operator|&&
 literal|"Successor idx out of range for switch!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|cast
 operator|<
@@ -13923,14 +14348,11 @@ return|;
 block|}
 name|void
 name|setSuccessor
-parameter_list|(
-name|unsigned
-name|idx
-parameter_list|,
-name|BasicBlock
-modifier|*
-name|NewSucc
-parameter_list|)
+argument_list|(
+argument|unsigned idx
+argument_list|,
+argument|BasicBlock *NewSucc
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -13941,7 +14363,7 @@ argument_list|()
 operator|&&
 literal|"Successor # out of range for switch!"
 argument_list|)
-expr_stmt|;
+block|;
 name|setOperand
 argument_list|(
 name|idx
@@ -13952,19 +14374,14 @@ literal|1
 argument_list|,
 name|NewSucc
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Instruction
-modifier|*
-name|I
-parameter_list|)
+argument_list|(
+argument|const Instruction *I
+argument_list|)
 block|{
 return|return
 name|I
@@ -13978,15 +14395,11 @@ name|Switch
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|isa
@@ -14009,44 +14422,8 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|private
-label|:
-name|BasicBlock
-modifier|*
-name|getSuccessorV
-argument_list|(
-name|unsigned
-name|idx
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-name|override
-expr_stmt|;
-name|void
-name|setSuccessorV
-argument_list|(
-name|unsigned
-name|idx
-argument_list|,
-name|BasicBlock
-operator|*
-name|B
-argument_list|)
-name|override
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -14062,46 +14439,22 @@ operator|<
 literal|2
 operator|>
 block|{ }
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
+block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|SwitchInst
 argument_list|,
 argument|Value
 argument_list|)
-end_macro
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//                             IndirectBrInst Class
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//===---------------------------------------------------------------------------
-end_comment
-
-begin_comment
 comment|/// Indirect Branch Instruction.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|IndirectBrInst
-range|:
+operator|:
 name|public
 name|TerminatorInst
 block|{
@@ -14190,18 +14543,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 specifier|static
 name|IndirectBrInst
 operator|*
@@ -14413,7 +14754,6 @@ argument_list|)
 block|;   }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -14432,7 +14772,6 @@ name|IndirectBr
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -14460,36 +14799,8 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|private
-operator|:
-name|BasicBlock
-operator|*
-name|getSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|)
-specifier|const
-name|override
+expr|}
 block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-name|override
-block|;
-name|void
-name|setSuccessorV
-argument_list|(
-argument|unsigned idx
-argument_list|,
-argument|BasicBlock *B
-argument_list|)
-name|override
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -14505,77 +14816,53 @@ operator|<
 literal|1
 operator|>
 block|{ }
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
+block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|IndirectBrInst
 argument_list|,
 argument|Value
 argument_list|)
-end_macro
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//                               InvokeInst Class
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// Invoke instruction.  The SubclassData field is used to hold the
-end_comment
-
-begin_comment
 comment|/// calling convention of the call.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|InvokeInst
-range|:
+operator|:
 name|public
 name|TerminatorInst
-decl_stmt|,
+block|,
 name|public
 name|OperandBundleUser
-decl|<
+operator|<
 name|InvokeInst
-decl_stmt|,
+block|,
 name|User
-decl|::
+operator|::
 name|op_iterator
-decl|>
+operator|>
 block|{
 name|friend
 name|class
 name|OperandBundleUser
 operator|<
 name|InvokeInst
-operator|,
+block|,
 name|User
 operator|::
 name|op_iterator
 operator|>
-expr_stmt|;
-name|AttributeSet
+block|;
 name|AttributeList
-decl_stmt|;
+name|Attrs
+block|;
 name|FunctionType
-modifier|*
+operator|*
 name|FTy
-decl_stmt|;
+block|;
 name|InvokeInst
 argument_list|(
 specifier|const
@@ -14583,7 +14870,7 @@ name|InvokeInst
 operator|&
 name|BI
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// Construct an InvokeInst given a range of arguments.
 comment|///
 comment|/// Construct an InvokeInst from a range of arguments
@@ -14649,7 +14936,7 @@ argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// Construct an InvokeInst given a range of arguments.
 comment|///
 comment|/// Construct an InvokeInst from a range of arguments
@@ -14672,7 +14959,7 @@ argument|const Twine&NameStr
 argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
-expr_stmt|;
+block|;
 name|bool
 name|hasDescriptor
 argument_list|()
@@ -14685,35 +14972,17 @@ block|}
 name|void
 name|init
 argument_list|(
-name|Value
-operator|*
-name|Func
+argument|Value *Func
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfNormal
+argument|BasicBlock *IfNormal
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfException
+argument|BasicBlock *IfException
 argument_list|,
-name|ArrayRef
-operator|<
-name|Value
-operator|*
-operator|>
-name|Args
+argument|ArrayRef<Value *> Args
 argument_list|,
-name|ArrayRef
-operator|<
-name|OperandBundleDef
-operator|>
-name|Bundles
+argument|ArrayRef<OperandBundleDef> Bundles
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
+argument|const Twine&NameStr
 argument_list|)
 block|{
 name|init
@@ -14750,8 +15019,7 @@ name|Bundles
 argument_list|,
 name|NameStr
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|void
 name|init
 argument_list|(
@@ -14789,56 +15057,38 @@ name|Twine
 operator|&
 name|NameStr
 argument_list|)
-decl_stmt|;
+block|;
 name|protected
-label|:
+operator|:
 comment|// Note: Instruction needs to be a friend here to call cloneImpl.
 name|friend
 name|class
 name|Instruction
-decl_stmt|;
+block|;
 name|InvokeInst
 operator|*
 name|cloneImpl
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 specifier|static
 name|InvokeInst
-modifier|*
+operator|*
 name|Create
 argument_list|(
-name|Value
-operator|*
-name|Func
+argument|Value *Func
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfNormal
+argument|BasicBlock *IfNormal
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfException
+argument|BasicBlock *IfException
 argument_list|,
-name|ArrayRef
-operator|<
-name|Value
-operator|*
-operator|>
-name|Args
+argument|ArrayRef<Value *> Args
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
+argument|const Twine&NameStr
 argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
-name|nullptr
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -14882,48 +15132,23 @@ return|;
 block|}
 specifier|static
 name|InvokeInst
-modifier|*
+operator|*
 name|Create
 argument_list|(
-name|Value
-operator|*
-name|Func
+argument|Value *Func
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfNormal
+argument|BasicBlock *IfNormal
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfException
+argument|BasicBlock *IfException
 argument_list|,
-name|ArrayRef
-operator|<
-name|Value
-operator|*
-operator|>
-name|Args
+argument|ArrayRef<Value *> Args
 argument_list|,
-name|ArrayRef
-operator|<
-name|OperandBundleDef
-operator|>
-name|Bundles
-operator|=
-name|None
+argument|ArrayRef<OperandBundleDef> Bundles = None
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
-operator|=
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
-name|nullptr
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -14967,47 +15192,27 @@ return|;
 block|}
 specifier|static
 name|InvokeInst
-modifier|*
+operator|*
 name|Create
 argument_list|(
-name|FunctionType
-operator|*
-name|Ty
+argument|FunctionType *Ty
 argument_list|,
-name|Value
-operator|*
-name|Func
+argument|Value *Func
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfNormal
+argument|BasicBlock *IfNormal
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfException
+argument|BasicBlock *IfException
 argument_list|,
-name|ArrayRef
-operator|<
-name|Value
-operator|*
-operator|>
-name|Args
+argument|ArrayRef<Value *> Args
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
+argument|const Twine&NameStr
 argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
-name|nullptr
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 name|unsigned
 name|Values
-init|=
+operator|=
 name|unsigned
 argument_list|(
 name|Args
@@ -15017,7 +15222,7 @@ argument_list|()
 argument_list|)
 operator|+
 literal|3
-decl_stmt|;
+block|;
 return|return
 name|new
 argument_list|(
@@ -15047,57 +15252,30 @@ return|;
 block|}
 specifier|static
 name|InvokeInst
-modifier|*
+operator|*
 name|Create
 argument_list|(
-name|FunctionType
-operator|*
-name|Ty
+argument|FunctionType *Ty
 argument_list|,
-name|Value
-operator|*
-name|Func
+argument|Value *Func
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfNormal
+argument|BasicBlock *IfNormal
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfException
+argument|BasicBlock *IfException
 argument_list|,
-name|ArrayRef
-operator|<
-name|Value
-operator|*
-operator|>
-name|Args
+argument|ArrayRef<Value *> Args
 argument_list|,
-name|ArrayRef
-operator|<
-name|OperandBundleDef
-operator|>
-name|Bundles
-operator|=
-name|None
+argument|ArrayRef<OperandBundleDef> Bundles = None
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
-operator|=
+argument|const Twine&NameStr =
 literal|""
 argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-operator|=
-name|nullptr
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 name|unsigned
 name|Values
-init|=
+operator|=
 name|unsigned
 argument_list|(
 name|Args
@@ -15112,10 +15290,10 @@ name|Bundles
 argument_list|)
 operator|+
 literal|3
-decl_stmt|;
+block|;
 name|unsigned
 name|DescriptorBytes
-init|=
+operator|=
 name|Bundles
 operator|.
 name|size
@@ -15125,7 +15303,7 @@ sizeof|sizeof
 argument_list|(
 name|BundleOpInfo
 argument_list|)
-decl_stmt|;
+block|;
 return|return
 name|new
 argument_list|(
@@ -15157,41 +15335,25 @@ return|;
 block|}
 specifier|static
 name|InvokeInst
-modifier|*
+operator|*
 name|Create
 argument_list|(
-name|Value
-operator|*
-name|Func
+argument|Value *Func
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfNormal
+argument|BasicBlock *IfNormal
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfException
+argument|BasicBlock *IfException
 argument_list|,
-name|ArrayRef
-operator|<
-name|Value
-operator|*
-operator|>
-name|Args
+argument|ArrayRef<Value *> Args
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
+argument|const Twine&NameStr
 argument_list|,
-name|BasicBlock
-operator|*
-name|InsertAtEnd
+argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|{
 name|unsigned
 name|Values
-init|=
+operator|=
 name|unsigned
 argument_list|(
 name|Args
@@ -15201,7 +15363,7 @@ argument_list|()
 argument_list|)
 operator|+
 literal|3
-decl_stmt|;
+block|;
 return|return
 name|new
 argument_list|(
@@ -15229,47 +15391,27 @@ return|;
 block|}
 specifier|static
 name|InvokeInst
-modifier|*
+operator|*
 name|Create
 argument_list|(
-name|Value
-operator|*
-name|Func
+argument|Value *Func
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfNormal
+argument|BasicBlock *IfNormal
 argument_list|,
-name|BasicBlock
-operator|*
-name|IfException
+argument|BasicBlock *IfException
 argument_list|,
-name|ArrayRef
-operator|<
-name|Value
-operator|*
-operator|>
-name|Args
+argument|ArrayRef<Value *> Args
 argument_list|,
-name|ArrayRef
-operator|<
-name|OperandBundleDef
-operator|>
-name|Bundles
+argument|ArrayRef<OperandBundleDef> Bundles
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
+argument|const Twine&NameStr
 argument_list|,
-name|BasicBlock
-operator|*
-name|InsertAtEnd
+argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|{
 name|unsigned
 name|Values
-init|=
+operator|=
 name|unsigned
 argument_list|(
 name|Args
@@ -15284,10 +15426,10 @@ name|Bundles
 argument_list|)
 operator|+
 literal|3
-decl_stmt|;
+block|;
 name|unsigned
 name|DescriptorBytes
-init|=
+operator|=
 name|Bundles
 operator|.
 name|size
@@ -15297,7 +15439,7 @@ sizeof|sizeof
 argument_list|(
 name|BundleOpInfo
 argument_list|)
-decl_stmt|;
+block|;
 return|return
 name|new
 argument_list|(
@@ -15333,7 +15475,7 @@ comment|/// that the operand bundles for the new instruction are set to the oper
 comment|/// bundles in \p Bundles.
 specifier|static
 name|InvokeInst
-modifier|*
+operator|*
 name|Create
 argument_list|(
 name|InvokeInst
@@ -15352,13 +15494,13 @@ name|InsertPt
 operator|=
 name|nullptr
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
 argument_list|)
-expr_stmt|;
+block|;
 name|FunctionType
 operator|*
 name|getFunctionType
@@ -15371,11 +15513,9 @@ return|;
 block|}
 name|void
 name|mutateFunctionType
-parameter_list|(
-name|FunctionType
-modifier|*
-name|FTy
-parameter_list|)
+argument_list|(
+argument|FunctionType *FTy
+argument_list|)
 block|{
 name|mutateType
 argument_list|(
@@ -15384,14 +15524,13 @@ operator|->
 name|getReturnType
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 name|this
 operator|->
 name|FTy
 operator|=
 name|FTy
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Return the number of invoke arguments.
 comment|///
 name|unsigned
@@ -15412,13 +15551,12 @@ block|}
 comment|/// getArgOperand/setArgOperand - Return/set the i-th invoke argument.
 comment|///
 name|Value
-modifier|*
+operator|*
 name|getArgOperand
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -15429,7 +15567,7 @@ argument_list|()
 operator|&&
 literal|"Out of bounds!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|getOperand
 argument_list|(
@@ -15439,14 +15577,11 @@ return|;
 block|}
 name|void
 name|setArgOperand
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|,
-name|Value
-modifier|*
-name|v
-parameter_list|)
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Value *v
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -15457,19 +15592,18 @@ argument_list|()
 operator|&&
 literal|"Out of bounds!"
 argument_list|)
-expr_stmt|;
+block|;
 name|setOperand
 argument_list|(
 name|i
 argument_list|,
 name|v
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Return the iterator pointing to the beginning of the argument list.
 name|op_iterator
 name|arg_begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|op_begin
@@ -15479,7 +15613,7 @@ block|}
 comment|/// Return the iterator pointing to the end of the argument list.
 name|op_iterator
 name|arg_end
-parameter_list|()
+argument_list|()
 block|{
 comment|// [ invoke args ], [ operand bundles ], normal dest, unwind dest, callee
 return|return
@@ -15562,13 +15696,12 @@ block|}
 comment|/// Wrappers for getting the \c Use of a invoke argument.
 specifier|const
 name|Use
-modifier|&
+operator|&
 name|getArgOperandUse
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -15579,7 +15712,7 @@ argument_list|()
 operator|&&
 literal|"Out of bounds!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|getOperandUse
 argument_list|(
@@ -15588,12 +15721,11 @@ argument_list|)
 return|;
 block|}
 name|Use
-modifier|&
+operator|&
 name|getArgOperandUse
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
+argument_list|(
+argument|unsigned i
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -15604,7 +15736,7 @@ argument_list|()
 operator|&&
 literal|"Out of bounds!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|getOperandUse
 argument_list|(
@@ -15619,7 +15751,7 @@ operator|*
 name|getReturnedArgOperand
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// getCallingConv/setCallingConv - Get or set the calling convention of this
 comment|/// function call.
 name|CallingConv
@@ -15645,15 +15777,12 @@ block|}
 name|void
 name|setCallingConv
 argument_list|(
-name|CallingConv
-operator|::
-name|ID
-name|CC
+argument|CallingConv::ID CC
 argument_list|)
 block|{
 name|auto
 name|ID
-init|=
+operator|=
 name|static_cast
 operator|<
 name|unsigned
@@ -15661,7 +15790,7 @@ operator|>
 operator|(
 name|CC
 operator|)
-decl_stmt|;
+block|;
 name|assert
 argument_list|(
 operator|!
@@ -15676,119 +15805,115 @@ operator|)
 operator|&&
 literal|"Unsupported calling convention"
 argument_list|)
-expr_stmt|;
+block|;
 name|setInstructionSubclassData
 argument_list|(
 name|ID
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Return the parameter attributes for this invoke.
 comment|///
-name|AttributeSet
+name|AttributeList
 name|getAttributes
 argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 return|;
 block|}
 comment|/// Set the parameter attributes for this invoke.
 comment|///
 name|void
 name|setAttributes
-parameter_list|(
-name|AttributeSet
-name|Attrs
-parameter_list|)
+argument_list|(
+argument|AttributeList A
+argument_list|)
 block|{
-name|AttributeList
-operator|=
 name|Attrs
-expr_stmt|;
-block|}
+operator|=
+name|A
+block|; }
 comment|/// adds the attribute to the list of attributes.
 name|void
 name|addAttribute
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
+argument|Attribute::AttrKind Kind
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// adds the attribute to the list of attributes.
 name|void
 name|addAttribute
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|,
-name|Attribute
-name|Attr
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Attribute Attr
+argument_list|)
+block|;
+comment|/// Adds the attribute to the indicated argument
+name|void
+name|addParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|;
 comment|/// removes the attribute from the list of attributes.
 name|void
 name|removeAttribute
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
+argument|Attribute::AttrKind Kind
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// removes the attribute from the list of attributes.
 name|void
 name|removeAttribute
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|,
-name|StringRef
-name|Kind
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+block|;
+comment|/// Removes the attribute from the given argument
+name|void
+name|removeParamAttr
+argument_list|(
+argument|unsigned ArgNo
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|;
 comment|/// adds the dereferenceable attribute to the list of attributes.
 name|void
 name|addDereferenceableAttr
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|,
-name|uint64_t
-name|Bytes
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|uint64_t Bytes
+argument_list|)
+block|;
 comment|/// adds the dereferenceable_or_null attribute to the list of
 comment|/// attributes.
 name|void
 name|addDereferenceableOrNullAttr
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|,
-name|uint64_t
-name|Bytes
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|uint64_t Bytes
+argument_list|)
+block|;
 comment|/// Determine whether this call has the given attribute.
 name|bool
 name|hasFnAttr
 argument_list|(
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
+argument|Attribute::AttrKind Kind
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -15800,7 +15925,7 @@ name|NoBuiltin
 operator|&&
 literal|"Use CallInst::isNoBuiltin() to check for Attribute::NoBuiltin"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|hasFnAttrImpl
 argument_list|(
@@ -15812,10 +15937,9 @@ comment|/// Determine whether this call has the given attribute.
 name|bool
 name|hasFnAttr
 argument_list|(
-name|StringRef
-name|Kind
+argument|StringRef Kind
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|hasFnAttrImpl
@@ -15824,33 +15948,33 @@ name|Kind
 argument_list|)
 return|;
 block|}
-comment|/// Determine whether the call or the callee has the given attributes.
+comment|/// Determine whether the return value has the given attribute.
+name|bool
+name|hasRetAttr
+argument_list|(
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// Determine whether the argument or parameter has the given attribute.
 name|bool
 name|paramHasAttr
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned ArgNo
 argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
+argument|Attribute::AttrKind Kind
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// Get the attribute of a given kind at a position.
 name|Attribute
 name|getAttribute
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
+argument|Attribute::AttrKind Kind
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|getAttributes
@@ -15868,13 +15992,11 @@ comment|/// Get the attribute of a given kind at a position.
 name|Attribute
 name|getAttribute
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|,
-name|StringRef
-name|Kind
+argument|StringRef Kind
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|getAttributes
@@ -15905,31 +16027,39 @@ comment|///     (\p i - 1) in the operand list.
 name|bool
 name|dataOperandHasImpliedAttr
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|,
-name|Attribute
-operator|::
-name|AttrKind
-name|Kind
+argument|Attribute::AttrKind Kind
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
+comment|/// Extract the alignment of the return value.
+name|unsigned
+name|getRetAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Attrs
+operator|.
+name|getRetAlignment
+argument_list|()
+return|;
+block|}
 comment|/// Extract the alignment for a call or parameter (0=unknown).
 name|unsigned
 name|getParamAlignment
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned ArgNo
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 operator|.
 name|getParamAlignment
 argument_list|(
-name|i
+name|ArgNo
 argument_list|)
 return|;
 block|}
@@ -15938,13 +16068,12 @@ comment|/// parameter (0=unknown).
 name|uint64_t
 name|getDereferenceableBytes
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 operator|.
 name|getDereferenceableBytes
 argument_list|(
@@ -15957,13 +16086,12 @@ comment|/// parameter (0=unknown).
 name|uint64_t
 name|getDereferenceableOrNullBytes
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 operator|.
 name|getDereferenceableOrNullBytes
 argument_list|(
@@ -15971,23 +16099,20 @@ name|i
 argument_list|)
 return|;
 block|}
-comment|/// @brief Determine if the parameter or return value is marked with NoAlias
-comment|/// attribute.
-comment|/// @param n The parameter to check. 1 is the first parameter, 0 is the return
+comment|/// @brief Determine if the return value is marked with NoAlias attribute.
 name|bool
-name|doesNotAlias
-argument_list|(
-name|unsigned
-name|n
-argument_list|)
-decl|const
+name|returnDoesNotAlias
+argument_list|()
+specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 operator|.
 name|hasAttribute
 argument_list|(
-name|n
+name|AttributeList
+operator|::
+name|ReturnIndex
 argument_list|,
 name|Attribute
 operator|::
@@ -16038,11 +16163,11 @@ return|;
 block|}
 name|void
 name|setIsNoInline
-parameter_list|()
+argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16050,8 +16175,7 @@ name|Attribute
 operator|::
 name|NoInline
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Determine if the call does not access memory.
 name|bool
 name|doesNotAccessMemory
@@ -16069,11 +16193,11 @@ return|;
 block|}
 name|void
 name|setDoesNotAccessMemory
-parameter_list|()
+argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16081,8 +16205,7 @@ name|Attribute
 operator|::
 name|ReadNone
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Determine if the call does not access or only reads memory.
 name|bool
 name|onlyReadsMemory
@@ -16103,11 +16226,11 @@ return|;
 block|}
 name|void
 name|setOnlyReadsMemory
-parameter_list|()
+argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16115,8 +16238,7 @@ name|Attribute
 operator|::
 name|ReadOnly
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Determine if the call does not access or only writes memory.
 name|bool
 name|doesNotReadMemory
@@ -16137,11 +16259,11 @@ return|;
 block|}
 name|void
 name|setDoesNotReadMemory
-parameter_list|()
+argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16149,8 +16271,7 @@ name|Attribute
 operator|::
 name|WriteOnly
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// @brief Determine if the call access memmory only using it's pointer
 comment|/// arguments.
 name|bool
@@ -16169,11 +16290,11 @@ return|;
 block|}
 name|void
 name|setOnlyAccessesArgMemory
-parameter_list|()
+argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16181,8 +16302,7 @@ name|Attribute
 operator|::
 name|ArgMemOnly
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Determine if the call cannot return.
 name|bool
 name|doesNotReturn
@@ -16200,11 +16320,11 @@ return|;
 block|}
 name|void
 name|setDoesNotReturn
-parameter_list|()
+argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16212,8 +16332,7 @@ name|Attribute
 operator|::
 name|NoReturn
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Determine if the call cannot unwind.
 name|bool
 name|doesNotThrow
@@ -16231,11 +16350,11 @@ return|;
 block|}
 name|void
 name|setDoesNotThrow
-parameter_list|()
+argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16243,8 +16362,7 @@ name|Attribute
 operator|::
 name|NoUnwind
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Determine if the invoke cannot be duplicated.
 name|bool
 name|cannotDuplicate
@@ -16262,11 +16380,11 @@ return|;
 block|}
 name|void
 name|setCannotDuplicate
-parameter_list|()
+argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16274,8 +16392,7 @@ name|Attribute
 operator|::
 name|NoDuplicate
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Determine if the invoke is convergent
 name|bool
 name|isConvergent
@@ -16293,11 +16410,11 @@ return|;
 block|}
 name|void
 name|setConvergent
-parameter_list|()
+argument_list|()
 block|{
 name|addAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16305,15 +16422,14 @@ name|Attribute
 operator|::
 name|Convergent
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|void
 name|setNotConvergent
-parameter_list|()
+argument_list|()
 block|{
 name|removeAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16321,8 +16437,7 @@ name|Attribute
 operator|::
 name|Convergent
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Determine if the call returns a structure through first
 comment|/// pointer argument.
 name|bool
@@ -16344,7 +16459,7 @@ comment|// Be friendly and also check the callee.
 return|return
 name|paramHasAttr
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|Attribute
 operator|::
@@ -16352,20 +16467,14 @@ name|StructRet
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Determine if any call argument is an aggregate passed by value.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasByValArgument
 argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeList
+name|Attrs
 operator|.
 name|hasAttrSomewhere
 argument_list|(
@@ -16375,21 +16484,9 @@ name|ByVal
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Return the function called, or null if this is an
-end_comment
-
-begin_comment
 comment|/// indirect function invocation.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_expr_stmt
 name|Function
 operator|*
 name|getCalledFunction
@@ -16412,17 +16509,8 @@ operator|)
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Get a pointer to the function that is invoked by this
-end_comment
-
-begin_comment
 comment|/// instruction
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|Value
 operator|*
@@ -16440,13 +16528,10 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|Value
-modifier|*
+operator|*
 name|getCalledValue
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Op
@@ -16458,20 +16543,12 @@ operator|(
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Set the function called.
-end_comment
-
-begin_function
 name|void
 name|setCalledFunction
-parameter_list|(
-name|Value
-modifier|*
-name|Fn
-parameter_list|)
+argument_list|(
+argument|Value* Fn
+argument_list|)
 block|{
 name|setCalledFunction
 argument_list|(
@@ -16497,29 +16574,21 @@ operator|)
 argument_list|,
 name|Fn
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
+block|;   }
 name|void
 name|setCalledFunction
-parameter_list|(
-name|FunctionType
-modifier|*
-name|FTy
-parameter_list|,
-name|Value
-modifier|*
-name|Fn
-parameter_list|)
+argument_list|(
+argument|FunctionType *FTy
+argument_list|,
+argument|Value *Fn
+argument_list|)
 block|{
 name|this
 operator|->
 name|FTy
 operator|=
 name|FTy
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|FTy
@@ -16544,7 +16613,7 @@ name|getElementType
 argument_list|()
 operator|)
 argument_list|)
-expr_stmt|;
+block|;
 name|Op
 operator|<
 operator|-
@@ -16554,15 +16623,8 @@ operator|(
 operator|)
 operator|=
 name|Fn
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|;   }
 comment|// get*Dest - Return the destination basic blocks...
-end_comment
-
-begin_expr_stmt
 name|BasicBlock
 operator|*
 name|getNormalDest
@@ -16585,9 +16647,6 @@ operator|)
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|BasicBlock
 operator|*
 name|getUnwindDest
@@ -16610,16 +16669,11 @@ operator|)
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setNormalDest
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|B
-parameter_list|)
+argument_list|(
+argument|BasicBlock *B
+argument_list|)
 block|{
 name|Op
 operator|<
@@ -16637,18 +16691,12 @@ operator|>
 operator|(
 name|B
 operator|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
+block|;   }
 name|void
 name|setUnwindDest
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|B
-parameter_list|)
+argument_list|(
+argument|BasicBlock *B
+argument_list|)
 block|{
 name|Op
 operator|<
@@ -16666,36 +16714,22 @@ operator|>
 operator|(
 name|B
 operator|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|;   }
 comment|/// Get the landingpad instruction from the landing pad
-end_comment
-
-begin_comment
 comment|/// block (the unwind destination).
-end_comment
-
-begin_expr_stmt
 name|LandingPadInst
 operator|*
 name|getLandingPadInst
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 name|BasicBlock
-modifier|*
+operator|*
 name|getSuccessor
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -16705,7 +16739,7 @@ literal|2
 operator|&&
 literal|"Successor # out of range for invoke!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|i
 operator|==
@@ -16718,19 +16752,13 @@ name|getUnwindDest
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|setSuccessor
-parameter_list|(
-name|unsigned
-name|idx
-parameter_list|,
-name|BasicBlock
-modifier|*
-name|NewSucc
-parameter_list|)
+argument_list|(
+argument|unsigned idx
+argument_list|,
+argument|BasicBlock *NewSucc
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -16740,7 +16768,7 @@ literal|2
 operator|&&
 literal|"Successor # out of range for invoke!"
 argument_list|)
-expr_stmt|;
+block|;
 operator|*
 operator|(
 operator|&
@@ -16763,11 +16791,7 @@ operator|>
 operator|(
 name|NewSucc
 operator|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
+block|;   }
 name|unsigned
 name|getNumSuccessors
 argument_list|()
@@ -16777,23 +16801,13 @@ return|return
 literal|2
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-end_comment
-
-begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Instruction
-modifier|*
-name|I
-parameter_list|)
+argument_list|(
+argument|const Instruction *I
+argument_list|)
 block|{
 return|return
 operator|(
@@ -16808,19 +16822,12 @@ name|Invoke
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|isa
@@ -16843,51 +16850,8 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_label
 name|private
-label|:
-end_label
-
-begin_decl_stmt
-name|BasicBlock
-modifier|*
-name|getSuccessorV
-argument_list|(
-name|unsigned
-name|idx
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-name|override
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|void
-name|setSuccessorV
-argument_list|(
-name|unsigned
-name|idx
-argument_list|,
-name|BasicBlock
-operator|*
-name|B
-argument_list|)
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+operator|:
 name|template
 operator|<
 name|typename
@@ -16902,11 +16866,11 @@ specifier|const
 block|{
 if|if
 condition|(
-name|AttributeList
+name|Attrs
 operator|.
 name|hasAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
@@ -16916,17 +16880,8 @@ condition|)
 return|return
 name|true
 return|;
-end_expr_stmt
-
-begin_comment
 comment|// Operand bundles override attributes on the called function, but don't
-end_comment
-
-begin_comment
 comment|// override attributes directly present on the invoke instruction.
-end_comment
-
-begin_if
 if|if
 condition|(
 name|isFnAttrDisallowedByOpBundle
@@ -16937,9 +16892,6 @@ condition|)
 return|return
 name|false
 return|;
-end_if
-
-begin_if
 if|if
 condition|(
 specifier|const
@@ -16958,39 +16910,24 @@ argument_list|()
 operator|.
 name|hasAttribute
 argument_list|(
-name|AttributeSet
+name|AttributeList
 operator|::
 name|FunctionIndex
 argument_list|,
 name|Kind
 argument_list|)
 return|;
-end_if
-
-begin_return
 return|return
 name|false
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
-end_comment
-
-begin_comment
 comment|// method so that subclasses cannot accidentally use it.
-end_comment
-
-begin_macro
-unit|void
+name|void
 name|setInstructionSubclassData
 argument_list|(
 argument|unsigned short D
 argument_list|)
-end_macro
-
-begin_block
 block|{
 name|Instruction
 operator|::
@@ -16998,12 +16935,9 @@ name|setInstructionSubclassData
 argument_list|(
 name|D
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_expr_stmt
-unit|};
+block|;   }
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -17017,14 +16951,11 @@ name|public
 name|VariadicOperandTraits
 operator|<
 name|InvokeInst
-operator|,
+block|,
 literal|3
 operator|>
 block|{ }
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|InvokeInst
 operator|::
 name|InvokeInst
@@ -17239,25 +17170,13 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Provide fast operand accessors
-end_comment
-
-begin_expr_stmt
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// Convenience accessor.
-end_comment
-
-begin_expr_stmt
 name|Value
 operator|*
 name|getValue
@@ -17273,9 +17192,6 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|getNumSuccessors
 argument_list|()
@@ -17285,23 +17201,13 @@ return|return
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-end_comment
-
-begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Instruction
-modifier|*
-name|I
-parameter_list|)
+argument_list|(
+argument|const Instruction *I
+argument_list|)
 block|{
 return|return
 name|I
@@ -17314,19 +17220,12 @@ operator|::
 name|Resume
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|isa
@@ -17349,52 +17248,39 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_label
 name|private
-label|:
-end_label
-
-begin_decl_stmt
-name|BasicBlock
-modifier|*
-name|getSuccessorV
-argument_list|(
-name|unsigned
-name|idx
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-name|override
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|void
-name|setSuccessorV
-argument_list|(
-name|unsigned
-name|idx
-argument_list|,
+operator|:
+name|friend
+name|TerminatorInst
+block|;
 name|BasicBlock
 operator|*
-name|B
+name|getSuccessor
+argument_list|(
+argument|unsigned idx
 argument_list|)
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-unit|};
+specifier|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"ResumeInst has no successors!"
+argument_list|)
+block|;   }
+name|void
+name|setSuccessor
+argument_list|(
+argument|unsigned idx
+argument_list|,
+argument|BasicBlock *NewSucc
+argument_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"ResumeInst has no successors!"
+argument_list|)
+block|;   }
+block|}
+block|;
 name|template
 operator|<
 operator|>
@@ -17408,38 +17294,23 @@ name|public
 name|FixedNumOperandTraits
 operator|<
 name|ResumeInst
-operator|,
+block|,
 literal|1
 operator|>
 block|{ }
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
+block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|ResumeInst
 argument_list|,
 argument|Value
 argument_list|)
-end_macro
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//                         CatchSwitchInst Class
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_decl_stmt
 name|class
 name|CatchSwitchInst
-range|:
+operator|:
 name|public
 name|TerminatorInst
 block|{
@@ -17543,18 +17414,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 specifier|static
 name|CatchSwitchInst
 operator|*
@@ -17704,47 +17563,32 @@ return|return
 name|nullptr
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|setUnwindDest
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|UnwindDest
-parameter_list|)
+argument_list|(
+argument|BasicBlock *UnwindDest
+argument_list|)
 block|{
 name|assert
 argument_list|(
 name|UnwindDest
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|hasUnwindDest
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 name|setOperand
 argument_list|(
 literal|1
 argument_list|,
 name|UnwindDest
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|;   }
 comment|/// return the number of 'handlers' in this catchswitch
-end_comment
-
-begin_comment
 comment|/// instruction, except the default handler
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getNumHandlers
 argument_list|()
@@ -17761,28 +17605,22 @@ argument_list|()
 operator|-
 literal|2
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|getNumOperands
 argument_list|()
 operator|-
 literal|1
 return|;
-end_return
-
-begin_function
-unit|}  private:
+block|}
+name|private
+operator|:
 specifier|static
 name|BasicBlock
-modifier|*
+operator|*
 name|handler_helper
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|Value *V
+argument_list|)
 block|{
 return|return
 name|cast
@@ -17794,20 +17632,14 @@ name|V
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|const
 name|BasicBlock
-modifier|*
+operator|*
 name|handler_helper
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|cast
@@ -17819,53 +17651,43 @@ name|V
 operator|)
 return|;
 block|}
-end_function
-
-begin_label
 name|public
-label|:
-end_label
-
-begin_typedef
-typedef|typedef
+operator|:
+name|using
+name|DerefFnTy
+operator|=
 name|std
 operator|::
 name|pointer_to_unary_function
 operator|<
 name|Value
 operator|*
-operator|,
+block|,
 name|BasicBlock
 operator|*
 operator|>
-name|DerefFnTy
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|handler_iterator
+operator|=
 name|mapped_iterator
 operator|<
 name|op_iterator
-operator|,
+block|,
 name|DerefFnTy
 operator|>
-name|handler_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|handler_range
+operator|=
 name|iterator_range
 operator|<
 name|handler_iterator
 operator|>
-name|handler_range
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|ConstDerefFnTy
+operator|=
 name|std
 operator|::
 name|pointer_to_unary_function
@@ -17873,54 +17695,43 @@ operator|<
 specifier|const
 name|Value
 operator|*
-operator|,
+block|,
 specifier|const
 name|BasicBlock
 operator|*
 operator|>
-name|ConstDerefFnTy
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|const_handler_iterator
+operator|=
 name|mapped_iterator
 operator|<
 name|const_op_iterator
-operator|,
+block|,
 name|ConstDerefFnTy
 operator|>
-name|const_handler_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|const_handler_range
+operator|=
 name|iterator_range
 operator|<
 name|const_handler_iterator
 operator|>
-name|const_handler_range
-expr_stmt|;
-end_typedef
-
-begin_comment
+block|;
 comment|/// Returns an iterator that points to the first handler in CatchSwitchInst.
-end_comment
-
-begin_function
 name|handler_iterator
 name|handler_begin
-parameter_list|()
+argument_list|()
 block|{
 name|op_iterator
 name|It
-init|=
+operator|=
 name|op_begin
 argument_list|()
 operator|+
 literal|1
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|hasUnwindDest
@@ -17941,17 +17752,8 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Returns an iterator that points to the first handler in the
-end_comment
-
-begin_comment
 comment|/// CatchSwitchInst.
-end_comment
-
-begin_expr_stmt
 name|const_handler_iterator
 name|handler_begin
 argument_list|()
@@ -17973,9 +17775,6 @@ condition|)
 operator|++
 name|It
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|const_handler_iterator
 argument_list|(
@@ -17987,24 +17786,12 @@ name|handler_helper
 argument_list|)
 argument_list|)
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// Returns a read-only iterator that points one past the last
-end_comment
-
-begin_comment
 comment|/// handler in the CatchSwitchInst.
-end_comment
-
-begin_macro
-unit|handler_iterator
+name|handler_iterator
 name|handler_end
 argument_list|()
-end_macro
-
-begin_block
 block|{
 return|return
 name|handler_iterator
@@ -18019,17 +17806,8 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/// Returns an iterator that points one past the last handler in the
-end_comment
-
-begin_comment
 comment|/// CatchSwitchInst.
-end_comment
-
-begin_expr_stmt
 name|const_handler_iterator
 name|handler_end
 argument_list|()
@@ -18048,16 +17826,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// iteration adapter for range-for loops.
-end_comment
-
-begin_function
 name|handler_range
 name|handlers
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|make_range
@@ -18070,13 +17842,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// iteration adapter for range-for loops.
-end_comment
-
-begin_expr_stmt
 name|const_handler_range
 name|handlers
 argument_list|()
@@ -18093,46 +17859,24 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Add an entry to the switch instruction...
-end_comment
-
-begin_comment
 comment|/// Note:
-end_comment
-
-begin_comment
 comment|/// This action invalidates handler_end(). Old handler_end() iterator will
-end_comment
-
-begin_comment
 comment|/// point to the added handler.
-end_comment
-
-begin_function_decl
 name|void
 name|addHandler
-parameter_list|(
+argument_list|(
 name|BasicBlock
-modifier|*
+operator|*
 name|Dest
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|)
+block|;
 name|void
 name|removeHandler
-parameter_list|(
-name|handler_iterator
-name|HI
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
+argument_list|(
+argument|handler_iterator HI
+argument_list|)
+block|;
 name|unsigned
 name|getNumSuccessors
 argument_list|()
@@ -18145,17 +17889,13 @@ operator|-
 literal|1
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|BasicBlock
-modifier|*
+operator|*
 name|getSuccessor
 argument_list|(
-name|unsigned
-name|Idx
+argument|unsigned Idx
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -18166,7 +17906,7 @@ argument_list|()
 operator|&&
 literal|"Successor # out of range for catchswitch!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|cast
 operator|<
@@ -18182,19 +17922,13 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|setSuccessor
-parameter_list|(
-name|unsigned
-name|Idx
-parameter_list|,
-name|BasicBlock
-modifier|*
-name|NewSucc
-parameter_list|)
+argument_list|(
+argument|unsigned Idx
+argument_list|,
+argument|BasicBlock *NewSucc
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -18205,7 +17939,7 @@ argument_list|()
 operator|&&
 literal|"Successor # out of range for catchswitch!"
 argument_list|)
-expr_stmt|;
+block|;
 name|setOperand
 argument_list|(
 name|Idx
@@ -18214,25 +17948,14 @@ literal|1
 argument_list|,
 name|NewSucc
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|;   }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-end_comment
-
-begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Instruction
-modifier|*
-name|I
-parameter_list|)
+argument_list|(
+argument|const Instruction *I
+argument_list|)
 block|{
 return|return
 name|I
@@ -18245,19 +17968,12 @@ operator|::
 name|CatchSwitch
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|const Value *V
+argument_list|)
 block|{
 return|return
 name|isa
@@ -18280,52 +17996,8 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_label
-name|private
-label|:
-end_label
-
-begin_decl_stmt
-name|BasicBlock
-modifier|*
-name|getSuccessorV
-argument_list|(
-name|unsigned
-name|Idx
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-name|override
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|void
-name|setSuccessorV
-argument_list|(
-name|unsigned
-name|Idx
-argument_list|,
-name|BasicBlock
-operator|*
-name|B
-argument_list|)
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -18341,34 +18013,19 @@ operator|<
 literal|2
 operator|>
 block|{}
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
+block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|CatchSwitchInst
 argument_list|,
 argument|Value
 argument_list|)
-end_macro
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//                               CleanupPadInst Class
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_decl_stmt
 name|class
 name|CleanupPadInst
-range|:
+operator|:
 name|public
 name|FuncletPadInst
 block|{
@@ -18523,7 +18180,6 @@ return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -18542,7 +18198,6 @@ name|CleanupPad
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -18776,7 +18431,6 @@ name|CatchSwitch
 block|;   }
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -18795,7 +18449,6 @@ name|CatchPad
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -19092,7 +18745,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -19113,7 +18765,6 @@ operator|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -19143,30 +18794,56 @@ return|;
 block|}
 name|private
 operator|:
+name|friend
+name|TerminatorInst
+block|;
 name|BasicBlock
 operator|*
-name|getSuccessorV
+name|getSuccessor
 argument_list|(
 argument|unsigned Idx
 argument_list|)
 specifier|const
-name|override
-block|;
-name|unsigned
-name|getNumSuccessorsV
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<
+name|getNumSuccessors
 argument_list|()
-specifier|const
-name|override
+operator|&&
+literal|"Successor # out of range for catchret!"
+argument_list|)
 block|;
+return|return
+name|getSuccessor
+argument_list|()
+return|;
+block|}
 name|void
-name|setSuccessorV
+name|setSuccessor
 argument_list|(
 argument|unsigned Idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
-name|override
-block|; }
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<
+name|getNumSuccessors
+argument_list|()
+operator|&&
+literal|"Successor # out of range for catchret!"
+argument_list|)
+block|;
+name|setSuccessor
+argument_list|(
+name|B
+argument_list|)
+block|;   }
+expr|}
 block|;
 name|template
 operator|<
@@ -19491,7 +19168,6 @@ name|NewDest
 block|;   }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -19512,7 +19188,6 @@ operator|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -19542,30 +19217,49 @@ return|;
 block|}
 name|private
 operator|:
+name|friend
+name|TerminatorInst
+block|;
 name|BasicBlock
 operator|*
-name|getSuccessorV
+name|getSuccessor
 argument_list|(
 argument|unsigned Idx
 argument_list|)
 specifier|const
-name|override
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|==
+literal|0
+argument_list|)
 block|;
-name|unsigned
-name|getNumSuccessorsV
+return|return
+name|getUnwindDest
 argument_list|()
-specifier|const
-name|override
-block|;
+return|;
+block|}
 name|void
-name|setSuccessorV
+name|setSuccessor
 argument_list|(
 argument|unsigned Idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
-name|override
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|==
+literal|0
+argument_list|)
 block|;
+name|setUnwindDest
+argument_list|(
+name|B
+argument_list|)
+block|;   }
 comment|// Shadow Instruction::setInstructionSubclassData with a private forwarding
 comment|// method so that subclasses cannot accidentally use it.
 name|void
@@ -19581,11 +19275,8 @@ argument_list|(
 name|D
 argument_list|)
 block|;   }
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+expr|}
+block|;
 name|template
 operator|<
 operator|>
@@ -19599,59 +19290,29 @@ name|public
 name|VariadicOperandTraits
 operator|<
 name|CleanupReturnInst
-operator|,
+block|,
 comment|/*MINARITY=*/
 literal|1
 operator|>
 block|{}
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
+block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|CleanupReturnInst
 argument_list|,
 argument|Value
 argument_list|)
-end_macro
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//                           UnreachableInst Class
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//===---------------------------------------------------------------------------
-end_comment
-
-begin_comment
 comment|/// This function has undefined behavior.  In particular, the
-end_comment
-
-begin_comment
 comment|/// presence of this instruction indicates some higher level knowledge that the
-end_comment
-
-begin_comment
 comment|/// end of the block cannot be reached.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|UnreachableInst
-range|:
+operator|:
 name|public
 name|TerminatorInst
 block|{
@@ -19717,18 +19378,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|unsigned
 name|getNumSuccessors
 argument_list|()
@@ -19740,7 +19389,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -19759,7 +19407,6 @@ name|Unreachable
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -19789,53 +19436,44 @@ return|;
 block|}
 name|private
 operator|:
+name|friend
+name|TerminatorInst
+block|;
 name|BasicBlock
 operator|*
-name|getSuccessorV
+name|getSuccessor
 argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
-name|override
-block|;
-name|unsigned
-name|getNumSuccessorsV
-argument_list|()
-specifier|const
-name|override
-block|;
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"UnreachableInst has no successors!"
+argument_list|)
+block|;   }
 name|void
-name|setSuccessorV
+name|setSuccessor
 argument_list|(
 argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
-name|override
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"UnreachableInst has no successors!"
+argument_list|)
+block|;   }
+block|}
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|//                                 TruncInst Class
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// This class represents a truncation of integer types.
-end_comment
-
-begin_decl_stmt
 name|class
 name|TruncInst
-range|:
+operator|:
 name|public
 name|CastInst
 block|{
@@ -19911,7 +19549,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -19928,7 +19565,6 @@ name|Trunc
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20040,7 +19676,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20057,7 +19692,6 @@ name|ZExt
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20169,7 +19803,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20186,7 +19819,6 @@ name|SExt
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20298,7 +19930,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20315,7 +19946,6 @@ name|FPTrunc
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20427,7 +20057,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20444,7 +20073,6 @@ name|FPExt
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20556,7 +20184,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20573,7 +20200,6 @@ name|UIToFP
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20685,7 +20311,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20702,7 +20327,6 @@ name|SIToFP
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20814,7 +20438,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20831,7 +20454,6 @@ name|FPToUI
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20943,7 +20565,6 @@ argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -20960,7 +20581,6 @@ name|FPToSI
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -21084,7 +20704,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -21101,7 +20720,6 @@ name|IntToPtr
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -21268,7 +20886,6 @@ return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -21285,7 +20902,6 @@ name|PtrToInt
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -21397,7 +21013,6 @@ argument_list|)
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -21414,7 +21029,6 @@ name|BitCast
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -21527,7 +21141,6 @@ argument_list|)
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(
@@ -21544,7 +21157,6 @@ name|AddrSpaceCast
 return|;
 block|}
 specifier|static
-specifier|inline
 name|bool
 name|classof
 argument_list|(

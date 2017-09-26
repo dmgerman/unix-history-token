@@ -129,7 +129,7 @@ name|GDBRemoteCommunicationServerPlatform
 argument_list|()
 name|override
 expr_stmt|;
-name|Error
+name|Status
 name|LaunchProcess
 argument_list|()
 name|override
@@ -203,7 +203,7 @@ operator|&
 name|args
 argument_list|)
 decl_stmt|;
-name|Error
+name|Status
 name|LaunchGDBServer
 argument_list|(
 specifier|const

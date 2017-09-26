@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- AArch64PBQPRegAlloc.h - AArch64 specific PBQP constraints -------===//
+comment|//==- AArch64PBQPRegAlloc.h - AArch64 specific PBQP constraints --*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -59,6 +59,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
 comment|/// Add the accumulator chaining constraint to a PBQP graph
 name|class
 name|A57ChainingConstraint
@@ -118,6 +121,10 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

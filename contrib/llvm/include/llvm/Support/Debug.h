@@ -125,14 +125,6 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
-comment|/// DebugFlag - This boolean is set to true if the '-debug' command line option
-comment|/// is specified.  This should probably not be referenced directly, instead, use
-comment|/// the DEBUG macro below.
-comment|///
-specifier|extern
-name|bool
-name|DebugFlag
-decl_stmt|;
 comment|/// isCurrentDebugType - Return true if the specified string is the debug type
 comment|/// specified on the command line, or if none was specified on the command line
 comment|/// with the -debug-only=X option.
@@ -229,6 +221,33 @@ parameter_list|)
 value|do { } while (false)
 endif|#
 directive|endif
+comment|/// This boolean is set to true if the '-debug' command line option
+comment|/// is specified.  This should probably not be referenced directly, instead, use
+comment|/// the DEBUG macro below.
+comment|///
+specifier|extern
+name|bool
+name|DebugFlag
+decl_stmt|;
+comment|/// \name Verification flags.
+comment|///
+comment|/// These flags turns on/off that are expensive and are turned off by default,
+comment|/// unless macro EXPENSIVE_CHECKS is defined. The flags allow selectively
+comment|/// turning the checks on without need to recompile.
+comment|/// \{
+comment|/// Enables verification of dominator trees.
+comment|///
+specifier|extern
+name|bool
+name|VerifyDomInfo
+decl_stmt|;
+comment|/// Enables verification of loop info.
+comment|///
+specifier|extern
+name|bool
+name|VerifyLoopInfo
+decl_stmt|;
+comment|///\}
 comment|/// EnableDebugBuffering - This defaults to false.  If true, the debug
 comment|/// stream will install signal handlers to dump any buffered debug
 comment|/// output.  It allows clients to selectively allow the debug stream

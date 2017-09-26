@@ -348,6 +348,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|SBAddress
+operator|&
+name|lhs
+operator|,
+specifier|const
+name|SBAddress
+operator|&
+name|rhs
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lldb_private
 operator|::
 name|Address
@@ -424,8 +443,27 @@ name|m_opaque_ap
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+unit|};
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|SBAddress
+operator|&
+name|lhs
+operator|,
+specifier|const
+name|SBAddress
+operator|&
+name|rhs
+operator|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-unit|};  }
+unit|}
 comment|// namespace lldb
 end_comment
 

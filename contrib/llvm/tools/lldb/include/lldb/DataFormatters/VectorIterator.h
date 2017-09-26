@@ -56,13 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Target/ExecutionContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/ExecutionContext.h"
+file|"lldb/Utility/ConstString.h"
 end_include
 
 begin_decl_stmt

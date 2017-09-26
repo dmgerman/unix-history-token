@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Linker/IRMover.h"
 end_include
 
@@ -96,24 +102,7 @@ literal|1
 operator|<<
 literal|1
 operator|)
-block|,
-name|InternalizeLinkedSymbols
-init|=
-operator|(
-literal|1
-operator|<<
-literal|2
-operator|)
-block|,
-comment|/// Don't force link referenced linkonce definitions, import declaration.
-name|DontForceLinkLinkonceODR
-init|=
-operator|(
-literal|1
-operator|<<
-literal|3
-operator|)
-block|}
+block|,   }
 enum|;
 name|Linker
 argument_list|(
@@ -126,9 +115,10 @@ comment|/// \brief Link \p Src into the composite.
 comment|///
 comment|/// Passing OverrideSymbols as true will have symbols from Src
 comment|/// shadow those in the Dest.
-comment|/// For ThinLTO function importing/exporting the \p ModuleSummaryIndex
-comment|/// is passed. If \p GlobalsToImport is provided, only the globals that
-comment|/// are part of the set will be imported from the source module.
+comment|///
+comment|/// Passing InternalizeCallback will have the linker call the function with
+comment|/// the new module and a list of global value names to be internalized by the
+comment|/// callback.
 comment|///
 comment|/// Returns true on error.
 name|bool
@@ -149,16 +139,25 @@ name|Flags
 operator|::
 name|None
 argument_list|,
-name|DenseSet
+name|std
+operator|::
+name|function
 operator|<
+name|void
+argument_list|(
+name|Module
+operator|&
+argument_list|,
 specifier|const
-name|GlobalValue
-operator|*
+name|StringSet
+operator|<
 operator|>
-operator|*
-name|GlobalsToImport
+operator|&
+argument_list|)
+operator|>
+name|InternalizeCallback
 operator|=
-name|nullptr
+block|{}
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -183,6 +182,26 @@ operator|=
 name|Flags
 operator|::
 name|None
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|Module
+operator|&
+argument_list|,
+specifier|const
+name|StringSet
+operator|<
+operator|>
+operator|&
+argument_list|)
+operator|>
+name|InternalizeCallback
+operator|=
+block|{}
 argument_list|)
 decl_stmt|;
 block|}

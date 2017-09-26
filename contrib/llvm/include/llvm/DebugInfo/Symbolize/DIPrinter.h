@@ -101,6 +101,9 @@ decl_stmt|;
 name|int
 name|PrintSourceContext
 decl_stmt|;
+name|bool
+name|Verbose
+decl_stmt|;
 name|void
 name|print
 parameter_list|(
@@ -139,6 +142,8 @@ argument|bool PrintPretty = false
 argument_list|,
 argument|int PrintSourceContext =
 literal|0
+argument_list|,
+argument|bool Verbose = false
 argument_list|)
 block|:
 name|OS
@@ -158,7 +163,12 @@ argument_list|)
 operator|,
 name|PrintSourceContext
 argument_list|(
-argument|PrintSourceContext
+name|PrintSourceContext
+argument_list|)
+operator|,
+name|Verbose
+argument_list|(
+argument|Verbose
 argument_list|)
 block|{}
 name|DIPrinter

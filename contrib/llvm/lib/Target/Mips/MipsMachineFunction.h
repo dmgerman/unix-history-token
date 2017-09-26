@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsMachineFunctionInfo.h - Private data used for Mips ----*- C++ -*-=//
+comment|//===- MipsMachineFunctionInfo.h - Private data used for Mips ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFrameInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
@@ -81,24 +75,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineMemOperand.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/PseudoSourceValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetFrameLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_include
@@ -130,48 +106,13 @@ argument_list|)
 operator|:
 name|MF
 argument_list|(
-name|MF
-argument_list|)
-block|,
-name|SRetReturnReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|GlobalBaseReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsFrameIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|CallsEhReturn
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|IsISR
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|SaveS2
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|MoveF64ViaSpillFI
-argument_list|(
-argument|-
-literal|1
+argument|MF
 argument_list|)
 block|{}
 operator|~
 name|MipsFunctionInfo
 argument_list|()
+name|override
 block|;
 name|unsigned
 name|getSRetReturnReg
@@ -397,8 +338,6 @@ name|char
 operator|*
 block|,
 specifier|const
-name|llvm
-operator|::
 name|Mips16HardFloatInfo
 operator|::
 name|FuncSignature
@@ -422,16 +361,22 @@ comment|/// returning the value of the returned struct in a register. This field
 comment|/// holds the virtual register into which the sret argument is passed.
 name|unsigned
 name|SRetReturnReg
+operator|=
+literal|0
 block|;
 comment|/// GlobalBaseReg - keeps track of the virtual register initialized for
 comment|/// use as the global base register. This is used for PIC in some PIC
 comment|/// relocation models.
 name|unsigned
 name|GlobalBaseReg
+operator|=
+literal|0
 block|;
 comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
 name|int
 name|VarArgsFrameIndex
+operator|=
+literal|0
 block|;
 comment|/// True if function has a byval argument.
 name|bool
@@ -444,6 +389,8 @@ block|;
 comment|/// CallsEhReturn - Whether the function calls llvm.eh.return.
 name|bool
 name|CallsEhReturn
+operator|=
+name|false
 block|;
 comment|/// Frame objects for spilling eh data registers.
 name|int
@@ -455,6 +402,8 @@ block|;
 comment|/// ISR - Whether the function is an Interrupt Service Routine.
 name|bool
 name|IsISR
+operator|=
+name|false
 block|;
 comment|/// Frame objects for spilling C0_STATUS, C0_EPC
 name|int
@@ -466,24 +415,33 @@ block|;
 comment|// saveS2
 name|bool
 name|SaveS2
+operator|=
+name|false
 block|;
 comment|/// FrameIndex for expanding BuildPairF64 nodes to spill and reload when the
 comment|/// O32 FPXX ABI is enabled. -1 is used to denote invalid index.
 name|int
 name|MoveF64ViaSpillFI
+operator|=
+operator|-
+literal|1
 block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end of namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_MIPS_MIPSMACHINEFUNCTION_H
+end_comment
 
 end_unit
 

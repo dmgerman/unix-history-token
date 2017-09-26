@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/StringTableBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -102,6 +108,50 @@ name|BitstreamWriter
 operator|>
 name|Stream
 expr_stmt|;
+name|StringTableBuilder
+name|StrtabBuilder
+block|{
+name|StringTableBuilder
+operator|::
+name|RAW
+block|}
+empty_stmt|;
+comment|// Owns any strings created by the irsymtab writer until we create the
+comment|// string table.
+name|BumpPtrAllocator
+name|Alloc
+decl_stmt|;
+name|bool
+name|WroteStrtab
+init|=
+name|false
+decl_stmt|,
+name|WroteSymtab
+init|=
+name|false
+decl_stmt|;
+name|void
+name|writeBlob
+parameter_list|(
+name|unsigned
+name|Block
+parameter_list|,
+name|unsigned
+name|Record
+parameter_list|,
+name|StringRef
+name|Blob
+parameter_list|)
+function_decl|;
+name|std
+operator|::
+name|vector
+operator|<
+name|Module
+operator|*
+operator|>
+name|Mods
+expr_stmt|;
 name|public
 label|:
 comment|/// Create a BitcodeWriter that writes to Buffer.
@@ -119,6 +169,32 @@ operator|~
 name|BitcodeWriter
 argument_list|()
 expr_stmt|;
+comment|/// Attempt to write a symbol table to the bitcode file. This must be called
+comment|/// at most once after all modules have been written.
+comment|///
+comment|/// A reader does not require a symbol table to interpret a bitcode file;
+comment|/// the symbol table is needed only to improve link-time performance. So
+comment|/// this function may decide not to write a symbol table. It may so decide
+comment|/// if, for example, the target is unregistered or the IR is malformed.
+name|void
+name|writeSymtab
+parameter_list|()
+function_decl|;
+comment|/// Write the bitcode file's string table. This must be called exactly once
+comment|/// after all modules and the optional symbol table have been written.
+name|void
+name|writeStrtab
+parameter_list|()
+function_decl|;
+comment|/// Copy the string table for another module into this bitcode file. This
+comment|/// should be called after copying the module itself into the bitcode file.
+name|void
+name|copyStrtab
+parameter_list|(
+name|StringRef
+name|Strtab
+parameter_list|)
+function_decl|;
 comment|/// Write the specified module to the buffer specified at construction time.
 comment|///
 comment|/// If \c ShouldPreserveUseListOrder, encode the use-list order for each \a
@@ -130,6 +206,13 @@ comment|/// (currently for use in ThinLTO optimization).
 comment|///
 comment|/// \p GenerateHash enables hashing the Module and including the hash in the
 comment|/// bitcode (currently for use in ThinLTO incremental build).
+comment|///
+comment|/// If \p ModHash is non-null, when GenerateHash is true, the resulting
+comment|/// hash is written into ModHash. When GenerateHash is false, that value
+comment|/// is used as the hash instead of computing from the generated bitcode.
+comment|/// Can be used to produce the same module hash for a minimized bitcode
+comment|/// used just for the thin link as in the regular full bitcode that will
+comment|/// be used in the backend.
 name|void
 name|writeModule
 parameter_list|(
@@ -154,8 +237,37 @@ name|bool
 name|GenerateHash
 init|=
 name|false
+parameter_list|,
+name|ModuleHash
+modifier|*
+name|ModHash
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
+name|void
+name|writeIndex
+argument_list|(
+specifier|const
+name|ModuleSummaryIndex
+operator|*
+name|Index
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+argument_list|,
+name|GVSummaryMapTy
+operator|>
+operator|*
+name|ModuleToSummariesForIndex
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Write the specified module to the specified raw output stream.
@@ -172,6 +284,13 @@ comment|/// (currently for use in ThinLTO optimization).
 comment|///
 comment|/// \p GenerateHash enables hashing the Module and including the hash in the
 comment|/// bitcode (currently for use in ThinLTO incremental build).
+comment|///
+comment|/// If \p ModHash is non-null, when GenerateHash is true, the resulting
+comment|/// hash is written into ModHash. When GenerateHash is false, that value
+comment|/// is used as the hash instead of computing from the generated bitcode.
+comment|/// Can be used to produce the same module hash for a minimized bitcode
+comment|/// used just for the thin link as in the regular full bitcode that will
+comment|/// be used in the backend.
 name|void
 name|WriteBitcodeToFile
 parameter_list|(
@@ -200,6 +319,12 @@ name|bool
 name|GenerateHash
 init|=
 name|false
+parameter_list|,
+name|ModuleHash
+modifier|*
+name|ModHash
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Write the specified module summary index to the given raw output stream,

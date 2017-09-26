@@ -70,13 +70,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ObjectYAML/YAML.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
+file|"llvm/BinaryFormat/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -86,6 +104,76 @@ block|{
 name|namespace
 name|DWARFYAML
 block|{
+struct|struct
+name|InitialLength
+block|{
+name|uint32_t
+name|TotalLength
+decl_stmt|;
+name|uint64_t
+name|TotalLength64
+decl_stmt|;
+name|bool
+name|isDWARF64
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TotalLength
+operator|==
+name|UINT32_MAX
+return|;
+block|}
+name|uint64_t
+name|getLength
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isDWARF64
+argument_list|()
+operator|?
+name|TotalLength64
+operator|:
+name|TotalLength
+return|;
+block|}
+name|void
+name|setLength
+parameter_list|(
+name|uint64_t
+name|Len
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Len
+operator|>=
+operator|(
+name|uint64_t
+operator|)
+name|UINT32_MAX
+condition|)
+block|{
+name|TotalLength64
+operator|=
+name|Len
+expr_stmt|;
+name|TotalLength
+operator|=
+name|UINT32_MAX
+expr_stmt|;
+block|}
+else|else
+block|{
+name|TotalLength
+operator|=
+name|Len
+expr_stmt|;
+block|}
+block|}
+block|}
+struct|;
 struct|struct
 name|AttributeAbbrev
 block|{
@@ -103,6 +191,14 @@ operator|::
 name|Form
 name|Form
 expr_stmt|;
+name|llvm
+operator|::
+name|yaml
+operator|::
+name|Hex64
+name|Value
+expr_stmt|;
+comment|// Some DWARF5 attributes have values
 block|}
 struct|;
 struct|struct
@@ -157,7 +253,7 @@ struct|;
 struct|struct
 name|ARange
 block|{
-name|uint32_t
+name|InitialLength
 name|Length
 decl_stmt|;
 name|uint16_t
@@ -207,17 +303,9 @@ struct|;
 struct|struct
 name|PubSection
 block|{
-name|PubSection
-argument_list|()
-operator|:
-name|IsGNUStyle
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-name|uint32_t
+name|InitialLength
 name|Length
-expr_stmt|;
+decl_stmt|;
 name|uint16_t
 name|Version
 decl_stmt|;
@@ -229,6 +317,8 @@ name|UnitSize
 decl_stmt|;
 name|bool
 name|IsGNUStyle
+init|=
+name|false
 decl_stmt|;
 name|std
 operator|::
@@ -290,12 +380,20 @@ struct|;
 struct|struct
 name|Unit
 block|{
-name|uint32_t
+name|InitialLength
 name|Length
 decl_stmt|;
 name|uint16_t
 name|Version
 decl_stmt|;
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|UnitType
+name|Type
+expr_stmt|;
+comment|// Added in DWARF 5
 name|uint32_t
 name|AbbrOffset
 decl_stmt|;
@@ -383,11 +481,8 @@ struct|;
 struct|struct
 name|LineTable
 block|{
-name|uint32_t
-name|TotalLength
-decl_stmt|;
-name|uint64_t
-name|TotalLength64
+name|InitialLength
+name|Length
 decl_stmt|;
 name|uint16_t
 name|Version
@@ -513,32 +608,18 @@ expr_stmt|;
 block|}
 struct|;
 block|}
-comment|// namespace llvm::DWARFYAML
+comment|// end namespace DWARFYAML
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
-argument|uint8_t
-argument_list|)
-end_macro
-
-begin_macro
-name|LLVM_YAML_IS_SEQUENCE_VECTOR
-argument_list|(
 argument|llvm::yaml::Hex64
-argument_list|)
-end_macro
-
-begin_macro
-name|LLVM_YAML_IS_SEQUENCE_VECTOR
-argument_list|(
-argument|llvm::StringRef
 argument_list|)
 end_macro
 
@@ -984,6 +1065,33 @@ name|LineTable
 argument_list|)
 block|; }
 expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|MappingTraits
+operator|<
+name|DWARFYAML
+operator|::
+name|InitialLength
+operator|>
+block|{
+specifier|static
+name|void
+name|mapping
+argument_list|(
+name|IO
+operator|&
+name|IO
+argument_list|,
+name|DWARFYAML
+operator|::
+name|InitialLength
+operator|&
+name|DWARF
+argument_list|)
+block|; }
+expr_stmt|;
 define|#
 directive|define
 name|HANDLE_DW_TAG
@@ -991,6 +1099,10 @@ parameter_list|(
 name|unused
 parameter_list|,
 name|name
+parameter_list|,
+name|unused2
+parameter_list|,
+name|unused3
 parameter_list|)
 define|\
 value|io.enumCase(value, "DW_TAG_" #name, dwarf::DW_TAG_##name);
@@ -1016,7 +1128,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback
@@ -1061,7 +1173,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback
@@ -1106,7 +1218,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback
@@ -1126,6 +1238,10 @@ parameter_list|(
 name|unused
 parameter_list|,
 name|name
+parameter_list|,
+name|unused2
+parameter_list|,
+name|unused3
 parameter_list|)
 define|\
 value|io.enumCase(value, "DW_AT_" #name, dwarf::DW_AT_##name);
@@ -1151,7 +1267,7 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback
@@ -1171,6 +1287,10 @@ parameter_list|(
 name|unused
 parameter_list|,
 name|name
+parameter_list|,
+name|unused2
+parameter_list|,
+name|unused3
 parameter_list|)
 define|\
 value|io.enumCase(value, "DW_FORM_" #name, dwarf::DW_FORM_##name);
@@ -1196,12 +1316,57 @@ argument_list|)
 block|{
 include|#
 directive|include
-file|"llvm/Support/Dwarf.def"
+file|"llvm/BinaryFormat/Dwarf.def"
 name|io
 operator|.
 name|enumFallback
 operator|<
 name|Hex16
+operator|>
+operator|(
+name|value
+operator|)
+block|;   }
+block|}
+expr_stmt|;
+define|#
+directive|define
+name|HANDLE_DW_UT
+parameter_list|(
+name|unused
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|io.enumCase(value, "DW_UT_" #name, dwarf::DW_UT_##name);
+name|template
+operator|<
+operator|>
+expr|struct
+name|ScalarEnumerationTraits
+operator|<
+name|dwarf
+operator|::
+name|UnitType
+operator|>
+block|{
+specifier|static
+name|void
+name|enumeration
+argument_list|(
+argument|IO&io
+argument_list|,
+argument|dwarf::UnitType&value
+argument_list|)
+block|{
+include|#
+directive|include
+file|"llvm/BinaryFormat/Dwarf.def"
+name|io
+operator|.
+name|enumFallback
+operator|<
+name|Hex8
 operator|>
 operator|(
 name|value
@@ -1268,18 +1433,22 @@ block|;   }
 block|}
 expr_stmt|;
 block|}
-comment|// namespace llvm::yaml
+comment|// end namespace yaml
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_DWARFYAML_H
+end_comment
 
 end_unit
 

@@ -97,6 +97,24 @@ argument_list|)
 specifier|const
 name|override
 block|;
+specifier|const
+name|MCPhysReg
+operator|*
+name|getCalleeSavedRegs
+argument_list|(
+argument|const MachineFunction *MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getFrameRegister
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// \brief get the HW encoding for a register's channel.
 name|unsigned
 name|getHWRegChan

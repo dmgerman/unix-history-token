@@ -211,12 +211,18 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__ANDROID__
+name|__FreeBSD__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|__Fuchsia__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__linux__
 argument_list|)
 end_if
 
@@ -606,6 +612,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ITE
+parameter_list|(
+name|cond
+parameter_list|)
+value|ite cond
+end_define
+
+begin_define
+define|#
+directive|define
 name|WIDE
 parameter_list|(
 name|op
@@ -631,6 +647,15 @@ begin_define
 define|#
 directive|define
 name|ITT
+parameter_list|(
+name|cond
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITE
 parameter_list|(
 name|cond
 parameter_list|)

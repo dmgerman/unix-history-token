@@ -102,19 +102,8 @@ name|namespace
 name|clang
 block|{
 comment|/// \brief Function object that provides a total ordering on QualType values.
-name|struct
+struct|struct
 name|QualTypeOrdering
-range|:
-name|std
-operator|::
-name|binary_function
-operator|<
-name|QualType
-decl_stmt|,
-name|QualType
-decl_stmt|,
-name|bool
-decl|>
 block|{
 name|bool
 name|operator
@@ -152,7 +141,7 @@ operator|)
 return|;
 block|}
 block|}
-empty_stmt|;
+struct|;
 block|}
 end_decl_stmt
 

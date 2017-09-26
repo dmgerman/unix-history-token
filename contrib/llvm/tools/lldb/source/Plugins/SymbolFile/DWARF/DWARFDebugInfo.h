@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/STLUtils.h"
 end_include
 
 begin_include

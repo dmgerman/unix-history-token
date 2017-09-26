@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- DAGDeltaAlgorithm.h - A DAG Minimization Algorithm ----*- C++ -*--===//
+comment|//===- DAGDeltaAlgorithm.h - A DAG Minimization Algorithm ------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -92,40 +92,44 @@ parameter_list|()
 function_decl|;
 name|public
 label|:
-typedef|typedef
-name|unsigned
+name|using
 name|change_ty
-typedef|;
-typedef|typedef
+init|=
+name|unsigned
+decl_stmt|;
+name|using
+name|edge_ty
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|change_ty
-operator|,
+decl_stmt|,
 name|change_ty
-operator|>
-name|edge_ty
-expr_stmt|;
+decl|>
+decl_stmt|;
 comment|// FIXME: Use a decent data structure.
-typedef|typedef
+name|using
+name|changeset_ty
+init|=
 name|std
 operator|::
 name|set
 operator|<
 name|change_ty
 operator|>
-name|changeset_ty
-expr_stmt|;
-typedef|typedef
+decl_stmt|;
+name|using
+name|changesetlist_ty
+init|=
 name|std
 operator|::
 name|vector
 operator|<
 name|changeset_ty
 operator|>
-name|changesetlist_ty
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 name|virtual

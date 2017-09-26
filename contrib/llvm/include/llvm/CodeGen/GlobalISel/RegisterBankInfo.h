@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==-- llvm/CodeGen/GlobalISel/RegisterBankInfo.h ----------------*- C++ -*-==//
+comment|//===- llvm/CodeGen/GlobalISel/RegisterBankInfo.h ---------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -54,20 +54,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_GLOBALISEL_REGBANKINFO_H
+name|LLVM_CODEGEN_GLOBALISEL_REGISTERBANKINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_GLOBALISEL_REGBANKINFO_H
+name|LLVM_CODEGEN_GLOBALISEL_REGISTERBANKINFO_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/APInt.h"
-end_include
 
 begin_include
 include|#
@@ -90,18 +84,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/GlobalISel/RegisterBank.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineValueType.h"
-end_include
-
-begin_comment
-comment|// For SimpleValueType.
-end_comment
 
 begin_include
 include|#
@@ -118,12 +102,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<memory>
+file|<initializer_list>
 end_include
 
-begin_comment
-comment|// For unique_ptr.
-end_comment
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -136,13 +122,19 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|raw_ostream
+decl_stmt|;
+name|class
+name|RegisterBank
+decl_stmt|;
+name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
-name|TargetRegisterInfo
+name|TargetRegisterClass
 decl_stmt|;
 name|class
-name|raw_ostream
+name|TargetRegisterInfo
 decl_stmt|;
 comment|/// Holds all the information related to register banks.
 name|class
@@ -430,10 +422,14 @@ comment|/// This is used to communicate between the target and the optimizers
 comment|/// which mapping should be realized.
 name|unsigned
 name|ID
+init|=
+name|InvalidMappingID
 decl_stmt|;
 comment|/// Cost of this mapping.
 name|unsigned
 name|Cost
+init|=
+literal|0
 decl_stmt|;
 comment|/// Mapping of all the operands.
 specifier|const
@@ -444,6 +440,8 @@ decl_stmt|;
 comment|/// Number of operands.
 name|unsigned
 name|NumOperands
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|ValueMapping
@@ -526,22 +524,9 @@ comment|/// Default constructor.
 comment|/// Use this constructor to express that the mapping is invalid.
 name|InstructionMapping
 argument_list|()
-operator|:
-name|ID
-argument_list|(
-name|InvalidMappingID
-argument_list|)
-operator|,
-name|Cost
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumOperands
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Get the cost.
 name|unsigned
 name|getCost
@@ -678,15 +663,15 @@ empty_stmt|;
 comment|/// Convenient type to represent the alternatives for mapping an
 comment|/// instruction.
 comment|/// \todo When we move to TableGen this should be an array ref.
-typedef|typedef
+name|using
+name|InstructionMappings
+init|=
 name|SmallVector
 operator|<
+specifier|const
 name|InstructionMapping
-operator|,
-literal|4
-operator|>
-name|InstructionMappings
-expr_stmt|;
+operator|*
+decl_stmt|, 4>;
 comment|/// Helper class used to get/create the virtual registers that will be used
 comment|/// to replace the MachineOperand when applying a mapping.
 name|class
@@ -806,7 +791,7 @@ operator|&
 name|MRI
 argument_list|)
 expr_stmt|;
-comment|/// Getters.
+comment|/// \name Getters.
 comment|/// @{
 comment|/// The MachineInstr being remapped.
 name|MachineInstr
@@ -831,11 +816,25 @@ return|return
 name|InstrMapping
 return|;
 block|}
+comment|/// The MachineRegisterInfo we used to realize the mapping.
+name|MachineRegisterInfo
+operator|&
+name|getMRI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MRI
+return|;
+block|}
 comment|/// @}
 comment|/// Create as many new virtual registers as needed for the mapping of the \p
 comment|/// OpIdx-th operand.
 comment|/// The number of registers is determined by the number of breakdown for the
 comment|/// related operand in the instruction mapping.
+comment|/// The type of the new registers is a plain scalar of the right size.
+comment|/// The proper type is expected to be set when the mapping is applied to
+comment|/// the instruction(s) that realizes the mapping.
 comment|///
 comment|/// \pre getMI().getOperand(OpIdx).isReg()
 comment|///
@@ -942,10 +941,13 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 specifier|const
 name|PartialMapping
-operator|*
-operator|>
+operator|>>
 name|MapOfPartialMappings
 expr_stmt|;
 comment|/// Keep dynamically allocated ValueMapping in a separate map.
@@ -955,10 +957,13 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 specifier|const
 name|ValueMapping
-operator|*
-operator|>
+operator|>>
 name|MapOfValueMappings
 expr_stmt|;
 comment|/// Keep dynamically allocated array of ValueMapping in a separate map.
@@ -968,12 +973,32 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ValueMapping
-operator|*
-operator|>
+index|[]
+operator|>>
 name|MapOfOperandsMappings
 expr_stmt|;
-comment|/// Create a RegisterBankInfo that can accomodate up to \p NumRegBanks
+comment|/// Keep dynamically allocated InstructionMapping in a separate map.
+comment|/// This shouldn't be needed when everything gets TableGen'ed.
+name|mutable
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+specifier|const
+name|InstructionMapping
+operator|>>
+name|MapOfInstructionMappings
+expr_stmt|;
+comment|/// Create a RegisterBankInfo that can accommodate up to \p NumRegBanks
 comment|/// RegisterBank instances.
 name|RegisterBankInfo
 argument_list|(
@@ -1041,7 +1066,9 @@ comment|/// - Copies and phis if at least one of the operands has been assigned 
 comment|///   register, a register class, or a register bank.
 comment|/// In other words, this method will likely fail to find a mapping for
 comment|/// any generic opcode that has not been lowered by target specific code.
+specifier|const
 name|InstructionMapping
+modifier|&
 name|getInstrMappingImpl
 argument_list|(
 specifier|const
@@ -1071,7 +1098,7 @@ name|RegBank
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Methods to get a uniquely generated ValueMapping.
+comment|/// \name Methods to get a uniquely generated ValueMapping.
 comment|/// @{
 comment|/// The most common ValueMapping consists of a single PartialMapping.
 comment|/// Feature a method for that.
@@ -1110,7 +1137,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// @}
-comment|/// Methods to get a uniquely generated array of ValueMapping.
+comment|/// \name Methods to get a uniquely generated array of ValueMapping.
 comment|/// @{
 comment|/// Get the uniquely generated array of ValueMapping for the
 comment|/// elements of between \p Begin and \p End.
@@ -1183,6 +1210,100 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// @}
+comment|/// \name Methods to get a uniquely generated InstructionMapping.
+comment|/// @{
+name|private
+label|:
+comment|/// Method to get a uniquely generated InstructionMapping.
+specifier|const
+name|InstructionMapping
+modifier|&
+name|getInstructionMappingImpl
+argument_list|(
+name|bool
+name|IsInvalid
+argument_list|,
+name|unsigned
+name|ID
+operator|=
+name|InvalidMappingID
+argument_list|,
+name|unsigned
+name|Cost
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|ValueMapping
+operator|*
+name|OperandsMapping
+operator|=
+name|nullptr
+argument_list|,
+name|unsigned
+name|NumOperands
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+name|public
+label|:
+comment|/// Method to get a uniquely generated InstructionMapping.
+specifier|const
+name|InstructionMapping
+modifier|&
+name|getInstructionMapping
+argument_list|(
+name|unsigned
+name|ID
+argument_list|,
+name|unsigned
+name|Cost
+argument_list|,
+specifier|const
+name|ValueMapping
+operator|*
+name|OperandsMapping
+argument_list|,
+name|unsigned
+name|NumOperands
+argument_list|)
+decl|const
+block|{
+return|return
+name|getInstructionMappingImpl
+argument_list|(
+comment|/*IsInvalid*/
+name|false
+argument_list|,
+name|ID
+argument_list|,
+name|Cost
+argument_list|,
+name|OperandsMapping
+argument_list|,
+name|NumOperands
+argument_list|)
+return|;
+block|}
+comment|/// Method to get a uniquely generated invalid InstructionMapping.
+specifier|const
+name|InstructionMapping
+operator|&
+name|getInvalidInstructionMapping
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInstructionMappingImpl
+argument_list|(
+comment|/*IsInvalid*/
+name|true
+argument_list|)
+return|;
+block|}
+comment|/// @}
 comment|/// Get the register bank for the \p OpIdx-th operand of \p MI form
 comment|/// the encoding constraints, if any.
 comment|///
@@ -1218,6 +1339,12 @@ comment|/// Helper method to apply something that is like the default mapping.
 comment|/// Basically, that means that \p OpdMapper.getMI() is left untouched
 comment|/// aside from the reassignment of the register operand that have been
 comment|/// remapped.
+comment|///
+comment|/// The type of all the new registers that have been created by the
+comment|/// mapper are properly remapped to the type of the original registers
+comment|/// they replace. In other words, the semantic of the instruction does
+comment|/// not change, only the register banks.
+comment|///
 comment|/// If the mapping of one of the operand spans several registers, this
 comment|/// method will abort as this is not like a default mapping anymore.
 comment|///
@@ -1257,6 +1384,8 @@ name|virtual
 operator|~
 name|RegisterBankInfo
 argument_list|()
+operator|=
+expr|default
 expr_stmt|;
 comment|/// Get the register bank identified by \p ID.
 specifier|const
@@ -1451,7 +1580,9 @@ comment|///
 comment|/// \note If returnedVal does not verify MI, this would probably mean
 comment|/// that the target does not support that instruction.
 name|virtual
+specifier|const
 name|InstructionMapping
+modifier|&
 name|getInstrMapping
 argument_list|(
 specifier|const
@@ -1724,13 +1855,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_GLOBALISEL_REGISTERBANKINFO_H
+end_comment
 
 end_unit
 

@@ -314,6 +314,12 @@ name|Flags
 return|;
 block|}
 comment|/// Add a flag to the flags list
+comment|/// \p Flag must be a flag accepted by the driver with its leading '-' removed,
+comment|///     and replaced with either:
+comment|///       '-' which contraindicates using this multilib with that flag
+comment|///     or:
+comment|///       '+' which promotes using this multilib in the presence of that flag
+comment|///     otherwise '-print-multi-lib' will not emit them correctly.
 name|Multilib
 modifier|&
 name|flag
@@ -351,6 +357,12 @@ operator|*
 name|this
 return|;
 block|}
+name|LLVM_DUMP_METHOD
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief print summary of the Multilib
 name|void
 name|print
@@ -735,6 +747,12 @@ name|size
 argument_list|()
 return|;
 block|}
+name|LLVM_DUMP_METHOD
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 name|void
 name|print
 argument_list|(

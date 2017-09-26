@@ -74,19 +74,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Baton.h"
+file|"lldb/Utility/Baton.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StringList.h"
+file|"lldb/Utility/StringList.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
+file|"lldb/Utility/StructuredData.h"
 end_include
 
 begin_include
@@ -198,7 +198,7 @@ name|Dictionary
 operator|&
 name|options_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -410,7 +410,7 @@ name|Dictionary
 operator|&
 name|data_dict
 argument_list|,
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

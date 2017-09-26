@@ -89,7 +89,7 @@ name|public
 operator|:
 name|NativeThreadProtocol
 argument_list|(
-argument|NativeProcessProtocol *process
+argument|NativeProcessProtocol&process
 argument_list|,
 argument|lldb::tid_t tid
 argument_list|)
@@ -125,7 +125,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|ReadRegister
 argument_list|(
 argument|uint32_t reg
@@ -134,7 +134,7 @@ argument|RegisterValue&reg_value
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|WriteRegister
 argument_list|(
 argument|uint32_t reg
@@ -143,7 +143,7 @@ argument|const RegisterValue&reg_value
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|SaveAllRegisters
 argument_list|(
 name|lldb
@@ -154,7 +154,7 @@ name|data_sp
 argument_list|)
 block|;
 name|virtual
-name|Error
+name|Status
 name|RestoreAllRegisters
 argument_list|(
 name|lldb
@@ -192,15 +192,20 @@ return|return
 name|m_tid
 return|;
 block|}
-name|NativeProcessProtocolSP
+name|NativeProcessProtocol
+operator|&
 name|GetProcess
 argument_list|()
-block|;
+block|{
+return|return
+name|m_process
+return|;
+block|}
 comment|// ---------------------------------------------------------------------
 comment|// Thread-specific watchpoints
 comment|// ---------------------------------------------------------------------
 name|virtual
-name|Error
+name|Status
 name|SetWatchpoint
 argument_list|(
 argument|lldb::addr_t addr
@@ -215,8 +220,31 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|Error
+name|Status
 name|RemoveWatchpoint
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|// ---------------------------------------------------------------------
+comment|// Thread-specific Hardware Breakpoint routines
+comment|// ---------------------------------------------------------------------
+name|virtual
+name|Status
+name|SetHardwareBreakpoint
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|,
+argument|size_t size
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|Status
+name|RemoveHardwareBreakpoint
 argument_list|(
 argument|lldb::addr_t addr
 argument_list|)
@@ -225,8 +253,9 @@ literal|0
 block|;
 name|protected
 operator|:
-name|NativeProcessProtocolWP
-name|m_process_wp
+name|NativeProcessProtocol
+operator|&
+name|m_process
 block|;
 name|lldb
 operator|::

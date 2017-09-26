@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/TargetLibraryInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/TargetTransformInfoImpl.h"
 end_include
 
@@ -95,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/TargetLibraryInfo.h"
 end_include
 
 begin_decl_stmt
@@ -144,116 +144,6 @@ typedef|typedef
 name|TargetTransformInfo
 name|TTI
 typedef|;
-comment|/// Estimate the overhead of scalarizing an instruction. Insert and Extract
-comment|/// are set if the result needs to be inserted and/or extracted from vectors.
-name|unsigned
-name|getScalarizationOverhead
-parameter_list|(
-name|Type
-modifier|*
-name|Ty
-parameter_list|,
-name|bool
-name|Insert
-parameter_list|,
-name|bool
-name|Extract
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|Ty
-operator|->
-name|isVectorTy
-argument_list|()
-operator|&&
-literal|"Can only scalarize vectors"
-argument_list|)
-expr_stmt|;
-name|unsigned
-name|Cost
-init|=
-literal|0
-decl_stmt|;
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-name|Ty
-operator|->
-name|getVectorNumElements
-argument_list|()
-init|;
-name|i
-operator|<
-name|e
-condition|;
-operator|++
-name|i
-control|)
-block|{
-if|if
-condition|(
-name|Insert
-condition|)
-name|Cost
-operator|+=
-name|static_cast
-operator|<
-name|T
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getVectorInstrCost
-argument_list|(
-name|Instruction
-operator|::
-name|InsertElement
-argument_list|,
-name|Ty
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Extract
-condition|)
-name|Cost
-operator|+=
-name|static_cast
-operator|<
-name|T
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getVectorInstrCost
-argument_list|(
-name|Instruction
-operator|::
-name|ExtractElement
-argument_list|,
-name|Ty
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|Cost
-return|;
-block|}
 comment|/// Estimate a cost of shuffle as a sequence of extract and insert
 comment|/// operations.
 name|unsigned
@@ -504,6 +394,29 @@ name|false
 return|;
 block|}
 name|bool
+name|isAlwaysUniform
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|unsigned
+name|getFlatAddressSpace
+parameter_list|()
+block|{
+comment|// Return an invalid address space.
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|bool
 name|isLegalAddImmediate
 parameter_list|(
 name|int64_t
@@ -603,6 +516,31 @@ argument_list|,
 name|Ty
 argument_list|,
 name|AddrSpace
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLSRCostLess
+argument_list|(
+name|TTI
+operator|::
+name|LSRCost
+name|C1
+argument_list|,
+name|TTI
+operator|::
+name|LSRCost
+name|C2
+argument_list|)
+block|{
+return|return
+name|TargetTransformInfoImplBase
+operator|::
+name|isLSRCostLess
+argument_list|(
+name|C1
+argument_list|,
+name|C2
 argument_list|)
 return|;
 block|}
@@ -805,6 +743,93 @@ name|Operands
 argument_list|)
 return|;
 block|}
+name|int
+name|getExtCost
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|Src
+parameter_list|)
+block|{
+if|if
+condition|(
+name|getTLI
+argument_list|()
+operator|->
+name|isExtFree
+argument_list|(
+name|I
+argument_list|)
+condition|)
+return|return
+name|TargetTransformInfo
+operator|::
+name|TCC_Free
+return|;
+if|if
+condition|(
+name|isa
+operator|<
+name|ZExtInst
+operator|>
+operator|(
+name|I
+operator|)
+operator|||
+name|isa
+operator|<
+name|SExtInst
+operator|>
+operator|(
+name|I
+operator|)
+condition|)
+if|if
+condition|(
+specifier|const
+name|LoadInst
+modifier|*
+name|LI
+init|=
+name|dyn_cast
+operator|<
+name|LoadInst
+operator|>
+operator|(
+name|Src
+operator|)
+condition|)
+if|if
+condition|(
+name|getTLI
+argument_list|()
+operator|->
+name|isExtLoad
+argument_list|(
+name|LI
+argument_list|,
+name|I
+argument_list|,
+name|DL
+argument_list|)
+condition|)
+return|return
+name|TargetTransformInfo
+operator|::
+name|TCC_Free
+return|;
+return|return
+name|TargetTransformInfo
+operator|::
+name|TCC_Basic
+return|;
+block|}
 name|unsigned
 name|getIntrinsicCost
 argument_list|(
@@ -926,6 +951,298 @@ name|RetTy
 argument_list|,
 name|ParamTys
 argument_list|)
+return|;
+block|}
+name|unsigned
+name|getEstimatedNumberOfCaseClusters
+parameter_list|(
+specifier|const
+name|SwitchInst
+modifier|&
+name|SI
+parameter_list|,
+name|unsigned
+modifier|&
+name|JumpTableSize
+parameter_list|)
+block|{
+comment|/// Try to find the estimated number of clusters. Note that the number of
+comment|/// clusters identified in this function could be different from the actural
+comment|/// numbers found in lowering. This function ignore switches that are
+comment|/// lowered with a mix of jump table / bit test / BTree. This function was
+comment|/// initially intended to be used when estimating the cost of switch in
+comment|/// inline cost heuristic, but it's a generic cost model to be used in other
+comment|/// places (e.g., in loop unrolling).
+name|unsigned
+name|N
+init|=
+name|SI
+operator|.
+name|getNumCases
+argument_list|()
+decl_stmt|;
+specifier|const
+name|TargetLoweringBase
+modifier|*
+name|TLI
+init|=
+name|getTLI
+argument_list|()
+decl_stmt|;
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+init|=
+name|this
+operator|->
+name|getDataLayout
+argument_list|()
+decl_stmt|;
+name|JumpTableSize
+operator|=
+literal|0
+expr_stmt|;
+name|bool
+name|IsJTAllowed
+init|=
+name|TLI
+operator|->
+name|areJTsAllowed
+argument_list|(
+name|SI
+operator|.
+name|getParent
+argument_list|()
+operator|->
+name|getParent
+argument_list|()
+argument_list|)
+decl_stmt|;
+comment|// Early exit if both a jump table and bit test are not allowed.
+if|if
+condition|(
+name|N
+operator|<
+literal|1
+operator|||
+operator|(
+operator|!
+name|IsJTAllowed
+operator|&&
+name|DL
+operator|.
+name|getPointerSizeInBits
+argument_list|()
+operator|<
+name|N
+operator|)
+condition|)
+return|return
+name|N
+return|;
+name|APInt
+name|MaxCaseVal
+init|=
+name|SI
+operator|.
+name|case_begin
+argument_list|()
+operator|->
+name|getCaseValue
+argument_list|()
+operator|->
+name|getValue
+argument_list|()
+decl_stmt|;
+name|APInt
+name|MinCaseVal
+init|=
+name|MaxCaseVal
+decl_stmt|;
+for|for
+control|(
+name|auto
+name|CI
+range|:
+name|SI
+operator|.
+name|cases
+argument_list|()
+control|)
+block|{
+specifier|const
+name|APInt
+modifier|&
+name|CaseVal
+init|=
+name|CI
+operator|.
+name|getCaseValue
+argument_list|()
+operator|->
+name|getValue
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|CaseVal
+operator|.
+name|sgt
+argument_list|(
+name|MaxCaseVal
+argument_list|)
+condition|)
+name|MaxCaseVal
+operator|=
+name|CaseVal
+expr_stmt|;
+if|if
+condition|(
+name|CaseVal
+operator|.
+name|slt
+argument_list|(
+name|MinCaseVal
+argument_list|)
+condition|)
+name|MinCaseVal
+operator|=
+name|CaseVal
+expr_stmt|;
+block|}
+comment|// Check if suitable for a bit test
+if|if
+condition|(
+name|N
+operator|<=
+name|DL
+operator|.
+name|getPointerSizeInBits
+argument_list|()
+condition|)
+block|{
+name|SmallPtrSet
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|,
+literal|4
+operator|>
+name|Dests
+expr_stmt|;
+for|for
+control|(
+name|auto
+name|I
+range|:
+name|SI
+operator|.
+name|cases
+argument_list|()
+control|)
+name|Dests
+operator|.
+name|insert
+argument_list|(
+name|I
+operator|.
+name|getCaseSuccessor
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TLI
+operator|->
+name|isSuitableForBitTests
+argument_list|(
+name|Dests
+operator|.
+name|size
+argument_list|()
+argument_list|,
+name|N
+argument_list|,
+name|MinCaseVal
+argument_list|,
+name|MaxCaseVal
+argument_list|,
+name|DL
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+block|}
+comment|// Check if suitable for a jump table.
+if|if
+condition|(
+name|IsJTAllowed
+condition|)
+block|{
+if|if
+condition|(
+name|N
+operator|<
+literal|2
+operator|||
+name|N
+operator|<
+name|TLI
+operator|->
+name|getMinimumJumpTableEntries
+argument_list|()
+condition|)
+return|return
+name|N
+return|;
+name|uint64_t
+name|Range
+init|=
+operator|(
+name|MaxCaseVal
+operator|-
+name|MinCaseVal
+operator|)
+operator|.
+name|getLimitedValue
+argument_list|(
+name|UINT64_MAX
+operator|-
+literal|1
+argument_list|)
+operator|+
+literal|1
+decl_stmt|;
+comment|// Check whether a range of clusters is dense enough for a jump table
+if|if
+condition|(
+name|TLI
+operator|->
+name|isSuitableForJumpTable
+argument_list|(
+operator|&
+name|SI
+argument_list|,
+name|N
+argument_list|,
+name|Range
+argument_list|)
+condition|)
+block|{
+name|JumpTableSize
+operator|=
+name|Range
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+block|}
+return|return
+name|N
 return|;
 block|}
 name|unsigned
@@ -1170,6 +1487,10 @@ argument_list|(
 name|Loop
 operator|*
 name|L
+argument_list|,
+name|ScalarEvolution
+operator|&
+name|SE
 argument_list|,
 name|TTI
 operator|::
@@ -1431,13 +1752,342 @@ return|;
 block|}
 name|unsigned
 name|getRegisterBitWidth
-parameter_list|(
+argument_list|(
 name|bool
 name|Vector
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 literal|32
+return|;
+block|}
+comment|/// Estimate the overhead of scalarizing an instruction. Insert and Extract
+comment|/// are set if the result needs to be inserted and/or extracted from vectors.
+name|unsigned
+name|getScalarizationOverhead
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|,
+name|bool
+name|Insert
+parameter_list|,
+name|bool
+name|Extract
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Ty
+operator|->
+name|isVectorTy
+argument_list|()
+operator|&&
+literal|"Can only scalarize vectors"
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|Cost
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|Ty
+operator|->
+name|getVectorNumElements
+argument_list|()
+init|;
+name|i
+operator|<
+name|e
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+name|Insert
+condition|)
+name|Cost
+operator|+=
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getVectorInstrCost
+argument_list|(
+name|Instruction
+operator|::
+name|InsertElement
+argument_list|,
+name|Ty
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Extract
+condition|)
+name|Cost
+operator|+=
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getVectorInstrCost
+argument_list|(
+name|Instruction
+operator|::
+name|ExtractElement
+argument_list|,
+name|Ty
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|Cost
+return|;
+block|}
+comment|/// Estimate the overhead of scalarizing an instructions unique
+comment|/// non-constant operands. The types of the arguments are ordinarily
+comment|/// scalar, in which case the costs are multiplied with VF.
+name|unsigned
+name|getOperandsScalarizationOverhead
+argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Args
+argument_list|,
+name|unsigned
+name|VF
+argument_list|)
+block|{
+name|unsigned
+name|Cost
+init|=
+literal|0
+decl_stmt|;
+name|SmallPtrSet
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+literal|4
+operator|>
+name|UniqueOperands
+expr_stmt|;
+for|for
+control|(
+specifier|const
+name|Value
+modifier|*
+name|A
+range|:
+name|Args
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|isa
+operator|<
+name|Constant
+operator|>
+operator|(
+name|A
+operator|)
+operator|&&
+name|UniqueOperands
+operator|.
+name|insert
+argument_list|(
+name|A
+argument_list|)
+operator|.
+name|second
+condition|)
+block|{
+name|Type
+modifier|*
+name|VecTy
+init|=
+name|nullptr
+decl_stmt|;
+if|if
+condition|(
+name|A
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isVectorTy
+argument_list|()
+condition|)
+block|{
+name|VecTy
+operator|=
+name|A
+operator|->
+name|getType
+argument_list|()
+expr_stmt|;
+comment|// If A is a vector operand, VF should be 1 or correspond to A.
+name|assert
+argument_list|(
+operator|(
+name|VF
+operator|==
+literal|1
+operator|||
+name|VF
+operator|==
+name|VecTy
+operator|->
+name|getVectorNumElements
+argument_list|()
+operator|)
+operator|&&
+literal|"Vector argument does not match VF"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|VecTy
+operator|=
+name|VectorType
+operator|::
+name|get
+argument_list|(
+name|A
+operator|->
+name|getType
+argument_list|()
+argument_list|,
+name|VF
+argument_list|)
+expr_stmt|;
+name|Cost
+operator|+=
+name|getScalarizationOverhead
+argument_list|(
+name|VecTy
+argument_list|,
+name|false
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+return|return
+name|Cost
+return|;
+block|}
+name|unsigned
+name|getScalarizationOverhead
+argument_list|(
+name|Type
+operator|*
+name|VecTy
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Args
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|VecTy
+operator|->
+name|isVectorTy
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|Cost
+init|=
+literal|0
+decl_stmt|;
+name|Cost
+operator|+=
+name|getScalarizationOverhead
+argument_list|(
+name|VecTy
+argument_list|,
+name|true
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Args
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|Cost
+operator|+=
+name|getOperandsScalarizationOverhead
+argument_list|(
+name|Args
+argument_list|,
+name|VecTy
+operator|->
+name|getVectorNumElements
+argument_list|()
+argument_list|)
+expr_stmt|;
+else|else
+comment|// When no information on arguments is provided, we add the cost
+comment|// associated with one argument as a heuristic.
+name|Cost
+operator|+=
+name|getScalarizationOverhead
+argument_list|(
+name|VecTy
+argument_list|,
+name|false
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+return|return
+name|Cost
 return|;
 block|}
 name|unsigned
@@ -1565,10 +2215,7 @@ name|IsFloat
 init|=
 name|Ty
 operator|->
-name|getScalarType
-argument_list|()
-operator|->
-name|isFloatingPointTy
+name|isFPOrFPVectorTy
 argument_list|()
 decl_stmt|;
 comment|// Assume that floating point arithmetic operations cost twice as much as
@@ -1676,17 +2323,14 @@ name|getScalarType
 argument_list|()
 argument_list|)
 decl_stmt|;
-comment|// return the cost of multiple scalar invocation plus the cost of
-comment|// inserting
-comment|// and extracting the values.
+comment|// Return the cost of multiple scalar invocation plus the cost of
+comment|// inserting and extracting the values.
 return|return
 name|getScalarizationOverhead
 argument_list|(
 name|Ty
 argument_list|,
-name|true
-argument_list|,
-name|true
+name|Args
 argument_list|)
 operator|+
 name|Num
@@ -1764,6 +2408,13 @@ parameter_list|,
 name|Type
 modifier|*
 name|Src
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|I
+init|=
+name|nullptr
 parameter_list|)
 block|{
 specifier|const
@@ -1948,6 +2599,98 @@ condition|)
 return|return
 literal|0
 return|;
+comment|// If this is a zext/sext of a load, return 0 if the corresponding
+comment|// extending load exists on target.
+if|if
+condition|(
+operator|(
+name|Opcode
+operator|==
+name|Instruction
+operator|::
+name|ZExt
+operator|||
+name|Opcode
+operator|==
+name|Instruction
+operator|::
+name|SExt
+operator|)
+operator|&&
+name|I
+operator|&&
+name|isa
+operator|<
+name|LoadInst
+operator|>
+operator|(
+name|I
+operator|->
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+condition|)
+block|{
+name|EVT
+name|ExtVT
+init|=
+name|EVT
+operator|::
+name|getEVT
+argument_list|(
+name|Dst
+argument_list|)
+decl_stmt|;
+name|EVT
+name|LoadVT
+init|=
+name|EVT
+operator|::
+name|getEVT
+argument_list|(
+name|Src
+argument_list|)
+decl_stmt|;
+name|unsigned
+name|LType
+init|=
+operator|(
+operator|(
+name|Opcode
+operator|==
+name|Instruction
+operator|::
+name|ZExt
+operator|)
+condition|?
+name|ISD
+operator|::
+name|ZEXTLOAD
+else|:
+name|ISD
+operator|::
+name|SEXTLOAD
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|TLI
+operator|->
+name|isLoadExtLegal
+argument_list|(
+name|LType
+argument_list|,
+name|ExtVT
+argument_list|,
+name|LoadVT
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+block|}
 comment|// If the cast is marked as legal (or promote) then assume low cost.
 if|if
 condition|(
@@ -2244,6 +2987,8 @@ argument_list|,
 name|SplitDst
 argument_list|,
 name|SplitSrc
+argument_list|,
+name|I
 argument_list|)
 operator|)
 return|;
@@ -2283,6 +3028,8 @@ name|Src
 operator|->
 name|getScalarType
 argument_list|()
+argument_list|,
+name|I
 argument_list|)
 decl_stmt|;
 comment|// Return the cost of multiple scalar invocation plus the cost of
@@ -2444,6 +3191,11 @@ parameter_list|,
 name|Type
 modifier|*
 name|CondTy
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|I
 parameter_list|)
 block|{
 specifier|const
@@ -2614,6 +3366,8 @@ name|getScalarType
 argument_list|()
 argument_list|,
 name|CondTy
+argument_list|,
+name|I
 argument_list|)
 decl_stmt|;
 comment|// Return the cost of multiple scalar invocation plus the cost of
@@ -2696,6 +3450,13 @@ name|Alignment
 parameter_list|,
 name|unsigned
 name|AddressSpace
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|I
+init|=
+name|nullptr
 parameter_list|)
 block|{
 name|assert
@@ -3397,7 +4158,7 @@ return|return
 name|Cost
 return|;
 block|}
-comment|/// Get intrinsic cost based on arguments
+comment|/// Get intrinsic cost based on arguments.
 name|unsigned
 name|getIntrinsicInstrCost
 argument_list|(
@@ -3419,8 +4180,45 @@ name|Args
 argument_list|,
 name|FastMathFlags
 name|FMF
+argument_list|,
+name|unsigned
+name|VF
+operator|=
+literal|1
 argument_list|)
 block|{
+name|unsigned
+name|RetVF
+init|=
+operator|(
+name|RetTy
+operator|->
+name|isVectorTy
+argument_list|()
+condition|?
+name|RetTy
+operator|->
+name|getVectorNumElements
+argument_list|()
+else|:
+literal|1
+operator|)
+decl_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|RetVF
+operator|==
+literal|1
+operator|||
+name|VF
+operator|==
+literal|1
+operator|)
+operator|&&
+literal|"VF> 1 and RetVF is a vector type"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|IID
@@ -3428,6 +4226,7 @@ condition|)
 block|{
 default|default:
 block|{
+comment|// Assume that we need to scalarize this intrinsic.
 name|SmallVector
 operator|<
 name|Type
@@ -3445,16 +4244,125 @@ name|Op
 range|:
 name|Args
 control|)
-name|Types
-operator|.
-name|push_back
-argument_list|(
+block|{
+name|Type
+modifier|*
+name|OpTy
+init|=
 name|Op
 operator|->
 name|getType
 argument_list|()
+decl_stmt|;
+name|assert
+argument_list|(
+name|VF
+operator|==
+literal|1
+operator|||
+operator|!
+name|OpTy
+operator|->
+name|isVectorTy
+argument_list|()
 argument_list|)
 expr_stmt|;
+name|Types
+operator|.
+name|push_back
+argument_list|(
+name|VF
+operator|==
+literal|1
+condition|?
+name|OpTy
+else|:
+name|VectorType
+operator|::
+name|get
+argument_list|(
+name|OpTy
+argument_list|,
+name|VF
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|VF
+operator|>
+literal|1
+operator|&&
+operator|!
+name|RetTy
+operator|->
+name|isVoidTy
+argument_list|()
+condition|)
+name|RetTy
+operator|=
+name|VectorType
+operator|::
+name|get
+argument_list|(
+name|RetTy
+argument_list|,
+name|VF
+argument_list|)
+expr_stmt|;
+comment|// Compute the scalarization overhead based on Args for a vector
+comment|// intrinsic. A vectorizer will pass a scalar RetTy and VF> 1, while
+comment|// CostModel will pass a vector RetTy and VF is 1.
+name|unsigned
+name|ScalarizationCost
+init|=
+name|UINT_MAX
+decl_stmt|;
+if|if
+condition|(
+name|RetVF
+operator|>
+literal|1
+operator|||
+name|VF
+operator|>
+literal|1
+condition|)
+block|{
+name|ScalarizationCost
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|RetTy
+operator|->
+name|isVoidTy
+argument_list|()
+condition|)
+name|ScalarizationCost
+operator|+=
+name|getScalarizationOverhead
+argument_list|(
+name|RetTy
+argument_list|,
+name|true
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
+name|ScalarizationCost
+operator|+=
+name|getOperandsScalarizationOverhead
+argument_list|(
+name|Args
+argument_list|,
+name|VF
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|static_cast
 operator|<
@@ -3474,6 +4382,8 @@ argument_list|,
 name|Types
 argument_list|,
 name|FMF
+argument_list|,
+name|ScalarizationCost
 argument_list|)
 return|;
 block|}
@@ -3483,6 +4393,15 @@ operator|::
 name|masked_scatter
 case|:
 block|{
+name|assert
+argument_list|(
+name|VF
+operator|==
+literal|1
+operator|&&
+literal|"Can't vectorize types here."
+argument_list|)
+expr_stmt|;
 name|Value
 modifier|*
 name|Mask
@@ -3562,6 +4481,15 @@ operator|::
 name|masked_gather
 case|:
 block|{
+name|assert
+argument_list|(
+name|VF
+operator|==
+literal|1
+operator|&&
+literal|"Can't vectorize types here."
+argument_list|)
+expr_stmt|;
 name|Value
 modifier|*
 name|Mask
@@ -3631,7 +4559,9 @@ return|;
 block|}
 block|}
 block|}
-comment|/// Get intrinsic cost based on argument types
+comment|/// Get intrinsic cost based on argument types.
+comment|/// If ScalarizationCostPassed is UINT_MAX, the cost of scalarizing the
+comment|/// arguments and the return value will be computed based on types.
 name|unsigned
 name|getIntrinsicInstrCost
 argument_list|(
@@ -3653,6 +4583,11 @@ name|Tys
 argument_list|,
 name|FastMathFlags
 name|FMF
+argument_list|,
+name|unsigned
+name|ScalarizationCostPassed
+operator|=
+name|UINT_MAX
 argument_list|)
 block|{
 name|SmallVector
@@ -3680,7 +4615,7 @@ comment|// Assume that we need to scalarize this intrinsic.
 name|unsigned
 name|ScalarizationCost
 init|=
-literal|0
+name|ScalarizationCostPassed
 decl_stmt|;
 name|unsigned
 name|ScalarCalls
@@ -3701,6 +4636,12 @@ name|isVectorTy
 argument_list|()
 condition|)
 block|{
+if|if
+condition|(
+name|ScalarizationCostPassed
+operator|==
+name|UINT_MAX
+condition|)
 name|ScalarizationCost
 operator|=
 name|getScalarizationOverhead
@@ -3782,6 +4723,12 @@ name|isVectorTy
 argument_list|()
 condition|)
 block|{
+if|if
+condition|(
+name|ScalarizationCostPassed
+operator|==
+name|UINT_MAX
+condition|)
 name|ScalarizationCost
 operator|+=
 name|getScalarizationOverhead
@@ -4588,6 +5535,15 @@ block|{
 name|unsigned
 name|ScalarizationCost
 init|=
+operator|(
+operator|(
+name|ScalarizationCostPassed
+operator|!=
+name|UINT_MAX
+operator|)
+condition|?
+name|ScalarizationCostPassed
+else|:
 name|getScalarizationOverhead
 argument_list|(
 name|RetTy
@@ -4596,6 +5552,7 @@ name|true
 argument_list|,
 name|false
 argument_list|)
+operator|)
 decl_stmt|;
 name|unsigned
 name|ScalarCalls
@@ -4726,6 +5683,12 @@ name|isVectorTy
 argument_list|()
 condition|)
 block|{
+if|if
+condition|(
+name|ScalarizationCostPassed
+operator|==
+name|UINT_MAX
+condition|)
 name|ScalarizationCost
 operator|+=
 name|getScalarizationOverhead
@@ -4859,6 +5822,41 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// Try to calculate arithmetic and shuffle op costs for reduction operations.
+comment|/// We're assuming that reduction operation are performing the following way:
+comment|/// 1. Non-pairwise reduction
+comment|/// %val1 = shufflevector<n x t> %val,<n x t> %undef,
+comment|///<n x i32><i32 n/2, i32 n/2 + 1, ..., i32 n, i32 undef, ..., i32 undef>
+comment|///            \----------------v-------------/  \----------v------------/
+comment|///                            n/2 elements               n/2 elements
+comment|/// %red1 = op<n x t> %val,<n x t> val1
+comment|/// After this operation we have a vector %red1 where only the first n/2
+comment|/// elements are meaningful, the second n/2 elements are undefined and can be
+comment|/// dropped. All other operations are actually working with the vector of
+comment|/// length n/2, not n, though the real vector length is still n.
+comment|/// %val2 = shufflevector<n x t> %red1,<n x t> %undef,
+comment|///<n x i32><i32 n/4, i32 n/4 + 1, ..., i32 n/2, i32 undef, ..., i32 undef>
+comment|///            \----------------v-------------/  \----------v------------/
+comment|///                            n/4 elements               3*n/4 elements
+comment|/// %red2 = op<n x t> %red1,<n x t> val2  - working with the vector of
+comment|/// length n/2, the resulting vector has length n/4 etc.
+comment|/// 2. Pairwise reduction:
+comment|/// Everything is the same except for an additional shuffle operation which
+comment|/// is used to produce operands for pairwise kind of reductions.
+comment|/// %val1 = shufflevector<n x t> %val,<n x t> %undef,
+comment|///<n x i32><i32 0, i32 2, ..., i32 n-2, i32 undef, ..., i32 undef>
+comment|///            \-------------v----------/  \----------v------------/
+comment|///                   n/2 elements               n/2 elements
+comment|/// %val2 = shufflevector<n x t> %val,<n x t> %undef,
+comment|///<n x i32><i32 1, i32 3, ..., i32 n-1, i32 undef, ..., i32 undef>
+comment|///            \-------------v----------/  \----------v------------/
+comment|///                   n/2 elements               n/2 elements
+comment|/// %red1 = op<n x t> %val1,<n x t> val2
+comment|/// Again, the operation is performed on<n x t> vector, but the resulting
+comment|/// vector %red1 is<n/2 x t> vector.
+comment|///
+comment|/// The cost model should take into account that the actual length of the
+comment|/// vector is reduced on each iteration.
 name|unsigned
 name|getReductionCost
 parameter_list|(
@@ -4908,41 +5906,6 @@ argument_list|(
 name|NumVecElts
 argument_list|)
 decl_stmt|;
-comment|// Try to calculate arithmetic and shuffle op costs for reduction operations.
-comment|// We're assuming that reduction operation are performing the following way:
-comment|// 1. Non-pairwise reduction
-comment|// %val1 = shufflevector<n x t> %val,<n x t> %undef,
-comment|//<n x i32><i32 n/2, i32 n/2 + 1, ..., i32 n, i32 undef, ..., i32 undef>
-comment|//            \----------------v-------------/  \----------v------------/
-comment|//                            n/2 elements               n/2 elements
-comment|// %red1 = op<n x t> %val,<n x t> val1
-comment|// After this operation we have a vector %red1 with only maningfull the
-comment|// first n/2 elements, the second n/2 elements are undefined and can be
-comment|// dropped. All other operations are actually working with the vector of
-comment|// length n/2, not n. though the real vector length is still n.
-comment|// %val2 = shufflevector<n x t> %red1,<n x t> %undef,
-comment|//<n x i32><i32 n/4, i32 n/4 + 1, ..., i32 n/2, i32 undef, ..., i32 undef>
-comment|//            \----------------v-------------/  \----------v------------/
-comment|//                            n/4 elements               3*n/4 elements
-comment|// %red2 = op<n x t> %red1,<n x t> val2  - working with the vector of
-comment|// length n/2, the resulting vector has length n/4 etc.
-comment|// 2. Pairwise reduction:
-comment|// Everything is the same except for an additional shuffle operation which
-comment|// is used to produce operands for pairwise kind of reductions.
-comment|// %val1 = shufflevector<n x t> %val,<n x t> %undef,
-comment|//<n x i32><i32 0, i32 2, ..., i32 n-2, i32 undef, ..., i32 undef>
-comment|//            \-------------v----------/  \----------v------------/
-comment|//                   n/2 elements               n/2 elements
-comment|// %val2 = shufflevector<n x t> %val,<n x t> %undef,
-comment|//<n x i32><i32 1, i32 3, ..., i32 n-1, i32 undef, ..., i32 undef>
-comment|//            \-------------v----------/  \----------v------------/
-comment|//                   n/2 elements               n/2 elements
-comment|// %red1 = op<n x t> %val1,<n x t> val2
-comment|// Again, the operation is performed on<n x t> vector, but the resulting
-comment|// vector %red1 is<n/2 x t> vector.
-comment|//
-comment|// The cost model should take into account that the actual length of the
-comment|// vector is reduced on each iteration.
 name|unsigned
 name|ArithCost
 init|=

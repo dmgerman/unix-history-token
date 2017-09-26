@@ -76,6 +76,8 @@ name|operation_unsupported
 operator|,
 name|corrupt_record
 operator|,
+name|no_records
+operator|,
 name|unknown_member_record
 operator|,
 block|}

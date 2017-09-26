@@ -209,6 +209,7 @@ name|string
 operator|&
 name|Error
 argument_list|)
+decl|const
 decl_stmt|;
 comment|/// getNumMatches - In a valid regex, return the number of parenthesized
 comment|/// matches it contains.  The number filled in by match will include this

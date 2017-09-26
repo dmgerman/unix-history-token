@@ -111,44 +111,47 @@ name|TinyPtrVector
 block|{
 name|public
 operator|:
-typedef|typedef
+name|using
+name|VecTy
+operator|=
 name|SmallVector
 operator|<
 name|EltTy
-operator|,
+block|,
 literal|4
 operator|>
-name|VecTy
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|value_type
+operator|=
 name|typename
 name|VecTy
 operator|::
 name|value_type
-name|value_type
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|PtrUnion
+operator|=
 name|PointerUnion
 operator|<
 name|EltTy
-operator|,
+block|,
 name|VecTy
 operator|*
 operator|>
-name|PtrUnion
-expr_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|PtrUnion
 name|Val
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|TinyPtrVector
 argument_list|()
 operator|=
 expr|default
-expr_stmt|;
+block|;
 operator|~
 name|TinyPtrVector
 argument_list|()
@@ -215,9 +218,9 @@ argument_list|)
 expr_stmt|;
 block|}
 name|TinyPtrVector
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|TinyPtrVector
@@ -383,9 +386,6 @@ operator|*
 name|this
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|TinyPtrVector
 argument_list|(
 name|TinyPtrVector
@@ -428,9 +428,6 @@ return|return
 operator|*
 name|this
 return|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|RHS
@@ -449,21 +446,9 @@ operator|*
 name|this
 return|;
 block|}
-end_if
-
-begin_comment
 comment|// If this vector has been allocated on the heap, re-use it if cheap. If it
-end_comment
-
-begin_comment
 comment|// would require more copying, just delete it and we'll steal the other
-end_comment
-
-begin_comment
 comment|// side.
-end_comment
-
-begin_if
 if|if
 condition|(
 name|VecTy
@@ -521,18 +506,12 @@ name|delete
 name|V
 decl_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|Val
 operator|=
 name|RHS
 operator|.
 name|Val
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|RHS
 operator|.
 name|Val
@@ -542,17 +521,14 @@ name|EltTy
 operator|)
 name|nullptr
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|*
 name|this
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// Constructor from an ArrayRef.
 end_comment
 
@@ -568,8 +544,8 @@ begin_comment
 comment|/// element constructor for ArrayRef.
 end_comment
 
-begin_expr_stmt
-unit|explicit
+begin_decl_stmt
+name|explicit
 name|TinyPtrVector
 argument_list|(
 name|ArrayRef
@@ -578,7 +554,7 @@ name|EltTy
 operator|>
 name|Elts
 argument_list|)
-operator|:
+range|:
 name|Val
 argument_list|(
 argument|Elts.empty()                 ? PtrUnion()                 : Elts.size() ==
@@ -624,7 +600,7 @@ condition|)
 return|return
 name|None
 return|;
-end_expr_stmt
+end_decl_stmt
 
 begin_if
 if|if
@@ -895,46 +871,50 @@ argument_list|()
 return|;
 end_return
 
-begin_decl_stmt
-unit|}    typedef
-name|EltTy
-modifier|*
+begin_expr_stmt
+unit|}    using
 name|iterator
+operator|=
+name|EltTy
+operator|*
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|using
+name|const_iterator
+init|=
+specifier|const
+name|EltTy
+operator|*
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
-specifier|const
-name|EltTy
-modifier|*
-name|const_iterator
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|reverse_iterator
+init|=
 name|std
 operator|::
 name|reverse_iterator
 operator|<
 name|iterator
 operator|>
-name|reverse_iterator
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
+name|using
+name|const_reverse_iterator
+init|=
 name|std
 operator|::
 name|reverse_iterator
 operator|<
 name|const_iterator
 operator|>
-name|const_reverse_iterator
-expr_stmt|;
-end_typedef
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|iterator

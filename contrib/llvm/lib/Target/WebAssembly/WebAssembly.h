@@ -189,6 +189,11 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createWebAssemblyCFGSort
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createWebAssemblyCFGStackify
 parameter_list|()
 function_decl|;

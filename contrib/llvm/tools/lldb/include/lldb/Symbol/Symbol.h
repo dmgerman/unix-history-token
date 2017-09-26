@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UserID.h"
+file|"lldb/Symbol/SymbolContextScope.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/SymbolContextScope.h"
+file|"lldb/Utility/UserID.h"
 end_include
 
 begin_include

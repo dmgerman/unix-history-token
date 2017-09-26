@@ -174,6 +174,30 @@ return|;
 block|}
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|BitcodeFileContents
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/// Basic information extracted from a bitcode module to be used for LTO.
+end_comment
+
+begin_struct
+struct|struct
+name|BitcodeLTOInfo
+block|{
+name|bool
+name|IsThinLTO
+decl_stmt|;
+name|bool
+name|HasSummary
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/// Represents a module in a bitcode file.
 end_comment
@@ -191,6 +215,10 @@ name|Buffer
 expr_stmt|;
 name|StringRef
 name|ModuleIdentifier
+decl_stmt|;
+comment|// The string table used to interpret this module.
+name|StringRef
+name|Strtab
 decl_stmt|;
 comment|// The bitstream location of the IDENTIFICATION_BLOCK.
 name|uint64_t
@@ -235,13 +263,9 @@ comment|// Calls the ctor.
 name|friend
 name|Expected
 operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|BitcodeModule
-operator|>>
-name|getBitcodeModuleList
+name|BitcodeFileContents
+operator|>
+name|getBitcodeFileContents
 argument_list|(
 argument|MemoryBufferRef Buffer
 argument_list|)
@@ -293,6 +317,15 @@ argument_list|)
 return|;
 block|}
 name|StringRef
+name|getStrtab
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Strtab
+return|;
+block|}
+name|StringRef
 name|getModuleIdentifier
 argument_list|()
 specifier|const
@@ -338,12 +371,13 @@ operator|&
 name|Context
 argument_list|)
 expr_stmt|;
-comment|/// Check if the given bitcode buffer contains a summary block.
+comment|/// Returns information about the module to be used for LTO: whether to
+comment|/// compile with ThinLTO, and whether it has a summary.
 name|Expected
 operator|<
-name|bool
+name|BitcodeLTOInfo
 operator|>
-name|hasSummary
+name|getLTOInfo
 argument_list|()
 expr_stmt|;
 comment|/// Parse the specified bitcode buffer, returning the module summary index.
@@ -358,12 +392,81 @@ operator|>>
 name|getSummary
 argument_list|()
 expr_stmt|;
+comment|/// Parse the specified bitcode buffer and merge its module summary index
+comment|/// into CombinedIndex.
+name|Error
+name|readSummary
+parameter_list|(
+name|ModuleSummaryIndex
+modifier|&
+name|CombinedIndex
+parameter_list|,
+name|StringRef
+name|ModulePath
+parameter_list|,
+name|uint64_t
+name|ModuleId
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_struct
+struct|struct
+name|BitcodeFileContents
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|BitcodeModule
+operator|>
+name|Mods
+expr_stmt|;
+name|StringRef
+name|Symtab
+decl_stmt|,
+name|StrtabForSymtab
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// Returns the contents of a bitcode file. This includes the raw contents of
+end_comment
+
+begin_comment
+comment|/// the symbol table embedded in the bitcode file. Clients which require a
+end_comment
+
+begin_comment
+comment|/// symbol table should prefer to use irsymtab::read instead of this function
+end_comment
+
+begin_comment
+comment|/// because it creates a reader for the irsymtab and handles upgrading bitcode
+end_comment
+
+begin_comment
+comment|/// files without a symbol table or with an old symbol table.
+end_comment
+
+begin_expr_stmt
+name|Expected
+operator|<
+name|BitcodeFileContents
+operator|>
+name|getBitcodeFileContents
+argument_list|(
+argument|MemoryBufferRef Buffer
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Returns a list of modules in the specified bitcode buffer.
@@ -556,15 +659,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Check if the given bitcode buffer contains a summary block.
+comment|/// Returns LTO information for the specified bitcode file.
 end_comment
 
 begin_expr_stmt
 name|Expected
 operator|<
-name|bool
+name|BitcodeLTOInfo
 operator|>
-name|hasGlobalValueSummary
+name|getBitcodeLTOInfo
 argument_list|(
 argument|MemoryBufferRef Buffer
 argument_list|)
@@ -587,6 +690,61 @@ operator|>>
 name|getModuleSummaryIndex
 argument_list|(
 argument|MemoryBufferRef Buffer
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Parse the specified bitcode buffer and merge the index into CombinedIndex.
+end_comment
+
+begin_function_decl
+name|Error
+name|readModuleSummaryIndex
+parameter_list|(
+name|MemoryBufferRef
+name|Buffer
+parameter_list|,
+name|ModuleSummaryIndex
+modifier|&
+name|CombinedIndex
+parameter_list|,
+name|uint64_t
+name|ModuleId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Parse the module summary index out of an IR file and return the module
+end_comment
+
+begin_comment
+comment|/// summary index object if found, or an empty summary if not. If Path refers
+end_comment
+
+begin_comment
+comment|/// to an empty file and IgnoreEmptyThinLTOIndexFile is true, then
+end_comment
+
+begin_comment
+comment|/// this function will return nullptr.
+end_comment
+
+begin_expr_stmt
+name|Expected
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ModuleSummaryIndex
+operator|>>
+name|getModuleSummaryIndexForFile
+argument_list|(
+argument|StringRef Path
+argument_list|,
+argument|bool IgnoreEmptyThinLTOIndexFile = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt

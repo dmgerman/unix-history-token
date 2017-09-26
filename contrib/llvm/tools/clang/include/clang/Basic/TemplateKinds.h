@@ -83,15 +83,23 @@ name|TNK_Function_template
 block|,
 comment|/// The name refers to a template whose specialization produces a
 comment|/// type. The template itself could be a class template, template
-comment|/// template parameter, or C++0x template alias.
+comment|/// template parameter, or template alias.
 name|TNK_Type_template
 block|,
 comment|/// The name refers to a variable template whose specialization produces a
 comment|/// variable.
 name|TNK_Var_template
 block|,
-comment|/// The name refers to a dependent template name. Whether the
-comment|/// template name is assumed to refer to a type template or a
+comment|/// The name refers to a dependent template name:
+comment|/// \code
+comment|/// template<typename MetaFun, typename T1, typename T2> struct apply2 {
+comment|///   typedef typename MetaFun::template apply<T1, T2>::type type;
+comment|/// };
+comment|/// \endcode
+comment|///
+comment|/// Here, "apply" is a dependent template name within the typename
+comment|/// specifier in the typedef. "apply" is a nested template, and
+comment|/// whether the template name is assumed to refer to a type template or a
 comment|/// function template depends on the context in which the template
 comment|/// name occurs.
 name|TNK_Dependent_template_name

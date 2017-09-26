@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==- ScheduleDAGMutation.h - MachineInstr Scheduling ------------*- C++ -*-==//
+comment|//===- ScheduleDAGMutation.h - MachineInstr Scheduling ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -85,27 +85,37 @@ name|virtual
 operator|~
 name|ScheduleDAGMutation
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|apply
-argument_list|(
+parameter_list|(
 name|ScheduleDAGInstrs
-operator|*
+modifier|*
 name|DAG
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 block|}
 empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_SCHEDULEDAGMUTATION_H
+end_comment
 
 end_unit
 

@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Twine.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -80,19 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Debug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ELF.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/MC/SectionKind.h"
 end_include
 
 begin_decl_stmt
@@ -138,11 +126,11 @@ name|MCSymbolELF
 operator|*
 name|Group
 block|;
-comment|/// Depending on the type of the section this is sh_link or sh_info.
+comment|/// sh_info for SHF_LINK_ORDER (can be null).
 specifier|const
-name|MCSectionELF
+name|MCSymbol
 operator|*
-name|Associated
+name|AssociatedSymbol
 block|;
 name|private
 operator|:
@@ -168,7 +156,7 @@ argument|unsigned UniqueID
 argument_list|,
 argument|MCSymbol *Begin
 argument_list|,
-argument|const MCSectionELF *Associated
+argument|const MCSymbolELF *AssociatedSymbol
 argument_list|)
 operator|:
 name|MCSection
@@ -210,9 +198,9 @@ argument_list|(
 name|group
 argument_list|)
 block|,
-name|Associated
+name|AssociatedSymbol
 argument_list|(
-argument|Associated
+argument|AssociatedSymbol
 argument_list|)
 block|{
 if|if
@@ -314,6 +302,8 @@ name|PrintSwitchToSection
 argument_list|(
 argument|const MCAsmInfo&MAI
 argument_list|,
+argument|const Triple&T
+argument_list|,
 argument|raw_ostream&OS
 argument_list|,
 argument|const MCExpr *Subsection
@@ -355,14 +345,29 @@ name|UniqueID
 return|;
 block|}
 specifier|const
-name|MCSectionELF
+name|MCSection
 operator|*
 name|getAssociatedSection
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Associated
+operator|&
+name|AssociatedSymbol
+operator|->
+name|getSection
+argument_list|()
+return|;
+block|}
+specifier|const
+name|MCSymbol
+operator|*
+name|getAssociatedSymbol
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AssociatedSymbol
 return|;
 block|}
 specifier|static
@@ -393,6 +398,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCSECTIONELF_H
+end_comment
 
 end_unit
 

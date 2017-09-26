@@ -98,6 +98,21 @@ argument_list|(
 argument|SubClass* U
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+operator|!
+name|std
+operator|::
+name|is_polymorphic
+operator|<
+name|SubClass
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"adding virtual methods to subclasses of User breaks use lists"
+argument_list|)
+block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -212,6 +227,21 @@ argument_list|(
 argument|SubClass* U
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+operator|!
+name|std
+operator|::
+name|is_polymorphic
+operator|<
+name|SubClass
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"adding virtual methods to subclasses of User breaks use lists"
+argument_list|)
+block|;
 return|return
 name|reinterpret_cast
 operator|<
@@ -276,9 +306,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// HungoffOperandTraits - determine the allocation regime of the Use array
 comment|/// when it is not a prefix to the User object, but allocated at an unrelated
 comment|/// heap address.
-comment|/// Assumes that the User subclass that is determined by this traits class
-comment|/// has an OperandList member of type User::op_iterator. [Note: this is now
-comment|/// trivially satisfied, because User has that member for historic reasons.]
 comment|///
 comment|/// This is the traits class that is needed when the Use array must be
 comment|/// resizable.

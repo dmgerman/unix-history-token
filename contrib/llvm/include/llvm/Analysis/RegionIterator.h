@@ -54,6 +54,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DepthFirstIterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/GraphTraits.h"
 end_include
 
@@ -61,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerIntPair.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
@@ -84,13 +84,28 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|BasicBlock
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// @brief Hierarchical RegionNode successor iterator.
 comment|///
@@ -128,7 +143,9 @@ operator|,
 name|NodeRef
 operator|>
 block|{
-typedef|typedef
+name|using
+name|super
+operator|=
 name|std
 operator|::
 name|iterator
@@ -136,28 +153,29 @@ operator|<
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
+block|,
 name|NodeRef
 operator|>
-name|super
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|BlockTraits
+operator|=
 name|GraphTraits
 operator|<
 name|BlockT
 operator|*
 operator|>
-name|BlockTraits
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|SuccIterTy
+operator|=
 name|typename
 name|BlockTraits
 operator|::
 name|ChildIteratorType
-name|SuccIterTy
-expr_stmt|;
+block|;
 comment|// The iterator works in two modes, bb mode or region mode.
-enum|enum
+block|enum
 name|ItMode
 block|{
 comment|// In BB mode it returns all successors of this BasicBlock as its
@@ -172,7 +190,7 @@ comment|// At the beginning of the regionnode successor.
 name|ItRgEnd
 comment|// At the end of the regionnode successor.
 block|}
-enum|;
+block|;
 name|static_assert
 argument_list|(
 name|std
@@ -189,27 +207,27 @@ literal|"pointers due to the use of pointer-specific data structures "
 literal|"(e.g. PointerIntPair and SmallPtrSet) internally. Generalize "
 literal|"it to support non-pointer types"
 argument_list|)
-expr_stmt|;
+block|;
 comment|// Use two bit to represent the mode iterator.
 name|PointerIntPair
 operator|<
 name|NodeRef
-operator|,
+block|,
 literal|2
-operator|,
+block|,
 name|ItMode
 operator|>
 name|Node
-expr_stmt|;
+block|;
 comment|// The block successor iterator.
 name|SuccIterTy
 name|BItor
-decl_stmt|;
+block|;
 comment|// advanceRegionSucc - A region node has only one successor. It reaches end
 comment|// once we advance it.
 name|void
 name|advanceRegionSucc
-parameter_list|()
+argument_list|()
 block|{
 name|assert
 argument_list|(
@@ -222,15 +240,14 @@ name|ItRgBegin
 operator|&&
 literal|"Cannot advance region successor!"
 argument_list|)
-expr_stmt|;
+block|;
 name|Node
 operator|.
 name|setInt
 argument_list|(
 name|ItRgEnd
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|NodeRef
 name|getNode
 argument_list|()
@@ -263,15 +280,13 @@ comment|// RegionNode or a subregion RegionNode.
 name|NodeRef
 name|getISucc
 argument_list|(
-name|BlockT
-operator|*
-name|BB
+argument|BlockT *BB
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|NodeRef
 name|succ
-decl_stmt|;
+block|;
 name|succ
 operator|=
 name|getNode
@@ -284,14 +299,14 @@ name|getNode
 argument_list|(
 name|BB
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|succ
 operator|&&
 literal|"BB not in Region or entered subregion!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|succ
 return|;
@@ -337,11 +352,9 @@ specifier|inline
 name|bool
 name|isExit
 argument_list|(
-name|BlockT
-operator|*
-name|BB
+argument|BlockT* BB
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|getNode
@@ -357,25 +370,27 @@ name|BB
 return|;
 block|}
 name|public
-label|:
-typedef|typedef
+operator|:
+name|using
+name|Self
+operator|=
 name|RNSuccIterator
 operator|<
 name|NodeRef
-operator|,
+block|,
 name|BlockT
-operator|,
+block|,
 name|RegionT
 operator|>
-name|Self
-expr_stmt|;
-typedef|typedef
+block|;
+name|using
+name|value_type
+operator|=
 name|typename
 name|super
 operator|::
 name|value_type
-name|value_type
-expr_stmt|;
+block|;
 comment|/// @brief Create begin iterator of a RegionNode.
 specifier|inline
 name|RNSuccIterator
@@ -396,7 +411,7 @@ name|ItRgBegin
 else|:
 name|ItBB
 argument_list|)
-operator|,
+block|,
 name|BItor
 argument_list|(
 argument|BlockTraits::child_begin(node->getEntry())
@@ -447,13 +462,7 @@ name|advanceRegionSucc
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// @brief Create an end iterator.
-end_comment
-
-begin_expr_stmt
 specifier|inline
 name|RNSuccIterator
 argument_list|(
@@ -533,9 +542,6 @@ operator|.
 name|BItor
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|operator
@@ -557,9 +563,6 @@ name|x
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|value_type
 name|operator
@@ -599,9 +602,6 @@ name|BB
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|Self
 operator|&
@@ -621,9 +621,6 @@ name|advanceRegionSucc
 argument_list|()
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 block|{
 comment|// Skip the exit.
@@ -654,17 +651,12 @@ argument_list|)
 condition|)
 do|;
 block|}
-end_else
-
-begin_return
 return|return
 operator|*
 name|this
 return|;
-end_return
-
-begin_expr_stmt
-unit|}    inline
+block|}
+specifier|inline
 name|Self
 name|operator
 operator|++
@@ -686,10 +678,14 @@ return|return
 name|tmp
 return|;
 block|}
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -750,7 +746,9 @@ operator|,
 name|NodeRef
 operator|>
 block|{
-typedef|typedef
+name|using
+name|super
+operator|=
 name|std
 operator|::
 name|iterator
@@ -758,95 +756,62 @@ operator|<
 name|std
 operator|::
 name|forward_iterator_tag
-operator|,
+block|,
 name|NodeRef
 operator|>
-name|super
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|BlockTraits
+operator|=
 name|GraphTraits
 operator|<
 name|BlockT
 operator|*
 operator|>
-name|BlockTraits
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|SuccIterTy
+operator|=
 name|typename
 name|BlockTraits
 operator|::
 name|ChildIteratorType
-name|SuccIterTy
-expr_stmt|;
-end_typedef
-
-begin_decl_stmt
+block|;
 name|NodeRef
 name|Node
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|SuccIterTy
 name|Itor
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_typedef
-typedef|typedef
+operator|:
+name|using
+name|Self
+operator|=
 name|RNSuccIterator
 operator|<
 name|FlatIt
 operator|<
 name|NodeRef
 operator|>
-operator|,
+block|,
 name|BlockT
-operator|,
+block|,
 name|RegionT
 operator|>
-name|Self
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+block|;
+name|using
+name|value_type
+operator|=
 name|typename
 name|super
 operator|::
 name|value_type
-name|value_type
-expr_stmt|;
-end_typedef
-
-begin_comment
+block|;
 comment|/// @brief Create the iterator from a RegionNode.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note that the incoming node must be a bb node, otherwise it will trigger
-end_comment
-
-begin_comment
 comment|/// an assertion when we try to get a BasicBlock.
-end_comment
-
-begin_expr_stmt
 specifier|inline
 name|RNSuccIterator
 argument_list|(
@@ -857,7 +822,7 @@ name|Node
 argument_list|(
 name|node
 argument_list|)
-operator|,
+block|,
 name|Itor
 argument_list|(
 argument|BlockTraits::child_begin(node->getEntry())
@@ -914,13 +879,7 @@ operator|++
 name|Itor
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// @brief Create an end iterator
-end_comment
-
-begin_expr_stmt
 specifier|inline
 name|RNSuccIterator
 argument_list|(
@@ -1265,7 +1224,7 @@ parameter_list|,
 name|RegionT
 parameter_list|)
 define|\
-value|template<> struct GraphTraits<NodeT *> {                                    \     typedef NodeT *NodeRef;                                                    \     typedef RNSuccIterator<NodeRef, BlockT, RegionT> ChildIteratorType;        \     static NodeRef getEntryNode(NodeRef N) { return N; }                       \     static inline ChildIteratorType child_begin(NodeRef N) {                   \       return RNSuccIterator<NodeRef, BlockT, RegionT>(N);                      \     }                                                                          \     static inline ChildIteratorType child_end(NodeRef N) {                     \       return RNSuccIterator<NodeRef, BlockT, RegionT>(N, true);                \     }                                                                          \   };                                                                           \   template<> struct GraphTraits<FlatIt<NodeT *>> {                            \     typedef NodeT *NodeRef;                                                    \     typedef RNSuccIterator<FlatIt<NodeRef>, BlockT, RegionT>                   \         ChildIteratorType;                                                     \     static NodeRef getEntryNode(NodeRef N) { return N; }                       \     static inline ChildIteratorType child_begin(NodeRef N) {                   \       return RNSuccIterator<FlatIt<NodeRef>, BlockT, RegionT>(N);              \     }                                                                          \     static inline ChildIteratorType child_end(NodeRef N) {                     \       return RNSuccIterator<FlatIt<NodeRef>, BlockT, RegionT>(N, true);        \     }                                                                          \   }
+value|template<> struct GraphTraits<NodeT *> {                                    \     using NodeRef = NodeT *;                                                   \     using ChildIteratorType = RNSuccIterator<NodeRef, BlockT, RegionT>;        \     static NodeRef getEntryNode(NodeRef N) { return N; }                       \     static inline ChildIteratorType child_begin(NodeRef N) {                   \       return RNSuccIterator<NodeRef, BlockT, RegionT>(N);                      \     }                                                                          \     static inline ChildIteratorType child_end(NodeRef N) {                     \       return RNSuccIterator<NodeRef, BlockT, RegionT>(N, true);                \     }                                                                          \   };                                                                           \   template<> struct GraphTraits<FlatIt<NodeT *>> {                            \     using NodeRef = NodeT *;                                                   \     using ChildIteratorType =                                                  \         RNSuccIterator<FlatIt<NodeRef>, BlockT, RegionT>;                      \     static NodeRef getEntryNode(NodeRef N) { return N; }                       \     static inline ChildIteratorType child_begin(NodeRef N) {                   \       return RNSuccIterator<FlatIt<NodeRef>, BlockT, RegionT>(N);              \     }                                                                          \     static inline ChildIteratorType child_end(NodeRef N) {                     \       return RNSuccIterator<FlatIt<NodeRef>, BlockT, RegionT>(N, true);        \     }                                                                          \   }
 end_define
 
 begin_define
@@ -1278,7 +1237,7 @@ parameter_list|,
 name|NodeT
 parameter_list|)
 define|\
-value|template<> struct GraphTraits<RegionT *> : public GraphTraits<NodeT *> {    \     typedef df_iterator<NodeRef> nodes_iterator;                               \     static NodeRef getEntryNode(RegionT *R) {                                  \       return R->getNode(R->getEntry());                                        \     }                                                                          \     static nodes_iterator nodes_begin(RegionT *R) {                            \       return nodes_iterator::begin(getEntryNode(R));                           \     }                                                                          \     static nodes_iterator nodes_end(RegionT *R) {                              \       return nodes_iterator::end(getEntryNode(R));                             \     }                                                                          \   };                                                                           \   template<>                                                                  \   struct GraphTraits<FlatIt<RegionT *>>                                        \       : public GraphTraits<FlatIt<NodeT *>> {                                  \     typedef df_iterator<NodeRef, df_iterator_default_set<NodeRef>, false,      \                         GraphTraits<FlatIt<NodeRef>>>                          \         nodes_iterator;                                                        \     static NodeRef getEntryNode(RegionT *R) {                                  \       return R->getBBNode(R->getEntry());                                      \     }                                                                          \     static nodes_iterator nodes_begin(RegionT *R) {                            \       return nodes_iterator::begin(getEntryNode(R));                           \     }                                                                          \     static nodes_iterator nodes_end(RegionT *R) {                              \       return nodes_iterator::end(getEntryNode(R));                             \     }                                                                          \   }
+value|template<> struct GraphTraits<RegionT *> : public GraphTraits<NodeT *> {    \     using nodes_iterator = df_iterator<NodeRef>;                               \     static NodeRef getEntryNode(RegionT *R) {                                  \       return R->getNode(R->getEntry());                                        \     }                                                                          \     static nodes_iterator nodes_begin(RegionT *R) {                            \       return nodes_iterator::begin(getEntryNode(R));                           \     }                                                                          \     static nodes_iterator nodes_end(RegionT *R) {                              \       return nodes_iterator::end(getEntryNode(R));                             \     }                                                                          \   };                                                                           \   template<>                                                                  \   struct GraphTraits<FlatIt<RegionT *>>                                        \       : public GraphTraits<FlatIt<NodeT *>> {                                  \     using nodes_iterator =                                                     \         df_iterator<NodeRef, df_iterator_default_set<NodeRef>, false,          \                     GraphTraits<FlatIt<NodeRef>>>;                             \     static NodeRef getEntryNode(RegionT *R) {                                  \       return R->getBBNode(R->getEntry());                                      \     }                                                                          \     static nodes_iterator nodes_begin(RegionT *R) {                            \       return nodes_iterator::begin(getEntryNode(R));                           \     }                                                                          \     static nodes_iterator nodes_end(RegionT *R) {                              \       return nodes_iterator::end(getEntryNode(R));                             \     }                                                                          \   }
 end_define
 
 begin_expr_stmt
@@ -1346,29 +1305,29 @@ name|FlatIt
 operator|<
 name|RegionNode
 operator|*
-operator|>
-expr|>
+operator|>>
 block|{
-typedef|typedef
+name|using
+name|nodes_iterator
+operator|=
 name|df_iterator
 operator|<
 name|NodeRef
-operator|,
+block|,
 name|df_iterator_default_set
 operator|<
 name|NodeRef
 operator|>
-operator|,
+block|,
 name|false
-operator|,
+block|,
 name|GraphTraits
 operator|<
 name|FlatIt
 operator|<
 name|NodeRef
 operator|>>>
-name|nodes_iterator
-expr_stmt|;
+block|;
 specifier|static
 name|NodeRef
 name|getEntryNode
@@ -1383,8 +1342,7 @@ name|FlatIt
 operator|<
 name|Region
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|::
 name|getEntryNode
 argument_list|(
@@ -1414,12 +1372,17 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_end
-argument_list|(
-argument|RegionInfo *RI
-argument_list|)
+parameter_list|(
+name|RegionInfo
+modifier|*
+name|RI
+parameter_list|)
 block|{
 return|return
 name|nodes_iterator
@@ -1433,14 +1396,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-block|}
-end_expr_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -1458,26 +1417,27 @@ name|RegionInfo
 operator|*
 operator|>
 block|{
-typedef|typedef
+name|using
+name|nodes_iterator
+operator|=
 name|df_iterator
 operator|<
 name|NodeRef
-operator|,
+block|,
 name|df_iterator_default_set
 operator|<
 name|NodeRef
 operator|>
-operator|,
+block|,
 name|false
-operator|,
+block|,
 name|GraphTraits
 operator|<
 name|FlatIt
 operator|<
 name|NodeRef
 operator|>>>
-name|nodes_iterator
-expr_stmt|;
+block|;
 specifier|static
 name|NodeRef
 name|getEntryNode
@@ -1526,12 +1486,17 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_end
-argument_list|(
-argument|RegionInfoPass *RI
-argument_list|)
+parameter_list|(
+name|RegionInfoPass
+modifier|*
+name|RI
+parameter_list|)
 block|{
 return|return
 name|GraphTraits
@@ -1550,22 +1515,21 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-block|}
-end_expr_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
-unit|}
-comment|// End namespace llvm
+unit|};  }
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ANALYSIS_REGIONITERATOR_H
+end_comment
 
 end_unit
 

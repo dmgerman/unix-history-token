@@ -74,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Baton.h"
+file|"lldb/Utility/Baton.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StringList.h"
+file|"lldb/Utility/StringList.h"
 end_include
 
 begin_include

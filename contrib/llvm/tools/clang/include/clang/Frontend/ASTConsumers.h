@@ -127,6 +127,8 @@ argument|StringRef FilterString
 argument_list|,
 argument|bool DumpDecls
 argument_list|,
+argument|bool Deserialize
+argument_list|,
 argument|bool DumpLookups
 argument_list|)
 expr_stmt|;

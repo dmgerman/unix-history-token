@@ -31,15 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips__
-argument_list|)
-end_if
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -98,6 +89,22 @@ argument_list|()
 specifier|const
 name|override
 block|;
+specifier|const
+name|lldb_private
+operator|::
+name|RegisterSet
+operator|*
+name|GetRegisterSet
+argument_list|(
+argument|size_t set
+argument_list|)
+specifier|const
+block|;
+name|size_t
+name|GetRegisterSetCount
+argument_list|()
+specifier|const
+block|;
 name|uint32_t
 name|GetRegisterCount
 argument_list|()
@@ -127,11 +134,6 @@ name|m_user_register_count
 block|; }
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -368,6 +368,11 @@ name|includeInGraph
 argument_list|(
 name|FD
 argument_list|)
+operator|&&
+name|FD
+operator|->
+name|isThisDeclarationADefinition
+argument_list|()
 condition|)
 block|{
 comment|// Add all blocks declared inside this function to the graph.

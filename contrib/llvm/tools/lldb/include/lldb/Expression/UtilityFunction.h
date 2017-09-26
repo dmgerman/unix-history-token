@@ -297,7 +297,7 @@ argument|const ValueList&arg_value_list
 argument_list|,
 argument|lldb::ThreadSP compilation_thread
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|;
 comment|// This one retrieves the function caller that is already made.  If you

@@ -88,6 +88,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AArch64RegisterBankInfo
+decl_stmt|;
+name|class
 name|AArch64TargetMachine
 range|:
 name|public
@@ -151,6 +154,17 @@ argument|const Function&F
 argument_list|)
 specifier|const
 name|override
+block|;
+comment|// The no argument getSubtargetImpl, while it exists on some, targets is
+comment|// deprecated and should not be used.
+specifier|const
+name|AArch64Subtarget
+operator|*
+name|getSubtargetImpl
+argument_list|()
+specifier|const
+operator|=
+name|delete
 block|;
 comment|// Pass Pipeline Configuration
 name|TargetPassConfig

@@ -76,13 +76,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Host/HostThread.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/HostThread.h"
+file|"lldb/Utility/FileSpec.h"
 end_include
 
 begin_include
@@ -96,7 +96,7 @@ name|namespace
 name|lldb_private
 block|{
 name|class
-name|Error
+name|Status
 decl_stmt|;
 name|class
 name|Module
@@ -240,7 +240,7 @@ name|launch_info
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -251,7 +251,7 @@ argument|ProcessFreeBSD *process
 argument_list|,
 argument|lldb::pid_t pid
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 empty_stmt|;
 operator|~
@@ -323,7 +323,7 @@ name|size
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -350,7 +350,7 @@ name|size
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -701,7 +701,7 @@ parameter_list|()
 function_decl|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|Detach
 argument_list|(
 argument|lldb::tid_t tid
@@ -788,7 +788,7 @@ decl_stmt|;
 comment|// Posted to once operation complete.
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|m_error
 expr_stmt|;
 comment|// Set if process operation failed.
@@ -920,7 +920,7 @@ name|args
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)
@@ -977,7 +977,7 @@ name|args
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|error
 argument_list|)

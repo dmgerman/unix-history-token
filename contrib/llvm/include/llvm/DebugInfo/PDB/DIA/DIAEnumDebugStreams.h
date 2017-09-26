@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/PDB/IPDBDataStream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/PDB/IPDBEnumChildren.h"
 end_include
 

@@ -46,13 +46,34 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/YAMLTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 name|namespace
 name|yaml
 block|{
@@ -126,9 +147,16 @@ expr_stmt|;
 comment|/// \brief Discriminator between the two states of the `Data` member.
 name|bool
 name|DataIsHexString
+init|=
+name|true
 decl_stmt|;
 name|public
 label|:
+name|BinaryRef
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|BinaryRef
 argument_list|(
 name|ArrayRef
@@ -155,36 +183,9 @@ argument_list|)
 operator|:
 name|Data
 argument_list|(
-name|reinterpret_cast
-operator|<
-specifier|const
-name|uint8_t
-operator|*
-operator|>
-operator|(
-name|Data
-operator|.
-name|data
-argument_list|()
-operator|)
+argument|reinterpret_cast<const uint8_t *>(Data.data())
 argument_list|,
-name|Data
-operator|.
-name|size
-argument_list|()
-argument_list|)
-operator|,
-name|DataIsHexString
-argument_list|(
-argument|true
-argument_list|)
-block|{}
-name|BinaryRef
-argument_list|()
-operator|:
-name|DataIsHexString
-argument_list|(
-argument|true
+argument|Data.size()
 argument_list|)
 block|{}
 comment|/// \brief The number of bytes that are represented by this BinaryRef.
@@ -321,8 +322,6 @@ argument_list|,
 name|void
 operator|*
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 argument_list|)
@@ -356,11 +355,24 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+unit|};  }
+comment|// end namespace yaml
+end_comment
+
+begin_comment
+unit|}
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}; } }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_OBJECTYAML_YAML_H
+end_comment
 
 end_unit
 

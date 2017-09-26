@@ -81,6 +81,12 @@ directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -88,7 +94,7 @@ block|{
 name|class
 name|Type
 decl_stmt|;
-comment|/// MVT - Machine Value Type. Every type that is supported natively by some
+comment|/// Machine Value Type. Every type that is supported natively by some
 comment|/// processor targeted by LLVM occurs here. This means that any legal value
 comment|/// type can be represented by an MVT.
 name|class
@@ -99,50 +105,49 @@ label|:
 enum|enum
 name|SimpleValueType
 enum|:
-name|int8_t
+name|uint8_t
 block|{
-comment|// INVALID_SIMPLE_VALUE_TYPE - Simple value types less than zero are
-comment|// considered extended value types.
+comment|// Simple value types that aren't explicitly part of this enumeration
+comment|// are considered extended value types.
 name|INVALID_SIMPLE_VALUE_TYPE
 init|=
-operator|-
-literal|1
+literal|0
 block|,
 comment|// If you change this numbering, you must change the values in
 comment|// ValueTypes.td as well!
 name|Other
 init|=
-literal|0
+literal|1
 block|,
 comment|// This is a non-standard value
 name|i1
 init|=
-literal|1
+literal|2
 block|,
 comment|// This is a 1 bit integer value
 name|i8
 init|=
-literal|2
+literal|3
 block|,
 comment|// This is an 8 bit integer value
 name|i16
 init|=
-literal|3
+literal|4
 block|,
 comment|// This is a 16 bit integer value
 name|i32
 init|=
-literal|4
+literal|5
 block|,
 comment|// This is a 32 bit integer value
 name|i64
 init|=
-literal|5
+literal|6
 block|,
 comment|// This is a 64 bit integer value
 name|i128
 init|=
-literal|6
+literal|7
 block|,
 comment|// This is a 128 bit integer value
 name|FIRST_INTEGER_VALUETYPE
@@ -155,32 +160,32 @@ name|i128
 block|,
 name|f16
 init|=
-literal|7
+literal|8
 block|,
 comment|// This is a 16 bit floating point value
 name|f32
 init|=
-literal|8
+literal|9
 block|,
 comment|// This is a 32 bit floating point value
 name|f64
 init|=
-literal|9
+literal|10
 block|,
 comment|// This is a 64 bit floating point value
 name|f80
 init|=
-literal|10
+literal|11
 block|,
 comment|// This is a 80 bit floating point value
 name|f128
 init|=
-literal|11
+literal|12
 block|,
 comment|// This is a 128 bit floating point value
 name|ppcf128
 init|=
-literal|12
+literal|13
 block|,
 comment|// This is a PPC 128-bit floating point value
 name|FIRST_FP_VALUETYPE
@@ -191,315 +196,547 @@ name|LAST_FP_VALUETYPE
 init|=
 name|ppcf128
 block|,
+name|v1i1
+init|=
+literal|14
+block|,
+comment|//    1 x i1
 name|v2i1
 init|=
-literal|13
+literal|15
 block|,
 comment|//    2 x i1
 name|v4i1
 init|=
-literal|14
+literal|16
 block|,
 comment|//    4 x i1
 name|v8i1
 init|=
-literal|15
+literal|17
 block|,
 comment|//    8 x i1
 name|v16i1
 init|=
-literal|16
+literal|18
 block|,
 comment|//   16 x i1
 name|v32i1
 init|=
-literal|17
+literal|19
 block|,
 comment|//   32 x i1
 name|v64i1
 init|=
-literal|18
+literal|20
 block|,
 comment|//   64 x i1
 name|v512i1
 init|=
-literal|19
+literal|21
 block|,
 comment|//  512 x i1
 name|v1024i1
 init|=
-literal|20
+literal|22
 block|,
 comment|// 1024 x i1
 name|v1i8
 init|=
-literal|21
+literal|23
 block|,
 comment|//  1 x i8
 name|v2i8
 init|=
-literal|22
+literal|24
 block|,
 comment|//  2 x i8
 name|v4i8
 init|=
-literal|23
+literal|25
 block|,
 comment|//  4 x i8
 name|v8i8
 init|=
-literal|24
+literal|26
 block|,
 comment|//  8 x i8
 name|v16i8
 init|=
-literal|25
+literal|27
 block|,
 comment|// 16 x i8
 name|v32i8
 init|=
-literal|26
+literal|28
 block|,
 comment|// 32 x i8
 name|v64i8
 init|=
-literal|27
+literal|29
 block|,
 comment|// 64 x i8
 name|v128i8
 init|=
-literal|28
+literal|30
 block|,
 comment|//128 x i8
 name|v256i8
 init|=
-literal|29
+literal|31
 block|,
 comment|//256 x i8
 name|v1i16
 init|=
-literal|30
+literal|32
 block|,
 comment|//  1 x i16
 name|v2i16
 init|=
-literal|31
+literal|33
 block|,
 comment|//  2 x i16
 name|v4i16
 init|=
-literal|32
+literal|34
 block|,
 comment|//  4 x i16
 name|v8i16
 init|=
-literal|33
+literal|35
 block|,
 comment|//  8 x i16
 name|v16i16
 init|=
-literal|34
+literal|36
 block|,
 comment|// 16 x i16
 name|v32i16
 init|=
-literal|35
+literal|37
 block|,
 comment|// 32 x i16
 name|v64i16
 init|=
-literal|36
+literal|38
 block|,
 comment|// 64 x i16
 name|v128i16
 init|=
-literal|37
+literal|39
 block|,
 comment|//128 x i16
 name|v1i32
 init|=
-literal|38
+literal|40
 block|,
 comment|//  1 x i32
 name|v2i32
 init|=
-literal|39
+literal|41
 block|,
 comment|//  2 x i32
 name|v4i32
 init|=
-literal|40
+literal|42
 block|,
 comment|//  4 x i32
 name|v8i32
 init|=
-literal|41
+literal|43
 block|,
 comment|//  8 x i32
 name|v16i32
 init|=
-literal|42
+literal|44
 block|,
 comment|// 16 x i32
 name|v32i32
 init|=
-literal|43
+literal|45
 block|,
 comment|// 32 x i32
 name|v64i32
 init|=
-literal|44
+literal|46
 block|,
 comment|// 64 x i32
 name|v1i64
 init|=
-literal|45
+literal|47
 block|,
 comment|//  1 x i64
 name|v2i64
 init|=
-literal|46
+literal|48
 block|,
 comment|//  2 x i64
 name|v4i64
 init|=
-literal|47
+literal|49
 block|,
 comment|//  4 x i64
 name|v8i64
 init|=
-literal|48
+literal|50
 block|,
 comment|//  8 x i64
 name|v16i64
 init|=
-literal|49
+literal|51
 block|,
 comment|// 16 x i64
 name|v32i64
 init|=
-literal|50
+literal|52
 block|,
 comment|// 32 x i64
 name|v1i128
 init|=
-literal|51
+literal|53
 block|,
 comment|//  1 x i128
+comment|// Scalable integer types
+name|nxv1i1
+init|=
+literal|54
+block|,
+comment|// n x  1 x i1
+name|nxv2i1
+init|=
+literal|55
+block|,
+comment|// n x  2 x i1
+name|nxv4i1
+init|=
+literal|56
+block|,
+comment|// n x  4 x i1
+name|nxv8i1
+init|=
+literal|57
+block|,
+comment|// n x  8 x i1
+name|nxv16i1
+init|=
+literal|58
+block|,
+comment|// n x 16 x i1
+name|nxv32i1
+init|=
+literal|59
+block|,
+comment|// n x 32 x i1
+name|nxv1i8
+init|=
+literal|60
+block|,
+comment|// n x  1 x i8
+name|nxv2i8
+init|=
+literal|61
+block|,
+comment|// n x  2 x i8
+name|nxv4i8
+init|=
+literal|62
+block|,
+comment|// n x  4 x i8
+name|nxv8i8
+init|=
+literal|63
+block|,
+comment|// n x  8 x i8
+name|nxv16i8
+init|=
+literal|64
+block|,
+comment|// n x 16 x i8
+name|nxv32i8
+init|=
+literal|65
+block|,
+comment|// n x 32 x i8
+name|nxv1i16
+init|=
+literal|66
+block|,
+comment|// n x  1 x i16
+name|nxv2i16
+init|=
+literal|67
+block|,
+comment|// n x  2 x i16
+name|nxv4i16
+init|=
+literal|68
+block|,
+comment|// n x  4 x i16
+name|nxv8i16
+init|=
+literal|69
+block|,
+comment|// n x  8 x i16
+name|nxv16i16
+init|=
+literal|70
+block|,
+comment|// n x 16 x i16
+name|nxv32i16
+init|=
+literal|71
+block|,
+comment|// n x 32 x i16
+name|nxv1i32
+init|=
+literal|72
+block|,
+comment|// n x  1 x i32
+name|nxv2i32
+init|=
+literal|73
+block|,
+comment|// n x  2 x i32
+name|nxv4i32
+init|=
+literal|74
+block|,
+comment|// n x  4 x i32
+name|nxv8i32
+init|=
+literal|75
+block|,
+comment|// n x  8 x i32
+name|nxv16i32
+init|=
+literal|76
+block|,
+comment|// n x 16 x i32
+name|nxv32i32
+init|=
+literal|77
+block|,
+comment|// n x 32 x i32
+name|nxv1i64
+init|=
+literal|78
+block|,
+comment|// n x  1 x i64
+name|nxv2i64
+init|=
+literal|79
+block|,
+comment|// n x  2 x i64
+name|nxv4i64
+init|=
+literal|80
+block|,
+comment|// n x  4 x i64
+name|nxv8i64
+init|=
+literal|81
+block|,
+comment|// n x  8 x i64
+name|nxv16i64
+init|=
+literal|82
+block|,
+comment|// n x 16 x i64
+name|nxv32i64
+init|=
+literal|83
+block|,
+comment|// n x 32 x i64
 name|FIRST_INTEGER_VECTOR_VALUETYPE
 init|=
-name|v2i1
+name|v1i1
 block|,
 name|LAST_INTEGER_VECTOR_VALUETYPE
 init|=
-name|v1i128
+name|nxv32i64
+block|,
+name|FIRST_INTEGER_SCALABLE_VALUETYPE
+init|=
+name|nxv1i1
+block|,
+name|LAST_INTEGER_SCALABLE_VALUETYPE
+init|=
+name|nxv32i64
 block|,
 name|v2f16
 init|=
-literal|52
+literal|84
 block|,
 comment|//  2 x f16
 name|v4f16
 init|=
-literal|53
+literal|85
 block|,
 comment|//  4 x f16
 name|v8f16
 init|=
-literal|54
+literal|86
 block|,
 comment|//  8 x f16
 name|v1f32
 init|=
-literal|55
+literal|87
 block|,
 comment|//  1 x f32
 name|v2f32
 init|=
-literal|56
+literal|88
 block|,
 comment|//  2 x f32
 name|v4f32
 init|=
-literal|57
+literal|89
 block|,
 comment|//  4 x f32
 name|v8f32
 init|=
-literal|58
+literal|90
 block|,
 comment|//  8 x f32
 name|v16f32
 init|=
-literal|59
+literal|91
 block|,
 comment|// 16 x f32
 name|v1f64
 init|=
-literal|60
+literal|92
 block|,
 comment|//  1 x f64
 name|v2f64
 init|=
-literal|61
+literal|93
 block|,
 comment|//  2 x f64
 name|v4f64
 init|=
-literal|62
+literal|94
 block|,
 comment|//  4 x f64
 name|v8f64
 init|=
-literal|63
+literal|95
 block|,
 comment|//  8 x f64
+name|nxv2f16
+init|=
+literal|96
+block|,
+comment|// n x  2 x f16
+name|nxv4f16
+init|=
+literal|97
+block|,
+comment|// n x  4 x f16
+name|nxv8f16
+init|=
+literal|98
+block|,
+comment|// n x  8 x f16
+name|nxv1f32
+init|=
+literal|99
+block|,
+comment|// n x  1 x f32
+name|nxv2f32
+init|=
+literal|100
+block|,
+comment|// n x  2 x f32
+name|nxv4f32
+init|=
+literal|101
+block|,
+comment|// n x  4 x f32
+name|nxv8f32
+init|=
+literal|102
+block|,
+comment|// n x  8 x f32
+name|nxv16f32
+init|=
+literal|103
+block|,
+comment|// n x 16 x f32
+name|nxv1f64
+init|=
+literal|104
+block|,
+comment|// n x  1 x f64
+name|nxv2f64
+init|=
+literal|105
+block|,
+comment|// n x  2 x f64
+name|nxv4f64
+init|=
+literal|106
+block|,
+comment|// n x  4 x f64
+name|nxv8f64
+init|=
+literal|107
+block|,
+comment|// n x  8 x f64
 name|FIRST_FP_VECTOR_VALUETYPE
 init|=
 name|v2f16
 block|,
 name|LAST_FP_VECTOR_VALUETYPE
 init|=
-name|v8f64
+name|nxv8f64
+block|,
+name|FIRST_FP_SCALABLE_VALUETYPE
+init|=
+name|nxv2f16
+block|,
+name|LAST_FP_SCALABLE_VALUETYPE
+init|=
+name|nxv8f64
 block|,
 name|FIRST_VECTOR_VALUETYPE
 init|=
-name|v2i1
+name|v1i1
 block|,
 name|LAST_VECTOR_VALUETYPE
 init|=
-name|v8f64
+name|nxv8f64
 block|,
 name|x86mmx
 init|=
-literal|64
+literal|108
 block|,
 comment|// This is an X86 MMX value
 name|Glue
 init|=
-literal|65
+literal|109
 block|,
 comment|// This glues nodes together during pre-RA sched
 name|isVoid
 init|=
-literal|66
+literal|110
 block|,
 comment|// This has no value
 name|Untyped
 init|=
-literal|67
+literal|111
 block|,
 comment|// This value takes a register, but has
 comment|// unspecified type.  The register class
 comment|// will be determined by the opcode.
 name|FIRST_VALUETYPE
 init|=
-literal|0
+literal|1
 block|,
 comment|// This is always the beginning of the list.
 name|LAST_VALUETYPE
 init|=
-literal|68
+literal|112
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
@@ -507,77 +744,206 @@ comment|// MVT::MAX_ALLOWED_VALUETYPE is used for asserts and to size bit vector
 comment|// This value must be a multiple of 32.
 name|MAX_ALLOWED_VALUETYPE
 init|=
-literal|96
+literal|128
 block|,
-comment|// Token - A value of type llvm::TokenTy
+comment|// A value of type llvm::TokenTy
 name|token
 init|=
-literal|120
+literal|248
 block|,
-comment|// Metadata - This is MDNode or MDString.
+comment|// This is MDNode or MDString.
 name|Metadata
 init|=
-literal|121
+literal|249
 block|,
-comment|// iPTRAny - An int value the size of the pointer of the current
+comment|// An int value the size of the pointer of the current
 comment|// target to any address space. This must only be used internal to
 comment|// tblgen. Other than for overloading, we treat iPTRAny the same as iPTR.
 name|iPTRAny
 init|=
-literal|122
+literal|250
 block|,
-comment|// vAny - A vector with any length and element size. This is used
+comment|// A vector with any length and element size. This is used
 comment|// for intrinsics that have overloadings based on vector types.
 comment|// This is only for tblgen's consumption!
 name|vAny
 init|=
-literal|123
+literal|251
 block|,
-comment|// fAny - Any floating-point or vector floating-point value. This is used
+comment|// Any floating-point or vector floating-point value. This is used
 comment|// for intrinsics that have overloadings based on floating-point types.
 comment|// This is only for tblgen's consumption!
 name|fAny
 init|=
-literal|124
+literal|252
 block|,
-comment|// iAny - An integer or vector integer value of any bit width. This is
+comment|// An integer or vector integer value of any bit width. This is
 comment|// used for intrinsics that have overloadings based on integer bit widths.
 comment|// This is only for tblgen's consumption!
 name|iAny
 init|=
-literal|125
+literal|253
 block|,
-comment|// iPTR - An int value the size of the pointer of the current
+comment|// An int value the size of the pointer of the current
 comment|// target.  This should only be used internal to tblgen!
 name|iPTR
 init|=
-literal|126
+literal|254
 block|,
-comment|// Any - Any type. This is used for intrinsics that have overloadings.
+comment|// Any type. This is used for intrinsics that have overloadings.
 comment|// This is only for tblgen's consumption!
 name|Any
 init|=
-literal|127
+literal|255
 block|}
 enum|;
 name|SimpleValueType
 name|SimpleTy
+init|=
+name|INVALID_SIMPLE_VALUE_TYPE
 decl_stmt|;
-name|constexpr
-name|MVT
-argument_list|()
-operator|:
-name|SimpleTy
+comment|// A class to represent the number of elements in a vector
+comment|//
+comment|// For fixed-length vectors, the total number of elements is equal to 'Min'
+comment|// For scalable vectors, the total number of elements is a multiple of 'Min'
+name|class
+name|ElementCount
+block|{
+name|public
+label|:
+name|unsigned
+name|Min
+decl_stmt|;
+name|bool
+name|Scalable
+decl_stmt|;
+name|ElementCount
 argument_list|(
-argument|INVALID_SIMPLE_VALUE_TYPE
+argument|unsigned Min
+argument_list|,
+argument|bool Scalable
+argument_list|)
+block|:
+name|Min
+argument_list|(
+name|Min
+argument_list|)
+operator|,
+name|Scalable
+argument_list|(
+argument|Scalable
 argument_list|)
 block|{}
+name|ElementCount
+name|operator
+operator|*
+operator|(
+name|unsigned
+name|RHS
+operator|)
+block|{
+return|return
+block|{
+name|Min
+operator|*
+name|RHS
+block|,
+name|Scalable
+block|}
+return|;
+block|}
+name|ElementCount
+operator|&
+name|operator
+operator|*=
+operator|(
+name|unsigned
+name|RHS
+operator|)
+block|{
+name|Min
+operator|*=
+name|RHS
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|ElementCount
+name|operator
+operator|/
+operator|(
+name|unsigned
+name|RHS
+operator|)
+block|{
+return|return
+block|{
+name|Min
+operator|/
+name|RHS
+block|,
+name|Scalable
+block|}
+return|;
+block|}
+name|ElementCount
+operator|&
+name|operator
+operator|/=
+operator|(
+name|unsigned
+name|RHS
+operator|)
+block|{
+name|Min
+operator|/=
+name|RHS
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|ElementCount
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+name|Min
+operator|==
+name|RHS
+operator|.
+name|Min
+operator|&&
+name|Scalable
+operator|==
+name|RHS
+operator|.
+name|Scalable
+return|;
+block|}
+block|}
+empty_stmt|;
+name|constexpr
+name|MVT
+parameter_list|()
+init|=
+init|default
+function_decl|;
 name|constexpr
 name|MVT
 argument_list|(
 argument|SimpleValueType SVT
 argument_list|)
-operator|:
+block|:
 name|SimpleTy
 argument_list|(
 argument|SVT
@@ -697,7 +1063,7 @@ operator|.
 name|SimpleTy
 return|;
 block|}
-comment|/// isValid - Return true if this is a valid simple valuetype.
+comment|/// Return true if this is a valid simple valuetype.
 name|bool
 name|isValid
 argument_list|()
@@ -719,7 +1085,7 @@ name|LAST_VALUETYPE
 operator|)
 return|;
 block|}
-comment|/// isFloatingPoint - Return true if this is a FP, or a vector FP type.
+comment|/// Return true if this is a FP or a vector FP type.
 name|bool
 name|isFloatingPoint
 argument_list|()
@@ -757,7 +1123,7 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// isInteger - Return true if this is an integer, or a vector integer type.
+comment|/// Return true if this is an integer or a vector integer type.
 name|bool
 name|isInteger
 argument_list|()
@@ -795,8 +1161,7 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// isScalarInteger - Return true if this is an integer, not including
-comment|/// vectors.
+comment|/// Return true if this is an integer, not including vectors.
 name|bool
 name|isScalarInteger
 argument_list|()
@@ -818,7 +1183,7 @@ name|LAST_INTEGER_VALUETYPE
 operator|)
 return|;
 block|}
-comment|/// isVector - Return true if this is a vector value type.
+comment|/// Return true if this is a vector value type.
 name|bool
 name|isVector
 argument_list|()
@@ -840,7 +1205,46 @@ name|LAST_VECTOR_VALUETYPE
 operator|)
 return|;
 block|}
-comment|/// is16BitVector - Return true if this is a 16-bit vector type.
+comment|/// Return true if this is a vector value type where the
+comment|/// runtime length is machine dependent
+name|bool
+name|isScalableVector
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+operator|(
+name|SimpleTy
+operator|>=
+name|MVT
+operator|::
+name|FIRST_INTEGER_SCALABLE_VALUETYPE
+operator|&&
+name|SimpleTy
+operator|<=
+name|MVT
+operator|::
+name|LAST_INTEGER_SCALABLE_VALUETYPE
+operator|)
+operator|||
+operator|(
+name|SimpleTy
+operator|>=
+name|MVT
+operator|::
+name|FIRST_FP_SCALABLE_VALUETYPE
+operator|&&
+name|SimpleTy
+operator|<=
+name|MVT
+operator|::
+name|LAST_FP_SCALABLE_VALUETYPE
+operator|)
+operator|)
+return|;
+block|}
+comment|/// Return true if this is a 16-bit vector type.
 name|bool
 name|is16BitVector
 argument_list|()
@@ -868,7 +1272,7 @@ name|v16i1
 operator|)
 return|;
 block|}
-comment|/// is32BitVector - Return true if this is a 32-bit vector type.
+comment|/// Return true if this is a 32-bit vector type.
 name|bool
 name|is32BitVector
 argument_list|()
@@ -876,6 +1280,12 @@ specifier|const
 block|{
 return|return
 operator|(
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v32i1
+operator|||
 name|SimpleTy
 operator|==
 name|MVT
@@ -908,7 +1318,7 @@ name|v1f32
 operator|)
 return|;
 block|}
-comment|/// is64BitVector - Return true if this is a 64-bit vector type.
+comment|/// Return true if this is a 64-bit vector type.
 name|bool
 name|is64BitVector
 argument_list|()
@@ -916,6 +1326,12 @@ specifier|const
 block|{
 return|return
 operator|(
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v64i1
+operator|||
 name|SimpleTy
 operator|==
 name|MVT
@@ -960,7 +1376,7 @@ name|v1f64
 operator|)
 return|;
 block|}
-comment|/// is128BitVector - Return true if this is a 128-bit vector type.
+comment|/// Return true if this is a 128-bit vector type.
 name|bool
 name|is128BitVector
 argument_list|()
@@ -1018,7 +1434,7 @@ name|v2f64
 operator|)
 return|;
 block|}
-comment|/// is256BitVector - Return true if this is a 256-bit vector type.
+comment|/// Return true if this is a 256-bit vector type.
 name|bool
 name|is256BitVector
 argument_list|()
@@ -1064,7 +1480,7 @@ name|v4i64
 operator|)
 return|;
 block|}
-comment|/// is512BitVector - Return true if this is a 512-bit vector type.
+comment|/// Return true if this is a 512-bit vector type.
 name|bool
 name|is512BitVector
 argument_list|()
@@ -1116,7 +1532,7 @@ name|v8i64
 operator|)
 return|;
 block|}
-comment|/// is1024BitVector - Return true if this is a 1024-bit vector type.
+comment|/// Return true if this is a 1024-bit vector type.
 name|bool
 name|is1024BitVector
 argument_list|()
@@ -1156,7 +1572,7 @@ name|v16i64
 operator|)
 return|;
 block|}
-comment|/// is2048BitVector - Return true if this is a 1024-bit vector type.
+comment|/// Return true if this is a 1024-bit vector type.
 name|bool
 name|is2048BitVector
 argument_list|()
@@ -1190,7 +1606,7 @@ name|v32i64
 operator|)
 return|;
 block|}
-comment|/// isOverloaded - Return true if this is an overloaded type for TableGen.
+comment|/// Return true if this is an overloaded type for TableGen.
 name|bool
 name|isOverloaded
 argument_list|()
@@ -1230,7 +1646,7 @@ name|iPTRAny
 operator|)
 return|;
 block|}
-comment|/// isPow2VectorType - Returns true if the given vector is a power of 2.
+comment|/// Returns true if the given vector is a power of 2.
 name|bool
 name|isPow2VectorType
 argument_list|()
@@ -1255,8 +1671,8 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// getPow2VectorType - Widens the length of the given vector MVT up to
-comment|/// the nearest power of 2 and returns that type.
+comment|/// Widens the length of the given vector MVT up to the nearest power of 2
+comment|/// and returns that type.
 name|MVT
 name|getPow2VectorType
 argument_list|()
@@ -1299,8 +1715,7 @@ name|Pow2NElts
 argument_list|)
 return|;
 block|}
-comment|/// getScalarType - If this is a vector type, return the element type,
-comment|/// otherwise return this.
+comment|/// If this is a vector, return the element type, otherwise return this.
 name|MVT
 name|getScalarType
 argument_list|()
@@ -1334,6 +1749,9 @@ literal|"Not a vector MVT!"
 argument_list|)
 expr_stmt|;
 case|case
+name|v1i1
+case|:
+case|case
 name|v2i1
 case|:
 case|case
@@ -1356,6 +1774,24 @@ name|v512i1
 case|:
 case|case
 name|v1024i1
+case|:
+case|case
+name|nxv1i1
+case|:
+case|case
+name|nxv2i1
+case|:
+case|case
+name|nxv4i1
+case|:
+case|case
+name|nxv8i1
+case|:
+case|case
+name|nxv16i1
+case|:
+case|case
+name|nxv32i1
 case|:
 return|return
 name|i1
@@ -1387,6 +1823,24 @@ case|:
 case|case
 name|v256i8
 case|:
+case|case
+name|nxv1i8
+case|:
+case|case
+name|nxv2i8
+case|:
+case|case
+name|nxv4i8
+case|:
+case|case
+name|nxv8i8
+case|:
+case|case
+name|nxv16i8
+case|:
+case|case
+name|nxv32i8
+case|:
 return|return
 name|i8
 return|;
@@ -1414,6 +1868,24 @@ case|:
 case|case
 name|v128i16
 case|:
+case|case
+name|nxv1i16
+case|:
+case|case
+name|nxv2i16
+case|:
+case|case
+name|nxv4i16
+case|:
+case|case
+name|nxv8i16
+case|:
+case|case
+name|nxv16i16
+case|:
+case|case
+name|nxv32i16
+case|:
 return|return
 name|i16
 return|;
@@ -1438,6 +1910,24 @@ case|:
 case|case
 name|v64i32
 case|:
+case|case
+name|nxv1i32
+case|:
+case|case
+name|nxv2i32
+case|:
+case|case
+name|nxv4i32
+case|:
+case|case
+name|nxv8i32
+case|:
+case|case
+name|nxv16i32
+case|:
+case|case
+name|nxv32i32
+case|:
 return|return
 name|i32
 return|;
@@ -1459,6 +1949,24 @@ case|:
 case|case
 name|v32i64
 case|:
+case|case
+name|nxv1i64
+case|:
+case|case
+name|nxv2i64
+case|:
+case|case
+name|nxv4i64
+case|:
+case|case
+name|nxv8i64
+case|:
+case|case
+name|nxv16i64
+case|:
+case|case
+name|nxv32i64
+case|:
 return|return
 name|i64
 return|;
@@ -1476,6 +1984,15 @@ name|v4f16
 case|:
 case|case
 name|v8f16
+case|:
+case|case
+name|nxv2f16
+case|:
+case|case
+name|nxv4f16
+case|:
+case|case
+name|nxv8f16
 case|:
 return|return
 name|f16
@@ -1495,6 +2012,21 @@ case|:
 case|case
 name|v16f32
 case|:
+case|case
+name|nxv1f32
+case|:
+case|case
+name|nxv2f32
+case|:
+case|case
+name|nxv4f32
+case|:
+case|case
+name|nxv8f32
+case|:
+case|case
+name|nxv16f32
+case|:
 return|return
 name|f32
 return|;
@@ -1509,6 +2041,18 @@ name|v4f64
 case|:
 case|case
 name|v8f64
+case|:
+case|case
+name|nxv1f64
+case|:
+case|case
+name|nxv2f64
+case|:
+case|case
+name|nxv4f64
+case|:
+case|case
+name|nxv8f64
 case|:
 return|return
 name|f64
@@ -1588,6 +2132,21 @@ case|:
 case|case
 name|v32i64
 case|:
+case|case
+name|nxv32i1
+case|:
+case|case
+name|nxv32i8
+case|:
+case|case
+name|nxv32i16
+case|:
+case|case
+name|nxv32i32
+case|:
+case|case
+name|nxv32i64
+case|:
 return|return
 literal|32
 return|;
@@ -1608,6 +2167,24 @@ name|v16i64
 case|:
 case|case
 name|v16f32
+case|:
+case|case
+name|nxv16i1
+case|:
+case|case
+name|nxv16i8
+case|:
+case|case
+name|nxv16i16
+case|:
+case|case
+name|nxv16i32
+case|:
+case|case
+name|nxv16i64
+case|:
+case|case
+name|nxv16f32
 case|:
 return|return
 literal|16
@@ -1636,6 +2213,30 @@ case|:
 case|case
 name|v8f64
 case|:
+case|case
+name|nxv8i1
+case|:
+case|case
+name|nxv8i8
+case|:
+case|case
+name|nxv8i16
+case|:
+case|case
+name|nxv8i32
+case|:
+case|case
+name|nxv8i64
+case|:
+case|case
+name|nxv8f16
+case|:
+case|case
+name|nxv8f32
+case|:
+case|case
+name|nxv8f64
+case|:
 return|return
 literal|8
 return|;
@@ -1662,6 +2263,30 @@ name|v4f32
 case|:
 case|case
 name|v4f64
+case|:
+case|case
+name|nxv4i1
+case|:
+case|case
+name|nxv4i8
+case|:
+case|case
+name|nxv4i16
+case|:
+case|case
+name|nxv4i32
+case|:
+case|case
+name|nxv4i64
+case|:
+case|case
+name|nxv4f16
+case|:
+case|case
+name|nxv4f32
+case|:
+case|case
+name|nxv4f64
 case|:
 return|return
 literal|4
@@ -1690,9 +2315,36 @@ case|:
 case|case
 name|v2f64
 case|:
+case|case
+name|nxv2i1
+case|:
+case|case
+name|nxv2i8
+case|:
+case|case
+name|nxv2i16
+case|:
+case|case
+name|nxv2i32
+case|:
+case|case
+name|nxv2i64
+case|:
+case|case
+name|nxv2f16
+case|:
+case|case
+name|nxv2f32
+case|:
+case|case
+name|nxv2f64
+case|:
 return|return
 literal|2
 return|;
+case|case
+name|v1i1
+case|:
 case|case
 name|v1i8
 case|:
@@ -1714,10 +2366,48 @@ case|:
 case|case
 name|v1f64
 case|:
+case|case
+name|nxv1i1
+case|:
+case|case
+name|nxv1i8
+case|:
+case|case
+name|nxv1i16
+case|:
+case|case
+name|nxv1i32
+case|:
+case|case
+name|nxv1i64
+case|:
+case|case
+name|nxv1f32
+case|:
+case|case
+name|nxv1f64
+case|:
 return|return
 literal|1
 return|;
 block|}
+block|}
+name|MVT
+operator|::
+name|ElementCount
+name|getVectorElementCount
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|getVectorNumElements
+argument_list|()
+block|,
+name|isScalableVector
+argument_list|()
+block|}
+return|;
 block|}
 name|unsigned
 name|getSizeInBits
@@ -1791,17 +2481,29 @@ expr_stmt|;
 case|case
 name|i1
 case|:
+case|case
+name|v1i1
+case|:
+case|case
+name|nxv1i1
+case|:
 return|return
 literal|1
 return|;
 case|case
 name|v2i1
 case|:
+case|case
+name|nxv2i1
+case|:
 return|return
 literal|2
 return|;
 case|case
 name|v4i1
+case|:
+case|case
+name|nxv4i1
 case|:
 return|return
 literal|4
@@ -1814,6 +2516,12 @@ name|v1i8
 case|:
 case|case
 name|v8i1
+case|:
+case|case
+name|nxv1i8
+case|:
+case|case
+name|nxv8i1
 case|:
 return|return
 literal|8
@@ -1832,6 +2540,15 @@ name|v2i8
 case|:
 case|case
 name|v1i16
+case|:
+case|case
+name|nxv16i1
+case|:
+case|case
+name|nxv2i8
+case|:
+case|case
+name|nxv1i16
 case|:
 return|return
 literal|16
@@ -1859,6 +2576,24 @@ name|v1f32
 case|:
 case|case
 name|v1i32
+case|:
+case|case
+name|nxv32i1
+case|:
+case|case
+name|nxv4i8
+case|:
+case|case
+name|nxv2i16
+case|:
+case|case
+name|nxv1i32
+case|:
+case|case
+name|nxv2f16
+case|:
+case|case
+name|nxv1f32
 case|:
 return|return
 literal|32
@@ -1895,6 +2630,27 @@ name|v2f32
 case|:
 case|case
 name|v1f64
+case|:
+case|case
+name|nxv8i8
+case|:
+case|case
+name|nxv4i16
+case|:
+case|case
+name|nxv2i32
+case|:
+case|case
+name|nxv1i64
+case|:
+case|case
+name|nxv4f16
+case|:
+case|case
+name|nxv2f32
+case|:
+case|case
+name|nxv1f64
 case|:
 return|return
 literal|64
@@ -1938,6 +2694,27 @@ case|:
 case|case
 name|v2f64
 case|:
+case|case
+name|nxv16i8
+case|:
+case|case
+name|nxv8i16
+case|:
+case|case
+name|nxv4i32
+case|:
+case|case
+name|nxv2i64
+case|:
+case|case
+name|nxv8f16
+case|:
+case|case
+name|nxv4f32
+case|:
+case|case
+name|nxv2f64
+case|:
 return|return
 literal|128
 return|;
@@ -1958,6 +2735,24 @@ name|v8f32
 case|:
 case|case
 name|v4f64
+case|:
+case|case
+name|nxv32i8
+case|:
+case|case
+name|nxv16i16
+case|:
+case|case
+name|nxv8i32
+case|:
+case|case
+name|nxv4i64
+case|:
+case|case
+name|nxv8f32
+case|:
+case|case
+name|nxv4f64
 case|:
 return|return
 literal|256
@@ -1983,6 +2778,21 @@ case|:
 case|case
 name|v8f64
 case|:
+case|case
+name|nxv32i16
+case|:
+case|case
+name|nxv16i32
+case|:
+case|case
+name|nxv8i64
+case|:
+case|case
+name|nxv16f32
+case|:
+case|case
+name|nxv8f64
+case|:
 return|return
 literal|512
 return|;
@@ -2001,6 +2811,12 @@ case|:
 case|case
 name|v16i64
 case|:
+case|case
+name|nxv32i32
+case|:
+case|case
+name|nxv16i64
+case|:
 return|return
 literal|1024
 return|;
@@ -2015,6 +2831,9 @@ name|v64i32
 case|:
 case|case
 name|v32i64
+case|:
+case|case
+name|nxv32i64
 case|:
 return|return
 literal|2048
@@ -2034,8 +2853,8 @@ name|getSizeInBits
 argument_list|()
 return|;
 block|}
-comment|/// getStoreSize - Return the number of bytes overwritten by a store
-comment|/// of the specified value type.
+comment|/// Return the number of bytes overwritten by a store of the specified value
+comment|/// type.
 name|unsigned
 name|getStoreSize
 argument_list|()
@@ -2052,8 +2871,8 @@ operator|/
 literal|8
 return|;
 block|}
-comment|/// getStoreSizeInBits - Return the number of bits overwritten by a store
-comment|/// of the specified value type.
+comment|/// Return the number of bits overwritten by a store of the specified value
+comment|/// type.
 name|unsigned
 name|getStoreSizeInBits
 argument_list|()
@@ -2308,6 +3127,17 @@ if|if
 condition|(
 name|NumElements
 operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|v1i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
 literal|2
 condition|)
 return|return
@@ -2928,6 +3758,625 @@ name|INVALID_SIMPLE_VALUE_TYPE
 operator|)
 return|;
 block|}
+specifier|static
+name|MVT
+name|getScalableVectorVT
+parameter_list|(
+name|MVT
+name|VT
+parameter_list|,
+name|unsigned
+name|NumElements
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|VT
+operator|.
+name|SimpleTy
+condition|)
+block|{
+default|default:
+break|break;
+case|case
+name|MVT
+operator|::
+name|i1
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv1i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|2
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv2i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv4i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv8i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|16
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv16i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|32
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv32i1
+return|;
+break|break;
+case|case
+name|MVT
+operator|::
+name|i8
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv1i8
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|2
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv2i8
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv4i8
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv8i8
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|16
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv16i8
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|32
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv32i8
+return|;
+break|break;
+case|case
+name|MVT
+operator|::
+name|i16
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv1i16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|2
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv2i16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv4i16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv8i16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|16
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv16i16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|32
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv32i16
+return|;
+break|break;
+case|case
+name|MVT
+operator|::
+name|i32
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv1i32
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|2
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv2i32
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv4i32
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv8i32
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|16
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv16i32
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|32
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv32i32
+return|;
+break|break;
+case|case
+name|MVT
+operator|::
+name|i64
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv1i64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|2
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv2i64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv4i64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv8i64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|16
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv16i64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|32
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv32i64
+return|;
+break|break;
+case|case
+name|MVT
+operator|::
+name|f16
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|2
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv2f16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv4f16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv8f16
+return|;
+break|break;
+case|case
+name|MVT
+operator|::
+name|f32
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv1f32
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|2
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv2f32
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv4f32
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv8f32
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|16
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv16f32
+return|;
+break|break;
+case|case
+name|MVT
+operator|::
+name|f64
+case|:
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|1
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv1f64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|2
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv2f64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|4
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv4f64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|nxv8f64
+return|;
+break|break;
+block|}
+return|return
+operator|(
+name|MVT
+operator|::
+name|SimpleValueType
+operator|)
+operator|(
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
+operator|)
+return|;
+block|}
+specifier|static
+name|MVT
+name|getVectorVT
+parameter_list|(
+name|MVT
+name|VT
+parameter_list|,
+name|unsigned
+name|NumElements
+parameter_list|,
+name|bool
+name|IsScalable
+parameter_list|)
+block|{
+if|if
+condition|(
+name|IsScalable
+condition|)
+return|return
+name|getScalableVectorVT
+argument_list|(
+name|VT
+argument_list|,
+name|NumElements
+argument_list|)
+return|;
+return|return
+name|getVectorVT
+argument_list|(
+name|VT
+argument_list|,
+name|NumElements
+argument_list|)
+return|;
+block|}
+specifier|static
+name|MVT
+name|getVectorVT
+argument_list|(
+name|MVT
+name|VT
+argument_list|,
+name|MVT
+operator|::
+name|ElementCount
+name|EC
+argument_list|)
+block|{
+if|if
+condition|(
+name|EC
+operator|.
+name|Scalable
+condition|)
+return|return
+name|getScalableVectorVT
+argument_list|(
+name|VT
+argument_list|,
+name|EC
+operator|.
+name|Min
+argument_list|)
+return|;
+return|return
+name|getVectorVT
+argument_list|(
+name|VT
+argument_list|,
+name|EC
+operator|.
+name|Min
+argument_list|)
+return|;
+block|}
 comment|/// Return the value type corresponding to the specified type.  This returns
 comment|/// all pointers as iPTR.  If HandleUnknown is true, unknown types are
 comment|/// returned as Other, otherwise they are invalid.
@@ -3039,13 +4488,14 @@ block|}
 block|}
 struct|;
 comment|/// A range of the MVT::SimpleValueType enum.
-typedef|typedef
+name|using
+name|mvt_range
+init|=
 name|iterator_range
 operator|<
 name|mvt_iterator
 operator|>
-name|mvt_range
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 comment|/// SimpleValueType Iteration
@@ -3203,6 +4653,60 @@ operator|)
 argument_list|)
 return|;
 block|}
+specifier|static
+name|mvt_range
+name|integer_scalable_vector_valuetypes
+parameter_list|()
+block|{
+return|return
+name|mvt_range
+argument_list|(
+name|MVT
+operator|::
+name|FIRST_INTEGER_SCALABLE_VALUETYPE
+argument_list|,
+operator|(
+name|MVT
+operator|::
+name|SimpleValueType
+operator|)
+operator|(
+name|MVT
+operator|::
+name|LAST_INTEGER_SCALABLE_VALUETYPE
+operator|+
+literal|1
+operator|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|mvt_range
+name|fp_scalable_vector_valuetypes
+parameter_list|()
+block|{
+return|return
+name|mvt_range
+argument_list|(
+name|MVT
+operator|::
+name|FIRST_FP_SCALABLE_VALUETYPE
+argument_list|,
+operator|(
+name|MVT
+operator|::
+name|SimpleValueType
+operator|)
+operator|(
+name|MVT
+operator|::
+name|LAST_FP_SCALABLE_VALUETYPE
+operator|+
+literal|1
+operator|)
+argument_list|)
+return|;
+block|}
 comment|/// @}
 block|}
 end_decl_stmt
@@ -3213,13 +4717,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINEVALUETYPE_H
+end_comment
 
 end_unit
 

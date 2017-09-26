@@ -102,19 +102,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/Process.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Status.h"
 end_include
 
 begin_include
@@ -214,7 +214,7 @@ comment|// Creating a new process, or attaching to an existing one
 comment|//------------------------------------------------------------------
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DoLoadCore
 argument_list|()
 name|override
@@ -247,7 +247,7 @@ comment|// Process Control
 comment|//------------------------------------------------------------------
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|DoDestroy
 argument_list|()
 name|override
@@ -277,7 +277,7 @@ argument|void *buf
 argument_list|,
 argument|size_t size
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
@@ -290,13 +290,13 @@ argument|void *buf
 argument_list|,
 argument|size_t size
 argument_list|,
-argument|lldb_private::Error&error
+argument|lldb_private::Status&error
 argument_list|)
 name|override
 block|;
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|GetMemoryRegionInfo
 argument_list|(
 argument|lldb::addr_t load_addr
@@ -558,7 +558,7 @@ end_comment
 begin_expr_stmt
 name|lldb_private
 operator|::
-name|Error
+name|Status
 name|ParseThreadContextsFromNoteSegment
 argument_list|(
 argument|const elf::ELFProgramHeader *segment_header

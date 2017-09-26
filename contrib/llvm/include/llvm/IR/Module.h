@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Module.h - C++ class to represent a VM module ------*- C++ -*-===//
+comment|//===- llvm/Module.h - C++ class to represent a VM module -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,7 +66,37 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Attributes.h"
 end_include
 
 begin_include
@@ -114,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/SymbolTableListTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/CBindingWrapping.h"
 end_include
 
@@ -126,21 +162,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|Optional
-expr_stmt|;
 name|class
 name|Error
 decl_stmt|;
@@ -159,9 +217,6 @@ decl_stmt|;
 name|class
 name|RandomNumberGenerator
 decl_stmt|;
-name|class
-name|StructType
-decl_stmt|;
 name|template
 operator|<
 name|class
@@ -170,6 +225,9 @@ operator|>
 name|class
 name|SmallPtrSetImpl
 expr_stmt|;
+name|class
+name|StructType
+decl_stmt|;
 comment|/// A Module instance is used to store all the information related to an
 comment|/// LLVM module. Modules are the top level container of all other LLVM
 comment|/// Intermediate Representation (IR) objects. Each module directly contains a
@@ -189,137 +247,155 @@ comment|/// @{
 name|public
 label|:
 comment|/// The type for the list of global variables.
-typedef|typedef
+name|using
+name|GlobalListType
+init|=
 name|SymbolTableList
 operator|<
 name|GlobalVariable
 operator|>
-name|GlobalListType
-expr_stmt|;
+decl_stmt|;
 comment|/// The type for the list of functions.
-typedef|typedef
+name|using
+name|FunctionListType
+init|=
 name|SymbolTableList
 operator|<
 name|Function
 operator|>
-name|FunctionListType
-expr_stmt|;
+decl_stmt|;
 comment|/// The type for the list of aliases.
-typedef|typedef
+name|using
+name|AliasListType
+init|=
 name|SymbolTableList
 operator|<
 name|GlobalAlias
 operator|>
-name|AliasListType
-expr_stmt|;
+decl_stmt|;
 comment|/// The type for the list of ifuncs.
-typedef|typedef
+name|using
+name|IFuncListType
+init|=
 name|SymbolTableList
 operator|<
 name|GlobalIFunc
 operator|>
-name|IFuncListType
-expr_stmt|;
+decl_stmt|;
 comment|/// The type for the list of named metadata.
-typedef|typedef
+name|using
+name|NamedMDListType
+init|=
 name|ilist
 operator|<
 name|NamedMDNode
 operator|>
-name|NamedMDListType
-expr_stmt|;
+decl_stmt|;
 comment|/// The type of the comdat "symbol" table.
-typedef|typedef
+name|using
+name|ComdatSymTabType
+init|=
 name|StringMap
 operator|<
 name|Comdat
 operator|>
-name|ComdatSymTabType
-expr_stmt|;
+decl_stmt|;
 comment|/// The Global Variable iterator.
-typedef|typedef
-name|GlobalListType
-operator|::
-name|iterator
+name|using
 name|global_iterator
-expr_stmt|;
+init|=
+name|GlobalListType
+operator|::
+name|iterator
+decl_stmt|;
 comment|/// The Global Variable constant iterator.
-typedef|typedef
+name|using
+name|const_global_iterator
+init|=
 name|GlobalListType
 operator|::
 name|const_iterator
-name|const_global_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Function iterators.
-typedef|typedef
+name|using
+name|iterator
+init|=
 name|FunctionListType
 operator|::
 name|iterator
-name|iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Function constant iterator
-typedef|typedef
+name|using
+name|const_iterator
+init|=
 name|FunctionListType
 operator|::
 name|const_iterator
-name|const_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Function reverse iterator.
-typedef|typedef
+name|using
+name|reverse_iterator
+init|=
 name|FunctionListType
 operator|::
 name|reverse_iterator
-name|reverse_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Function constant reverse iterator.
-typedef|typedef
+name|using
+name|const_reverse_iterator
+init|=
 name|FunctionListType
 operator|::
 name|const_reverse_iterator
-name|const_reverse_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Global Alias iterators.
-typedef|typedef
-name|AliasListType
-operator|::
-name|iterator
+name|using
 name|alias_iterator
-expr_stmt|;
+init|=
+name|AliasListType
+operator|::
+name|iterator
+decl_stmt|;
 comment|/// The Global Alias constant iterator
-typedef|typedef
+name|using
+name|const_alias_iterator
+init|=
 name|AliasListType
 operator|::
 name|const_iterator
-name|const_alias_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The Global IFunc iterators.
-typedef|typedef
-name|IFuncListType
-operator|::
-name|iterator
+name|using
 name|ifunc_iterator
-expr_stmt|;
+init|=
+name|IFuncListType
+operator|::
+name|iterator
+decl_stmt|;
 comment|/// The Global IFunc constant iterator
-typedef|typedef
+name|using
+name|const_ifunc_iterator
+init|=
 name|IFuncListType
 operator|::
 name|const_iterator
-name|const_ifunc_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The named metadata iterators.
-typedef|typedef
+name|using
+name|named_metadata_iterator
+init|=
 name|NamedMDListType
 operator|::
 name|iterator
-name|named_metadata_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// The named metadata constant iterators.
-typedef|typedef
+name|using
+name|const_named_metadata_iterator
+init|=
 name|NamedMDListType
 operator|::
 name|const_iterator
-name|const_named_metadata_iterator
-expr_stmt|;
+decl_stmt|;
 comment|/// This enumeration defines the supported behaviors of module flags.
 enum|enum
 name|ModFlagBehavior
@@ -366,6 +442,11 @@ name|AppendUnique
 init|=
 literal|6
 block|,
+comment|/// Takes the max of the two values, which are required to be integers.
+name|Max
+init|=
+literal|7
+block|,
 comment|// Markers:
 name|ModFlagBehaviorFirstVal
 init|=
@@ -373,7 +454,7 @@ name|Error
 block|,
 name|ModFlagBehaviorLastVal
 init|=
-name|AppendUnique
+name|Max
 block|}
 enum|;
 comment|/// Checks if Metadata represents a valid ModFlagBehavior, and stores the
@@ -677,17 +758,18 @@ comment|/// A unique RNG per pass ensures a reproducible random stream even
 comment|/// when other randomness consuming passes are added or removed. In
 comment|/// addition, the random stream will be reproducible across LLVM
 comment|/// versions when the pass does not change.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RandomNumberGenerator
-modifier|*
+operator|>
 name|createRNG
 argument_list|(
-specifier|const
-name|Pass
-operator|*
-name|P
+argument|const Pass* P
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 comment|/// @}
 comment|/// @name Module Level Mutators
 comment|/// @{
@@ -912,7 +994,7 @@ name|FunctionType
 modifier|*
 name|T
 parameter_list|,
-name|AttributeSet
+name|AttributeList
 name|AttributeList
 parameter_list|)
 function_decl|;
@@ -932,42 +1014,96 @@ comment|/// Look up the specified function in the module symbol table. If it doe
 comment|/// exist, add a prototype for the function and return it. This function
 comment|/// guarantees to return a constant of pointer to the specified function type
 comment|/// or a ConstantExpr BitCast of that type if the named function has a
-comment|/// different type. This version of the method takes a null terminated list of
+comment|/// different type. This version of the method takes a list of
 comment|/// function arguments, which makes it easier for clients to use.
+name|template
+operator|<
+name|typename
+operator|...
+name|ArgsTy
+operator|>
 name|Constant
-modifier|*
+operator|*
 name|getOrInsertFunction
 argument_list|(
-name|StringRef
+argument|StringRef Name
+argument_list|,
+argument|AttributeList AttributeList
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArgsTy... Args
+argument_list|)
+block|{
+name|SmallVector
+operator|<
+name|Type
+operator|*
+block|,
+sizeof|sizeof...
+argument_list|(
+name|ArgsTy
+argument_list|)
+operator|>
+name|ArgTys
+block|{
+name|Args
+operator|...
+block|}
+block|;
+return|return
+name|getOrInsertFunction
+argument_list|(
 name|Name
 argument_list|,
-name|AttributeSet
+name|FunctionType
+operator|::
+name|get
+argument_list|(
+name|RetTy
+argument_list|,
+name|ArgTys
+argument_list|,
+name|false
+argument_list|)
+argument_list|,
 name|AttributeList
-argument_list|,
-name|Type
-operator|*
-name|RetTy
-argument_list|,
-operator|...
 argument_list|)
-name|LLVM_END_WITH_NULL
-decl_stmt|;
+return|;
+block|}
 comment|/// Same as above, but without the attributes.
+name|template
+operator|<
+name|typename
+operator|...
+name|ArgsTy
+operator|>
 name|Constant
-modifier|*
+operator|*
 name|getOrInsertFunction
 argument_list|(
-name|StringRef
+argument|StringRef Name
+argument_list|,
+argument|Type *RetTy
+argument_list|,
+argument|ArgsTy... Args
+argument_list|)
+block|{
+return|return
+name|getOrInsertFunction
+argument_list|(
 name|Name
 argument_list|,
-name|Type
-operator|*
+name|AttributeList
+block|{}
+argument_list|,
 name|RetTy
 argument_list|,
+name|Args
 operator|...
 argument_list|)
-name|LLVM_END_WITH_NULL
-decl_stmt|;
+return|;
+block|}
 comment|/// Look up the specified function in the module symbol table. If it does not
 comment|/// exist, return null.
 name|Function
@@ -1015,25 +1151,7 @@ name|bool
 name|AllowInternal
 argument_list|)
 decl|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|Module
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getGlobalVariable
-argument_list|(
-name|Name
-argument_list|,
-name|AllowInternal
-argument_list|)
-return|;
-block|}
+decl_stmt|;
 name|GlobalVariable
 modifier|*
 name|getGlobalVariable
@@ -1046,27 +1164,29 @@ name|AllowInternal
 init|=
 name|false
 parameter_list|)
-function_decl|;
-comment|/// Return the global variable in the module with the specified name, of
-comment|/// arbitrary type. This method returns null if a global with the specified
-comment|/// name is not found.
-name|GlobalVariable
-modifier|*
-name|getNamedGlobal
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|)
 block|{
 return|return
+name|static_cast
+operator|<
+specifier|const
+name|Module
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
 name|getGlobalVariable
 argument_list|(
 name|Name
 argument_list|,
-name|true
+name|AllowInternal
 argument_list|)
 return|;
 block|}
+comment|/// Return the global variable in the module with the specified name, of
+comment|/// arbitrary type. This method returns null if a global with the specified
+comment|/// name is not found.
 specifier|const
 name|GlobalVariable
 modifier|*
@@ -1078,8 +1198,32 @@ argument_list|)
 decl|const
 block|{
 return|return
+name|getGlobalVariable
+argument_list|(
+name|Name
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+name|GlobalVariable
+modifier|*
+name|getNamedGlobal
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+block|{
+return|return
 name|const_cast
 operator|<
+name|GlobalVariable
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
 name|Module
 operator|*
 operator|>
@@ -1091,6 +1235,7 @@ name|getNamedGlobal
 argument_list|(
 name|Name
 argument_list|)
+operator|)
 return|;
 block|}
 comment|/// Look up the specified global in the module symbol table.
@@ -2073,29 +2218,31 @@ block|}
 comment|/// @}
 comment|/// @name Convenience iterators
 comment|/// @{
-typedef|typedef
+name|using
+name|global_object_iterator
+init|=
 name|concat_iterator
 operator|<
 name|GlobalObject
-operator|,
+decl_stmt|,
 name|iterator
-operator|,
+decl_stmt|,
 name|global_iterator
-operator|>
-name|global_object_iterator
-expr_stmt|;
-typedef|typedef
+decl|>
+decl_stmt|;
+name|using
+name|const_global_object_iterator
+init|=
 name|concat_iterator
 operator|<
 specifier|const
 name|GlobalObject
-operator|,
+decl_stmt|,
 name|const_iterator
-operator|,
+decl_stmt|,
 name|const_global_iterator
-operator|>
-name|const_global_object_iterator
-expr_stmt|;
+decl|>
+decl_stmt|;
 name|iterator_range
 operator|<
 name|global_object_iterator
@@ -2184,6 +2331,145 @@ specifier|const
 block|{
 return|return
 name|global_objects
+argument_list|()
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|using
+name|global_value_iterator
+init|=
+name|concat_iterator
+operator|<
+name|GlobalValue
+decl_stmt|,
+name|iterator
+decl_stmt|,
+name|global_iterator
+decl_stmt|,
+name|alias_iterator
+decl_stmt|,
+name|ifunc_iterator
+decl|>
+decl_stmt|;
+name|using
+name|const_global_value_iterator
+init|=
+name|concat_iterator
+operator|<
+specifier|const
+name|GlobalValue
+decl_stmt|,
+name|const_iterator
+decl_stmt|,
+name|const_global_iterator
+decl_stmt|,
+name|const_alias_iterator
+decl_stmt|,
+name|const_ifunc_iterator
+decl|>
+decl_stmt|;
+name|iterator_range
+operator|<
+name|global_value_iterator
+operator|>
+name|global_values
+argument_list|()
+block|{
+return|return
+name|concat
+operator|<
+name|GlobalValue
+operator|>
+operator|(
+name|functions
+argument_list|()
+operator|,
+name|globals
+argument_list|()
+operator|,
+name|aliases
+argument_list|()
+operator|,
+name|ifuncs
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_global_value_iterator
+operator|>
+name|global_values
+argument_list|()
+specifier|const
+block|{
+return|return
+name|concat
+operator|<
+specifier|const
+name|GlobalValue
+operator|>
+operator|(
+name|functions
+argument_list|()
+operator|,
+name|globals
+argument_list|()
+operator|,
+name|aliases
+argument_list|()
+operator|,
+name|ifuncs
+argument_list|()
+operator|)
+return|;
+block|}
+name|global_value_iterator
+name|global_value_begin
+parameter_list|()
+block|{
+return|return
+name|global_values
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|global_value_iterator
+name|global_value_end
+parameter_list|()
+block|{
+return|return
+name|global_values
+argument_list|()
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_global_value_iterator
+name|global_value_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|global_values
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_global_value_iterator
+name|global_value_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|global_values
 argument_list|()
 operator|.
 name|end
@@ -2605,6 +2891,13 @@ function_decl|;
 comment|/// @}
 comment|/// @name Utility functions for querying Debug information.
 comment|/// @{
+comment|/// \brief Returns the Number of Register ParametersDwarf Version by checking
+comment|/// module flags.
+name|unsigned
+name|getNumberRegisterParameters
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Returns the Dwarf Version by checking module flags.
 name|unsigned
 name|getDwarfVersion
@@ -2810,13 +3103,17 @@ end_function
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_MODULE_H
+end_comment
 
 end_unit
 

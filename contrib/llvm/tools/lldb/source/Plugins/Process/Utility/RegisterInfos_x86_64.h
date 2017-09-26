@@ -339,7 +339,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{                                                                            \     #reg #i, nullptr, DR_SIZE,                                                 \         DR_OFFSET(i), eEncodingUint, eFormatHex,                               \                   {LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM,                   \                    LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM,                   \                    LLDB_INVALID_REGNUM },                                      \                    nullptr, nullptr, nullptr, 0                                \   }
+value|{                                                                            \     #reg #i, nullptr, DR_SIZE,                                                 \         DR_OFFSET(i), eEncodingUint, eFormatHex,                               \                   {LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM,                   \                    LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM,                   \                    lldb_##reg##i##_x86_64 },                                   \                    nullptr, nullptr, nullptr, 0                                \   }
 end_define
 
 begin_define

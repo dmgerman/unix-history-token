@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/MC/MCAsmParser.h - Abstract Asm Parser Interface ---*- C++ -*-===//
+comment|//===- llvm/MC/MCAsmParser.h - Abstract Asm Parser Interface ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,13 +46,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -70,13 +82,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCParser/AsmLexer.h"
+file|"llvm/MC/MCParser/MCAsmLexer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/SMLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -85,9 +115,6 @@ name|llvm
 block|{
 name|class
 name|MCAsmInfo
-decl_stmt|;
-name|class
-name|MCAsmLexer
 decl_stmt|;
 name|class
 name|MCAsmParserExtension
@@ -111,16 +138,7 @@ name|class
 name|MCTargetAsmParser
 decl_stmt|;
 name|class
-name|SMLoc
-decl_stmt|;
-name|class
-name|SMRange
-decl_stmt|;
-name|class
 name|SourceMgr
-decl_stmt|;
-name|class
-name|Twine
 decl_stmt|;
 name|class
 name|InlineAsmIdentifierInfo
@@ -244,33 +262,35 @@ name|MCAsmParser
 block|{
 name|public
 label|:
-typedef|typedef
-name|bool
-function_decl|(
-modifier|*
+name|using
 name|DirectiveHandler
-function_decl|)
-parameter_list|(
+init|=
+name|bool
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
 name|MCAsmParserExtension
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|StringRef
-parameter_list|,
+argument_list|,
 name|SMLoc
-parameter_list|)
-function_decl|;
-typedef|typedef
+argument_list|)
+decl_stmt|;
+name|using
+name|ExtensionDirectiveHandler
+init|=
 name|std
 operator|::
 name|pair
 operator|<
 name|MCAsmParserExtension
 operator|*
-operator|,
+decl_stmt|,
 name|DirectiveHandler
-operator|>
-name|ExtensionDirectiveHandler
-expr_stmt|;
+decl|>
+decl_stmt|;
 struct|struct
 name|MCPendingError
 block|{
@@ -290,29 +310,11 @@ block|}
 struct|;
 name|private
 label|:
-name|MCAsmParser
-argument_list|(
-specifier|const
-name|MCAsmParser
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|MCAsmParser
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|MCTargetAsmParser
 modifier|*
 name|TargetParser
+init|=
+name|nullptr
 decl_stmt|;
 name|unsigned
 name|ShowParsedOperands
@@ -327,6 +329,8 @@ argument_list|()
 expr_stmt|;
 name|bool
 name|HadError
+init|=
+name|false
 decl_stmt|;
 name|SmallVector
 operator|<
@@ -339,6 +343,27 @@ expr_stmt|;
 comment|/// Flag tracking whether any errors have been encountered.
 name|public
 label|:
+name|MCAsmParser
+argument_list|(
+specifier|const
+name|MCAsmParser
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|MCAsmParser
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MCAsmParser
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|virtual
 operator|~
 name|MCAsmParser
@@ -827,9 +852,7 @@ function_decl|;
 name|bool
 name|parseMany
 argument_list|(
-name|std
-operator|::
-name|function
+name|function_ref
 operator|<
 name|bool
 argument_list|()
@@ -857,35 +880,31 @@ parameter_list|)
 function_decl|;
 name|bool
 name|check
-argument_list|(
+parameter_list|(
 name|bool
 name|P
-argument_list|,
+parameter_list|,
 specifier|const
-name|llvm
-operator|::
 name|Twine
-operator|&
+modifier|&
 name|Msg
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|bool
 name|check
-argument_list|(
+parameter_list|(
 name|bool
 name|P
-argument_list|,
+parameter_list|,
 name|SMLoc
 name|Loc
-argument_list|,
+parameter_list|,
 specifier|const
-name|llvm
-operator|::
 name|Twine
-operator|&
+modifier|&
 name|Msg
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Parse an identifier or string (as a quoted identifier) and set \p
 comment|/// Res to the identifier contents.
 name|virtual
@@ -1093,13 +1112,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCPARSER_MCASMPARSER_H
+end_comment
 
 end_unit
 

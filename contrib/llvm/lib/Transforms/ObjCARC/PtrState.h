@@ -98,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/Support/Debug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Debug.h"
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_decl_stmt

@@ -550,57 +550,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-name|enum
-name|class
-name|InlineeLinesSignature
-range|:
-name|uint32_t
-block|{
-name|Normal
-block|,
-comment|// CV_INLINEE_SOURCE_LINE_SIGNATURE
-name|ExtraFiles
-comment|// CV_INLINEE_SOURCE_LINE_SIGNATURE_EX
-block|}
-decl_stmt|;
-struct|struct
-name|InlineeSourceLine
-block|{
-name|TypeIndex
-name|Inlinee
-decl_stmt|;
-comment|// ID of the function that was inlined.
-name|ulittle32_t
-name|FileID
-decl_stmt|;
-comment|// Offset into FileChecksums subsection.
-name|ulittle32_t
-name|SourceLineNum
-decl_stmt|;
-comment|// First line of inlined code.
-comment|// If extra files present:
-comment|//   ulittle32_t ExtraFileCount;
-comment|//   ulittle32_t Files[];
-block|}
-struct|;
-struct|struct
-name|FileChecksum
-block|{
-name|ulittle32_t
-name|FileNameOffset
-decl_stmt|;
-comment|// Byte offset of filename in global string table.
-name|uint8_t
-name|ChecksumSize
-decl_stmt|;
-comment|// Number of bytes of checksum.
-name|uint8_t
-name|ChecksumKind
-decl_stmt|;
-comment|// FileChecksumKind
-comment|// Checksum bytes follow.
-block|}
-struct|;
 block|}
 comment|// namespace codeview
 block|}

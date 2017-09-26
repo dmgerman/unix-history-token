@@ -444,6 +444,36 @@ name|LastprivateCopies
 expr_stmt|;
 name|SmallVector
 operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|4
+operator|>
+name|ReductionVars
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|4
+operator|>
+name|ReductionCopies
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|4
+operator|>
+name|ReductionOps
+expr_stmt|;
+name|SmallVector
+operator|<
 name|std
 operator|::
 name|pair
@@ -504,6 +534,14 @@ name|bool
 operator|>
 name|Priority
 expr_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Reductions
+operator|=
+name|nullptr
+expr_stmt|;
 name|unsigned
 name|NumberOfParts
 init|=
@@ -521,6 +559,418 @@ name|false
 decl_stmt|;
 block|}
 struct|;
+comment|/// Class intended to support codegen of all kind of the reduction clauses.
+name|class
+name|ReductionCodeGen
+block|{
+name|private
+label|:
+comment|/// Data required for codegen of reduction clauses.
+struct|struct
+name|ReductionData
+block|{
+comment|/// Reference to the original shared item.
+specifier|const
+name|Expr
+modifier|*
+name|Ref
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// Helper expression for generation of private copy.
+specifier|const
+name|Expr
+modifier|*
+name|Private
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// Helper expression for generation reduction operation.
+specifier|const
+name|Expr
+modifier|*
+name|ReductionOp
+init|=
+name|nullptr
+decl_stmt|;
+name|ReductionData
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|Ref
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|Private
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|ReductionOp
+argument_list|)
+operator|:
+name|Ref
+argument_list|(
+name|Ref
+argument_list|)
+operator|,
+name|Private
+argument_list|(
+name|Private
+argument_list|)
+operator|,
+name|ReductionOp
+argument_list|(
+argument|ReductionOp
+argument_list|)
+block|{}
+block|}
+struct|;
+comment|/// List of reduction-based clauses.
+name|SmallVector
+operator|<
+name|ReductionData
+operator|,
+literal|4
+operator|>
+name|ClausesData
+expr_stmt|;
+comment|/// List of addresses of original shared variables/expressions.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|LValue
+operator|,
+name|LValue
+operator|>
+operator|,
+literal|4
+operator|>
+name|SharedAddresses
+expr_stmt|;
+comment|/// Sizes of the reduction items in chars.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+operator|,
+literal|4
+operator|>
+name|Sizes
+expr_stmt|;
+comment|/// Base declarations for the reduction items.
+name|SmallVector
+operator|<
+specifier|const
+name|VarDecl
+operator|*
+operator|,
+literal|4
+operator|>
+name|BaseDecls
+expr_stmt|;
+comment|/// Emits lvalue for shared expresion.
+name|LValue
+name|emitSharedLValue
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+comment|/// Emits upper bound for shared expression (if array section).
+name|LValue
+name|emitSharedLValueUB
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+comment|/// Performs aggregate initialization.
+comment|/// \param N Number of reduction item in the common list.
+comment|/// \param PrivateAddr Address of the corresponding private item.
+comment|/// \param SharedLVal Address of the original shared variable.
+comment|/// \param DRD Declare reduction construct used for reduction item.
+name|void
+name|emitAggregateInitialization
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|,
+name|Address
+name|PrivateAddr
+parameter_list|,
+name|LValue
+name|SharedLVal
+parameter_list|,
+specifier|const
+name|OMPDeclareReductionDecl
+modifier|*
+name|DRD
+parameter_list|)
+function_decl|;
+name|public
+label|:
+name|ReductionCodeGen
+argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|Shareds
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|Privates
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|ReductionOps
+argument_list|)
+expr_stmt|;
+comment|/// Emits lvalue for a reduction item.
+comment|/// \param N Number of the reduction item.
+name|void
+name|emitSharedLValue
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|)
+function_decl|;
+comment|/// Emits the code for the variable-modified type, if required.
+comment|/// \param N Number of the reduction item.
+name|void
+name|emitAggregateType
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|)
+function_decl|;
+comment|/// Emits the code for the variable-modified type, if required.
+comment|/// \param N Number of the reduction item.
+comment|/// \param Size Size of the type in chars.
+name|void
+name|emitAggregateType
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|unsigned
+name|N
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Size
+argument_list|)
+decl_stmt|;
+comment|/// Performs initialization of the private copy for the reduction item.
+comment|/// \param N Number of the reduction item.
+comment|/// \param PrivateAddr Address of the corresponding private item.
+comment|/// \param DefaultInit Default initialization sequence that should be
+comment|/// performed if no reduction specific initialization is found.
+comment|/// \param SharedLVal Address of the original shared variable.
+name|void
+name|emitInitialization
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|unsigned
+name|N
+argument_list|,
+name|Address
+name|PrivateAddr
+argument_list|,
+name|LValue
+name|SharedLVal
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+name|CodeGenFunction
+operator|&
+argument_list|)
+operator|>
+name|DefaultInit
+argument_list|)
+decl_stmt|;
+comment|/// Returns true if the private copy requires cleanups.
+name|bool
+name|needCleanups
+parameter_list|(
+name|unsigned
+name|N
+parameter_list|)
+function_decl|;
+comment|/// Emits cleanup code for the reduction item.
+comment|/// \param N Number of the reduction item.
+comment|/// \param PrivateAddr Address of the corresponding private item.
+name|void
+name|emitCleanups
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|,
+name|Address
+name|PrivateAddr
+parameter_list|)
+function_decl|;
+comment|/// Adjusts \p PrivatedAddr for using instead of the original variable
+comment|/// address in normal operations.
+comment|/// \param N Number of the reduction item.
+comment|/// \param PrivateAddr Address of the corresponding private item.
+name|Address
+name|adjustPrivateAddress
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|,
+name|Address
+name|PrivateAddr
+parameter_list|)
+function_decl|;
+comment|/// Returns LValue for the reduction item.
+name|LValue
+name|getSharedLValue
+argument_list|(
+name|unsigned
+name|N
+argument_list|)
+decl|const
+block|{
+return|return
+name|SharedAddresses
+index|[
+name|N
+index|]
+operator|.
+name|first
+return|;
+block|}
+comment|/// Returns the size of the reduction item (in chars and total number of
+comment|/// elements in the item), or nullptr, if the size is a constant.
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|getSizes
+argument_list|(
+argument|unsigned N
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Sizes
+index|[
+name|N
+index|]
+return|;
+block|}
+comment|/// Returns the base declaration of the reduction item.
+specifier|const
+name|VarDecl
+modifier|*
+name|getBaseDecl
+argument_list|(
+name|unsigned
+name|N
+argument_list|)
+decl|const
+block|{
+return|return
+name|BaseDecls
+index|[
+name|N
+index|]
+return|;
+block|}
+comment|/// Returns true if the initialization of the reduction item uses initializer
+comment|/// from declare reduction construct.
+name|bool
+name|usesReductionInitializer
+argument_list|(
+name|unsigned
+name|N
+argument_list|)
+decl|const
+decl_stmt|;
+block|}
+empty_stmt|;
 name|class
 name|CGOpenMPRuntime
 block|{
@@ -564,7 +1014,7 @@ comment|/// \param OutlinedFn Outlined function value to be defined by this call
 comment|/// \param OutlinedFnID Outlined function ID value to be defined by this call.
 comment|/// \param IsOffloadEntry True if the outlined function is an offload entry.
 comment|/// \param CodeGen Lambda codegen specific to an accelerator device.
-comment|/// An oulined function may not be an entry if, e.g. the if clause always
+comment|/// An outlined function may not be an entry if, e.g. the if clause always
 comment|/// evaluates to false.
 name|virtual
 name|void
@@ -1899,7 +2349,31 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|emitParallelOrTeamsOutlinedFunction
+name|emitParallelOutlinedFunction
+argument_list|(
+argument|const OMPExecutableDirective&D
+argument_list|,
+argument|const VarDecl *ThreadIDVar
+argument_list|,
+argument|OpenMPDirectiveKind InnermostKind
+argument_list|,
+argument|const RegionCodeGenTy&CodeGen
+argument_list|)
+expr_stmt|;
+comment|/// \brief Emits outlined function for the specified OpenMP teams directive
+comment|/// \a D. This outlined function has type void(*)(kmp_int32 *ThreadID,
+comment|/// kmp_int32 BoundID, struct context_vars*).
+comment|/// \param D OpenMP directive.
+comment|/// \param ThreadIDVar Variable for thread id in the current OpenMP region.
+comment|/// \param InnermostKind Kind of innermost directive (for simple directives it
+comment|/// is a directive itself, for combined - its innermost directive).
+comment|/// \param CodeGen Code generation sequence for the \a D directive.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|emitTeamsOutlinedFunction
 argument_list|(
 argument|const OMPExecutableDirective&D
 argument_list|,
@@ -2241,30 +2715,50 @@ name|ScheduleKind
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
-name|void
-name|emitForDispatchInit
+comment|/// struct with the values to be passed to the dispatch runtime function
+struct|struct
+name|DispatchRTInput
+block|{
+comment|/// Loop lower bound
+name|llvm
+operator|::
+name|Value
+operator|*
+name|LB
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// Loop upper bound
+name|llvm
+operator|::
+name|Value
+operator|*
+name|UB
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// Chunk size specified using 'schedule' clause (nullptr if chunk
+comment|/// was not specified)
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Chunk
+operator|=
+name|nullptr
+expr_stmt|;
+name|DispatchRTInput
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|DispatchRTInput
 argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
-name|SourceLocation
-name|Loc
-argument_list|,
-specifier|const
-name|OpenMPScheduleTy
-operator|&
-name|ScheduleKind
-argument_list|,
-name|unsigned
-name|IVSize
-argument_list|,
-name|bool
-name|IVSigned
-argument_list|,
-name|bool
-name|Ordered
+name|llvm
+operator|::
+name|Value
+operator|*
+name|LB
 argument_list|,
 name|llvm
 operator|::
@@ -2277,14 +2771,30 @@ operator|::
 name|Value
 operator|*
 name|Chunk
-operator|=
-name|nullptr
 argument_list|)
-decl_stmt|;
-comment|/// \brief Call the appropriate runtime routine to initialize it before start
+operator|:
+name|LB
+argument_list|(
+name|LB
+argument_list|)
+operator|,
+name|UB
+argument_list|(
+name|UB
+argument_list|)
+operator|,
+name|Chunk
+argument_list|(
+argument|Chunk
+argument_list|)
+block|{}
+block|}
+struct|;
+comment|/// Call the appropriate runtime routine to initialize it before start
 comment|/// of loop.
-comment|///
-comment|/// Depending on the loop schedule, it is nesessary to call some runtime
+comment|/// This is used for non static scheduled types and when the ordered
+comment|/// clause is present on the loop construct.
+comment|/// Depending on the loop schedule, it is necessary to call some runtime
 comment|/// routine before start of the OpenMP loop to get the loop upper / lower
 comment|/// bounds \a LB and \a UB and stride \a ST.
 comment|///
@@ -2292,7 +2802,57 @@ comment|/// \param CGF Reference to current CodeGenFunction.
 comment|/// \param Loc Clang source location.
 comment|/// \param ScheduleKind Schedule kind, specified by the 'schedule' clause.
 comment|/// \param IVSize Size of the iteration variable in bits.
-comment|/// \param IVSigned Sign of the interation variable.
+comment|/// \param IVSigned Sign of the iteration variable.
+comment|/// \param Ordered true if loop is ordered, false otherwise.
+comment|/// \param DispatchValues struct containing llvm values for lower bound, upper
+comment|/// bound, and chunk expression.
+comment|/// For the default (nullptr) value, the chunk 1 will be used.
+comment|///
+name|virtual
+name|void
+name|emitForDispatchInit
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|OpenMPScheduleTy
+modifier|&
+name|ScheduleKind
+parameter_list|,
+name|unsigned
+name|IVSize
+parameter_list|,
+name|bool
+name|IVSigned
+parameter_list|,
+name|bool
+name|Ordered
+parameter_list|,
+specifier|const
+name|DispatchRTInput
+modifier|&
+name|DispatchValues
+parameter_list|)
+function_decl|;
+comment|/// \brief Call the appropriate runtime routine to initialize it before start
+comment|/// of loop.
+comment|///
+comment|/// This is used only in case of static schedule, when the user did not
+comment|/// specify a ordered clause on the loop construct.
+comment|/// Depending on the loop schedule, it is necessary to call some runtime
+comment|/// routine before start of the OpenMP loop to get the loop upper / lower
+comment|/// bounds \a LB and \a UB and stride \a ST.
+comment|///
+comment|/// \param CGF Reference to current CodeGenFunction.
+comment|/// \param Loc Clang source location.
+comment|/// \param ScheduleKind Schedule kind, specified by the 'schedule' clause.
+comment|/// \param IVSize Size of the iteration variable in bits.
+comment|/// \param IVSigned Sign of the iteration variable.
 comment|/// \param Ordered true if loop is ordered, false otherwise.
 comment|/// \param IL Address of the output variable in which the flag of the
 comment|/// last iteration is returned.
@@ -2301,7 +2861,7 @@ comment|/// number is returned.
 comment|/// \param UB Address of the output variable in which the upper iteration
 comment|/// number is returned.
 comment|/// \param ST Address of the output variable in which the stride value is
-comment|/// returned nesessary to generated the static_chunked scheduled loop.
+comment|/// returned necessary to generated the static_chunked scheduled loop.
 comment|/// \param Chunk Value of the chunk for the static_chunked scheduled loop.
 comment|/// For the default (nullptr) value, the chunk 1 will be used.
 comment|///
@@ -2356,7 +2916,7 @@ comment|/// \param CGF Reference to current CodeGenFunction.
 comment|/// \param Loc Clang source location.
 comment|/// \param SchedKind Schedule kind, specified by the 'dist_schedule' clause.
 comment|/// \param IVSize Size of the iteration variable in bits.
-comment|/// \param IVSigned Sign of the interation variable.
+comment|/// \param IVSigned Sign of the iteration variable.
 comment|/// \param Ordered true if loop is ordered, false otherwise.
 comment|/// \param IL Address of the output variable in which the flag of the
 comment|/// last iteration is returned.
@@ -2365,7 +2925,7 @@ comment|/// number is returned.
 comment|/// \param UB Address of the output variable in which the upper iteration
 comment|/// number is returned.
 comment|/// \param ST Address of the output variable in which the stride value is
-comment|/// returned nesessary to generated the static_chunked scheduled loop.
+comment|/// returned necessary to generated the static_chunked scheduled loop.
 comment|/// \param Chunk Value of the chunk for the static_chunked scheduled loop.
 comment|/// For the default (nullptr) value, the chunk 1 will be used.
 comment|///
@@ -2419,7 +2979,7 @@ comment|///
 comment|/// \param CGF Reference to current CodeGenFunction.
 comment|/// \param Loc Clang source location.
 comment|/// \param IVSize Size of the iteration variable in bits.
-comment|/// \param IVSigned Sign of the interation variable.
+comment|/// \param IVSigned Sign of the iteration variable.
 comment|///
 name|virtual
 name|void
@@ -2462,7 +3022,7 @@ comment|///          ident_t *loc, kmp_int32 tid, kmp_int32 *p_lastiter,
 comment|///          kmp_int[32|64] *p_lower, kmp_int[32|64] *p_upper,
 comment|///          kmp_int[32|64] *p_stride);
 comment|/// \param IVSize Size of the iteration variable in bits.
-comment|/// \param IVSigned Sign of the interation variable.
+comment|/// \param IVSigned Sign of the iteration variable.
 comment|/// \param IL Address of the output variable in which the flag of the
 comment|/// last iteration is returned.
 comment|/// \param LB Address of the output variable in which the lower iteration
@@ -2586,6 +3146,25 @@ argument_list|,
 argument|CodeGenFunction *CGF = nullptr
 argument_list|)
 expr_stmt|;
+comment|/// Creates artificial threadprivate variable with name \p Name and type \p
+comment|/// VarType.
+comment|/// \param VarType Type of the artificial threadprivate variable.
+comment|/// \param Name Name of the artificial threadprivate variable.
+name|virtual
+name|Address
+name|getAddrOfArtificialThreadPrivate
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|QualType
+name|VarType
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit flush of the variables specified in 'omp flush' directive.
 comment|/// \param Vars List of variables to flush.
 name|virtual
@@ -2771,6 +3350,105 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// Emits reduction function.
+comment|/// \param ArgsType Array type containing pointers to reduction variables.
+comment|/// \param Privates List of private copies for original reduction arguments.
+comment|/// \param LHSExprs List of LHS in \a ReductionOps reduction operations.
+comment|/// \param RHSExprs List of RHS in \a ReductionOps reduction operations.
+comment|/// \param ReductionOps List of reduction operations in form 'LHS binop RHS'
+comment|/// or 'operator binop(LHS, RHS)'.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|emitReductionFunction
+argument_list|(
+name|CodeGenModule
+operator|&
+name|CGM
+argument_list|,
+name|llvm
+operator|::
+name|Type
+operator|*
+name|ArgsType
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|Privates
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|LHSExprs
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|RHSExprs
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|ReductionOps
+argument_list|)
+expr_stmt|;
+comment|/// Emits single reduction combiner
+name|void
+name|emitSingleReductionCombiner
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|ReductionOp
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|PrivateRef
+parameter_list|,
+specifier|const
+name|DeclRefExpr
+modifier|*
+name|LHS
+parameter_list|,
+specifier|const
+name|DeclRefExpr
+modifier|*
+name|RHS
+parameter_list|)
+function_decl|;
+struct|struct
+name|ReductionOptionsTy
+block|{
+name|bool
+name|WithNowait
+decl_stmt|;
+name|bool
+name|SimpleReduction
+decl_stmt|;
+name|OpenMPDirectiveKind
+name|ReductionKind
+decl_stmt|;
+block|}
+struct|;
 comment|/// \brief Emit a code for reduction clause. Next code should be emitted for
 comment|/// reduction:
 comment|/// \code
@@ -2807,8 +3485,12 @@ comment|/// \param LHSExprs List of LHS in \a ReductionOps reduction operations.
 comment|/// \param RHSExprs List of RHS in \a ReductionOps reduction operations.
 comment|/// \param ReductionOps List of reduction operations in form 'LHS binop RHS'
 comment|/// or 'operator binop(LHS, RHS)'.
-comment|/// \param WithNowait true if parent directive has also nowait clause, false
-comment|/// otherwise.
+comment|/// \param Options List of options for reduction codegen:
+comment|///     WithNowait true if parent directive has also nowait clause, false
+comment|///     otherwise.
+comment|///     SimpleReduction Emit reduction operation only. Used for omp simd
+comment|///     directive on the host.
+comment|///     ReductionKind The kind of reduction to perform.
 name|virtual
 name|void
 name|emitReduction
@@ -2852,11 +3534,98 @@ operator|*
 operator|>
 name|ReductionOps
 argument_list|,
-name|bool
-name|WithNowait
+name|ReductionOptionsTy
+name|Options
+argument_list|)
+decl_stmt|;
+comment|/// Emit a code for initialization of task reduction clause. Next code
+comment|/// should be emitted for reduction:
+comment|/// \code
+comment|///
+comment|/// _task_red_item_t red_data[n];
+comment|/// ...
+comment|/// red_data[i].shar =&origs[i];
+comment|/// red_data[i].size = sizeof(origs[i]);
+comment|/// red_data[i].f_init = (void*)RedInit<i>;
+comment|/// red_data[i].f_fini = (void*)RedDest<i>;
+comment|/// red_data[i].f_comb = (void*)RedOp<i>;
+comment|/// red_data[i].flags =<Flag_i>;
+comment|/// ...
+comment|/// void* tg1 = __kmpc_task_reduction_init(gtid, n, red_data);
+comment|/// \endcode
+comment|///
+comment|/// \param LHSExprs List of LHS in \a Data.ReductionOps reduction operations.
+comment|/// \param RHSExprs List of RHS in \a Data.ReductionOps reduction operations.
+comment|/// \param Data Additional data for task generation like tiedness, final
+comment|/// state, list of privates, reductions etc.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|emitTaskReductionInit
+argument_list|(
+argument|CodeGenFunction&CGF
 argument_list|,
-name|bool
-name|SimpleReduction
+argument|SourceLocation Loc
+argument_list|,
+argument|ArrayRef<const Expr *> LHSExprs
+argument_list|,
+argument|ArrayRef<const Expr *> RHSExprs
+argument_list|,
+argument|const OMPTaskDataTy&Data
+argument_list|)
+expr_stmt|;
+comment|/// Required to resolve existing problems in the runtime. Emits threadprivate
+comment|/// variables to store the size of the VLAs/array sections for
+comment|/// initializer/combiner/finalizer functions + emits threadprivate variable to
+comment|/// store the pointer to the original reduction item for the custom
+comment|/// initializer defined by declare reduction construct.
+comment|/// \param RCG Allows to reuse an existing data for the reductions.
+comment|/// \param N Reduction item for which fixups must be emitted.
+name|virtual
+name|void
+name|emitTaskReductionFixups
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|ReductionCodeGen
+modifier|&
+name|RCG
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|)
+function_decl|;
+comment|/// Get the address of `void *` type of the privatue copy of the reduction
+comment|/// item specified by the \p SharedLVal.
+comment|/// \param ReductionsPtr Pointer to the reduction data returned by the
+comment|/// emitTaskReductionInit function.
+comment|/// \param SharedLVal Address of the original reduction item.
+name|virtual
+name|Address
+name|getTaskReductionItem
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ReductionsPtr
+argument_list|,
+name|LValue
+name|SharedLVal
 argument_list|)
 decl_stmt|;
 comment|/// \brief Emit code for 'taskwait' directive.
@@ -2923,7 +3692,7 @@ comment|/// \param OutlinedFn Outlined function value to be defined by this call
 comment|/// \param OutlinedFnID Outlined function ID value to be defined by this call.
 comment|/// \param IsOffloadEntry True if the outlined function is an offload entry.
 comment|/// \param CodeGen Code generation sequence for the \a D directive.
-comment|/// An oulined function may not be an entry if, e.g. the if clause always
+comment|/// An outlined function may not be an entry if, e.g. the if clause always
 comment|/// evaluates to false.
 name|virtual
 name|void
@@ -3040,7 +3809,7 @@ name|GD
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit the global \a GD if it is meaningful for the target. Returns
-comment|/// if it was emitted succesfully.
+comment|/// if it was emitted successfully.
 comment|/// \param GD Global to scan.
 name|virtual
 name|bool

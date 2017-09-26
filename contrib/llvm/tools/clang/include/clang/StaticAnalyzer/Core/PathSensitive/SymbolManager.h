@@ -192,7 +192,23 @@ name|R
 argument_list|(
 argument|r
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|r
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isValidTypeForSymbol
+argument_list|(
+name|r
+operator|->
+name|getValueType
+argument_list|()
+argument_list|)
+argument_list|)
+block|;   }
 specifier|const
 name|TypedValueRegion
 operator|*
@@ -368,7 +384,25 @@ name|SymbolTag
 argument_list|(
 argument|symbolTag
 argument_list|)
-block|{}
+block|{
+comment|// FIXME: 's' might be a nullptr if we're conducting invalidation
+comment|// that was caused by a destructor call on a temporary object,
+comment|// which has no statement associated with it.
+comment|// Due to this, we might be creating the same invalidation symbol for
+comment|// two different invalidation passes (for two different temporaries).
+name|assert
+argument_list|(
+name|lctx
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isValidTypeForSymbol
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+block|;   }
 specifier|const
 name|Stmt
 operator|*
@@ -561,7 +595,28 @@ name|R
 argument_list|(
 argument|r
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|parent
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|r
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isValidTypeForSymbol
+argument_list|(
+name|r
+operator|->
+name|getValueType
+argument_list|()
+argument_list|)
+argument_list|)
+block|;   }
 name|SymbolRef
 name|getParentSymbol
 argument_list|()
@@ -714,7 +769,12 @@ name|R
 argument_list|(
 argument|r
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|r
+argument_list|)
+block|;   }
 specifier|const
 name|SubRegion
 operator|*
@@ -891,7 +951,35 @@ name|Tag
 argument_list|(
 argument|tag
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|r
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|s
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isValidTypeForSymbol
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|LCtx
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|tag
+argument_list|)
+block|;     }
 specifier|const
 name|MemRegion
 operator|*
@@ -1124,7 +1212,23 @@ name|ToTy
 argument_list|(
 argument|To
 argument_list|)
-block|{ }
+block|{
+name|assert
+argument_list|(
+name|In
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isValidTypeForSymbol
+argument_list|(
+name|From
+argument_list|)
+argument_list|)
+block|;
+comment|// FIXME: GenericTaintChecker creates symbols of void type.
+comment|// Otherwise, 'To' should also be a valid type.
+block|}
 name|QualType
 name|getType
 argument_list|()
@@ -1276,7 +1380,23 @@ name|T
 argument_list|(
 argument|t
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|classof
+argument_list|(
+name|this
+argument_list|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isValidTypeForSymbol
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+block|;   }
 name|public
 operator|:
 comment|// FIXME: We probably need to make this out-of-line to avoid redundant
@@ -1358,7 +1478,7 @@ argument|const SymExpr *lhs
 argument_list|,
 argument|BinaryOperator::Opcode op
 argument_list|,
-argument|const llvm::APSInt& rhs
+argument|const llvm::APSInt&rhs
 argument_list|,
 argument|QualType t
 argument_list|)
@@ -1381,7 +1501,12 @@ name|RHS
 argument_list|(
 argument|rhs
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|lhs
+argument_list|)
+block|;   }
 name|void
 name|dumpToStream
 argument_list|(
@@ -1533,7 +1658,7 @@ name|public
 operator|:
 name|IntSymExpr
 argument_list|(
-argument|const llvm::APSInt& lhs
+argument|const llvm::APSInt&lhs
 argument_list|,
 argument|BinaryOperator::Opcode op
 argument_list|,
@@ -1560,7 +1685,12 @@ name|RHS
 argument_list|(
 argument|rhs
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|rhs
+argument_list|)
+block|;   }
 name|void
 name|dumpToStream
 argument_list|(
@@ -1737,7 +1867,17 @@ name|RHS
 argument_list|(
 argument|rhs
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|lhs
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|rhs
+argument_list|)
+block|;   }
 specifier|const
 name|SymExpr
 operator|*

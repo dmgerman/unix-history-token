@@ -260,7 +260,7 @@ name|exe_ctx
 argument_list|,
 name|lldb_private
 operator|::
-name|Error
+name|Status
 operator|&
 name|err
 argument_list|)

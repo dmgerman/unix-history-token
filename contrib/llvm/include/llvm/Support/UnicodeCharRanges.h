@@ -91,6 +91,13 @@ directive|include
 file|<algorithm>
 end_include
 
+begin_define
+define|#
+directive|define
+name|DEBUG_TYPE
+value|"unicode"
+end_define
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -98,10 +105,6 @@ block|{
 name|namespace
 name|sys
 block|{
-define|#
-directive|define
-name|DEBUG_TYPE
-value|"unicode"
 comment|/// \brief Represents a closed range of Unicode code points [Lower, Upper].
 struct|struct
 name|UnicodeCharRange
@@ -423,10 +426,6 @@ name|Ranges
 decl_stmt|;
 block|}
 empty_stmt|;
-undef|#
-directive|undef
-name|DEBUG_TYPE
-comment|// "unicode"
 block|}
 comment|// namespace sys
 block|}
@@ -434,6 +433,16 @@ end_decl_stmt
 
 begin_comment
 comment|// namespace llvm
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEBUG_TYPE
+end_undef
+
+begin_comment
+comment|// "unicode"
 end_comment
 
 begin_endif

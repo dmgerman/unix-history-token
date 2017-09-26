@@ -156,7 +156,7 @@ specifier|const
 name|char
 operator|*
 argument_list|,
-name|Error
+name|Status
 operator|&
 argument_list|)
 operator|=
@@ -170,7 +170,7 @@ name|Create
 argument_list|(
 argument|llvm::StringRef value_str
 argument_list|,
-argument|Error&error
+argument|Status&error
 argument_list|)
 block|;
 comment|//---------------------------------------------------------------------
@@ -199,7 +199,7 @@ argument|uint32_t dump_mask
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 argument|llvm::StringRef value
@@ -208,7 +208,7 @@ argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
 block|;
-name|Error
+name|Status
 name|SetValueFromString
 argument_list|(
 specifier|const

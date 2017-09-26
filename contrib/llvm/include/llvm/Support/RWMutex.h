@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/Config/llvm-config.h"
 end_include
 
 begin_include
@@ -98,6 +98,32 @@ name|explicit
 name|RWMutexImpl
 parameter_list|()
 function_decl|;
+comment|/// @}
+comment|/// @name Do Not Implement
+comment|/// @{
+name|RWMutexImpl
+argument_list|(
+specifier|const
+name|RWMutexImpl
+operator|&
+name|original
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|RWMutexImpl
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|RWMutexImpl
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+comment|/// @}
 comment|/// Releases and removes the lock
 comment|/// @brief Destructor
 operator|~
@@ -159,37 +185,12 @@ literal|0
 name|void
 modifier|*
 name|data_
+init|=
+name|nullptr
 decl_stmt|;
 comment|///< We don't know what the data will be
 endif|#
 directive|endif
-comment|/// @}
-comment|/// @name Do Not Implement
-comment|/// @{
-name|private
-label|:
-name|RWMutexImpl
-argument_list|(
-specifier|const
-name|RWMutexImpl
-operator|&
-name|original
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|RWMutexImpl
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-comment|/// @}
 block|}
 empty_stmt|;
 comment|/// SmartMutex - An R/W mutex with a compile time constant parameter that
@@ -223,6 +224,37 @@ name|SmartRWMutex
 argument_list|()
 operator|=
 expr|default
+block|;
+name|SmartRWMutex
+argument_list|(
+specifier|const
+name|SmartRWMutex
+operator|<
+name|mt_only
+operator|>
+operator|&
+name|original
+argument_list|)
+operator|=
+name|delete
+block|;
+name|SmartRWMutex
+operator|<
+name|mt_only
+operator|>
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|SmartRWMutex
+operator|<
+name|mt_only
+operator|>
+operator|&
+operator|)
+operator|=
+name|delete
 block|;
 name|bool
 name|lock_shared
@@ -359,31 +391,6 @@ return|return
 name|true
 return|;
 block|}
-name|private
-label|:
-name|SmartRWMutex
-argument_list|(
-specifier|const
-name|SmartRWMutex
-operator|<
-name|mt_only
-operator|>
-operator|&
-name|original
-argument_list|)
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|SmartRWMutex
-operator|<
-name|mt_only
-operator|>
-operator|&
-operator|)
-decl_stmt|;
 block|}
 empty_stmt|;
 typedef|typedef

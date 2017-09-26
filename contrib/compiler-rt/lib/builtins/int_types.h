@@ -147,10 +147,6 @@ name|udwords
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* MIPS64 issue: PR 20098 */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -164,19 +160,10 @@ name|defined
 argument_list|(
 name|__wasm__
 argument_list|)
-operator|)
-operator|&&
-expr|\
-operator|!
-operator|(
+operator|||
 name|defined
 argument_list|(
-name|__mips__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__clang__
+name|__mips64
 argument_list|)
 operator|)
 end_if

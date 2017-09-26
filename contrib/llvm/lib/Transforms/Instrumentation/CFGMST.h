@@ -51,6 +51,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_LIB_TRANSFORMS_INSTRUMENTATION_CFGMST_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_LIB_TRANSFORMS_INSTRUMENTATION_CFGMST_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -117,14 +129,17 @@ directive|include
 file|<vector>
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
+begin_define
 define|#
 directive|define
 name|DEBUG_TYPE
 value|"cfgmst"
+end_define
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
 comment|/// \brief An union-find based Minimum Spanning Tree for CFG
 comment|///
 comment|/// Implements a Union-find algorithm to compute Minimum Spanning Tree
@@ -1288,8 +1303,12 @@ argument_list|()
 block|;   }
 end_expr_stmt
 
+begin_comment
+unit|};  }
+comment|// end namespace llvm
+end_comment
+
 begin_undef
-unit|};
 undef|#
 directive|undef
 name|DEBUG_TYPE
@@ -1299,9 +1318,13 @@ begin_comment
 comment|// "cfgmst"
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-unit|}
-comment|// end namespace llvm
+comment|// LLVM_LIB_TRANSFORMS_INSTRUMENTATION_CFGMST_H
 end_comment
 
 end_unit

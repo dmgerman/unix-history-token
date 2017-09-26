@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -95,6 +101,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/STLUtils.h"
+end_include
 
 begin_decl_stmt
 name|class

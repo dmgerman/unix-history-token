@@ -83,33 +83,27 @@ range|:
 name|public
 name|HexagonShuffler
 block|{
-name|bool
-name|immext_present
-block|;
-name|bool
-name|duplex_present
-block|;
 name|public
 operator|:
 name|HexagonMCShuffler
 argument_list|(
-name|MCInstrInfo
-specifier|const
-operator|&
-name|MCII
+argument|MCContext&Context
 argument_list|,
-name|MCSubtargetInfo
-specifier|const
-operator|&
-name|STI
+argument|bool Fatal
 argument_list|,
-name|MCInst
-operator|&
-name|MCB
+argument|MCInstrInfo const&MCII
+argument_list|,
+argument|MCSubtargetInfo const&STI
+argument_list|,
+argument|MCInst&MCB
 argument_list|)
 operator|:
 name|HexagonShuffler
 argument_list|(
+argument|Context
+argument_list|,
+argument|Fatal
+argument_list|,
 argument|MCII
 argument_list|,
 argument|STI
@@ -123,19 +117,27 @@ block|;   }
 block|;
 name|HexagonMCShuffler
 argument_list|(
+argument|MCContext&Context
+argument_list|,
+argument|bool Fatal
+argument_list|,
 argument|MCInstrInfo const&MCII
 argument_list|,
 argument|MCSubtargetInfo const&STI
 argument_list|,
 argument|MCInst&MCB
 argument_list|,
-argument|const MCInst *AddMI
+argument|MCInst const&AddMI
 argument_list|,
-argument|bool bInsertAtFront = false
+argument|bool InsertAtFront
 argument_list|)
 operator|:
 name|HexagonShuffler
 argument_list|(
+argument|Context
+argument_list|,
+argument|Fatal
+argument_list|,
 argument|MCII
 argument_list|,
 argument|STI
@@ -147,7 +149,7 @@ name|MCB
 argument_list|,
 name|AddMI
 argument_list|,
-name|bInsertAtFront
+name|InsertAtFront
 argument_list|)
 block|;   }
 block|;
@@ -169,26 +171,6 @@ operator|&
 name|MCB
 argument_list|)
 block|;
-name|bool
-name|immextPresent
-argument_list|()
-specifier|const
-block|{
-return|return
-name|immext_present
-return|;
-block|}
-block|;
-name|bool
-name|duplexPresent
-argument_list|()
-specifier|const
-block|{
-return|return
-name|duplex_present
-return|;
-block|}
-block|;
 name|private
 operator|:
 name|void
@@ -204,9 +186,9 @@ name|init
 argument_list|(
 argument|MCInst&MCB
 argument_list|,
-argument|const MCInst *AddMI
+argument|MCInst const&AddMI
 argument_list|,
-argument|bool bInsertAtFront = false
+argument|bool InsertAtFront
 argument_list|)
 block|; }
 decl_stmt|;
@@ -214,6 +196,13 @@ comment|// Invocation of the shuffler.
 name|bool
 name|HexagonMCShuffle
 parameter_list|(
+name|MCContext
+modifier|&
+name|Context
+parameter_list|,
+name|bool
+name|Fatal
+parameter_list|,
 name|MCInstrInfo
 specifier|const
 modifier|&
@@ -231,6 +220,10 @@ function_decl|;
 name|bool
 name|HexagonMCShuffle
 parameter_list|(
+name|MCContext
+modifier|&
+name|Context
+parameter_list|,
 name|MCInstrInfo
 specifier|const
 modifier|&
@@ -244,16 +237,20 @@ parameter_list|,
 name|MCInst
 modifier|&
 parameter_list|,
-specifier|const
 name|MCInst
-modifier|*
+specifier|const
+modifier|&
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|unsigned
+name|bool
 name|HexagonMCShuffle
 argument_list|(
+name|MCContext
+operator|&
+name|Context
+argument_list|,
 name|MCInstrInfo
 specifier|const
 operator|&
@@ -263,10 +260,6 @@ name|MCSubtargetInfo
 specifier|const
 operator|&
 name|STI
-argument_list|,
-name|MCContext
-operator|&
-name|Context
 argument_list|,
 name|MCInst
 operator|&
@@ -281,6 +274,10 @@ argument_list|)
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

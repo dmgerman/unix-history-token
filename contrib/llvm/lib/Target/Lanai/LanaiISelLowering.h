@@ -391,6 +391,23 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|void
+name|computeKnownBitsForTargetNode
+argument_list|(
+argument|const SDValue Op
+argument_list|,
+argument|KnownBits&Known
+argument_list|,
+argument|const APInt&DemandedElts
+argument_list|,
+argument|const SelectionDAG&DAG
+argument_list|,
+argument|unsigned Depth =
+literal|0
+argument_list|)
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 name|SDValue
