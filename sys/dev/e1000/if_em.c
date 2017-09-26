@@ -2435,6 +2435,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|IFLIB_PNP_INFO
+argument_list|(
+name|pci
+argument_list|,
+name|em
+argument_list|,
+name|em_vendor_info_array
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|driver_t
@@ -2523,6 +2535,18 @@ argument_list|,
 literal|1
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|IFLIB_PNP_INFO
+argument_list|(
+name|pci
+argument_list|,
+name|igb
+argument_list|,
+name|igb_vendor_info_array
 argument_list|)
 expr_stmt|;
 end_expr_stmt

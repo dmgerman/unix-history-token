@@ -1550,7 +1550,7 @@ decl_stmt|;
 name|int
 name|device
 decl_stmt|;
-name|long
+name|intptr_t
 name|driver_private
 decl_stmt|;
 name|char

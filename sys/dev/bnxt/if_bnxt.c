@@ -1317,6 +1317,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|IFLIB_PNP_INFO
+argument_list|(
+name|pci
+argument_list|,
+name|bnxt
+argument_list|,
+name|bnxt_vendor_info_array
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|device_method_t

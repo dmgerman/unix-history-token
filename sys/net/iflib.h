@@ -523,6 +523,28 @@ name|PVID_END
 value|{0, 0, 0, 0, 0, 0, NULL}
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFLIB_PNP_DESCR
+value|"U32:vendor;U32:device;U32:subvendor;U32:subdevice;" \     "U32:revision;U32:class;D:human"
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFLIB_PNP_INFO
+parameter_list|(
+name|b
+parameter_list|,
+name|u
+parameter_list|,
+name|t
+parameter_list|)
+define|\
+value|MODULE_PNP_INFO(IFLIB_PNP_DESCR, b, u, t, sizeof(t[0]), nitems(t))
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
