@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 Xin Li<delphij@FreeBSD.org>. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, 2016 Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 RackTop Systems.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 Xin Li<delphij@FreeBSD.org>. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, 2016 Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 RackTop Systems.  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_comment
@@ -7253,7 +7253,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inputs:  * zc_name              name of the pool  * zc_cookie            scan func (pool_scan_func_t)  */
+comment|/*  * inputs:  * zc_name              name of the pool  * zc_cookie            scan func (pool_scan_func_t)  * zc_flags             scrub pause/resume flag (pool_scrub_cmd_t)  */
 end_comment
 
 begin_function
@@ -7298,6 +7298,40 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|zc
+operator|->
+name|zc_flags
+operator|>=
+name|POOL_SCRUB_FLAGS_END
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EINVAL
+argument_list|)
+operator|)
+return|;
+if|if
+condition|(
+name|zc
+operator|->
+name|zc_flags
+operator|==
+name|POOL_SCRUB_PAUSE
+condition|)
+name|error
+operator|=
+name|spa_scrub_pause_resume
+argument_list|(
+name|spa
+argument_list|,
+name|POOL_SCRUB_PAUSE
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|zc
