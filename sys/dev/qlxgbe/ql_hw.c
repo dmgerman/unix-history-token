@@ -11600,8 +11600,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EINVAL
 operator|)
 return|;
 block|}
