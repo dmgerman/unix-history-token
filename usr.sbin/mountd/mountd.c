@@ -9644,11 +9644,6 @@ name|dp
 decl_stmt|;
 name|dp
 operator|=
-operator|(
-expr|struct
-name|dirlist
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
