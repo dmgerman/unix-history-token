@@ -201,7 +201,7 @@ name|CRYPTO_NULL_HMAC
 block|,
 literal|"NULL-HMAC"
 block|,
-name|NULL_HMAC_KEY_LEN
+literal|0
 block|,
 name|NULL_HASH_LEN
 block|,

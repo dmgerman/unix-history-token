@@ -64,7 +64,7 @@ name|CRYPTO_RIPEMD160_HMAC
 block|,
 literal|"HMAC-RIPEMD-160"
 block|,
-name|RIPEMD160_HMAC_KEY_LEN
+name|RIPEMD160_HMAC_BLOCK_LEN
 block|,
 name|RIPEMD160_HASH_LEN
 block|,

@@ -89,7 +89,7 @@ name|CRYPTO_SHA1_HMAC
 block|,
 literal|"HMAC-SHA1"
 block|,
-name|SHA1_HMAC_KEY_LEN
+name|SHA1_HMAC_BLOCK_LEN
 block|,
 name|SHA1_HASH_LEN
 block|,
@@ -123,7 +123,7 @@ name|CRYPTO_SHA1_KPDK
 block|,
 literal|"Keyed SHA1"
 block|,
-name|NULL_HMAC_KEY_LEN
+literal|0
 block|,
 name|SHA1_KPDK_HASH_LEN
 block|,

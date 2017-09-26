@@ -64,7 +64,7 @@ name|CRYPTO_MD5_HMAC
 block|,
 literal|"HMAC-MD5"
 block|,
-name|MD5_HMAC_KEY_LEN
+name|MD5_HMAC_BLOCK_LEN
 block|,
 name|MD5_HASH_LEN
 block|,
@@ -121,7 +121,7 @@ name|CRYPTO_MD5_KPDK
 block|,
 literal|"Keyed MD5"
 block|,
-name|NULL_HMAC_KEY_LEN
+literal|0
 block|,
 name|MD5_KPDK_HASH_LEN
 block|,

@@ -2406,10 +2406,16 @@ literal|8
 expr_stmt|;
 if|if
 condition|(
+name|thash
+operator|->
+name|keysize
+operator|!=
+literal|0
+operator|&&
 name|sop
 operator|->
 name|mackeylen
-operator|!=
+operator|>
 name|thash
 operator|->
 name|keysize

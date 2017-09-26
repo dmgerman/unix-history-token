@@ -110,7 +110,7 @@ name|CRYPTO_SHA2_256_HMAC
 block|,
 literal|"HMAC-SHA2-256"
 block|,
-name|SHA2_256_HMAC_KEY_LEN
+name|SHA2_256_HMAC_BLOCK_LEN
 block|,
 name|SHA2_256_HASH_LEN
 block|,
@@ -167,7 +167,7 @@ name|CRYPTO_SHA2_384_HMAC
 block|,
 literal|"HMAC-SHA2-384"
 block|,
-name|SHA2_384_HMAC_KEY_LEN
+name|SHA2_384_HMAC_BLOCK_LEN
 block|,
 name|SHA2_384_HASH_LEN
 block|,
@@ -224,7 +224,7 @@ name|CRYPTO_SHA2_512_HMAC
 block|,
 literal|"HMAC-SHA2-512"
 block|,
-name|SHA2_512_HMAC_KEY_LEN
+name|SHA2_512_HMAC_BLOCK_LEN
 block|,
 name|SHA2_512_HASH_LEN
 block|,

@@ -752,7 +752,7 @@ expr_stmt|;
 if|if
 condition|(
 name|keylen
-operator|!=
+operator|>
 name|thash
 operator|->
 name|keysize
@@ -768,7 +768,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"%s: invalid keylength %d, algorithm %s requires "
-literal|"keysize %d\n"
+literal|"keysize less than %d\n"
 operator|,
 name|__func__
 operator|,
