@@ -10762,9 +10762,13 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|dp
+operator|->
+name|dp_dirp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
