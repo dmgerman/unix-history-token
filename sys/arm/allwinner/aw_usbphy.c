@@ -629,7 +629,10 @@ name|CLR4
 argument_list|(
 name|sc
 operator|->
-name|phy_ctrl
+name|pmu
+index|[
+name|phyno
+index|]
 argument_list|,
 name|PMU_UNK_H3
 argument_list|,
