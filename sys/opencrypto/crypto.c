@@ -1765,7 +1765,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|EINVAL
+name|EOPNOTSUPP
 expr_stmt|;
 block|}
 name|CRYPTO_DRIVER_UNLOCK
