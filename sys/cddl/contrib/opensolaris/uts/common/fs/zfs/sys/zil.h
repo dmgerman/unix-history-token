@@ -65,6 +65,9 @@ struct_decl|;
 struct_decl|struct
 name|dsl_dataset
 struct_decl|;
+struct_decl|struct
+name|lwb
+struct_decl|;
 comment|/*  * Intent log format:  *  * Each objset has its own intent log.  The log header (zil_header_t)  * for objset N's intent log is kept in the Nth object of the SPA's  * intent_log objset.  The log header points to a chain of log blocks,  * each of which contains log records (i.e., transactions) followed by  * a log block trailer (zil_trailer_t).  The format of a log record  * depends on the record (or transaction) type, but all records begin  * with a common structure that defines the type, length, and txg.  */
 comment|/*  * Intent log header - this on disk structure holds fields to manage  * the log.  All fields are 64 bit to easily handle cross architectures.  */
 typedef|typedef
@@ -194,6 +197,11 @@ name|x
 parameter_list|)
 value|(roundup(x, sizeof (uint64_t)))
 comment|/*  * Intent log transaction types and record structures  */
+define|#
+directive|define
+name|TX_COMMIT
+value|0
+comment|/* Commit marker (no on-disk state) */
 define|#
 directive|define
 name|TX_CREATE
@@ -773,6 +781,11 @@ name|char
 modifier|*
 name|dbuf
 parameter_list|,
+name|struct
+name|lwb
+modifier|*
+name|lwb
+parameter_list|,
 name|zio_t
 modifier|*
 name|zio
@@ -1098,16 +1111,30 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|zil_add_block
+name|zil_lwb_add_block
 parameter_list|(
-name|zilog_t
+name|struct
+name|lwb
 modifier|*
-name|zilog
+name|lwb
 parameter_list|,
 specifier|const
 name|blkptr_t
 modifier|*
 name|bp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zil_lwb_add_txg
+parameter_list|(
+name|struct
+name|lwb
+modifier|*
+name|lwb
+parameter_list|,
+name|uint64_t
+name|txg
 parameter_list|)
 function_decl|;
 specifier|extern

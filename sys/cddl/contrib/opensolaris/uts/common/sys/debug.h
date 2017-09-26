@@ -8,7 +8,7 @@ comment|/*  * Copyright 2014 Garrett D'Amore<garrett@damore.org>  *  * Copyright
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -221,6 +221,17 @@ parameter_list|)
 value|do { \ 	const TYPE __left = (TYPE)(LEFT); \ 	const TYPE __right = (TYPE)(RIGHT); \ 	if (!(__left OP __right)) \ 		assfail3(#LEFT " " #OP " " #RIGHT, \ 			(uintmax_t)__left, #OP, (uintmax_t)__right, \ 			__FILE__, __LINE__); \ _NOTE(CONSTCOND) } while (0)
 define|#
 directive|define
+name|VERIFY3B
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
+value|VERIFY3_IMPL(x, y, z, boolean_t)
+define|#
+directive|define
 name|VERIFY3S
 parameter_list|(
 name|x
@@ -264,6 +275,17 @@ directive|ifdef
 name|DEBUG
 define|#
 directive|define
+name|ASSERT3B
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
+value|VERIFY3_IMPL(x, y, z, boolean_t)
+define|#
+directive|define
 name|ASSERT3S
 parameter_list|(
 name|x
@@ -304,6 +326,17 @@ parameter_list|)
 value|VERIFY3_IMPL(x, ==, 0, uintmax_t)
 else|#
 directive|else
+define|#
+directive|define
+name|ASSERT3B
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
+value|((void)0)
 define|#
 directive|define
 name|ASSERT3S
