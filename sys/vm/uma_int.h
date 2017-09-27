@@ -413,7 +413,7 @@ name|uma_zone_t
 name|uk_slabzone
 decl_stmt|;
 comment|/* Slab zone backing us, if OFFPAGE */
-name|uint16_t
+name|uint32_t
 name|uk_pgoff
 decl_stmt|;
 comment|/* Offset to uma_slab struct */
