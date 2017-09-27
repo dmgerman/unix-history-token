@@ -1960,11 +1960,6 @@ operator|->
 name|no
 argument_list|)
 expr_stmt|;
-name|IPFW_WLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 name|SRV_OBJECT
 argument_list|(
 name|ch
@@ -1977,11 +1972,6 @@ name|kidx
 argument_list|)
 operator|=
 name|obj
-expr_stmt|;
-name|IPFW_WUNLOCK
-argument_list|(
-name|ch
-argument_list|)
 expr_stmt|;
 name|obj
 operator|->
@@ -2084,11 +2074,6 @@ operator|->
 name|kidx
 argument_list|)
 expr_stmt|;
-name|IPFW_WLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 name|obj
 operator|=
 name|SRV_OBJECT
@@ -2110,11 +2095,6 @@ name|kidx
 argument_list|)
 operator|=
 name|NULL
-expr_stmt|;
-name|IPFW_WUNLOCK
-argument_list|(
-name|ch
-argument_list|)
 expr_stmt|;
 name|ipfw_objhash_del
 argument_list|(
