@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/bhnd/bhnd_erom.h>
+file|<dev/bhnd/bhnd_eromvar.h>
 end_include
 
 begin_include
@@ -111,6 +111,11 @@ name|kobj_ops
 name|erom_ops
 decl_stmt|;
 comment|/**< compiled kobj opcache */
+name|struct
+name|bhnd_erom_iobus
+name|erom_io
+decl_stmt|;
+comment|/**< erom I/O callbacks */
 union|union
 block|{
 name|bhnd_erom_static_t

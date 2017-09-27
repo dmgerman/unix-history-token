@@ -51,10 +51,11 @@ modifier|*
 name|bhndb_pci_set_regwin_t
 function_decl|)
 parameter_list|(
-name|struct
-name|bhndb_pci_softc
-modifier|*
-name|sc
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|pci_dev
 parameter_list|,
 specifier|const
 name|struct
