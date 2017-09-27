@@ -324,9 +324,6 @@ parameter_list|,
 name|uintptr_t
 name|v
 parameter_list|,
-name|uintptr_t
-name|tid
-parameter_list|,
 name|int
 name|opts
 parameter_list|,
@@ -380,9 +377,6 @@ name|c
 parameter_list|,
 name|uintptr_t
 name|v
-parameter_list|,
-name|uintptr_t
-name|tid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -722,8 +716,6 @@ name|m
 parameter_list|,
 name|v
 parameter_list|,
-name|t
-parameter_list|,
 name|o
 parameter_list|,
 name|f
@@ -731,7 +723,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__mtx_lock_sleep(&(m)->mtx_lock, v, t, o, f, l)
+value|__mtx_lock_sleep(&(m)->mtx_lock, v, o, f, l)
 end_define
 
 begin_define
@@ -765,8 +757,6 @@ name|m
 parameter_list|,
 name|v
 parameter_list|,
-name|t
-parameter_list|,
 name|o
 parameter_list|,
 name|f
@@ -774,7 +764,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__mtx_lock_sleep(&(m)->mtx_lock, v, t)
+value|__mtx_lock_sleep(&(m)->mtx_lock, v)
 end_define
 
 begin_define
@@ -1050,7 +1040,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = MTX_UNOWNED;					\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(adaptive__acquire) ||\ 	    !_mtx_obtain_lock_fetch((mp),&_v, _tid)))			\ 		_mtx_lock_sleep((mp), _v, _tid, (opts), (file), (line));\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = MTX_UNOWNED;					\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(adaptive__acquire) ||\ 	    !_mtx_obtain_lock_fetch((mp),&_v, _tid)))			\ 		_mtx_lock_sleep((mp), _v, (opts), (file), (line));	\ } while (0)
 end_define
 
 begin_comment
