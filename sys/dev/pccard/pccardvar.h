@@ -235,7 +235,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_PNP_DESCR
-value|"D:human;V32:manufacturer;V32:product;Z:cisvendor;Z:cisproduct;"
+value|"D:#;V32:manufacturer;V32:product;Z:cisvendor;Z:cisproduct;"
 end_define
 
 begin_define
