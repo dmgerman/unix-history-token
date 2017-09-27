@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landon@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *   * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landon@freebsd.org>  * Copyright (c) 2017 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by Landon Fuller  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -92,6 +92,43 @@ include|#
 directive|include
 file|"bhnd_nexusvar.h"
 end_include
+
+begin_comment
+comment|/**  * Default bhnd_nexus implementation of BHND_BUS_GET_SERVICE_REGISTRY().  */
+end_comment
+
+begin_function
+specifier|static
+name|struct
+name|bhnd_service_registry
+modifier|*
+name|bhnd_nexus_get_service_registry
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{
+name|struct
+name|bcm_platform
+modifier|*
+name|bp
+init|=
+name|bcm_get_platform
+argument_list|()
+decl_stmt|;
+return|return
+operator|(
+operator|&
+name|bp
+operator|->
+name|services
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/**  * Default bhnd_nexus implementation of BHND_BUS_ACTIVATE_RESOURCE().  */
@@ -477,6 +514,41 @@ index|[]
 init|=
 block|{
 comment|/* bhnd interface */
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_get_service_registry
+argument_list|,
+name|bhnd_nexus_get_service_registry
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_register_provider
+argument_list|,
+name|bhnd_bus_generic_sr_register_provider
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_deregister_provider
+argument_list|,
+name|bhnd_bus_generic_sr_deregister_provider
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_retain_provider
+argument_list|,
+name|bhnd_bus_generic_sr_retain_provider
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_release_provider
+argument_list|,
+name|bhnd_bus_generic_sr_release_provider
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|bhnd_bus_activate_resource

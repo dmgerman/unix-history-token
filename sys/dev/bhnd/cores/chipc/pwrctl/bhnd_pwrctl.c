@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2016 Landon Fuller<landonf@FreeBSD.org>  * Copyright (c) 2010, Broadcom Corporation.  * All rights reserved.  *   * This file is derived from the siutils.c source distributed with the  * Asus RT-N16 firmware source code release.  *   * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: siutils.c,v 1.821.2.48 2011-02-11 20:59:28 Exp $  */
+comment|/*-  * Copyright (c) 2016 Landon Fuller<landonf@FreeBSD.org>  * Copyright (c) 2010 Broadcom Corporation.  * Copyright (c) 2017 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Landon Fuller under sponsorship from  * the FreeBSD Foundation.  *   * This file is derived from the siutils.c source distributed with the  * Asus RT-N16 firmware source code release.  *   * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: siutils.c,v 1.821.2.48 2011-02-11 20:59:28 Exp $  */
 end_comment
 
 begin_include
@@ -392,6 +392,9 @@ decl_stmt|;
 name|device_t
 name|hostb_dev
 decl_stmt|;
+name|device_t
+name|bus
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -446,6 +449,15 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bus
+operator|=
+name|device_get_parent
+argument_list|(
+name|sc
+operator|->
+name|chipc_dev
+argument_list|)
+expr_stmt|;
 comment|/* On devices that lack a slow clock source, HT must always be 	 * enabled. */
 name|hostb_class
 operator|=
@@ -453,7 +465,7 @@ name|BHND_DEVCLASS_INVALID
 expr_stmt|;
 name|hostb_dev
 operator|=
-name|bhnd_find_hostb_device
+name|bhnd_bus_find_hostb_device
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -638,6 +650,36 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Register as the bus PMU provider */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|bhnd_register_provider
+argument_list|(
+name|dev
+argument_list|,
+name|BHND_SERVICE_PMU
+argument_list|)
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"failed to register PMU with bus : %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
 return|return
 operator|(
 literal|0
@@ -695,6 +737,29 @@ condition|(
 operator|(
 name|error
 operator|=
+name|bhnd_deregister_provider
+argument_list|(
+name|dev
+argument_list|,
+name|BHND_SERVICE_ANY
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|PWRCTL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|bhnd_pwrctl_setclk
 argument_list|(
 name|sc
@@ -708,6 +773,11 @@ operator|(
 name|error
 operator|)
 return|;
+name|PWRCTL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH_SAFE
 argument_list|(
 argument|clkres
