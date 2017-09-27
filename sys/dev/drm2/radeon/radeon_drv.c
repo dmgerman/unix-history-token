@@ -2006,5 +2006,32 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_PNP_INFO
+argument_list|(
+literal|"U32:vendor;U32:device;P:#;D:human"
+argument_list|,
+name|vgapci
+argument_list|,
+name|radeonkms
+argument_list|,
+name|pciidlist
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pciidlist
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|,
+name|nitems
+argument_list|(
+name|pciidlist
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
