@@ -1545,6 +1545,9 @@ name|dtrace_pops_t
 name|dtrace_provider_ops
 init|=
 block|{
+operator|.
+name|dtps_provide
+operator|=
 operator|(
 name|void
 argument_list|(
@@ -1560,6 +1563,9 @@ argument_list|)
 operator|)
 name|dtrace_nullop
 block|,
+operator|.
+name|dtps_provide_module
+operator|=
 operator|(
 name|void
 argument_list|(
@@ -1575,6 +1581,9 @@ argument_list|)
 operator|)
 name|dtrace_nullop
 block|,
+operator|.
+name|dtps_enable
+operator|=
 operator|(
 name|void
 argument_list|(
@@ -1592,6 +1601,9 @@ argument_list|)
 operator|)
 name|dtrace_nullop
 block|,
+operator|.
+name|dtps_disable
+operator|=
 operator|(
 name|void
 argument_list|(
@@ -1609,6 +1621,9 @@ argument_list|)
 operator|)
 name|dtrace_nullop
 block|,
+operator|.
+name|dtps_suspend
+operator|=
 operator|(
 name|void
 argument_list|(
@@ -1626,6 +1641,9 @@ argument_list|)
 operator|)
 name|dtrace_nullop
 block|,
+operator|.
+name|dtps_resume
+operator|=
 operator|(
 name|void
 argument_list|(
@@ -1643,12 +1661,24 @@ argument_list|)
 operator|)
 name|dtrace_nullop
 block|,
+operator|.
+name|dtps_getargdesc
+operator|=
 name|NULL
 block|,
+operator|.
+name|dtps_getargval
+operator|=
 name|NULL
 block|,
+operator|.
+name|dtps_usermode
+operator|=
 name|NULL
 block|,
+operator|.
+name|dtps_destroy
+operator|=
 operator|(
 name|void
 argument_list|(
@@ -1665,7 +1695,7 @@ operator|*
 argument_list|)
 operator|)
 name|dtrace_nullop
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
