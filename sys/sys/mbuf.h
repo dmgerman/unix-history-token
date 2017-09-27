@@ -1143,7 +1143,7 @@ value|(M_FLAG_BITS M_FLAG_PROTOBITS)
 end_define
 
 begin_comment
-comment|/*  * Network interface cards are able to hash protocol fields (such as IPv4  * addresses and TCP port numbers) classify packets into flows.  These flows  * can then be used to maintain ordering while delivering packets to the OS  * via parallel input queues, as well as to provide a stateless affinity  * model.  NIC drivers can pass up the hash via m->m_pkthdr.flowid, and set  * m_flag fields to indicate how the hash should be interpreted by the  * network stack.  *  * Most NICs support RSS, which provides ordering and explicit affinity, and  * use the hash m_flag bits to indicate what header fields were covered by  * the hash.  M_HASHTYPE_OPAQUE and M_HASHTYPE_OPAQUE_HASH can be set by non-  * RSS cards or configurations that provide an opaque flow identifier, allowing  * for ordering and distribution without explicit affinity.  Additionally,  * M_HASHTYPE_OPAQUE_HASH indicates that the flow identifier has hash  * properties.  */
+comment|/*  * Network interface cards are able to hash protocol fields (such as IPv4  * addresses and TCP port numbers) classify packets into flows.  These flows  * can then be used to maintain ordering while delivering packets to the OS  * via parallel input queues, as well as to provide a stateless affinity  * model.  NIC drivers can pass up the hash via m->m_pkthdr.flowid, and set  * m_flag fields to indicate how the hash should be interpreted by the  * network stack.  *  * Most NICs support RSS, which provides ordering and explicit affinity, and  * use the hash m_flag bits to indicate what header fields were covered by  * the hash.  M_HASHTYPE_OPAQUE and M_HASHTYPE_OPAQUE_HASH can be set by non-  * RSS cards or configurations that provide an opaque flow identifier, allowing  * for ordering and distribution without explicit affinity.  Additionally,  * M_HASHTYPE_OPAQUE_HASH indicates that the flow identifier has hash  * properties.  *  * The meaning of the IPV6_EX suffix:  * "o  Home address from the home address option in the IPv6 destination  *     options header.  If the extension header is not present, use the Source  *     IPv6 Address.  *  o  IPv6 address that is contained in the Routing-Header-Type-2 from the  *     associated extension header.  If the extension header is not present,  *     use the Destination IPv6 Address."  * Quoted from:  * https://docs.microsoft.com/en-us/windows-hardware/drivers/network/rss-hashing-types#ndishashipv6ex  */
 end_comment
 
 begin_define
@@ -1244,10 +1244,6 @@ begin_comment
 comment|/* TCPv6 4-tuple + 							    * ext hdrs */
 end_comment
 
-begin_comment
-comment|/* Non-standard RSS hash types */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1257,17 +1253,6 @@ end_define
 
 begin_comment
 comment|/* IPv4 UDP 4-tuple*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_HASHTYPE_RSS_UDP_IPV4_EX
-value|M_HASHTYPE_HASH(8)
-end_define
-
-begin_comment
-comment|/* IPv4 UDP 4-tuple + 							    * ext hdrs */
 end_comment
 
 begin_define
