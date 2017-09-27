@@ -233,6 +233,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|sx
+name|__exclusive_cache_line
 name|sysctlmemlock
 decl_stmt|;
 end_decl_stmt
