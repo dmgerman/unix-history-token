@@ -465,7 +465,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Tag present in the kernelconf.tmlp template file. It's mandatory for those  * two strings to be the same. Otherwise you'll get into trouble.  */
+comment|/*  * Tag present in the kernconf.tmpl template file. It's mandatory for those  * two strings to be the same. Otherwise you'll get into trouble.  */
 end_comment
 
 begin_define
