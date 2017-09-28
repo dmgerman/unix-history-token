@@ -3297,6 +3297,10 @@ decl_stmt|,
 name|n
 decl_stmt|,
 name|N
+decl_stmt|,
+name|nowritecache
+init|=
+literal|0
 decl_stmt|;
 name|printf
 argument_list|(
@@ -3377,6 +3381,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|nowritecache
+condition|)
+continue|continue;
+if|if
+condition|(
 name|isreg
 condition|)
 name|error
@@ -3402,6 +3411,18 @@ name|error
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOTSUP
+condition|)
+name|nowritecache
+operator|=
+literal|1
+expr_stmt|;
+else|else
 name|err
 argument_list|(
 name|EX_IOERR
@@ -3409,6 +3430,7 @@ argument_list|,
 literal|"Flush error"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|N
 operator|+=
