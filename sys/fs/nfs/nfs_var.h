@@ -2546,7 +2546,14 @@ name|nfsrv_descript
 modifier|*
 parameter_list|,
 name|struct
-name|sockaddr_storage
+name|sockaddr_in
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr_in6
+modifier|*
+parameter_list|,
+name|sa_family_t
 modifier|*
 parameter_list|,
 name|int
