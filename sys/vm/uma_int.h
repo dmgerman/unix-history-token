@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/_bitset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_task.h>
 end_include
 
