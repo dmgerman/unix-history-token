@@ -7123,6 +7123,12 @@ name|OBJPR_NOTMAPPED
 operator|)
 operator|==
 literal|0
+operator|&&
+name|object
+operator|->
+name|ref_count
+operator|!=
+literal|0
 condition|)
 name|pmap_remove_all
 argument_list|(
@@ -7230,6 +7236,12 @@ name|OBJPR_NOTMAPPED
 operator|)
 operator|==
 literal|0
+operator|&&
+name|object
+operator|->
+name|ref_count
+operator|!=
+literal|0
 condition|)
 name|pmap_remove_write
 argument_list|(
@@ -7241,6 +7253,8 @@ condition|(
 name|p
 operator|->
 name|dirty
+operator|!=
+literal|0
 condition|)
 continue|continue;
 block|}
@@ -7252,6 +7266,12 @@ operator|&
 name|OBJPR_NOTMAPPED
 operator|)
 operator|==
+literal|0
+operator|&&
+name|object
+operator|->
+name|ref_count
+operator|!=
 literal|0
 condition|)
 name|pmap_remove_all
