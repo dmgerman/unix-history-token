@@ -3608,7 +3608,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *        Version 2  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * Version 1.2, Revision 8  * February 27, 2017  *  * NOTE: There are two versions of the table with the same signature --  * the client version and the server version. The common PlatformClass  * field is used to differentiate the two types of tables.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *        Version 2  *  * TCG Hardware Interface Table for TPM 1.2 Clients and Servers  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * Version 1.2, Revision 8  * February 27, 2017  *  * NOTE: There are two versions of the table with the same signature --  * the client version and the server version. The common PlatformClass  * field is used to differentiate the two types of tables.  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -3786,7 +3786,7 @@ value|(1<<3)
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * TPM2 - Trusted Platform Module (TPM) 2.0 Hardware Interface Table  *        Version 4  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * Version 1.2, Revision 8  * February 27, 2017  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * TPM2 - Trusted Platform Module (TPM) 2.0 Hardware Interface Table  *        Version 4  *  * TCG Hardware Interface Table for TPM 2.0 Clients and Servers  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * Version 1.2, Revision 8  * February 27, 2017  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -3830,8 +3830,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_TPM2_RESERVED1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_TPM2_START_METHOD
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_RESERVED3
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_RESERVED4
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_RESERVED5
+value|5
 end_define
 
 begin_define
@@ -3858,6 +3886,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_TPM2_RESERVED9
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_RESERVED10
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC
 value|11
 end_define
@@ -3866,8 +3908,15 @@ begin_comment
 comment|/* V1.2 Rev 8 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_RESERVED
+value|12
+end_define
+
 begin_comment
-comment|/* Trailer appears after any StartMethod subtables */
+comment|/* Optional trailer appears after any StartMethod subtables */
 end_comment
 
 begin_typedef
@@ -3875,6 +3924,12 @@ typedef|typedef
 struct|struct
 name|acpi_tpm2_trailer
 block|{
+name|UINT8
+name|MethodParameters
+index|[
+literal|12
+index|]
+decl_stmt|;
 name|UINT32
 name|MinimumLogLength
 decl_stmt|;

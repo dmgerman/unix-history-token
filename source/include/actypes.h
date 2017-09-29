@@ -1300,6 +1300,18 @@ name|ACPI_NSEC_PER_SEC
 value|1000000000L
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_TIME_AFTER
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((INT64)((b) - (a))< 0)
+end_define
+
 begin_comment
 comment|/* Owner IDs are used to track namespace nodes for selective deletion */
 end_comment

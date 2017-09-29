@@ -85,6 +85,13 @@ argument_list|,
 literal|"Display version information"
 argument_list|)
 expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vd"
+argument_list|,
+literal|"Display build date and time"
+argument_list|)
+expr_stmt|;
 name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"\nExtract binary ACPI tables from text acpidump output\n"
@@ -234,12 +241,52 @@ break|break;
 case|case
 literal|'v'
 case|:
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'^'
+case|:
 comment|/* -v: (Version): signon already emitted, just exit */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+case|case
+literal|'d'
+case|:
+name|printf
+argument_list|(
+name|ACPI_COMMON_BUILD_TIME
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -v%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+break|break;
 case|case
 literal|'h'
 case|:
@@ -316,7 +363,7 @@ name|AX_LIST_ALL
 case|:
 name|Status
 operator|=
-name|AxListTables
+name|AxListAllTables
 argument_list|(
 name|Filename
 argument_list|)

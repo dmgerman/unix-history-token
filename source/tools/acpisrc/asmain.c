@@ -812,6 +812,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-vd"
+argument_list|,
+literal|"Display build date and time"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-y"
 argument_list|,
 literal|"Suppress file overwrite prompts"
@@ -1041,6 +1048,19 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+literal|'d'
+case|:
+name|printf
+argument_list|(
+name|ACPI_COMMON_BUILD_TIME
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 default|default:
 name|printf
 argument_list|(

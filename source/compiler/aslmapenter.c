@@ -443,7 +443,7 @@ decl_stmt|;
 comment|/*      * Allocate a new info block and insert it into the global GPIO list      * sorted by both source device name and then the pin number. There is      * one block per pin.      */
 name|Buffer
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -626,7 +626,7 @@ decl_stmt|;
 comment|/*      * Allocate a new info block and insert it into the global Serial list      * sorted by both source device name and then the address.      */
 name|Buffer
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(

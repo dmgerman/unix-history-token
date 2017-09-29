@@ -117,7 +117,7 @@ block|{
 name|AcpiOsPrintf
 argument_list|(
 name|AE_PREFIX
-literal|"Evaluating Method or Node: [%4.4s]"
+literal|"Evaluating Method or Node: [%4.4s]\n"
 argument_list|,
 operator|(
 name|char
@@ -127,6 +127,30 @@ operator|&
 name|Name
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Be terse about loop timeouts */
+if|if
+condition|(
+operator|(
+name|AmlStatus
+operator|==
+name|AE_AML_LOOP_TIMEOUT
+operator|)
+operator|&&
+name|AcpiGbl_AbortLoopOnTimeout
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+name|AE_PREFIX
+literal|"Aborting loop after timeout\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 name|AcpiOsPrintf
 argument_list|(

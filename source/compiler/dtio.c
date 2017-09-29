@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dtcompiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acapps.h"
 end_include
 
@@ -278,7 +272,7 @@ condition|)
 block|{
 name|ReturnString
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 literal|1
 argument_list|)
@@ -414,7 +408,7 @@ literal|1
 expr_stmt|;
 name|ReturnString
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|Length
 operator|+

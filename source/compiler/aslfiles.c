@@ -19,12 +19,6 @@ directive|include
 file|"acapps.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"dtcompiler.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -402,7 +396,7 @@ condition|)
 block|{
 name|Pathname
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -426,7 +420,7 @@ block|}
 comment|/* Need a local copy of the prefix directory path */
 name|CommonPath
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -520,7 +514,7 @@ name|ConcatenatePaths
 label|:
 name|Pathname
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(

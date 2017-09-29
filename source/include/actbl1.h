@@ -134,7 +134,7 @@ value|"PDTT"
 end_define
 
 begin_comment
-comment|/* Processor Debug Trigger Table */
+comment|/* Platform Debug Trigger Table */
 end_comment
 
 begin_define
@@ -157,6 +157,17 @@ end_define
 
 begin_comment
 comment|/* Smart Battery Specification Table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_SDEV
+value|"SDEV"
+end_define
+
+begin_comment
+comment|/* Secure Devices table */
 end_comment
 
 begin_define
@@ -4089,7 +4100,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * PDTT - Processor Debug Trigger Table (ACPI 6.2)  *        Version 0  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * PDTT - Platform Debug Trigger Table (ACPI 6.2)  *        Version 0  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -4127,8 +4138,11 @@ typedef|typedef
 struct|struct
 name|acpi_pdtt_channel
 block|{
-name|UINT16
-name|SubChannelId
+name|UINT8
+name|SubchannelId
+decl_stmt|;
+name|UINT8
+name|Flags
 decl_stmt|;
 block|}
 name|ACPI_PDTT_CHANNEL
@@ -4136,28 +4150,21 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Mask and Flags for above */
+comment|/* Flags for above */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_PDTT_SUBCHANNEL_ID_MASK
-value|0x00FF
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_PDTT_RUNTIME_TRIGGER
-value|(1<<8)
+value|(1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PPTT_WAIT_COMPLETION
-value|(1<<9)
+value|(1<<1)
 end_define
 
 begin_comment
@@ -4484,6 +4491,166 @@ name|CriticalLevel
 decl_stmt|;
 block|}
 name|ACPI_TABLE_SBST
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*******************************************************************************  *  * SDEV - Secure Devices Table (ACPI 6.2)  *        Version 1  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_sdev
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+block|}
+name|ACPI_TABLE_SDEV
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_sdev_header
+block|{
+name|UINT8
+name|Type
+decl_stmt|;
+name|UINT8
+name|Flags
+decl_stmt|;
+name|UINT16
+name|Length
+decl_stmt|;
+block|}
+name|ACPI_SDEV_HEADER
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for subtable type above */
+end_comment
+
+begin_enum
+enum|enum
+name|AcpiSdevType
+block|{
+name|ACPI_SDEV_TYPE_NAMESPACE_DEVICE
+init|=
+literal|0
+block|,
+name|ACPI_SDEV_TYPE_PCIE_ENDPOINT_DEVICE
+init|=
+literal|1
+block|,
+name|ACPI_SDEV_TYPE_RESERVED
+init|=
+literal|2
+comment|/* 2 and greater are reserved */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Values for flags above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SDEV_HANDOFF_TO_UNSECURE_OS
+value|(1)
+end_define
+
+begin_comment
+comment|/*  * SDEV subtables  */
+end_comment
+
+begin_comment
+comment|/* 0: Namespace Device Based Secure Device Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_sdev_namespace
+block|{
+name|ACPI_SDEV_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|DeviceIdOffset
+decl_stmt|;
+name|UINT16
+name|DeviceIdLength
+decl_stmt|;
+name|UINT16
+name|VendorDataOffset
+decl_stmt|;
+name|UINT16
+name|VendorDataLength
+decl_stmt|;
+block|}
+name|ACPI_SDEV_NAMESPACE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 1: PCIe Endpoint Device Based Device Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_sdev_pcie
+block|{
+name|ACPI_SDEV_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|Segment
+decl_stmt|;
+name|UINT16
+name|StartBus
+decl_stmt|;
+name|UINT16
+name|PathOffset
+decl_stmt|;
+name|UINT16
+name|PathLength
+decl_stmt|;
+name|UINT16
+name|VendorDataOffset
+decl_stmt|;
+name|UINT16
+name|VendorDataLength
+decl_stmt|;
+block|}
+name|ACPI_SDEV_PCIE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 1a: PCIe Endpoint path entry */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_sdev_pcie_path
+block|{
+name|UINT8
+name|Device
+decl_stmt|;
+name|UINT8
+name|Function
+decl_stmt|;
+block|}
+name|ACPI_SDEV_PCIE_PATH
 typedef|;
 end_typedef
 

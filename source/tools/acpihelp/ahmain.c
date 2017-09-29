@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|AH_SUPPORTED_OPTIONS
-value|"adeghikmopstuv"
+value|"adeghikmopstuv^"
 end_define
 
 begin_if
@@ -107,6 +107,13 @@ argument_list|(
 literal|"-v"
 argument_list|,
 literal|"Display version information"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vd"
+argument_list|,
+literal|"Display build date and time"
 argument_list|)
 expr_stmt|;
 name|ACPI_USAGE_TEXT
@@ -422,11 +429,52 @@ case|case
 literal|'v'
 case|:
 comment|/* -v: (Version): signon already emitted, just exit */
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'^'
+case|:
+comment|/* -v: (Version) */
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
+case|case
+literal|'d'
+case|:
+name|printf
+argument_list|(
+name|ACPI_COMMON_BUILD_TIME
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -v%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+break|break;
 case|case
 literal|'h'
 case|:

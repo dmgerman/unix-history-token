@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dtcompiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"dtparser.y.h"
 end_include
 

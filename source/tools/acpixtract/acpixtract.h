@@ -143,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|AX_SUPPORTED_OPTIONS
-value|"ahlms:v"
+value|"ahlms:v^"
 end_define
 
 begin_define
@@ -157,7 +157,7 @@ begin_define
 define|#
 directive|define
 name|AX_TABLE_INFO_FORMAT
-value|"Acpi table [%4.4s] - %7u bytes written to %s\n"
+value|"  %4.4s - %7u bytes written (0x%8.8X) - %s\n"
 end_define
 
 begin_comment
@@ -199,6 +199,20 @@ end_define
 begin_comment
 comment|/* strlen ("DSDT @") */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AX_IS_TABLE_BLOCK_HEADER
+value|strstr (Gbl_LineBuffer, " @ ")
+end_define
+
+begin_define
+define|#
+directive|define
+name|AX_END_OF_HEX_DATA
+value|55
+end_define
 
 begin_typedef
 typedef|typedef
@@ -357,7 +371,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|AxListTables
+name|AxListAllTables
 parameter_list|(
 name|char
 modifier|*
@@ -369,22 +383,6 @@ end_function_decl
 begin_comment
 comment|/*  * axutils.c  */
 end_comment
-
-begin_function_decl
-name|size_t
-name|AxGetTableHeader
-parameter_list|(
-name|FILE
-modifier|*
-name|InputFile
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-name|OutputData
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|unsigned
@@ -444,7 +442,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|BOOLEAN
+name|AxIsFileAscii
+parameter_list|(
+name|FILE
+modifier|*
+name|Handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|AxIsHexDataLine
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
 name|AxIsEmptyLine
 parameter_list|(
 name|char
@@ -455,7 +473,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|BOOLEAN
 name|AxIsDataBlockHeader
 parameter_list|(
 name|void
@@ -465,7 +483,7 @@ end_function_decl
 
 begin_function_decl
 name|long
-name|AxProcessOneTextLine
+name|AxConvertAndWrite
 parameter_list|(
 name|FILE
 modifier|*
@@ -484,7 +502,7 @@ end_function_decl
 
 begin_function_decl
 name|size_t
-name|AxConvertLine
+name|AxConvertToBinary
 parameter_list|(
 name|char
 modifier|*
@@ -494,6 +512,18 @@ name|unsigned
 name|char
 modifier|*
 name|OutputData
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AxDumpTableHeader
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|Header
 parameter_list|)
 function_decl|;
 end_function_decl

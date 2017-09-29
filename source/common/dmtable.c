@@ -37,12 +37,6 @@ directive|include
 file|"aslcompiler.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"dtcompiler.h"
-end_include
-
 begin_comment
 comment|/* This module used for application-level code only */
 end_comment
@@ -381,13 +375,13 @@ literal|"IA-32 Corrected Machine Check"
 block|,
 literal|"IA-32 Non-Maskable Interrupt"
 block|,
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 block|,
 comment|/* 3 - Reserved */
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 block|,
 comment|/* 4 - Reserved */
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 block|,
 comment|/* 5 - Reserved */
 literal|"PCI Express Root Port AER"
@@ -621,7 +615,7 @@ block|,
 comment|/* ACPI_PMTT_TYPE_CONTROLLER */
 literal|"Physical Component (DIMM)"
 block|,
-comment|/* ACPI_PMTT_TYPE_DIMM  */
+comment|/* ACPI_PMTT_TYPE_DIMM */
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
@@ -645,7 +639,28 @@ block|,
 comment|/* ACPI_PPTT_TYPE_CACHE */
 literal|"ID"
 block|,
-comment|/* ACPI_PMTT_TYPE_ID  */
+comment|/* ACPI_PPTT_TYPE_ID */
+literal|"Unknown Subtable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmSdevSubnames
+index|[]
+init|=
+block|{
+literal|"Namespace Device"
+block|,
+comment|/* ACPI_SDEV_TYPE_NAMESPACE_DEVICE */
+literal|"PCIe Endpoint Device"
+block|,
+comment|/* ACPI_SDEV_TYPE_PCIE_ENDPOINT_DEVICE */
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
@@ -672,6 +687,45 @@ block|,
 literal|"GIC ITS Affinity"
 block|,
 comment|/* Acpi 6.2 */
+literal|"Unknown Subtable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmTpm2Subnames
+index|[]
+init|=
+block|{
+literal|"Illegal Start Method value"
+block|,
+literal|"Reserved"
+block|,
+literal|"ACPI Start Method"
+block|,
+literal|"Reserved"
+block|,
+literal|"Reserved"
+block|,
+literal|"Reserved"
+block|,
+literal|"Memory Mapped I/O"
+block|,
+literal|"Command Response Buffer"
+block|,
+literal|"Command Response Buffer with ACPI Start Method"
+block|,
+literal|"Reserved"
+block|,
+literal|"Reserved"
+block|,
+literal|"Command Response Buffer with ARM SMC"
+block|,
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
@@ -1168,6 +1222,18 @@ name|TemplatePcct
 block|}
 block|,
 block|{
+name|ACPI_SIG_PDTT
+block|,
+name|AcpiDmTableInfoPdtt
+block|,
+name|AcpiDmDumpPdtt
+block|,
+name|DtCompilePdtt
+block|,
+name|TemplatePdtt
+block|}
+block|,
+block|{
 name|ACPI_SIG_PMTT
 block|,
 name|NULL
@@ -1249,6 +1315,18 @@ block|,
 name|NULL
 block|,
 name|TemplateSdei
+block|}
+block|,
+block|{
+name|ACPI_SIG_SDEV
+block|,
+name|AcpiDmTableInfoSdev
+block|,
+name|AcpiDmDumpSdev
+block|,
+name|DtCompileSdev
+block|,
+name|TemplateSdev
 block|}
 block|,
 block|{
@@ -1340,9 +1418,9 @@ name|ACPI_SIG_TPM2
 block|,
 name|AcpiDmTableInfoTpm2
 block|,
-name|NULL
+name|AcpiDmDumpTpm2
 block|,
-name|NULL
+name|DtCompileTpm2
 block|,
 name|TemplateTpm2
 block|}
@@ -2444,6 +2522,9 @@ case|case
 name|ACPI_DMT_PPTT
 case|:
 case|case
+name|ACPI_DMT_SDEV
+case|:
+case|case
 name|ACPI_DMT_SRAT
 case|:
 case|case
@@ -2514,6 +2595,9 @@ name|ACPI_DMT_SIG
 case|:
 case|case
 name|ACPI_DMT_LPIT
+case|:
+case|case
+name|ACPI_DMT_TPM2
 case|:
 name|ByteLength
 operator|=
@@ -4287,6 +4371,41 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_SDEV
+case|:
+comment|/* SDEV subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_SDEV_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_SDEV_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmSdevSubnames
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_SRAT
 case|:
 comment|/* SRAT subtable types */
@@ -4315,6 +4434,41 @@ operator|*
 name|Target
 argument_list|,
 name|AcpiDmSratSubnames
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_TPM2
+case|:
+comment|/* TPM2 Start Method types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_TPM2_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_TPM2_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmTpm2Subnames
 index|[
 name|Temp8
 index|]

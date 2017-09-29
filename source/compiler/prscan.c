@@ -19,12 +19,6 @@ directive|include
 file|"aslcompiler.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"dtcompiler.h"
-end_include
-
 begin_comment
 comment|/*  * TBDs:  *  * No nested macros, maybe never  * Implement ASL "Include" as well as "#include" here?  */
 end_comment

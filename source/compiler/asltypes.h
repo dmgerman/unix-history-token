@@ -239,6 +239,9 @@ decl_stmt|;
 name|UINT8
 name|ShouldBeSerialized
 decl_stmt|;
+name|UINT8
+name|CreatesNamedObjects
+decl_stmt|;
 block|}
 name|ASL_METHOD_INFO
 typedef|;
@@ -620,7 +623,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* An entry in the exception list, one for each error/warning */
+comment|/*  * An entry in the exception list, one for each error/warning  * Note: SubError nodes would be treated with the same messageId and Level  * as the parent error node.  */
 end_comment
 
 begin_typedef
@@ -648,6 +651,11 @@ name|struct
 name|asl_error_msg
 modifier|*
 name|Next
+decl_stmt|;
+name|struct
+name|asl_error_msg
+modifier|*
+name|SubError
 decl_stmt|;
 name|char
 modifier|*

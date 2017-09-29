@@ -848,7 +848,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AE_AML_INFINITE_LOOP
+name|AE_AML_LOOP_TIMEOUT
 value|EXCEP_AML (0x0021)
 end_define
 
@@ -1613,9 +1613,9 @@ argument_list|)
 block|,
 name|EXCEP_TXT
 argument_list|(
-literal|"AE_AML_INFINITE_LOOP"
+literal|"AE_AML_LOOP_TIMEOUT"
 argument_list|,
-literal|"An apparent infinite AML While loop, method was aborted"
+literal|"An AML While loop exceeded the maximum execution time"
 argument_list|)
 block|,
 name|EXCEP_TXT

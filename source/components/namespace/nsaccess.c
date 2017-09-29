@@ -1535,6 +1535,10 @@ name|Object
 expr_stmt|;
 block|}
 block|}
+block|}
+comment|/* Special handling for the last segment (NumSegments == 0) */
+else|else
+block|{
 ifdef|#
 directive|ifdef
 name|ACPI_ASL_COMPILER
@@ -1555,16 +1559,13 @@ block|{
 name|ThisNode
 operator|->
 name|Flags
-operator||=
+operator|&=
+operator|~
 name|IMPLICIT_EXTERNAL
 expr_stmt|;
 block|}
 endif|#
 directive|endif
-block|}
-comment|/* Special handling for the last segment (NumSegments == 0) */
-else|else
-block|{
 comment|/*              * Sanity typecheck of the target object:              *              * If 1) This is the last segment (NumSegments == 0)              *    2) And we are looking for a specific type              *       (Not checking for TYPE_ANY)              *    3) Which is not an alias              *    4) Which is not a local type (TYPE_SCOPE)              *    5) And the type of target object is known (not TYPE_ANY)              *    6) And target object does not match what we are looking for              *              * Then we have a type mismatch. Just warn and ignore it.              */
 if|if
 condition|(

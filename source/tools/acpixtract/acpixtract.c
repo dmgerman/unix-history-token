@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: acpixtract - convert ascii ACPI tables to binary  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: acpixtract - Top level functions to convert ascii/hex  *                           ACPI tables to the original binary tables  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -12,22 +12,6 @@ include|#
 directive|include
 file|"acpixtract.h"
 end_include
-
-begin_comment
-comment|/* Local prototypes */
-end_comment
-
-begin_function_decl
-specifier|static
-name|BOOLEAN
-name|AxIsFileAscii
-parameter_list|(
-name|FILE
-modifier|*
-name|Handle
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AxExtractTables  *  * PARAMETERS:  InputPathname       - Filename for input acpidump file  *              Signature           - Requested ACPI signature to extract.  *                                    NULL means extract ALL tables.  *              MinimumInstances    - Min instances that are acceptable  *  * RETURN:      Status  *  * DESCRIPTION: Convert text ACPI tables to binary  *  ******************************************************************************/
@@ -224,10 +208,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
+comment|/* Don't abort */
 block|}
 if|if
 condition|(
@@ -262,6 +246,49 @@ name|InputFile
 argument_list|)
 condition|)
 block|{
+comment|/*          * Check up front if we have a header line of the form:          * DSDT @ 0xdfffd0c0 (10999 bytes)          */
+if|if
+condition|(
+name|AX_IS_TABLE_BLOCK_HEADER
+operator|&&
+operator|(
+name|State
+operator|==
+name|AX_STATE_EXTRACT_DATA
+operator|)
+condition|)
+block|{
+comment|/* End of previous table, start of new table */
+if|if
+condition|(
+name|ThisTableBytesWritten
+condition|)
+block|{
+name|printf
+argument_list|(
+name|AX_TABLE_INFO_FORMAT
+argument_list|,
+name|ThisSignature
+argument_list|,
+name|ThisTableBytesWritten
+argument_list|,
+name|ThisTableBytesWritten
+argument_list|,
+name|Gbl_OutputFilename
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Gbl_TableCount
+operator|--
+expr_stmt|;
+block|}
+name|State
+operator|=
+name|AX_STATE_FIND_HEADER
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|State
@@ -408,10 +435,20 @@ continue|continue;
 case|case
 name|AX_STATE_EXTRACT_DATA
 case|:
+if|if
+condition|(
+operator|!
+name|AxIsHexDataLine
+argument_list|()
+condition|)
+block|{
+continue|continue;
+comment|/* Toss any lines that are not raw hex data */
+block|}
 comment|/* Empty line or non-data line terminates the data block */
 name|BytesConverted
 operator|=
-name|AxProcessOneTextLine
+name|AxConvertAndWrite
 argument_list|(
 name|OutputFile
 argument_list|,
@@ -493,22 +530,9 @@ name|ThisSignature
 argument_list|,
 name|ThisTableBytesWritten
 argument_list|,
-name|Gbl_OutputFilename
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|Gbl_TableCount
-operator|>
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"\n%u binary ACPI tables extracted\n"
+name|ThisTableBytesWritten
 argument_list|,
-name|Gbl_TableCount
+name|Gbl_OutputFilename
 argument_list|)
 expr_stmt|;
 block|}
@@ -696,6 +720,49 @@ name|InputFile
 argument_list|)
 condition|)
 block|{
+comment|/*          * Check up front if we have a header line of the form:          * DSDT @ 0xdfffd0c0 (10999 bytes)          */
+if|if
+condition|(
+name|AX_IS_TABLE_BLOCK_HEADER
+operator|&&
+operator|(
+name|State
+operator|==
+name|AX_STATE_EXTRACT_DATA
+operator|)
+condition|)
+block|{
+comment|/* End of previous table, start of new table */
+if|if
+condition|(
+name|ThisTableBytesWritten
+condition|)
+block|{
+name|printf
+argument_list|(
+name|AX_TABLE_INFO_FORMAT
+argument_list|,
+name|ThisSignature
+argument_list|,
+name|ThisTableBytesWritten
+argument_list|,
+name|ThisTableBytesWritten
+argument_list|,
+name|Gbl_OutputFilename
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Gbl_TableCount
+operator|--
+expr_stmt|;
+block|}
+name|State
+operator|=
+name|AX_STATE_FIND_HEADER
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|State
@@ -758,10 +825,20 @@ continue|continue;
 case|case
 name|AX_STATE_EXTRACT_DATA
 case|:
+if|if
+condition|(
+operator|!
+name|AxIsHexDataLine
+argument_list|()
+condition|)
+block|{
+continue|continue;
+comment|/* Toss any lines that are not raw hex data */
+block|}
 comment|/* Empty line or non-data line terminates the data block */
 name|BytesConverted
 operator|=
-name|AxProcessOneTextLine
+name|AxConvertAndWrite
 argument_list|(
 name|OutputFile
 argument_list|,
@@ -833,6 +910,8 @@ name|ThisSignature
 argument_list|,
 name|ThisTableBytesWritten
 argument_list|,
+name|ThisTableBytesWritten
+argument_list|,
 name|Gbl_OutputFilename
 argument_list|)
 expr_stmt|;
@@ -867,12 +946,12 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AxListTables  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *  * RETURN:      Status  *  * DESCRIPTION: Display info for all ACPI tables found in input. Does not  *              perform an actual extraction of the tables.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AxListAllTables  *  * PARAMETERS:  InputPathname       - Filename for acpidump file  *  * RETURN:      Status  *  * DESCRIPTION: Display info for all ACPI tables found in input. Does not  *              perform an actual extraction of the tables.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|int
-name|AxListTables
+name|AxListAllTables
 parameter_list|(
 name|char
 modifier|*
@@ -883,9 +962,6 @@ name|FILE
 modifier|*
 name|InputFile
 decl_stmt|;
-name|size_t
-name|HeaderSize
-decl_stmt|;
 name|unsigned
 name|char
 name|Header
@@ -893,19 +969,16 @@ index|[
 literal|48
 index|]
 decl_stmt|;
-name|ACPI_TABLE_HEADER
-modifier|*
-name|TableHeader
+name|UINT32
+name|ByteCount
 init|=
-operator|(
-name|ACPI_TABLE_HEADER
-operator|*
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
-name|Header
+literal|0
+decl_stmt|;
+name|unsigned
+name|int
+name|State
+init|=
+name|AX_STATE_FIND_HEADER
 decl_stmt|;
 comment|/* Open input in text mode, output is in binary mode */
 name|InputFile
@@ -958,13 +1031,26 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Dump the headers for all tables found in the input file */
+comment|/* Info header */
 name|printf
 argument_list|(
-literal|"\nSignature  Length      Revision   OemId    OemTableId"
-literal|"   OemRevision CompilerId CompilerRevision\n\n"
+literal|"\n Signature  Length    Version Oem       Oem         "
+literal|"Oem         Compiler Compiler\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"                              Id        TableId     "
+literal|"RevisionId  Name     Revision\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" _________  __________  ____  ________  __________  "
+literal|"__________  _______  __________\n\n"
+argument_list|)
+expr_stmt|;
+comment|/* Dump the headers for all tables found in the input file */
 while|while
 condition|(
 name|fgets
@@ -977,215 +1063,112 @@ name|InputFile
 argument_list|)
 condition|)
 block|{
-comment|/* Ignore empty lines and lines that start with a space */
+comment|/* Ignore empty lines */
 if|if
 condition|(
 name|AxIsEmptyLine
 argument_list|(
 name|Gbl_LineBuffer
 argument_list|)
-operator|||
+condition|)
+block|{
+continue|continue;
+block|}
+comment|/*          * Check up front if we have a header line of the form:          * DSDT @ 0xdfffd0c0 (10999 bytes)          */
+if|if
+condition|(
+name|AX_IS_TABLE_BLOCK_HEADER
+operator|&&
 operator|(
-name|Gbl_LineBuffer
-index|[
-literal|0
-index|]
+name|State
 operator|==
-literal|' '
+name|AX_STATE_EXTRACT_DATA
 operator|)
 condition|)
 block|{
-continue|continue;
-block|}
-comment|/* Get the 36 byte header and display the fields */
-name|HeaderSize
+name|State
 operator|=
-name|AxGetTableHeader
-argument_list|(
-name|InputFile
-argument_list|,
-name|Header
-argument_list|)
+name|AX_STATE_FIND_HEADER
 expr_stmt|;
-if|if
+block|}
+switch|switch
 condition|(
-name|HeaderSize
-operator|<
-literal|16
+name|State
 condition|)
 block|{
-continue|continue;
-block|}
-comment|/* RSDP has an oddball signature and header */
+case|case
+name|AX_STATE_FIND_HEADER
+case|:
+name|ByteCount
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|strncmp
-argument_list|(
-name|TableHeader
-operator|->
-name|Signature
-argument_list|,
-literal|"RSD PTR "
-argument_list|,
-literal|8
-argument_list|)
+name|AxIsDataBlockHeader
+argument_list|()
 condition|)
 block|{
-name|AxCheckAscii
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|Header
-index|[
-literal|9
-index|]
-argument_list|,
-literal|6
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%7.4s                          \"%6.6s\"\n"
-argument_list|,
-literal|"RSDP"
-argument_list|,
-operator|&
-name|Header
-index|[
-literal|9
-index|]
-argument_list|)
-expr_stmt|;
-name|Gbl_TableCount
-operator|++
-expr_stmt|;
 continue|continue;
 block|}
-comment|/* Minimum size for table with standard header */
+name|State
+operator|=
+name|AX_STATE_EXTRACT_DATA
+expr_stmt|;
+continue|continue;
+case|case
+name|AX_STATE_EXTRACT_DATA
+case|:
+comment|/* Ignore any lines that don't look like a data line */
 if|if
 condition|(
-name|HeaderSize
-operator|<
+operator|!
+name|AxIsHexDataLine
+argument_list|()
+condition|)
+block|{
+continue|continue;
+comment|/* Toss any lines that are not raw hex data */
+block|}
+comment|/* Convert header to hex and display it */
+name|ByteCount
+operator|+=
+name|AxConvertToBinary
+argument_list|(
+name|Gbl_LineBuffer
+argument_list|,
+operator|&
+name|Header
+index|[
+name|ByteCount
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ByteCount
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|ACPI_TABLE_HEADER
 argument_list|)
 condition|)
 block|{
-continue|continue;
+name|AxDumpTableHeader
+argument_list|(
+name|Header
+argument_list|)
+expr_stmt|;
+name|State
+operator|=
+name|AX_STATE_FIND_HEADER
+expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|AcpiUtValidNameseg
-argument_list|(
-name|TableHeader
-operator|->
-name|Signature
-argument_list|)
-condition|)
-block|{
 continue|continue;
+default|default:
+break|break;
 block|}
-comment|/* Signature and Table length */
-name|Gbl_TableCount
-operator|++
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%7.4s   0x%8.8X"
-argument_list|,
-name|TableHeader
-operator|->
-name|Signature
-argument_list|,
-name|TableHeader
-operator|->
-name|Length
-argument_list|)
-expr_stmt|;
-comment|/* FACS has only signature and length */
-if|if
-condition|(
-name|ACPI_COMPARE_NAME
-argument_list|(
-name|TableHeader
-operator|->
-name|Signature
-argument_list|,
-literal|"FACS"
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* OEM IDs and Compiler IDs */
-name|AxCheckAscii
-argument_list|(
-name|TableHeader
-operator|->
-name|OemId
-argument_list|,
-literal|6
-argument_list|)
-expr_stmt|;
-name|AxCheckAscii
-argument_list|(
-name|TableHeader
-operator|->
-name|OemTableId
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-name|AxCheckAscii
-argument_list|(
-name|TableHeader
-operator|->
-name|AslCompilerId
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"     0x%2.2X    \"%6.6s\"  \"%8.8s\"   0x%8.8X"
-literal|"    \"%4.4s\"     0x%8.8X\n"
-argument_list|,
-name|TableHeader
-operator|->
-name|Revision
-argument_list|,
-name|TableHeader
-operator|->
-name|OemId
-argument_list|,
-name|TableHeader
-operator|->
-name|OemTableId
-argument_list|,
-name|TableHeader
-operator|->
-name|OemRevision
-argument_list|,
-name|TableHeader
-operator|->
-name|AslCompilerId
-argument_list|,
-name|TableHeader
-operator|->
-name|AslCompilerRevision
-argument_list|)
-expr_stmt|;
 block|}
 name|printf
 argument_list|(
@@ -1204,116 +1187,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AxIsFileAscii  *  * PARAMETERS:  Handle              - To open input file  *  * RETURN:      TRUE if file is entirely ASCII and printable  *  * DESCRIPTION: Verify that the input file is entirely ASCII.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|BOOLEAN
-name|AxIsFileAscii
-parameter_list|(
-name|FILE
-modifier|*
-name|Handle
-parameter_list|)
-block|{
-name|UINT8
-name|Byte
-decl_stmt|;
-comment|/* Read the entire file */
-while|while
-condition|(
-name|fread
-argument_list|(
-operator|&
-name|Byte
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-name|Handle
-argument_list|)
-operator|==
-literal|1
-condition|)
-block|{
-comment|/* Check for an ASCII character */
-if|if
-condition|(
-operator|!
-name|ACPI_IS_ASCII
-argument_list|(
-name|Byte
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|ErrorExit
-goto|;
-block|}
-comment|/* Ensure character is either printable or a "space" char */
-elseif|else
-if|if
-condition|(
-operator|!
-name|isprint
-argument_list|(
-name|Byte
-argument_list|)
-operator|&&
-operator|!
-name|isspace
-argument_list|(
-name|Byte
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|ErrorExit
-goto|;
-block|}
-block|}
-comment|/* File is OK (100% ASCII) */
-name|fseek
-argument_list|(
-name|Handle
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_SET
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-name|ErrorExit
-label|:
-name|printf
-argument_list|(
-literal|"File is binary (contains non-text or non-ascii characters)\n"
-argument_list|)
-expr_stmt|;
-name|fseek
-argument_list|(
-name|Handle
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_SET
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|FALSE
 operator|)
 return|;
 block|}
