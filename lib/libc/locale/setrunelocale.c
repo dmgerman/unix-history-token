@@ -348,6 +348,8 @@ operator|)
 return|;
 block|}
 comment|/* Range checking not needed, encoding length already checked before */
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -359,16 +361,13 @@ name|_PathLocale
 argument_list|,
 name|encoding
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|path
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
-literal|0
+name|errno
 operator|)
 return|;
 if|if
