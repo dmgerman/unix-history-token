@@ -26,13 +26,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<immintrin.h>
+file|<crypto/aesni/aesni_os.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<crypto/aesni/sha_sse.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<immintrin.h>
 end_include
 
 begin_function
