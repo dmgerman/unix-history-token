@@ -7738,6 +7738,8 @@ argument_list|,
 name|CTLTYPE_STRING
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sc
 argument_list|,
@@ -8314,6 +8316,7 @@ block|}
 end_function
 
 begin_struct
+specifier|static
 struct|struct
 name|mps_debug_string
 block|{
@@ -8418,6 +8421,7 @@ name|string
 decl_stmt|;
 name|struct
 name|sbuf
+modifier|*
 name|sbuf
 decl_stmt|;
 name|char
@@ -8465,10 +8469,11 @@ operator|(
 name|error
 operator|)
 return|;
+name|sbuf
+operator|=
 name|sbuf_new_for_sysctl
 argument_list|(
-operator|&
-name|sbuf
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -8485,7 +8490,6 @@ name|mps_debug
 expr_stmt|;
 name|sbuf_printf
 argument_list|(
-operator|&
 name|sbuf
 argument_list|,
 literal|"%#x"
@@ -8540,7 +8544,6 @@ name|flag
 condition|)
 name|sbuf_printf
 argument_list|(
-operator|&
 name|sbuf
 argument_list|,
 literal|",%s"
@@ -8555,13 +8558,11 @@ name|error
 operator|=
 name|sbuf_finish
 argument_list|(
-operator|&
 name|sbuf
 argument_list|)
 expr_stmt|;
 name|sbuf_delete
 argument_list|(
-operator|&
 name|sbuf
 argument_list|)
 expr_stmt|;
