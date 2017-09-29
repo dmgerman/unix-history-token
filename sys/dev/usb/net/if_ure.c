@@ -235,6 +235,15 @@ parameter_list|)
 value|{ USB_VPI(USB_VENDOR_##v, USB_PRODUCT_##v##_##p, i) }
 name|URE_DEV
 argument_list|(
+name|LENOVO
+argument_list|,
+name|RTL8153
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|URE_DEV
+argument_list|(
 name|REALTEK
 argument_list|,
 name|RTL8152
