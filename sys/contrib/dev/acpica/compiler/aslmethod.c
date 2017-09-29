@@ -661,6 +661,7 @@ break|break;
 case|case
 name|PARSEOP_METHODCALL
 case|:
+comment|/* Check for a recursive method call */
 if|if
 condition|(
 name|MethodInfo
@@ -682,6 +683,49 @@ name|Node
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|MethodInfo
+operator|->
+name|CreatesNamedObjects
+condition|)
+block|{
+comment|/*                  * This is an error, as it will fail at runtime on all ACPI                  * implementations. Any named object declarations will be                  * executed twice, causing failure the second time. Note,                  * this is independent of whether the method is declared                  * Serialized, because the same thread is attempting to                  * reenter the method, and this will always succeed.                  */
+name|AslDualParseOpError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_ILLEGAL_RECURSION
+argument_list|,
+name|Op
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|String
+argument_list|,
+name|ASL_MSG_FOUND_HERE
+argument_list|,
+name|MethodInfo
+operator|->
+name|Op
+argument_list|,
+name|MethodInfo
+operator|->
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Method does not create objects, issue a remark */
 name|AslError
 argument_list|(
 name|ASL_REMARK
@@ -697,6 +741,7 @@ operator|.
 name|ExternalName
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
@@ -1513,7 +1558,15 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Determine if we are creating a named object */
+comment|/* Determine if we are creating a named object within a method */
+if|if
+condition|(
+operator|!
+name|MethodInfo
+condition|)
+block|{
+return|return;
+block|}
 name|OpInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
@@ -1534,11 +1587,15 @@ operator|==
 name|AML_CLASS_NAMED_OBJECT
 condition|)
 block|{
-comment|/*          * If we have a named object created within a non-serialized method,          * emit a remark that the method should be serialized.          *          * Reason: If a thread blocks within the method for any reason, and          * another thread enters the method, the method will fail because an          * attempt will be made to create the same object twice.          */
+comment|/*          * 1) Mark the method as a method that creates named objects.          *          * 2) If the method is non-serialized, emit a remark that the method          * should be serialized.          *          * Reason: If a thread blocks within the method for any reason, and          * another thread enters the method, the method will fail because          * an attempt will be made to create the same object twice.          */
+name|MethodInfo
+operator|->
+name|CreatesNamedObjects
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
-name|MethodInfo
-operator|&&
 operator|!
 name|MethodInfo
 operator|->

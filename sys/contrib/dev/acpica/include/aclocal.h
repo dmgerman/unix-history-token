@@ -2009,10 +2009,10 @@ modifier|*
 name|PackageEnd
 decl_stmt|;
 comment|/* End of if/while block */
-name|UINT32
-name|LoopCount
+name|UINT64
+name|LoopTimeout
 decl_stmt|;
-comment|/* While() loop counter */
+comment|/* While() loop timeout */
 block|}
 name|ACPI_CONTROL_STATE
 typedef|;

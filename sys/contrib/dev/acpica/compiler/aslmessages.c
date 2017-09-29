@@ -553,6 +553,12 @@ literal|"Expected remark, warning, or error did not occur. Message ID:"
 block|,
 comment|/*    ASL_MSG_NULL_RESOURCE_TEMPLATE */
 literal|"Empty Resource Template (END_TAG only)"
+block|,
+comment|/*    ASL_MSG_FOUND_HERE */
+literal|"Original name creation/declaration below: "
+block|,
+comment|/*    ASL_MSG_ILLEGAL_RECURSION */
+literal|"Illegal recursive call to method that creates named objects"
 block|}
 decl_stmt|;
 end_decl_stmt
