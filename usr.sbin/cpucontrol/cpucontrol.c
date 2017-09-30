@@ -174,6 +174,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FLAG_N
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|OP_INVAL
 value|0x00
 end_define
@@ -1956,12 +1963,6 @@ operator|=
 literal|""
 expr_stmt|;
 comment|/* To keep gcc3 happy. */
-comment|/* 	 * Add all default data dirs to the list first. 	 */
-name|datadir_add
-argument_list|(
-name|DEFAULT_DATADIR
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1973,7 +1974,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:hi:m:uv"
+literal|"d:hi:m:nuv"
 argument_list|)
 operator|)
 operator|!=
@@ -2017,6 +2018,14 @@ expr_stmt|;
 name|cmdarg
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|flags
+operator||=
+name|FLAG_N
 expr_stmt|;
 break|break;
 case|case
@@ -2065,6 +2074,21 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|FLAG_N
+operator|)
+operator|==
+literal|0
+condition|)
+name|datadir_add
+argument_list|(
+name|DEFAULT_DATADIR
+argument_list|)
+expr_stmt|;
 name|dev
 operator|=
 name|argv
