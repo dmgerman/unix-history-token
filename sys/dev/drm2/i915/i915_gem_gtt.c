@@ -841,7 +841,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|PQ_INACTIVE
+name|PQ_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -1000,7 +1000,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|PQ_INACTIVE
+name|PQ_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
