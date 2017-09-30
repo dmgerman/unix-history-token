@@ -5283,11 +5283,7 @@ argument_list|(
 name|ifp
 argument_list|)
 operator|&
-operator|(
-name|IFCAP_RXCSUM
-operator||
 name|IFCAP_TXCSUM
-operator|)
 operator|)
 operator|!=
 literal|0
@@ -5297,6 +5293,10 @@ argument_list|(
 name|ifp
 argument_list|,
 name|CSUM_IP
+operator||
+name|CSUM_UDP
+operator||
+name|CSUM_TCP
 argument_list|,
 literal|0
 argument_list|)
@@ -5309,6 +5309,10 @@ argument_list|,
 literal|0
 argument_list|,
 name|CSUM_IP
+operator||
+name|CSUM_UDP
+operator||
+name|CSUM_TCP
 argument_list|)
 expr_stmt|;
 break|break;
