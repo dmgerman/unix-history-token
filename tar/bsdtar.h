@@ -651,7 +651,9 @@ block|,
 name|OPTION_VERSION
 block|,
 name|OPTION_XATTRS
-block|}
+block|,
+name|OPTION_ZSTD
+block|, }
 enum|;
 end_enum
 

@@ -183,6 +183,12 @@ name|archive_write_add_filter_xz
 block|}
 block|,
 block|{
+literal|"zstd"
+block|,
+name|archive_write_add_filter_zstd
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL

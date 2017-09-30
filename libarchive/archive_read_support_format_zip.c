@@ -2803,6 +2803,29 @@ case|:
 comment|/* WinZip AES extra data field. */
 if|if
 condition|(
+name|datasize
+operator|<
+literal|6
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_FILE_FORMAT
+argument_list|,
+literal|"Incomplete AES field"
+argument_list|)
+expr_stmt|;
+return|return
+name|ARCHIVE_FAILED
+return|;
+block|}
+if|if
+condition|(
 name|p
 index|[
 name|offset

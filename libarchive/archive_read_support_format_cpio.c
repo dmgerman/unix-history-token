@@ -3421,6 +3421,36 @@ operator|)
 operator|&
 literal|3
 expr_stmt|;
+comment|/* Make sure that the padded name length fits into size_t. */
+if|if
+condition|(
+operator|*
+name|name_pad
+operator|>
+name|SIZE_MAX
+operator|-
+operator|*
+name|namelength
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_FILE_FORMAT
+argument_list|,
+literal|"cpio archive has invalid namelength"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 comment|/* 	 * Note: entry_bytes_remaining is at least 64 bits and 	 * therefore guaranteed to be big enough for a 33-bit file 	 * size. 	 */
 name|cpio
 operator|->

@@ -904,6 +904,14 @@ literal|'J'
 block|}
 block|,
 block|{
+literal|"zstd"
+block|,
+literal|0
+block|,
+name|OPTION_ZSTD
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

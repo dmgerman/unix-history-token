@@ -1365,6 +1365,10 @@ operator|(
 name|NULL
 operator|)
 return|;
+if|if
+condition|(
+name|s
+condition|)
 name|wmemmove
 argument_list|(
 name|as

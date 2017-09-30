@@ -575,7 +575,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Enter working directory and return working pathname of archive_entry.  * If a pointer to an integer is provided and its value is below zero  * open a file descriptor on this pahtname.  */
+comment|/*  * Enter working directory and return working pathname of archive_entry.  * If a pointer to an integer is provided and its value is below zero  * open a file descriptor on this pathname.  */
 end_comment
 
 begin_function

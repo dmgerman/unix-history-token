@@ -287,6 +287,12 @@ literal|"xz"
 block|}
 block|,
 block|{
+literal|".zst"
+block|,
+literal|"zstd"
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -483,6 +489,12 @@ block|{
 literal|".tZ"
 block|,
 literal|".tar.Z"
+block|}
+block|,
+block|{
+literal|".tzst"
+block|,
+literal|".tar.zst"
 block|}
 block|,
 block|{

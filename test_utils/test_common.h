@@ -2269,6 +2269,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Return true if this platform can run the "zstd" program. */
+end_comment
+
+begin_function_decl
+name|int
+name|canZstd
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Return true if this platform can run the "lzip" program. */
 end_comment
 

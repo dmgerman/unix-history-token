@@ -290,6 +290,13 @@ name|MTREE_HASHTABLE_SIZE
 value|1024
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_LINE_LEN
+value|(1024 * 1024)
+end_define
+
 begin_struct
 struct|struct
 name|mtree_option
@@ -1546,6 +1553,19 @@ decl_stmt|;
 name|ssize_t
 name|tested
 decl_stmt|;
+comment|/* 		 * Place an arbitrary limit on the line length. 		 * mtree is almost free-form input and without line length limits, 		 * it can consume a lot of memory. 		 */
+if|if
+condition|(
+name|len
+operator|>=
+name|MAX_LINE_LEN
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* Increase reading bytes if it is not enough to at least 		 * new two lines. */
 if|if
 condition|(

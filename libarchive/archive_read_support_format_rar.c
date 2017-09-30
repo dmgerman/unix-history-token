@@ -7663,10 +7663,10 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/*        * Do not increment filename_size here as the computations below        * add the space for the terminating NUL explicitly.        */
 name|filename
 index|[
 name|filename_size
-operator|++
 index|]
 operator|=
 literal|'\0'
