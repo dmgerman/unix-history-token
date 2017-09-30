@@ -619,6 +619,10 @@ argument_list|(
 name|mdname
 argument_list|)
 expr_stmt|;
+name|mdsize
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Can't set these to NULL.  They may be passed to the 	 * respective programs without modification.  I.e., we may not 	 * receive any command-line options which will caused them to 	 * be modified. 	 */
 name|mdconfig_arg
 operator|=
