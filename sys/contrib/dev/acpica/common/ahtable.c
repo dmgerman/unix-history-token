@@ -316,12 +316,6 @@ literal|"Platform Communications Channel Table"
 block|}
 block|,
 block|{
-name|ACPI_SIG_PDTT
-block|,
-literal|"Platform Debug Trigger Table"
-block|}
-block|,
-block|{
 name|ACPI_SIG_PMTT
 block|,
 literal|"Platform Memory Topology Table"
@@ -367,12 +361,6 @@ block|{
 name|ACPI_SIG_SDEI
 block|,
 literal|"Software Delegated Exception Interface Table"
-block|}
-block|,
-block|{
-name|ACPI_SIG_SDEV
-block|,
-literal|"Secure Devices table"
 block|}
 block|,
 block|{

@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20170929
+value|0x20170831
 end_define
 
 begin_include
@@ -563,7 +563,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Maximum timeout for While() loop iterations before forced method abort.  * This mechanism is intended to prevent infinite loops during interpreter  * execution within a host kernel.  */
+comment|/*  * Maximum number of While() loop iterations before forced method abort.  * This mechanism is intended to prevent infinite loops during interpreter  * execution within a host kernel.  */
 end_comment
 
 begin_expr_stmt
@@ -573,7 +573,7 @@ name|UINT32
 argument_list|,
 name|AcpiGbl_MaxLoopIterations
 argument_list|,
-name|ACPI_MAX_LOOP_TIMEOUT
+name|ACPI_MAX_LOOP_COUNT
 argument_list|)
 expr_stmt|;
 end_expr_stmt

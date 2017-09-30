@@ -457,7 +457,7 @@ block|}
 else|else
 block|{
 comment|/*                      * The name already exists in this scope                      * But continue processing the elements                      */
-name|AslDualParseOpError
+name|AslError
 argument_list|(
 name|ASL_ERROR
 argument_list|,
@@ -472,20 +472,6 @@ operator|.
 name|Value
 operator|.
 name|String
-argument_list|,
-name|ASL_MSG_FOUND_HERE
-argument_list|,
-name|Node
-operator|->
-name|Op
-argument_list|,
-name|Node
-operator|->
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ExternalName
 argument_list|)
 expr_stmt|;
 block|}
@@ -602,7 +588,7 @@ name|AE_ALREADY_EXISTS
 condition|)
 block|{
 comment|/* Actual node causing the error was saved in ParentMethod */
-name|AslDualParseOpError
+name|AslError
 argument_list|(
 name|ASL_ERROR
 argument_list|,
@@ -623,20 +609,6 @@ operator|->
 name|Asl
 operator|.
 name|Namepath
-argument_list|,
-name|ASL_MSG_FOUND_HERE
-argument_list|,
-name|Node
-operator|->
-name|Op
-argument_list|,
-name|Node
-operator|->
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ExternalName
 argument_list|)
 expr_stmt|;
 return|return
@@ -1811,7 +1783,7 @@ name|PARSEOP_EXTERNAL
 operator|)
 condition|)
 block|{
-comment|/*                  * Allow one create on an object or segment that was                  * previously declared External only if WalkState->OwnerId and                  * Node->OwnerId are different (meaning that the current WalkState                  * and the Node are in different tables).                  */
+comment|/*                  * Allow one create on an object or segment that was                  * previously declared External only if WalkState->OwnerId and                  * Node->OwnerId are found in different tables (meaning that                  * they have differnt OwnerIds).                  */
 name|Node
 operator|->
 name|Flags
@@ -1887,7 +1859,7 @@ name|IMPLICIT_EXTERNAL
 operator|)
 condition|)
 block|{
-name|AslDualParseOpError
+name|AslError
 argument_list|(
 name|ASL_ERROR
 argument_list|,
@@ -1895,20 +1867,6 @@ name|ASL_MSG_NAME_EXISTS
 argument_list|,
 name|Op
 argument_list|,
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ExternalName
-argument_list|,
-name|ASL_MSG_FOUND_HERE
-argument_list|,
-name|Node
-operator|->
-name|Op
-argument_list|,
-name|Node
-operator|->
 name|Op
 operator|->
 name|Asl
@@ -1974,7 +1932,7 @@ operator|->
 name|OwnerId
 condition|)
 block|{
-name|AslDualParseOpError
+name|AslError
 argument_list|(
 name|ASL_ERROR
 argument_list|,
@@ -1982,20 +1940,6 @@ name|ASL_MSG_NAME_EXISTS
 argument_list|,
 name|Op
 argument_list|,
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ExternalName
-argument_list|,
-name|ASL_MSG_FOUND_HERE
-argument_list|,
-name|Node
-operator|->
-name|Op
-argument_list|,
-name|Node
-operator|->
 name|Op
 operator|->
 name|Asl
@@ -2107,7 +2051,7 @@ block|}
 else|else
 block|{
 comment|/* Valid error, object already exists */
-name|AslDualParseOpError
+name|AslError
 argument_list|(
 name|ASL_ERROR
 argument_list|,
@@ -2115,20 +2059,6 @@ name|ASL_MSG_NAME_EXISTS
 argument_list|,
 name|Op
 argument_list|,
-name|Op
-operator|->
-name|Asl
-operator|.
-name|ExternalName
-argument_list|,
-name|ASL_MSG_FOUND_HERE
-argument_list|,
-name|Node
-operator|->
-name|Op
-argument_list|,
-name|Node
-operator|->
 name|Op
 operator|->
 name|Asl

@@ -46,14 +46,6 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-name|ACPI_COMMON_SIGNON
-argument_list|(
-name|ASL_COMPILER_NAME
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"%s\n\n"
 argument_list|,
 name|ASL_COMPLIANCE

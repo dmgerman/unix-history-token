@@ -336,7 +336,7 @@ condition|)
 block|{
 name|NewString
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|StringLength
 operator|+
@@ -630,7 +630,7 @@ condition|)
 block|{
 name|NewString
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|StringLength
 operator|+

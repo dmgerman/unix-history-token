@@ -110,7 +110,7 @@ argument_list|)
 expr_stmt|;
 name|CommentString
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -151,7 +151,7 @@ condition|)
 block|{
 name|FinalLineToken
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -288,7 +288,7 @@ block|}
 block|}
 name|FinalLineToken
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -356,7 +356,7 @@ block|{
 comment|/*             * If this is not a regular comment, pad with extra spaces that             * appeared in the original source input to retain the original             * spacing.             */
 name|FinalCommentString
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -474,7 +474,7 @@ argument_list|)
 expr_stmt|;
 name|CommentString
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -494,7 +494,7 @@ expr_stmt|;
 comment|/* If this comment lies on the same line as the latest parse op,          * assign it to that op's CommentAfter field. Saving in this field          * will allow us to support comments that come after code on the          * same line as the code itself. For example,          * Name(A,"") //comment          *          * will be retained rather than transformed into          *          * Name(A,"")          * //comment          *          * For this case, we only need to add one comment since          *          * Name(A,"") //comment1 //comment2 ... more comments here.          *          * would be lexically analyzed as a single comment.          *          * Create a new string with the approperiate spaces. Since we need          * to account for the proper spacing, the actual comment,          * extra 2 spaces so that this comment can be converted to the "/ *"          * style and the null terminator, the string would look something          * like:          *          * [ (spaces) (comment)  ( * /) ('\0') ]          *          */
 name|FinalCommentString
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|CurrentState
 operator|.
@@ -1058,7 +1058,7 @@ expr_stmt|;
 comment|/* First, print the file name comment after changing .asl to .dsl */
 name|NewFilename
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -2124,7 +2124,7 @@ argument_list|)
 expr_stmt|;
 name|Str
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|Size
 operator|+

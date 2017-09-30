@@ -332,6 +332,7 @@ operator|=
 name|Op
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|Gbl_CaptureComments
@@ -342,7 +343,6 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(

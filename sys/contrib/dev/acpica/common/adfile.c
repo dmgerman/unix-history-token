@@ -411,7 +411,7 @@ decl_stmt|;
 comment|/*      * Copy the original filename to a new buffer. Leave room for the worst      * case where we append the suffix, an added dot and the null terminator.      */
 name|NewFilename
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 operator|(
 name|ACPI_SIZE
@@ -530,7 +530,7 @@ name|NewString
 decl_stmt|;
 name|NewString
 operator|=
-name|UtLocalCacheCalloc
+name|UtStringCacheCalloc
 argument_list|(
 operator|(
 name|ACPI_SIZE

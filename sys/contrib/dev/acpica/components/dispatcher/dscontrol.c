@@ -223,24 +223,6 @@ name|Common
 operator|.
 name|AmlOpcode
 expr_stmt|;
-name|ControlState
-operator|->
-name|Control
-operator|.
-name|LoopTimeout
-operator|=
-name|AcpiOsGetTimer
-argument_list|()
-operator|+
-call|(
-name|UINT64
-call|)
-argument_list|(
-name|AcpiGbl_MaxLoopIterations
-operator|*
-name|ACPI_100NSEC_PER_SEC
-argument_list|)
-expr_stmt|;
 comment|/* Push the control state on this walk's control stack */
 name|AcpiUtPushGenericState
 argument_list|(
@@ -407,25 +389,28 @@ name|Value
 condition|)
 block|{
 comment|/* Predicate was true, the body of the loop was just executed */
-comment|/*              * This infinite loop detection mechanism allows the interpreter              * to escape possibly infinite loops. This can occur in poorly              * written AML when the hardware does not respond within a while              * loop and the loop does not implement a timeout.              */
-if|if
-condition|(
-name|ACPI_TIME_AFTER
-argument_list|(
-name|AcpiOsGetTimer
-argument_list|()
-argument_list|,
+comment|/*              * This loop counter mechanism allows the interpreter to escape              * possibly infinite loops. This can occur in poorly written AML              * when the hardware does not respond within a while loop and the              * loop does not implement a timeout.              */
 name|ControlState
 operator|->
 name|Control
 operator|.
-name|LoopTimeout
-argument_list|)
+name|LoopCount
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ControlState
+operator|->
+name|Control
+operator|.
+name|LoopCount
+operator|>
+name|AcpiGbl_MaxLoopIterations
 condition|)
 block|{
 name|Status
 operator|=
-name|AE_AML_LOOP_TIMEOUT
+name|AE_AML_INFINITE_LOOP
 expr_stmt|;
 break|break;
 block|}

@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/dev/acpica/compiler/dtcompiler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/dev/acpica/compiler/dttemplate.h>
 end_include
 
@@ -421,7 +427,7 @@ operator|)
 name|AcpiTerminate
 argument_list|()
 expr_stmt|;
-name|UtDeleteLocalCaches
+name|CmDeleteCaches
 argument_list|()
 expr_stmt|;
 return|return

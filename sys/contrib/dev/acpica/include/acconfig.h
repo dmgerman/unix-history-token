@@ -253,14 +253,14 @@ value|2
 end_define
 
 begin_comment
-comment|/* Maximum time (default 30s) of While() loops before abort */
+comment|/* Maximum number of While() loops before abort */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_MAX_LOOP_TIMEOUT
-value|30
+name|ACPI_MAX_LOOP_COUNT
+value|0x000FFFFF
 end_define
 
 begin_comment

@@ -19,6 +19,12 @@ directive|include
 file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/compiler/dtcompiler.h>
+end_include
+
 begin_comment
 comment|/*  * TBDs:  *  * No nested macros, maybe never  * Implement ASL "Include" as well as "#include" here?  */
 end_comment

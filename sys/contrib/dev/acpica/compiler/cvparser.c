@@ -1475,6 +1475,16 @@ literal|0
 decl_stmt|;
 name|UINT8
 name|CommentOption
+init|=
+operator|(
+name|UINT16
+operator|)
+name|ACPI_GET8
+argument_list|(
+name|Aml
+operator|+
+literal|1
+argument_list|)
 decl_stmt|;
 name|BOOLEAN
 name|StdDefBlockFlag

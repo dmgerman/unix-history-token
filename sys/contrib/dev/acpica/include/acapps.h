@@ -139,14 +139,6 @@ define|\
 value|"%s%s\n%s%s version %8.8X%s\n%s%s\n%s\n", \     Prefix, ACPICA_NAME, \     Prefix, UtilityName, ((UINT32) ACPI_CA_VERSION), ACPI_WIDTH, \     Prefix, ACPICA_COPYRIGHT, \     Prefix
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_COMMON_BUILD_TIME
-define|\
-value|"Build date/time: %s %s\n", __DATE__, __TIME__
-end_define
-
 begin_comment
 comment|/* Macros for usage messages */
 end_comment
