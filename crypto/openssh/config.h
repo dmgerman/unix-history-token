@@ -4586,12 +4586,9 @@ begin_comment
 comment|/* Define if you want TCP Wrappers support */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LIBWRAP
-value|1
-end_define
+begin_comment
+comment|/* #undef LIBWRAP */
+end_comment
 
 begin_comment
 comment|/* Define to whatever link() returns for "not supported" if it doesn't return    EOPNOTSUPP. */
