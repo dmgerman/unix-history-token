@@ -603,21 +603,21 @@ begin_define
 define|#
 directive|define
 name|EMAC_TX_DMA_STA
-value|0x80
+value|0xb0
 end_define
 
 begin_define
 define|#
 directive|define
 name|EMAC_TX_DMA_CUR_DESC
-value|0x84
+value|0xb4
 end_define
 
 begin_define
 define|#
 directive|define
 name|EMAC_TX_DMA_CUR_BUF
-value|0x88
+value|0xb8
 end_define
 
 begin_define
