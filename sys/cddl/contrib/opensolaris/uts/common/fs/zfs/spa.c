@@ -13911,6 +13911,12 @@ argument_list|,
 name|config
 argument_list|)
 expr_stmt|;
+else|else
+name|nvlist_free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|state
