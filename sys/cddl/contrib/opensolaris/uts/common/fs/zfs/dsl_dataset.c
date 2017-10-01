@@ -9561,8 +9561,6 @@ name|propval
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|nvlist_free
 argument_list|(
 name|val
@@ -9573,7 +9571,6 @@ argument_list|(
 name|propval
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
