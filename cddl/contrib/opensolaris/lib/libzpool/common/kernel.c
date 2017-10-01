@@ -3380,6 +3380,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* necessary to make vpanic meet noreturn requirements */
 block|}
 end_function
 
