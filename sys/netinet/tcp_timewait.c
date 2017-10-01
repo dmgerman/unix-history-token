@@ -2885,20 +2885,16 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|KASSERT
+if|if
+condition|(
+name|__predict_true
 argument_list|(
 name|tw
 operator|==
 name|NULL
-argument_list|,
-operator|(
-literal|"%s: held last inp "
-literal|"reference but tw not NULL"
-operator|,
-name|__func__
-operator|)
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
@@ -2906,6 +2902,47 @@ name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
+else|else
+block|{
+comment|/* This should not happen as in TIMEWAIT 					 * state the inp should not be destroyed 					 * before its tcptw. If INVARIANTS is 					 * defined panic. 					 */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|panic
+argument_list|(
+literal|"%s: Panic before an infinite "
+literal|"loop: INP_TIMEWAIT&& (INP_FREED "
+literal|"|| inp last reference)&& tw != "
+literal|"NULL"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: Avoid an infinite "
+literal|"loop: INP_TIMEWAIT&& (INP_FREED "
+literal|"|| inp last reference)&& tw != "
+literal|"NULL"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|INP_INFO_RUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 if|if
 condition|(
