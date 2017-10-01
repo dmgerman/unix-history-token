@@ -5632,9 +5632,13 @@ block|}
 else|else
 block|{
 comment|/* 				 * If a write error occurs, reactivate page 				 * so it doesn't clog the inactive list, 				 * then finish the I/O. 				 */
-name|vm_page_dirty
+name|MPASS
 argument_list|(
 name|m
+operator|->
+name|dirty
+operator|==
+name|VM_PAGE_BITS_ALL
 argument_list|)
 expr_stmt|;
 name|vm_page_lock
