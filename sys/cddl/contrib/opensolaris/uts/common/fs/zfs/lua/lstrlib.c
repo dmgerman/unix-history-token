@@ -5437,11 +5437,8 @@ literal|'\0'
 operator|||
 name|iscntrl
 argument_list|(
-name|uchar
-argument_list|(
 operator|*
 name|s
-argument_list|)
 argument_list|)
 condition|)
 block|{
