@@ -2356,7 +2356,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Extractl acls without acls */
+comment|/* Extract acls without acls */
 name|assertMakeDir
 argument_list|(
 literal|"acls_noacls"

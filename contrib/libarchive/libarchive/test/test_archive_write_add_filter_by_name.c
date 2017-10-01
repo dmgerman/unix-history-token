@@ -941,5 +941,26 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|DEFINE_TEST
+argument_list|(
+argument|test_archive_write_add_filter_by_name_zstd
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|test_filter_by_name
+argument_list|(
+literal|"zstd"
+argument_list|,
+name|ARCHIVE_FILTER_ZSTD
+argument_list|,
+name|canZstd
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 end_unit
 
