@@ -88,6 +88,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCM_BSC_CTRL_INT_ALL
+define|\
+value|(BCM_BSC_CTRL_INTR | BCM_BSC_CTRL_INTT | BCM_BSC_CTRL_INTD)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCM_BSC_STATUS
 value|0x04
 end_define
@@ -160,6 +168,14 @@ define|#
 directive|define
 name|BCM_BSC_STATUS_TA
 value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM_BSC_STATUS_ERRBITS
+define|\
+value|(BCM_BSC_STATUS_CLKT | BCM_BSC_STATUS_ERR)
 end_define
 
 begin_define
