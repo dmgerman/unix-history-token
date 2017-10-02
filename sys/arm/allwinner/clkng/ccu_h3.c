@@ -86,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dt-bindings/clock/sun8i-h3-ccu.h>
+file|<gnu/dts/include/dt-bindings/clock/sun8i-h3-ccu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dt-bindings/reset/sun8i-h3-ccu.h>
+file|<gnu/dts/include/dt-bindings/reset/sun8i-h3-ccu.h>
 end_include
 
 begin_include
