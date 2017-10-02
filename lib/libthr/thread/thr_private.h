@@ -2023,6 +2023,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Used in symbol lookup of libthread_db */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pthread_key
+name|_thread_keytable
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* List of all threads: */
 end_comment
 
