@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 RackTop Systems.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 RackTop Systems.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2017 Nexenta Systems, Inc.  */
 end_comment
 
 begin_include
@@ -13198,36 +13198,7 @@ return|;
 block|}
 end_function
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|dsl_dataset_rollback_arg
-block|{
-specifier|const
-name|char
-modifier|*
-name|ddra_fsname
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|ddra_tosnap
-decl_stmt|;
-name|void
-modifier|*
-name|ddra_owner
-decl_stmt|;
-name|nvlist_t
-modifier|*
-name|ddra_result
-decl_stmt|;
-block|}
-name|dsl_dataset_rollback_arg_t
-typedef|;
-end_typedef
-
 begin_function
-specifier|static
 name|int
 name|dsl_dataset_rollback_check
 parameter_list|(
@@ -13719,7 +13690,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|dsl_dataset_rollback_sync
 parameter_list|(

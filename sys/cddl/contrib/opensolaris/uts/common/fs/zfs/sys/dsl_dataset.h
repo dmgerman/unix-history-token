@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2017 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_ifndef
@@ -491,6 +491,31 @@ name|cr
 decl_stmt|;
 block|}
 name|dsl_dataset_promote_arg_t
+typedef|;
+typedef|typedef
+struct|struct
+name|dsl_dataset_rollback_arg
+block|{
+specifier|const
+name|char
+modifier|*
+name|ddra_fsname
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ddra_tosnap
+decl_stmt|;
+name|void
+modifier|*
+name|ddra_owner
+decl_stmt|;
+name|nvlist_t
+modifier|*
+name|ddra_result
+decl_stmt|;
+block|}
+name|dsl_dataset_rollback_arg_t
 typedef|;
 comment|/*  * The max length of a temporary tag prefix is the number of hex digits  * required to express UINT64_MAX plus one for the hyphen.  */
 define|#
@@ -1592,6 +1617,30 @@ parameter_list|(
 name|dsl_dataset_t
 modifier|*
 name|ds
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_dataset_rollback_check
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|void
+name|dsl_dataset_rollback_sync
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
 parameter_list|)
 function_decl|;
 name|int
