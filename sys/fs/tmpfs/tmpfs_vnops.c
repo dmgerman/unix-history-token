@@ -6132,9 +6132,8 @@ case|:
 operator|*
 name|retval
 operator|=
-literal|0
+literal|64
 expr_stmt|;
-comment|/* XXX Don't know which value should I return. */
 break|break;
 default|default:
 name|error
