@@ -327,6 +327,10 @@ name|taskq_t
 modifier|*
 name|dp_sync_taskq
 decl_stmt|;
+name|taskq_t
+modifier|*
+name|dp_zil_clean_taskq
+decl_stmt|;
 comment|/* 	 * Protects administrative changes (properties, namespace) 	 * 	 * It is only held for write in syncing context.  Therefore 	 * syncing context does not need to ever have it for read, since 	 * nobody else could possibly have it for write. 	 */
 name|rrwlock_t
 name|dp_config_rwlock
