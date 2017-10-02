@@ -59,6 +59,12 @@ directive|include
 file|<sys/un.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_UNPCB
+end_define
+
 begin_include
 include|#
 directive|include
@@ -4331,8 +4337,6 @@ condition|(
 operator|(
 name|xup
 operator|->
-name|xu_unp
-operator|.
 name|unp_conn
 operator|==
 name|NULL
@@ -4344,8 +4348,6 @@ operator|||
 operator|(
 name|xup
 operator|->
-name|xu_unp
-operator|.
 name|unp_conn
 operator|!=
 name|NULL
@@ -4469,11 +4471,11 @@ if|if
 condition|(
 name|xup
 operator|->
-name|xu_unp
+name|xu_addr
 operator|.
-name|unp_addr
-operator|!=
-name|NULL
+name|sun_family
+operator|==
+name|AF_UNIX
 condition|)
 name|laddr
 operator|->
@@ -4499,8 +4501,6 @@ if|if
 condition|(
 name|xup
 operator|->
-name|xu_unp
-operator|.
 name|unp_conn
 operator|!=
 name|NULL
@@ -4520,8 +4520,6 @@ operator|)
 operator|=
 name|xup
 operator|->
-name|xu_unp
-operator|.
 name|unp_conn
 expr_stmt|;
 name|laddr
