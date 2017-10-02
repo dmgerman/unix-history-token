@@ -2319,6 +2319,8 @@ literal|"\t[-T time (default: %llu sec)] total run time\n"
 literal|"\t[-F freezeloops (default: %llu)] max loops in spa_freeze()\n"
 literal|"\t[-P passtime (default: %llu sec)] time per pass\n"
 literal|"\t[-B alt_ztest (default:<none>)] alternate ztest path\n"
+literal|"\t[-o variable=value] ... set global variable to an unsigned\n"
+literal|"\t    32-bit integer value\n"
 literal|"\t[-h] (print help)\n"
 literal|""
 argument_list|,
@@ -2495,7 +2497,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"v:s:a:m:r:R:d:t:g:i:k:p:f:VET:P:hF:B:"
+literal|"v:s:a:m:r:R:d:t:g:i:k:p:f:VET:P:hF:B:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -2876,6 +2878,24 @@ sizeof|sizeof
 argument_list|(
 name|altdir
 argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+if|if
+condition|(
+name|set_global_var
+argument_list|(
+name|optarg
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|usage
+argument_list|(
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 break|break;

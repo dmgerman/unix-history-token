@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -2314,6 +2314,15 @@ parameter_list|(
 name|struct
 name|spa
 modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|set_global_var
+parameter_list|(
+name|char
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 typedef|typedef
