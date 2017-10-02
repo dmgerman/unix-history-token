@@ -3956,6 +3956,13 @@ name|provider
 operator|=
 name|pp
 expr_stmt|;
+name|cp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|G_CF_ORPHAN
+expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
