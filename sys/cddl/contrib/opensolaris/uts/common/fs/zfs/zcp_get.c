@@ -1201,7 +1201,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|vfs_unbusy
+name|vfs_rel
 argument_list|(
 name|vfsp
 argument_list|)
@@ -1224,7 +1224,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|vfs_unbusy
+name|vfs_rel
 argument_list|(
 name|vfsp
 argument_list|)
