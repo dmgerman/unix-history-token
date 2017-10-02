@@ -7196,6 +7196,10 @@ operator|||
 name|proto
 operator|==
 name|IPPROTO_TCP
+operator|||
+name|proto
+operator|==
+name|IPPROTO_SCTP
 operator|)
 operator|&&
 name|offset
