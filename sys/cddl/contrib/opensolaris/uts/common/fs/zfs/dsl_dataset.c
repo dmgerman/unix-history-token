@@ -6059,32 +6059,6 @@ return|;
 block|}
 end_function
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|dsl_dataset_snapshot_arg
-block|{
-name|nvlist_t
-modifier|*
-name|ddsa_snaps
-decl_stmt|;
-name|nvlist_t
-modifier|*
-name|ddsa_props
-decl_stmt|;
-name|nvlist_t
-modifier|*
-name|ddsa_errors
-decl_stmt|;
-name|cred_t
-modifier|*
-name|ddsa_cr
-decl_stmt|;
-block|}
-name|dsl_dataset_snapshot_arg_t
-typedef|;
-end_typedef
-
 begin_function
 name|int
 name|dsl_dataset_snapshot_check_impl
@@ -6289,7 +6263,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|dsl_dataset_snapshot_check
 parameter_list|(
@@ -7782,7 +7755,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|dsl_dataset_snapshot_sync
 parameter_list|(

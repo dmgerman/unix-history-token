@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * This file and its contents are supplied un
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2016 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2016, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -113,6 +113,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ZCP_NVLIST_MAX_DEPTH
+value|20
+end_define
+
 begin_decl_stmt
 name|uint64_t
 name|zfs_lua_check_instrlimit_interval
@@ -136,6 +143,10 @@ init|=
 name|ZCP_MAX_MEMLIMIT
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Forward declarations for mutually recursive functions  */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -519,13 +530,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|ZCP_NVLIST_MAX_DEPTH
-value|20
-end_define
 
 begin_comment
 comment|/*  * Convert the lua table at the given index on the Lua stack to an nvlist  * and return it.  *  * If the table can not be converted for any reason, NULL is returned and  * an error message is pushed onto the Lua stack.  */
