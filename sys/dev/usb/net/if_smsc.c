@@ -5840,6 +5840,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|ofw_bus_node_is_compatible
 argument_list|(
 name|node
@@ -5852,6 +5853,14 @@ argument_list|(
 name|node
 argument_list|,
 literal|"usb,device"
+argument_list|)
+operator|)
+operator|||
+name|ofw_bus_node_is_compatible
+argument_list|(
+name|node
+argument_list|,
+literal|"usb424,ec00"
 argument_list|)
 condition|)
 return|return
