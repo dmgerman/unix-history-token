@@ -81,6 +81,12 @@ directive|include
 file|<sys/abd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"zdb.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|uint8_t
@@ -94,7 +100,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|prefix
+name|tab_prefix
 index|[
 literal|4
 index|]
@@ -168,11 +174,17 @@ parameter_list|,
 name|int
 name|txtype
 parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|lr_create_t
 modifier|*
 name|lr
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 name|time_t
 name|crtime
 init|=
@@ -272,7 +284,7 @@ name|printf
 argument_list|(
 literal|"%s%s -> %s\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 name|name
 argument_list|,
@@ -295,7 +307,7 @@ name|printf
 argument_list|(
 literal|"%s%s\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 name|name
 argument_list|)
@@ -308,7 +320,7 @@ name|printf
 argument_list|(
 literal|"%s%s"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 name|ctime
 argument_list|(
@@ -324,7 +336,7 @@ name|printf
 argument_list|(
 literal|"%sdoid %llu, foid %llu, mode %llo\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -355,7 +367,7 @@ name|printf
 argument_list|(
 literal|"%suid %llu, gid %llu, gen %llu, rdev 0x%llx\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -405,11 +417,17 @@ parameter_list|,
 name|int
 name|txtype
 parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|lr_remove_t
 modifier|*
 name|lr
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -417,7 +435,7 @@ name|printf
 argument_list|(
 literal|"%sdoid %llu, name %s\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -456,11 +474,17 @@ parameter_list|,
 name|int
 name|txtype
 parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|lr_link_t
 modifier|*
 name|lr
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -468,7 +492,7 @@ name|printf
 argument_list|(
 literal|"%sdoid %llu, link_obj %llu, name %s\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -514,11 +538,17 @@ parameter_list|,
 name|int
 name|txtype
 parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|lr_rename_t
 modifier|*
 name|lr
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 name|char
 modifier|*
 name|snm
@@ -553,7 +583,7 @@ name|printf
 argument_list|(
 literal|"%ssdoid %llu, tdoid %llu\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -577,7 +607,7 @@ name|printf
 argument_list|(
 literal|"%ssrc %s tgt %s\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 name|snm
 argument_list|,
@@ -616,7 +646,7 @@ name|data
 decl_stmt|;
 for|for
 control|(
-name|int
+name|size_t
 name|i
 init|=
 literal|0
@@ -688,11 +718,17 @@ parameter_list|,
 name|int
 name|txtype
 parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|lr_write_t
 modifier|*
 name|lr
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 name|abd_t
 modifier|*
 name|data
@@ -735,7 +771,7 @@ name|printf
 argument_list|(
 literal|"%sfoid %llu, offset %llx, length %llx\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -791,7 +827,7 @@ name|printf
 argument_list|(
 literal|"%shas blkptr, %s\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|!
 name|BP_IS_HOLE
@@ -819,7 +855,7 @@ name|print_log_bp
 argument_list|(
 name|bp
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|)
 expr_stmt|;
 if|if
@@ -853,7 +889,7 @@ name|printf
 argument_list|(
 literal|"%s<hole>\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|)
 expr_stmt|;
 return|return;
@@ -878,7 +914,7 @@ name|printf
 argument_list|(
 literal|"%s<block already committed>\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1000,7 +1036,7 @@ name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1068,11 +1104,17 @@ parameter_list|,
 name|int
 name|txtype
 parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|lr_truncate_t
 modifier|*
 name|lr
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1080,7 +1122,7 @@ name|printf
 argument_list|(
 literal|"%sfoid %llu, offset 0x%llx, length 0x%llx\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1123,11 +1165,17 @@ parameter_list|,
 name|int
 name|txtype
 parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|lr_setattr_t
 modifier|*
 name|lr
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 name|time_t
 name|atime
 init|=
@@ -1161,7 +1209,7 @@ name|printf
 argument_list|(
 literal|"%sfoid %llu, mask 0x%llx\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1194,7 +1242,7 @@ name|printf
 argument_list|(
 literal|"%sAT_MODE  %llo\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|longlong_t
@@ -1221,7 +1269,7 @@ name|printf
 argument_list|(
 literal|"%sAT_UID   %llu\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1248,7 +1296,7 @@ name|printf
 argument_list|(
 literal|"%sAT_GID   %llu\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1275,7 +1323,7 @@ name|printf
 argument_list|(
 literal|"%sAT_SIZE  %llu\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1302,7 +1350,7 @@ name|printf
 argument_list|(
 literal|"%sAT_ATIME %llu.%09llu %s"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1348,7 +1396,7 @@ name|printf
 argument_list|(
 literal|"%sAT_MTIME %llu.%09llu %s"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1397,11 +1445,17 @@ parameter_list|,
 name|int
 name|txtype
 parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|lr_acl_t
 modifier|*
 name|lr
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1409,7 +1463,7 @@ name|printf
 argument_list|(
 literal|"%sfoid %llu, aclcnt %llu\n"
 argument_list|,
-name|prefix
+name|tab_prefix
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1436,7 +1490,15 @@ function_decl|(
 modifier|*
 name|zil_prt_rec_func_t
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|zilog_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
 function_decl|;
 end_typedef
 
@@ -1448,6 +1510,7 @@ block|{
 name|zil_prt_rec_func_t
 name|zri_print
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|zri_name
@@ -1470,128 +1533,254 @@ index|]
 init|=
 block|{
 block|{
+operator|.
+name|zri_print
+operator|=
 name|NULL
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"Total              "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_create
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_CREATE          "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_create
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_MKDIR           "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_create
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_MKXATTR         "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_create
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_SYMLINK         "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_remove
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_REMOVE          "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_remove
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_RMDIR           "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_link
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_LINK            "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_rename
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_RENAME          "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_write
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_WRITE           "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_truncate
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_TRUNCATE        "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_setattr
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_SETATTR         "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_acl
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_ACL_V0          "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_acl
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_ACL_ACL         "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_create
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_CREATE_ACL      "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_create
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_CREATE_ATTR     "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_create
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_CREATE_ACL_ATTR "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_create
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_MKDIR_ACL       "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_create
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_MKDIR_ATTR      "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_create
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_MKDIR_ACL_ATTR  "
 block|}
 block|,
 block|{
+operator|.
+name|zri_print
+operator|=
 name|zil_prt_rec_write
 block|,
+operator|.
+name|zri_name
+operator|=
 literal|"TX_WRITE2          "
 block|}
 block|, }
@@ -1813,6 +2002,7 @@ literal|'i'
 index|]
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|claim
@@ -1952,7 +2142,7 @@ name|int
 name|verbose
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|,
 name|w

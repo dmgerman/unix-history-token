@@ -241,6 +241,12 @@ directive|include
 file|<libzfs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"zdb.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -354,6 +360,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 name|cmdname
@@ -392,17 +399,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_function_decl
-specifier|extern
-name|void
-name|dump_intent_log
-parameter_list|(
-name|zilog_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|uint64_t
 modifier|*
@@ -413,7 +409,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|static
+name|unsigned
 name|zopt_objects
 init|=
 literal|0
@@ -1339,6 +1336,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 name|histo_stars
@@ -1349,8 +1347,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
-name|int
+name|uint64_t
 name|histo_width
 init|=
 sizeof|sizeof
@@ -1967,6 +1966,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|dump_uint8
 parameter_list|(
@@ -2047,7 +2047,7 @@ name|void
 modifier|*
 name|prop
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 name|dump_zap_stats
@@ -3014,7 +3014,7 @@ name|uint16_t
 modifier|*
 name|layout_attrs
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 name|dump_zap_stats
@@ -3376,6 +3376,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_dtl_refcount
 parameter_list|(
@@ -3436,7 +3437,7 @@ return|;
 block|}
 for|for
 control|(
-name|int
+name|unsigned
 name|c
 init|=
 literal|0
@@ -3471,6 +3472,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_metaslab_refcount
 parameter_list|(
@@ -3500,7 +3502,7 @@ condition|)
 block|{
 for|for
 control|(
-name|int
+name|unsigned
 name|m
 init|=
 literal|0
@@ -3552,7 +3554,7 @@ block|}
 block|}
 for|for
 control|(
-name|int
+name|unsigned
 name|c
 init|=
 literal|0
@@ -3700,6 +3702,7 @@ name|offset
 decl_stmt|,
 name|entry
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ddata
@@ -4472,7 +4475,7 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|int
+name|unsigned
 name|c
 init|=
 literal|0
@@ -4944,6 +4947,7 @@ name|dde
 operator|->
 name|dde_key
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|types
@@ -5444,18 +5448,32 @@ parameter_list|)
 block|{
 name|ddt_histogram_t
 name|ddh_total
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 name|ddt_stat_t
 name|dds_total
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|ddh_total
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ddh_total
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|dds_total
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dds_total
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|enum
@@ -5687,6 +5705,7 @@ decl_stmt|;
 name|boolean_t
 name|required
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -5905,7 +5924,7 @@ expr_stmt|;
 block|}
 for|for
 control|(
-name|int
+name|unsigned
 name|c
 init|=
 literal|0
@@ -6084,7 +6103,7 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|int
+name|unsigned
 name|i
 init|=
 literal|0
@@ -6231,13 +6250,16 @@ argument_list|(
 name|internalstr
 argument_list|)
 argument_list|,
-literal|"[internal %s txg:%lld] %s"
+literal|"[internal %s txg:%ju] %s"
 argument_list|,
 name|zfs_history_event_names
 index|[
 name|ievent
 index|]
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|txg
 argument_list|,
 name|intstr
@@ -8141,6 +8163,7 @@ parameter_list|,
 name|uint64_t
 name|obj
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -8354,6 +8377,7 @@ name|bpobj_t
 modifier|*
 name|bpo
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -11188,6 +11212,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|objset_types
@@ -11256,6 +11281,7 @@ index|[
 name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|type
@@ -11275,9 +11301,10 @@ name|print_header
 init|=
 literal|1
 decl_stmt|;
-name|int
+name|unsigned
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|dsl_pool_config_enter
@@ -11789,6 +11816,8 @@ name|void
 operator|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|header
 condition|?
 name|header
@@ -11927,6 +11956,8 @@ name|void
 operator|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|footer
 condition|?
 name|footer
@@ -13786,6 +13817,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|zdb_ot_extname
@@ -13852,7 +13884,7 @@ decl_stmt|;
 name|uint64_t
 name|zcb_start
 decl_stmt|;
-name|uint64_t
+name|hrtime_t
 name|zcb_lastprint
 decl_stmt|;
 name|uint64_t
@@ -14022,7 +14054,7 @@ name|zb_count
 operator|++
 expr_stmt|;
 comment|/* 		 * The histogram is only big enough to record blocks up to 		 * SPA_OLD_MAXBLOCKSIZE; larger blocks go into the last, 		 * "other", bucket. 		 */
-name|int
+name|unsigned
 name|idx
 init|=
 name|BP_GET_PSIZE
@@ -15156,10 +15188,6 @@ parameter_list|)
 block|{
 name|ddt_bookmark_t
 name|ddb
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 name|ddt_entry_t
 name|dde
@@ -15167,6 +15195,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|ddb
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ddb
+argument_list|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -15679,7 +15718,7 @@ name|spa_root_vdev
 decl_stmt|;
 for|for
 control|(
-name|int
+name|unsigned
 name|c
 init|=
 literal|0
@@ -15715,7 +15754,7 @@ name|vdev_mg
 decl_stmt|;
 for|for
 control|(
-name|int
+name|unsigned
 name|m
 init|=
 literal|0
@@ -15901,10 +15940,6 @@ parameter_list|)
 block|{
 name|zdb_cb_t
 name|zcb
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 name|zdb_blkstats_t
 modifier|*
@@ -15936,6 +15971,17 @@ name|leaks
 init|=
 name|B_FALSE
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|zcb
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|zcb
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -16856,6 +16902,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|typename
@@ -17554,18 +17601,32 @@ name|zdde
 decl_stmt|;
 name|ddt_histogram_t
 name|ddh_total
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 name|ddt_stat_t
 name|dds_total
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|ddh_total
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ddh_total
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|dds_total
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dds_total
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|avl_create
 argument_list|(
 operator|&
@@ -18343,6 +18404,7 @@ value|0x0080
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|flagbits
 index|[
@@ -18564,7 +18626,7 @@ operator|*
 operator|)
 name|buf
 decl_stmt|;
-name|int
+name|unsigned
 name|nwords
 init|=
 name|size
@@ -18585,15 +18647,17 @@ operator|&
 name|ZDB_FLAG_BSWAP
 operator|)
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|hdr
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|c
 decl_stmt|;
@@ -18782,6 +18846,7 @@ name|vdev_t
 modifier|*
 name|vdev
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -18797,7 +18862,7 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 if|if
@@ -18814,9 +18879,6 @@ return|;
 comment|/* First, assume the x.x.x.x format */
 name|i
 operator|=
-operator|(
-name|int
-operator|)
 name|strtoul
 argument_list|(
 name|path
@@ -18852,10 +18914,6 @@ name|name
 goto|;
 if|if
 condition|(
-name|i
-operator|<
-literal|0
-operator|||
 name|i
 operator|>=
 name|vdev
@@ -19187,18 +19245,20 @@ decl_stmt|,
 modifier|*
 name|buf
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|,
 modifier|*
+name|vdev
+decl_stmt|;
+name|char
+modifier|*
 name|p
 decl_stmt|,
 modifier|*
 name|dup
-decl_stmt|,
-modifier|*
-name|vdev
 decl_stmt|,
 modifier|*
 name|flagstr
@@ -19289,13 +19349,24 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+condition|)
 name|flagstr
 operator|=
+name|strdup
+argument_list|(
 name|s
-condition|?
-name|s
-else|:
+argument_list|)
+expr_stmt|;
+else|else
+name|flagstr
+operator|=
+name|strdup
+argument_list|(
 literal|""
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -19517,6 +19588,11 @@ return|return;
 block|}
 block|}
 block|}
+name|free
+argument_list|(
+name|flagstr
+argument_list|)
+expr_stmt|;
 name|vd
 operator|=
 name|zdb_vdev_lookup
@@ -20242,10 +20318,6 @@ parameter_list|)
 block|{
 name|blkptr_t
 name|bp
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 name|unsigned
 name|long
@@ -20269,6 +20341,17 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|bp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|sscanf
@@ -20589,11 +20672,18 @@ literal|0
 decl_stmt|;
 name|importargs_t
 name|args
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|args
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|args
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|args
 operator|.
 name|paths
@@ -20915,8 +21005,6 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|c
 decl_stmt|;
 name|struct
@@ -22154,8 +22242,9 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|unsigned
 name|i
-operator|=
+init|=
 literal|0
 init|;
 name|i
@@ -22321,8 +22410,9 @@ name|ZDB_FLAG_RAW
 expr_stmt|;
 for|for
 control|(
+name|int
 name|i
-operator|=
+init|=
 literal|0
 init|;
 name|i
