@@ -17502,6 +17502,12 @@ block|}
 block|}
 end_function
 
+begin_decl_stmt
+name|devclass_t
+name|ahci_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
