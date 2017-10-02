@@ -245,6 +245,8 @@ name|talk
 parameter_list|(
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 name|long
 parameter_list|,
 name|pid_t
@@ -304,6 +306,8 @@ name|dflag
 decl_stmt|,
 name|nflag
 decl_stmt|,
+name|Nflag
+decl_stmt|,
 name|one
 decl_stmt|,
 name|rem
@@ -341,6 +345,8 @@ operator|=
 name|dflag
 operator|=
 name|nflag
+operator|=
+name|Nflag
 operator|=
 literal|0
 expr_stmt|;
@@ -436,7 +442,7 @@ block|}
 define|#
 directive|define
 name|OPTIONS
-value|"468Lde:l:nt:w"
+value|"468LNde:l:nt:w"
 while|while
 condition|(
 operator|(
@@ -481,6 +487,18 @@ name|PF_INET6
 expr_stmt|;
 break|break;
 case|case
+literal|'N'
+case|:
+name|Nflag
+operator|=
+literal|1
+expr_stmt|;
+name|nflag
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 literal|'L'
 case|:
 comment|/* -8Lew are ignored to allow rlogin aliases */
@@ -516,6 +534,10 @@ case|:
 name|nflag
 operator|=
 literal|1
+expr_stmt|;
+name|Nflag
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -977,6 +999,8 @@ name|talk
 argument_list|(
 name|nflag
 argument_list|,
+name|Nflag
+argument_list|,
 name|omask
 argument_list|,
 name|pid
@@ -1015,6 +1039,9 @@ name|talk
 parameter_list|(
 name|int
 name|nflag
+parameter_list|,
+name|int
+name|Nflag
 parameter_list|,
 name|long
 name|omask
@@ -1248,6 +1275,11 @@ name|rewrite
 goto|;
 name|done
 label|:
+if|if
+condition|(
+operator|!
+name|Nflag
+condition|)
 operator|(
 name|void
 operator|)
@@ -1797,7 +1829,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rsh [-46dn] [-l username] [-t timeout] host [command]\n"
+literal|"usage: rsh [-46Ndn] [-l username] [-t timeout] host [command]\n"
 argument_list|)
 expr_stmt|;
 name|exit
