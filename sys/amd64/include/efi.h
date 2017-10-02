@@ -15,12 +15,6 @@ directive|define
 name|__AMD64_INCLUDE_EFI_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<isa/rtc.h>
-end_include
-
 begin_comment
 comment|/*  * XXX: from gcc 6.2 manual:  * Note, the ms_abi attribute for Microsoft Windows 64-bit targets  * currently requires the -maccumulate-outgoing-args option.  *  * Avoid EFIABI_ATTR declarations for compilers that don't support it.  * GCC support began in version 4.4.  */
 end_comment
@@ -66,6 +60,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<isa/rtc.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -89,6 +95,11 @@ name|EFI_TIME_OWNED
 parameter_list|()
 value|mtx_assert(&atrtc_time_lock, MA_OWNED);
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
