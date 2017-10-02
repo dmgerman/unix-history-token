@@ -3895,11 +3895,11 @@ block|{
 case|case
 name|PT_STEP
 case|:
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_PTRACE
 argument_list|,
-literal|"PT_STEP: tid %d (pid %d)"
+literal|"PT_STEP: tid %d (pid %d), sig = %d"
 argument_list|,
 name|td2
 operator|->
@@ -3908,6 +3908,8 @@ argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 name|error
