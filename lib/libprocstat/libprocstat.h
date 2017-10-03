@@ -204,6 +204,13 @@ name|PS_FST_TYPE_NONE
 value|12
 end_define
 
+begin_define
+define|#
+directive|define
+name|PS_FST_TYPE_PROCDESC
+value|13
+end_define
+
 begin_comment
 comment|/*  * Special descriptor numbers.  */
 end_comment
