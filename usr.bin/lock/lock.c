@@ -1100,9 +1100,9 @@ expr_stmt|;
 if|if
 condition|(
 name|cryptpw
-operator|==
+operator|!=
 name|NULL
-operator|||
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
