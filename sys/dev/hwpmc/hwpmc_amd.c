@@ -310,7 +310,7 @@ name|pmc_event
 name|pe_ev
 decl_stmt|;
 comment|/* enum value */
-name|uint8_t
+name|uint16_t
 name|pe_code
 decl_stmt|;
 comment|/* encoded event mask */

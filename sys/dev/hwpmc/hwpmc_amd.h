@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|AMD_PMC_EVENTMASK
-value|0x00FF
+value|0xF000000FF
 end_define
 
 begin_define
@@ -226,7 +226,7 @@ name|AMD_PMC_TO_EVENTMASK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0xFF)
+value|(((x)& 0xFF) | (((x)& 0xF00)<< 24))
 end_define
 
 begin_define
