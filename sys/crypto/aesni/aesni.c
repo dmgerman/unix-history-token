@@ -3863,6 +3863,23 @@ name|allocated
 decl_stmt|,
 name|authallocated
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ses
+operator|->
+name|algo
+operator|!=
+name|CRYPTO_AES_NIST_GCM_16
+operator|||
+name|authcrd
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"AES_NIST_GCM_16 must include MAC descriptor"
+operator|)
+argument_list|)
+expr_stmt|;
 name|buf
 operator|=
 name|aesni_cipher_alloc
@@ -3897,10 +3914,6 @@ operator|->
 name|algo
 operator|==
 name|CRYPTO_AES_NIST_GCM_16
-operator|&&
-name|authcrd
-operator|!=
-name|NULL
 condition|)
 block|{
 name|authbuf
@@ -4284,10 +4297,6 @@ name|CRYPTO_AES_NIST_GCM_16
 case|:
 if|if
 condition|(
-name|authcrd
-operator|!=
-name|NULL
-operator|&&
 operator|!
 name|encflag
 condition|)
