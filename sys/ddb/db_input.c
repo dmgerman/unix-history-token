@@ -694,6 +694,12 @@ argument_list|(
 literal|'u'
 argument_list|)
 case|:
+case|case
+name|CTRL
+argument_list|(
+literal|'c'
+argument_list|)
+case|:
 comment|/* kill entire line: */
 comment|/* at first, delete to beginning of line */
 if|if
