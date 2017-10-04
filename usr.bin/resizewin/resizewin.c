@@ -305,7 +305,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Disable echo, drain the input, and flush the output */
+comment|/* Disable echo, flush the input, and drain the output */
 if|if
 condition|(
 name|tcgetattr
