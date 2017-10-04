@@ -719,6 +719,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|linux_delayed_work_fn
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|struct
 name|workqueue_struct
 modifier|*
