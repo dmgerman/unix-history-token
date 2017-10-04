@@ -321,11 +321,6 @@ argument_list|,
 operator|&
 name|ro
 operator|.
-name|ro_peername
-argument_list|,
-operator|&
-name|ro
-operator|.
 name|ro_flags
 argument_list|)
 expr_stmt|;
@@ -601,10 +596,6 @@ argument_list|,
 name|si
 operator|.
 name|si_fds_len
-argument_list|,
-name|si
-operator|.
-name|si_flags
 argument_list|,
 operator|&
 name|datalen
