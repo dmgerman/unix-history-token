@@ -1787,7 +1787,8 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"?\n"
+literal|"Unrecognized input; use \"help\" "
+literal|"to list available commands\n"
 argument_list|)
 expr_stmt|;
 name|db_flush_lex
@@ -2753,7 +2754,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"?\n"
+literal|"Mismatched parens\n"
 argument_list|)
 expr_stmt|;
 name|db_flush_lex
