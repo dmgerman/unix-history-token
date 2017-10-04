@@ -299,6 +299,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|uint16_t
+name|u16
+decl_stmt|;
 block|}
 name|value
 union|;
