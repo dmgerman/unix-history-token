@@ -674,19 +674,13 @@ modifier|*
 name|h
 parameter_list|)
 block|{
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|h
-operator|!=
+operator|==
 name|NULL
-argument_list|,
-operator|(
-literal|"%s: NULL token"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 name|mtx_lock
 argument_list|(
 operator|&
