@@ -3243,10 +3243,6 @@ name|config
 argument_list|)
 operator|!=
 literal|0
-operator|||
-name|config
-operator|==
-name|NULL
 condition|)
 block|{
 operator|(
