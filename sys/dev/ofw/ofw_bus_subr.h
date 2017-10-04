@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|SIMPLEBUS_PNP_DESCR
-value|"Z:compat;P:private;"
+value|"Z:compat;P:#;"
 end_define
 
 begin_define
