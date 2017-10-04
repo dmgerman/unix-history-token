@@ -95,6 +95,9 @@ name|int
 name|sc_orphaned
 decl_stmt|;
 name|int
+name|sc_shutting_down
+decl_stmt|;
+name|int
 name|sc_access_r
 decl_stmt|;
 name|int
