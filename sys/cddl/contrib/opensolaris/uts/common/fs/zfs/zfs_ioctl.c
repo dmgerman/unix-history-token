@@ -6226,6 +6226,9 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 operator|(
@@ -6259,6 +6262,22 @@ argument_list|)
 operator|)
 return|;
 block|}
+else|#
+directive|else
+comment|/* 		 * vfs_busy() ensures that the filesystem is not and 		 * can not be unmounted. 		 */
+name|ASSERT
+argument_list|(
+operator|!
+operator|(
+operator|*
+name|zfvp
+operator|)
+operator|->
+name|z_unmounted
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
