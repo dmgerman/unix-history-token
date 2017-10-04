@@ -223,6 +223,9 @@ modifier|*
 name|arg
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+name|cryptpw
 decl_stmt|;
 name|uid_t
 name|uid
@@ -906,10 +909,8 @@ argument_list|(
 literal|"Password: "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
+name|cryptpw
+operator|=
 name|crypt
 argument_list|(
 name|password
@@ -918,6 +919,16 @@ name|old_pw
 operator|->
 name|pw_passwd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cryptpw
+operator|==
+name|NULL
+operator|||
+name|strcmp
+argument_list|(
+name|cryptpw
 argument_list|,
 name|old_pw
 operator|->
