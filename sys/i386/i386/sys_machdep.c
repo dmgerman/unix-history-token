@@ -2531,7 +2531,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"i386_get_ldt: start=%d num=%d descs=%p\n"
+literal|"i386_get_ldt: start=%u num=%u descs=%p\n"
 argument_list|,
 name|uap
 operator|->
@@ -2820,7 +2820,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"i386_set_ldt: start=%d num=%d descs=%p\n"
+literal|"i386_set_ldt: start=%u num=%u descs=%p\n"
 argument_list|,
 name|uap
 operator|->
