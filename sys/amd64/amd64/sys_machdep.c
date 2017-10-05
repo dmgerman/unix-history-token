@@ -2724,7 +2724,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"amd64_get_ldt: start=%d num=%d descs=%p\n"
+literal|"amd64_get_ldt: start=%u num=%u descs=%p\n"
 argument_list|,
 name|uap
 operator|->
@@ -2949,7 +2949,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"amd64_set_ldt: start=%d num=%d descs=%p\n"
+literal|"amd64_set_ldt: start=%u num=%u descs=%p\n"
 argument_list|,
 name|uap
 operator|->
