@@ -16291,6 +16291,13 @@ name|txr_comp
 operator|=
 literal|0
 expr_stmt|;
+operator|*
+name|hw_tx_cntxt
+operator|->
+name|tx_cons
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|qla_mbx_cmd
