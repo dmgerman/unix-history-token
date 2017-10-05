@@ -867,6 +867,12 @@ operator|->
 name|mnt_optnew
 argument_list|)
 expr_stmt|;
+name|mp
+operator|->
+name|mnt_vnodecovered
+operator|=
+name|NULL
+expr_stmt|;
 name|vfs_mount_destroy
 argument_list|(
 name|mp
