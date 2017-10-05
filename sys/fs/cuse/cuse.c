@@ -1665,6 +1665,14 @@ operator|(
 name|EINTR
 operator|)
 return|;
+case|case
+name|CUSE_ERR_NO_DEVICE
+case|:
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
 default|default:
 return|return
 operator|(
