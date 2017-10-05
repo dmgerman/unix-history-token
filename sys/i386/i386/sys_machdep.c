@@ -2331,13 +2331,6 @@ name|struct
 name|mdproc
 modifier|*
 name|mdp
-init|=
-operator|&
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_md
 decl_stmt|;
 name|struct
 name|proc_ldt
@@ -2351,6 +2344,15 @@ name|dt_lock
 argument_list|,
 name|MA_OWNED
 argument_list|)
+expr_stmt|;
+name|mdp
+operator|=
+operator|&
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_md
 expr_stmt|;
 if|if
 condition|(
@@ -3008,20 +3010,17 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-operator|(
 name|uap
 operator|->
 name|start
-operator|==
+operator|!=
 name|LDT_AUTO_ALLOC
-operator|&&
+operator|||
 name|uap
 operator|->
 name|num
-operator|==
+operator|!=
 literal|1
-operator|)
 condition|)
 block|{
 comment|/* verify range of descriptors to modify */
@@ -3047,13 +3046,11 @@ name|largest_ld
 operator|>
 name|MAX_LD
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 block|}
 comment|/* Check descriptors for access violations */
 for|for
@@ -3162,13 +3159,11 @@ case|case
 name|SDT_SYS386CGT
 case|:
 comment|/* system 386 call gate */
-comment|/* I can't think of any reason to allow a user proc 			 * to create a segment of these types.  They are 			 * for OS use only. 			 */
 return|return
 operator|(
 name|EACCES
 operator|)
 return|;
-comment|/*NOTREACHED*/
 comment|/* memory segment types */
 case|case
 name|SDT_MEMEC
@@ -3258,12 +3253,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/*NOTREACHED*/
 block|}
 comment|/* Only user (ring-3) descriptors may be present. */
 if|if
 condition|(
-operator|(
 name|dp
 operator|->
 name|sd
@@ -3271,9 +3264,7 @@ operator|.
 name|sd_p
 operator|!=
 literal|0
-operator|)
 operator|&&
-operator|(
 name|dp
 operator|->
 name|sd
@@ -3281,7 +3272,6 @@ operator|.
 name|sd_dpl
 operator|!=
 name|SEL_UPL
-operator|)
 condition|)
 return|return
 operator|(
