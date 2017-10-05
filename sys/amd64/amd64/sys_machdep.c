@@ -2549,11 +2549,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|mdp
 operator|->
 name|md_ldt
 operator|=
 name|NULL
+expr_stmt|;
+name|atomic_thread_fence_rel
+argument_list|()
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -2585,6 +2591,9 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 name|user_ldt_deref
 argument_list|(
