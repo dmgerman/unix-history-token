@@ -3076,9 +3076,13 @@ name|error
 condition|)
 name|printf
 argument_list|(
-literal|"%s: setaffinity failed: %d\n"
+literal|"%s: setaffinity failed for %s: %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|gtask
+operator|->
+name|gt_name
 argument_list|,
 name|error
 argument_list|)

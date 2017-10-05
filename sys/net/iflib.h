@@ -1362,8 +1362,8 @@ parameter_list|(
 name|if_ctx_t
 name|ctx
 parameter_list|,
-name|int
-name|rid
+name|if_irq_t
+name|irq
 parameter_list|,
 name|iflib_intr_type_t
 name|type

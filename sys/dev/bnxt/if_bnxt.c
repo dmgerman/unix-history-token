@@ -8429,9 +8429,7 @@ name|iflib_softirq_alloc_generic
 argument_list|(
 name|ctx
 argument_list|,
-name|i
-operator|+
-literal|1
+name|NULL
 argument_list|,
 name|IFLIB_INTR_TX
 argument_list|,
