@@ -6275,11 +6275,11 @@ name|sc
 argument_list|,
 name|vi
 operator|->
-name|tmr_idx
+name|ofld_tmr_idx
 argument_list|,
 name|vi
 operator|->
-name|pktc_idx
+name|ofld_pktc_idx
 argument_list|,
 name|vi
 operator|->

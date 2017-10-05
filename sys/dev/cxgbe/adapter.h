@@ -842,7 +842,13 @@ name|int
 name|tmr_idx
 decl_stmt|;
 name|int
+name|ofld_tmr_idx
+decl_stmt|;
+name|int
 name|pktc_idx
+decl_stmt|;
+name|int
+name|ofld_pktc_idx
 decl_stmt|;
 name|int
 name|qsize_rxq
