@@ -3286,13 +3286,11 @@ case|:
 case|case
 name|SDT_SYSTGT
 case|:
-comment|/* I can't think of any reason to allow a user proc 			 * to create a segment of these types.  They are 			 * for OS use only. 			 */
 return|return
 operator|(
 name|EACCES
 operator|)
 return|;
-comment|/*NOTREACHED*/
 comment|/* memory segment types */
 case|case
 name|SDT_MEMEC
@@ -3380,7 +3378,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/*NOTREACHED*/
 block|}
 comment|/* Only user (ring-3) descriptors may be present. */
 if|if
