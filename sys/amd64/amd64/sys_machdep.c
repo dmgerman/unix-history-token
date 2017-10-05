@@ -3114,6 +3114,7 @@ operator|++
 control|)
 operator|(
 operator|(
+specifier|volatile
 name|uint64_t
 operator|*
 operator|)
@@ -3665,6 +3666,7 @@ name|proc_ldt
 modifier|*
 name|pldt
 decl_stmt|;
+specifier|volatile
 name|uint64_t
 modifier|*
 name|dst
@@ -3701,6 +3703,7 @@ expr_stmt|;
 name|dst
 operator|=
 operator|(
+specifier|volatile
 name|uint64_t
 operator|*
 operator|)
@@ -3713,6 +3716,7 @@ expr_stmt|;
 name|src
 operator|=
 operator|(
+specifier|volatile
 name|uint64_t
 operator|*
 operator|)
