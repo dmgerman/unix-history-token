@@ -176,7 +176,7 @@ begin_decl_stmt
 name|int
 name|max_ldt_segment
 init|=
-literal|1024
+literal|512
 decl_stmt|;
 end_decl_stmt
 
