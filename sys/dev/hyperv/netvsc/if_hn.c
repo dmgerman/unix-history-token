@@ -2266,12 +2266,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RSS
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|int
@@ -2283,11 +2277,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -5889,12 +5878,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RSS
-end_ifndef
-
 begin_function
 specifier|static
 name|int
@@ -6024,15 +6007,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !RSS */
-end_comment
 
 begin_function
 specifier|static
