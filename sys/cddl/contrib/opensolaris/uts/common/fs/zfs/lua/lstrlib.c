@@ -115,6 +115,16 @@ parameter_list|)
 value|(((C)>= 'a'&& (C)<= 'z') ? (C) - 'a' + 'A': (C))
 end_define
 
+begin_define
+define|#
+directive|define
+name|iscntrl
+parameter_list|(
+name|C
+parameter_list|)
+value|((((C)>= 0)&& ((C)<= 0x1f)) || ((C) == 0x7f))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -130,11 +140,6 @@ parameter_list|)
 value|(isalpha(C) || isdigit(C))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -142,8 +147,13 @@ name|iscntrl
 parameter_list|(
 name|C
 parameter_list|)
-value|((((C)>= 0)&& ((C)<= 0x1f)) || ((C) == 0x7f))
+value|(uchar(C)<= 0x1f || uchar(C) == 0x7f)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -5437,8 +5447,11 @@ literal|'\0'
 operator|||
 name|iscntrl
 argument_list|(
+name|uchar
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 condition|)
 block|{
