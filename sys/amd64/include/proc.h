@@ -172,17 +172,6 @@ value|do {				\ 	struct thread	*td = curthread;				\ 	(total) = td->td_kstack_pa
 end_define
 
 begin_function_decl
-name|void
-name|set_user_ldt
-parameter_list|(
-name|struct
-name|mdproc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|proc_ldt
 modifier|*

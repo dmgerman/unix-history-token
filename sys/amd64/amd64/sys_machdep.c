@@ -2065,6 +2065,7 @@ comment|/*  * Update the GDT entry pointing to the LDT to point to the LDT of th
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|set_user_ldt
 parameter_list|(
