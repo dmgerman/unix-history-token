@@ -277,18 +277,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|qla_hw_del_all_mcast
-parameter_list|(
-name|qla_host_t
-modifier|*
-name|ha
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|qla_add_rcv_rings
 parameter_list|(
 name|qla_host_t
@@ -17226,7 +17214,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|qla_hw_del_all_mcast
 parameter_list|(
