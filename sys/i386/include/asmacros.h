@@ -394,14 +394,6 @@ comment|/* save data and extra segments ... */
 value|\ 	movw	%ds,(%esp) ;						\ 	pushl	$0 ;							\ 	movw	%es,(%esp) ;						\ 	pushl	$0 ;							\ 	movw	%fs,(%esp)
 end_define
 
-begin_define
-define|#
-directive|define
-name|POP_FRAME
-define|\
-value|popl	%fs ;							\ 	popl	%es ;							\ 	popl	%ds ;							\ 	popal ;								\ 	addl	$4+4,%esp
-end_define
-
 begin_comment
 comment|/*  * Access per-CPU data.  */
 end_comment
