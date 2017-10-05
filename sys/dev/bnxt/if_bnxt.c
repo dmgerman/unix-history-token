@@ -6414,6 +6414,16 @@ operator|&
 name|ifmr
 argument_list|)
 expr_stmt|;
+name|bnxt_hwrm_cfa_l2_set_rx_mask
+argument_list|(
+name|softc
+argument_list|,
+operator|&
+name|softc
+operator|->
+name|vnic_info
+argument_list|)
+expr_stmt|;
 return|return;
 name|fail
 label|:
