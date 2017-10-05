@@ -1832,11 +1832,6 @@ name|m
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|turnstile
 modifier|*
 name|ts
@@ -1855,10 +1850,6 @@ name|false
 decl_stmt|;
 endif|#
 directive|endif
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 name|m_gen
 operator|=
 name|pmap_delayed_invl_genp
