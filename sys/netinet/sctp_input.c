@@ -24218,6 +24218,17 @@ name|SCTP_HAD_NO_TCB
 operator|)
 operator|&&
 operator|(
+name|asoc
+operator|->
+name|peer_vtag
+operator|!=
+name|htonl
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+operator|&&
+operator|(
 name|vtag_in
 operator|==
 name|asoc
