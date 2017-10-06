@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_html.c,v 1.23 2017/07/31 16:14:10 schwarze Exp $ */
+comment|/*	$Id: tbl_html.c,v 1.22 2017/06/12 20:14:18 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -181,17 +181,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-if|if
-condition|(
-name|su
-operator|->
-name|scale
-operator|<
-literal|0.0
-condition|)
-return|return
-literal|0
-return|;
 switch|switch
 condition|(
 name|su

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_term.c,v 1.209 2017/07/31 15:19:06 schwarze Exp $ */
+comment|/*	$Id: man_term.c,v 1.208 2017/06/25 11:42:02 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -3378,8 +3378,8 @@ operator|&&
 name|n
 operator|->
 name|tok
-operator|>=
-name|MAN_TH
+operator|!=
+name|TOKEN_NONE
 operator|&&
 name|termacts
 index|[
@@ -3654,8 +3654,8 @@ operator|&&
 name|n
 operator|->
 name|tok
-operator|>=
-name|MAN_TH
+operator|!=
+name|TOKEN_NONE
 operator|&&
 name|termacts
 index|[
