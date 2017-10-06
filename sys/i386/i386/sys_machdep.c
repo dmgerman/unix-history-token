@@ -700,11 +700,6 @@ condition|)
 block|{
 name|lp
 operator|=
-operator|(
-expr|union
-name|descriptor
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|kargs
