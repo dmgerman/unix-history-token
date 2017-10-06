@@ -396,6 +396,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|efi_devpath_is_prefix
+parameter_list|(
+name|EFI_DEVICE_PATH
+modifier|*
+parameter_list|,
+name|EFI_DEVICE_PATH
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|CHAR16
 modifier|*
 name|efi_devpath_name
