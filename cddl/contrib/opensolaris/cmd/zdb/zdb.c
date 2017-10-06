@@ -503,20 +503,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\t%s [-AbcdDFGhiLMPsvX] [-e [-p<path> ...]] "
+literal|"Usage:\t%s [-AbcdDFGhiLMPsvX] [-e [-V] [-p<path> ...]] "
 literal|"[-I<inflight I/Os>]\n"
 literal|"\t\t[-o<var>=<value>]... [-t<txg>] [-U<cache>] [-x<dumpdir>]\n"
 literal|"\t\t[<poolname> [<object> ...]]\n"
-literal|"\t%s [-AdiPv] [-e [-p<path> ...]] [-U<cache>]<dataset> "
+literal|"\t%s [-AdiPv] [-e [-V] [-p<path> ...]] [-U<cache>]<dataset> "
 literal|"[<object> ...]\n"
 literal|"\t%s -C [-A] [-U<cache>]\n"
 literal|"\t%s -l [-Aqu]<device>\n"
-literal|"\t%s -m [-AFLPX] [-e [-p<path> ...]] [-t<txg>] [-U<cache>]\n"
-literal|"\t\t<poolname> [<vdev> [<metaslab> ...]]\n"
+literal|"\t%s -m [-AFLPX] [-e [-V] [-p<path> ...]] [-t<txg>] "
+literal|"[-U<cache>]\n\t\t<poolname> [<vdev> [<metaslab> ...]]\n"
 literal|"\t%s -O<dataset><path>\n"
-literal|"\t%s -R [-A] [-e [-p<path> ...]] [-U<cache>]\n"
+literal|"\t%s -R [-A] [-e [-V] [-p<path> ...]] [-U<cache>]\n"
 literal|"\t\t<poolname><vdev>:<offset>:<size>[:<flags>]\n"
-literal|"\t%s -S [-AP] [-e [-p<path> ...]] [-U<cache>]<poolname>\n\n"
+literal|"\t%s -S [-AP] [-e [-V] [-p<path> ...]] [-U<cache>] "
+literal|"<poolname>\n\n"
 argument_list|,
 name|cmdname
 argument_list|,
@@ -881,6 +882,16 @@ name|stderr
 argument_list|,
 literal|"        -U<cachefile_path> -- use alternate "
 literal|"cachefile\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"        -V do verbatim import\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -20896,6 +20907,11 @@ init|=
 name|UINT64_MAX
 decl_stmt|;
 name|int
+name|flags
+init|=
+name|ZFS_IMPORT_MISSING_LOG
+decl_stmt|;
+name|int
 name|rewind
 init|=
 name|ZPOOL_NEVER_REWIND
@@ -20969,7 +20985,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AbcCdDeFGhiI:lLmMo:Op:PqRsSt:uU:vx:X"
+literal|"AbcCdDeFGhiI:lLmMo:Op:PqRsSt:uU:vVx:X"
 argument_list|)
 operator|)
 operator|!=
@@ -21270,6 +21286,14 @@ literal|'v'
 case|:
 name|verbose
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
+name|flags
+operator|=
+name|ZFS_IMPORT_VERBATIM
 expr_stmt|;
 break|break;
 case|case
@@ -21745,9 +21769,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|spa_import
@@ -21758,27 +21779,9 @@ name|cfg
 argument_list|,
 name|NULL
 argument_list|,
-name|ZFS_IMPORT_MISSING_LOG
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|error
-operator|=
-name|spa_import
-argument_list|(
-name|name
-argument_list|,
-name|cfg
-argument_list|,
-name|NULL
-argument_list|,
-name|ZFS_IMPORT_VERBATIM
+name|flags
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
