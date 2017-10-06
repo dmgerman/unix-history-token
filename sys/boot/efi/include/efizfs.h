@@ -9,6 +9,12 @@ directive|include
 file|<stdint.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -85,6 +91,18 @@ modifier|*
 name|efizfs_get_zfsinfo_list
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|efi_zfs_is_preferred
+parameter_list|(
+name|EFI_HANDLE
+modifier|*
+name|h
 parameter_list|)
 function_decl|;
 end_function_decl
