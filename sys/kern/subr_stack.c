@@ -160,7 +160,8 @@ name|stack
 modifier|*
 name|stack_create
 parameter_list|(
-name|void
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -173,12 +174,14 @@ operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|st
+argument_list|)
 argument_list|,
 name|M_STACK
 argument_list|,
-name|M_WAITOK
+name|flags
 operator||
 name|M_ZERO
 argument_list|)

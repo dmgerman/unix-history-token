@@ -4811,7 +4811,9 @@ name|stack_idx
 index|]
 operator|=
 name|stack_create
-argument_list|()
+argument_list|(
+name|M_WAITOK
+argument_list|)
 expr_stmt|;
 comment|/* Where we will store the td name, tid, etc. */
 name|td_infos

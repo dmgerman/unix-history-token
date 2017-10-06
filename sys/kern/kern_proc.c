@@ -13590,7 +13590,9 @@ expr_stmt|;
 name|st
 operator|=
 name|stack_create
-argument_list|()
+argument_list|(
+name|M_WAITOK
+argument_list|)
 expr_stmt|;
 name|lwpidarray
 operator|=
