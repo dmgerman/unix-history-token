@@ -163,6 +163,12 @@ directive|include
 file|<arm/allwinner/clkng/ccu_a64.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arm/allwinner/clkng/ccu_sun8i_r.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -186,6 +192,12 @@ begin_include
 include|#
 directive|include
 file|<arm/allwinner/clkng/ccu_h3.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/allwinner/clkng/ccu_sun8i_r.h>
 end_include
 
 begin_endif
@@ -252,6 +264,13 @@ name|H3_CCU
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|H3_R_CCU
+value|2
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -270,7 +289,7 @@ begin_define
 define|#
 directive|define
 name|A31_CCU
-value|2
+value|3
 end_define
 
 begin_endif
@@ -291,7 +310,14 @@ begin_define
 define|#
 directive|define
 name|A64_CCU
-value|2
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|A64_R_CCU
+value|5
 end_define
 
 begin_endif
@@ -324,6 +350,12 @@ block|,
 name|H3_CCU
 block|}
 block|,
+block|{
+literal|"allwinner,sun8i-h3-r-ccu"
+block|,
+name|H3_R_CCU
+block|}
+block|,
 endif|#
 directive|endif
 if|#
@@ -350,6 +382,12 @@ block|{
 literal|"allwinner,sun50i-a64-ccu"
 block|,
 name|A64_CCU
+block|}
+block|,
+block|{
+literal|"allwinner,sun50i-a64-r-ccu"
+block|,
+name|A64_R_CCU
 block|}
 block|,
 endif|#
@@ -1536,6 +1574,15 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|H3_R_CCU
+case|:
+name|ccu_sun8i_r_register_clocks
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 if|#
@@ -1565,6 +1612,15 @@ case|case
 name|A64_CCU
 case|:
 name|ccu_a64_register_clocks
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|A64_R_CCU
+case|:
+name|ccu_sun8i_r_register_clocks
 argument_list|(
 name|sc
 argument_list|)
