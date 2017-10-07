@@ -261,6 +261,12 @@ name|img
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EFI_ZFS_BOOT
+end_ifdef
+
 begin_function
 name|bool
 name|efi_zfs_is_preferred
@@ -281,6 +287,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
