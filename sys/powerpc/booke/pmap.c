@@ -11307,7 +11307,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a count of reference bits for a page, clearing those bits.  * It is not necessary for every reference bit to be cleared, but it  * is necessary that 0 only be returned when there are truly no  * reference bits set.  *  * XXX: The exact number of bits to check and clear is a matter that  * should be tested and standardized at some point in the future for  * optimal aging of shared pages.  */
+comment|/*  * Return a count of reference bits for a page, clearing those bits.  * It is not necessary for every reference bit to be cleared, but it  * is necessary that 0 only be returned when there are truly no  * reference bits set.  *  * As an optimization, update the page's dirty field if a modified bit is  * found while counting reference bits.  This opportunistic update can be  * performed at low cost and can eliminate the need for some future calls  * to pmap_is_modified().  However, since this function stops after  * finding PMAP_TS_REFERENCED_MAX reference bits, it may not detect some  * dirty pages.  Those dirty pages will only be detected by a future call  * to pmap_is_modified().  */
 end_comment
 
 begin_function
@@ -11406,6 +11406,18 @@ condition|)
 block|{
 if|if
 condition|(
+name|PTE_ISMODIFIED
+argument_list|(
+name|pte
+argument_list|)
+condition|)
+name|vm_page_dirty
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|PTE_ISREFERENCED
 argument_list|(
 name|pte
@@ -11447,8 +11459,8 @@ if|if
 condition|(
 operator|++
 name|count
-operator|>
-literal|4
+operator|>=
+name|PMAP_TS_REFERENCED_MAX
 condition|)
 block|{
 name|PMAP_UNLOCK

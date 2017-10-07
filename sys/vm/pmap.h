@@ -106,6 +106,17 @@ name|PMAP_ENTER_RESERVED
 value|0xFF000000
 end_define
 
+begin_comment
+comment|/*  * Define the maximum number of machine-dependent reference bits that are  * cleared by a call to pmap_ts_referenced().  This limit serves two purposes.  * First, it bounds the cost of reference bit maintenance on widely shared  * pages.  Second, it prevents numeric overflow during maintenance of a  * widely shared page's "act_count" field.  An overflow could result in the  * premature deactivation of the page.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMAP_TS_REFERENCED_MAX
+value|5
+end_define
+
 begin_function_decl
 name|void
 name|pmap_activate
