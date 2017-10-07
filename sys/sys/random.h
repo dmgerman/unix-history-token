@@ -166,7 +166,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Note: if you add or remove members of random_entropy_source, remember to also update the  * KASSERT regarding what valid members are in random_harvest_internal(), and remember the  * strings in the static array random_source_descr[] in random_harvestq.c.  *  * NOTE: complain loudly to markm@ or on the lists if this enum gets more than 32  * distinct values (0-31)! ENTROPYSOURCE may be == 32, but not> 32.  */
+comment|/*  * Note: if you add or remove members of random_entropy_source, remember to  * also update the strings in the static array random_source_descr[] in  * random_harvestq.c.  *  * NOTE: complain loudly to markm@ or on the lists if this enum gets more than 32  * distinct values (0-31)! ENTROPYSOURCE may be == 32, but not> 32.  */
 end_comment
 
 begin_enum
