@@ -1638,15 +1638,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|vm_page_try_to_free
-parameter_list|(
-name|vm_page_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|vm_page_deactivate
 parameter_list|(
@@ -2031,6 +2022,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|vm_page_sunbusy
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|vm_page_try_to_free
 parameter_list|(
 name|vm_page_t
 name|m
