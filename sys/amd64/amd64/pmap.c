@@ -20423,7 +20423,7 @@ name|pt_entry_t
 name|PG_V
 decl_stmt|;
 name|vm_page_t
-name|mpde
+name|pdpg
 decl_stmt|;
 name|struct
 name|spglist
@@ -20446,7 +20446,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|mpde
+name|pdpg
 operator|=
 name|pmap_allocpde
 argument_list|(
@@ -20489,7 +20489,7 @@ name|PHYS_TO_DMAP
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
-name|mpde
+name|pdpg
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -20518,18 +20518,18 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
-name|mpde
+name|pdpg
 operator|->
 name|wire_count
 operator|>
 literal|1
 argument_list|,
 operator|(
-literal|"pmap_enter_pde: mpde's wire count is too low"
+literal|"pmap_enter_pde: pdpg's wire count is too low"
 operator|)
 argument_list|)
 expr_stmt|;
-name|mpde
+name|pdpg
 operator|->
 name|wire_count
 operator|--
@@ -20626,7 +20626,7 @@ name|pmap
 argument_list|,
 name|va
 argument_list|,
-name|mpde
+name|pdpg
 argument_list|,
 operator|&
 name|free
@@ -22382,6 +22382,13 @@ decl_stmt|;
 name|vm_offset_t
 name|va_next
 decl_stmt|;
+name|vm_page_t
+name|dst_pdpg
+decl_stmt|,
+name|dstmpte
+decl_stmt|,
+name|srcmpte
+decl_stmt|;
 name|pt_entry_t
 name|PG_A
 decl_stmt|,
@@ -22493,13 +22500,6 @@ name|src_pte
 decl_stmt|,
 modifier|*
 name|dst_pte
-decl_stmt|;
-name|vm_page_t
-name|dstmpde
-decl_stmt|,
-name|dstmpte
-decl_stmt|,
-name|srcmpte
 decl_stmt|;
 name|pml4_entry_t
 modifier|*
@@ -22680,7 +22680,7 @@ operator|>
 name|end_addr
 condition|)
 continue|continue;
-name|dstmpde
+name|dst_pdpg
 operator|=
 name|pmap_allocpde
 argument_list|(
@@ -22693,7 +22693,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dstmpde
+name|dst_pdpg
 operator|==
 name|NULL
 condition|)
@@ -22708,7 +22708,7 @@ name|PHYS_TO_DMAP
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
-name|dstmpde
+name|dst_pdpg
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -22782,7 +22782,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|dstmpde
+name|dst_pdpg
 operator|->
 name|wire_count
 operator|--
@@ -29273,10 +29273,10 @@ decl_stmt|,
 name|PG_V
 decl_stmt|;
 name|vm_paddr_t
-name|mpdepa
+name|pdpgpa
 decl_stmt|;
 name|vm_page_t
-name|mpde
+name|pdpg
 decl_stmt|;
 name|PG_A
 operator|=
@@ -29344,7 +29344,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|mpde
+name|pdpg
 operator|=
 name|vm_page_alloc
 argument_list|(
@@ -29383,11 +29383,11 @@ name|FALSE
 operator|)
 return|;
 block|}
-name|mpdepa
+name|pdpgpa
 operator|=
 name|VM_PAGE_TO_PHYS
 argument_list|(
-name|mpde
+name|pdpg
 argument_list|)
 expr_stmt|;
 name|firstpde
@@ -29398,12 +29398,12 @@ operator|*
 operator|)
 name|PHYS_TO_DMAP
 argument_list|(
-name|mpdepa
+name|pdpgpa
 argument_list|)
 expr_stmt|;
 name|newpdpe
 operator|=
-name|mpdepa
+name|pdpgpa
 operator||
 name|PG_M
 operator||
