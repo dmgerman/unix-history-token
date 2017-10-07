@@ -8147,9 +8147,13 @@ name|mask
 operator|<
 name|psize
 operator|&&
-name|vm_page_ps_is_valid
+name|vm_page_ps_test
 argument_list|(
 name|p
+argument_list|,
+name|PS_ALL_VALID
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
