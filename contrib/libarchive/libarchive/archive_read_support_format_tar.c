@@ -11365,6 +11365,12 @@ operator|||
 name|offset
 operator|<
 literal|0
+operator|||
+name|offset
+operator|>
+name|INT64_MAX
+operator|-
+name|remaining
 condition|)
 block|{
 name|archive_set_error
