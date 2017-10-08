@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__SMBONF_H
+name|__DEV_SMBUS_SMBCONF_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__SMBONF_H
+name|__DEV_SMBUS_SMBCONF_H
 end_define
 
 begin_include
@@ -548,6 +548,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __DEV_SMBUS_SMBCONF_H */
+end_comment
 
 end_unit
 
