@@ -125,6 +125,8 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
+name|CAP_EVENT
+argument_list|,
 name|CAP_FCNTL
 argument_list|,
 name|CAP_FSTAT
