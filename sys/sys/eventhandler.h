@@ -280,6 +280,19 @@ define|\
 value|do {									\ 	struct eventhandler_list *_el;					\ 									\ 	if ((_el = eventhandler_find_list(#name)) != NULL)		\ 		eventhandler_deregister(_el, tag);			\ } while(0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EVENTHANDLER_DEREGISTER_NOWAIT
+parameter_list|(
+name|name
+parameter_list|,
+name|tag
+parameter_list|)
+define|\
+value|do {									\ 	struct eventhandler_list *_el;					\ 									\ 	if ((_el = eventhandler_find_list(#name)) != NULL)		\ 		eventhandler_deregister_nowait(_el, tag);		\ } while(0)
+end_define
+
 begin_function_decl
 name|eventhandler_tag
 name|eventhandler_register
@@ -311,6 +324,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|eventhandler_deregister
+parameter_list|(
+name|struct
+name|eventhandler_list
+modifier|*
+name|list
+parameter_list|,
+name|eventhandler_tag
+name|tag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|eventhandler_deregister_nowait
 parameter_list|(
 name|struct
 name|eventhandler_list
