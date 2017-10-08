@@ -12739,6 +12739,61 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Can this platform run the zstd program?  */
+end_comment
+
+begin_function
+name|int
+name|canZstd
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|static
+name|int
+name|tested
+init|=
+literal|0
+decl_stmt|,
+name|value
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|tested
+condition|)
+block|{
+name|tested
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|systemf
+argument_list|(
+literal|"zstd -V %s"
+argument_list|,
+name|redirectArgs
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|value
+operator|=
+literal|1
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Can this platform run the lzip program?  */
 end_comment
 

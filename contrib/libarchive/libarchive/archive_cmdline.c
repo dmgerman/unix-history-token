@@ -398,7 +398,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up command line arguments.  * Returns ARChIVE_OK if everything okey.  * Returns ARChIVE_FAILED if there is a lack of the `"' terminator or an  * empty command line.  * Returns ARChIVE_FATAL if no memory.  */
+comment|/*  * Set up command line arguments.  * Returns ARCHIVE_OK if everything okey.  * Returns ARCHIVE_FAILED if there is a lack of the `"' terminator or an  * empty command line.  * Returns ARCHIVE_FATAL if no memory.  */
 end_comment
 
 begin_function

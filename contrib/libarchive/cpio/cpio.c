@@ -1407,6 +1407,9 @@ case|case
 name|OPTION_LZOP
 case|:
 comment|/* GNU tar, others */
+case|case
+name|OPTION_ZSTD
+case|:
 name|cpio
 operator|->
 name|compress
@@ -2543,6 +2546,19 @@ case|:
 name|r
 operator|=
 name|archive_write_add_filter_lzop
+argument_list|(
+name|cpio
+operator|->
+name|archive
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_ZSTD
+case|:
+name|r
+operator|=
+name|archive_write_add_filter_zstd
 argument_list|(
 name|cpio
 operator|->
