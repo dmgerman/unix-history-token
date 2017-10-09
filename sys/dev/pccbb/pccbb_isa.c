@@ -235,7 +235,11 @@ name|isa_intr_mask
 argument_list|,
 literal|0
 argument_list|,
-literal|"Mask of allowable interrupts for this laptop.  The default is generally\n\ correct, but some laptops do not route all the IRQ pins to the bridge to\n\ save wires.  Sometimes you need a more restrictive mask because some of the\n\ hardware in your laptop may not have a driver so its IRQ might not be\n\ allocated."
+literal|"Mask of allowable interrupts for this laptop.  The default is generally"
+literal|" correct, but some laptops do not route all the IRQ pins to the bridge to"
+literal|" save wires.  Sometimes you need a more restrictive mask because some of"
+literal|" the hardware in your laptop may not have a driver so its IRQ might not be"
+literal|" allocated."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -268,7 +272,13 @@ name|pcic_pd6722_vsense
 argument_list|,
 literal|1
 argument_list|,
-literal|"Select CL-PD6722's VSENSE method.  VSENSE is used to determine the\n\ volatage of inserted cards.  The CL-PD6722 has two methods to determine the\n\ voltage of the card.  0 means assume a 5.0V card and do not check.  1 means\n\ use the same method that the CL-PD6710 uses (default).  2 means use the\n\ same method as the CL-PD6729.  2 is documented in the datasheet as being\n\ the correct way, but 1 seems to give better results on more laptops."
+literal|"Select CL-PD6722's VSENSE method.  VSENSE is used to determine the"
+literal|" voltage of inserted cards.  The CL-PD6722 has two methods to determine"
+literal|" the voltage of the card.  0 means assume a 5.0V card and do not check.  1"
+literal|" means use the same method that the CL-PD6710 uses (default).  2 means use"
+literal|" the same method as the CL-PD6729.  2 is documented in the datasheet as"
+literal|" being the correct way, but 1 seems to give better results on more"
+literal|" laptops."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1769,7 +1769,9 @@ name|pci_enable_io_modes
 argument_list|,
 literal|1
 argument_list|,
-literal|"Enable I/O and memory bits in the config register.  Some BIOSes do not\n\ enable these bits correctly.  We'd like to do this all the time, but there\n\ are some peripherals that this causes problems with."
+literal|"Enable I/O and memory bits in the config register.  Some BIOSes do not"
+literal|" enable these bits correctly.  We'd like to do this all the time, but"
+literal|" there are some peripherals that this causes problems with."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1830,7 +1832,10 @@ name|pci_do_power_nodriver
 argument_list|,
 literal|0
 argument_list|,
-literal|"Place a function into D3 state when no driver attaches to it.  0 means\n\ disable.  1 means conservatively place devices into D3 state.  2 means\n\ aggressively place devices into D3 state.  3 means put absolutely everything\n\ in D3 state."
+literal|"Place a function into D3 state when no driver attaches to it.  0 means"
+literal|" disable.  1 means conservatively place devices into D3 state.  2 means"
+literal|" aggressively place devices into D3 state.  3 means put absolutely"
+literal|" everything in D3 state."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2071,7 +2076,9 @@ name|pci_usb_takeover
 argument_list|,
 literal|1
 argument_list|,
-literal|"Enable early takeover of USB controllers.\n\ Disable this if you depend on BIOS emulation of USB devices, that is\n\ you use USB devices (like keyboard or mouse) but do not load USB drivers"
+literal|"Enable early takeover of USB controllers. Disable this if you depend on"
+literal|" BIOS emulation of USB devices, that is you use USB devices (like"
+literal|" keyboard or mouse) but do not load USB drivers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
