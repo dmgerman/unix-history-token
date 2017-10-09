@@ -746,6 +746,8 @@ argument_list|,
 name|M_SWAP
 argument_list|,
 name|flags
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
