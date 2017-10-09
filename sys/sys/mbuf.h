@@ -1599,17 +1599,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT_SFBUF_NOCACHE
-value|8
-end_define
-
-begin_comment
-comment|/* sendfile(2)'s sf_buf not to be cached */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EXT_VENDOR1
 value|224
 end_define
@@ -1875,36 +1864,6 @@ name|EXT_FLAG_BITS
 define|\
 value|"\20\1EXT_FLAG_EMBREF\2EXT_FLAG_EXTREF\5EXT_FLAG_NOFREE" \     "\21EXT_FLAG_VENDOR1\22EXT_FLAG_VENDOR2\23EXT_FLAG_VENDOR3" \     "\24EXT_FLAG_VENDOR4\25EXT_FLAG_EXP1\26EXT_FLAG_EXP2\27EXT_FLAG_EXP3" \     "\30EXT_FLAG_EXP4"
 end_define
-
-begin_comment
-comment|/*  * External reference/free functions.  */
-end_comment
-
-begin_function_decl
-name|void
-name|sf_ext_free
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sf_ext_free_nocache
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Flags indicating checksum, segmentation and other offload work to be  * done, or already done, by hardware or lower layers.  It is split into  * separate inbound and outbound flags.  *  * Outbound flags that are set by upper protocol layers requesting lower  * layers, or ideally the hardware, to perform these offloading tasks.  * For outbound packets this field and its flags can be directly tested  * against ifnet if_hwassist.  */
