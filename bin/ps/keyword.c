@@ -2282,7 +2282,7 @@ literal|"TDNAM"
 block|,
 name|NULL
 block|,
-literal|"terminal-device-name"
+literal|"thread-name"
 block|,
 name|LJUST
 block|,
