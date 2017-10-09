@@ -6185,6 +6185,21 @@ operator|&
 name|dt_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Reset the fs and gs bases.  The values from the old address 	 * space do not make sense for the new program.  In particular, 	 * gsbase might be the TLS base for the old program but the new 	 * program has no TLS now. 	 */
+name|set_fsbase
+argument_list|(
+name|td
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|set_gsbase
+argument_list|(
+name|td
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
