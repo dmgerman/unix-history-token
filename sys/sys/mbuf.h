@@ -657,17 +657,16 @@ name|m_ext
 block|{
 union|union
 block|{
+comment|/* 		 * If EXT_FLAG_EMBREF is set, then we use refcount in the 		 * mbuf, the 'ext_count' member.  Otherwise, we have a 		 * shadow copy and we use pointer 'ext_cnt'.  The original 		 * mbuf is responsible to carry the pointer to free routine 		 * and its arguments.  They aren't copied into shadows in 		 * mb_dupcl() to avoid dereferencing next cachelines. 		 */
 specifier|volatile
 name|u_int
 name|ext_count
 decl_stmt|;
-comment|/* value of ref count info */
 specifier|volatile
 name|u_int
 modifier|*
 name|ext_cnt
 decl_stmt|;
-comment|/* pointer to ref count info */
 block|}
 union|;
 name|char
@@ -690,6 +689,11 @@ range|:
 literal|24
 decl_stmt|;
 comment|/* external storage mbuf flags */
+comment|/* 	 * Fields below store the free context for the external storage. 	 * They are valid only in the refcount carrying mbuf, the one with 	 * EXT_FLAG_EMBREF flag, with exclusion for EXT_EXTREF type, where 	 * the free context is copied into all mbufs that use same external 	 * storage. 	 */
+define|#
+directive|define
+name|m_ext_copylen
+value|offsetof(struct m_ext, ext_free)
 name|m_ext_free_t
 modifier|*
 name|ext_free
