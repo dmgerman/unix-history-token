@@ -639,6 +639,18 @@ begin_comment
 comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  * Size ILP32: 28  *	 LP64: 48  * Compile-time assertions in uipc_mbuf.c test these values to ensure that  * they are correct.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|void
+name|m_ext_free_t
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|m_ext
@@ -658,7 +670,8 @@ decl_stmt|;
 comment|/* pointer to ref count info */
 block|}
 union|;
-name|caddr_t
+name|char
+modifier|*
 name|ext_buf
 decl_stmt|;
 comment|/* start of buffer */
@@ -677,24 +690,11 @@ range|:
 literal|24
 decl_stmt|;
 comment|/* external storage mbuf flags */
-name|void
-function_decl|(
+name|m_ext_free_t
 modifier|*
 name|ext_free
-function_decl|)
+decl_stmt|;
 comment|/* free routine if not the usual */
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
 name|void
 modifier|*
 name|ext_arg1
@@ -1780,7 +1780,7 @@ value|0x010000
 end_define
 
 begin_comment
-comment|/* for vendor-internal use */
+comment|/* These flags are vendor */
 end_comment
 
 begin_define
@@ -1791,7 +1791,7 @@ value|0x020000
 end_define
 
 begin_comment
-comment|/* for vendor-internal use */
+comment|/* or submodule specific, */
 end_comment
 
 begin_define
@@ -1802,7 +1802,7 @@ value|0x040000
 end_define
 
 begin_comment
-comment|/* for vendor-internal use */
+comment|/* not used by mbuf code. */
 end_comment
 
 begin_define
@@ -1813,7 +1813,7 @@ value|0x080000
 end_define
 
 begin_comment
-comment|/* for vendor-internal use */
+comment|/* Set/read by submodule. */
 end_comment
 
 begin_define
@@ -2951,25 +2951,12 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|caddr_t
+name|char
+modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
+name|m_ext_free_t
 parameter_list|,
 name|void
 modifier|*
@@ -3389,7 +3376,8 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|caddr_t
+name|char
+modifier|*
 name|buf
 parameter_list|,
 name|u_int
@@ -3399,22 +3387,8 @@ name|u_int
 modifier|*
 name|ref_cnt
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
+name|m_ext_free_t
 name|freef
-function_decl|)
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
 parameter_list|,
 name|void
 modifier|*
@@ -4297,7 +4271,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|m_extadd((m), (caddr_t)(buf), (size), (free), (arg1), (arg2),	\     (flags), (type))
+value|m_extadd((m), (char *)(buf), (size), (free), (arg1), (arg2),	\     (flags), (type))
 end_define
 
 begin_define

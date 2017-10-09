@@ -331,23 +331,6 @@ name|bus_addr_t
 name|rxds_paddr
 decl_stmt|;
 comment|/* physical address of the segment */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800016
-name|struct
-name|cas_softc
-modifier|*
-name|rxds_sc
-decl_stmt|;
-comment|/* softc pointer */
-name|u_int
-name|rxds_idx
-decl_stmt|;
-comment|/* our index */
-endif|#
-directive|endif
 name|u_int
 name|rxds_refcount
 decl_stmt|;
@@ -818,34 +801,6 @@ define|\
 value|__CAS_UPDATE_RXDESC(&(sc)->sc_rxdescs[(d)],			\&(sc)->sc_rxdsoft[(s)], (s))
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800016
-end_if
-
-begin_define
-define|#
-directive|define
-name|CAS_INIT_RXDESC
-parameter_list|(
-name|sc
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|do {									\ 	struct cas_rxdsoft *__rxds =&(sc)->sc_rxdsoft[(s)];		\ 									\ 	__rxds->rxds_sc = (sc);						\ 	__rxds->rxds_idx = (s);						\ 	__CAS_UPDATE_RXDESC(&(sc)->sc_rxdescs[(d)], __rxds, (s));	\ } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -859,11 +814,6 @@ name|s
 parameter_list|)
 value|CAS_UPDATE_RXDESC(sc, d, s)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

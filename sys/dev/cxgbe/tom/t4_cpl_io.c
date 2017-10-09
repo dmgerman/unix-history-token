@@ -10881,14 +10881,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|void
-modifier|*
-name|buffer
-parameter_list|,
-name|void
-modifier|*
-name|arg
 parameter_list|)
 block|{
 name|struct
@@ -10896,7 +10888,11 @@ name|aiotx_buffer
 modifier|*
 name|ab
 init|=
-name|buffer
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg1
 decl_stmt|;
 ifdef|#
 directive|ifdef

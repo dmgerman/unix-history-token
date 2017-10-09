@@ -11928,14 +11928,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|void
-modifier|*
-name|data
-parameter_list|,
-name|void
-modifier|*
-name|arg
 parameter_list|)
 block|{
 name|struct
@@ -11943,14 +11935,22 @@ name|mwl_softc
 modifier|*
 name|sc
 init|=
-name|arg
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg1
 decl_stmt|;
 comment|/* XXX bounds check data */
 name|mwl_putrxdma
 argument_list|(
 name|sc
 argument_list|,
-name|data
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we were previously blocked by a lack of rx dma buffers 	 * check if we now have enough to restart rx interrupt handling. 	 * NB: we know we are called at splvm which is above splnet. 	 */
@@ -12761,7 +12761,7 @@ operator|=
 name|newdata
 expr_stmt|;
 comment|/* 		 * Attach the dma buffer to the mbuf; 		 * mwl_rxbuf_init will re-setup the rx 		 * descriptor using the replacement dma 		 * buffer we just installed above. 		 */
-name|MEXTADD
+name|m_extadd
 argument_list|(
 name|m
 argument_list|,
@@ -12771,9 +12771,9 @@ name|MWL_AGGR_SIZE
 argument_list|,
 name|mwl_ext_free
 argument_list|,
-name|data
-argument_list|,
 name|sc
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|,

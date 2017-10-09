@@ -314,12 +314,6 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3107,7 +3101,7 @@ name|m_new
 init|=
 name|NULL
 decl_stmt|;
-name|caddr_t
+name|char
 modifier|*
 name|buf
 init|=
@@ -3196,16 +3190,6 @@ block|}
 comment|/* Attach the buffer to the mbuf */
 name|m_new
 operator|->
-name|m_data
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|buf
-expr_stmt|;
-name|m_new
-operator|->
 name|m_len
 operator|=
 name|m_new
@@ -3216,7 +3200,7 @@ name|len
 operator|=
 name|LGE_JUMBO_FRAMELEN
 expr_stmt|;
-name|MEXTADD
+name|m_extadd
 argument_list|(
 name|m_new
 argument_list|,
@@ -3226,14 +3210,9 @@ name|LGE_JUMBO_FRAMELEN
 argument_list|,
 name|lge_jfree
 argument_list|,
-name|buf
-argument_list|,
-operator|(
-expr|struct
-name|lge_softc
-operator|*
-operator|)
 name|sc
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -3803,14 +3782,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|void
-modifier|*
-name|args
 parameter_list|)
 block|{
 name|struct
@@ -3829,7 +3800,11 @@ decl_stmt|;
 comment|/* Extract the softc struct pointer. */
 name|sc
 operator|=
-name|args
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg1
 expr_stmt|;
 if|if
 condition|(
@@ -3849,7 +3824,11 @@ operator|(
 operator|(
 name|vm_offset_t
 operator|)
-name|buf
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
 operator|-
 operator|(
 name|vm_offset_t
