@@ -11201,11 +11201,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
