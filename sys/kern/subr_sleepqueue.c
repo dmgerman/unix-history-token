@@ -6156,9 +6156,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|td
 argument_list|,
-argument|&sq->sq_blocked[
-literal|0
-argument|]
+argument|&sq->sq_blocked[i]
 argument_list|,
 argument|td_slpq
 argument_list|)
