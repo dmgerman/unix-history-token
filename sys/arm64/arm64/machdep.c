@@ -525,6 +525,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Physical address of the EFI System Table. Stashed from the metadata hints  * passed into the kernel and used by the EFI code to call runtime services.  */
+end_comment
+
+begin_decl_stmt
+name|vm_paddr_t
+name|efi_systbl_phys
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* pagezero_* implementations are provided in support.S */
 end_comment
 
@@ -4489,6 +4499,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|efi_systbl_phys
+operator|=
+name|MD_FETCH
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFOMD_FW_HANDLE
+argument_list|,
+name|vm_paddr_t
+argument_list|)
+expr_stmt|;
 comment|/* Find the address to start allocating from */
 name|lastaddr
 operator|=
