@@ -2336,6 +2336,23 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"RSS caps %#x\n"
+argument_list|,
+name|caps
+operator|.
+name|ndis_caps
+argument_list|)
+expr_stmt|;
 comment|/* Commit! */
 name|sc
 operator|->
