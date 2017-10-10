@@ -1551,6 +1551,41 @@ name|NDIS_TXCSUM_INFO_THOFF
 value|0x03ff0000
 end_define
 
+begin_define
+define|#
+directive|define
+name|NDIS_TXCSUM_INFO_MKL4CS
+parameter_list|(
+name|thoff
+parameter_list|,
+name|flag
+parameter_list|)
+define|\
+value|((((uint32_t)(thoff))<< 16) | (flag))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_TXCSUM_INFO_MKTCPCS
+parameter_list|(
+name|thoff
+parameter_list|)
+define|\
+value|NDIS_TXCSUM_INFO_MKL4CS((thoff), NDIS_TXCSUM_INFO_TCPCS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_TXCSUM_INFO_MKUDPCS
+parameter_list|(
+name|thoff
+parameter_list|)
+define|\
+value|NDIS_TXCSUM_INFO_MKL4CS((thoff), NDIS_TXCSUM_INFO_UDPCS)
+end_define
+
 begin_endif
 endif|#
 directive|endif
