@@ -3829,7 +3829,7 @@ literal|0
 operator|&&
 name|count
 operator|<
-literal|130
+literal|260
 condition|)
 do|;
 name|count
@@ -3964,6 +3964,34 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"16950 or compatible"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|count
+operator|>=
+literal|224
+operator|&&
+name|count
+operator|<=
+literal|256
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_rxfifosz
+operator|=
+literal|256
+expr_stmt|;
+name|device_set_desc
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"16x50 with 256 byte FIFO"
 argument_list|)
 expr_stmt|;
 block|}
