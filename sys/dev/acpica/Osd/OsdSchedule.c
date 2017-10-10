@@ -978,18 +978,6 @@ decl_stmt|;
 name|UINT64
 name|t
 decl_stmt|;
-comment|/* XXX During early boot there is no (decent) timer available yet. */
-name|KASSERT
-argument_list|(
-name|cold
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"acpi: timer op not yet supported during boot"
-operator|)
-argument_list|)
-expr_stmt|;
 name|binuptime
 argument_list|(
 operator|&
