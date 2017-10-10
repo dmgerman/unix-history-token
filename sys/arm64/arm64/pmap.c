@@ -1201,46 +1201,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|pmap_l0_index
-parameter_list|(
-name|va
-parameter_list|)
-value|(((va)>> L0_SHIFT)& L0_ADDR_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_l1_index
-parameter_list|(
-name|va
-parameter_list|)
-value|(((va)>> L1_SHIFT)& Ln_ADDR_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_l2_index
-parameter_list|(
-name|va
-parameter_list|)
-value|(((va)>> L2_SHIFT)& Ln_ADDR_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_l3_index
-parameter_list|(
-name|va
-parameter_list|)
-value|(((va)>> L3_SHIFT)& Ln_ADDR_MASK)
-end_define
-
 begin_function
 specifier|static
 name|__inline
