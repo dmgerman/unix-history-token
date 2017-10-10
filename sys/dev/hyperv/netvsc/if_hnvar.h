@@ -42,15 +42,11 @@ name|HN_RXBUF_SIZE_COMPAT
 value|(15 * 1024 * 1024)
 end_define
 
-begin_comment
-comment|/* Claimed to be 12232B */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|HN_MTU_MAX
-value|(9 * 1024)
+value|(65535 - ETHER_ADDR_LEN)
 end_define
 
 begin_define
