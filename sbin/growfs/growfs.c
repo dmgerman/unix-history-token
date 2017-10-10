@@ -8199,13 +8199,11 @@ specifier|static
 name|void
 name|cgckhash
 parameter_list|(
-name|cgp
-parameter_list|)
 name|struct
 name|cg
 modifier|*
 name|cgp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
