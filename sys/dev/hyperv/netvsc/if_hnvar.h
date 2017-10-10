@@ -177,6 +177,10 @@ name|int
 name|hn_rx_flags
 decl_stmt|;
 comment|/* HN_RX_FLAG_ */
+name|uint32_t
+name|hn_mbuf_hash
+decl_stmt|;
+comment|/* NDIS_HASH_ */
 name|uint8_t
 modifier|*
 name|hn_rxbuf
@@ -734,7 +738,11 @@ decl_stmt|;
 name|uint32_t
 name|hn_rss_hash
 decl_stmt|;
-comment|/* NDIS_HASH_ */
+comment|/* setting, NDIS_HASH_ */
+name|uint32_t
+name|hn_rss_hcap
+decl_stmt|;
+comment|/* caps, NDIS_HASH_ */
 name|struct
 name|ndis_rssprm_toeplitz
 name|hn_rss

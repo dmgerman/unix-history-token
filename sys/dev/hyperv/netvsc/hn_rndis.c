@@ -2368,7 +2368,7 @@ name|indsz
 expr_stmt|;
 name|sc
 operator|->
-name|hn_rss_hash
+name|hn_rss_hcap
 operator|=
 name|hash_func
 operator||
