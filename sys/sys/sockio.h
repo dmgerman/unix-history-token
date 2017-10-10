@@ -843,6 +843,28 @@ begin_comment
 comment|/* get net xmedia */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SIOCGIFRSSKEY
+value|_IOWR('i', 150, struct ifrsskey)
+end_define
+
+begin_comment
+comment|/* get RSS key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFRSSHASH
+value|_IOWR('i', 151, struct ifrsshash)
+end_define
+
+begin_comment
+comment|/* get the current RSS 							type/func settings */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
