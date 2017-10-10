@@ -46,21 +46,6 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* Local prototypes */
-end_comment
-
-begin_function_decl
-specifier|static
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|TrGetOpFromCache
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    TrCreateOp  *  * PARAMETERS:  ParseOpcode         - Opcode to be assigned to the op  *              NumChildren         - Number of children to follow  *              ...                 - A list of child ops to link to the new  *                                    op. NumChildren long.  *  * RETURN:      Pointer to the new op. Aborts on allocation failure  *  * DESCRIPTION: Create a new parse op and link together a list of child  *              ops underneath the new op.  *  ******************************************************************************/
 end_comment
 
@@ -827,7 +812,7 @@ return|;
 block|}
 name|Op
 operator|=
-name|TrGetOpFromCache
+name|UtParseOpCacheCalloc
 argument_list|()
 expr_stmt|;
 comment|/* Copy the pertinent values (omit link pointer fields) */
@@ -1704,7 +1689,7 @@ name|LatestOp
 decl_stmt|;
 name|Op
 operator|=
-name|TrGetOpFromCache
+name|UtParseOpCacheCalloc
 argument_list|()
 expr_stmt|;
 name|Op
@@ -2045,94 +2030,6 @@ block|}
 return|return
 operator|(
 name|Op
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrGetOpFromCache  *  * PARAMETERS:  None  *  * RETURN:      New parse op. Aborts on allocation failure  *  * DESCRIPTION: Allocate a new parse op for the parse tree. Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|TrGetOpFromCache
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|ASL_CACHE_INFO
-modifier|*
-name|Cache
-decl_stmt|;
-if|if
-condition|(
-name|Gbl_ParseOpCacheNext
-operator|>=
-name|Gbl_ParseOpCacheLast
-condition|)
-block|{
-comment|/* Allocate a new buffer */
-name|Cache
-operator|=
-name|UtLocalCalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|Cache
-operator|->
-name|Next
-argument_list|)
-operator|+
-operator|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_PARSE_OBJECT
-argument_list|)
-operator|*
-name|ASL_PARSEOP_CACHE_SIZE
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Link new cache buffer to head of list */
-name|Cache
-operator|->
-name|Next
-operator|=
-name|Gbl_ParseOpCacheList
-expr_stmt|;
-name|Gbl_ParseOpCacheList
-operator|=
-name|Cache
-expr_stmt|;
-comment|/* Setup cache management pointers */
-name|Gbl_ParseOpCacheNext
-operator|=
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_PARSE_OBJECT
-argument_list|,
-name|Cache
-operator|->
-name|Buffer
-argument_list|)
-expr_stmt|;
-name|Gbl_ParseOpCacheLast
-operator|=
-name|Gbl_ParseOpCacheNext
-operator|+
-name|ASL_PARSEOP_CACHE_SIZE
-expr_stmt|;
-block|}
-name|Gbl_ParseOpCount
-operator|++
-expr_stmt|;
-return|return
-operator|(
-name|Gbl_ParseOpCacheNext
-operator|++
 operator|)
 return|;
 block|}

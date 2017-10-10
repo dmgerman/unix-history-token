@@ -13,12 +13,6 @@ directive|include
 file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/compiler/dtcompiler.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -770,7 +764,7 @@ index|]
 operator|.
 name|Filename
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(

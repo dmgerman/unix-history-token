@@ -662,7 +662,7 @@ name|Filename
 operator|=
 name|NULL
 expr_stmt|;
-name|CmDeleteCaches
+name|UtDeleteLocalCaches
 argument_list|()
 expr_stmt|;
 return|return
@@ -731,7 +731,7 @@ index|]
 operator|.
 name|Filename
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
