@@ -823,6 +823,10 @@ if|if
 condition|(
 name|pclen
 operator|==
+literal|0
+operator|||
+name|pclen
+operator|==
 operator|(
 name|size_t
 operator|)
