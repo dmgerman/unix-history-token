@@ -7574,6 +7574,16 @@ name|types
 operator||=
 name|RSS_TYPE_TCP_IPV6_EX
 expr_stmt|;
+if|if
+condition|(
+name|rss_hash
+operator|&
+name|NDIS_HASH_UDP_IPV4_X
+condition|)
+name|types
+operator||=
+name|RSS_TYPE_UDP_IPV4
+expr_stmt|;
 return|return
 operator|(
 name|types
@@ -7602,8 +7612,6 @@ operator|(
 name|types
 operator|&
 operator|(
-name|RSS_TYPE_UDP_IPV4
-operator||
 name|RSS_TYPE_UDP_IPV6
 operator||
 name|RSS_TYPE_UDP_IPV6_EX
@@ -7613,7 +7621,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"UDP4, UDP6 and UDP6EX are not supported"
+literal|"UDP6 and UDP6EX are not supported"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7676,6 +7684,16 @@ condition|)
 name|rss_hash
 operator||=
 name|NDIS_HASH_TCP_IPV6_EX
+expr_stmt|;
+if|if
+condition|(
+name|types
+operator|&
+name|RSS_TYPE_UDP_IPV4
+condition|)
+name|rss_hash
+operator||=
+name|NDIS_HASH_UDP_IPV4_X
 expr_stmt|;
 return|return
 operator|(
@@ -8131,7 +8149,7 @@ name|mbuf_types
 operator|=
 name|my_types
 expr_stmt|;
-comment|/* 	 * Detect RSS hash value/type confliction. 	 * 	 * NOTE: 	 * We don't disable the hash type, but stop delivery the hash 	 * value/type through mbufs on RX path. 	 */
+comment|/* 	 * Detect RSS hash value/type confliction. 	 * 	 * NOTE: 	 * We don't disable the hash type, but stop delivery the hash 	 * value/type through mbufs on RX path. 	 * 	 * XXX If HN_CAP_UDPHASH is set in hn_caps, then UDP 4-tuple 	 * hash is delivered with type of TCP_IPV4.  This means if 	 * UDP_IPV4 is enabled, then TCP_IPV4 should be forced, at 	 * least to hn_mbuf_hash.  However, given that _all_ of the 	 * NICs implement TCP_IPV4, this will _not_ impose any issues 	 * here. 	 */
 if|if
 condition|(
 operator|(
@@ -17107,6 +17125,14 @@ condition|(
 name|l4proto
 operator|==
 name|IPPROTO_UDP
+operator|&&
+operator|(
+name|rxr
+operator|->
+name|hn_mbuf_hash
+operator|&
+name|NDIS_HASH_UDP_IPV4_X
+operator|)
 condition|)
 block|{
 name|hash_type

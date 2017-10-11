@@ -164,7 +164,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|NDIS_HASH_UDP_IPV4_X
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* XXX non-standard */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NDIS_HASH_ALL
+value|(NDIS_HASH_IPV4 |	\ 					 NDIS_HASH_TCP_IPV4 |	\ 					 NDIS_HASH_IPV6 |	\ 					 NDIS_HASH_IPV6_EX |	\ 					 NDIS_HASH_TCP_IPV6 |	\ 					 NDIS_HASH_TCP_IPV6_EX |\ 					 NDIS_HASH_UDP_IPV4_X)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_STD
 value|(NDIS_HASH_IPV4 |	\ 					 NDIS_HASH_TCP_IPV4 |	\ 					 NDIS_HASH_IPV6 |	\ 					 NDIS_HASH_IPV6_EX |	\ 					 NDIS_HASH_TCP_IPV6 |	\ 					 NDIS_HASH_TCP_IPV6_EX)
 end_define
 
@@ -177,7 +195,7 @@ define|#
 directive|define
 name|NDIS_HASH_BITS
 define|\
-value|"\20\1TOEPLITZ\11IP4\12TCP4\13IP6\14IP6EX\15TCP6\16TCP6EX"
+value|"\20\1TOEPLITZ\11IP4\12TCP4\13IP6\14IP6EX\15TCP6\16TCP6EX\17UDP4_X"
 end_define
 
 begin_define

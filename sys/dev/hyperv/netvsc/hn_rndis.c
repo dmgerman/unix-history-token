@@ -2458,6 +2458,23 @@ name|hash_func
 operator||
 name|hash_types
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_caps
+operator|&
+name|HN_CAP_UDPHASH
+condition|)
+block|{
+comment|/* UDP 4-tuple hash is unconditionally enabled. */
+name|sc
+operator|->
+name|hn_rss_hcap
+operator||=
+name|NDIS_HASH_UDP_IPV4_X
+expr_stmt|;
+block|}
 operator|*
 name|rxr_cnt0
 operator|=
@@ -3636,7 +3653,11 @@ name|NDIS_HASH_FUNCTION_MASK
 operator|)
 argument_list|,
 operator|(
-literal|"no hash func"
+literal|"no hash func %08x"
+operator|,
+name|sc
+operator|->
+name|hn_rss_hash
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3647,11 +3668,15 @@ name|sc
 operator|->
 name|hn_rss_hash
 operator|&
-name|NDIS_HASH_TYPE_MASK
+name|NDIS_HASH_STD
 operator|)
 argument_list|,
 operator|(
-literal|"no hash types"
+literal|"no standard hash types %08x"
+operator|,
+name|sc
+operator|->
+name|hn_rss_hash
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3752,6 +3777,12 @@ operator|=
 name|sc
 operator|->
 name|hn_rss_hash
+operator|&
+operator|(
+name|NDIS_HASH_FUNCTION_MASK
+operator||
+name|NDIS_HASH_STD
+operator|)
 expr_stmt|;
 name|prm
 operator|->
