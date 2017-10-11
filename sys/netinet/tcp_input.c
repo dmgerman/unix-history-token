@@ -565,13 +565,6 @@ literal|0
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_drop_synfin
-value|VNET(drop_synfin)
-end_define
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -647,13 +640,6 @@ operator|=
 literal|1
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_do_rfc3042
-value|VNET(tcp_do_rfc3042)
-end_define
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -940,13 +926,6 @@ literal|0
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_tcp_insecure_syn
-value|VNET(tcp_insecure_syn)
-end_define
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -984,13 +963,6 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_insecure_rst
-value|VNET(tcp_insecure_rst)
-end_define
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1077,13 +1049,6 @@ literal|1
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_tcp_do_autorcvbuf
-value|VNET(tcp_do_autorcvbuf)
-end_define
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -1123,13 +1088,6 @@ operator|*
 literal|1024
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_autorcvbuf_inc
-value|VNET(tcp_autorcvbuf_inc)
-end_define
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1172,13 +1130,6 @@ operator|*
 literal|1024
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_autorcvbuf_max
-value|VNET(tcp_autorcvbuf_max)
-end_define
 
 begin_expr_stmt
 name|SYSCTL_INT

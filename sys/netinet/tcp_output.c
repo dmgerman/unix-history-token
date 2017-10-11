@@ -403,13 +403,6 @@ literal|1
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_tcp_do_tso
-value|VNET(tcp_do_tso)
-end_define
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -495,13 +488,6 @@ literal|1
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_tcp_do_autosndbuf
-value|VNET(tcp_do_autosndbuf)
-end_define
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -541,13 +527,6 @@ operator|*
 literal|1024
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_autosndbuf_inc
-value|VNET(tcp_autosndbuf_inc)
-end_define
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -590,13 +569,6 @@ operator|*
 literal|1024
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_autosndbuf_max
-value|VNET(tcp_autosndbuf_max)
-end_define
 
 begin_expr_stmt
 name|SYSCTL_INT
