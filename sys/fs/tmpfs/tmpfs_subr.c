@@ -1488,6 +1488,12 @@ name|tn_type
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If we are unmounting there is no need for going through the overhead 	 * of freeing the inodes from the unr individually, so free them all in 	 * one go later. 	 */
+if|if
+condition|(
+operator|!
+name|detach
+condition|)
 name|free_unr
 argument_list|(
 name|tmp
