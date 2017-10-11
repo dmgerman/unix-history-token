@@ -5739,6 +5739,11 @@ decl_stmt|;
 name|uint32_t
 name|mdump_template_size
 decl_stmt|;
+comment|/* driver state related */
+name|void
+modifier|*
+name|drvr_state
+decl_stmt|;
 block|}
 name|qla_hw_t
 typedef|;
