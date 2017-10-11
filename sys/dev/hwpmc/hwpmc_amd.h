@@ -226,7 +226,7 @@ name|AMD_PMC_TO_EVENTMASK
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& 0xFF) | (((uint32_t)(x)& 0xF00)<< 24))
+value|(((x)& 0xFF) | (((uint64_t)(x)& 0xF00)<< 24))
 end_define
 
 begin_define
