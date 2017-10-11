@@ -287,13 +287,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|net
-name|init_net
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|spinlock_t
 name|pci_lock
 decl_stmt|;
