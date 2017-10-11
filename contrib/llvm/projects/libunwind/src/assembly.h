@@ -159,6 +159,12 @@ name|name
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NO_EXEC_STACK_DIRECTIVE
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -207,6 +213,48 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNU__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ANDROID__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NO_EXEC_STACK_DIRECTIVE
+value|.section .note.GNU-stack,"",%progbits
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NO_EXEC_STACK_DIRECTIVE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -221,6 +269,12 @@ name|name
 parameter_list|)
 define|\
 value|.def name SEPARATOR                                                          \     .scl 2 SEPARATOR                                                           \     .type 32 SEPARATOR                                                         \   .endef
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_EXEC_STACK_DIRECTIVE
 end_define
 
 begin_endif
