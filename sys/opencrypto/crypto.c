@@ -2179,7 +2179,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"crypto: assign %s driver id %u, flags %u\n"
+literal|"crypto: assign %s driver id %u, flags 0x%x\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
