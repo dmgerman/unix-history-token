@@ -3477,6 +3477,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|clear_unrhdr
+parameter_list|(
+name|struct
+name|unrhdr
+modifier|*
+name|uh
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|clean_unrhdr
 parameter_list|(
 name|struct
