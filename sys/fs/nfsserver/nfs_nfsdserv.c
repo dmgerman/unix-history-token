@@ -5618,11 +5618,9 @@ if|if
 condition|(
 name|error
 condition|)
-name|panic
-argument_list|(
-literal|"nfsrv_write mbuf"
-argument_list|)
-expr_stmt|;
+goto|goto
+name|nfsmout
+goto|;
 block|}
 if|if
 condition|(
