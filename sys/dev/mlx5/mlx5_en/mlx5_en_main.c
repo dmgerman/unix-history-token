@@ -7284,6 +7284,16 @@ return|;
 name|mlx5e_cq_arm
 argument_list|(
 name|cq
+argument_list|,
+name|MLX5_GET_DOORBELL_LOCK
+argument_list|(
+operator|&
+name|cq
+operator|->
+name|priv
+operator|->
+name|doorbell_lock
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

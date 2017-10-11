@@ -2965,6 +2965,16 @@ operator|&
 name|sq
 operator|->
 name|cq
+argument_list|,
+name|MLX5_GET_DOORBELL_LOCK
+argument_list|(
+operator|&
+name|sq
+operator|->
+name|priv
+operator|->
+name|doorbell_lock
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

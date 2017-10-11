@@ -2606,6 +2606,10 @@ name|struct
 name|mlx5e_cq
 modifier|*
 name|cq
+parameter_list|,
+name|spinlock_t
+modifier|*
+name|dblock
 parameter_list|)
 block|{
 name|struct
@@ -2632,7 +2636,7 @@ name|uar
 operator|->
 name|map
 argument_list|,
-name|NULL
+name|dblock
 argument_list|,
 name|cq
 operator|->
