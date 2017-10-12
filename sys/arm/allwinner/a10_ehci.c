@@ -181,13 +181,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SW_USB_PMU_IRQ_ENABLE
-value|0x800
-end_define
-
-begin_define
-define|#
-directive|define
 name|SW_SDRAM_REG_HPCR_USB1
 value|(0x250 + ((1<< 2) * 4))
 end_define
@@ -204,34 +197,6 @@ define|#
 directive|define
 name|SW_SDRAM_BP_HPCR_ACCESS
 value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SW_ULPI_BYPASS
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SW_AHB_INCRX_ALIGN
-value|(1<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SW_AHB_INCR4
-value|(1<< 9)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SW_AHB_INCR8
-value|(1<< 10)
 end_define
 
 begin_define
@@ -460,7 +425,16 @@ operator|&
 name|a31_ehci_conf
 block|}
 block|,
-comment|/* { "allwinner,sun50i-a64-ehci",	(uintptr_t)&a31_ehci_conf }, */
+block|{
+literal|"allwinner,sun50i-a64-ehci"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|a31_ehci_conf
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -1200,45 +1174,6 @@ name|error
 goto|;
 block|}
 block|}
-comment|/* Enable passby */
-name|reg_value
-operator|=
-name|A10_READ_4
-argument_list|(
-name|sc
-argument_list|,
-name|SW_USB_PMU_IRQ_ENABLE
-argument_list|)
-expr_stmt|;
-name|reg_value
-operator||=
-name|SW_AHB_INCR8
-expr_stmt|;
-comment|/* AHB INCR8 enable */
-name|reg_value
-operator||=
-name|SW_AHB_INCR4
-expr_stmt|;
-comment|/* AHB burst type INCR4 enable */
-name|reg_value
-operator||=
-name|SW_AHB_INCRX_ALIGN
-expr_stmt|;
-comment|/* AHB INCRX align enable */
-name|reg_value
-operator||=
-name|SW_ULPI_BYPASS
-expr_stmt|;
-comment|/* ULPI bypass enable */
-name|A10_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|SW_USB_PMU_IRQ_ENABLE
-argument_list|,
-name|reg_value
-argument_list|)
-expr_stmt|;
 comment|/* Configure port */
 if|if
 condition|(
@@ -1554,49 +1489,6 @@ name|reg_value
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Disable passby */
-name|reg_value
-operator|=
-name|A10_READ_4
-argument_list|(
-name|sc
-argument_list|,
-name|SW_USB_PMU_IRQ_ENABLE
-argument_list|)
-expr_stmt|;
-name|reg_value
-operator|&=
-operator|~
-name|SW_AHB_INCR8
-expr_stmt|;
-comment|/* AHB INCR8 disable */
-name|reg_value
-operator|&=
-operator|~
-name|SW_AHB_INCR4
-expr_stmt|;
-comment|/* AHB burst type INCR4 disable */
-name|reg_value
-operator|&=
-operator|~
-name|SW_AHB_INCRX_ALIGN
-expr_stmt|;
-comment|/* AHB INCRX align disable */
-name|reg_value
-operator|&=
-operator|~
-name|SW_ULPI_BYPASS
-expr_stmt|;
-comment|/* ULPI bypass disable */
-name|A10_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|SW_USB_PMU_IRQ_ENABLE
-argument_list|,
-name|reg_value
-argument_list|)
-expr_stmt|;
 comment|/* Disable clock */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
