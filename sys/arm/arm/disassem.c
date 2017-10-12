@@ -295,6 +295,16 @@ name|__ARM_ARCH
 operator|>=
 literal|6
 block|{
+literal|0x0fff0ff0
+block|,
+literal|0x06bf0fb0
+block|,
+literal|"rev16"
+block|,
+literal|"dm"
+block|}
+block|,
+block|{
 literal|0xffffffff
 block|,
 literal|0xf57ff01f
