@@ -1403,7 +1403,7 @@ expr_stmt|;
 else|else
 name|dtsec_rm_pool_rx_put_buffer
 argument_list|(
-name|arg
+name|sc
 argument_list|,
 name|buffer
 argument_list|,
