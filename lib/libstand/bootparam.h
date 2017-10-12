@@ -3,6 +3,10 @@ begin_comment
 comment|/*	$NetBSD: bootparam.h,v 1.3 1998/01/05 19:19:41 perry Exp $	*/
 end_comment
 
+begin_comment
+comment|/*	$FreeBSD$ */
+end_comment
+
 begin_function_decl
 name|int
 name|bp_whoami
