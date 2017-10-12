@@ -55,6 +55,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Make sure we have an explicit reference to exit so libsa's panic pulls in the MD exit */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|exitfn
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+init|=
+name|exit
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|devsw

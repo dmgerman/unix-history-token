@@ -56,6 +56,24 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Make sure we have an explicit reference to exit so libsa's panic pulls in the MD exit */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|exitfn
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+init|=
+name|exit
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * We could use linker sets for some or all of these, but  * then we would have to control what ended up linked into  * the bootstrap.  So it's easier to conditionalise things  * here.  *  * XXX rename these arrays to be consistent and less namespace-hostile  */
 end_comment
 

@@ -2423,6 +2423,16 @@ end_comment
 
 begin_function_decl
 specifier|extern
+name|void
+name|exit
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|getchar
 parameter_list|(
