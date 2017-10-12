@@ -497,7 +497,7 @@ end_function_decl
 
 begin_decl_stmt
 name|void
-name|exit
+name|efi_exit
 argument_list|(
 name|EFI_STATUS
 name|status

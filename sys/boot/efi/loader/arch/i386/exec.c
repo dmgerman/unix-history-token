@@ -54,21 +54,6 @@ name|__v86
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX - Needed a definition here to implicitly define exit(); do not remove. */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|exit
-parameter_list|(
-name|int
-name|x
-parameter_list|)
-block|{ }
-end_function
-
 begin_function
 name|void
 name|__v86int
