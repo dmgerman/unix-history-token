@@ -202,10 +202,19 @@ name|uint32_t
 name|ns_tx_disassoc_code
 decl_stmt|;
 comment|/* last disassociation reason */
+comment|/* Hardware A-MSDU decode */
+name|uint32_t
+name|ns_rx_amsdu_more
+decl_stmt|;
+comment|/* RX decap A-MSDU, more coming from A-MSDU */
+name|uint32_t
+name|ns_rx_amsdu_more_end
+decl_stmt|;
+comment|/* RX decap A-MSDU (or any other frame), no more coming */
 name|uint32_t
 name|ns_spare
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 block|}
