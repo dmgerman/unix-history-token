@@ -16838,8 +16838,6 @@ literal|2
 index|]
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|cfd
 decl_stmt|;
 name|error
