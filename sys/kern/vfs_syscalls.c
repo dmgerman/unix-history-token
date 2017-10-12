@@ -23583,7 +23583,7 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
-name|CAP_WRITE
+name|CAP_PWRITE
 argument_list|)
 argument_list|,
 operator|&
