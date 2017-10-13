@@ -871,6 +871,12 @@ name|rxseq
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|rxs
+operator|!=
+name|NULL
+operator|)
+operator|&&
 name|ieee80211_check_rxseq_amsdu
 argument_list|(
 name|rxs
