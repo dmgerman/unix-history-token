@@ -635,6 +635,20 @@ begin_comment
 comment|/* Cache line size align */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UMA_ALIGNOF
+parameter_list|(
+name|type
+parameter_list|)
+value|(_Alignof(type) - 1)
+end_define
+
+begin_comment
+comment|/* Alignment fit for 'type' */
+end_comment
+
 begin_comment
 comment|/*  * Destroys an empty uma zone.  If the zone is not empty uma complains loudly.  *  * Arguments:  *	zone  The zone we want to destroy.  *  */
 end_comment
