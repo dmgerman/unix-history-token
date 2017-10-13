@@ -2522,6 +2522,21 @@ block|{
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|hyperv_ver_major
+operator|>=
+literal|10
+condition|)
+block|{
+comment|/* UDP 4-tuple hash is enforced. */
+name|sc
+operator|->
+name|hn_caps
+operator||=
+name|HN_CAP_UDPHASH
+expr_stmt|;
+block|}
 comment|/* 	 * Initialize NVS. 	 */
 name|error
 operator|=

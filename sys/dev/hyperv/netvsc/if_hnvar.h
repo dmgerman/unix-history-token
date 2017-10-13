@@ -291,6 +291,13 @@ name|HN_RX_FLAG_XPNT_VF
 value|0x0004
 end_define
 
+begin_define
+define|#
+directive|define
+name|HN_RX_FLAG_UDP_HASH
+value|0x0008
+end_define
+
 begin_struct
 struct|struct
 name|hn_tx_ring
@@ -991,6 +998,13 @@ name|HN_CAP_HASHVAL
 value|0x0200
 end_define
 
+begin_define
+define|#
+directive|define
+name|HN_CAP_UDPHASH
+value|0x0400
+end_define
+
 begin_comment
 comment|/* Capability description for use with printf(9) %b identifier. */
 end_comment
@@ -1000,7 +1014,7 @@ define|#
 directive|define
 name|HN_CAP_BITS
 define|\
-value|"\020\1VLAN\2MTU\3IPCS\4TCP4CS\5TCP6CS"	\ 	"\6UDP4CS\7UDP6CS\10TSO4\11TSO6\12HASHVAL"
+value|"\020\1VLAN\2MTU\3IPCS\4TCP4CS\5TCP6CS"	\ 	"\6UDP4CS\7UDP6CS\10TSO4\11TSO6\12HASHVAL\13UDPHASH"
 end_define
 
 begin_define
