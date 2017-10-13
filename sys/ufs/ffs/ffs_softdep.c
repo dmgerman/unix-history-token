@@ -18412,9 +18412,6 @@ name|jmvref
 modifier|*
 name|jmvref
 decl_stmt|;
-name|int
-name|waiting
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -18447,24 +18444,12 @@ argument_list|(
 name|wk
 argument_list|)
 expr_stmt|;
-name|waiting
-operator|=
-name|wk
-operator|->
-name|wk_state
-operator|&
-name|IOWAITING
-expr_stmt|;
 name|wk
 operator|->
 name|wk_state
 operator|&=
 operator|~
-operator|(
 name|INPROGRESS
-operator||
-name|IOWAITING
-operator|)
 expr_stmt|;
 name|wk
 operator|->
@@ -18663,15 +18648,6 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-if|if
-condition|(
-name|waiting
-condition|)
-name|wakeup
-argument_list|(
-name|wk
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Release the self reference so the structure may be freed. */
 name|rele_jseg
