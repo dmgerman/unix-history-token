@@ -5709,6 +5709,9 @@ name|flags
 decl_stmt|,
 name|req_class
 decl_stmt|;
+name|u_int
+name|free_count
+decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -6011,6 +6014,8 @@ literal|"missing page"
 operator|)
 argument_list|)
 expr_stmt|;
+name|free_count
+operator|=
 name|vm_phys_freecnt_adj
 argument_list|(
 name|m
@@ -6308,7 +6313,9 @@ comment|/* 	 * Don't wakeup too often - wakeup the pageout daemon when 	 * we wo
 if|if
 condition|(
 name|vm_paging_needed
-argument_list|()
+argument_list|(
+name|free_count
+argument_list|)
 condition|)
 name|pagedaemon_wakeup
 argument_list|()
@@ -7131,7 +7138,11 @@ block|}
 if|if
 condition|(
 name|vm_paging_needed
-argument_list|()
+argument_list|(
+name|vm_cnt
+operator|.
+name|v_free_count
+argument_list|)
 condition|)
 name|pagedaemon_wakeup
 argument_list|()
@@ -7310,6 +7321,8 @@ name|m
 decl_stmt|;
 name|u_int
 name|flags
+decl_stmt|,
+name|free_count
 decl_stmt|;
 name|int
 name|req_class
@@ -7443,6 +7456,8 @@ name|NULL
 operator|)
 return|;
 block|}
+name|free_count
+operator|=
 name|vm_phys_freecnt_adj
 argument_list|(
 name|m
@@ -7532,7 +7547,9 @@ expr_stmt|;
 if|if
 condition|(
 name|vm_paging_needed
-argument_list|()
+argument_list|(
+name|free_count
+argument_list|)
 condition|)
 name|pagedaemon_wakeup
 argument_list|()
