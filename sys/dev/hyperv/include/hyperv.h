@@ -314,6 +314,13 @@ begin_comment
 comment|/* CPUID_HV_MSR_ */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|hyperv_ver_major
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
