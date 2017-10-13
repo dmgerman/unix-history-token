@@ -4716,6 +4716,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|LINUX_POLL_TABLE_NORMAL
+value|((poll_table *)1)
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -4816,7 +4823,7 @@ name|poll
 argument_list|(
 name|filp
 argument_list|,
-name|NULL
+name|LINUX_POLL_TABLE_NORMAL
 argument_list|)
 operator|&
 name|events
@@ -5083,6 +5090,13 @@ operator|=
 name|LINUX_FWQ_STATE_QUEUED
 block|, 	}
 decl_stmt|;
+comment|/* check if we are called inside the select system call */
+if|if
+condition|(
+name|p
+operator|==
+name|LINUX_POLL_TABLE_NORMAL
+condition|)
 name|selrecord
 argument_list|(
 name|curthread
@@ -6797,17 +6811,6 @@ name|poll
 operator|!=
 name|NULL
 condition|)
-block|{
-name|selrecord
-argument_list|(
-name|td
-argument_list|,
-operator|&
-name|filp
-operator|->
-name|f_selinfo
-argument_list|)
-expr_stmt|;
 name|revents
 operator|=
 name|filp
@@ -6818,12 +6821,11 @@ name|poll
 argument_list|(
 name|filp
 argument_list|,
-name|NULL
+name|LINUX_POLL_TABLE_NORMAL
 argument_list|)
 operator|&
 name|events
 expr_stmt|;
-block|}
 else|else
 name|revents
 operator|=
