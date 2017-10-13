@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_validate.c,v 1.350 2017/07/20 12:54:02 schwarze Exp $ */
+comment|/*	$Id: mdoc_validate.c,v 1.352 2017/08/02 13:29:04 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -6033,41 +6033,6 @@ operator|->
 name|string
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|n
-operator|->
-name|sec
-operator|==
-name|SEC_SYNOPSIS
-operator|&&
-name|mdoc
-operator|->
-name|meta
-operator|.
-name|msec
-operator|!=
-name|NULL
-condition|)
-name|mandoc_xr_add
-argument_list|(
-name|mdoc
-operator|->
-name|meta
-operator|.
-name|msec
-argument_list|,
-name|n
-operator|->
-name|string
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -6371,19 +6336,11 @@ name|last
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|n
 operator|->
 name|sec
 operator|==
 name|SEC_NAME
-operator|||
-name|n
-operator|->
-name|sec
-operator|==
-name|SEC_SYNOPSIS
-operator|)
 operator|&&
 name|n
 operator|->
@@ -10179,8 +10136,8 @@ operator|&&
 name|n
 operator|->
 name|tok
-operator|!=
-name|TOKEN_NONE
+operator|>=
+name|MDOC_Dd
 operator|&&
 name|mdoc_macros
 index|[
