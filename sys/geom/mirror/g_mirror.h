@@ -536,6 +536,17 @@ name|G_MIRROR_BUMP_GENID
 value|0x2
 end_define
 
+begin_comment
+comment|/* Bump syncid immediately. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_MIRROR_BUMP_SYNCID_NOW
+value|0x4
+end_define
+
 begin_struct
 struct|struct
 name|g_mirror_softc
