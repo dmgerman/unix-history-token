@@ -172,6 +172,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MTX_UNOWNED
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Cookie for free mutex */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MTX_RECURSED
 value|0x00000001
 end_define
@@ -194,30 +205,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MTX_UNOWNED
+name|MTX_DESTROYED
 value|0x00000004
 end_define
 
 begin_comment
-comment|/* Cookie for free mutex */
+comment|/* lock destroyed */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MTX_FLAGMASK
-value|(MTX_RECURSED | MTX_CONTESTED | MTX_UNOWNED)
-end_define
-
-begin_comment
-comment|/*  * Value stored in mutex->mtx_lock to denote a destroyed mutex.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTX_DESTROYED
-value|(MTX_CONTESTED | MTX_UNOWNED)
+value|(MTX_RECURSED | MTX_CONTESTED | MTX_DESTROYED)
 end_define
 
 begin_comment
