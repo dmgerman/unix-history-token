@@ -750,6 +750,56 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vmbus
+argument_list|,
+name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Hyper-V vmbus"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vmbus_pin_evttask
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_vmbus
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pin_evttask
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|vmbus_pin_evttask
+argument_list|,
+literal|0
+argument_list|,
+literal|"Pin event tasks to their respective CPU"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -4243,6 +4293,11 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vmbus_pin_evttask
+condition|)
+block|{
 name|CPU_SETOF
 argument_list|(
 name|cpu
@@ -4294,6 +4349,7 @@ operator|&
 name|cpuset_task
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Setup tasks and taskqueues to handle messages. 		 */
 name|VMBUS_PCPU_GET
 argument_list|(
