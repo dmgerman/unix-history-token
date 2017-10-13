@@ -1032,9 +1032,6 @@ operator|=
 name|current
 expr_stmt|;
 comment|/* 	 * Our wait queue entry is on the stack - make sure it doesn't 	 * get swapped out while we sleep. 	 */
-ifndef|#
-directive|ifndef
-name|NO_SWAPPING
 name|PHOLD
 argument_list|(
 name|task
@@ -1044,8 +1041,6 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sleepq_lock
 argument_list|(
 name|task
@@ -1100,9 +1095,6 @@ else|:
 literal|0
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|NO_SWAPPING
 name|PRELE
 argument_list|(
 name|task
@@ -1112,8 +1104,6 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
