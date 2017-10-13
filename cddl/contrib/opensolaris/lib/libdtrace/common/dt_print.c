@@ -1421,7 +1421,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"0x%p"
+literal|"%p"
 argument_list|,
 operator|(
 name|void
