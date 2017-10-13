@@ -10282,6 +10282,14 @@ argument_list|,
 name|nh6
 argument_list|)
 expr_stmt|;
+name|sa6
+operator|->
+name|sin6_port
+operator|=
+name|sa
+operator|->
+name|sin_port
+expr_stmt|;
 comment|/* 						 * Set sin6_scope_id only for 						 * link-local unicast addresses. 						 */
 if|if
 condition|(
@@ -10311,6 +10319,16 @@ else|else
 endif|#
 directive|endif
 block|{
+name|args
+operator|->
+name|hopstore
+operator|.
+name|sin_port
+operator|=
+name|sa
+operator|->
+name|sin_port
+expr_stmt|;
 name|sa
 operator|=
 name|args
