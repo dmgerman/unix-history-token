@@ -3699,7 +3699,7 @@ specifier|static
 name|int
 name|hn_xpnt_vf
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
