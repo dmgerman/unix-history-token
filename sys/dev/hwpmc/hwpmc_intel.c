@@ -595,12 +595,22 @@ operator|=
 literal|3
 expr_stmt|;
 break|break;
+comment|/* Skylake */
 case|case
 literal|0x4e
 case|:
 case|case
 literal|0x5e
 case|:
+comment|/* Kabylake */
+case|case
+literal|0x8E
+case|:
+comment|/* Per Intel document 325462-063US July 2017. */
+case|case
+literal|0x9E
+case|:
+comment|/* Per Intel document 325462-063US July 2017. */
 name|cputype
 operator|=
 name|PMC_CPU_INTEL_SKYLAKE
