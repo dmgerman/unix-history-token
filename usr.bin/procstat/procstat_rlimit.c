@@ -369,8 +369,13 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|hflag
+operator|(
+name|procstat_opts
+operator|&
+name|PS_OPT_NOHEADER
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|xo_emit
