@@ -360,7 +360,7 @@ name|u_int
 name|v_free_count
 name|VMMETER_ALIGNED
 decl_stmt|;
-comment|/* (a) pages free */
+comment|/* (f) pages free */
 block|}
 struct|;
 end_struct
