@@ -15059,8 +15059,6 @@ name|tp1
 operator|->
 name|sent_rcv_time
 argument_list|,
-name|sctp_align_safe_nocopy
-argument_list|,
 name|SCTP_RTT_FROM_DATA
 argument_list|)
 expr_stmt|;
@@ -19164,8 +19162,6 @@ name|tp1
 operator|->
 name|sent_rcv_time
 argument_list|,
-name|sctp_align_safe_nocopy
-argument_list|,
 name|SCTP_RTT_FROM_DATA
 argument_list|)
 expr_stmt|;
@@ -22122,8 +22118,6 @@ operator|&
 name|tp1
 operator|->
 name|sent_rcv_time
-argument_list|,
-name|sctp_align_safe_nocopy
 argument_list|,
 name|SCTP_RTT_FROM_DATA
 argument_list|)
