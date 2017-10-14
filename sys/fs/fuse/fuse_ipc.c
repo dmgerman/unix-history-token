@@ -2791,41 +2791,45 @@ break|break;
 case|case
 name|FUSE_SETXATTR
 case|:
-name|panic
-argument_list|(
-literal|"FUSE_SETXATTR implementor has forgotten to define a"
-literal|" response body format check"
-argument_list|)
+name|err
+operator|=
+operator|(
+name|blen
+operator|==
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
+name|EINVAL
 expr_stmt|;
 break|break;
 case|case
 name|FUSE_GETXATTR
 case|:
-name|panic
-argument_list|(
-literal|"FUSE_GETXATTR implementor has forgotten to define a"
-literal|" response body format check"
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|FUSE_LISTXATTR
 case|:
-name|panic
-argument_list|(
-literal|"FUSE_LISTXATTR implementor has forgotten to define a"
-literal|" response body format check"
-argument_list|)
+comment|/* 		 * These can have varying response lengths, and 0 length 		 * isn't necessarily invalid. 		 */
+name|err
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
 name|FUSE_REMOVEXATTR
 case|:
-name|panic
-argument_list|(
-literal|"FUSE_REMOVEXATTR implementor has forgotten to define a"
-literal|" response body format check"
-argument_list|)
+name|err
+operator|=
+operator|(
+name|blen
+operator|==
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
+name|EINVAL
 expr_stmt|;
 break|break;
 case|case
