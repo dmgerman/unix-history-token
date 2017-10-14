@@ -941,9 +941,10 @@ operator|)
 expr_stmt|;
 return|return
 operator|(
-name|x
+operator|*
+name|owner
 operator|!=
-name|MTX_UNOWNED
+name|NULL
 operator|)
 return|;
 block|}
