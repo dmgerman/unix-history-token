@@ -6175,7 +6175,7 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
-name|FOLLOW
+name|NOFOLLOW
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
@@ -6216,7 +6216,7 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
-name|FOLLOW
+name|NOFOLLOW
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
