@@ -1709,6 +1709,20 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* xpt_get_ccb returns a zero'd allocation for the ccb, mimic that here */
+name|memset
+argument_list|(
+operator|&
+name|nvmeio
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nvmeio
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|length
