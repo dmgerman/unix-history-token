@@ -1028,7 +1028,7 @@ modifier|*
 name|sim
 parameter_list|)
 block|{
-name|nvme_ctrlr_intx_handler
+name|nvme_ctrlr_poll
 argument_list|(
 name|sim2ctrlr
 argument_list|(
