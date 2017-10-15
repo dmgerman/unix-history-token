@@ -859,7 +859,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"MAJOR=226\nMINOR=%d\nDEVNAME=drm/%d\nDEVTYPE=dri_minor\n"
+literal|"MAJOR=226\nMINOR=%d\nDEVNAME=dri/card%d\nDEVTYPE=dri_minor\n"
 argument_list|,
 name|unit
 argument_list|,
