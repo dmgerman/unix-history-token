@@ -749,7 +749,7 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* timeout 5s */
+comment|/* timeout 30s */
 name|nvme_ns_flush_cmd
 argument_list|(
 operator|&
@@ -818,7 +818,7 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* timeout 5s */
+comment|/* timeout 30s */
 name|nvme_ns_trim_cmd
 argument_list|(
 operator|&
@@ -889,7 +889,7 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* timeout 5s */
+comment|/* timeout 30s */
 name|nvme_ns_write_cmd
 argument_list|(
 operator|&
@@ -1025,7 +1025,7 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* timeout 5s */
+comment|/* timeout 30s */
 name|nvme_ns_rw_cmd
 argument_list|(
 operator|&
