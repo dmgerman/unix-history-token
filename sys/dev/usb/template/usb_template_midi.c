@@ -297,12 +297,12 @@ block|,
 operator|.
 name|bInterfaceClass
 operator|=
-literal|1
+name|UICLASS_AUDIO
 block|,
 operator|.
 name|bInterfaceSubClass
 operator|=
-literal|1
+name|UISUBCLASS_AUDIOCONTROL
 block|,
 operator|.
 name|bInterfaceProtocol
@@ -707,15 +707,13 @@ block|,
 operator|.
 name|bInterfaceClass
 operator|=
-literal|0x01
+name|UICLASS_AUDIO
 block|,
-comment|/* MIDI */
 operator|.
 name|bInterfaceSubClass
 operator|=
-literal|3
+name|UISUBCLASS_MIDISTREAM
 block|,
-comment|/* MIDI streaming */
 operator|.
 name|bInterfaceProtocol
 operator|=
