@@ -147,23 +147,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ext2_fserr
-parameter_list|(
-name|struct
-name|m_ext2fs
-modifier|*
-parameter_list|,
-name|uid_t
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|u_long
 name|ext2_hashalloc
 parameter_list|(
@@ -6562,7 +6545,6 @@ comment|/*  * Fserr prints the name of a filesystem with an error diagnostic.  *
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ext2_fserr
 parameter_list|(

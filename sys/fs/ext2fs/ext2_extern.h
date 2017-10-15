@@ -275,6 +275,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ext2_fserr
+parameter_list|(
+name|struct
+name|m_ext2fs
+modifier|*
+parameter_list|,
+name|uid_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ext2_ei2i
 parameter_list|(
 name|struct
@@ -309,7 +325,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ext2_i2ei
 parameter_list|(
 name|struct
