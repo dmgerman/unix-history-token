@@ -916,6 +916,27 @@ argument_list|,
 literal|"cannot get interface name"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|orig_name
+argument_list|)
+operator|<
+name|strlen
+argument_list|(
+literal|"wlan"
+argument_list|)
+operator|+
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"expecting a wlan interface name"
+argument_list|)
+expr_stmt|;
 name|ifconfig_close
 argument_list|(
 name|h
