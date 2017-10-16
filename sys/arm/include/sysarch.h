@@ -131,6 +131,13 @@ name|ARM_GET_TP
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARM_GET_VFPSTATE
+value|4
+end_define
+
 begin_struct
 struct|struct
 name|arm_sync_icache_args
@@ -143,6 +150,21 @@ name|size_t
 name|len
 decl_stmt|;
 comment|/* Region size */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|arm_get_vfpstate_args
+block|{
+name|size_t
+name|mc_vfp_size
+decl_stmt|;
+name|void
+modifier|*
+name|mc_vfp
+decl_stmt|;
 block|}
 struct|;
 end_struct

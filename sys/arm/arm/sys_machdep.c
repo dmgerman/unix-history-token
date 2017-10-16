@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -792,6 +798,9 @@ case|:
 case|case
 name|ARM_GET_TP
 case|:
+case|case
+name|ARM_GET_VFPSTATE
+case|:
 break|break;
 default|default:
 ifdef|#
@@ -884,6 +893,21 @@ case|:
 name|error
 operator|=
 name|arm32_get_tp
+argument_list|(
+name|td
+argument_list|,
+name|uap
+operator|->
+name|parms
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ARM_GET_VFPSTATE
+case|:
+name|error
+operator|=
+name|arm_get_vfpstate
 argument_list|(
 name|td
 argument_list|,
