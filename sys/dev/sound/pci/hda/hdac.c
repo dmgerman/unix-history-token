@@ -1211,6 +1211,16 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_CREATIVE_ALL
+block|,
+literal|"Creative"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_VIA_ALL
 block|,
 literal|"VIA"
