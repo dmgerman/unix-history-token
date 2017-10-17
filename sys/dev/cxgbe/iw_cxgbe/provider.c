@@ -17,6 +17,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|LINUXKPI_PARAM_PREFIX
+value|iw_cxgbe_
+end_define
+
 begin_include
 include|#
 directive|include

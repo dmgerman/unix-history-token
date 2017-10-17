@@ -11,6 +11,13 @@ directive|define
 name|_SDP_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUXKPI_PARAM_PREFIX
+value|ib_sdp_
+end_define
+
 begin_include
 include|#
 directive|include

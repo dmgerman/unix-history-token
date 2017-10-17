@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/moduleparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/cdev.h>
 end_include
 
@@ -200,6 +206,24 @@ include|#
 directive|include
 file|<linux/workqueue.h>
 end_include
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_compat
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|linuxkpi
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"LinuxKPI parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_DEFINE
