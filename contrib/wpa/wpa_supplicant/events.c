@@ -1363,6 +1363,12 @@ argument_list|(
 name|wpa_s
 argument_list|)
 expr_stmt|;
+name|wpa_s
+operator|->
+name|wnmsleep_used
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
