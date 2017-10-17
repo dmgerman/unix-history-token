@@ -548,6 +548,11 @@ name|thread
 modifier|*
 parameter_list|)
 function_decl|;
+name|u_long
+modifier|*
+name|sv_hwcap
+decl_stmt|;
+comment|/* Value passed in AT_HWCAP. */
 block|}
 struct|;
 end_struct
@@ -627,6 +632,17 @@ end_define
 
 begin_comment
 comment|/* Shared page timehands. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SV_HWCAP
+value|0x080000
+end_define
+
+begin_comment
+comment|/* sv_hwcap field is valid. */
 end_comment
 
 begin_define
