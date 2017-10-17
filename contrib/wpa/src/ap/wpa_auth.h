@@ -1608,6 +1608,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|wpa_auth_sta_ft_tk_already_set
+parameter_list|(
+name|struct
+name|wpa_state_machine
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|wpa_auth_sta_clear_pmksa
 parameter_list|(
 name|struct

@@ -4210,6 +4210,23 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|sm
+operator|->
+name|tk_already_set
+condition|)
+block|{
+comment|/* Must avoid TK reconfiguration to prevent clearing of TX/RX 		 * PN in the driver */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"FT: Do not re-install same PTK to the driver"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* FIX: add STA entry to kernel/driver here? The set_key will fail 	 * most likely without this.. At the moment, STA entry is added only 	 * after association has been completed. This function will be called 	 * again after association to get the PTK configured, but that could be 	 * optimized by adding the STA entry earlier. 	 */
 if|if
 condition|(
@@ -4243,6 +4260,12 @@ comment|/* FIX: MLME-SetProtection.Request(TA, Tx_Rx) */
 name|sm
 operator|->
 name|pairwise_set
+operator|=
+name|TRUE
+expr_stmt|;
+name|sm
+operator|->
+name|tk_already_set
 operator|=
 name|TRUE
 expr_stmt|;
@@ -4817,6 +4840,12 @@ operator|->
 name|PTK_valid
 operator|=
 name|TRUE
+expr_stmt|;
+name|sm
+operator|->
+name|tk_already_set
+operator|=
+name|FALSE
 expr_stmt|;
 name|wpa_ft_install_ptk
 argument_list|(

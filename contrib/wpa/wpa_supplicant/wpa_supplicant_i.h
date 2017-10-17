@@ -1699,6 +1699,12 @@ name|added_vif
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|int
+name|wnmsleep_used
+range|:
+literal|1
+decl_stmt|;
 name|struct
 name|os_reltime
 name|last_mac_addr_change
