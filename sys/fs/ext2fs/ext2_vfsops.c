@@ -5280,6 +5280,11 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
+name|ext4_ext_print_extent_tree_status
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|bqrelse

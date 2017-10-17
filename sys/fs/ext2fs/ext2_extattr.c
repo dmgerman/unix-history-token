@@ -2830,7 +2830,7 @@ operator|)
 return|;
 name|facl
 operator|=
-name|ext2_allocfacl
+name|ext2_alloc_meta
 argument_list|(
 name|ip
 argument_list|)
@@ -5550,7 +5550,7 @@ name|ip
 operator|->
 name|i_facl
 operator|=
-name|ext2_allocfacl
+name|ext2_alloc_meta
 argument_list|(
 name|ip
 argument_list|)
