@@ -488,6 +488,8 @@ name|auid
 decl_stmt|;
 endif|#
 directive|endif
+name|p
+operator|=
 name|shell
 operator|=
 name|class
