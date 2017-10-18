@@ -10509,10 +10509,6 @@ argument|FILETYPE_DIRECTORY
 argument_list|)
 name|X
 argument_list|(
-argument|FILETYPE_POLL
-argument_list|)
-name|X
-argument_list|(
 argument|FILETYPE_PROCESS
 argument_list|)
 name|X
