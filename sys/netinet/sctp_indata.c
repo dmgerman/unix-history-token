@@ -13145,8 +13145,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|chk_length
-decl_stmt|,
 name|break_flag
 decl_stmt|,
 name|last_chunk
@@ -13165,6 +13163,9 @@ name|m
 decl_stmt|;
 name|uint32_t
 name|highest_tsn
+decl_stmt|;
+name|uint16_t
+name|chk_length
 decl_stmt|;
 comment|/* set the rwnd */
 name|sctp_set_rwnd
@@ -13645,7 +13646,7 @@ name|SCTP_IDATA
 operator|)
 condition|)
 block|{
-name|int
+name|uint16_t
 name|clen
 decl_stmt|;
 if|if
@@ -13705,7 +13706,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"%s chunk of length %d"
+literal|"%s chunk of length %u"
 argument_list|,
 name|ch
 operator|->
@@ -14016,7 +14017,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"Chunk of length %d"
+literal|"Chunk of length %u"
 argument_list|,
 name|chk_length
 argument_list|)
