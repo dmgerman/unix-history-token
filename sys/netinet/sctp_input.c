@@ -23579,6 +23579,11 @@ name|chunk_length
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|*
+name|offset
+operator|=
+name|length
+expr_stmt|;
 return|return
 operator|(
 name|stcb
