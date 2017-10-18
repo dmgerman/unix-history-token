@@ -1027,6 +1027,7 @@ name|ip_v
 operator|!=
 name|IPVERSION
 operator|||
+comment|/* half char */
 name|ip
 operator|->
 name|ip_p
@@ -1034,7 +1035,6 @@ operator|!=
 name|proto
 condition|)
 block|{
-comment|/* half char */
 ifdef|#
 directive|ifdef
 name|NET_DEBUG
