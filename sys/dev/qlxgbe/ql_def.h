@@ -826,7 +826,7 @@ name|size
 parameter_list|,
 name|align
 parameter_list|)
-value|(size + (align - 1))& ~(align - 1);
+value|(((size) + ((align) - 1))& (~((align) - 1)))
 end_define
 
 begin_define
