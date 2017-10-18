@@ -2291,9 +2291,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n2
-operator|!=
 name|n
+operator|<
+name|n2
 condition|)
 name|printf
 argument_list|(
