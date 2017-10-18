@@ -5964,29 +5964,13 @@ operator|-
 name|t
 expr_stmt|;
 block|}
+comment|/* Update the UTC timestamps used by the get*() functions. */
 name|th
 operator|->
 name|th_bintime
 operator|=
-name|th
-operator|->
-name|th_offset
+name|bt
 expr_stmt|;
-name|bintime_add
-argument_list|(
-operator|&
-name|th
-operator|->
-name|th_bintime
-argument_list|,
-operator|&
-name|th
-operator|->
-name|th_boottime
-argument_list|)
-expr_stmt|;
-comment|/* Update the UTC timestamps used by the get*() functions. */
-comment|/* XXX shouldn't do this here.  Should force non-`get' versions. */
 name|bintime2timeval
 argument_list|(
 operator|&
