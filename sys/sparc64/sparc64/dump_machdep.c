@@ -122,13 +122,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|off_t
-name|dumplo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|dump_pa
 name|dump_map
@@ -404,9 +397,6 @@ name|di
 argument_list|,
 operator|&
 name|kdh
-argument_list|,
-operator|&
-name|dumplo
 argument_list|)
 expr_stmt|;
 if|if
@@ -555,8 +545,6 @@ name|di
 argument_list|,
 operator|&
 name|kdh
-argument_list|,
-name|dumplo
 argument_list|)
 expr_stmt|;
 if|if
