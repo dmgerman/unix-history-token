@@ -221,6 +221,228 @@ name|qla_rd_fw_dump_t
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|qla_drvr_state_tx
+block|{
+name|uint64_t
+name|base_p_addr
+decl_stmt|;
+name|uint64_t
+name|cons_p_addr
+decl_stmt|;
+name|uint32_t
+name|tx_prod_reg
+decl_stmt|;
+name|uint32_t
+name|tx_cntxt_id
+decl_stmt|;
+name|uint32_t
+name|txr_free
+decl_stmt|;
+name|uint32_t
+name|txr_next
+decl_stmt|;
+name|uint32_t
+name|txr_comp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|qla_drvr_state_tx
+name|qla_drvr_state_tx_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|qla_drvr_state_sds
+block|{
+name|uint32_t
+name|sdsr_next
+decl_stmt|;
+comment|/* next entry in SDS ring to process */
+name|uint32_t
+name|sds_consumer
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|qla_drvr_state_sds
+name|qla_drvr_state_sds_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|qla_drvr_state_rx
+block|{
+name|uint32_t
+name|prod_std
+decl_stmt|;
+name|uint32_t
+name|rx_next
+decl_stmt|;
+comment|/* next standard rcv ring to arm fw */
+empty_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|qla_drvr_state_rx
+name|qla_drvr_state_rx_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|qla_drvr_state_hdr
+block|{
+name|uint32_t
+name|drvr_version_major
+decl_stmt|;
+name|uint32_t
+name|drvr_version_minor
+decl_stmt|;
+name|uint32_t
+name|drvr_version_build
+decl_stmt|;
+name|uint8_t
+name|mac_addr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|link_speed
+decl_stmt|;
+name|uint16_t
+name|cable_length
+decl_stmt|;
+name|uint32_t
+name|cable_oui
+decl_stmt|;
+name|uint8_t
+name|link_up
+decl_stmt|;
+name|uint8_t
+name|module_type
+decl_stmt|;
+name|uint8_t
+name|link_faults
+decl_stmt|;
+name|uint32_t
+name|rcv_intr_coalesce
+decl_stmt|;
+name|uint32_t
+name|xmt_intr_coalesce
+decl_stmt|;
+name|uint32_t
+name|tx_state_offset
+decl_stmt|;
+comment|/* size = sizeof (qla_drvr_state_tx_t) * num_tx_rings */
+name|uint32_t
+name|rx_state_offset
+decl_stmt|;
+comment|/* size = sizeof (qla_drvr_state_rx_t) * num_rx_rings */
+name|uint32_t
+name|sds_state_offset
+decl_stmt|;
+comment|/* size = sizeof (qla_drvr_state_sds_t) * num_sds_rings */
+name|uint32_t
+name|num_tx_rings
+decl_stmt|;
+comment|/* number of tx rings */
+name|uint32_t
+name|txr_size
+decl_stmt|;
+comment|/* size of each tx ring in bytes */
+name|uint32_t
+name|txr_entries
+decl_stmt|;
+comment|/* number of descriptors in each tx ring */
+name|uint32_t
+name|txr_offset
+decl_stmt|;
+comment|/* start of tx ring [0 - #rings] content */
+name|uint32_t
+name|num_rx_rings
+decl_stmt|;
+comment|/* number of rx rings */
+name|uint32_t
+name|rxr_size
+decl_stmt|;
+comment|/* size of each rx ring in bytes */
+name|uint32_t
+name|rxr_entries
+decl_stmt|;
+comment|/* number of descriptors in each rx ring */
+name|uint32_t
+name|rxr_offset
+decl_stmt|;
+comment|/* start of rx ring [0 - #rings] content */
+name|uint32_t
+name|num_sds_rings
+decl_stmt|;
+comment|/* number of sds rings */
+name|uint32_t
+name|sds_ring_size
+decl_stmt|;
+comment|/* size of each sds ring in bytes */
+name|uint32_t
+name|sds_entries
+decl_stmt|;
+comment|/* number of descriptors in each sds ring */
+name|uint32_t
+name|sds_offset
+decl_stmt|;
+comment|/* start of sds ring [0 - #rings] content */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|qla_drvr_state_hdr
+name|qla_drvr_state_hdr_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|qla_driver_state
+block|{
+name|uint32_t
+name|size
+decl_stmt|;
+name|void
+modifier|*
+name|buffer
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|qla_driver_state
+name|qla_driver_state_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Read/Write Register  */
 end_comment
@@ -307,6 +529,17 @@ define|#
 directive|define
 name|QLA_RD_FW_DUMP
 value|_IOWR('q', 8, qla_rd_fw_dump_t)
+end_define
+
+begin_comment
+comment|/*  * Read Driver State  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QLA_RD_DRVR_STATE
+value|_IOWR('q', 9, qla_driver_state_t)
 end_define
 
 begin_endif
