@@ -1473,7 +1473,7 @@ operator|(
 name|sc
 operator|->
 name|high_cap
-operator|!=
+operator|==
 literal|0
 condition|?
 name|MMC_SECTOR_SIZE
