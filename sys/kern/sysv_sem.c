@@ -7679,6 +7679,15 @@ name|short
 name|seq
 decl_stmt|;
 comment|/* 	 * Go through the chain of undo vectors looking for one 	 * associated with this process. 	 */
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|semu_list
+argument_list|)
+condition|)
+return|return;
 name|SEMUNDO_LOCK
 argument_list|()
 expr_stmt|;
