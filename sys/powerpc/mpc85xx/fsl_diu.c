@@ -68,24 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/timeet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/timetc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/watchdog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/fbio.h>
 end_include
 
@@ -93,18 +75,6 @@ begin_include
 include|#
 directive|include
 file|<sys/consio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/gpio.h>
 end_include
 
 begin_include
@@ -171,12 +141,6 @@ begin_include
 include|#
 directive|include
 file|<powerpc/mpc85xx/mpc85xx.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gpio_if.h"
 end_include
 
 begin_include
