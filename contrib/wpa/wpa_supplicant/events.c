@@ -885,6 +885,12 @@ name|key_mgmt
 operator|=
 literal|0
 expr_stmt|;
+name|wpa_s
+operator|->
+name|wnmsleep_used
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 

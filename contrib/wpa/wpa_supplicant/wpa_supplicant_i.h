@@ -1033,6 +1033,12 @@ name|last_eapol_matches_bssid
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|int
+name|wnmsleep_used
+range|:
+literal|1
+decl_stmt|;
 name|struct
 name|ibss_rsn
 modifier|*
