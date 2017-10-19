@@ -4839,6 +4839,12 @@ name|UQ_AU_SET_SPDIF_CM6206
 index|]
 operator|=
 literal|"UQ_AU_SET_SPDIF_CM6206"
+block|,
+index|[
+name|UQ_WMT_IGNORE
+index|]
+operator|=
+literal|"UQ_WMT_IGNORE"
 block|, }
 decl_stmt|;
 end_decl_stmt

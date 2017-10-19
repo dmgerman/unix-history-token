@@ -224,6 +224,9 @@ comment|/* ejects Dymo MSC device */
 name|UQ_AU_SET_SPDIF_CM6206
 block|,
 comment|/* enable S/PDIF audio output */
+name|UQ_WMT_IGNORE
+block|,
+comment|/* device should be ignored by wmt driver */
 name|USB_QUIRK_MAX
 block|}
 enum|;
