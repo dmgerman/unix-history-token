@@ -2130,7 +2130,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"PSCI version 0.2 available\n"
+literal|"PSCI version 0.2 compatible\n"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We only register this for v0.2 since v0.1 doesn't support 		 * system_reset. 		 */
