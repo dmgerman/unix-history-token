@@ -3952,6 +3952,15 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|p
+operator|->
+name|p_ptevents
+operator|&
+name|PTRACE_EXEC
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3976,6 +3985,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Stop the process here if its stop event mask has 		 * the S_EXEC bit set. 		 */
 name|STOPEVENT
 argument_list|(
