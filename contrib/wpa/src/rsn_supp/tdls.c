@@ -511,6 +511,10 @@ name|int
 name|tpk_set
 decl_stmt|;
 name|int
+name|tk_set
+decl_stmt|;
+comment|/* TPK-TK configured to the driver */
+name|int
 name|tpk_success
 decl_stmt|;
 struct|struct
@@ -718,6 +722,35 @@ name|enum
 name|wpa_alg
 name|alg
 decl_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|tk_set
+condition|)
+block|{
+comment|/* 		 * This same TPK-TK has already been configured to the driver 		 * and this new configuration attempt (likely due to an 		 * unexpected retransmitted frame) would result in clearing 		 * the TX/RX sequence number which can break security, so must 		 * not allow that to happen. 		 */
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"TDLS: TPK-TK for the peer "
+name|MACSTR
+literal|" has already been configured to the driver - do not reconfigure"
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|peer
+operator|->
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|os_memset
 argument_list|(
 name|rsc
@@ -778,6 +811,21 @@ operator|-
 literal|1
 return|;
 block|}
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"TDLS: Configure pairwise key for peer "
+name|MACSTR
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|peer
+operator|->
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|wpa_sm_set_key
@@ -827,6 +875,12 @@ operator|-
 literal|1
 return|;
 block|}
+name|peer
+operator|->
+name|tk_set
+operator|=
+literal|1
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3089,6 +3143,10 @@ literal|0
 expr_stmt|;
 name|peer
 operator|->
+name|tk_set
+operator|=
+name|peer
+operator|->
 name|tpk_set
 operator|=
 name|peer
@@ -4942,6 +5000,13 @@ operator|-
 literal|1
 return|;
 block|}
+name|peer
+operator|->
+name|tk_set
+operator|=
+literal|0
+expr_stmt|;
+comment|/* A new nonce results in a new TK */
 name|wpa_hexdump
 argument_list|(
 name|MSG_DEBUG
@@ -7677,6 +7742,13 @@ goto|goto
 name|error
 goto|;
 block|}
+name|peer
+operator|->
+name|tk_set
+operator|=
+literal|0
+expr_stmt|;
+comment|/* A new nonce results in a new TK */
 if|#
 directive|if
 literal|0
@@ -8118,6 +8190,31 @@ expr_stmt|;
 return|return
 operator|-
 literal|1
+return|;
+block|}
+if|if
+condition|(
+name|peer
+operator|->
+name|tpk_success
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"TDLS: Ignore incoming TPK M2 retry, from "
+name|MACSTR
+literal|" as TPK M3 was already sent"
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|src_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 name|wpa_tdls_tpk_retry_timeout_cancel
