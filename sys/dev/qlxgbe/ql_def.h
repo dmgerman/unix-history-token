@@ -663,10 +663,6 @@ decl_stmt|;
 name|uint32_t
 name|rxb_free_count
 decl_stmt|;
-specifier|volatile
-name|uint32_t
-name|posting
-decl_stmt|;
 comment|/* stats */
 name|uint32_t
 name|err_m_getcl

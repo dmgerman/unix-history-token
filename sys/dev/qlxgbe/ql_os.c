@@ -2522,6 +2522,11 @@ goto|goto
 name|qla_pci_attach_err
 goto|;
 block|}
+name|ql_alloc_drvr_state_buffer
+argument_list|(
+name|ha
+argument_list|)
+expr_stmt|;
 comment|/* create the o.s ethernet interface */
 name|qla_init_ifnet
 argument_list|(
@@ -3224,6 +3229,11 @@ argument_list|(
 name|ha
 operator|->
 name|ifp
+argument_list|)
+expr_stmt|;
+name|ql_free_drvr_state_buffer
+argument_list|(
+name|ha
 argument_list|)
 expr_stmt|;
 name|ql_free_dma
