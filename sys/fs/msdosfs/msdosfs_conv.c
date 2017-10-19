@@ -4108,7 +4108,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"winChkName(): un=%s:%d,d_name=%s:%d\n"
+literal|"winChkName(): un=%s:%zu,d_name=%s:%d\n"
 argument_list|,
 name|un
 argument_list|,

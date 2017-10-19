@@ -159,6 +159,23 @@ directive|include
 file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
