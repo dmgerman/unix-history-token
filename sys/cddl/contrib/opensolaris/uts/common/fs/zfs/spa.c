@@ -28221,13 +28221,6 @@ decl_stmt|;
 name|int
 name|tasks
 decl_stmt|;
-name|ASSERT
-argument_list|(
-name|spa
-operator|->
-name|spa_sync_on
-argument_list|)
-expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
