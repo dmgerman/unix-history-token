@@ -15,43 +15,8 @@ directive|define
 name|_SYS_SOCKBUF_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_task.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|SB_MAX
-value|(2*1024*1024)
-end_define
-
 begin_comment
-comment|/* default for max chars in sockbuf */
-end_comment
-
-begin_comment
-comment|/*  * Constants for sb_flags field of struct sockbuf.  */
+comment|/*  * Constants for sb_flags field of struct sockbuf/xsockbuf.  */
 end_comment
 
 begin_define
@@ -217,6 +182,55 @@ end_define
 
 begin_comment
 comment|/* at mark on input */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_SOCKET
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_task.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|SB_MAX
+value|(2*1024*1024)
+end_define
+
+begin_comment
+comment|/* default for max chars in sockbuf */
 end_comment
 
 begin_struct_decl
@@ -397,6 +411,15 @@ comment|/* AIO task */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(_KERNEL) || defined(_WANT_SOCKET) */
+end_comment
 
 begin_ifdef
 ifdef|#
