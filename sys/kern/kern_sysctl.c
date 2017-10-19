@@ -9428,6 +9428,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|memlocked
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|req
@@ -9438,6 +9442,8 @@ name|req
 operator|.
 name|oldlen
 operator|>
+literal|4
+operator|*
 name|PAGE_SIZE
 condition|)
 block|{
@@ -9452,11 +9458,6 @@ name|sysctlmemlock
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|memlocked
-operator|=
-literal|0
-expr_stmt|;
 name|CURVNET_SET
 argument_list|(
 name|TD_TO_VNET
