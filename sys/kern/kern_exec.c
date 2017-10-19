@@ -3698,10 +3698,15 @@ name|newargs
 operator|=
 name|NULL
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
-comment|/* 	 * Check if system-wide sampling is in effect or if the 	 * current process is using PMCs.  If so, do exec() time 	 * processing.  This processing needs to happen AFTER the 	 * P_INEXEC flag is cleared. 	 * 	 * The proc lock needs to be released before taking the PMC 	 * SX. 	 */
+comment|/* 	 * Check if system-wide sampling is in effect or if the 	 * current process is using PMCs.  If so, do exec() time 	 * processing.  This processing needs to happen AFTER the 	 * P_INEXEC flag is cleared. 	 */
 if|if
 condition|(
 name|PMC_SYSTEM_SAMPLING_ACTIVE
@@ -3713,11 +3718,6 @@ name|p
 argument_list|)
 condition|)
 block|{
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|imgp
@@ -3767,20 +3767,6 @@ name|LK_RETRY
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* !HWPMC_HOOKS */
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* Set values passed into the program in registers. */
