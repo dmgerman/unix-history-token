@@ -663,10 +663,6 @@ decl_stmt|;
 name|uint32_t
 name|rxb_free_count
 decl_stmt|;
-specifier|volatile
-name|uint32_t
-name|posting
-decl_stmt|;
 comment|/* stats */
 name|uint32_t
 name|err_m_getcl
@@ -830,7 +826,7 @@ name|size
 parameter_list|,
 name|align
 parameter_list|)
-value|(size + (align - 1))& ~(align - 1);
+value|(((size) + ((align) - 1))& (~((align) - 1)));
 end_define
 
 begin_define
