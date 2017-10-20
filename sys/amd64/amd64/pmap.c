@@ -1192,6 +1192,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx
+name|__exclusive_cache_line
 name|pv_chunks_mutex
 decl_stmt|;
 end_decl_stmt
@@ -1200,6 +1201,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|rwlock
+name|__exclusive_cache_line
 name|pv_list_locks
 index|[
 name|NPV_LIST_LOCKS
