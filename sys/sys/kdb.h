@@ -136,7 +136,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|kdb_active
 decl_stmt|;
 end_decl_stmt
