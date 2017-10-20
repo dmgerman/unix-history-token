@@ -2861,12 +2861,6 @@ name|td
 operator|->
 name|td_pcb
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dt_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|td
@@ -2882,13 +2876,6 @@ condition|)
 name|user_ldt_free
 argument_list|(
 name|td
-argument_list|)
-expr_stmt|;
-else|else
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dt_lock
 argument_list|)
 expr_stmt|;
 name|update_pcb_bases

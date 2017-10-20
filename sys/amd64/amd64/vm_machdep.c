@@ -1173,12 +1173,6 @@ name|td
 parameter_list|)
 block|{
 comment|/* 	 * If this process has a custom LDT, release it. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|dt_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|td
@@ -1189,18 +1183,11 @@ name|p_md
 operator|.
 name|md_ldt
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|user_ldt_free
 argument_list|(
 name|td
-argument_list|)
-expr_stmt|;
-else|else
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dt_lock
 argument_list|)
 expr_stmt|;
 block|}

@@ -2472,12 +2472,10 @@ name|proc_ldt
 modifier|*
 name|pldt
 decl_stmt|;
-name|mtx_assert
+name|mtx_lock
 argument_list|(
 operator|&
 name|dt_lock
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
