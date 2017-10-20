@@ -1959,18 +1959,9 @@ argument_list|(
 name|save_trap_init
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AIM
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|__powerpc64__
-argument_list|)
 comment|/* 	 * Clear battable[] translations 	 */
 if|if
 condition|(
