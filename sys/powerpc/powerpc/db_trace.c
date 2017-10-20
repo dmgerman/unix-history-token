@@ -1124,6 +1124,36 @@ case|case
 name|EXC_DSI
 case|:
 comment|/* XXX take advantage of the union. */
+ifdef|#
+directive|ifdef
+name|BOOKE
+name|db_printf
+argument_list|(
+literal|"DSI %s trap @ %#zx by "
+argument_list|,
+operator|(
+name|tf
+operator|->
+name|cpu
+operator|.
+name|booke
+operator|.
+name|esr
+operator|&
+name|ESR_ST
+operator|)
+condition|?
+literal|"write"
+else|:
+literal|"read"
+argument_list|,
+name|tf
+operator|->
+name|dar
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|db_printf
 argument_list|(
 literal|"DSI %s trap @ %#zx by "
@@ -1149,13 +1179,14 @@ operator|->
 name|dar
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|print_trap
 goto|;
 case|case
 name|EXC_ALI
 case|:
-comment|/* XXX take advantage of the union. */
 name|db_printf
 argument_list|(
 literal|"ALI trap @ %#zx (xSR %#x) "
@@ -1254,13 +1285,6 @@ operator|=
 literal|"MCHK"
 expr_stmt|;
 break|break;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BOOKE
-argument_list|)
 case|case
 name|EXC_VEC
 case|:
@@ -1269,6 +1293,13 @@ operator|=
 literal|"VEC"
 expr_stmt|;
 break|break;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BOOKE
+argument_list|)
 case|case
 name|EXC_FPA
 case|:
