@@ -2275,11 +2275,19 @@ operator|>
 literal|0
 condition|)
 do|;
+comment|/* 	 * Often uma_zone_reserve_kva() cannot reserve exactly the 	 * requested size.  Account for the difference when 	 * calculating swap_maxpages. 	 */
+name|n
+operator|=
+name|uma_zone_get_max
+argument_list|(
+name|swblk_zone
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|n2
-operator|!=
 name|n
+operator|<
+name|n2
 condition|)
 name|printf
 argument_list|(
