@@ -10765,6 +10765,14 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+name|tq
+argument_list|)
+condition|)
+return|return;
 name|mtx_lock
 argument_list|(
 operator|&
