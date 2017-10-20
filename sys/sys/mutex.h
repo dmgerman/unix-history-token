@@ -404,6 +404,14 @@ directive|ifdef
 name|SMP
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|LOCK_DEBUG
+operator|>
+literal|0
+end_if
+
 begin_function_decl
 name|void
 name|_mtx_lock_spin_cookie
@@ -415,9 +423,6 @@ name|c
 parameter_list|,
 name|uintptr_t
 name|v
-parameter_list|,
-name|uintptr_t
-name|tid
 parameter_list|,
 name|int
 name|opts
@@ -432,6 +437,31 @@ name|line
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|_mtx_lock_spin_cookie
+parameter_list|(
+specifier|volatile
+name|uintptr_t
+modifier|*
+name|c
+parameter_list|,
+name|uintptr_t
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -795,6 +825,14 @@ directive|ifdef
 name|SMP
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|LOCK_DEBUG
+operator|>
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -804,7 +842,29 @@ name|m
 parameter_list|,
 name|v
 parameter_list|,
-name|t
+name|o
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|_mtx_lock_spin_cookie(&(m)->mtx_lock, v, o, f, l)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_mtx_lock_spin
+parameter_list|(
+name|m
+parameter_list|,
+name|v
 parameter_list|,
 name|o
 parameter_list|,
@@ -813,8 +873,13 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|_mtx_lock_spin_cookie(&(m)->mtx_lock, v, t, o, f, l)
+value|_mtx_lock_spin_cookie(&(m)->mtx_lock, v)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1068,7 +1133,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = MTX_UNOWNED;					\ 									\ 	spinlock_enter();						\ 	if (!_mtx_obtain_lock_fetch((mp),&_v, _tid)) 			\ 		_mtx_lock_spin((mp), _v, _tid, (opts), (file), (line)); \ 	else 								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(spin__acquire,	\ 		    mp, 0, 0, file, line);				\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = MTX_UNOWNED;					\ 									\ 	spinlock_enter();						\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(spin__acquire) ||	\ 	    !_mtx_obtain_lock_fetch((mp),&_v, _tid))) 			\ 		_mtx_lock_spin((mp), _v, (opts), (file), (line)); 	\ } while (0)
 end_define
 
 begin_define
