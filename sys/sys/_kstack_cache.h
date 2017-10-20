@@ -42,6 +42,24 @@ name|kstack_cache
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KSTACK_MAX_PAGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|KSTACK_MAX_PAGES
+value|32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
