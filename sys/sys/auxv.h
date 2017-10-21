@@ -28,6 +28,7 @@ file|<machine/elf.h>
 end_include
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|elf_aux_info
 parameter_list|(
@@ -43,6 +44,10 @@ name|buflen
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
