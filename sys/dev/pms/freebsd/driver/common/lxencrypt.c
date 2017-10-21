@@ -43,18 +43,18 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENCRYPT_ENHANCE
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|atomic_t
 name|ioerr_queue_count
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENCRYPT_ENHANCE
-end_ifdef
 
 begin_comment
 comment|/****************************************************************************** careful_write():  Purpose: Parameters: Return: Note: ******************************************************************************/

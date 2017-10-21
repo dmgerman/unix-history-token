@@ -2711,16 +2711,6 @@ name|retVal
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|agtiapi_softc
-modifier|*
-name|pCard
-init|=
-name|TIROOT_TO_CARD
-argument_list|(
-name|tiRoot
-argument_list|)
-decl_stmt|;
 name|ccb_t
 modifier|*
 name|pccb
