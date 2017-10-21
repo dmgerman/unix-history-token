@@ -4866,7 +4866,7 @@ name|nvlhdr
 argument_list|)
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|memcpy
 argument_list|(
@@ -4891,7 +4891,7 @@ name|nvlhdr
 argument_list|)
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 if|if
 condition|(
@@ -4908,7 +4908,7 @@ name|nvlhdr
 argument_list|)
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 comment|/* 	 * nvlh_descriptors might be smaller than nfds in embedded nvlists. 	 */
 if|if
@@ -4920,7 +4920,7 @@ operator|>
 name|nfds
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 if|if
 condition|(
@@ -4936,7 +4936,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|inarrayf
 operator|=
@@ -5006,7 +5006,7 @@ operator|(
 name|ptr
 operator|)
 return|;
-name|failed
+name|fail
 label|:
 name|ERRNO_SET
 argument_list|(
@@ -5120,7 +5120,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|ptr
 operator|=
@@ -5146,7 +5146,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 if|if
 condition|(
@@ -5163,7 +5163,7 @@ name|EILSEQ
 argument_list|)
 expr_stmt|;
 goto|goto
-name|failed
+name|fail
 goto|;
 block|}
 while|while
@@ -5195,7 +5195,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 switch|switch
 condition|(
@@ -5310,7 +5310,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|nvlist_set_parent
 argument_list|(
@@ -5399,7 +5399,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|nvl
 operator|=
@@ -5437,7 +5437,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|nvl
 operator|=
@@ -5488,7 +5488,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 block|}
 name|nvpair_free_structure
@@ -5578,7 +5578,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|PJDLOG_ASSERT
 argument_list|(
@@ -5658,7 +5658,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 if|if
 condition|(
@@ -5671,7 +5671,7 @@ name|nvp
 argument_list|)
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 if|if
 condition|(
@@ -5695,7 +5695,7 @@ operator|(
 name|retnvl
 operator|)
 return|;
-name|failed
+name|fail
 label|:
 name|nvlist_destroy
 argument_list|(

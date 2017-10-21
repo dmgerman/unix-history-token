@@ -2857,7 +2857,7 @@ name|nvphdr
 argument_list|)
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|memcpy
 argument_list|(
@@ -2901,7 +2901,7 @@ operator|<
 name|NV_TYPE_FIRST
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 endif|#
 directive|endif
@@ -2927,7 +2927,7 @@ name|NV_TYPE_NVLIST_ARRAY_NEXT
 condition|)
 block|{
 goto|goto
-name|failed
+name|fail
 goto|;
 block|}
 if|#
@@ -3005,7 +3005,7 @@ operator|>
 name|NV_NAME_MAX
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 if|if
 condition|(
@@ -3017,7 +3017,7 @@ operator|.
 name|nvph_namesize
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 if|if
 condition|(
@@ -3028,7 +3028,7 @@ operator|<
 literal|1
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 if|if
 condition|(
@@ -3059,7 +3059,7 @@ argument_list|)
 condition|)
 block|{
 goto|goto
-name|failed
+name|fail
 goto|;
 block|}
 name|memcpy
@@ -3098,7 +3098,7 @@ operator|.
 name|nvph_datasize
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|nvp
 operator|->
@@ -3135,7 +3135,7 @@ operator|(
 name|ptr
 operator|)
 return|;
-name|failed
+name|fail
 label|:
 name|ERRNO_SET
 argument_list|(
@@ -5463,7 +5463,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|tmp
 operator|=
@@ -5494,7 +5494,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|failed
+name|fail
 goto|;
 name|nvp
 operator|=
@@ -5537,7 +5537,7 @@ operator|(
 name|ptr
 operator|)
 return|;
-name|failed
+name|fail
 label|:
 name|nv_free
 argument_list|(
