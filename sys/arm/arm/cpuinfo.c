@@ -945,14 +945,14 @@ name|HWCAP_HALF
 operator||
 name|HWCAP_FAST_MULT
 expr_stmt|;
-comment|/* Requierd for all CPUs */
+comment|/* Required for all CPUs */
 name|elf_hwcap
 operator||=
 name|HWCAP_TLS
 operator||
 name|HWCAP_EDSP
 expr_stmt|;
-comment|/* Requierd for v6+ CPUs */
+comment|/* Required for v6+ CPUs */
 name|tmp
 operator|=
 operator|(
