@@ -1003,6 +1003,17 @@ name|HI6220_POWER_NR_CLKS
 value|8
 end_define
 
+begin_comment
+comment|/* clk in Hi6220 acpu sctrl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HI6220_ACPU_SFT_AT_S
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
