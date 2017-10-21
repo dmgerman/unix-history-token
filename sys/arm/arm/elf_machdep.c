@@ -155,6 +155,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|u_long
+name|elf_hwcap2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|sysentvec
 name|elf32_freebsd_sysvec
@@ -350,6 +356,12 @@ name|sv_hwcap
 operator|=
 operator|&
 name|elf_hwcap
+block|,
+operator|.
+name|sv_hwcap2
+operator|=
+operator|&
+name|elf_hwcap2
 block|, }
 decl_stmt|;
 end_decl_stmt

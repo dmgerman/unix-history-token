@@ -468,6 +468,22 @@ name|elf_hwcap
 operator||=
 name|HWCAP_NEON
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tmp
+operator|&
+name|VMVFR1_FMAC_MASK
+operator|)
+operator|>>
+name|VMVFR1_FMAC_OFF
+operator|==
+literal|1
+condition|)
+name|elf_hwcap
+operator||=
+name|HWCAP_VFPv4
+expr_stmt|;
 block|}
 comment|/* initialize the coprocess 10 and 11 calls 		 * These are called to restore the registers and enable 		 * the VFP hardware. 		 */
 if|if
