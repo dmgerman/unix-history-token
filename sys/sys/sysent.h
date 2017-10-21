@@ -553,6 +553,11 @@ modifier|*
 name|sv_hwcap
 decl_stmt|;
 comment|/* Value passed in AT_HWCAP. */
+name|u_long
+modifier|*
+name|sv_hwcap2
+decl_stmt|;
+comment|/* Value passed in AT_HWCAP2. */
 block|}
 struct|;
 end_struct
