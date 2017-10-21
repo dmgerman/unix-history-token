@@ -1220,8 +1220,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLK_INFRA_NR_CLK
+name|CLK_INFRA_CA53SEL
 value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_INFRA_CA57SEL
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_INFRA_NR_CLK
+value|15
 end_define
 
 begin_comment

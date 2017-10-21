@@ -36,21 +36,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_LPSR_GPIO1_IO00__WDOD1_WDOG_ANY
+name|MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG_ANY
 value|0x0000 0x0030 0x0000 0x2 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_LPSR_GPIO1_IO00__WDOD1_WDOG_B
+name|MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG_B
 value|0x0000 0x0030 0x0000 0x3 0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_LPSR_GPIO1_IO00__WDOD1_WDOG__RST_B_DEB
+name|MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG__RST_B_DEB
 value|0x0000 0x0030 0x0000 0x4 0x0
 end_define
 

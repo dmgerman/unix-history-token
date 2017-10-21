@@ -87,6 +87,24 @@ name|GPIO_OPEN_SOURCE
 value|(GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_SOURCE)
 end_define
 
+begin_comment
+comment|/* Bit 3 express GPIO suspend/resume persistence */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPIO_SLEEP_MAINTAIN_VALUE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPIO_SLEEP_MAY_LOOSE_VALUE
+value|8
+end_define
+
 begin_endif
 endif|#
 directive|endif

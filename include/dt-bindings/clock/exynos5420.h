@@ -1417,6 +1417,27 @@ name|CLK_MOUT_MX_MSPLL_CCORE
 value|656
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_EPLL
+value|657
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_MAU_EPLL
+value|658
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_USER_MAU_EPLL
+value|659
+end_define
+
 begin_comment
 comment|/* divider clocks */
 end_comment

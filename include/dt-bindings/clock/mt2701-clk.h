@@ -1392,8 +1392,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLK_INFRA_NR
+name|CLK_INFRA_CPUSEL
 value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_INFRA_NR
+value|21
 end_define
 
 begin_comment

@@ -18,13 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLKID_CPUCLK
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|CLKID_HDMI_PLL
 value|2
 end_define
@@ -74,6 +67,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CLKID_SPICC
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLKID_I2C
 value|22
 end_define
@@ -90,6 +90,13 @@ define|#
 directive|define
 name|CLKID_RNG0
 value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKID_UART0
+value|26
 end_define
 
 begin_define
@@ -116,6 +123,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CLKID_IEC958
+value|39
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLKID_I2S_OUT
 value|40
 end_define
@@ -132,6 +146,13 @@ define|#
 directive|define
 name|CLKID_AIU
 value|47
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKID_UART1
+value|48
 end_define
 
 begin_define
@@ -179,6 +200,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CLKID_UART2
+value|68
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLKID_SANA
 value|69
 end_define
@@ -195,6 +223,13 @@ define|#
 directive|define
 name|CLKID_AOCLK_GATE
 value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKID_IEC958_GATE
+value|81
 end_define
 
 begin_define
@@ -272,6 +307,27 @@ define|#
 directive|define
 name|CLKID_MALI
 value|106
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKID_CTS_AMCLK
+value|107
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKID_CTS_MCLK_I958
+value|110
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKID_CTS_I958
+value|113
 end_define
 
 begin_endif
