@@ -6865,10 +6865,6 @@ name|nvls
 operator|=
 name|NULL
 expr_stmt|;
-name|ii
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|value
