@@ -186,7 +186,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|uint32_t
 name|opts
 decl_stmt|;
@@ -1759,6 +1758,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Arm EABIs */
+end_comment
+
+begin_function_decl
+name|void
+name|__aeabi_unwind_cpp_pr0
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|__aeabi_unwind_cpp_pr0
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
 
 end_unit
 
