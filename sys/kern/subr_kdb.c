@@ -131,7 +131,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|bool
+name|u_char
 name|__read_frequently
 name|kdb_active
 init|=
