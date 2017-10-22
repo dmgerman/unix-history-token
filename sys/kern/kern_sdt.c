@@ -47,6 +47,14 @@ name|sdt_probe_stub
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|volatile
+name|bool
+name|__read_frequently
+name|sdt_probes_enabled
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This is a stub for probe calls in case kernel DTrace support isn't  * enabled. It should never get called because there is no DTrace support  * to enable it.  */
 end_comment

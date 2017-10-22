@@ -292,6 +292,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|sdt_probes_enabled_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|dtrace_pattr_t
 name|sdt_attr
 init|=
@@ -990,6 +997,19 @@ condition|)
 name|lockstat_enabled
 operator|++
 expr_stmt|;
+name|sdt_probes_enabled_count
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|sdt_probes_enabled_count
+operator|==
+literal|1
+condition|)
+name|sdt_probes_enabled
+operator|=
+name|true
+expr_stmt|;
 block|}
 end_function
 
@@ -1032,6 +1052,19 @@ operator|(
 literal|"no probes enabled"
 operator|)
 argument_list|)
+expr_stmt|;
+name|sdt_probes_enabled_count
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sdt_probes_enabled_count
+operator|==
+literal|0
+condition|)
+name|sdt_probes_enabled
+operator|=
+name|false
 expr_stmt|;
 if|if
 condition|(
