@@ -593,6 +593,28 @@ parameter_list|)
 value|(((va)>= DMAP_MIN_ADDRESS&& (va)< DMAP_MAX_ADDRESS) \     || ((va)>= VM_MIN_KERNEL_ADDRESS&& (va)< VM_MAX_KERNEL_ADDRESS))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SC_TABLESIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* Must be power of 2. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
