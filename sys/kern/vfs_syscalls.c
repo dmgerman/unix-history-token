@@ -6329,19 +6329,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 case|case
-name|S_IFMT
-case|:
-name|error
-operator|=
-name|priv_check
-argument_list|(
-name|td
-argument_list|,
-name|PRIV_VFS_MKNOD_BAD
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|S_IFWHT
 case|:
 name|error
@@ -6553,17 +6540,6 @@ operator|&
 name|S_IFMT
 condition|)
 block|{
-case|case
-name|S_IFMT
-case|:
-comment|/* used by badsect to flag bad sectors */
-name|vattr
-operator|.
-name|va_type
-operator|=
-name|VBAD
-expr_stmt|;
-break|break;
 case|case
 name|S_IFCHR
 case|:
