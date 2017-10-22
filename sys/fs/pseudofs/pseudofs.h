@@ -229,12 +229,6 @@ name|pfs_node
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|pfs_bitmap
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * Init / uninit callback  */
 end_comment
@@ -372,16 +366,6 @@ name|PFS_ATTR_ARGS
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_struct_decl
-struct_decl|struct
-name|pfs_bitmap
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* opaque */
-end_comment
 
 begin_comment
 comment|/*  * Visibility callback  * Called with proc locked  */
