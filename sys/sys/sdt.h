@@ -208,22 +208,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SDT_PROBE_ENABLED
-parameter_list|(
-name|prov
-parameter_list|,
-name|mod
-parameter_list|,
-name|func
-parameter_list|,
-name|name
-parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|SDT_PROBE
 parameter_list|(
 name|prov
@@ -1057,23 +1041,6 @@ name|name
 parameter_list|)
 define|\
 value|extern struct sdt_probe sdt_##prov##_##mod##_##func##_##name[1]
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDT_PROBE_ENABLED
-parameter_list|(
-name|prov
-parameter_list|,
-name|mod
-parameter_list|,
-name|func
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|__predict_false((sdt_##prov##_##mod##_##func##_##name->id))
 end_define
 
 begin_define
