@@ -827,11 +827,12 @@ name|int
 name|td_dbgflags
 decl_stmt|;
 comment|/* (c) Userland debugger flags */
-name|struct
-name|ksiginfo
-name|td_dbgksi
+name|uint64_t
+name|padding3
+index|[
+literal|14
+index|]
 decl_stmt|;
-comment|/* (c) ksi reflected to debugger. */
 name|int
 name|td_ng_outbound
 decl_stmt|;
@@ -1102,6 +1103,10 @@ name|syscall_args
 name|td_sa
 decl_stmt|;
 comment|/* (kx) Syscall parameters. Copied on 					   fork for child tracing. */
+name|siginfo_t
+name|td_si
+decl_stmt|;
+comment|/* (c) For debugger or core file */
 block|}
 struct|;
 end_struct

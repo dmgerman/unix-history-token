@@ -5684,9 +5684,9 @@ if|if
 condition|(
 name|td2
 operator|->
-name|td_dbgksi
+name|td_si
 operator|.
-name|ksi_signo
+name|si_signo
 operator|!=
 literal|0
 operator|&&
@@ -5770,9 +5770,7 @@ name|pl_siginfo
 operator|=
 name|td2
 operator|->
-name|td_dbgksi
-operator|.
-name|ksi_info
+name|td_si
 expr_stmt|;
 block|}
 block|}
