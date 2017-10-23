@@ -309,7 +309,7 @@ begin_define
 define|#
 directive|define
 name|WITNESS_PENDLIST
-value|(1024 + MAXCPU)
+value|(2048 + MAXCPU)
 end_define
 
 begin_comment
