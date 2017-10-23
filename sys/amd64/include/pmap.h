@@ -1479,32 +1479,30 @@ name|_NPCPV
 value|168
 end_define
 
+begin_define
+define|#
+directive|define
+name|PV_CHUNK_HEADER
+define|\
+value|pmap_t			pc_pmap;				\ 	TAILQ_ENTRY(pv_chunk)	pc_list;				\ 	uint64_t		pc_map[_NPCM];
+comment|/* bitmap; 1 = free */
+value|\ 	TAILQ_ENTRY(pv_chunk)	pc_lru;
+end_define
+
+begin_struct
+struct|struct
+name|pv_chunk_header
+block|{
+name|PV_CHUNK_HEADER
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|pv_chunk
 block|{
-name|pmap_t
-name|pc_pmap
-decl_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|pv_chunk
-argument_list|)
-name|pc_list
-expr_stmt|;
-name|uint64_t
-name|pc_map
-index|[
-name|_NPCM
-index|]
-decl_stmt|;
-comment|/* bitmap; 1 = free */
-name|TAILQ_ENTRY
-argument_list|(
-argument|pv_chunk
-argument_list|)
-name|pc_lru
-expr_stmt|;
+name|PV_CHUNK_HEADER
 name|struct
 name|pv_entry
 name|pc_pventry
