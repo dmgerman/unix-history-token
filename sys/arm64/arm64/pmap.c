@@ -28,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -12415,6 +12421,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  * After promotion from 512 4KB page mappings to a single 2MB page mapping,  * replace the many pv entries for the 4KB page mappings by a single pv entry  * for the 2MB page mapping.  */
 end_comment
@@ -12909,6 +12923,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VM_NRESERVLEVEL> 0 */
+end_comment
 
 begin_comment
 comment|/*  *	Insert the given physical page (p) at  *	the specified virtual address (v) in the  *	target physical map with the protection requested.  *  *	If specified, the page will be wired down, meaning  *	that the related pte can not be reclaimed.  *  *	NB:  This is the only routine which MAY NOT lazy-evaluate  *	or lose information.  That is, this routine must actually  *	insert this page into the given map NOW.  */
@@ -14186,6 +14209,11 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
 if|if
 condition|(
 operator|(
@@ -14234,6 +14262,8 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
