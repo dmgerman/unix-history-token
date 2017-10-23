@@ -602,14 +602,14 @@ name|td_tid
 decl_stmt|;
 comment|/* (b) Thread ID. */
 name|uint64_t
-name|padding1
+name|td_padding1
 index|[
 literal|4
 index|]
 decl_stmt|;
 name|void
 modifier|*
-name|padding2
+name|td_padding2
 index|[
 literal|4
 index|]
@@ -829,7 +829,7 @@ decl_stmt|;
 comment|/* (c) Userland debugger flags */
 name|struct
 name|ksiginfo
-name|padding3
+name|td_padding3
 decl_stmt|;
 name|int
 name|td_ng_outbound
@@ -909,10 +909,10 @@ name|td_base_user_pri
 decl_stmt|;
 comment|/* (t) Base user pri */
 name|u_int
-name|td_padding3
+name|td_padding4
 decl_stmt|;
 name|u_int
-name|td_padding4
+name|td_padding5
 decl_stmt|;
 name|uintptr_t
 name|td_rb_list
