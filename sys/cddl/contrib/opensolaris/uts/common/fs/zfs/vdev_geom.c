@@ -701,6 +701,9 @@ parameter_list|,
 name|vdev_t
 modifier|*
 name|vd
+parameter_list|,
+name|boolean_t
+name|sanity
 parameter_list|)
 block|{
 name|struct
@@ -732,6 +735,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sanity
+condition|)
+block|{
+if|if
+condition|(
 name|pp
 operator|->
 name|sectorsize
@@ -751,7 +759,8 @@ name|ZFS_LOG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Failing attach of %s. Incompatible sectorsize %d\n"
+literal|"Failing attach of %s. "
+literal|"Incompatible sectorsize %d\n"
 argument_list|,
 name|pp
 operator|->
@@ -782,7 +791,8 @@ name|ZFS_LOG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Failing attach of %s. Incompatible mediasize %ju\n"
+literal|"Failing attach of %s. "
+literal|"Incompatible mediasize %ju\n"
 argument_list|,
 name|pp
 operator|->
@@ -798,6 +808,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
 block|}
 comment|/* Do we have geom already? No? Create one. */
 name|LIST_FOREACH
@@ -2902,6 +2913,8 @@ argument_list|(
 name|pp
 argument_list|,
 name|NULL
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3070,6 +3083,8 @@ argument_list|(
 name|pp
 argument_list|,
 name|NULL
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3109,13 +3124,6 @@ operator|&
 name|config
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nlabels
-operator|==
-literal|0
-condition|)
-block|{
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -3126,6 +3134,13 @@ argument_list|,
 name|B_TRUE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nlabels
+operator|==
+literal|0
+condition|)
+block|{
 name|ZFS_LOG
 argument_list|(
 literal|1
@@ -3143,16 +3158,6 @@ name|NO_MATCH
 operator|)
 return|;
 block|}
-name|g_topology_lock
-argument_list|()
-expr_stmt|;
-name|vdev_geom_detach
-argument_list|(
-name|cp
-argument_list|,
-name|B_TRUE
-argument_list|)
-expr_stmt|;
 name|pool_guid
 operator|=
 literal|0
@@ -3502,6 +3507,8 @@ argument_list|(
 name|best_pp
 argument_list|,
 name|vd
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3803,6 +3810,8 @@ argument_list|(
 name|pp
 argument_list|,
 name|vd
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
