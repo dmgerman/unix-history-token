@@ -827,11 +827,9 @@ name|int
 name|td_dbgflags
 decl_stmt|;
 comment|/* (c) Userland debugger flags */
-name|uint64_t
+name|struct
+name|ksiginfo
 name|padding3
-index|[
-literal|14
-index|]
 decl_stmt|;
 name|int
 name|td_ng_outbound
