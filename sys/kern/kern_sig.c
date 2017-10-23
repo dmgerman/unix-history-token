@@ -14723,7 +14723,16 @@ argument_list|(
 name|action
 operator|!=
 name|SIG_IGN
-operator|&&
+argument_list|,
+operator|(
+literal|"postsig action %p"
+operator|,
+name|action
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 operator|!
 name|SIGISMEMBER
 argument_list|(
@@ -14735,7 +14744,9 @@ name|sig
 argument_list|)
 argument_list|,
 operator|(
-literal|"postsig action"
+literal|"postsig action: blocked sig %d"
+operator|,
+name|sig
 operator|)
 argument_list|)
 expr_stmt|;
