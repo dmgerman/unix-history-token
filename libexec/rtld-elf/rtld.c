@@ -9052,7 +9052,8 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Absolute pathname required for shared object \"%s\""
+literal|"Absolute pathname required "
+literal|"for shared object \"%s\""
 argument_list|,
 name|name
 argument_list|)
@@ -9093,7 +9094,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/*      * If refobj->rpath != NULL, then refobj->runpath is NULL.  Fall      * back to pre-conforming behaviour if user requested so with      * LD_LIBRARY_PATH_RPATH environment variable and ignore -z      * nodeflib.      */
+comment|/* 	 * If refobj->rpath != NULL, then refobj->runpath is NULL.  Fall 	 * back to pre-conforming behaviour if user requested so with 	 * LD_LIBRARY_PATH_RPATH environment variable and ignore -z 	 * nodeflib. 	 */
 if|if
 condition|(
 name|objgiven
@@ -9437,7 +9438,8 @@ condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"Shared object \"%s\" not found, required by \"%s\""
+literal|"Shared object \"%s\" not found, "
+literal|"required by \"%s\""
 argument_list|,
 name|name
 argument_list|,
@@ -9461,7 +9463,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
