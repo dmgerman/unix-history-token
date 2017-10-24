@@ -1050,9 +1050,13 @@ name|uint8_t
 name|tx_chan
 decl_stmt|;
 name|uint8_t
-name|rx_chan_map
+name|mps_bg_map
 decl_stmt|;
-comment|/* rx MPS channel bitmap */
+comment|/* rx MPS buffer group bitmap */
+name|uint8_t
+name|rx_e_chan_map
+decl_stmt|;
+comment|/* rx TP e-channel bitmap */
 name|struct
 name|link_config
 name|link_cfg
@@ -2879,6 +2883,7 @@ index|[
 name|MAX_NCHAN
 index|]
 decl_stmt|;
+comment|/* channel -> port */
 name|void
 modifier|*
 name|tom_softc

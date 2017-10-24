@@ -17290,7 +17290,7 @@ return|return
 operator|(
 name|pi
 operator|->
-name|rx_chan_map
+name|rx_e_chan_map
 operator|)
 return|;
 block|}
@@ -18083,9 +18083,7 @@ name|fl
 argument_list|,
 name|intr_idx
 argument_list|,
-name|pi
-operator|->
-name|rx_chan_map
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

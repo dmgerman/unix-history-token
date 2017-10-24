@@ -1240,6 +1240,10 @@ name|unsigned
 name|int
 name|max_ird_adapter
 decl_stmt|;
+name|uint32_t
+name|mps_bg_map
+decl_stmt|;
+comment|/* rx buffer group map for all ports (upto 4) */
 block|}
 struct|;
 end_struct
