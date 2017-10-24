@@ -1902,7 +1902,7 @@ argument_list|,
 name|blk
 argument_list|)
 expr_stmt|;
-name|brelse
+name|bqrelse
 argument_list|(
 name|bp
 argument_list|)
@@ -6795,32 +6795,6 @@ expr_stmt|;
 name|num
 operator|=
 literal|0
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|a
-operator|==
-name|ex_blk
-argument_list|,
-operator|(
-literal|"ext4_ext_rm_leaf: bad a"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|b
-operator|!=
-name|ex_blk
-operator|+
-name|ex_len
-operator|-
-literal|1
-argument_list|,
-operator|(
-literal|"ext4_ext_rm_leaf: bad b"
-operator|)
-argument_list|)
 expr_stmt|;
 block|}
 if|if
