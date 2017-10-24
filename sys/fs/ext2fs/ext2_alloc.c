@@ -147,7 +147,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_long
+name|e4fs_daddr_t
 name|ext2_hashalloc
 parameter_list|(
 name|struct
@@ -256,7 +256,7 @@ name|ext2mount
 modifier|*
 name|ump
 decl_stmt|;
-name|int32_t
+name|e4fs_daddr_t
 name|bno
 decl_stmt|;
 name|int
@@ -550,7 +550,7 @@ comment|/*  * Allocate EA's block for inode.  */
 end_comment
 
 begin_function
-name|daddr_t
+name|e4fs_daddr_t
 name|ext2_alloc_meta
 parameter_list|(
 name|struct
@@ -2828,7 +2828,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_long
+name|e4fs_daddr_t
 name|ext2_hashalloc
 parameter_list|(
 name|struct
@@ -2868,7 +2868,7 @@ name|m_ext2fs
 modifier|*
 name|fs
 decl_stmt|;
-name|ino_t
+name|e4fs_daddr_t
 name|result
 decl_stmt|;
 name|int
@@ -5863,9 +5863,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
 name|bno
 operator|>=
 name|fs

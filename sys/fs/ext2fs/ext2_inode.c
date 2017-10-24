@@ -1010,7 +1010,7 @@ name|ovp
 init|=
 name|vp
 decl_stmt|;
-name|int32_t
+name|e4fs_daddr_t
 name|lastblock
 decl_stmt|;
 name|struct
@@ -1018,7 +1018,7 @@ name|inode
 modifier|*
 name|oip
 decl_stmt|;
-name|int32_t
+name|e4fs_daddr_t
 name|bn
 decl_stmt|,
 name|lbn

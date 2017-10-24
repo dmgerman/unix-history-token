@@ -107,7 +107,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|daddr_t
+name|e4fs_daddr_t
 name|ext2_alloc_meta
 parameter_list|(
 name|struct
@@ -269,7 +269,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|daddr_t
+name|e4fs_daddr_t
 parameter_list|,
 name|int
 parameter_list|)
