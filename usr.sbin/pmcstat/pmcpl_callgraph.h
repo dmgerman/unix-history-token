@@ -159,7 +159,7 @@ parameter_list|(
 name|int
 name|c
 parameter_list|,
-name|WINDOW
+name|void
 modifier|*
 name|w
 parameter_list|)

@@ -219,6 +219,30 @@ directive|include
 file|"pmcpl_callgraph.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|min
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|((A)< (B) ? (A) : (B))
+end_define
+
+begin_define
+define|#
+directive|define
+name|max
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|((A)> (B) ? (A) : (B))
+end_define
+
 begin_comment
 comment|/* Get the sample value in percent related to nsamples. */
 end_comment
@@ -2740,11 +2764,23 @@ parameter_list|(
 name|int
 name|c
 parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|WINDOW
 modifier|*
 name|w
-parameter_list|)
-block|{
+decl_stmt|;
+name|w
+operator|=
+operator|(
+name|WINDOW
+operator|*
+operator|)
+name|arg
+expr_stmt|;
 operator|(
 name|void
 operator|)
