@@ -627,6 +627,17 @@ parameter_list|)
 value|mtx_assert(&(_softc)->hwrm_lock,    \     MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BNXT_IS_FLOW_CTRL_CHANGED
+parameter_list|(
+name|link_info
+parameter_list|)
+define|\
+value|((link_info->last_flow_ctrl.tx != link_info->flow_ctrl.tx) ||       \          (link_info->last_flow_ctrl.rx != link_info->flow_ctrl.rx) ||       \ 	 (link_info->last_flow_ctrl.autoneg != link_info->flow_ctrl.autoneg))
+end_define
+
 begin_comment
 comment|/* Chip info */
 end_comment
@@ -913,6 +924,23 @@ end_struct
 
 begin_struct
 struct|struct
+name|bnxt_flow_ctrl
+block|{
+name|bool
+name|rx
+decl_stmt|;
+name|bool
+name|tx
+decl_stmt|;
+name|bool
+name|autoneg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|bnxt_link_info
 block|{
 name|uint8_t
@@ -945,17 +973,13 @@ decl_stmt|;
 name|uint8_t
 name|last_duplex
 decl_stmt|;
-name|uint8_t
-name|pause
+name|struct
+name|bnxt_flow_ctrl
+name|flow_ctrl
 decl_stmt|;
-name|uint8_t
-name|last_pause
-decl_stmt|;
-name|uint8_t
-name|auto_pause
-decl_stmt|;
-name|uint8_t
-name|force_pause
+name|struct
+name|bnxt_flow_ctrl
+name|last_flow_ctrl
 decl_stmt|;
 name|uint8_t
 name|duplex_setting
@@ -1008,9 +1032,6 @@ name|BNXT_AUTONEG_FLOW_CTRL
 value|2
 name|uint8_t
 name|req_duplex
-decl_stmt|;
-name|uint8_t
-name|req_flow_ctrl
 decl_stmt|;
 name|uint16_t
 name|req_link_speed
@@ -1926,6 +1947,15 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|hw_lro_oid
+decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|flow_ctrl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|flow_ctrl_oid
 decl_stmt|;
 name|struct
 name|bnxt_ver_info

@@ -29,6 +29,28 @@ directive|define
 name|_BNXT_HWRM_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|BNXT_PAUSE_TX
+value|(HWRM_PORT_PHY_QCFG_OUTPUT_PAUSE_TX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BNXT_PAUSE_RX
+value|(HWRM_PORT_PHY_QCFG_OUTPUT_PAUSE_RX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BNXT_AUTO_PAUSE_AUTONEG_PAUSE
+define|\
+value|(HWRM_PORT_PHY_QCFG_OUTPUT_AUTO_PAUSE_AUTONEG_PAUSE)
+end_define
+
 begin_comment
 comment|/* HWRM Function Prototypes */
 end_comment
@@ -180,12 +202,16 @@ parameter_list|(
 name|struct
 name|bnxt_softc
 modifier|*
+name|softc
 parameter_list|,
 name|bool
 name|set_pause
 parameter_list|,
 name|bool
 name|set_eee
+parameter_list|,
+name|bool
+name|set_link
 parameter_list|)
 function_decl|;
 end_function_decl
