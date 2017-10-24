@@ -1491,9 +1491,15 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-comment|/* 	 * So if we have any more IOPs left, allow it, 	 * otherwise wait. 	 */
+comment|/* 	 * So if we have any more IOPs left, allow it, 	 * otherwise wait. If current iops is 0, treat that 	 * as unlimited as a failsafe. 	 */
 if|if
 condition|(
+name|ios
+operator|->
+name|current
+operator|>
+literal|0
+operator|&&
 name|ios
 operator|->
 name|l_value1
@@ -1667,9 +1673,15 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-comment|/* 	 * So if we have any more bw quota left, allow it, 	 * otherwise wait. Note, we'll go negative and that's 	 * OK. We'll just get a little less next quota. 	 * 	 * Note on going negative: that allows us to process 	 * requests in order better, since we won't allow 	 * shorter reads to get around the long one that we 	 * don't have the quota to do just yet. It also prevents 	 * starvation by being a little more permissive about 	 * what we let through this quantum (to prevent the 	 * starvation), at the cost of getting a little less 	 * next quantum. 	 */
+comment|/* 	 * So if we have any more bw quota left, allow it, 	 * otherwise wait. Note, we'll go negative and that's 	 * OK. We'll just get a little less next quota. 	 * 	 * Note on going negative: that allows us to process 	 * requests in order better, since we won't allow 	 * shorter reads to get around the long one that we 	 * don't have the quota to do just yet. It also prevents 	 * starvation by being a little more permissive about 	 * what we let through this quantum (to prevent the 	 * starvation), at the cost of getting a little less 	 * next quantum. 	 * 	 * Also note that if the current limit is<= 0, 	 * we treat it as unlimited as a failsafe. 	 */
 if|if
 condition|(
+name|ios
+operator|->
+name|current
+operator|>
+literal|0
+operator|&&
 name|ios
 operator|->
 name|l_value1
