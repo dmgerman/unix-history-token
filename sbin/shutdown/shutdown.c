@@ -350,6 +350,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|docycle
+decl_stmt|,
 name|dohalt
 decl_stmt|,
 name|dopower
@@ -668,7 +670,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-hknopr"
+literal|"-chknopr"
 argument_list|)
 operator|)
 operator|!=
@@ -684,6 +686,14 @@ case|case
 literal|'-'
 case|:
 name|readstdin
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|docycle
 operator|=
 literal|1
 expr_stmt|;
@@ -782,12 +792,14 @@ operator|+
 name|dohalt
 operator|+
 name|dopower
+operator|+
+name|docycle
 operator|>
 literal|1
 condition|)
 name|usage
 argument_list|(
-literal|"incompatible switches -h, -k, -p and -r"
+literal|"incompatible switches -c, -h, -k, -p and -r"
 argument_list|)
 expr_stmt|;
 if|if
@@ -801,11 +813,13 @@ operator|||
 name|dopower
 operator|||
 name|doreboot
+operator|||
+name|docycle
 operator|)
 condition|)
 name|usage
 argument_list|(
-literal|"-o requires -h, -p or -r"
+literal|"-o requires -c, -h, -p or -r"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1720,6 +1734,10 @@ name|dopower
 condition|?
 literal|"power-down"
 else|:
+name|docycle
+condition|?
+literal|"power-cycle"
+else|:
 literal|"shutdown"
 argument_list|,
 name|whom
@@ -1767,6 +1785,19 @@ operator|)
 name|printf
 argument_list|(
 literal|"reboot"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|docycle
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"power-cycle"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1847,6 +1878,11 @@ condition|?
 name|SIGUSR2
 else|:
 comment|/* power-down */
+name|docycle
+condition|?
+name|SIGWINCH
+else|:
+comment|/* power-cycle */
 name|SIGTERM
 argument_list|)
 expr_stmt|;
@@ -1948,6 +1984,48 @@ argument_list|,
 literal|"-l"
 argument_list|,
 literal|"-p"
+argument_list|,
+name|nosync
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|empty_environ
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"shutdown: can't exec %s: %m."
+argument_list|,
+name|_PATH_HALT
+argument_list|)
+expr_stmt|;
+name|warn
+argument_list|(
+name|_PATH_HALT
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|docycle
+condition|)
+block|{
+name|execle
+argument_list|(
+name|_PATH_HALT
+argument_list|,
+literal|"halt"
+argument_list|,
+literal|"-l"
+argument_list|,
+literal|"-c"
 argument_list|,
 name|nosync
 argument_list|,
