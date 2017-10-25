@@ -2701,7 +2701,7 @@ block|{
 name|bool
 name|printed
 decl_stmt|;
-comment|/* 	 * RB_AUTOBOOT is special in that its value is zero, but it is 	 * also an implied argument if a different operation is not 	 * requested via RB_HALT, RB_POWEROFF, or RB_REROOT. 	 */
+comment|/* 	 * RB_AUTOBOOT is special in that its value is zero, but it is 	 * also an implied argument if a different operation is not 	 * requested via RB_HALT, RB_POWERCYCLE, RB_POWEROFF, or RB_REROOT. 	 */
 if|if
 condition|(
 name|howto
@@ -2717,6 +2717,8 @@ operator||
 name|RB_POWEROFF
 operator||
 name|RB_REROOT
+operator||
+name|RB_POWERCYCLE
 operator|)
 operator|)
 operator|==
