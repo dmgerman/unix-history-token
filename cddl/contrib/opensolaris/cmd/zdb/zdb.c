@@ -504,7 +504,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: %s [-CumMdibcsDvhLXFPAG] [-t txg] [-e [-p path...]] "
-literal|"[-U config] [-I inflight I/Os] [-x dumpdir] poolname [object...]\n"
+literal|"[-U config] [-I inflight I/Os] [-x dumpdir] [-o var=value] "
+literal|"poolname [object...]\n"
 literal|"       %s [-divPA] [-e -p path...] [-U config] dataset "
 literal|"[object...]\n"
 literal|"       %s -mM [-LXFPA] [-t txg] [-e [-p path...]] [-U config] "
@@ -866,6 +867,17 @@ name|stderr
 argument_list|,
 literal|"        -G dump zfs_dbgmsg buffer before "
 literal|"exiting\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"        -o<variable>=<value> set global "
+literal|"variable to an unsigned 32-bit integer value\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -20100,7 +20112,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bcdhilmMI:suCDRSAFLXx:evp:t:U:PG"
+literal|"bcdhilmMI:suCDRSAFLXx:evp:t:U:PGo:"
 argument_list|)
 operator|)
 operator|!=
@@ -20382,6 +20394,26 @@ case|:
 name|vn_dumpdir
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|error
+operator|=
+name|set_global_var
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|usage
+argument_list|()
 expr_stmt|;
 break|break;
 default|default:
