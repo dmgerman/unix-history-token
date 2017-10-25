@@ -66010,7 +66010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait for pending output on a vnode to complete.  * Must be called with vnode lock and interlock locked.  *  * XXX: Should just be a call to bufobj_wwait().  */
+comment|/*  * Wait for pending output on a vnode to complete.  */
 end_comment
 
 begin_function
@@ -66026,18 +66026,6 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-name|struct
-name|bufobj
-modifier|*
-name|bo
-decl_stmt|;
-name|bo
-operator|=
-operator|&
-name|vp
-operator|->
-name|v_bufobj
-expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
@@ -66045,49 +66033,21 @@ argument_list|,
 literal|"drain_output"
 argument_list|)
 expr_stmt|;
-name|ASSERT_BO_WLOCKED
-argument_list|(
-name|bo
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|bo
-operator|->
-name|bo_numoutput
-condition|)
-block|{
-name|bo
-operator|->
-name|bo_flag
-operator||=
-name|BO_WWAIT
-expr_stmt|;
-name|msleep
-argument_list|(
 operator|(
-name|caddr_t
+name|void
 operator|)
-operator|&
-name|bo
-operator|->
-name|bo_numoutput
-argument_list|,
-name|BO_LOCKPTR
+name|bufobj_wwait
 argument_list|(
-name|bo
-argument_list|)
+operator|&
+name|vp
+operator|->
+name|v_bufobj
 argument_list|,
-name|PRIBIO
-operator|+
-literal|1
-argument_list|,
-literal|"drainvp"
+literal|0
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
