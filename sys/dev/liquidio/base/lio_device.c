@@ -3614,11 +3614,10 @@ name|lio_dev_dbg
 argument_list|(
 name|oct
 argument_list|,
-literal|"Core setup bytes expected %lu found %d\n"
+literal|"Core setup bytes expected %llu found %d\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
+name|LIO_CAST64
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3626,6 +3625,7 @@ name|cs
 argument_list|)
 operator|+
 name|LIO_DROQ_INFO_SIZE
+argument_list|)
 argument_list|,
 name|recv_pkt
 operator|->

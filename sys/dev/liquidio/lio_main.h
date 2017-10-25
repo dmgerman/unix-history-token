@@ -31,12 +31,6 @@ name|lio_hwlro
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__LP64__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -46,22 +40,6 @@ name|v
 parameter_list|)
 value|((long long)(long)(v))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-literal|"Unknown system architecture"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -320,10 +298,12 @@ name|lio_dev_dbg
 argument_list|(
 name|oct
 argument_list|,
-literal|"BAR%d Tag 0x%lx Handle 0x%lx\n"
+literal|"BAR%d Tag 0x%llx Handle 0x%llx\n"
 argument_list|,
 name|baridx
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|oct
 operator|->
 name|mem_bus_space
@@ -332,7 +312,10 @@ name|baridx
 index|]
 operator|.
 name|tag
+argument_list|)
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|oct
 operator|->
 name|mem_bus_space
@@ -341,6 +324,7 @@ name|baridx
 index|]
 operator|.
 name|handle
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

@@ -4028,8 +4028,7 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
-name|long
+name|uint64_t
 name|lio_get_baudrate
 parameter_list|(
 name|struct
@@ -5711,19 +5710,25 @@ name|lio_dev_err
 argument_list|(
 name|octeon_dev
 argument_list|,
-literal|"Got bad iqueues (%016lX) or oqueues (%016lX) from firmware.\n"
+literal|"Got bad iqueues (%016llX) or oqueues (%016llX) from firmware.\n"
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|resp
 operator|->
 name|cfg_info
 operator|.
 name|iqmask
+argument_list|)
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|resp
 operator|->
 name|cfg_info
 operator|.
 name|oqmask
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5734,21 +5739,27 @@ name|lio_dev_dbg
 argument_list|(
 name|octeon_dev
 argument_list|,
-literal|"interface %d, iqmask %016lx, oqmask %016lx, numiqueues %d, numoqueues %d\n"
+literal|"interface %d, iqmask %016llx, oqmask %016llx, numiqueues %d, numoqueues %d\n"
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|resp
 operator|->
 name|cfg_info
 operator|.
 name|iqmask
+argument_list|)
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|resp
 operator|->
 name|cfg_info
 operator|.
 name|oqmask
+argument_list|)
 argument_list|,
 name|num_iqueues
 argument_list|,

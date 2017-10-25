@@ -1233,7 +1233,7 @@ name|lio_dev_dbg
 argument_list|(
 name|oct
 argument_list|,
-literal|"droq[%d]: desc_ring: virt: 0x%p, dma: %lx\n"
+literal|"droq[%d]: desc_ring: virt: 0x%p, dma: %llx\n"
 argument_list|,
 name|q_no
 argument_list|,
@@ -1241,9 +1241,12 @@ name|droq
 operator|->
 name|desc_ring
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|droq
 operator|->
 name|desc_ring_dma
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|lio_dev_dbg
