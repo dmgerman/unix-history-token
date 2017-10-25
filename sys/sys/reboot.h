@@ -264,6 +264,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RB_POWERCYCLE
+value|0x400000
+end_define
+
+begin_comment
+comment|/* Power cycle if possible */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RB_MULTIPLE
 value|0x20000000
 end_define
