@@ -331,6 +331,9 @@ name|uint8_t
 name|kda_enable
 decl_stmt|;
 name|uint8_t
+name|kda_compression
+decl_stmt|;
+name|uint8_t
 name|kda_encryption
 decl_stmt|;
 name|uint8_t

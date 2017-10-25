@@ -2026,6 +2026,12 @@ modifier|*
 name|kdc
 decl_stmt|;
 comment|/* Kernel dump crypto. */
+name|struct
+name|kerneldumpgz
+modifier|*
+name|kdgz
+decl_stmt|;
+comment|/* Kernel dump compression. */
 block|}
 struct|;
 end_struct
@@ -2070,7 +2076,10 @@ modifier|*
 name|td
 parameter_list|,
 name|uint8_t
-name|encrypt
+name|compression
+parameter_list|,
+name|uint8_t
+name|encryption
 parameter_list|,
 specifier|const
 name|uint8_t

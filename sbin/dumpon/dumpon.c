@@ -206,7 +206,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: dumpon [-v] [-k public_key_file] special_file"
+literal|"usage: dumpon [-v] [-k public_key_file] [-z] special_file"
 argument_list|,
 literal|"       dumpon [-v] off"
 argument_list|,
@@ -839,7 +839,13 @@ literal|0
 decl_stmt|;
 name|bool
 name|enable
+decl_stmt|,
+name|gzip
 decl_stmt|;
+name|gzip
+operator|=
+name|false
+expr_stmt|;
 name|pubkeyfile
 operator|=
 name|NULL
@@ -855,7 +861,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"k:lv"
+literal|"k:lvz"
 argument_list|)
 operator|)
 operator|!=
@@ -892,6 +898,14 @@ case|:
 name|verbose
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|gzip
+operator|=
+name|true
 expr_stmt|;
 break|break;
 default|default:
@@ -1107,6 +1121,11 @@ argument_list|,
 name|dumpdev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|gzip
+condition|)
 name|check_size
 argument_list|(
 name|fd
@@ -1178,6 +1197,16 @@ operator|.
 name|kda_enable
 operator|=
 literal|1
+expr_stmt|;
+name|kda
+operator|.
+name|kda_compression
+operator|=
+name|gzip
+condition|?
+name|KERNELDUMP_COMP_GZIP
+else|:
+name|KERNELDUMP_COMP_NONE
 expr_stmt|;
 name|i
 operator|=

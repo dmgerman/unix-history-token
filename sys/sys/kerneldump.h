@@ -137,6 +137,20 @@ end_endif
 begin_define
 define|#
 directive|define
+name|KERNELDUMP_COMP_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNELDUMP_COMP_GZIP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|KERNELDUMP_ENC_NONE
 value|0
 end_define
@@ -214,11 +228,11 @@ decl_stmt|;
 define|#
 directive|define
 name|KERNELDUMPVERSION
-value|2
+value|3
 define|#
 directive|define
 name|KERNELDUMP_TEXT_VERSION
-value|2
+value|3
 name|uint32_t
 name|architectureversion
 decl_stmt|;
@@ -259,6 +273,9 @@ name|dumplength
 decl_stmt|;
 comment|/* excl headers */
 name|uint64_t
+name|dumpextent
+decl_stmt|;
+name|uint64_t
 name|dumptime
 decl_stmt|;
 name|uint32_t
@@ -266,6 +283,9 @@ name|dumpkeysize
 decl_stmt|;
 name|uint32_t
 name|blocksize
+decl_stmt|;
+name|uint8_t
+name|compression
 decl_stmt|;
 name|char
 name|hostname
@@ -282,7 +302,7 @@ decl_stmt|;
 name|char
 name|panicstring
 index|[
-literal|188
+literal|179
 index|]
 decl_stmt|;
 name|uint32_t
