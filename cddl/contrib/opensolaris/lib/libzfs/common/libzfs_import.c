@@ -3691,7 +3691,7 @@ decl_stmt|;
 name|int
 name|l
 decl_stmt|;
-name|vdev_label_t
+name|vdev_phys_t
 modifier|*
 name|labels
 decl_stmt|;
@@ -3757,7 +3757,7 @@ name|VDEV_LABELS
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|vdev_label_t
+name|vdev_phys_t
 argument_list|)
 argument_list|)
 operator|)
@@ -3817,6 +3817,8 @@ name|size
 argument_list|,
 name|l
 argument_list|)
+operator|+
+name|VDEV_SKIP_SIZE
 expr_stmt|;
 name|aiocbs
 index|[
@@ -3840,7 +3842,7 @@ name|aio_nbytes
 operator|=
 sizeof|sizeof
 argument_list|(
-name|vdev_label_t
+name|vdev_phys_t
 argument_list|)
 expr_stmt|;
 name|aiocbs
@@ -3945,6 +3947,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|labels
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3984,7 +3991,7 @@ argument_list|)
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|vdev_label_t
+name|vdev_phys_t
 argument_list|)
 condition|)
 continue|continue;
@@ -3997,8 +4004,6 @@ index|[
 name|l
 index|]
 operator|.
-name|vl_vdev_phys
-operator|.
 name|vp_nvlist
 argument_list|,
 sizeof|sizeof
@@ -4007,8 +4012,6 @@ name|labels
 index|[
 name|l
 index|]
-operator|.
-name|vl_vdev_phys
 operator|.
 name|vp_nvlist
 argument_list|)
