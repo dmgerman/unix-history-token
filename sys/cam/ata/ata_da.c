@@ -15304,6 +15304,8 @@ operator|(
 name|RB_HALT
 operator||
 name|RB_POWEROFF
+operator||
+name|RB_POWERCYCLE
 operator|)
 operator|)
 operator|!=
