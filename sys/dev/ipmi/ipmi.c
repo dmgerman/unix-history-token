@@ -328,6 +328,19 @@ begin_comment
 comment|/* sec */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|cycle_wait
+init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sec */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -448,6 +461,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"IPMI watchdog pre-timeout countdown (seconds)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ipmi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cyle_wait
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|cycle_wait
+argument_list|,
+literal|0
+argument_list|,
+literal|"IPMI power cycle on reboot delay time (seconds)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3871,10 +3905,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * BMCs are notoriously slow, give it up to 10s to effect the power 	 * down leg of the power cycle. If that fails, fallback to the next 	 * hanlder in the shutdown_final chain and/or the platform failsafe. 	 */
+comment|/* 	 * BMCs are notoriously slow, give it cyle_wait seconds for the power 	 * down leg of the power cycle. If that fails, fallback to the next 	 * hanlder in the shutdown_final chain and/or the platform failsafe. 	 */
 name|DELAY
 argument_list|(
-literal|10
+name|cycle_wait
 operator|*
 literal|1000
 operator|*
