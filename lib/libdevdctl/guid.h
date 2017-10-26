@@ -36,11 +36,17 @@ block|{
 name|public
 label|:
 comment|/* Constructors */
+comment|/* Default constructor: an Invalid guid */
+name|Guid
+argument_list|()
+expr_stmt|;
+comment|/* Construct a guid from a provided integer */
 name|Guid
 argument_list|(
 argument|uint64_t guid
 argument_list|)
 empty_stmt|;
+comment|/* Construct a guid from a string in base 8, 10, or 16 */
 name|Guid
 argument_list|(
 specifier|const
@@ -124,6 +130,17 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//- Guid Inline Public Methods ------------------------------------------------
+specifier|inline
+name|Guid
+operator|::
+name|Guid
+argument_list|()
+operator|:
+name|m_GUID
+argument_list|(
+argument|INVALID_GUID
+argument_list|)
+block|{ }
 specifier|inline
 name|Guid
 operator|::
