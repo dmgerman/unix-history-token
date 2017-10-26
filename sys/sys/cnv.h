@@ -89,7 +89,35 @@ end_endif
 
 begin_function_decl
 name|__BEGIN_DECLS
+comment|/*  * Functions which returns information about the given cookie.  */
+specifier|const
+name|char
+modifier|*
+name|cnvlist_name
+parameter_list|(
+name|void
+modifier|*
+name|cookiep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cnvlist_type
+parameter_list|(
+name|void
+modifier|*
+name|cookiep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * The cnvlist_get functions returns value associated with the given cookie.  * If it returns a pointer, the pointer represents internal buffer and should  * not be freed by the caller.  */
+end_comment
+
+begin_function_decl
 name|bool
 name|cnvlist_get_bool
 parameter_list|(
