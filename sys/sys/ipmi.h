@@ -397,8 +397,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPMI_SET_WD_ACTION_NONE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPMI_SET_WD_ACTION_RESET
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPMI_SET_WD_ACTION_POWER_DOWN
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPMI_SET_WD_ACTION_POWER_CYCLE
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPMI_SET_WD_PREACTION_NONE
+value|(0x00<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPMI_SET_WD_PREACTION_SMI
+value|(0x01<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPMI_SET_WD_PREACTION_NMI
+value|(0x02<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPMI_SET_WD_PREACTION_MI
+value|(0x03<< 4)
 end_define
 
 begin_struct
