@@ -2178,6 +2178,8 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 specifier|extern
