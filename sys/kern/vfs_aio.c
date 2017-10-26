@@ -14147,9 +14147,11 @@ operator|=
 name|uap
 operator|->
 name|nent
+operator|-
+literal|1
 init|;
 name|i
-operator|>
+operator|>=
 literal|0
 condition|;
 name|i
