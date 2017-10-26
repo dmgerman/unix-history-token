@@ -3928,7 +3928,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|cam_periph_error
+name|adaerror
 argument_list|(
 operator|&
 name|ccb
@@ -3938,8 +3938,6 @@ argument_list|,
 name|SF_NO_RECOVERY
 operator||
 name|SF_NO_RETRY
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4104,7 +4102,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|cam_periph_error
+name|adaerror
 argument_list|(
 operator|&
 name|ccb
@@ -4114,8 +4112,6 @@ argument_list|,
 name|SF_NO_RECOVERY
 operator||
 name|SF_NO_RETRY
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
