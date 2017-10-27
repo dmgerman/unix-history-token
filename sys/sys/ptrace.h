@@ -678,6 +678,84 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WANT_LWPINFO32
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+operator|)
+end_if
+
+begin_struct
+struct|struct
+name|ptrace_lwpinfo32
+block|{
+name|lwpid_t
+name|pl_lwpid
+decl_stmt|;
+comment|/* LWP described. */
+name|int
+name|pl_event
+decl_stmt|;
+comment|/* Event that stopped the LWP. */
+name|int
+name|pl_flags
+decl_stmt|;
+comment|/* LWP flags. */
+name|sigset_t
+name|pl_sigmask
+decl_stmt|;
+comment|/* LWP signal mask */
+name|sigset_t
+name|pl_siglist
+decl_stmt|;
+comment|/* LWP pending signal */
+name|struct
+name|siginfo32
+name|pl_siginfo
+decl_stmt|;
+comment|/* siginfo for signal */
+name|char
+name|pl_tdname
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* LWP name. */
+name|pid_t
+name|pl_child_pid
+decl_stmt|;
+comment|/* New child pid */
+name|u_int
+name|pl_syscall_code
+decl_stmt|;
+name|u_int
+name|pl_syscall_narg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Argument structure for PT_VM_ENTRY. */
 end_comment
