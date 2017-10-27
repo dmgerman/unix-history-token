@@ -179,6 +179,12 @@ directive|include
 file|<sys/capsicum.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/ptrace.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -195,12 +201,6 @@ begin_include
 include|#
 directive|include
 file|<sys/pipe.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ptrace.h>
 end_include
 
 begin_include
