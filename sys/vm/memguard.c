@@ -1298,6 +1298,8 @@ parameter_list|)
 block|{
 name|vm_offset_t
 name|addr
+decl_stmt|,
+name|origaddr
 decl_stmt|;
 name|u_long
 name|size_p
@@ -1413,7 +1415,7 @@ operator||
 name|M_NOWAIT
 argument_list|,
 operator|&
-name|addr
+name|origaddr
 argument_list|)
 operator|==
 literal|0
@@ -1449,6 +1451,10 @@ operator|=
 name|memguard_base
 expr_stmt|;
 block|}
+name|addr
+operator|=
+name|origaddr
+expr_stmt|;
 if|if
 condition|(
 name|do_guard
@@ -1481,7 +1487,7 @@ name|vmem_xfree
 argument_list|(
 name|memguard_arena
 argument_list|,
-name|addr
+name|origaddr
 argument_list|,
 name|size_v
 argument_list|)
