@@ -37,12 +37,6 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
@@ -50,6 +44,12 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
