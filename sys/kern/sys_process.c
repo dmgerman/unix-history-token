@@ -4686,6 +4686,13 @@ break|break;
 block|}
 name|sendsig
 label|:
+comment|/* 		 * Clear the pending event for the thread that just 		 * reported its event (p_xthread).  This may not be 		 * the thread passed to PT_CONTINUE, PT_STEP, etc. if 		 * the debugger is resuming a different thread. 		 */
+name|td2
+operator|=
+name|p
+operator|->
+name|p_xthread
+expr_stmt|;
 if|if
 condition|(
 name|proctree_locked
