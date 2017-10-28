@@ -9121,11 +9121,6 @@ operator|->
 name|wk_mp
 argument_list|)
 expr_stmt|;
-name|WORKLIST_REMOVE
-argument_list|(
-name|wk
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ump
@@ -9148,6 +9143,11 @@ operator|->
 name|wk_list
 operator|.
 name|le_prev
+expr_stmt|;
+name|WORKLIST_REMOVE
+argument_list|(
+name|wk
+argument_list|)
 expr_stmt|;
 name|ump
 operator|->
@@ -10342,14 +10342,6 @@ name|WK_HEAD
 argument_list|)
 expr_stmt|;
 block|}
-name|LIST_REMOVE
-argument_list|(
-operator|&
-name|sentinel
-argument_list|,
-name|wk_list
-argument_list|)
-expr_stmt|;
 comment|/* Sentinal could've become the tail from remove_from_worklist. */
 if|if
 condition|(
@@ -10374,6 +10366,14 @@ operator|.
 name|wk_list
 operator|.
 name|le_prev
+expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+operator|&
+name|sentinel
+argument_list|,
+name|wk_list
+argument_list|)
 expr_stmt|;
 name|PRELE
 argument_list|(
