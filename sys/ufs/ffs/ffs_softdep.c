@@ -65405,7 +65405,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 		 * The lock argument must be bp->b_vp's mutex in 		 * this case. 		 */
 ifdef|#
 directive|ifdef
 name|DEBUG_VFS_LOCKS
