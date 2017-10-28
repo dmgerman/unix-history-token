@@ -1683,7 +1683,7 @@ begin_define
 define|#
 directive|define
 name|FEC_DESC_RING_ALIGN
-value|16
+value|64
 end_define
 
 begin_define
