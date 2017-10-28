@@ -229,35 +229,35 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Flags that describe general differences between the FEC hardware in various  * SoCs.  These are ORed into the FECTYPE enum values.  */
+comment|/*  * Flags that describe general differences between the FEC hardware in various  * SoCs.  These are ORed into the FECTYPE enum values in the ofw_compat_data, so  * the low 8 bits are reserved for the type enum.  In the softc, the type and  * flags are put into separate members, so that you don't need to mask the flags  * out of the type to compare it.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FECTYPE_MASK
-value|0x0000ffff
+value|0x000000ff
 end_define
 
 begin_define
 define|#
 directive|define
 name|FECFLAG_GBE
-value|(1<< 16)
+value|(1<<  8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FECFLAG_AVB
-value|(1<< 17)
+value|(1<<  9)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FECFLAG_RACC
-value|(1<< 18)
+value|(1<< 10)
 end_define
 
 begin_comment
@@ -453,7 +453,10 @@ decl_stmt|;
 name|mii_contype_t
 name|phy_conn_type
 decl_stmt|;
-name|uintptr_t
+name|uint32_t
+name|fecflags
+decl_stmt|;
+name|uint8_t
 name|fectype
 decl_stmt|;
 name|boolean_t
@@ -953,8 +956,6 @@ condition|(
 name|sc
 operator|->
 name|fectype
-operator|&
-name|FECTYPE_MASK
 condition|)
 block|{
 case|case
@@ -3185,15 +3186,14 @@ name|seg
 decl_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
 name|sc
 operator|->
-name|fectype
+name|fecflags
 operator|&
 name|FECFLAG_RACC
 operator|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* 		 * The RACC[SHIFT16] feature is not available.  So, we need to 		 * leave at least ETHER_ALIGN bytes free at the beginning of the 		 * buffer to allow the data to be re-aligned after receiving it 		 * (by copying it backwards ETHER_ALIGN bytes in the same 		 * buffer).  We also have to ensure that the beginning of the 		 * buffer is aligned to the hardware's requirements. 		 */
@@ -3525,7 +3525,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|fectype
+name|fecflags
 operator|&
 name|FECFLAG_RACC
 condition|)
@@ -4904,7 +4904,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|fectype
+name|fecflags
 operator|&
 name|FECFLAG_RACC
 condition|)
@@ -5867,8 +5867,16 @@ name|void
 modifier|*
 name|dummy
 decl_stmt|;
+name|uintptr_t
+name|typeflags
+decl_stmt|;
 name|phandle_t
 name|ofw_node
+decl_stmt|;
+name|uint32_t
+name|idx
+decl_stmt|,
+name|mscr
 decl_stmt|;
 name|int
 name|error
@@ -5884,11 +5892,6 @@ name|eaddr
 index|[
 name|ETHER_ADDR_LEN
 index|]
-decl_stmt|;
-name|uint32_t
-name|idx
-decl_stmt|,
-name|mscr
 decl_stmt|;
 name|sc
 operator|=
@@ -5909,9 +5912,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * There are differences in the implementation and features of the FEC 	 * hardware on different SoCs, so figure out what type we are. 	 */
-name|sc
-operator|->
-name|fectype
+name|typeflags
 operator|=
 name|ofw_bus_search_compatible
 argument_list|(
@@ -5922,11 +5923,38 @@ argument_list|)
 operator|->
 name|ocd_data
 expr_stmt|;
+name|sc
+operator|->
+name|fectype
+operator|=
+call|(
+name|uint8_t
+call|)
+argument_list|(
+name|typeflags
+operator|&
+name|FECTYPE_MASK
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|fecflags
+operator|=
+call|(
+name|uint32_t
+call|)
+argument_list|(
+name|typeflags
+operator|&
+operator|~
+name|FECTYPE_MASK
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
 operator|->
-name|fectype
+name|fecflags
 operator|&
 name|FECFLAG_AVB
 condition|)
@@ -6785,7 +6813,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|fectype
+name|fecflags
 operator|&
 name|FECFLAG_AVB
 condition|)
@@ -7107,7 +7135,7 @@ argument_list|,
 operator|(
 name|sc
 operator|->
-name|fectype
+name|fecflags
 operator|&
 name|FECTYPE_MVF
 operator|)
