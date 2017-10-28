@@ -222,6 +222,7 @@ name|FECTYPE_IMX53
 block|,
 name|FECTYPE_IMX6
 block|,
+comment|/* imx6 and imx7 */
 name|FECTYPE_MVF
 block|, }
 enum|;
@@ -242,7 +243,14 @@ begin_define
 define|#
 directive|define
 name|FECFLAG_GBE
-value|(0x0001<< 16)
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FECFLAG_AVB
+value|(1<< 17)
 end_define
 
 begin_comment
@@ -281,6 +289,16 @@ block|{
 literal|"fsl,imx6ul-fec"
 block|,
 name|FECTYPE_IMX6
+block|}
+block|,
+block|{
+literal|"fsl,imx7d-fec"
+block|,
+name|FECTYPE_IMX6
+operator||
+name|FECFLAG_GBE
+operator||
+name|FECFLAG_AVB
 block|}
 block|,
 block|{
@@ -407,7 +425,7 @@ decl_stmt|;
 name|mii_contype_t
 name|phy_conn_type
 decl_stmt|;
-name|uint8_t
+name|uintptr_t
 name|fectype
 decl_stmt|;
 name|boolean_t
@@ -421,6 +439,12 @@ name|is_detaching
 decl_stmt|;
 name|int
 name|tx_watchdog_count
+decl_stmt|;
+name|int
+name|rxbuf_align
+decl_stmt|;
+name|int
+name|txbuf_align
 decl_stmt|;
 name|bus_dma_tag_t
 name|rxdesc_tag
@@ -3095,7 +3119,9 @@ name|roundup
 argument_list|(
 name|ETHER_ALIGN
 argument_list|,
-name|FEC_RXBUF_ALIGN
+name|sc
+operator|->
+name|rxbuf_align
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4546,7 +4572,9 @@ name|roundup
 argument_list|(
 name|ETHER_ALIGN
 argument_list|,
-name|FEC_RXBUF_ALIGN
+name|sc
+operator|->
+name|rxbuf_align
 argument_list|)
 expr_stmt|;
 name|maxfl
@@ -5727,6 +5755,43 @@ argument_list|)
 operator|->
 name|ocd_data
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|fectype
+operator|&
+name|FECFLAG_AVB
+condition|)
+block|{
+name|sc
+operator|->
+name|rxbuf_align
+operator|=
+literal|64
+expr_stmt|;
+name|sc
+operator|->
+name|txbuf_align
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|rxbuf_align
+operator|=
+literal|16
+expr_stmt|;
+name|sc
+operator|->
+name|txbuf_align
+operator|=
+literal|16
+expr_stmt|;
+block|}
 comment|/* 	 * We have to be told what kind of electrical connection exists between 	 * the MAC and PHY or we can't operate correctly. 	 */
 if|if
 condition|(
@@ -6075,7 +6140,9 @@ name|dev
 argument_list|)
 argument_list|,
 comment|/* Parent tag. */
-name|FEC_TXBUF_ALIGN
+name|sc
+operator|->
+name|txbuf_align
 argument_list|,
 literal|0
 argument_list|,

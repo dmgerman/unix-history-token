@@ -1686,20 +1686,6 @@ name|FEC_DESC_RING_ALIGN
 value|64
 end_define
 
-begin_define
-define|#
-directive|define
-name|FEC_RXBUF_ALIGN
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|FEC_TXBUF_ALIGN
-value|16
-end_define
-
 begin_endif
 endif|#
 directive|endif
