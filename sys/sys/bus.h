@@ -2183,6 +2183,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|RESOURCE_SPEC_END
+value|{-1, 0, 0}
+end_define
+
 begin_function_decl
 name|int
 name|bus_alloc_resources
