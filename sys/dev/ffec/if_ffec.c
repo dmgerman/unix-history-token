@@ -253,6 +253,13 @@ name|FECFLAG_AVB
 value|(1<< 17)
 end_define
 
+begin_define
+define|#
+directive|define
+name|FECFLAG_RACC
+value|(1<< 18)
+end_define
+
 begin_comment
 comment|/*  * Table of supported FDT compat strings and their associated FECTYPE values.  */
 end_comment
@@ -282,6 +289,8 @@ literal|"fsl,imx6q-fec"
 block|,
 name|FECTYPE_IMX6
 operator||
+name|FECFLAG_RACC
+operator||
 name|FECFLAG_GBE
 block|}
 block|,
@@ -289,12 +298,16 @@ block|{
 literal|"fsl,imx6ul-fec"
 block|,
 name|FECTYPE_IMX6
+operator||
+name|FECFLAG_RACC
 block|}
 block|,
 block|{
 literal|"fsl,imx7d-fec"
 block|,
 name|FECTYPE_IMX6
+operator||
+name|FECFLAG_RACC
 operator||
 name|FECFLAG_GBE
 operator||
@@ -305,6 +318,8 @@ block|{
 literal|"fsl,mvf600-fec"
 block|,
 name|FECTYPE_MVF
+operator||
+name|FECFLAG_RACC
 block|}
 block|,
 block|{
@@ -3168,7 +3183,20 @@ name|struct
 name|bus_dma_segment
 name|seg
 decl_stmt|;
-comment|/* 	 * We need to leave at least ETHER_ALIGN bytes free at the beginning of 	 * the buffer to allow the data to be re-aligned after receiving it (by 	 * copying it backwards ETHER_ALIGN bytes in the same buffer).  We also 	 * have to ensure that the beginning of the buffer is aligned to the 	 * hardware's requirements. 	 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|fectype
+operator|&
+name|FECFLAG_RACC
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * The RACC[SHIFT16] feature is not available.  So, we need to 		 * leave at least ETHER_ALIGN bytes free at the beginning of the 		 * buffer to allow the data to be re-aligned after receiving it 		 * (by copying it backwards ETHER_ALIGN bytes in the same 		 * buffer).  We also have to ensure that the beginning of the 		 * buffer is aligned to the hardware's requirements. 		 */
 name|m_adj
 argument_list|(
 name|m
@@ -3183,6 +3211,7 @@ name|rxbuf_align
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|bus_dmamap_load_mbuf_sg
@@ -3410,7 +3439,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 *  Unfortunately, the protocol headers need to be aligned on a 32-bit 	 *  boundary for the upper layers.  The hardware requires receive 	 *  buffers to be 16-byte aligned.  The ethernet header is 14 bytes, 	 *  leaving the protocol header unaligned.  We used m_adj() after 	 *  allocating the buffer to leave empty space at the start of the 	 *  buffer, now we'll use the alignment agnostic bcopy() routine to 	 *  shuffle all the data backwards 2 bytes and adjust m_data. 	 * 	 *  XXX imx6 hardware is able to do this 2-byte alignment by setting the 	 *  SHIFT16 bit in the RACC register.  Older hardware doesn't have that 	 *  feature, but for them could we speed this up by copying just the 	 *  protocol headers into their own small mbuf then chaining the cluster 	 *  to it?  That way we'd only need to copy like 64 bytes or whatever 	 *  the biggest header is, instead of the whole 1530ish-byte frame. 	 */
 name|FFEC_UNLOCK
 argument_list|(
 name|sc
@@ -3492,6 +3520,33 @@ name|sc
 operator|->
 name|ifp
 expr_stmt|;
+comment|/* 	 * Align the protocol headers in the receive buffer on a 32-bit 	 * boundary.  Newer hardware does the alignment for us.  On hardware 	 * that doesn't support this feature, we have to copy-align the data. 	 * 	 *  XXX for older hardware, could we speed this up by copying just the 	 *  protocol headers into their own small mbuf then chaining the cluster 	 *  to it? That way we'd only need to copy like 64 bytes or whatever the 	 *  biggest header is, instead of the whole 1530ish-byte frame. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|fectype
+operator|&
+name|FECFLAG_RACC
+condition|)
+block|{
+name|m
+operator|->
+name|m_data
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|uint8_t
+operator|*
+argument_list|)
+operator|+
+literal|2
+expr_stmt|;
+block|}
+else|else
+block|{
 name|src
 operator|=
 name|mtod
@@ -3523,6 +3578,7 @@ name|m_data
 operator|=
 name|dst
 expr_stmt|;
+block|}
 name|sc
 operator|->
 name|ifp
@@ -4844,6 +4900,37 @@ operator|~
 name|FEC_MIBC_DIS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|fectype
+operator|&
+name|FECFLAG_RACC
+condition|)
+block|{
+comment|/* 		 * RACC - Receive Accelerator Function Configuration. 		 */
+name|regval
+operator|=
+name|RD4
+argument_list|(
+name|sc
+argument_list|,
+name|FEC_RACC_REG
+argument_list|)
+expr_stmt|;
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|FEC_RACC_REG
+argument_list|,
+name|regval
+operator||
+name|FEC_RACC_SHIFT16
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * ECR - Ethernet control register. 	 * 	 * This must happen after all the other config registers are set.  If 	 * we're running on little-endian hardware, also set the flag for byte- 	 * swapping descriptor ring entries.  This flag doesn't exist on older 	 * hardware, but it can be safely set -- the bit position it occupies 	 * was unused. 	 */
 name|regval
 operator|=
