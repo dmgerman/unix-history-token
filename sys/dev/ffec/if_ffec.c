@@ -6626,7 +6626,25 @@ argument_list|,
 name|eaddr
 argument_list|)
 expr_stmt|;
-comment|/* Reset the hardware.  Disables all interrupts. */
+comment|/* 	 * Reset the hardware.  Disables all interrupts. 	 * 	 * When the FEC is connected to the AXI bus (indicated by AVB flag), a 	 * MAC reset while a bus transaction is pending can hang the bus. 	 * Instead of resetting, turn off the ENABLE bit, which allows the 	 * hardware to complete any in-progress transfers (appending a bad CRC 	 * to any partial packet) and release the AXI bus.  This could probably 	 * be done unconditionally for all hardware variants, but that hasn't 	 * been tested. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|fectype
+operator|&
+name|FECFLAG_AVB
+condition|)
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|FEC_ECR_REG
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|WR4
 argument_list|(
 name|sc
