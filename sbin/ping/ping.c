@@ -140,12 +140,6 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITH_CASPER
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -157,11 +151,6 @@ include|#
 directive|include
 file|<casper/cap_dns.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1067,12 +1056,6 @@ name|siginfo_p
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITH_CASPER
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|cap_channel_t
@@ -1080,11 +1063,6 @@ modifier|*
 name|capdns
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1113,12 +1091,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITH_CASPER
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|cap_channel_t
@@ -1129,11 +1101,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -2859,16 +2826,11 @@ name|payload
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|WITH_CASPER
 name|capdns
 operator|=
 name|capdns_setup
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|source
@@ -2917,9 +2879,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|WITH_CASPER
 if|if
 condition|(
 name|capdns
@@ -2938,8 +2897,6 @@ name|AF_INET
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|hp
 operator|=
 name|gethostbyname2
@@ -3143,9 +3100,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|WITH_CASPER
 if|if
 condition|(
 name|capdns
@@ -3164,8 +3118,6 @@ name|AF_INET
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|hp
 operator|=
 name|gethostbyname2
@@ -3273,9 +3225,6 @@ operator|=
 name|hnamebuf
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|WITH_CASPER
 comment|/* From now on we will use only reverse DNS lookups. */
 if|if
 condition|(
@@ -3320,8 +3269,6 @@ literal|"unable to limit access to system.dns service"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|connect
@@ -3923,9 +3870,6 @@ name|cansandbox
 operator|=
 name|true
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITH_CASPER
 elseif|else
 if|if
 condition|(
@@ -3937,8 +3881,6 @@ name|cansandbox
 operator|=
 name|true
 expr_stmt|;
-endif|#
-directive|endif
 else|else
 name|cansandbox
 operator|=
@@ -8883,9 +8825,6 @@ argument_list|(
 name|ina
 argument_list|)
 return|;
-ifdef|#
-directive|ifdef
-name|WITH_CASPER
 if|if
 condition|(
 name|capdns
@@ -8911,8 +8850,6 @@ name|AF_INET
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|hp
 operator|=
 name|gethostbyaddr
@@ -9491,12 +9428,6 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITH_CASPER
-end_ifdef
-
 begin_function
 specifier|static
 name|cap_channel_t
@@ -9641,15 +9572,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* WITH_CASPER */
-end_comment
 
 begin_if
 if|#
