@@ -23,7 +23,7 @@ init|=
 literal|"@(#) $Version: unifdef-2.11 $\n"
 literal|"@(#) $FreeBSD$\n"
 literal|"@(#) $Author: Tony Finch (dot@dotat.at) $\n"
-literal|"@(#) $URL: http://dotat.at/prog/unifdef $\n"
+literal|"@(#) $URL: https://dotat.at/prog/unifdef $\n"
 decl_stmt|;
 end_decl_stmt
 
