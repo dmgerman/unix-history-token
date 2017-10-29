@@ -326,7 +326,7 @@ block|,
 operator|.
 name|describe
 operator|=
-literal|"http://www.freebsd.org"
+literal|"https://www.freebsd.org"
 block|}
 decl_stmt|;
 end_decl_stmt
