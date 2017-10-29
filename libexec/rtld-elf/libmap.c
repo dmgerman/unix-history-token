@@ -668,6 +668,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|lm_map
+argument_list|)
+expr_stmt|;
 name|dbg
 argument_list|(
 literal|"lm_parse_file: read(\"%s\") failed, %s"
