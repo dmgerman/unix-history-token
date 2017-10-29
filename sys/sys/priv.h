@@ -1377,7 +1377,7 @@ value|330
 end_define
 
 begin_comment
-comment|/* Can mknod() to mark bad inodes. */
+comment|/* Was: mknod() can mark bad inodes. */
 end_comment
 
 begin_define
