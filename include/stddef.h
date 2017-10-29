@@ -205,9 +205,9 @@ name|offsetof
 parameter_list|(
 name|type
 parameter_list|,
-name|member
+name|field
 parameter_list|)
-value|__offsetof(type, member)
+value|__offsetof(type, field)
 end_define
 
 begin_if
