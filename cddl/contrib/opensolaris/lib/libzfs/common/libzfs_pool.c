@@ -10562,6 +10562,15 @@ name|strcmp
 argument_list|(
 name|type
 argument_list|,
+name|VDEV_TYPE_RAIDZ
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|type
+argument_list|,
 name|VDEV_TYPE_REPLACING
 argument_list|)
 operator|==
