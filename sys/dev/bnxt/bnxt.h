@@ -693,6 +693,20 @@ parameter_list|)
 value|min_t(type, max_t(type, _x, min), max)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BNXT_IFMEDIA_ADD
+parameter_list|(
+name|supported
+parameter_list|,
+name|fw_speed
+parameter_list|,
+name|ifm_speed
+parameter_list|)
+value|do {			\ 	if ((supported)& HWRM_PORT_PHY_QCFG_OUTPUT_SUPPORT_ ## fw_speed)	\ 		ifmedia_add(softc->media, IFM_ETHER | (ifm_speed), 0, NULL);	\ } while(0)
+end_define
+
 begin_comment
 comment|/* NVRAM access */
 end_comment
