@@ -77,6 +77,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|USEC2NSEC
+parameter_list|(
+name|m
+parameter_list|)
+value|((hrtime_t)(m) * (NANOSEC / MICROSEC))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSEC2USEC
+parameter_list|(
+name|n
+parameter_list|)
+value|((n) / (NANOSEC / MICROSEC))
+end_define
+
+begin_define
+define|#
+directive|define
 name|NSEC2SEC
 parameter_list|(
 name|n

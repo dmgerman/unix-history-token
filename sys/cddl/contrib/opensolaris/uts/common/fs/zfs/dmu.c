@@ -8509,6 +8509,19 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/* 	 * In order to prevent the zgd's lwb from being free'd prior to 	 * dmu_sync_late_arrival_done() being called, we have to ensure 	 * the lwb's "max txg" takes this tx's txg into account. 	 */
+name|zil_lwb_add_txg
+argument_list|(
+name|zgd
+operator|->
+name|zgd_lwb
+argument_list|,
+name|dmu_tx_get_txg
+argument_list|(
+name|tx
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|dsa
 operator|=
 name|kmem_alloc

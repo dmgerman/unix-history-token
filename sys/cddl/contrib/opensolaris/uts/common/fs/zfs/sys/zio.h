@@ -2153,6 +2153,15 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
+name|zio_cancel
+parameter_list|(
+name|zio_t
+modifier|*
+name|zio
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
 name|zio_suspend
 parameter_list|(
 name|spa_t

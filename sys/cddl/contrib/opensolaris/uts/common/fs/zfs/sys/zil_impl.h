@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -47,7 +47,23 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * Log write buffer.  */
+comment|/*  * Possbile states for a given lwb structure. An lwb will start out in  * the "closed" state, and then transition to the "opened" state via a  * call to zil_lwb_write_open(). After the lwb is "open", it can  * transition into the "issued" state via zil_lwb_write_issue(). After  * the lwb's zio completes, and the vdev's are flushed, the lwb will  * transition into the "done" state via zil_lwb_write_done(), and the  * structure eventually freed.  */
+typedef|typedef
+enum|enum
+block|{
+name|LWB_STATE_CLOSED
+block|,
+name|LWB_STATE_OPENED
+block|,
+name|LWB_STATE_ISSUED
+block|,
+name|LWB_STATE_DONE
+block|,
+name|LWB_NUM_STATES
+block|}
+name|lwb_state_t
+typedef|;
+comment|/*  * Log write block (lwb)  *  * Prior to an lwb being issued to disk via zil_lwb_write_issue(), it  * will be protected by the zilog's "zl_writer_lock". Basically, prior  * to it being issued, it will only be accessed by the thread that's  * holding the "zl_writer_lock". After the lwb is issued, the zilog's  * "zl_lock" is used to protect the lwb against concurrent access.  */
 typedef|typedef
 struct|struct
 name|lwb
@@ -73,6 +89,10 @@ name|int
 name|lwb_sz
 decl_stmt|;
 comment|/* size of block and buffer */
+name|lwb_state_t
+name|lwb_state
+decl_stmt|;
+comment|/* the state of this lwb */
 name|char
 modifier|*
 name|lwb_buf
@@ -80,9 +100,14 @@ decl_stmt|;
 comment|/* log write buffer */
 name|zio_t
 modifier|*
-name|lwb_zio
+name|lwb_write_zio
 decl_stmt|;
-comment|/* zio for this buffer */
+comment|/* zio for the lwb buffer */
+name|zio_t
+modifier|*
+name|lwb_root_zio
+decl_stmt|;
+comment|/* root zio for lwb write and flushes */
 name|dmu_tx_t
 modifier|*
 name|lwb_tx
@@ -96,8 +121,57 @@ name|list_node_t
 name|lwb_node
 decl_stmt|;
 comment|/* zilog->zl_lwb_list linkage */
+name|list_t
+name|lwb_waiters
+decl_stmt|;
+comment|/* list of zil_commit_waiter's */
+name|avl_tree_t
+name|lwb_vdev_tree
+decl_stmt|;
+comment|/* vdevs to flush after lwb write */
+name|kmutex_t
+name|lwb_vdev_lock
+decl_stmt|;
+comment|/* protects lwb_vdev_tree */
+name|hrtime_t
+name|lwb_issued_timestamp
+decl_stmt|;
+comment|/* when was the lwb issued? */
 block|}
 name|lwb_t
+typedef|;
+comment|/*  * ZIL commit waiter.  *  * This structure is allocated each time zil_commit() is called, and is  * used by zil_commit() to communicate with other parts of the ZIL, such  * that zil_commit() can know when it safe for it return. For more  * details, see the comment above zil_commit().  *  * The "zcw_lock" field is used to protect the commit waiter against  * concurrent access. This lock is often acquired while already holding  * the zilog's "zl_writer_lock" or "zl_lock"; see the functions  * zil_process_commit_list() and zil_lwb_flush_vdevs_done() as examples  * of this. Thus, one must be careful not to acquire the  * "zl_writer_lock" or "zl_lock" when already holding the "zcw_lock";  * e.g. see the zil_commit_waiter_timeout() function.  */
+typedef|typedef
+struct|struct
+name|zil_commit_waiter
+block|{
+name|kcondvar_t
+name|zcw_cv
+decl_stmt|;
+comment|/* signalled when "done" */
+name|kmutex_t
+name|zcw_lock
+decl_stmt|;
+comment|/* protects fields of this struct */
+name|list_node_t
+name|zcw_node
+decl_stmt|;
+comment|/* linkage in lwb_t:lwb_waiter list */
+name|lwb_t
+modifier|*
+name|zcw_lwb
+decl_stmt|;
+comment|/* back pointer to lwb when linked */
+name|boolean_t
+name|zcw_done
+decl_stmt|;
+comment|/* B_TRUE when "done", else B_FALSE */
+name|int
+name|zcw_zio_error
+decl_stmt|;
+comment|/* contains the zio io_error value */
+block|}
+name|zil_commit_waiter_t
 typedef|;
 comment|/*  * Intent log transaction lists  */
 typedef|typedef
@@ -210,11 +284,15 @@ modifier|*
 name|zl_get_data
 decl_stmt|;
 comment|/* callback to get object content */
-name|zio_t
+name|lwb_t
 modifier|*
-name|zl_root_zio
+name|zl_last_lwb_opened
 decl_stmt|;
-comment|/* log writer root zio */
+comment|/* most recent lwb opened */
+name|hrtime_t
+name|zl_last_lwb_latency
+decl_stmt|;
+comment|/* zio latency of last lwb done */
 name|uint64_t
 name|zl_lr_seq
 decl_stmt|;
@@ -243,10 +321,6 @@ name|zl_suspend
 decl_stmt|;
 comment|/* log suspend count */
 name|kcondvar_t
-name|zl_cv_writer
-decl_stmt|;
-comment|/* log writer thread completion */
-name|kcondvar_t
 name|zl_cv_suspend
 decl_stmt|;
 comment|/* log suspend completion */
@@ -266,10 +340,10 @@ name|uint8_t
 name|zl_stop_sync
 decl_stmt|;
 comment|/* for debugging */
-name|uint8_t
-name|zl_writer
+name|kmutex_t
+name|zl_writer_lock
 decl_stmt|;
-comment|/* boolean: write setup in progress */
+comment|/* single writer, per ZIL, at a time */
 name|uint8_t
 name|zl_logbias
 decl_stmt|;
@@ -298,21 +372,6 @@ name|uint64_t
 name|zl_parse_lr_count
 decl_stmt|;
 comment|/* number of log records parsed */
-name|uint64_t
-name|zl_next_batch
-decl_stmt|;
-comment|/* next batch number */
-name|uint64_t
-name|zl_com_batch
-decl_stmt|;
-comment|/* committed batch number */
-name|kcondvar_t
-name|zl_cv_batch
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* batch condition variables */
 name|itxg_t
 name|zl_itxg
 index|[
@@ -332,14 +391,6 @@ name|list_t
 name|zl_lwb_list
 decl_stmt|;
 comment|/* in-flight log write list */
-name|kmutex_t
-name|zl_vdev_lock
-decl_stmt|;
-comment|/* protects zl_vdev_tree */
-name|avl_tree_t
-name|zl_vdev_tree
-decl_stmt|;
-comment|/* vdevs to flush in zil_commit() */
 name|avl_tree_t
 name|zl_bp_tree
 decl_stmt|;
@@ -371,6 +422,10 @@ name|txg_node_t
 name|zl_dirty_link
 decl_stmt|;
 comment|/* protected by dp_dirty_zilogs list */
+name|uint64_t
+name|zl_dirty_max_txg
+decl_stmt|;
+comment|/* highest txg used to dirty zilog */
 block|}
 struct|;
 typedef|typedef
