@@ -966,11 +966,15 @@ name|IFLIB_MAX_TX_SEGS
 value|128
 end_define
 
+begin_comment
+comment|/* bnxt supports 64 with hardware LRO enabled */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IFLIB_MAX_RX_SEGS
-value|32
+value|64
 end_define
 
 begin_define
