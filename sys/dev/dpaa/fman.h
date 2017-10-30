@@ -109,7 +109,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fman_resume
+name|fman_resume_dev
 parameter_list|(
 name|device_t
 name|dev

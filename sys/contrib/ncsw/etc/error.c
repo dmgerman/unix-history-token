@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -28,6 +28,12 @@ operator|)
 operator|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|"error_ext.h"
+end_include
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -51,209 +57,276 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
+begin_function
 name|char
 modifier|*
-name|errTypeStrings
-index|[]
-init|=
+name|ErrTypeStrings
+parameter_list|(
+name|e_ErrorType
+name|err
+parameter_list|)
 block|{
-literal|"Invalid State"
-comment|/* E_INVALID_STATE */
-block|,
-literal|"Invalid Operation"
-comment|/* E_INVALID_OPERATION */
-block|,
-literal|"Unsupported Operation"
-comment|/* E_NOT_SUPPORTED */
-block|,
-literal|"No Device"
-comment|/* E_NO_DEVICE */
-block|,
-literal|"Invalid Handle"
-comment|/* E_INVALID_HANDLE */
-block|,
-literal|"Invalid ID"
-comment|/* E_INVALID_ID */
-block|,
-literal|"Unexpected NULL Pointer"
-comment|/* E_NULL_POINTER */
-block|,
-literal|"Invalid Value"
-comment|/* E_INVALID_VALUE */
-block|,
-literal|"Invalid Selection"
-comment|/* E_INVALID_SELECTION */
-block|,
-literal|"Invalid Communication Mode"
-comment|/* E_INVALID_COMM_MODE */
-block|,
-literal|"Invalid Byte Order"
-comment|/* E_INVALID_BYTE_ORDER */
-block|,
-literal|"Invalid Memory Type"
-comment|/* E_INVALID_MEMORY_TYPE */
-block|,
-literal|"Invalid Interrupt Queue"
-comment|/* E_INVALID_INTR_QUEUE */
-block|,
-literal|"Invalid Priority"
-comment|/* E_INVALID_PRIORITY */
-block|,
-literal|"Invalid Clock"
-comment|/* E_INVALID_CLOCK */
-block|,
-literal|"Invalid Rate"
-comment|/* E_INVALID_RATE */
-block|,
-literal|"Invalid Address"
-comment|/* E_INVALID_ADDRESS */
-block|,
-literal|"Invalid Bus"
-comment|/* E_INVALID_BUS */
-block|,
-literal|"Conflict In Bus Selection"
-comment|/* E_BUS_CONFLICT */
-block|,
-literal|"Conflict In Settings"
-comment|/* E_CONFLICT */
-block|,
-literal|"Incorrect Alignment"
-comment|/* E_NOT_ALIGNED */
-block|,
-literal|"Value Out Of Range"
-comment|/* E_NOT_IN_RANGE */
-block|,
-literal|"Invalid Frame"
-comment|/* E_INVALID_FRAME */
-block|,
-literal|"Frame Is Empty"
-comment|/* E_EMPTY_FRAME */
-block|,
-literal|"Buffer Is Empty"
-comment|/* E_EMPTY_BUFFER */
-block|,
-literal|"Memory Allocation Failed"
-comment|/* E_NO_MEMORY */
-block|,
-literal|"Resource Not Found"
-comment|/* E_NOT_FOUND */
-block|,
-literal|"Resource Is Unavailable"
-comment|/* E_NOT_AVAILABLE */
-block|,
-literal|"Resource Already Exists"
-comment|/* E_ALREADY_EXISTS */
-block|,
-literal|"Resource Is Full"
-comment|/* E_FULL */
-block|,
-literal|"Resource Is Empty"
-comment|/* E_EMPTY */
-block|,
-literal|"Resource Is Busy"
-comment|/* E_BUSY */
-block|,
-literal|"Resource Already Free"
-comment|/* E_ALREADY_FREE */
-block|,
-literal|"Read Access Failed"
-comment|/* E_READ_FAILED */
-block|,
+switch|switch
+condition|(
+name|err
+condition|)
+block|{
+case|case
+operator|(
+name|E_OK
+operator|)
+case|:
+return|return
+literal|"OK"
+return|;
+case|case
+operator|(
+name|E_WRITE_FAILED
+operator|)
+case|:
+return|return
 literal|"Write Access Failed"
-comment|/* E_WRITE_FAILED */
-block|,
+return|;
+case|case
+operator|(
+name|E_NO_DEVICE
+operator|)
+case|:
+return|return
+literal|"No Device"
+return|;
+case|case
+operator|(
+name|E_NOT_AVAILABLE
+operator|)
+case|:
+return|return
+literal|"Resource Is Unavailable"
+return|;
+case|case
+operator|(
+name|E_NO_MEMORY
+operator|)
+case|:
+return|return
+literal|"Memory Allocation Failed"
+return|;
+case|case
+operator|(
+name|E_INVALID_ADDRESS
+operator|)
+case|:
+return|return
+literal|"Invalid Address"
+return|;
+case|case
+operator|(
+name|E_BUSY
+operator|)
+case|:
+return|return
+literal|"Resource Is Busy"
+return|;
+case|case
+operator|(
+name|E_ALREADY_EXISTS
+operator|)
+case|:
+return|return
+literal|"Resource Already Exists"
+return|;
+case|case
+operator|(
+name|E_INVALID_OPERATION
+operator|)
+case|:
+return|return
+literal|"Invalid Operation"
+return|;
+case|case
+operator|(
+name|E_INVALID_VALUE
+operator|)
+case|:
+return|return
+literal|"Invalid Value"
+return|;
+case|case
+operator|(
+name|E_NOT_IN_RANGE
+operator|)
+case|:
+return|return
+literal|"Value Out Of Range"
+return|;
+case|case
+operator|(
+name|E_NOT_SUPPORTED
+operator|)
+case|:
+return|return
+literal|"Unsupported Operation"
+return|;
+case|case
+operator|(
+name|E_INVALID_STATE
+operator|)
+case|:
+return|return
+literal|"Invalid State"
+return|;
+case|case
+operator|(
+name|E_INVALID_HANDLE
+operator|)
+case|:
+return|return
+literal|"Invalid Handle"
+return|;
+case|case
+operator|(
+name|E_INVALID_ID
+operator|)
+case|:
+return|return
+literal|"Invalid ID"
+return|;
+case|case
+operator|(
+name|E_NULL_POINTER
+operator|)
+case|:
+return|return
+literal|"Unexpected NULL Pointer"
+return|;
+case|case
+operator|(
+name|E_INVALID_SELECTION
+operator|)
+case|:
+return|return
+literal|"Invalid Selection"
+return|;
+case|case
+operator|(
+name|E_INVALID_COMM_MODE
+operator|)
+case|:
+return|return
+literal|"Invalid Communication Mode"
+return|;
+case|case
+operator|(
+name|E_INVALID_MEMORY_TYPE
+operator|)
+case|:
+return|return
+literal|"Invalid Memory Type"
+return|;
+case|case
+operator|(
+name|E_INVALID_CLOCK
+operator|)
+case|:
+return|return
+literal|"Invalid Clock"
+return|;
+case|case
+operator|(
+name|E_CONFLICT
+operator|)
+case|:
+return|return
+literal|"Conflict In Settings"
+return|;
+case|case
+operator|(
+name|E_NOT_ALIGNED
+operator|)
+case|:
+return|return
+literal|"Incorrect Alignment"
+return|;
+case|case
+operator|(
+name|E_NOT_FOUND
+operator|)
+case|:
+return|return
+literal|"Resource Not Found"
+return|;
+case|case
+operator|(
+name|E_FULL
+operator|)
+case|:
+return|return
+literal|"Resource Is Full"
+return|;
+case|case
+operator|(
+name|E_EMPTY
+operator|)
+case|:
+return|return
+literal|"Resource Is Empty"
+return|;
+case|case
+operator|(
+name|E_ALREADY_FREE
+operator|)
+case|:
+return|return
+literal|"Resource Already Free"
+return|;
+case|case
+operator|(
+name|E_READ_FAILED
+operator|)
+case|:
+return|return
+literal|"Read Access Failed"
+return|;
+case|case
+operator|(
+name|E_INVALID_FRAME
+operator|)
+case|:
+return|return
+literal|"Invalid Frame"
+return|;
+case|case
+operator|(
+name|E_SEND_FAILED
+operator|)
+case|:
+return|return
 literal|"Send Operation Failed"
-comment|/* E_SEND_FAILED */
-block|,
+return|;
+case|case
+operator|(
+name|E_RECEIVE_FAILED
+operator|)
+case|:
+return|return
 literal|"Receive Operation Failed"
-comment|/* E_RECEIVE_FAILED */
-block|,
+return|;
+case|case
+operator|(
+name|E_TIMEOUT
+operator|)
+case|:
+return|return
 literal|"Operation Timed Out"
-comment|/* E_TIMEOUT */
+return|;
+default|default:
+break|break;
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|REPORT_EVENTS
-argument_list|)
-operator|&&
-operator|(
-name|REPORT_EVENTS
-operator|>
-literal|0
-operator|)
-operator|)
-end_if
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|eventStrings
-index|[]
-init|=
-block|{
-literal|"Rx Discard"
-comment|/* EV_RX_DISCARD */
-block|,
-literal|"Rx Error"
-comment|/* EV_RX_ERROR */
-block|,
-literal|"Tx Error"
-comment|/* EV_TX_ERROR */
-block|,
-literal|"No Buffer Objects"
-comment|/* EV_NO_BUFFERS */
-block|,
-literal|"No MB-Frame Objects"
-comment|/* EV_NO_MB_FRAMES */
-block|,
-literal|"No SB-Frame Objects"
-comment|/* EV_NO_SB_FRAMES */
-block|,
-literal|"Tx Queue Is Full"
-comment|/* EV_TX_QUEUE_FULL */
-block|,
-literal|"Rx Queue Is Full"
-comment|/* EV_RX_QUEUE_FULL */
-block|,
-literal|"Interrupts Queue Is Full"
-comment|/* EV_INTR_QUEUE_FULL */
-block|,
-literal|"Data Buffer Is Unavailable"
-comment|/* EV_NO_DATA_BUFFER */
-block|,
-literal|"Objects Pool Is Empty"
-comment|/* EV_OBJ_POOL_EMPTY */
-block|,
-literal|"Illegal bus access"
-comment|/* EV_BUS_ERROR */
-block|,
-literal|"PTP Tx Timestamps Queue Is Full"
-comment|/* EV_PTP_TXTS_QUEUE_FULL */
-block|,
-literal|"PTP Rx Timestamps Queue Is Full"
-comment|/* EV_PTP_RXTS_QUEUE_FULL */
+return|return
+name|NULL
+return|;
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* (defined(REPORT_EVENTS)&& (REPORT_EVENTS> 0)) */
-end_comment
+end_function
 
 begin_endif
 endif|#

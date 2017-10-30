@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -80,12 +80,6 @@ begin_comment
 comment|/* defined(__MWERKS__)&& ... */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MEM_MAP_START
-end_define
-
 begin_comment
 comment|/**************************************************************************/
 end_comment
@@ -107,7 +101,7 @@ block|{
 name|uint32_t
 name|enumHdr
 decl_stmt|;
-comment|/**< IN. The existance of this header will envoke                                                      the sw parser code. */
+comment|/**< IN. The existence of this header will invoke                                                      the sw parser code. */
 name|uint8_t
 name|indexPerHdr
 decl_stmt|;
@@ -138,18 +132,15 @@ block|{
 name|uint8_t
 name|guestId
 decl_stmt|;
-comment|/**< IN */
 name|uint8_t
 name|numOfSchemes
 decl_stmt|;
-comment|/**< IN */
 name|uint8_t
 name|schemesIds
 index|[
 name|FM_PCD_KG_NUM_OF_SCHEMES
 index|]
 decl_stmt|;
-comment|/**< OUT */
 block|}
 name|_PackedType
 name|t_FmPcdIpcKgSchemesParams
@@ -164,62 +155,15 @@ block|{
 name|uint8_t
 name|guestId
 decl_stmt|;
-comment|/**< IN */
 name|uint16_t
 name|numOfClsPlanEntries
 decl_stmt|;
-comment|/**< IN */
 name|uint8_t
 name|clsPlanBase
 decl_stmt|;
-comment|/**< IN in alloc only */
 block|}
 name|_PackedType
 name|t_FmPcdIpcKgClsPlanParams
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|_Packed
-struct|struct
-name|t_FmPcdIpcPlcrAllocParams
-block|{
-name|uint16_t
-name|num
-decl_stmt|;
-name|uint8_t
-name|hardwarePortId
-decl_stmt|;
-name|uint16_t
-name|plcrProfilesBase
-decl_stmt|;
-block|}
-name|_PackedType
-name|t_FmPcdIpcPlcrAllocParams
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|_Packed
-struct|struct
-name|t_FmPcdIpcSharedPlcrAllocParams
-block|{
-name|uint16_t
-name|num
-decl_stmt|;
-comment|/**< IN */
-comment|//uint16_t  profilesIds[FM_PCD_PLCR_NUM_ENTRIES];   /**< OUT */
-name|uint32_t
-name|sharedProfilesMask
-index|[
-literal|8
-index|]
-decl_stmt|;
-block|}
-name|_PackedType
-name|t_FmPcdIpcSharedPlcrAllocParams
 typedef|;
 end_typedef
 
@@ -232,11 +176,9 @@ block|{
 name|uint8_t
 name|hardwarePortId
 decl_stmt|;
-comment|/* IN */
 name|bool
 name|include
 decl_stmt|;
-comment|/* IN */
 block|}
 name|_PackedType
 name|t_FmPcdIpcPrsIncludePort
@@ -305,11 +247,26 @@ name|t_FmPcdIpcReply
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|MEM_MAP_END
-end_define
+begin_typedef
+typedef|typedef
+name|_Packed
+struct|struct
+name|t_FmIpcResourceAllocParams
+block|{
+name|uint8_t
+name|guestId
+decl_stmt|;
+name|uint16_t
+name|base
+decl_stmt|;
+name|uint16_t
+name|num
+decl_stmt|;
+block|}
+name|_PackedType
+name|t_FmIpcResourceAllocParams
+typedef|;
+end_typedef
 
 begin_if
 if|#
@@ -387,7 +344,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_PCD_ALLOC_PROFILES   @Description   Used by FM PCD front-end in order to allocate Policer profiles   @Param[in/out] t_FmPcdIpcKgSchemesParams Pointer */
+comment|/**  @Function      FM_PCD_ALLOC_PROFILES   @Description   Used by FM PCD front-end in order to allocate Policer profiles   @Param[in/out] t_FmIpcResourceAllocParams Pointer */
 end_comment
 
 begin_comment
@@ -406,7 +363,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_PCD_FREE_PROFILES   @Description   Used by FM PCD front-end in order to Free Policer profiles   @Param[in/out] t_FmPcdIpcPlcrAllocParams Pointer */
+comment|/**  @Function      FM_PCD_FREE_PROFILES   @Description   Used by FM PCD front-end in order to Free Policer profiles   @Param[in/out] t_FmIpcResourceAllocParams Pointer */
 end_comment
 
 begin_comment
@@ -425,6 +382,44 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/**  @Function      FM_PCD_SET_PORT_PROFILES   @Description   Used by FM PCD front-end in order to allocate Policer profiles                 for specific port   @Param[in/out] t_FmIpcResourceAllocParams Pointer */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_PCD_SET_PORT_PROFILES
+value|7
+end_define
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      FM_PCD_CLEAR_PORT_PROFILES   @Description   Used by FM PCD front-end in order to allocate Policer profiles                 for specific port   @Param[in/out] t_FmIpcResourceAllocParams Pointer */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_PCD_CLEAR_PORT_PROFILES
+value|8
+end_define
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
 comment|/**  @Function      FM_PCD_GET_PHYS_MURAM_BASE   @Description   Used by FM PCD front-end in order to get MURAM base address   @Param[in/out] t_FmPcdIcPhysAddr Pointer */
 end_comment
 
@@ -436,7 +431,7 @@ begin_define
 define|#
 directive|define
 name|FM_PCD_GET_PHYS_MURAM_BASE
-value|7
+value|9
 end_define
 
 begin_comment
@@ -455,44 +450,6 @@ begin_define
 define|#
 directive|define
 name|FM_PCD_GET_SW_PRS_OFFSET
-value|8
-end_define
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_PCD_ALLOC_SHARED_PROFILES   @Description   Used by FM PCD front-end in order to allocate shared profiles   @Param[in/out] t_FmPcdIpcSharedPlcrAllocParams Pointer */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_PCD_ALLOC_SHARED_PROFILES
-value|9
-end_define
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_PCD_FREE_SHARED_PROFILES   @Description   Used by FM PCD front-end in order to free shared profiles   @Param[in/out] t_FmPcdIpcSharedPlcrAllocParams Pointer */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_PCD_FREE_SHARED_PROFILES
 value|10
 end_define
 
@@ -532,101 +489,6 @@ define|#
 directive|define
 name|FM_PCD_GUEST_DISABLE
 value|16
-end_define
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_PCD_DUMP_REGS   @Description   Used by FM front-end to dump all PCD registers   @Param[in]     None */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_PCD_DUMP_REGS
-value|17
-end_define
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_PCD_KG_DUMP_REGS   @Description   Used by FM front-end to dump KG registers   @Param[in]     None */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_PCD_KG_DUMP_REGS
-value|18
-end_define
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_PCD_PLCR_DUMP_REGS   @Description   Used by FM front-end to dump PLCR registers   @Param[in]     None */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_PCD_PLCR_DUMP_REGS
-value|19
-end_define
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_PCD_PLCR_PROFILE_DUMP_REGS   @Description   Used by FM front-end to dump PLCR specified profile registers   @Param[in]     t_Handle Pointer */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_PCD_PLCR_PROFILE_DUMP_REGS
-value|20
-end_define
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_PCD_PRS_DUMP_REGS   @Description   Used by FM front-end to dump PRS registers   @Param[in]     None */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_PCD_PRS_DUMP_REGS
-value|21
 end_define
 
 begin_comment
@@ -723,6 +585,36 @@ directive|define
 name|FM_PCD_PRS_INC_PORT_STATS
 value|26
 end_define
+
+begin_if
+if|#
+directive|if
+operator|(
+name|DPAA_VERSION
+operator|>=
+literal|11
+operator|)
+end_if
+
+begin_comment
+comment|/* TODO - doc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_PCD_ALLOC_SP
+value|27
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* (DPAA_VERSION>= 11) */
+end_comment
 
 begin_comment
 comment|/** @} */

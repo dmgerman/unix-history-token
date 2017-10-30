@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/ncsw/inc/integrations/dpaa_integration_ext.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/ncsw/inc/Peripherals/fm_mac_ext.h>
 end_include
 

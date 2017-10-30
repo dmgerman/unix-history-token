@@ -1302,7 +1302,7 @@ name|e_DpaaSwPortal
 name|swPortalId
 decl_stmt|;
 comment|/**< Portal id */
-name|int
+name|uintptr_t
 name|irq
 decl_stmt|;
 comment|/**< portal interrupt line; used only if useIrq set to TRUE */

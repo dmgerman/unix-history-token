@@ -350,7 +350,7 @@ operator|(
 name|uintptr_t
 operator|)
 name|a
-operator|+
+operator||
 name|b
 operator|)
 return|;
@@ -1767,7 +1767,7 @@ operator|->
 name|cursor
 argument_list|)
 expr_stmt|;
-name|hwsync
+name|mb
 argument_list|()
 expr_stmt|;
 name|qm_out
@@ -1928,7 +1928,7 @@ operator|->
 name|cursor
 argument_list|)
 expr_stmt|;
-name|lwsync
+name|wmb
 argument_list|()
 expr_stmt|;
 name|qm_cl_out
@@ -2009,7 +2009,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* QM_CHECKING */
-name|lwsync
+name|rmb
 argument_list|()
 expr_stmt|;
 name|eqcursor
@@ -6423,7 +6423,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* QM_CHECKING */
-name|lwsync
+name|rmb
 argument_list|()
 expr_stmt|;
 name|mc

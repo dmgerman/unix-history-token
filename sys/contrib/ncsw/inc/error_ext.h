@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/* Copyright (c) 2008-2012 Freescale Semiconductor, Inc  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/**************************************************************************/
 end_comment
 
 begin_comment
@@ -22,6 +26,38 @@ define|#
 directive|define
 name|__ERROR_EXT_H
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NCSW_FREEBSD
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -130,24 +166,76 @@ name|E_OK
 init|=
 literal|0
 comment|/*   Never use "RETURN_ERROR" with E_OK; Use "return E_OK;"     */
-comment|/* Invalid Function Calls */
+block|,
+name|E_WRITE_FAILED
+init|=
+name|EIO
+comment|/**< Write access failed on memory/device.                      */
+comment|/*   String: none, or device name.                              */
+block|,
+name|E_NO_DEVICE
+init|=
+name|ENXIO
+comment|/**< The associated device is not initialized.                  */
+comment|/*   String: none.                                              */
+block|,
+name|E_NOT_AVAILABLE
+init|=
+name|EAGAIN
+comment|/**< Resource is unavailable.                                   */
+comment|/*   String: none, unless the operation is not the main goal                                  of the function (in this case add resource description).   */
+block|,
+name|E_NO_MEMORY
+init|=
+name|ENOMEM
+comment|/**< External memory allocation failed.                         */
+comment|/*   String: description of item for which allocation failed.   */
+block|,
+name|E_INVALID_ADDRESS
+init|=
+name|EFAULT
+comment|/**< Invalid address.                                           */
+comment|/*   String: description of the specific violation.             */
+block|,
+name|E_BUSY
+init|=
+name|EBUSY
+comment|/**< Resource or module is busy.                                */
+comment|/*   String: none, unless the operation is not the main goal                                  of the function (in this case add resource description).   */
+block|,
+name|E_ALREADY_EXISTS
+init|=
+name|EEXIST
+comment|/**< Requested resource or item already exists.                 */
+comment|/*   Use when resource duplication or sharing are not allowed.                                  String: none, unless the operation is not the main goal                                  of the function (in this case add item description).       */
+block|,
+name|E_INVALID_OPERATION
+init|=
+name|ENODEV
+comment|/**< The operation/command is invalid (unrecognized).           */
+comment|/*   String: none.                                              */
+block|,
+name|E_INVALID_VALUE
+init|=
+name|EDOM
+comment|/**< Invalid value.                                             */
+comment|/*   Use for non-enumeration parameters, and                                  only when other error types are not suitable.                                  String: parameter description + "(should be<attribute>)",                                  e.g: "Maximum Rx buffer length (should be divisible by 8)",                                       "Channel number (should be even)".                    */
+block|,
+name|E_NOT_IN_RANGE
+init|=
+name|ERANGE
+comment|/**< Parameter value is out of range.                           */
+comment|/*   Don't use this error for enumeration parameters.                                  String: parameter description + "(should be %d-%d)",                                  e.g: "Number of pad characters (should be 0-15)".          */
+block|,
+name|E_NOT_SUPPORTED
+init|=
+name|ENOSYS
+comment|/**< The function is not supported or not implemented.          */
+comment|/*   String: none.                                              */
 block|,
 name|E_INVALID_STATE
 comment|/**< The operation is not allowed in current module state.      */
 comment|/*   String: none.                                              */
-block|,
-name|E_INVALID_OPERATION
-comment|/**< The operation/command is invalid (unrecognized).           */
-comment|/*   String: none.                                              */
-block|,
-name|E_NOT_SUPPORTED
-comment|/**< The function is not supported or not implemented.          */
-comment|/*   String: none.                                              */
-block|,
-name|E_NO_DEVICE
-comment|/**< The associated device is not initialized.                  */
-comment|/*   String: none.                                              */
-comment|/* Invalid Parameters */
 block|,
 name|E_INVALID_HANDLE
 comment|/**< Invalid handle of module or object.                        */
@@ -161,10 +249,6 @@ name|E_NULL_POINTER
 comment|/**< Unexpected NULL pointer.                                   */
 comment|/*   String: pointer description.                               */
 block|,
-name|E_INVALID_VALUE
-comment|/**< Invalid value.                                             */
-comment|/*   Use for non-enumeration parameters, and                                  only when other error types are not suitable.                                  String: parameter description + "(should be<attribute>)",                                  e.g: "Maximum Rx buffer length (should be divisible by 8)",                                       "Channel number (should be even)".                    */
-block|,
 name|E_INVALID_SELECTION
 comment|/**< Invalid selection or mode.                                 */
 comment|/*   Use for enumeration values, only when other error types                                  are not suitable.                                  String: parameter description.                             */
@@ -173,41 +257,13 @@ name|E_INVALID_COMM_MODE
 comment|/**< Invalid communication mode.                                */
 comment|/*   String: none, unless the function takes in more than one                                  communication mode indications (in this case add                                  parameter description).                                    */
 block|,
-name|E_INVALID_BYTE_ORDER
-comment|/**< Invalid byte order.                                        */
-comment|/*   String: none, unless the function takes in more than one                                  byte order indications (in this case add parameter                                  description).                                              */
-block|,
 name|E_INVALID_MEMORY_TYPE
 comment|/**< Invalid memory type.                                       */
 comment|/*   String: none, unless the function takes in more than one                                  memory types (in this case add memory description,                                  e.g: "Data memory", "Buffer descriptors memory").          */
 block|,
-name|E_INVALID_INTR_QUEUE
-comment|/**< Invalid interrupt queue.                                   */
-comment|/*   String: none, unless the function takes in more than one                                  interrupt queues (in this case add queue description,                                  e.g: "Rx interrupt queue", "Tx interrupt queue").          */
-block|,
-name|E_INVALID_PRIORITY
-comment|/**< Invalid priority.                                          */
-comment|/*   String: none, unless the function takes in more than one                                  priority (in this case add priority description).          */
-block|,
 name|E_INVALID_CLOCK
 comment|/**< Invalid clock.                                             */
 comment|/*   String: none, unless the function takes in more than one                                  clocks (in this case add clock description,                                  e.g: "Rx clock", "Tx clock").                              */
-block|,
-name|E_INVALID_RATE
-comment|/**< Invalid rate value.                                        */
-comment|/*   String: none, unless the function takes in more than one                                  rate values (in this case add rate description).           */
-block|,
-name|E_INVALID_ADDRESS
-comment|/**< Invalid address.                                           */
-comment|/*   String: description of the specific violation.             */
-block|,
-name|E_INVALID_BUS
-comment|/**< Invalid bus type.                                          */
-comment|/*   String: none, unless the function takes in more than one                                  bus parameters (in this case add bus description).         */
-block|,
-name|E_BUS_CONFLICT
-comment|/**< Bus (or memory) type conflicts with another setting.       */
-comment|/*   String: description of the conflicting buses/memories.     */
 block|,
 name|E_CONFLICT
 comment|/**< Some setting conflicts with another setting.               */
@@ -217,39 +273,9 @@ name|E_NOT_ALIGNED
 comment|/**< Non-aligned address.                                       */
 comment|/*   String: parameter description + "(should be %d-bytes aligned)",                                  e.g: "Rx data buffer (should be 32-bytes aligned)".        */
 block|,
-name|E_NOT_IN_RANGE
-comment|/**< Parameter value is out of range.                           */
-comment|/*   Don't use this error for enumeration parameters.                                  String: parameter description + "(should be %d-%d)",                                  e.g: "Number of pad characters (should be 0-15)".          */
-comment|/* Frame/Buffer Errors */
-block|,
-name|E_INVALID_FRAME
-comment|/**< Invalid frame object (NULL handle or missing buffers).     */
-comment|/*   String: none.                                              */
-block|,
-name|E_EMPTY_FRAME
-comment|/**< Frame object is empty (has no buffers).                    */
-comment|/*   String: none.                                              */
-block|,
-name|E_EMPTY_BUFFER
-comment|/**< Buffer object is empty (no data, or zero data length).     */
-comment|/*   String: none.                                              */
-comment|/* Resource Errors */
-block|,
-name|E_NO_MEMORY
-comment|/**< External memory allocation failed.                         */
-comment|/*   String: description of item for which allocation failed.   */
-block|,
 name|E_NOT_FOUND
 comment|/**< Requested resource or item was not found.                  */
 comment|/*   Use only when the resource/item is uniquely identified.                                  String: none, unless the operation is not the main goal                                  of the function (in this case add item description).       */
-block|,
-name|E_NOT_AVAILABLE
-comment|/**< Resource is unavailable.                                   */
-comment|/*   String: none, unless the operation is not the main goal                                  of the function (in this case add resource description).   */
-block|,
-name|E_ALREADY_EXISTS
-comment|/**< Requested resource or item already exists.                 */
-comment|/*   Use when resource duplication or sharing are not allowed.                                  String: none, unless the operation is not the main goal                                  of the function (in this case add item description).       */
 block|,
 name|E_FULL
 comment|/**< Resource is full.                                          */
@@ -259,23 +285,17 @@ name|E_EMPTY
 comment|/**< Resource is empty.                                         */
 comment|/*   String: none, unless the operation is not the main goal                                  of the function (in this case add resource description).   */
 block|,
-name|E_BUSY
-comment|/**< Resource or module is busy.                                */
-comment|/*   String: none, unless the operation is not the main goal                                  of the function (in this case add resource description).   */
-block|,
 name|E_ALREADY_FREE
 comment|/**< Specified resource or item is already free or deleted.     */
 comment|/*   String: none, unless the operation is not the main goal                                  of the function (in this case add item description).       */
-comment|/* Read/Write Access Errors */
 block|,
 name|E_READ_FAILED
 comment|/**< Read access failed on memory/device.                       */
 comment|/*   String: none, or device name.                              */
 block|,
-name|E_WRITE_FAILED
-comment|/**< Write access failed on memory/device.                      */
-comment|/*   String: none, or device name.                              */
-comment|/* Send/Receive Failures */
+name|E_INVALID_FRAME
+comment|/**< Invalid frame object (NULL handle or missing buffers).     */
+comment|/*   String: none.                                              */
 block|,
 name|E_SEND_FAILED
 comment|/**< Send operation failed on device.                           */
@@ -284,9 +304,9 @@ block|,
 name|E_RECEIVE_FAILED
 comment|/**< Receive operation failed on device.                        */
 comment|/*   String: none, or device name.                              */
-comment|/* Operation time-out */
 block|,
 name|E_TIMEOUT
+comment|/* = ETIMEDOUT*/
 comment|/**< The operation timed out.                                   */
 comment|/*   String: none.                                              */
 block|,
@@ -784,27 +804,7 @@ begin_define
 define|#
 directive|define
 name|PRINT_FMT_PARAMS
-value|CORE_GetId(), __FILE__, __LINE__, __FUNCTION__
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ERR_STRING
-parameter_list|(
-name|err
-parameter_list|)
-value|#err
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERR_STRING
-parameter_list|(
-name|err
-parameter_list|)
-value|_ERR_STRING(err)
+value|PCPU_GET(cpuid), __FILE__, __LINE__, __FUNCTION__
 end_define
 
 begin_if
@@ -945,26 +945,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|errTypeStrings
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|moduleStrings
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
@@ -993,6 +973,17 @@ end_endif
 begin_comment
 comment|/* (REPORT_EVENTS> 0) */
 end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|ErrTypeStrings
+parameter_list|(
+name|e_ErrorType
+name|err
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -1043,7 +1034,7 @@ parameter_list|,
 name|_vmsg
 parameter_list|)
 define|\
-value|do { \         if (REPORT_LEVEL_##_level<= DEBUG_DYNAMIC_LEVEL) { \             XX_Print("> %s (%s) " PRINT_FORMAT ": ", \                      dbgLevelStrings[REPORT_LEVEL_##_level - 1], \                      ERR_STRING(__ERR_MODULE__), \                      PRINT_FMT_PARAMS); \             XX_Print _vmsg; \             XX_Print("\r\n"); \         } \     } while (0)
+value|do { \         if (REPORT_LEVEL_##_level<= DEBUG_DYNAMIC_LEVEL) { \             XX_Print("> %s (%s) " PRINT_FORMAT ": ", \                      dbgLevelStrings[REPORT_LEVEL_##_level - 1], \                      __STRING(__ERR_MODULE__), \                      PRINT_FMT_PARAMS); \             XX_Print _vmsg; \             XX_Print("\r\n"); \         } \     } while (0)
 end_define
 
 begin_endif
@@ -1067,7 +1058,7 @@ parameter_list|,
 name|_vmsg
 parameter_list|)
 define|\
-value|do { \         if (REPORT_LEVEL_##_level<= ERROR_DYNAMIC_LEVEL) { \             XX_Print("! %s %s Error " PRINT_FORMAT ": %s; ", \                      dbgLevelStrings[REPORT_LEVEL_##_level - 1], \                      ERR_STRING(__ERR_MODULE__), \                      PRINT_FMT_PARAMS, \                      errTypeStrings[(GET_ERROR_TYPE(_err) - E_OK - 1)]); \             XX_Print _vmsg; \             XX_Print("\r\n"); \         } \     } while (0)
+value|do { \         if (REPORT_LEVEL_##_level<= ERROR_DYNAMIC_LEVEL) { \             XX_Print("! %s %s Error " PRINT_FORMAT ": %s; ", \                      dbgLevelStrings[REPORT_LEVEL_##_level - 1], \                      __STRING(__ERR_MODULE__), \                      PRINT_FMT_PARAMS, \                      ErrTypeStrings((e_ErrorType)GET_ERROR_TYPE(_err))); \             XX_Print _vmsg; \             XX_Print("\r\n"); \         } \     } while (0)
 end_define
 
 begin_define
@@ -1109,7 +1100,7 @@ parameter_list|,
 name|_vmsg
 parameter_list|)
 define|\
-value|do { \         if (_ev##_LEVEL<= EVENT_DYNAMIC_LEVEL) { \             XX_Print("~ %s %s Event " PRINT_FORMAT ": %s (flags: 0x%04x); ", \                      dbgLevelStrings[_ev##_LEVEL - 1], \                      ERR_STRING(__ERR_MODULE__), \                      PRINT_FMT_PARAMS, \                      eventStrings[((_ev) - EV_NO_EVENT - 1)], \                      (uint16_t)(_flg)); \             XX_Print _vmsg; \             XX_Print("\r\n"); \             XX_EventById((uint32_t)(_ev), (t_Handle)(_appId), (uint16_t)(_flg), NO_MSG); \         } \     } while (0)
+value|do { \         if (_ev##_LEVEL<= EVENT_DYNAMIC_LEVEL) { \             XX_Print("~ %s %s Event " PRINT_FORMAT ": %s (flags: 0x%04x); ", \                      dbgLevelStrings[_ev##_LEVEL - 1], \                      __STRING(__ERR_MODULE__), \                      PRINT_FMT_PARAMS, \                      eventStrings[((_ev) - EV_NO_EVENT - 1)], \                      (uint16_t)(_flg)); \             XX_Print _vmsg; \             XX_Print("\r\n"); \             XX_EventById((uint32_t)(_ev), (t_Handle)(_appId), (uint16_t)(_flg), NO_MSG); \         } \     } while (0)
 end_define
 
 begin_else

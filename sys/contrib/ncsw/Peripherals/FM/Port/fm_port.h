@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -47,6 +47,30 @@ directive|include
 file|"fm_common.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"fm_sp_common.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fsl_fman_sp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fm_port_ext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fsl_fman_port.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -73,6 +97,13 @@ define|#
 directive|define
 name|MAX_LIODN_OFFSET
 value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_PORT_FIFO_SIZE
+value|MIN(BMI_MAX_FIFO_SIZE, 1024*BMI_FIFO_UNITS)
 end_define
 
 begin_comment
@@ -123,7 +154,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_PORT_deqHighPriority
+name|DEFAULT_PORT_deqHighPriority_1G
+value|FALSE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_deqHighPriority_10G
 value|TRUE
 end_define
 
@@ -133,12 +171,6 @@ directive|define
 name|DEFAULT_PORT_deqType
 value|e_FM_PORT_DEQ_TYPE1
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FM_QMI_DEQ_OPTIONS_SUPPORT
-end_ifdef
 
 begin_define
 define|#
@@ -154,77 +186,53 @@ name|DEFAULT_PORT_deqPrefetchOption_HC
 value|e_FM_PORT_DEQ_NO_PREFETCH
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FM_QMI_DEQ_OPTIONS_SUPPORT */
-end_comment
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_deqByteCnt_10G
+value|0x1400
+end_define
 
 begin_define
 define|#
 directive|define
-name|DEFAULT_PORT_deqByteCnt
-value|2000
+name|DEFAULT_PORT_deqByteCnt_1G
+value|0x400
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_PORT_bufferPrefixContent_privDataSize
-value|0
+value|DEFAULT_FM_SP_bufferPrefixContent_privDataSize
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_PORT_bufferPrefixContent_passPrsResult
-value|FALSE
+value|DEFAULT_FM_SP_bufferPrefixContent_passPrsResult
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_PORT_bufferPrefixContent_passTimeStamp
-value|FALSE
+value|DEFAULT_FM_SP_bufferPrefixContent_passTimeStamp
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_PORT_bufferPrefixContent_allOtherPCDInfo
-value|FALSE
+value|DEFAULT_FM_SP_bufferPrefixContent_allOtherPCDInfo
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_PORT_bufferPrefixContent_debugInfo
-value|FALSE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_PORT_bufferPrefixContent_dataAlign
-value|DATA_ALIGNMENT
+value|DEFAULT_FM_SP_bufferPrefixContent_dataAlign
 end_define
 
 begin_define
@@ -244,50 +252,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEFAULT_PORT_txFifoMinFillLevel
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_PORT_txFifoDeqPipelineDepth_IM
+name|DEFAULT_PORT_fifoDeqPipelineDepth_IM
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_PORT_txFifoDeqPipelineDepth_1G
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_PORT_txFifoDeqPipelineDepth_10G
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_PORT_txFifoLowComfLevel
-value|(5*KILOBYTE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_PORT_rxFifoPriElevationLevel
-value|BMI_MAX_FIFO_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_PORT_rxFifoThreshold
-value|(BMI_MAX_FIFO_SIZE*3/4)
 end_define
 
 begin_define
@@ -301,35 +267,42 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_PORT_dmaSwapData
-value|e_FM_PORT_DMA_NO_SWP
+value|(e_FmDmaSwapOption)DEFAULT_FMAN_SP_DMA_SWAP_DATA
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_PORT_dmaIntContextCacheAttr
-value|e_FM_PORT_DMA_NO_STASH
+value|(e_FmDmaCacheOption)DEFAULT_FMAN_SP_DMA_INT_CONTEXT_CACHE_ATTR
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_PORT_dmaHeaderCacheAttr
-value|e_FM_PORT_DMA_NO_STASH
+value|(e_FmDmaCacheOption)DEFAULT_FMAN_SP_DMA_HEADER_CACHE_ATTR
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_PORT_dmaScatterGatherCacheAttr
-value|e_FM_PORT_DMA_NO_STASH
+value|(e_FmDmaCacheOption)DEFAULT_FMAN_SP_DMA_SCATTER_GATHER_CACHE_ATTR
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_PORT_dmaWriteOptimize
-value|TRUE
+value|DEFAULT_FMAN_SP_DMA_WRITE_OPTIMIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_noScatherGather
+value|DEFAULT_FMAN_SP_NO_SCATTER_GATHER
 end_define
 
 begin_define
@@ -381,25 +354,92 @@ name|DEFAULT_PORT_errorsToDiscard
 value|FM_PORT_FRM_ERR_CLS_DISCARD
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_dualRateLimitScaleDown
-value|e_FM_PORT_DUAL_RATE_LIMITER_NONE
-end_define
+begin_comment
+comment|/* #define DEFAULT_PORT_dualRateLimitScaleDown             e_FM_PORT_DUAL_RATE_LIMITER_NONE */
+end_comment
+
+begin_comment
+comment|/* #define DEFAULT_PORT_rateLimitBurstSizeHighGranularity  FALSE */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|DEFAULT_rateLimitBurstSizeHighGranularity
-value|FALSE
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_exception
+name|DEFAULT_PORT_exception
 value|IM_EV_BSY
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_maxFrameLength
+value|9600
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_notSupported
+value|0xff
+end_define
+
+begin_if
+if|#
+directive|if
+operator|(
+name|DPAA_VERSION
+operator|<
+literal|11
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_rxFifoPriElevationLevel
+value|MAX_PORT_FIFO_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_rxFifoThreshold
+value|(MAX_PORT_FIFO_SIZE*3/4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_txFifoMinFillLevel
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_txFifoLowComfLevel
+value|(5*KILOBYTE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_fifoDeqPipelineDepth_1G
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_fifoDeqPipelineDepth_10G
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_fifoDeqPipelineDepth_OH
+value|2
 end_define
 
 begin_comment
@@ -425,7 +465,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|(uint32_t)((((type) == e_FM_PORT_TYPE_RX_10G) ||        \                 ((type) == e_FM_PORT_TYPE_TX_10G)) ? 8 :    \                ((((type) == e_FM_PORT_TYPE_RX) ||           \                  ((type) == e_FM_PORT_TYPE_TX) ||           \                  ((type) == e_FM_PORT_TYPE_OH_OFFLINE_PARSING)) ? 2 : 0))
+value|(uint32_t)(((type) == e_FM_PORT_TYPE_RX_10G)  ? 8 :    \                (((type) == e_FM_PORT_TYPE_RX) ? 2 : 0))
 end_define
 
 begin_define
@@ -436,7 +476,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|(uint32_t)(((type) == e_FM_PORT_TYPE_TX_10G) ? 8 :  \                (((type) == e_FM_PORT_TYPE_RX_10G) ? 4 : 1))
+value|(uint32_t)((((type) == e_FM_PORT_TYPE_TX_10G) ||        \                 ((type) == e_FM_PORT_TYPE_RX_10G)) ? 8 : 1 )
 end_define
 
 begin_define
@@ -447,31 +487,25 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|(uint32_t)((((type) == e_FM_PORT_TYPE_RX_10G) ||        \                 ((type) == e_FM_PORT_TYPE_TX_10G)) ? 8 :    \                ((((type) == e_FM_PORT_TYPE_RX) ||           \                  ((type) == e_FM_PORT_TYPE_TX) ||           \                  ((type) == e_FM_PORT_TYPE_OH_OFFLINE_PARSING)) ? 1 : 0))
+value|(uint32_t)(((type) == e_FM_PORT_TYPE_RX_10G) ? 8 :    \                (((type) == e_FM_PORT_TYPE_RX) ? 1 : 0))
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CONFIG_FMAN_RESOURCE_ALLOCATION_ALGORITHM
-argument_list|)
-end_if
-
-begin_comment
-comment|/* Let LLD to set minimum fifosize, otherwise fifosize settings will not work */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|DEFAULT_PORT_sizeOfFifo
+name|DEFAULT_PORT_numOfFifoBufs
 parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|(uint32_t)(KILOBYTE)
+value|(uint32_t)((((type) == e_FM_PORT_TYPE_RX_10G) ||        \                 ((type) == e_FM_PORT_TYPE_TX_10G)) ? 48 :   \                 ((type) == e_FM_PORT_TYPE_RX) ? 45 :        \                 ((type) == e_FM_PORT_TYPE_TX) ? 44 : 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_extraNumOfFifoBufs
+value|0
 end_define
 
 begin_else
@@ -479,15 +513,121 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* (DPAA_VERSION< 11) */
+end_comment
+
+begin_comment
+comment|/* Defaults are registers' reset values */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|DEFAULT_PORT_sizeOfFifo
+name|DEFAULT_PORT_rxFifoPriElevationLevel
+value|MAX_PORT_FIFO_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_rxFifoThreshold
+value|MAX_PORT_FIFO_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_txFifoMinFillLevel
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_txFifoLowComfLevel
+value|(5 * KILOBYTE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_fifoDeqPipelineDepth_1G
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_fifoDeqPipelineDepth_10G
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_fifoDeqPipelineDepth_OH
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_numOfTasks
 parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|(uint32_t)((((type) == e_FM_PORT_TYPE_RX_10G) ||                    \                 ((type) == e_FM_PORT_TYPE_TX_10G)) ? (16*KILOBYTE) :    \                ((((type) == e_FM_PORT_TYPE_RX) ||                       \                  ((type) == e_FM_PORT_TYPE_TX) ||                       \                  ((type) == e_FM_PORT_TYPE_OH_OFFLINE_PARSING)) ? (4*KILOBYTE) : (1536)))
+value|(uint32_t)((((type) == e_FM_PORT_TYPE_RX_10G) ||        \                 ((type) == e_FM_PORT_TYPE_TX_10G)) ? 14 :   \                (((type) == e_FM_PORT_TYPE_RX) ||            \                  ((type) == e_FM_PORT_TYPE_TX)) ? 4 :       \                  ((type) == e_FM_PORT_TYPE_OH_OFFLINE_PARSING) ? 6 : 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_extraNumOfTasks
+parameter_list|(
+name|type
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_numOfOpenDmas
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|(uint32_t)(((type) == e_FM_PORT_TYPE_RX_10G) ? 8 :      \                ((type) == e_FM_PORT_TYPE_TX_10G) ? 12 :     \                ((type) == e_FM_PORT_TYPE_RX)     ? 2 :      \                ((type) == e_FM_PORT_TYPE_TX)     ? 3 :      \                ((type) == e_FM_PORT_TYPE_OH_HOST_COMMAND) ? 2 : 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_extraNumOfOpenDmas
+parameter_list|(
+name|type
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_numOfFifoBufs
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|(uint32_t) (((type) == e_FM_PORT_TYPE_RX_10G) ? 96 : \                 ((type) == e_FM_PORT_TYPE_TX_10G) ? 64 : \                 ((type) == e_FM_PORT_TYPE_OH_HOST_COMMAND) ? 10 : 50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PORT_extraNumOfFifoBufs
+value|0
 end_define
 
 begin_endif
@@ -495,16 +635,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_PORT_extraSizeOfFifo
-parameter_list|(
-name|type
-parameter_list|)
-define|\
-value|(uint32_t)(((type) == e_FM_PORT_TYPE_RX_10G) ? (8*KILOBYTE) :   \                (((type) == e_FM_PORT_TYPE_RX) ? (4*KILOBYTE) : (0)))
-end_define
+begin_comment
+comment|/* (DPAA_VERSION< 11) */
+end_comment
 
 begin_define
 define|#
@@ -537,9 +670,262 @@ end_define
 begin_define
 define|#
 directive|define
-name|OH_PIPELINE_DEPTH
-value|2
+name|FM_PORT_CG_REG_NUM
+parameter_list|(
+name|_cgId
+parameter_list|)
+value|(((FM_PORT_NUM_OF_CONGESTION_GRPS/32)-1)-_cgId/32)
 end_define
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Collection    PCD Engines */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|fmPcdEngines_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**< options as defined below: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_PCD_NONE
+value|0
+end_define
+
+begin_comment
+comment|/**< No PCD Engine indicated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_PCD_PRS
+value|0x80000000
+end_define
+
+begin_comment
+comment|/**< Parser indicated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_PCD_KG
+value|0x40000000
+end_define
+
+begin_comment
+comment|/**< Keygen indicated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_PCD_CC
+value|0x20000000
+end_define
+
+begin_comment
+comment|/**< Coarse classification indicated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_PCD_PLCR
+value|0x10000000
+end_define
+
+begin_comment
+comment|/**< Policer indicated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_PCD_MANIP
+value|0x08000000
+end_define
+
+begin_comment
+comment|/**< Manipulation indicated */
+end_comment
+
+begin_comment
+comment|/* @} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_PORT_MAX_NUM_OF_EXT_POOLS_ALL_INTEGRATIONS
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_PORT_MAX_NUM_OF_CONGESTION_GRPS_ALL_INTEGRATIONS
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_PORT_CG_REG_NUM
+parameter_list|(
+name|_cgId
+parameter_list|)
+value|(((FM_PORT_NUM_OF_CONGESTION_GRPS/32)-1)-_cgId/32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_OH_PORT_ID
+value|0
+end_define
+
+begin_comment
+comment|/***********************************************************************/
+end_comment
+
+begin_comment
+comment|/*          SW parser OFFLOAD labels (offsets)                         */
+end_comment
+
+begin_comment
+comment|/***********************************************************************/
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|DPAA_VERSION
+operator|==
+literal|10
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|OFFLOAD_SW_PATCH_IPv4_IPR_LABEL
+value|0x300
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFFLOAD_SW_PATCH_IPv6_IPR_LABEL
+value|0x325
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFFLOAD_SW_PATCH_IPv6_IPF_LABEL
+value|0x325
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OFFLOAD_SW_PATCH_IPv4_IPR_LABEL
+value|0x100
+end_define
+
+begin_comment
+comment|/* Will be used for:  * 1. identify fragments  * 2. udp-lite  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFFLOAD_SW_PATCH_IPv6_IPR_LABEL
+value|0x146
+end_define
+
+begin_comment
+comment|/* Will be used for:  * 1. will identify the fragmentable area  * 2. udp-lite  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFFLOAD_SW_PATCH_IPv6_IPF_LABEL
+value|0x261
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFFLOAD_SW_PATCH_CAPWAP_LABEL
+value|0x38d
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* (DPAA_VERSION == 10) */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+name|DPAA_VERSION
+operator|==
+literal|10
+operator|)
+operator|&&
+name|defined
+argument_list|(
+name|FM_CAPWAP_SUPPORT
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|UDP_LITE_SW_PATCH_LABEL
+value|0x2E0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ((DPAA_VERSION == 10)&& defined(FM_CAPWAP_SUPPORT)) */
+end_comment
 
 begin_comment
 comment|/**************************************************************************/
@@ -588,29 +974,8 @@ begin_comment
 comment|/* defined(__MWERKS__)&& ... */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MEM_MAP_START
-end_define
-
-begin_define
-define|#
-directive|define
-name|FM_PORT_MAX_NUM_OF_EXT_POOLS_ALL_INTEGRATIONS
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|FM_PORT_NUM_OF_CONGESTION_GRPS_ALL_INTEGRATIONS
-value|256
-end_define
-
 begin_typedef
 typedef|typedef
-name|_Packed
 struct|struct
 block|{
 specifier|volatile
@@ -692,10 +1057,10 @@ specifier|volatile
 name|uint32_t
 name|reserved1
 index|[
-literal|1
+literal|0x01
 index|]
 decl_stmt|;
-comment|/**< (0x03C 0x03F) */
+comment|/**< (0x03C) */
 specifier|volatile
 name|uint32_t
 name|fmbm_rprai
@@ -733,10 +1098,23 @@ specifier|volatile
 name|uint32_t
 name|reserved2
 index|[
-literal|0x23
+literal|0x02
 index|]
 decl_stmt|;
-comment|/**< (0x074 0x0FF)  */
+comment|/**< (0x074-0x078) */
+specifier|volatile
+name|uint32_t
+name|fmbm_rcmne
+decl_stmt|;
+comment|/**< Rx Frame Continuous Mode Next Engine */
+specifier|volatile
+name|uint32_t
+name|reserved3
+index|[
+literal|0x20
+index|]
+decl_stmt|;
+comment|/**< (0x080 0x0FF)  */
 specifier|volatile
 name|uint32_t
 name|fmbm_ebmpi
@@ -755,17 +1133,17 @@ decl_stmt|;
 comment|/**< Allocate Counter-*/
 specifier|volatile
 name|uint32_t
-name|reserved3
+name|reserved4
 index|[
-literal|8
+literal|0x08
 index|]
 decl_stmt|;
 comment|/**< 0x130/0x140 - 0x15F reserved -*/
 specifier|volatile
 name|uint32_t
-name|fmbm_cgm
+name|fmbm_rcgm
 index|[
-name|FM_PORT_NUM_OF_CONGESTION_GRPS_ALL_INTEGRATIONS
+name|FM_PORT_MAX_NUM_OF_CONGESTION_GRPS_ALL_INTEGRATIONS
 operator|/
 literal|32
 index|]
@@ -773,12 +1151,12 @@ decl_stmt|;
 comment|/**< Congestion Group Map*/
 specifier|volatile
 name|uint32_t
-name|fmbm_mpd
+name|fmbm_rmpd
 decl_stmt|;
 comment|/**< BM Pool Depletion  */
 specifier|volatile
 name|uint32_t
-name|reserved4
+name|reserved5
 index|[
 literal|0x1F
 index|]
@@ -831,12 +1209,17 @@ decl_stmt|;
 comment|/**< Rx Buffers Deallocate Counter-*/
 specifier|volatile
 name|uint32_t
-name|reserved5
+name|fmbm_rpec
+decl_stmt|;
+comment|/**< Rx RX Prepare to enqueue Counter-*/
+specifier|volatile
+name|uint32_t
+name|reserved6
 index|[
-literal|0x17
+literal|0x16
 index|]
 decl_stmt|;
-comment|/**< (0x224 0x27F) */
+comment|/**< (0x228 0x27F) */
 specifier|volatile
 name|uint32_t
 name|fmbm_rpc
@@ -879,26 +1262,40 @@ decl_stmt|;
 comment|/**< Rx Pause Activation Counter*/
 specifier|volatile
 name|uint32_t
-name|reserved6
+name|reserved7
 index|[
 literal|0x18
 index|]
 decl_stmt|;
-comment|/**< (0x2A0 0x2FF) */
+comment|/**< (0x2A0-0x2FF) */
 specifier|volatile
 name|uint32_t
-name|fmbm_rdbg
+name|fmbm_rdcfg
+index|[
+literal|0x3
+index|]
 decl_stmt|;
 comment|/**< Rx Debug-*/
+specifier|volatile
+name|uint32_t
+name|fmbm_rgpr
+decl_stmt|;
+comment|/**< Rx General Purpose Register. */
+specifier|volatile
+name|uint32_t
+name|reserved8
+index|[
+literal|0x3a
+index|]
+decl_stmt|;
+comment|/**< (0x310-0x3FF) */
 block|}
-name|_PackedType
 name|t_FmPortRxBmiRegs
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|_Packed
 struct|struct
 block|{
 specifier|volatile
@@ -933,9 +1330,9 @@ decl_stmt|;
 comment|/**< Tx Internal Context Parameters */
 specifier|volatile
 name|uint32_t
-name|fmbm_tfne
+name|fmbm_tfdne
 decl_stmt|;
-comment|/**< Tx Frame Next Engine. */
+comment|/**< Tx Frame Dequeue Next Engine. */
 specifier|volatile
 name|uint32_t
 name|fmbm_tfca
@@ -968,12 +1365,43 @@ decl_stmt|;
 comment|/**< Tx Rate Limiter */
 specifier|volatile
 name|uint32_t
+name|fmbm_tccb
+decl_stmt|;
+comment|/**< Tx Coarse Classification Base */
+specifier|volatile
+name|uint32_t
 name|reserved0
 index|[
-literal|0x73
+literal|0x0e
 index|]
 decl_stmt|;
-comment|/**< (0x038-0x200) */
+comment|/**< (0x038-0x070) */
+specifier|volatile
+name|uint32_t
+name|fmbm_tfne
+decl_stmt|;
+comment|/**< Tx Frame Next Engine */
+specifier|volatile
+name|uint32_t
+name|fmbm_tpfcm
+index|[
+literal|0x02
+index|]
+decl_stmt|;
+comment|/**< Tx Priority based Flow Control (PFC) Mapping */
+specifier|volatile
+name|uint32_t
+name|fmbm_tcmne
+decl_stmt|;
+comment|/**< Tx Frame Continuous Mode Next Engine */
+specifier|volatile
+name|uint32_t
+name|reserved2
+index|[
+literal|0x60
+index|]
+decl_stmt|;
+comment|/**< (0x080-0x200) */
 specifier|volatile
 name|uint32_t
 name|fmbm_tstc
@@ -1006,7 +1434,7 @@ decl_stmt|;
 comment|/**< Tx Buffers Deallocate Counter */
 specifier|volatile
 name|uint32_t
-name|reserved1
+name|reserved3
 index|[
 literal|0x1A
 index|]
@@ -1047,15 +1475,42 @@ name|uint32_t
 name|fmbm_tfuc
 decl_stmt|;
 comment|/**< Tx FIFO Utilization Counter*/
+specifier|volatile
+name|uint32_t
+name|reserved4
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/**< (0x29C-0x2FF) */
+specifier|volatile
+name|uint32_t
+name|fmbm_tdcfg
+index|[
+literal|0x3
+index|]
+decl_stmt|;
+comment|/**< Tx Debug-*/
+specifier|volatile
+name|uint32_t
+name|fmbm_tgpr
+decl_stmt|;
+comment|/**< O/H General Purpose Register */
+specifier|volatile
+name|uint32_t
+name|reserved5
+index|[
+literal|0x3a
+index|]
+decl_stmt|;
+comment|/**< (0x310-0x3FF) */
 block|}
-name|_PackedType
 name|t_FmPortTxBmiRegs
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|_Packed
 struct|struct
 block|{
 specifier|volatile
@@ -1120,12 +1575,22 @@ decl_stmt|;
 comment|/**< O/H Internal margins*/
 specifier|volatile
 name|uint32_t
+name|fmbm_ofp
+decl_stmt|;
+comment|/**< O/H Fifo Parameters*/
+specifier|volatile
+name|uint32_t
+name|fmbm_ofed
+decl_stmt|;
+comment|/**< O/H Frame End Data*/
+specifier|volatile
+name|uint32_t
 name|reserved0
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
-comment|/**< (0x030 - 0x03F) */
+comment|/**< (0x038 - 0x03F) */
 specifier|volatile
 name|uint32_t
 name|fmbm_oprai
@@ -1171,32 +1636,33 @@ decl_stmt|;
 comment|/**< O/H Rate Limiter  */
 specifier|volatile
 name|uint32_t
-name|reserved0a
+name|fmbm_ocmne
+decl_stmt|;
+comment|/**< O/H Continuous Mode Next Engine  */
+specifier|volatile
+name|uint32_t
+name|reserved1
 index|[
-literal|0x21
+literal|0x20
 index|]
 decl_stmt|;
-comment|/**< 0x07C - 0x0FF Reserved */
-union|union
-block|{
+comment|/**< (0x080 - 0x0FF) */
 specifier|volatile
 name|uint32_t
 name|fmbm_oebmpi
 index|[
-name|FM_PORT_MAX_NUM_OF_OBSERVED_EXT_POOLS
+literal|2
 index|]
 decl_stmt|;
 comment|/**< Buffer Manager Observed Pool Information */
 specifier|volatile
 name|uint32_t
-name|reserved0b
+name|reserved2
 index|[
-literal|0x18
+literal|0x16
 index|]
 decl_stmt|;
-block|}
-union|;
-comment|/**< 0x100 - 0x15F Reserved */
+comment|/**< (0x108 - 0x15F) */
 specifier|volatile
 name|uint32_t
 name|fmbm_ocgm
@@ -1204,12 +1670,12 @@ decl_stmt|;
 comment|/**< Observed Congestion Group Map */
 specifier|volatile
 name|uint32_t
-name|reserved0c
+name|reserved3
 index|[
 literal|0x7
 index|]
 decl_stmt|;
-comment|/**< 0x164 - 0x17F Reserved */
+comment|/**< (0x164 - 0x17F) */
 specifier|volatile
 name|uint32_t
 name|fmbm_ompd
@@ -1217,12 +1683,12 @@ decl_stmt|;
 comment|/**< Observed BMan Pool Depletion */
 specifier|volatile
 name|uint32_t
-name|reserved0d
+name|reserved4
 index|[
 literal|0x1F
 index|]
 decl_stmt|;
-comment|/**< 0x184 - 0x1FF Reserved */
+comment|/**< (0x184 - 0x1FF) */
 specifier|volatile
 name|uint32_t
 name|fmbm_ostc
@@ -1270,12 +1736,22 @@ decl_stmt|;
 comment|/**< O/H Buffers Deallocate Counter */
 specifier|volatile
 name|uint32_t
-name|reserved2
+name|fmbm_oodc
+decl_stmt|;
+comment|/**< O/H Out of Buffers Discard Counter */
+specifier|volatile
+name|uint32_t
+name|fmbm_opec
+decl_stmt|;
+comment|/**< O/H Prepare to enqueue Counter */
+specifier|volatile
+name|uint32_t
+name|reserved5
 index|[
-literal|0x17
+literal|0x15
 index|]
 decl_stmt|;
-comment|/**< (0x218 - 0x27F) */
+comment|/**< ( - 0x27F) */
 specifier|volatile
 name|uint32_t
 name|fmbm_opc
@@ -1306,15 +1782,42 @@ name|uint32_t
 name|fmbm_ofuc
 decl_stmt|;
 comment|/**< O/H FIFO Utilization Counter */
+specifier|volatile
+name|uint32_t
+name|reserved6
+index|[
+literal|26
+index|]
+decl_stmt|;
+comment|/**< (0x298-0x2FF) */
+specifier|volatile
+name|uint32_t
+name|fmbm_odcfg
+index|[
+literal|0x3
+index|]
+decl_stmt|;
+comment|/**< O/H Debug (only 1 in P1023) */
+specifier|volatile
+name|uint32_t
+name|fmbm_ogpr
+decl_stmt|;
+comment|/**< O/H General Purpose Register. */
+specifier|volatile
+name|uint32_t
+name|reserved7
+index|[
+literal|0x3a
+index|]
+decl_stmt|;
+comment|/**< (0x310 0x3FF) */
 block|}
-name|_PackedType
 name|t_FmPortOhBmiRegs
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|_Packed
 union|union
 block|{
 name|t_FmPortRxBmiRegs
@@ -1327,14 +1830,12 @@ name|t_FmPortOhBmiRegs
 name|ohPortBmiRegs
 decl_stmt|;
 block|}
-name|_PackedType
 name|u_FmPortBmiRegs
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|_Packed
 struct|struct
 block|{
 specifier|volatile
@@ -1371,14 +1872,12 @@ name|fmqm_pndcc
 decl_stmt|;
 comment|/**<   PortID n Dequeue Confirm Counter */
 block|}
-name|_PackedType
 name|t_FmPortNonRxQmiRegs
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|_Packed
 struct|struct
 block|{
 specifier|volatile
@@ -1419,17 +1918,14 @@ name|nonRxQmiRegs
 decl_stmt|;
 comment|/**<   Registers for Tx Hc& Op ports */
 block|}
-name|_PackedType
 name|t_FmPortQmiRegs
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|_Packed
 struct|struct
 block|{
-name|_Packed
 struct|struct
 block|{
 specifier|volatile
@@ -1443,17 +1939,16 @@ name|lcv
 decl_stmt|;
 comment|/**<   Line-up Enable Confirmation Mask */
 block|}
-name|_PackedType
 name|hdrs
 index|[
 name|FM_PCD_PRS_NUM_OF_HDRS
 index|]
 struct|;
 specifier|volatile
-name|uint8_t
+name|uint32_t
 name|reserved0
 index|[
-literal|0x378
+literal|0xde
 index|]
 decl_stmt|;
 specifier|volatile
@@ -1467,7 +1962,6 @@ name|pctpid
 decl_stmt|;
 comment|/**<   Parse Internal Memory Configured TPID Register */
 block|}
-name|_PackedType
 name|t_FmPortPrsRegs
 typedef|;
 end_typedef
@@ -1630,12 +2124,6 @@ name|t_FmPortImPram
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|MEM_MAP_END
-end_define
-
 begin_if
 if|#
 directive|if
@@ -1693,6 +2181,46 @@ begin_comment
 comment|/***************************************************************************/
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|DPAA_VERSION
+operator|>=
+literal|11
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BMI_SP_ID_MASK
+value|0xff000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BMI_SP_ID_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|BMI_SP_EN
+value|0x01000000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* (DPAA_VERSION>= 11) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1724,6 +2252,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BMI_PORT_CFG_AM
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
 name|BMI_PORT_STATUS_BSY
 value|0x80000000
 end_define
@@ -1733,13 +2268,6 @@ define|#
 directive|define
 name|BMI_COUNTERS_EN
 value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BMI_DMA_ATTR_WRITE_OPTIMIZE
-value|0x00100000
 end_define
 
 begin_define
@@ -1761,6 +2289,13 @@ define|#
 directive|define
 name|BMI_RFNE_FDCS_MASK
 value|0xFF000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BMI_RFNE_HXS_MASK
+value|0x000000FF
 end_define
 
 begin_define
@@ -1794,13 +2329,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BMI_CMD_TX_MR_DEF
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BMI_CMD_RX_MR_DEF
 value|(BMI_CMD_MR_LEAC | \                                                  BMI_CMD_MR_SLEAC | \                                                  BMI_CMD_MR_MA | \                                                  BMI_CMD_MR_DEAS)
 end_define
@@ -1817,6 +2345,13 @@ define|#
 directive|define
 name|BMI_CMD_ATTR_SYNC
 value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BMI_CMD_ATTR_MODE_MISS_ALLIGN_ADDR_EN
+value|0x00080000
 end_define
 
 begin_define
@@ -1850,27 +2385,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BMI_EXT_BUF_POOL_VALID
-value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BMI_EXT_BUF_POOL_EN_COUNTER
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BMI_EXT_BUF_POOL_BACKUP
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|BMI_EXT_BUF_POOL_ID_MASK
 value|0x003F0000
 end_define
@@ -1879,14 +2393,14 @@ begin_define
 define|#
 directive|define
 name|BMI_STATUS_RX_MASK_UNUSED
-value|(uint32_t)(~(FM_PORT_FRM_ERR_DMA                    | \                                                              FM_PORT_FRM_ERR_PHYSICAL               | \                                                              FM_PORT_FRM_ERR_SIZE                   | \                                                              FM_PORT_FRM_ERR_CLS_DISCARD            | \                                                              FM_PORT_FRM_ERR_EXTRACTION             | \                                                              FM_PORT_FRM_ERR_NO_SCHEME              | \                                                              FM_PORT_FRM_ERR_COLOR_RED              | \                                                              FM_PORT_FRM_ERR_COLOR_YELLOW           | \                                                              FM_PORT_FRM_ERR_ILL_PLCR               | \                                                              FM_PORT_FRM_ERR_PLCR_FRAME_LEN         | \                                                              FM_PORT_FRM_ERR_PRS_TIMEOUT            | \                                                              FM_PORT_FRM_ERR_PRS_ILL_INSTRUCT       | \                                                              FM_PORT_FRM_ERR_BLOCK_LIMIT_EXCEEDED   | \                                                              FM_PORT_FRM_ERR_PRS_HDR_ERR            | \                                                              FM_PORT_FRM_ERR_PROCESS_TIMEOUT        | \                                                              FM_PORT_FRM_ERR_KEYSIZE_OVERFLOW))
+value|(uint32_t)(~(FM_PORT_FRM_ERR_DMA                    | \                                                              FM_PORT_FRM_ERR_PHYSICAL               | \                                                              FM_PORT_FRM_ERR_SIZE                   | \                                                              FM_PORT_FRM_ERR_CLS_DISCARD            | \                                                              FM_PORT_FRM_ERR_EXTRACTION             | \                                                              FM_PORT_FRM_ERR_NO_SCHEME              | \                                                              FM_PORT_FRM_ERR_COLOR_RED              | \                                                              FM_PORT_FRM_ERR_COLOR_YELLOW           | \                                                              FM_PORT_FRM_ERR_ILL_PLCR               | \                                                              FM_PORT_FRM_ERR_PLCR_FRAME_LEN         | \                                                              FM_PORT_FRM_ERR_PRS_TIMEOUT            | \                                                              FM_PORT_FRM_ERR_PRS_ILL_INSTRUCT       | \                                                              FM_PORT_FRM_ERR_BLOCK_LIMIT_EXCEEDED   | \                                                              FM_PORT_FRM_ERR_PRS_HDR_ERR            | \                                                              FM_PORT_FRM_ERR_IPRE                   | \                                                              FM_PORT_FRM_ERR_IPR_NCSP               | \                                                              FM_PORT_FRM_ERR_KEYSIZE_OVERFLOW))
 end_define
 
 begin_define
 define|#
 directive|define
 name|BMI_STATUS_OP_MASK_UNUSED
-value|(uint32_t)(BMI_STATUS_RX_MASK_UNUSED&                \                                                            ~(FM_PORT_FRM_ERR_LENGTH                 | \                                                              FM_PORT_FRM_ERR_UNSUPPORTED_FORMAT))
+value|(uint32_t)(BMI_STATUS_RX_MASK_UNUSED&                \                                                            ~(FM_PORT_FRM_ERR_LENGTH                 | \                                                              FM_PORT_FRM_ERR_NON_FM                 | \                                                              FM_PORT_FRM_ERR_UNSUPPORTED_FORMAT))
 end_define
 
 begin_define
@@ -1949,14 +2463,8 @@ begin_define
 define|#
 directive|define
 name|RX_ERRS_TO_ENQ
-value|(FM_PORT_FRM_ERR_DMA                    | \                                                  FM_PORT_FRM_ERR_PHYSICAL               | \                                                  FM_PORT_FRM_ERR_SIZE                   | \                                                  FM_PORT_FRM_ERR_EXTRACTION             | \                                                  FM_PORT_FRM_ERR_NO_SCHEME              | \                                                  FM_PORT_FRM_ERR_ILL_PLCR               | \                                                  FM_PORT_FRM_ERR_PLCR_FRAME_LEN         | \                                                  FM_PORT_FRM_ERR_PRS_TIMEOUT            | \                                                  FM_PORT_FRM_ERR_PRS_ILL_INSTRUCT       | \                                                  FM_PORT_FRM_ERR_BLOCK_LIMIT_EXCEEDED   | \                                                  FM_PORT_FRM_ERR_PRS_HDR_ERR            | \                                                  FM_PORT_FRM_ERR_PROCESS_TIMEOUT        | \                                                  FM_PORT_FRM_ERR_KEYSIZE_OVERFLOW)
+value|(FM_PORT_FRM_ERR_DMA                    | \                                                  FM_PORT_FRM_ERR_PHYSICAL               | \                                                  FM_PORT_FRM_ERR_SIZE                   | \                                                  FM_PORT_FRM_ERR_EXTRACTION             | \                                                  FM_PORT_FRM_ERR_NO_SCHEME              | \                                                  FM_PORT_FRM_ERR_ILL_PLCR               | \                                                  FM_PORT_FRM_ERR_PLCR_FRAME_LEN         | \                                                  FM_PORT_FRM_ERR_PRS_TIMEOUT            | \                                                  FM_PORT_FRM_ERR_PRS_ILL_INSTRUCT       | \                                                  FM_PORT_FRM_ERR_BLOCK_LIMIT_EXCEEDED   | \                                                  FM_PORT_FRM_ERR_PRS_HDR_ERR            | \                                                  FM_PORT_FRM_ERR_KEYSIZE_OVERFLOW       | \                                                  FM_PORT_FRM_ERR_IPRE)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FM_CAPWAP_SUPPORT
-end_ifdef
 
 begin_define
 define|#
@@ -1965,26 +2473,40 @@ name|OP_ERRS_TO_ENQ
 value|(RX_ERRS_TO_ENQ                         | \                                                  FM_PORT_FRM_ERR_LENGTH                 | \                                                  FM_PORT_FRM_ERR_NON_FM                 | \                                                  FM_PORT_FRM_ERR_UNSUPPORTED_FORMAT)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_define
+define|#
+directive|define
+name|BMI_RX_FIFO_PRI_ELEVATION_MASK
+value|0x03FF0000
+end_define
 
 begin_define
 define|#
 directive|define
-name|OP_ERRS_TO_ENQ
-value|(RX_ERRS_TO_ENQ                         | \                                                  FM_PORT_FRM_ERR_LENGTH                 | \                                                  FM_PORT_FRM_ERR_UNSUPPORTED_FORMAT)
+name|BMI_RX_FIFO_THRESHOLD_MASK
+value|0x000003FF
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|BMI_TX_FIFO_MIN_FILL_MASK
+value|0x03FF0000
+end_define
 
-begin_comment
-comment|/* FM_CAPWAP_SUPPORT */
-end_comment
+begin_define
+define|#
+directive|define
+name|BMI_FIFO_PIPELINE_DEPTH_MASK
+value|0x0000F000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BMI_TX_LOW_COMF_MASK
+value|0x000003FF
+end_define
 
 begin_comment
 comment|/* shifts */
@@ -2000,29 +2522,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|BMI_DMA_ATTR_SWP_SHIFT
-value|30
-end_define
-
-begin_define
-define|#
-directive|define
 name|BMI_DMA_ATTR_IC_CACHE_SHIFT
-value|28
+value|FMAN_SP_DMA_ATTR_IC_CACHE_SHIFT
 end_define
 
 begin_define
 define|#
 directive|define
 name|BMI_DMA_ATTR_HDR_CACHE_SHIFT
-value|26
+value|FMAN_SP_DMA_ATTR_HDR_CACHE_SHIFT
 end_define
 
 begin_define
 define|#
 directive|define
 name|BMI_DMA_ATTR_SG_CACHE_SHIFT
-value|24
+value|FMAN_SP_DMA_ATTR_SG_CACHE_SHIFT
 end_define
 
 begin_define
@@ -2070,22 +2585,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BMI_IC_TO_EXT_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|BMI_IC_FROM_INT_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
 name|BMI_IC_SIZE_SHIFT
-value|0
+value|FMAN_SP_IC_SIZE_SHIFT
 end_define
 
 begin_define
@@ -2098,15 +2599,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BMI_EXT_BUF_MARG_START_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|BMI_EXT_BUF_MARG_END_SHIFT
-value|0
+value|FMAN_SP_EXT_BUF_MARG_END_SHIFT
 end_define
 
 begin_define
@@ -2154,22 +2648,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BMI_POOL_DEP_NUM_OF_POOLS_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|BMI_POOL_DEP_NUM_OF_POOLS_VECTOR_SHIFT
 value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|BMI_EXT_BUF_POOL_ID_SHIFT
-value|16
 end_define
 
 begin_define
@@ -2182,22 +2662,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BMI_TX_FIFO_PIPELINE_DEPTH_SHIFT
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
 name|BMI_TX_LOW_COMF_SHIFT
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|BMI_TX_FRAME_END_CS_IGNORE_SHIFT
-value|24
 end_define
 
 begin_define
@@ -2256,13 +2722,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|OFFSET_UNITS
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|FRAME_OFFSET_UNITS
 value|16
 end_define
@@ -2270,36 +2729,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_EXT_OFFSET
-value|496
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_EXT_BUFFER_OFFSET
-value|511
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_INT_OFFSET
-value|240
-end_define
-
-begin_define
-define|#
-directive|define
 name|MIN_TX_INT_OFFSET
 value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_IC_SIZE
-value|256
 end_define
 
 begin_define
@@ -2382,8 +2813,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|FRAG_EXTRA_SPACE
-value|32
+name|MIN_NUM_OF_OP_DMAS
+value|2
 end_define
 
 begin_comment
@@ -2568,7 +2999,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PRS_HDR_IPV6_ROUTE_HDR_DIS
+name|PRS_HDR_IPV6_ROUTE_HDR_EN
 value|0x00008000
 end_define
 
@@ -2818,27 +3249,6 @@ name|DCCP_SW_PATCH_START
 value|0x41
 end_define
 
-begin_define
-define|#
-directive|define
-name|IP_FRAG_SW_PATCH_IPv4
-value|0x300
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FRAG_SW_PATCH_IPv6_0
-value|0x320
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FRAG_SW_PATCH_IPv6_1
-value|0x372
-end_define
-
 begin_comment
 comment|/**************************************************************************/
 end_comment
@@ -2898,13 +3308,6 @@ define|#
 directive|define
 name|BD_RX_ERRORS
 value|(BD_RX_CRE | BD_RX_FTL | BD_RX_FTS | BD_RX_OV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BD_ERROR_PASS_FRAME
-value|BD_RX_ERRORS
 end_define
 
 begin_define
@@ -3055,6 +3458,18 @@ name|IM_EV_RX
 value|0x80000000
 end_define
 
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Description       Additional defines */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -3124,108 +3539,14 @@ name|t_FmMacIm
 typedef|;
 end_typedef
 
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Description   structure for defining internal context copying */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|uint16_t
-name|extBufOffset
+name|struct
+name|fman_port_cfg
+name|dfltCfg
 decl_stmt|;
-comment|/**< Offset in External buffer to which internal                                          context is copied to (Rx) or taken from (Tx, Op). */
-name|uint8_t
-name|intContextOffset
-decl_stmt|;
-comment|/**< Offset within internal context to copy from                                          (Rx) or to copy to (Tx, Op). */
-name|uint16_t
-name|size
-decl_stmt|;
-comment|/**< Internal offset size to be copied */
-block|}
-name|t_FmPortIntContextDataCopy
-typedef|;
-end_typedef
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Description   struct for defining external buffer margins */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint16_t
-name|startMargins
-decl_stmt|;
-comment|/**< Number of bytes to be left at the beginning                                              of the external buffer (must be divisible by 16) */
-name|uint16_t
-name|endMargins
-decl_stmt|;
-comment|/**< number of bytes to be left at the end                                              of the external buffer(must be divisible by 16) */
-block|}
-name|t_FmPortBufMargins
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint32_t
-name|dataOffset
-decl_stmt|;
-name|uint32_t
-name|prsResultOffset
-decl_stmt|;
-name|uint32_t
-name|timeStampOffset
-decl_stmt|;
-name|uint32_t
-name|hashResultOffset
-decl_stmt|;
-name|uint32_t
-name|pcdInfoOffset
-decl_stmt|;
-name|uint32_t
-name|manipOffset
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|uint32_t
-name|debugOffset
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
-block|}
-name|t_FmPortBufferOffsets
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
 name|uint32_t
 name|dfltFqid
 decl_stmt|;
@@ -3247,15 +3568,9 @@ decl_stmt|;
 name|e_FmPortDeqType
 name|deqType
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FM_QMI_DEQ_OPTIONS_SUPPORT
 name|e_FmPortDeqPrefetchOption
 name|deqPrefetchOption
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* FM_QMI_DEQ_OPTIONS_SUPPORT */
 name|uint16_t
 name|deqByteCnt
 decl_stmt|;
@@ -3265,7 +3580,7 @@ decl_stmt|;
 name|uint8_t
 name|cutBytesFromEnd
 decl_stmt|;
-name|t_FmPortBufPoolDepletion
+name|t_FmBufPoolDepletion
 name|bufPoolDepletion
 decl_stmt|;
 name|uint8_t
@@ -3295,19 +3610,19 @@ decl_stmt|;
 name|uint16_t
 name|liodnBase
 decl_stmt|;
-name|t_FmPortExtPools
+name|t_FmExtPools
 name|extBufPools
 decl_stmt|;
-name|e_FmPortDmaSwap
+name|e_FmDmaSwapOption
 name|dmaSwapData
 decl_stmt|;
-name|e_FmPortDmaCache
+name|e_FmDmaCacheOption
 name|dmaIntContextCacheAttr
 decl_stmt|;
-name|e_FmPortDmaCache
+name|e_FmDmaCacheOption
 name|dmaHeaderCacheAttr
 decl_stmt|;
-name|e_FmPortDmaCache
+name|e_FmDmaCacheOption
 name|dmaScatterGatherCacheAttr
 decl_stmt|;
 name|bool
@@ -3328,10 +3643,10 @@ decl_stmt|;
 name|uint32_t
 name|rxFifoThreshold
 decl_stmt|;
-name|t_FmPortBufMargins
+name|t_FmSpBufMargins
 name|bufMargins
 decl_stmt|;
-name|t_FmPortIntContextDataCopy
+name|t_FmSpIntContextDataCopy
 name|intContext
 decl_stmt|;
 name|bool
@@ -3346,25 +3661,50 @@ decl_stmt|;
 name|fmPortFrameErrSelect_t
 name|errorsToEnq
 decl_stmt|;
-name|uint64_t
-name|fmMuramPhysBaseAddr
-decl_stmt|;
 name|bool
 name|forwardReuseIntContext
 decl_stmt|;
-name|t_FmPortBufferPrefixContent
+name|t_FmBufferPrefixContent
 name|bufferPrefixContent
 decl_stmt|;
-name|uint8_t
-name|internalBufferOffset
-decl_stmt|;
-name|t_FmPortBackupBmPools
+name|t_FmBackupBmPools
 modifier|*
 name|p_BackupBmPools
 decl_stmt|;
 name|bool
 name|dontReleaseBuf
 decl_stmt|;
+name|bool
+name|setNumOfTasks
+decl_stmt|;
+name|bool
+name|setNumOfOpenDmas
+decl_stmt|;
+name|bool
+name|setSizeOfFifo
+decl_stmt|;
+if|#
+directive|if
+operator|(
+name|DPAA_VERSION
+operator|>=
+literal|11
+operator|)
+name|bool
+name|noScatherGather
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* (DPAA_VERSION>= 11) */
+ifdef|#
+directive|ifdef
+name|FM_HEAVY_TRAFFIC_HANG_ERRATA_FMAN_A005669
+name|bool
+name|bcbWorkaround
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* FM_HEAVY_TRAFFIC_HANG_ERRATA_FMAN_A005669 */
 block|}
 name|t_FmPortDriverParam
 typedef|;
@@ -3373,12 +3713,77 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
+name|t_FmPortRxPoolsParams
 block|{
+name|uint8_t
+name|numOfPools
+decl_stmt|;
+name|uint16_t
+name|secondLargestBufSize
+decl_stmt|;
+name|uint16_t
+name|largestBufSize
+decl_stmt|;
+block|}
+name|t_FmPortRxPoolsParams
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t_FmPortDsarVars
+block|{
+name|t_Handle
+modifier|*
+name|autoResOffsets
+decl_stmt|;
+name|t_FmPortDsarTablesSizes
+modifier|*
+name|autoResMaxSizes
+decl_stmt|;
+name|uint32_t
+name|fmbm_tcfg
+decl_stmt|;
+name|uint32_t
+name|fmbm_tcmne
+decl_stmt|;
+name|uint32_t
+name|fmbm_rfne
+decl_stmt|;
+name|uint32_t
+name|fmbm_rfpne
+decl_stmt|;
+name|uint32_t
+name|fmbm_rcfg
+decl_stmt|;
+name|bool
+name|dsarEnabledParser
+decl_stmt|;
+block|}
+name|t_FmPortDsarVars
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|struct
+name|fman_port
+name|port
+decl_stmt|;
 name|t_Handle
 name|h_Fm
 decl_stmt|;
 name|t_Handle
 name|h_FmPcd
+decl_stmt|;
+name|t_Handle
+name|h_FmMuram
+decl_stmt|;
+name|t_FmRevisionInfo
+name|fmRevInfo
 decl_stmt|;
 name|uint8_t
 name|portId
@@ -3465,7 +3870,7 @@ name|t_Handle
 name|arg
 parameter_list|)
 function_decl|;
-name|t_FmPortBufferOffsets
+name|t_FmSpBufferOffsets
 name|bufferOffsets
 decl_stmt|;
 comment|/* Independent-Mode parameters support */
@@ -3474,9 +3879,6 @@ name|imEn
 decl_stmt|;
 name|t_FmMacIm
 name|im
-decl_stmt|;
-name|uint8_t
-name|txFifoDeqPipelineDepth
 decl_stmt|;
 specifier|volatile
 name|bool
@@ -3504,10 +3906,7 @@ decl_stmt|;
 name|bool
 name|polling
 decl_stmt|;
-name|uint8_t
-name|numOfTasks
-decl_stmt|;
-name|t_FmPortExtPools
+name|t_FmExtPools
 name|extBufPools
 decl_stmt|;
 name|uint32_t
@@ -3517,10 +3916,34 @@ name|uint32_t
 name|savedQmiPnen
 decl_stmt|;
 name|uint32_t
+name|savedBmiFene
+decl_stmt|;
+name|uint32_t
+name|savedBmiFpne
+decl_stmt|;
+name|uint32_t
+name|savedBmiCmne
+decl_stmt|;
+name|uint32_t
+name|savedBmiOfp
+decl_stmt|;
+name|uint32_t
 name|savedNonRxQmiRegsPndn
+decl_stmt|;
+name|uint32_t
+name|origNonRxQmiRegsPndn
 decl_stmt|;
 name|int
 name|savedPrsStartOffset
+decl_stmt|;
+name|bool
+name|includeInPrsStatistics
+decl_stmt|;
+name|uint16_t
+name|maxFrameLength
+decl_stmt|;
+name|t_FmFmanCtrl
+name|orFmanCtrl
 decl_stmt|;
 name|t_FmPortRsrc
 name|openDmas
@@ -3531,8 +3954,47 @@ decl_stmt|;
 name|t_FmPortRsrc
 name|fifoBufs
 decl_stmt|;
-name|t_FmInterModulePortRxPoolsParams
+name|t_FmPortRxPoolsParams
 name|rxPoolsParams
+decl_stmt|;
+comment|//    bool                        explicitUserSizeOfFifo;
+name|t_Handle
+name|h_IpReassemblyManip
+decl_stmt|;
+name|t_Handle
+name|h_CapwapReassemblyManip
+decl_stmt|;
+name|t_Handle
+name|h_ReassemblyTree
+decl_stmt|;
+name|uint64_t
+name|fmMuramPhysBaseAddr
+decl_stmt|;
+if|#
+directive|if
+operator|(
+name|DPAA_VERSION
+operator|>=
+literal|11
+operator|)
+name|bool
+name|vspe
+decl_stmt|;
+name|uint8_t
+name|dfltRelativeId
+decl_stmt|;
+name|e_FmPortGprFuncType
+name|gprFunc
+decl_stmt|;
+name|t_FmPcdCtrlParamsPage
+modifier|*
+name|p_ParamsPage
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* (DPAA_VERSION>= 11) */
+name|t_FmPortDsarVars
+name|deepSleepVars
 decl_stmt|;
 name|t_FmPortDriverParam
 modifier|*
@@ -3542,17 +4004,6 @@ block|}
 name|t_FmPort
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|CHECK_FM_CTL_AC_POST_FETCH_PCD
-parameter_list|(
-name|savedBmiNia
-parameter_list|)
-define|\
-value|((((savedBmiNia)& NIA_ENG_MASK) == NIA_ENG_FM_CTL)&& \      ((((savedBmiNia)& NIA_FM_CTL_AC_MASK) == NIA_FM_CTL_AC_POST_FETCH_PCD) || \       (((savedBmiNia)& NIA_FM_CTL_AC_MASK) == NIA_FM_CTL_AC_POST_FETCH_PCD_UDP_LEN)))
-end_define
 
 begin_function_decl
 name|void
@@ -3654,6 +4105,48 @@ name|h_FmPort
 parameter_list|,
 name|uint8_t
 name|dfltSci
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|t_Error
+name|FM_PORT_SetNumOfOpenDmas
+parameter_list|(
+name|t_Handle
+name|h_FmPort
+parameter_list|,
+name|t_FmPortRsrc
+modifier|*
+name|p_NumOfOpenDmas
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|t_Error
+name|FM_PORT_SetNumOfTasks
+parameter_list|(
+name|t_Handle
+name|h_FmPort
+parameter_list|,
+name|t_FmPortRsrc
+modifier|*
+name|p_NumOfTasks
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|t_Error
+name|FM_PORT_SetSizeOfFifo
+parameter_list|(
+name|t_Handle
+name|h_FmPort
+parameter_list|,
+name|t_FmPortRsrc
+modifier|*
+name|p_SizeOfFifo
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3862,6 +4355,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|FM_PORT_Dsar_DumpRegs
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -63,6 +63,13 @@ begin_comment
 comment|/***************************************************************************/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FM_MAC_NO_PFC
+value|0xff
+end_define
+
 begin_comment
 comment|/**************************************************************************/
 end_comment
@@ -83,72 +90,114 @@ block|{
 name|e_FM_MAC_EX_10G_MDIO_SCAN_EVENTMDIO
 init|=
 literal|0
+comment|/**< 10GEC MDIO scan event interrupt */
 block|,
 name|e_FM_MAC_EX_10G_MDIO_CMD_CMPL
+comment|/**< 10GEC MDIO command completion interrupt */
 block|,
 name|e_FM_MAC_EX_10G_REM_FAULT
+comment|/**< 10GEC, mEMAC Remote fault interrupt */
 block|,
 name|e_FM_MAC_EX_10G_LOC_FAULT
+comment|/**< 10GEC, mEMAC Local fault interrupt */
 block|,
 name|e_FM_MAC_EX_10G_1TX_ECC_ER
+comment|/**< 10GEC, mEMAC Transmit frame ECC error interrupt */
 block|,
 name|e_FM_MAC_EX_10G_TX_FIFO_UNFL
+comment|/**< 10GEC, mEMAC Transmit FIFO underflow interrupt */
 block|,
 name|e_FM_MAC_EX_10G_TX_FIFO_OVFL
+comment|/**< 10GEC, mEMAC Transmit FIFO overflow interrupt */
 block|,
 name|e_FM_MAC_EX_10G_TX_ER
+comment|/**< 10GEC Transmit frame error interrupt */
 block|,
 name|e_FM_MAC_EX_10G_RX_FIFO_OVFL
+comment|/**< 10GEC, mEMAC Receive FIFO overflow interrupt */
 block|,
 name|e_FM_MAC_EX_10G_RX_ECC_ER
+comment|/**< 10GEC, mEMAC Receive frame ECC error interrupt */
 block|,
 name|e_FM_MAC_EX_10G_RX_JAB_FRM
+comment|/**< 10GEC Receive jabber frame interrupt */
 block|,
 name|e_FM_MAC_EX_10G_RX_OVRSZ_FRM
+comment|/**< 10GEC Receive oversized frame interrupt */
 block|,
 name|e_FM_MAC_EX_10G_RX_RUNT_FRM
+comment|/**< 10GEC Receive runt frame interrupt */
 block|,
 name|e_FM_MAC_EX_10G_RX_FRAG_FRM
+comment|/**< 10GEC Receive fragment frame interrupt */
 block|,
 name|e_FM_MAC_EX_10G_RX_LEN_ER
+comment|/**< 10GEC Receive payload length error interrupt */
 block|,
 name|e_FM_MAC_EX_10G_RX_CRC_ER
+comment|/**< 10GEC Receive CRC error interrupt */
 block|,
 name|e_FM_MAC_EX_10G_RX_ALIGN_ER
+comment|/**< 10GEC Receive alignment error interrupt */
 block|,
 name|e_FM_MAC_EX_1G_BAB_RX
+comment|/**< dTSEC Babbling receive error */
 block|,
 name|e_FM_MAC_EX_1G_RX_CTL
+comment|/**< dTSEC Receive control (pause frame) interrupt */
 block|,
 name|e_FM_MAC_EX_1G_GRATEFUL_TX_STP_COMPLET
+comment|/**< dTSEC Graceful transmit stop complete */
 block|,
 name|e_FM_MAC_EX_1G_BAB_TX
+comment|/**< dTSEC Babbling transmit error */
 block|,
 name|e_FM_MAC_EX_1G_TX_CTL
+comment|/**< dTSEC Transmit control (pause frame) interrupt */
 block|,
 name|e_FM_MAC_EX_1G_TX_ERR
+comment|/**< dTSEC Transmit error */
 block|,
 name|e_FM_MAC_EX_1G_LATE_COL
+comment|/**< dTSEC Late collision */
 block|,
 name|e_FM_MAC_EX_1G_COL_RET_LMT
+comment|/**< dTSEC Collision retry limit */
 block|,
 name|e_FM_MAC_EX_1G_TX_FIFO_UNDRN
+comment|/**< dTSEC Transmit FIFO underrun */
 block|,
 name|e_FM_MAC_EX_1G_MAG_PCKT
+comment|/**< dTSEC Magic Packet detection */
 block|,
 name|e_FM_MAC_EX_1G_MII_MNG_RD_COMPLET
+comment|/**< dTSEC MII management read completion */
 block|,
 name|e_FM_MAC_EX_1G_MII_MNG_WR_COMPLET
+comment|/**< dTSEC MII management write completion */
 block|,
 name|e_FM_MAC_EX_1G_GRATEFUL_RX_STP_COMPLET
+comment|/**< dTSEC Graceful receive stop complete */
 block|,
 name|e_FM_MAC_EX_1G_TX_DATA_ERR
+comment|/**< dTSEC Internal data error on transmit */
 block|,
 name|e_FM_MAC_EX_1G_RX_DATA_ERR
+comment|/**< dTSEC Internal data error on receive */
 block|,
 name|e_FM_MAC_EX_1G_1588_TS_RX_ERR
+comment|/**< dTSEC Time-Stamp Receive Error */
 block|,
 name|e_FM_MAC_EX_1G_RX_MIB_CNT_OVFL
+comment|/**< dTSEC MIB counter overflow */
+block|,
+name|e_FM_MAC_EX_TS_FIFO_ECC_ERR
+comment|/**< mEMAC Time-stamp FIFO ECC error interrupt;                                                                      not supported on T4240/B4860 rev1 chips */
+block|,
+name|e_FM_MAC_EX_MAGIC_PACKET_INDICATION
+init|=
+name|e_FM_MAC_EX_1G_MAG_PCKT
+comment|/**< mEMAC Magic Packet Indication Interrupt */
 block|}
 name|e_FmMacExceptions
 typedef|;
@@ -178,20 +227,79 @@ block|,
 comment|/**< No statistics */
 name|e_FM_MAC_PARTIAL_STATISTICS
 block|,
-comment|/**< Only error counters are available. Optimized for performance */
+comment|/**< Only error counters are available; Optimized for performance */
 name|e_FM_MAC_FULL_STATISTICS
-comment|/**< All counters available. Not optimized for performance */
+comment|/**< All counters available; Not optimized for performance */
 block|}
 name|e_FmMacStatisticsLevel
 typedef|;
 end_typedef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|DPAA_VERSION
+operator|>=
+literal|11
+operator|)
+end_if
 
 begin_comment
 comment|/**************************************************************************/
 end_comment
 
 begin_comment
-comment|/**  @Function      t_FmMacExceptionCallback   @Description   Fm Mac Exception Callback from FM MAC to the user   @Param[in]     h_App             - Handle to the upper layer handler   @Param[in]     exceptions        - The exception that occurred    @Return        void. */
+comment|/**  @Description   Priority Flow Control Parameters */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t_FmMacPfcParams
+block|{
+name|bool
+name|pfcEnable
+decl_stmt|;
+comment|/**< Enable/Disable PFC */
+name|uint16_t
+name|pauseQuanta
+index|[
+name|FM_MAX_NUM_OF_PFC_PRIORITIES
+index|]
+decl_stmt|;
+comment|/**< Pause Quanta per priority to be sent in a pause frame. Each quanta represents a 512 bit-times*/
+name|uint16_t
+name|pauseThresholdQuanta
+index|[
+name|FM_MAX_NUM_OF_PFC_PRIORITIES
+index|]
+decl_stmt|;
+comment|/**< Pause threshold per priority, when timer passes this threshold time a PFC frames is sent again if the port is still congested or BM pool in depletion*/
+block|}
+name|t_FmMacPfcParams
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* (DPAA_VERSION>= 11) */
+end_comment
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      t_FmMacExceptionCallback   @Description   Fm Mac Exception Callback from FM MAC to the user   @Param[in]     h_App             - Handle to the upper layer handler   @Param[in]     exceptions        - The exception that occurred   @Return        void. */
 end_comment
 
 begin_comment
@@ -272,7 +380,7 @@ comment|/**< Total number of packets longer than valid maximum length octets */
 name|uint64_t
 name|eStatsDropEvents
 decl_stmt|;
-comment|/**< number of dropped packets due to internal errors of the MAC Client. */
+comment|/**< number of dropped packets due to internal errors of the MAC Client (during receive). */
 name|uint64_t
 name|eStatCRCAlignErrors
 decl_stmt|;
@@ -280,11 +388,11 @@ comment|/**< Incremented when frames of correct length but with CRC error are re
 name|uint64_t
 name|eStatUndersizePkts
 decl_stmt|;
-comment|/**< Total number of packets that were less than 64 octets long with a good CRC.*/
+comment|/**< Incremented for frames under 64 bytes with a valid FCS and otherwise well formed;                                             This count does not include range length errors */
 name|uint64_t
 name|eStatOversizePkts
 decl_stmt|;
-comment|/**< T,B.D*/
+comment|/**< Incremented for frames which exceed 1518 (non VLAN) or 1522 (VLAN) and contains                                             a valid FCS and otherwise well formed */
 comment|/* Pause */
 name|uint64_t
 name|teStatPause
@@ -303,6 +411,10 @@ name|uint64_t
 name|ifInPkts
 decl_stmt|;
 comment|/**< Total number of packets received.*/
+name|uint64_t
+name|ifInUcastPkts
+decl_stmt|;
+comment|/**< Total number of unicast frame received;                                             NOTE: this counter is not supported on dTSEC MAC */
 name|uint64_t
 name|ifInMcastPkts
 decl_stmt|;
@@ -327,6 +439,10 @@ name|uint64_t
 name|ifOutPkts
 decl_stmt|;
 comment|/**< Total number of packets sent .*/
+name|uint64_t
+name|ifOutUcastPkts
+decl_stmt|;
+comment|/**< Total number of unicast frame sent;                                             NOTE: this counter is not supported on dTSEC MAC */
 name|uint64_t
 name|ifOutMcastPkts
 decl_stmt|;
@@ -353,7 +469,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Group         FM_mac_init_grp Initialization Unit   @Description   FM MAC Initialization Unit   @{ */
+comment|/**  @Group         FM_mac_init_grp FM MAC Initialization Unit   @Description   FM MAC Initialization Unit   @{ */
 end_comment
 
 begin_comment
@@ -388,11 +504,11 @@ comment|/**< MAC address of device; First octet is sent first */
 name|uint8_t
 name|macId
 decl_stmt|;
-comment|/**< MAC ID<dTSEC 0-3><10G 0>         */
+comment|/**< MAC ID;                                                          numbering of dTSEC and 1G-mEMAC:                                                             0 - FM_MAX_NUM_OF_1G_MACS;                                                          numbering of 10G-MAC (TGEC) and 10G-mEMAC:                                                             0 - FM_MAX_NUM_OF_10G_MACS */
 name|e_EnetMode
 name|enetMode
 decl_stmt|;
-comment|/**< Ethernet operation mode (MAC-PHY interface and speed) */
+comment|/**< Ethernet operation mode (MAC-PHY interface and speed);                                                          Note that the speed should indicate the maximum rate that                                                          this MAC should support rather than the actual speed;                                                          i.e. user should use the FM_MAC_AdjustLink() routine to                                                          provide accurate speed;                                                          In case of mEMAC RGMII mode, the MAC is configured to RGMII                                                          automatic mode, where actual speed/duplex mode information                                                          is provided by PHY automatically in-band; FM_MAC_AdjustLink()                                                          function should be used to switch to manual RGMII speed/duplex mode                                                          configuration if RGMII PHY doesn't support in-band status signaling;                                                          In addition, in mEMAC, in case where user is using the higher MACs                                                          (i.e. the MACs that should support 10G), user should pass here                                                          speed=10000 even if the interface is not allowing that (e.g. SGMII). */
 name|t_Handle
 name|h_Fm
 decl_stmt|;
@@ -492,7 +608,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Group         FM_mac_advanced_init_grp    Advanced Configuration Unit   @Description   Configuration functions used to change default values.   @{ */
+comment|/**  @Group         FM_mac_advanced_init_grp    FM MAC Advanced Configuration Unit   @Description   Configuration functions used to change default values.   @{ */
 end_comment
 
 begin_comment
@@ -504,7 +620,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_ConfigResetOnInit   @Description   Tell the driver whether to reset the FM MAC before initialization or                 not. It changes the default configuration [FALSE].   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     enable     When TRUE, FM will be reset before any initialization.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_ConfigResetOnInit   @Description   Tell the driver whether to reset the FM MAC before initialization or                 not. It changes the default configuration [DEFAULT_resetOnInit].   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     enable     When TRUE, FM will be reset before any initialization.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
 end_comment
 
 begin_comment
@@ -554,7 +670,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_ConfigMaxFrameLength   @Description   Setup maximum Frame Length   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     newVal     MAX Frame length   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_ConfigMaxFrameLength   @Description   Setup maximum Rx Frame Length (in 1G MAC, effects also Tx)   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     newVal     MAX Frame length   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
 end_comment
 
 begin_comment
@@ -579,7 +695,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_ConfigWan   @Description   ENABLE WAN mode in 10G MAC   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     enable     TRUE to enable or FALSE to disable.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_ConfigWan   @Description   ENABLE WAN mode in 10G-MAC   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     enable     TRUE to enable or FALSE to disable.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
 end_comment
 
 begin_comment
@@ -604,7 +720,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_ConfigPadAndCrc   @Description   Config PAD and CRC mode   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     enable     TRUE to enable or FALSE to disable.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_ConfigPadAndCrc   @Description   Config PAD and CRC mode   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     enable     TRUE to enable or FALSE to disable.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init().                 Not supported on 10G-MAC (i.e. CRC& PAD are added automatically                 by HW); on mEMAC, this routine supports only PAD (i.e. CRC is                 added automatically by HW). */
 end_comment
 
 begin_comment
@@ -654,7 +770,32 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_ConfigLengthCheck   @Description   Configure thef frame length checking.   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     enable     TRUE to enable or FALSE to disable.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_ConfigTbiPhyAddr   @Description   Configures the address of internal TBI PHY.   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     newVal     TBI PHY address (1-31).   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_MAC_ConfigTbiPhyAddr
+parameter_list|(
+name|t_Handle
+name|h_FmMac
+parameter_list|,
+name|uint8_t
+name|newVal
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      FM_MAC_ConfigLengthCheck   @Description   Configure the frame length checking.   @Param[in]     h_FmMac    A handle to a FM MAC Module.  @Param[in]     enable     TRUE to enable or FALSE to disable.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
 end_comment
 
 begin_comment
@@ -679,7 +820,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_ConfigException   @Description   Change Exception selection from default   @Param[in]     h_FmMac         A handle to a FM MAC Module.  @Param[in]     ex              Type of the desired exceptions  @Param[in]     enable          TRUE to enable the specified exception, FALSE to disable it.    @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_ConfigException   @Description   Change Exception selection from default   @Param[in]     h_FmMac         A handle to a FM MAC Module.  @Param[in]     ex              Type of the desired exceptions  @Param[in]     enable          TRUE to enable the specified exception, FALSE to disable it.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Config() and before FM_MAC_Init(). */
 end_comment
 
 begin_comment
@@ -748,7 +889,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Group         FM_mac_runtime_control_grp Runtime Control Unit   @Description   FM MAC Runtime control unit API functions, definitions and enums.   @{ */
+comment|/**  @Group         FM_mac_runtime_control_grp FM MAC Runtime Control Unit   @Description   FM MAC Runtime control unit API functions, definitions and enums.   @{ */
 end_comment
 
 begin_comment
@@ -810,6 +951,28 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/**  @Function      FM_MAC_Resume   @Description   Re-init the MAC after suspend   @Param[in]     h_FmMac    A handle to a FM MAC Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_MAC_Resume
+parameter_list|(
+name|t_Handle
+name|h_FmMac
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
 comment|/**  @Function      FM_MAC_Enable1588TimeStamp   @Description   Enables the TSU operation.   @Param[in]     h_Fm   - Handle to the PTP as returned from the FM_MAC_PtpConfig.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
 end_comment
 
@@ -854,7 +1017,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_SetTxAutoPauseFrames   @Description   Enable/Disable transmition of Pause-Frames.   @Param[in]     h_FmMac     A handle to a FM MAC Module.  @Param[in]     pauseTime   Pause quanta value used with transmitted pause frames.                             Each quanta represents a 512 bit-times; Note that '0'                             as an input here will be used as disabling the                             transmission of the pause-frames.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_SetTxAutoPauseFrames   @Description   Enable/Disable transmission of Pause-Frames.                 The routine changes the default configuration [DEFAULT_TX_PAUSE_TIME].   @Param[in]     h_FmMac       -  A handle to a FM MAC Module.  @Param[in]     pauseTime     -  Pause quanta value used with transmitted pause frames.                                  Each quanta represents a 512 bit-times; Note that '0'                                  as an input here will be used as disabling the                                  transmission of the pause-frames.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
 end_comment
 
 begin_comment
@@ -879,7 +1042,38 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_SetRxIgnorePauseFrames   @Description   Enable/Disable ignoring of Pause-Frames.   @Param[in]     h_FmMac     A handle to a FM MAC Module.  @Param[in]     en          boolean indicates whether to ignore the incoming pause                             frames or not.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_SetTxPauseFrames   @Description   Enable/Disable transmission of Pause-Frames.                 The routine changes the default configuration:                 pause-time - [DEFAULT_TX_PAUSE_TIME]                 threshold-time - [0]   @Param[in]     h_FmMac       -  A handle to a FM MAC Module.  @Param[in]     priority      -  the PFC class of service; use 'FM_MAC_NO_PFC'                                  to indicate legacy pause support (i.e. no PFC).  @Param[in]     pauseTime     -  Pause quanta value used with transmitted pause frames.                                  Each quanta represents a 512 bit-times;                                  Note that '0' as an input here will be used as disabling the                                  transmission of the pause-frames.  @Param[in]     threshTime    -  Pause Threshold equanta value used by the MAC to retransmit pause frame.                                  if the situation causing a pause frame to be sent didn't finish when the timer                                  reached the threshold quanta, the MAC will retransmit the pause frame.                                  Each quanta represents a 512 bit-times.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init().                 In order for PFC to work properly the user must configure                 TNUM-aging in the tx-port it is recommended that pre-fetch and                 rate limit in the tx port should be disabled;                 PFC is supported only on new mEMAC; i.e. in MACs that don't have                 PFC support (10G-MAC and dTSEC), user should use 'FM_MAC_NO_PFC'                 in the 'priority' field. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_MAC_SetTxPauseFrames
+parameter_list|(
+name|t_Handle
+name|h_FmMac
+parameter_list|,
+name|uint8_t
+name|priority
+parameter_list|,
+name|uint16_t
+name|pauseTime
+parameter_list|,
+name|uint16_t
+name|threshTime
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      FM_MAC_SetRxIgnorePauseFrames   @Description   Enable/Disable ignoring of Pause-Frames.   @Param[in]     h_FmMac    - A handle to a FM MAC Module.  @Param[in]     en         - boolean indicates whether to ignore the incoming pause                              frames or not.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
 end_comment
 
 begin_comment
@@ -904,7 +1098,32 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_ResetCounters   @Description   reset all statistics counters   @Param[in]     h_FmMac     A handle to a FM MAC Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_SetWakeOnLan   @Description   Enable/Disable Wake On Lan support   @Param[in]     h_FmMac    - A handle to a FM MAC Module.  @Param[in]     en         - boolean indicates whether to enable Wake On Lan                              support or not.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_MAC_SetWakeOnLan
+parameter_list|(
+name|t_Handle
+name|h_FmMac
+parameter_list|,
+name|bool
+name|en
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      FM_MAC_ResetCounters   @Description   reset all statistics counters   @Param[in]     h_FmMac    - A handle to a FM MAC Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
 end_comment
 
 begin_comment
@@ -926,7 +1145,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_SetException   @Description   Enable/Disable a specific Exception   @Param[in]     h_FmMac         A handle to a FM MAC Module.  @Param[in]     ex              Type of the desired exceptions  @Param[in]     enable          TRUE to enable the specified exception, FALSE to disable it.    @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_SetException   @Description   Enable/Disable a specific Exception   @Param[in]     h_FmMac        - A handle to a FM MAC Module.  @Param[in]     ex             - Type of the desired exceptions  @Param[in]     enable         - TRUE to enable the specified exception, FALSE to disable it.    @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
 end_comment
 
 begin_comment
@@ -954,7 +1173,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_SetStatistics   @Description   Define Statistics level.                                 Where applicable, the routine also enables the MIB counters                                 overflow interrupt in order to keep counters accurate                                 and account for overflows.   @Param[in]     h_FmMac         A handle to a FM MAC Module.  @Param[in]     statisticsLevel Full statistics level provides all standard counters but may                                 reduce performance. Partial statistics provides only special                                 event counters (errors etc.). If selected, regular counters (such as                                 byte/packet) will be invalid and will return -1.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
+comment|/**  @Function      FM_MAC_SetStatistics   @Description   Define Statistics level.                 Where applicable, the routine also enables the MIB counters                 overflow interrupt in order to keep counters accurate                 and account for overflows.                 This routine is relevant only for dTSEC.   @Param[in]     h_FmMac         - A handle to a FM MAC Module.  @Param[in]     statisticsLevel - Full statistics level provides all standard counters but may                                   reduce performance. Partial statistics provides only special                                   event counters (errors etc.). If selected, regular counters (such as                                   byte/packet) will be invalid and will return -1.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_MAC_Init(). */
 end_comment
 
 begin_comment
@@ -979,7 +1198,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_GetStatistics   @Description   get all statistics counters   @Param[in]     h_FmMac         A handle to a FM MAC Module.  @Param[in]     p_Statistics    Staructure with statistics   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init(). */
+comment|/**  @Function      FM_MAC_GetStatistics   @Description   get all statistics counters   @Param[in]     h_FmMac       -  A handle to a FM MAC Module.  @Param[in]     p_Statistics  -  Structure with statistics   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init(). */
 end_comment
 
 begin_comment
@@ -1160,7 +1379,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_MAC_AdjustLink   @Description   Adjusts the Ethernet link with new speed/duplex setup.   @Param[in]     h_FmMac     - A handle to a FM Module.  @Param[in]     speed       - Ethernet speed.  @Param[in]     fullDuplex  - TRUE for Full-Duplex mode;                               FALSE for Half-Duplex mode.   @Return        E_OK on success; Error code otherwise. */
+comment|/**  @Function      FM_MAC_AdjustLink   @Description   Adjusts the Ethernet link with new speed/duplex setup.                 This routine is relevant for dTSEC and mEMAC.                 In case of mEMAC, this routine is also used for manual                 re-configuration of RGMII speed and duplex mode for                 RGMII PHYs not supporting in-band status information                 to MAC.   @Param[in]     h_FmMac     - A handle to a FM Module.  @Param[in]     speed       - Ethernet speed.  @Param[in]     fullDuplex  - TRUE for full-duplex mode;                               FALSE for half-duplex mode.   @Return        E_OK on success; Error code otherwise. */
 end_comment
 
 begin_comment
@@ -1179,6 +1398,28 @@ name|speed
 parameter_list|,
 name|bool
 name|fullDuplex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      FM_MAC_RestartAutoneg   @Description   Restarts the auto-negotiation process.                 When auto-negotiation process is invoked under traffic the                 auto-negotiation process between the internal SGMII PHY and the                 external PHY does not always complete successfully. Calling this                 function will restart the auto-negotiation process that will end                 successfully. It is recommended to call this function after issuing                 auto-negotiation restart command to the Eth Phy.                 This routine is relevant only for dTSEC.   @Param[in]     h_FmMac     - A handle to a FM Module.   @Return        E_OK on success; Error code otherwise. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_MAC_RestartAutoneg
+parameter_list|(
+name|t_Handle
+name|h_FmMac
 parameter_list|)
 function_decl|;
 end_function_decl

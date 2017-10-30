@@ -29,7 +29,7 @@ end_include
 
 begin_function
 name|void
-name|LIST_Append
+name|NCSW_LIST_Append
 parameter_list|(
 name|t_List
 modifier|*
@@ -60,7 +60,7 @@ name|t_List
 modifier|*
 name|p_Last
 init|=
-name|LIST_LAST
+name|NCSW_LIST_LAST
 argument_list|(
 name|p_NewList
 argument_list|)
@@ -95,7 +95,7 @@ argument_list|)
 operator|=
 name|p_Cur
 expr_stmt|;
-name|LIST_LAST
+name|NCSW_LIST_LAST
 argument_list|(
 name|p_Cur
 argument_list|)
@@ -108,7 +108,7 @@ end_function
 
 begin_function
 name|int
-name|LIST_NumOfObjs
+name|NCSW_LIST_NumOfObjs
 parameter_list|(
 name|t_List
 modifier|*
@@ -127,12 +127,12 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|LIST_IsEmpty
+name|NCSW_LIST_IsEmpty
 argument_list|(
 name|p_List
 argument_list|)
 condition|)
-name|LIST_FOR_EACH
+name|NCSW_LIST_FOR_EACH
 argument_list|(
 argument|p_Tmp
 argument_list|,

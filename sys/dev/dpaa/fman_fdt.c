@@ -148,7 +148,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|fman_resume
+name|fman_resume_dev
 argument_list|)
 block|,
 block|{

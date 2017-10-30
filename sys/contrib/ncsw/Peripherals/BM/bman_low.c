@@ -14,6 +14,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"std_ext.h"
 end_include
 
@@ -1423,7 +1441,7 @@ operator|->
 name|available
 operator|--
 expr_stmt|;
-name|hwsync
+name|mb
 argument_list|()
 expr_stmt|;
 name|bm_out
@@ -1562,7 +1580,7 @@ operator|->
 name|available
 operator|--
 expr_stmt|;
-name|lwsync
+name|wmb
 argument_list|()
 expr_stmt|;
 name|bm_cl_out
@@ -1637,7 +1655,7 @@ operator|==
 name|e_BmPortalPVB
 argument_list|)
 expr_stmt|;
-name|lwsync
+name|rmb
 argument_list|()
 expr_stmt|;
 name|rcursor
@@ -2371,7 +2389,7 @@ operator|==
 name|mc_user
 argument_list|)
 expr_stmt|;
-name|lwsync
+name|rmb
 argument_list|()
 expr_stmt|;
 name|mc

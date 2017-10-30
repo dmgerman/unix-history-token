@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -19,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"std_ext.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sprint_ext.h"
 end_include
 
 begin_include
@@ -699,6 +693,10 @@ name|XX_Free
 argument_list|(
 name|p_CurrB
 argument_list|)
+expr_stmt|;
+name|p_CurrB
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 break|break;
@@ -1777,6 +1775,12 @@ argument_list|)
 operator|!=
 name|E_OK
 condition|)
+block|{
+name|XX_Free
+argument_list|(
+name|p_NewBusyB
+argument_list|)
+expr_stmt|;
 return|return
 call|(
 name|uint64_t
@@ -1785,6 +1789,7 @@ argument_list|(
 name|ILLEGAL_BASE
 argument_list|)
 return|;
+block|}
 comment|/* insert the new busy block into the list of busy blocks */
 name|AddBusy
 argument_list|(
@@ -1917,7 +1922,21 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* initializes a new memory block */
+comment|/* Initializes counter of free memory to total size */
+name|p_MM
+operator|->
+name|freeMemSize
+operator|=
+name|size
+expr_stmt|;
+comment|/* A busy list is empty */
+name|p_MM
+operator|->
+name|busyBlocks
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Initializes a new memory block */
 if|if
 condition|(
 operator|(
@@ -1935,6 +1954,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|MM_Free
+argument_list|(
+name|p_MM
+argument_list|)
+expr_stmt|;
 name|RETURN_ERROR
 argument_list|(
 name|MAJOR
@@ -1944,14 +1969,8 @@ argument_list|,
 name|NO_MSG
 argument_list|)
 expr_stmt|;
-comment|/* A busy list is empty */
-name|p_MM
-operator|->
-name|busyBlocks
-operator|=
-literal|0
-expr_stmt|;
-comment|/*Initializes a new free block for each free list*/
+block|}
+comment|/* Initializes a new free block for each free list*/
 for|for
 control|(
 name|i
@@ -2009,6 +2028,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|MM_Free
+argument_list|(
+name|p_MM
+argument_list|)
+expr_stmt|;
 name|RETURN_ERROR
 argument_list|(
 name|MAJOR
@@ -2018,6 +2043,7 @@ argument_list|,
 name|NO_MSG
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 operator|*
 name|h_MM
@@ -2494,6 +2520,11 @@ argument_list|,
 name|intFlags
 argument_list|)
 expr_stmt|;
+name|XX_Free
+argument_list|(
+name|p_NewBusyB
+argument_list|)
+expr_stmt|;
 return|return
 call|(
 name|uint64_t
@@ -2503,6 +2534,13 @@ name|ILLEGAL_BASE
 argument_list|)
 return|;
 block|}
+comment|/* Decreasing the allocated memory size from free memory size */
+name|p_MM
+operator|->
+name|freeMemSize
+operator|-=
+name|size
+expr_stmt|;
 comment|/* insert the new busy block into the list of busy blocks */
 name|AddBusy
 argument_list|(
@@ -2725,6 +2763,11 @@ argument_list|,
 name|intFlags
 argument_list|)
 expr_stmt|;
+name|XX_Free
+argument_list|(
+name|p_NewBusyB
+argument_list|)
+expr_stmt|;
 return|return
 call|(
 name|uint64_t
@@ -2734,6 +2777,13 @@ name|ILLEGAL_BASE
 argument_list|)
 return|;
 block|}
+comment|/* Decreasing the allocated memory size from free memory size */
+name|p_MM
+operator|->
+name|freeMemSize
+operator|-=
+name|size
+expr_stmt|;
 comment|/* insert the new busy block into the list of busy blocks */
 name|AddBusy
 argument_list|(
@@ -3099,6 +3149,11 @@ argument_list|,
 name|intFlags
 argument_list|)
 expr_stmt|;
+name|XX_Free
+argument_list|(
+name|p_NewBusyB
+argument_list|)
+expr_stmt|;
 return|return
 call|(
 name|uint64_t
@@ -3108,6 +3163,13 @@ name|ILLEGAL_BASE
 argument_list|)
 return|;
 block|}
+comment|/* Decreasing the allocated memory size from free memory size */
+name|p_MM
+operator|->
+name|freeMemSize
+operator|-=
+name|size
+expr_stmt|;
 comment|/* insert the new busy block into the list of busy blocks */
 name|AddBusy
 argument_list|(
@@ -3310,6 +3372,13 @@ name|p_BusyB
 operator|->
 name|base
 expr_stmt|;
+comment|/* Adding the deallocated memory size to free memory size */
+name|p_MM
+operator|->
+name|freeMemSize
+operator|+=
+name|size
+expr_stmt|;
 name|XX_Free
 argument_list|(
 name|p_BusyB
@@ -3448,6 +3517,13 @@ literal|0
 argument_list|)
 return|;
 block|}
+comment|/* Adding the deallocated memory size to free memory size */
+name|p_MM
+operator|->
+name|freeMemSize
+operator|+=
+name|size
+expr_stmt|;
 name|XX_UnlockIntrSpinlock
 argument_list|(
 name|p_MM
@@ -3701,6 +3777,13 @@ name|errCode
 operator|)
 return|;
 block|}
+comment|/* Adding the new block size to free memory size */
+name|p_MM
+operator|->
+name|freeMemSize
+operator|+=
+name|size
+expr_stmt|;
 name|XX_UnlockIntrSpinlock
 argument_list|(
 name|p_MM
@@ -3919,15 +4002,46 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+name|uint64_t
+name|MM_GetFreeMemSize
+parameter_list|(
+name|t_Handle
+name|h_MM
+parameter_list|)
+block|{
+name|t_MM
+modifier|*
+name|p_MM
+init|=
+operator|(
+name|t_MM
+operator|*
+operator|)
+name|h_MM
+decl_stmt|;
+name|ASSERT_COND
+argument_list|(
+name|p_MM
+argument_list|)
+expr_stmt|;
+return|return
+name|p_MM
+operator|->
+name|freeMemSize
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************/
+end_comment
+
+begin_function
 name|void
 name|MM_Dump
 parameter_list|(
 name|t_Handle
 name|h_MM
-parameter_list|,
-name|void
-modifier|*
-name|buff
 parameter_list|)
 block|{
 name|t_MM
@@ -3957,10 +4071,8 @@ name|p_MM
 operator|->
 name|busyBlocks
 expr_stmt|;
-name|Sprint
+name|XX_Print
 argument_list|(
-name|buff
-argument_list|,
 literal|"List of busy blocks:\n"
 argument_list|)
 expr_stmt|;
@@ -3969,11 +4081,9 @@ condition|(
 name|p_BusyB
 condition|)
 block|{
-name|Sprint
+name|XX_Print
 argument_list|(
-name|buff
-argument_list|,
-literal|"\t0x%p: (%s: b=0x%lx, e=0x%lx)\n"
+literal|"\t0x%p: (%s: b=0x%llx, e=0x%llx)\n"
 argument_list|,
 name|p_BusyB
 argument_list|,
@@ -3997,10 +4107,8 @@ operator|->
 name|p_Next
 expr_stmt|;
 block|}
-name|Sprint
+name|XX_Print
 argument_list|(
-name|buff
-argument_list|,
 literal|"\nLists of free blocks according to alignment:\n"
 argument_list|)
 expr_stmt|;
@@ -4018,10 +4126,8 @@ name|i
 operator|++
 control|)
 block|{
-name|Sprint
+name|XX_Print
 argument_list|(
-name|buff
-argument_list|,
 literal|"%d alignment:\n"
 argument_list|,
 operator|(
@@ -4045,11 +4151,9 @@ condition|(
 name|p_FreeB
 condition|)
 block|{
-name|Sprint
+name|XX_Print
 argument_list|(
-name|buff
-argument_list|,
-literal|"\t0x%p: (b=0x%lx, e=0x%lx)\n"
+literal|"\t0x%p: (b=0x%llx, e=0x%llx)\n"
 argument_list|,
 name|p_FreeB
 argument_list|,
@@ -4069,10 +4173,8 @@ operator|->
 name|p_Next
 expr_stmt|;
 block|}
-name|Sprint
+name|XX_Print
 argument_list|(
-name|buff
-argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;

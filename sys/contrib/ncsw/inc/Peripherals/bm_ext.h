@@ -633,7 +633,7 @@ name|e_DpaaSwPortal
 name|swPortalId
 decl_stmt|;
 comment|/**< Portal id */
-name|int
+name|uintptr_t
 name|irq
 decl_stmt|;
 comment|/**< portal interrupt line; NO_IRQ if interrupts not used */
@@ -1169,58 +1169,6 @@ parameter_list|,
 name|void
 modifier|*
 name|p_Buff
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      BM_POOL_PhysToVirt   @Description   Translates a physical address to the matching virtual address.   @Param[in]     h_BmPool    - A handle to a BM-pool  @Param[in]     addr        - The physical address to translate   @Return        Virtual address. */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|void
-modifier|*
-name|BM_POOL_PhysToVirt
-parameter_list|(
-name|t_Handle
-name|h_BmPool
-parameter_list|,
-name|physAddress_t
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      BM_POOL_VirtToPhys   @Description   Translates a virtual address to the matching physical address.   @Param[in]     h_BmPool    - A handle to a BM-pool  @Param[in]     addr        - The virtual address to translate   @Return        Physical address. */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|physAddress_t
-name|BM_POOL_VirtToPhys
-parameter_list|(
-name|t_Handle
-name|h_BmPool
-parameter_list|,
-name|void
-modifier|*
-name|addr
 parameter_list|)
 function_decl|;
 end_function_decl

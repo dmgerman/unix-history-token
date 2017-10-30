@@ -42,7 +42,7 @@ name|uint32_t
 name|dp_ci_size
 decl_stmt|;
 comment|/* portal's CI area size */
-name|uint32_t
+name|uintptr_t
 name|dp_intr_num
 decl_stmt|;
 comment|/* portal's intr. number */
