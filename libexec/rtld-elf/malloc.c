@@ -2006,7 +2006,7 @@ name|PROT_WRITE
 argument_list|,
 name|MAP_ANON
 operator||
-name|MAP_COPY
+name|MAP_PRIVATE
 argument_list|,
 name|fd
 argument_list|,
