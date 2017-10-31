@@ -25,16 +25,6 @@ end_include
 
 begin_function_decl
 specifier|static
-name|int
-name|ena_sysctl_update_stats
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|ena_sysctl_add_stats
 parameter_list|(
@@ -997,7 +987,7 @@ argument_list|(
 name|hw_node
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_U64
+name|SYSCTL_ADD_COUNTER_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -1014,12 +1004,10 @@ name|hw_stats
 operator|->
 name|rx_packets
 argument_list|,
-literal|0
-argument_list|,
 literal|"Packets received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_U64
+name|SYSCTL_ADD_COUNTER_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -1036,12 +1024,10 @@ name|hw_stats
 operator|->
 name|tx_packets
 argument_list|,
-literal|0
-argument_list|,
 literal|"Packets transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_U64
+name|SYSCTL_ADD_COUNTER_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -1058,12 +1044,10 @@ name|hw_stats
 operator|->
 name|rx_bytes
 argument_list|,
-literal|0
-argument_list|,
 literal|"Bytes received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_U64
+name|SYSCTL_ADD_COUNTER_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -1080,12 +1064,10 @@ name|hw_stats
 operator|->
 name|tx_bytes
 argument_list|,
-literal|0
-argument_list|,
 literal|"Bytes transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_U64
+name|SYSCTL_ADD_COUNTER_U64
 argument_list|(
 name|ctx
 argument_list|,
@@ -1102,34 +1084,7 @@ name|hw_stats
 operator|->
 name|rx_drops
 argument_list|,
-literal|0
-argument_list|,
 literal|"Receive packet drops"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_PROC
-argument_list|(
-name|ctx
-argument_list|,
-name|hw_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"update_stats"
-argument_list|,
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
-argument_list|,
-name|adapter
-argument_list|,
-literal|0
-argument_list|,
-name|ena_sysctl_update_stats
-argument_list|,
-literal|"A"
-argument_list|,
-literal|"Update stats from hardware"
 argument_list|)
 expr_stmt|;
 comment|/* ENA Admin queue stats */
@@ -1269,61 +1224,6 @@ argument_list|,
 literal|"Commands not completed"
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|ena_sysctl_update_stats
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-block|{
-name|struct
-name|ena_adapter
-modifier|*
-name|adapter
-init|=
-operator|(
-expr|struct
-name|ena_adapter
-operator|*
-operator|)
-name|arg1
-decl_stmt|;
-name|int
-name|rc
-decl_stmt|;
-if|if
-condition|(
-name|adapter
-operator|->
-name|up
-condition|)
-name|ena_update_stats_counters
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-name|rc
-operator|=
-name|sysctl_handle_string
-argument_list|(
-name|oidp
-argument_list|,
-literal|""
-argument_list|,
-literal|1
-argument_list|,
-name|req
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|rc
-operator|)
-return|;
 block|}
 end_function
 
