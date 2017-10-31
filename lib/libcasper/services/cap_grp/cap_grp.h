@@ -348,6 +348,7 @@ value|endgrent()
 end_define
 
 begin_function
+specifier|static
 specifier|inline
 name|int
 name|cap_setgrent
