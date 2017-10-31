@@ -2904,7 +2904,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: shutdown [-] [-h | -p | -r | -k] [-o [-n]] time [warning-message ...]\n"
+literal|"usage: shutdown [-] [-c | -h | -p | -r | -k] [-o [-n]] time [warning-message ...]\n"
 literal|"       poweroff\n"
 argument_list|)
 expr_stmt|;
