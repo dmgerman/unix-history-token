@@ -11512,6 +11512,13 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+if|if
+condition|(
+name|panicstr
+operator|==
+name|NULL
+condition|)
+block|{
 name|ISCSI_DEBUG
 argument_list|(
 literal|"removing all sessions due to shutdown"
@@ -11522,6 +11529,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
