@@ -1391,8 +1391,8 @@ name|iscsi_outstanding
 modifier|*
 name|io
 parameter_list|,
-name|bool
-name|requeue
+name|cam_status
+name|status
 parameter_list|)
 block|{
 name|ISCSI_SESSION_LOCK_ASSERT
@@ -1424,10 +1424,6 @@ operator||
 name|CAM_STATUS_MASK
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|requeue
-condition|)
 name|io
 operator|->
 name|io_ccb
@@ -1436,18 +1432,7 @@ name|ccb_h
 operator|.
 name|status
 operator||=
-name|CAM_REQUEUE_REQ
-expr_stmt|;
-else|else
-name|io
-operator|->
-name|io_ccb
-operator|->
-name|ccb_h
-operator|.
 name|status
-operator||=
-name|CAM_REQ_ABORTED
 expr_stmt|;
 if|if
 condition|(
@@ -1525,8 +1510,8 @@ name|iscsi_session
 modifier|*
 name|is
 parameter_list|,
-name|bool
-name|requeue
+name|cam_status
+name|status
 parameter_list|)
 block|{
 name|struct
@@ -1559,7 +1544,7 @@ name|is
 argument_list|,
 name|io
 argument_list|,
-name|requeue
+name|status
 argument_list|)
 expr_stmt|;
 block|}
@@ -1695,7 +1680,7 @@ name|iscsi_session_terminate_tasks
 argument_list|(
 name|is
 argument_list|,
-name|true
+name|CAM_REQUEUE_REQ
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1704,7 +1689,7 @@ name|iscsi_session_terminate_tasks
 argument_list|(
 name|is
 argument_list|,
-name|false
+name|CAM_DEV_NOT_THERE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4577,7 +4562,7 @@ name|is
 argument_list|,
 name|aio
 argument_list|,
-name|false
+name|CAM_REQ_ABORTED
 argument_list|)
 expr_stmt|;
 block|}
