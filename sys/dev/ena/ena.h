@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|DRV_MODULE_VER_MINOR
-value|7
+value|8
 end_define
 
 begin_define
@@ -265,7 +265,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENA_TX_CLEANUP_TRESHOLD
+name|ENA_TX_CLEANUP_THRESHOLD
 value|128
 end_define
 
@@ -1241,6 +1241,10 @@ decl_stmt|;
 name|struct
 name|ena_hw_stats
 name|hw_stats
+decl_stmt|;
+name|enum
+name|ena_regs_reset_reason_types
+name|reset_reason
 decl_stmt|;
 block|}
 struct|;
