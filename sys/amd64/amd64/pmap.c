@@ -2188,6 +2188,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -2210,6 +2218,11 @@ name|lockp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2491,6 +2504,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -2514,6 +2535,11 @@ name|lockp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -14901,6 +14927,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  * After promotion from 512 4KB page mappings to a single 2MB page mapping,  * replace the many pv entries for the 4KB page mappings by a single pv entry  * for the 2MB page mapping.  */
 end_comment
@@ -15066,6 +15100,15 @@ condition|)
 do|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VM_NRESERVLEVEL> 0 */
+end_comment
 
 begin_comment
 comment|/*  * First find and then destroy the pv entry for the specified pmap and virtual  * address.  This operation can be performed on pv lists for either 4KB or 2MB  * page mappings.  */
@@ -18959,6 +19002,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Tries to promote the 512, contiguous 4KB page mappings that are within a  * single page table page (PTP) to a single 2MB page mapping.  For promotion  * to occur, two conditions must be met: (1) the 4KB page mappings must map  * aligned, contiguous physical memory and (2) the 4KB page mappings must have  * identical characteristics.   */
 end_comment
@@ -19529,6 +19580,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VM_NRESERVLEVEL> 0 */
+end_comment
 
 begin_comment
 comment|/*  *	Insert the given physical page (p) at  *	the specified virtual address (v) in the  *	target physical map with the protection requested.  *  *	If specified, the page will be wired down, meaning  *	that the related pte can not be reclaimed.  *  *	NB:  This is the only routine which MAY NOT lazy-evaluate  *	or lose information.  That is, this routine must actually  *	insert this page into the given map NOW.  *  *	When destroying both a page table and PV entry, this function  *	performs the TLB invalidation before releasing the PV list  *	lock, so we do not need pmap_delayed_invl_page() calls here.  */
@@ -20674,6 +20734,11 @@ argument_list|)
 expr_stmt|;
 name|unchanged
 label|:
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
 comment|/* 	 * If both the page table page and the reservation are fully 	 * populated, then attempt promotion. 	 */
 if|if
 condition|(
@@ -20723,6 +20788,8 @@ operator|&
 name|lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rv
 operator|=
 name|KERN_SUCCESS
@@ -32609,11 +32676,18 @@ name|rwlock
 modifier|*
 name|lock
 decl_stmt|;
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
 name|vm_page_t
 name|m
 decl_stmt|,
 name|mpte
 decl_stmt|;
+endif|#
+directive|endif
 name|pd_entry_t
 modifier|*
 name|pde
@@ -32837,6 +32911,11 @@ operator||=
 name|PG_A
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
 comment|/* try to promote the mapping */
 if|if
 condition|(
@@ -32932,6 +33011,8 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INVARIANTS

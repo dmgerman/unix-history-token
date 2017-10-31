@@ -12527,6 +12527,14 @@ do|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -12678,6 +12686,11 @@ condition|)
 do|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  Conditionally create a pv entry.  */
@@ -13361,6 +13374,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  *  Tries to promote the NPTE2_IN_PT2, contiguous 4KB page mappings that are  *  within a single page table page (PT2) to a single 1MB page mapping.  *  For promotion to occur, two conditions must be met: (1) the 4KB page  *  mappings must map aligned, contiguous physical memory and (2) the 4KB page  *  mappings must have identical characteristics.  *  *  Managed (PG_MANAGED) mappings within the kernel address space are not  *  promoted.  The reason is that kernel PTE1s are replicated in each pmap but  *  pmap_remove_write(), pmap_clear_modify(), and pmap_clear_reference() only  *  read the PTE1 from the kernel pmap.  */
 end_comment
@@ -13885,6 +13906,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VM_NRESERVLEVEL> 0 */
+end_comment
 
 begin_comment
 comment|/*  *  Zero L2 page table page.  */
@@ -16039,6 +16069,11 @@ comment|/* 		 * QQQ: In time when both access and not mofified bits are 		 *    
 block|panic("%s: pmap %p va %#x opte2 %x npte2 %x !!", __func__, pmap, 		    va, opte2, npte2); 	}
 endif|#
 directive|endif
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
 comment|/* 	 * If both the L2 page table page and the reservation are fully 	 * populated, then attempt promotion. 	 */
 if|if
 condition|(
@@ -16083,6 +16118,8 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sched_unpin
 argument_list|()
 expr_stmt|;
