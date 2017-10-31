@@ -822,6 +822,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ENA_COM_UNSUPPORTED
+value|EOPNOTSUPP
+end_define
+
+begin_define
+define|#
+directive|define
 name|ENA_COM_NO_DEVICE
 value|ENODEV
 end_define
@@ -1247,6 +1254,21 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|ENA_MEMCPY_TO_DEVICE_64
+parameter_list|(
+name|dst
+parameter_list|,
+name|src
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|do {								\ 		int count, i;						\ 		volatile uint64_t *to = (volatile uint64_t *)(dst);	\ 		const uint64_t *from = (const uint64_t *)(src);		\ 		count = (size) / 8;					\ 									\ 		for (i = 0; i< count; i++, from++, to++)		\ 			*to = *from;					\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ENA_MEM_ALLOC
 parameter_list|(
 name|dmadev
@@ -1377,6 +1399,16 @@ name|offset
 parameter_list|)
 define|\
 value|bus_space_read_4(						\ 			 ((struct ena_bus*)bus)->reg_bar_t,		\ 			 ((struct ena_bus*)bus)->reg_bar_h,		\ 			 (bus_size_t)(offset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENA_DB_SYNC
+parameter_list|(
+name|mem_handle
+parameter_list|)
+value|bus_dmamap_sync((mem_handle)->tag,	\ 	(mem_handle)->map, BUS_DMASYNC_PREREAD)
 end_define
 
 begin_define
@@ -1589,25 +1621,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ena_common_defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ena_admin_defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ena_eth_io_defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ena_regs_defs.h"
+file|"ena_defs/ena_includes.h"
 end_include
 
 begin_endif
