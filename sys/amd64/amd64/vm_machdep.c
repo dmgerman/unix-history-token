@@ -1898,6 +1898,22 @@ name|uintptr_t
 operator|)
 name|entry
 expr_stmt|;
+comment|/* Return address sentinel value to stop stack unwinding. */
+name|suword32
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|td
+operator|->
+name|td_frame
+operator|->
+name|tf_rsp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Pass the argument to the entry point. */
 name|suword32
 argument_list|(
@@ -2020,6 +2036,22 @@ operator|->
 name|tf_flags
 operator|=
 name|TF_HASSEGS
+expr_stmt|;
+comment|/* Return address sentinel value to stop stack unwinding. */
+name|suword
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|td
+operator|->
+name|td_frame
+operator|->
+name|tf_rsp
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Pass the argument to the entry point. */
 name|td
