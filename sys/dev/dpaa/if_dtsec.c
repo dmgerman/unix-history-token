@@ -735,13 +735,12 @@ name|params
 operator|.
 name|baseAddr
 operator|=
+name|rman_get_bushandle
+argument_list|(
 name|sc
 operator|->
-name|sc_fm_base
-operator|+
-name|sc
-operator|->
-name|sc_mac_mem_offset
+name|sc_mem
+argument_list|)
 expr_stmt|;
 name|params
 operator|.

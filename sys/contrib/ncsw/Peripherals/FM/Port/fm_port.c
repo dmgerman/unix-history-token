@@ -9302,7 +9302,7 @@ operator|*
 operator|)
 name|h_FmPort
 decl_stmt|;
-name|int
+name|uint32_t
 name|tmpInt
 decl_stmt|;
 specifier|volatile

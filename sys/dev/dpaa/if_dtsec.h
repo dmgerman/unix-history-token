@@ -112,6 +112,11 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
+name|resource
+modifier|*
+name|sc_mem
+decl_stmt|;
+name|struct
 name|mtx
 name|sc_lock
 decl_stmt|;

@@ -38,7 +38,7 @@ name|uint32_t
 name|size
 parameter_list|)
 block|{
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 for|for
@@ -106,7 +106,7 @@ name|uint32_t
 name|size
 parameter_list|)
 block|{
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 for|for
