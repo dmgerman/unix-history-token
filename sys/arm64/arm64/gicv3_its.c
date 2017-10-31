@@ -1815,7 +1815,7 @@ operator|)
 operator|-
 literal|1
 argument_list|,
-name|PAGE_SIZE
+name|PAGE_SIZE_64K
 argument_list|,
 literal|0
 argument_list|)
