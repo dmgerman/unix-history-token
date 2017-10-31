@@ -2184,8 +2184,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|mp_ncpus
+operator|<=
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -3019,8 +3019,8 @@ init|=
 literal|0
 init|;
 name|cpu
-operator|<
-name|mp_ncpus
+operator|<=
+name|mp_maxid
 condition|;
 name|cpu
 operator|++
