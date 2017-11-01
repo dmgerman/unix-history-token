@@ -371,11 +371,6 @@ decl_stmt|,
 modifier|*
 name|new_lc
 decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
 if|if
 condition|(
 name|name
