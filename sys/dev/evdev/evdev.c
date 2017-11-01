@@ -2601,6 +2601,15 @@ operator|==
 operator|!
 operator|*
 name|value
+operator|&&
+operator|!
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|evdev
+operator|->
+name|ev_clients
+argument_list|)
 condition|)
 block|{
 if|if
