@@ -11002,9 +11002,6 @@ argument_list|(
 name|ENOSYS
 argument_list|)
 expr_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|is_sx_downgraded
 operator|=
 literal|0
@@ -15272,9 +15269,6 @@ name|pm_syscall_errors
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-name|PICKUP_GIANT
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
