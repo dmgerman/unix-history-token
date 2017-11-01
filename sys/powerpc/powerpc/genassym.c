@@ -2314,6 +2314,16 @@ end_endif
 begin_expr_stmt
 name|ASSYM
 argument_list|(
+name|PSL_GS
+argument_list|,
+name|PSL_GS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
 name|PSL_DE
 argument_list|,
 name|PSL_DE
