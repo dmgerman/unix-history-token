@@ -586,7 +586,6 @@ break|break;
 case|case
 name|EVDEV_SYSMOUSE_T_AXIS_UMS
 case|:
-comment|/* XXX: Edge triggering should be used here */
 if|if
 condition|(
 name|buttons
@@ -594,7 +593,7 @@ operator|&
 operator|(
 literal|1
 operator|<<
-literal|5
+literal|6
 operator|)
 condition|)
 name|evdev_push_rel
@@ -614,7 +613,7 @@ operator|&
 operator|(
 literal|1
 operator|<<
-literal|6
+literal|5
 operator|)
 condition|)
 name|evdev_push_rel
@@ -626,6 +625,23 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|buttons
+operator|&=
+operator|~
+operator|(
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+operator|)
 expr_stmt|;
 comment|/* PASSTHROUGH */
 case|case
