@@ -1811,6 +1811,10 @@ name|ucred
 modifier|*
 name|newcred
 decl_stmt|;
+name|struct
+name|uidinfo
+name|tmpuinfo
+decl_stmt|;
 name|vm_paddr_t
 name|pageablemem
 decl_stmt|;
@@ -2273,6 +2277,30 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* group 0 */
+comment|/* A hack to prevent uifind from tripping over NULL pointers. */
+name|curthread
+operator|->
+name|td_ucred
+operator|=
+name|newcred
+expr_stmt|;
+name|tmpuinfo
+operator|.
+name|ui_uid
+operator|=
+literal|1
+expr_stmt|;
+name|newcred
+operator|->
+name|cr_uidinfo
+operator|=
+name|newcred
+operator|->
+name|cr_ruidinfo
+operator|=
+operator|&
+name|tmpuinfo
+expr_stmt|;
 name|newcred
 operator|->
 name|cr_uidinfo
@@ -2290,6 +2318,13 @@ name|uifind
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/* End hack. creds get properly set later with thread_cow_get_proc */
+name|curthread
+operator|->
+name|td_ucred
+operator|=
+name|NULL
 expr_stmt|;
 name|newcred
 operator|->
