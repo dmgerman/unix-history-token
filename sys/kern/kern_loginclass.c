@@ -399,7 +399,9 @@ operator|)
 return|;
 name|lc
 operator|=
-name|cred
+name|curthread
+operator|->
+name|td_ucred
 operator|->
 name|cr_loginclass
 expr_stmt|;
