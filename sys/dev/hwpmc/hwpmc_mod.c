@@ -15277,7 +15277,9 @@ name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
