@@ -1559,12 +1559,16 @@ name|sysent
 name|pmc_sysent
 init|=
 block|{
+operator|.
+name|sy_narg
+operator|=
 literal|2
 block|,
-comment|/* sy_narg */
+operator|.
+name|sy_call
+operator|=
 name|pmc_syscall_handler
-comment|/* sy_call */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1575,41 +1579,48 @@ name|syscall_module_data
 name|pmc_syscall_mod
 init|=
 block|{
+operator|.
+name|chainevh
+operator|=
 name|load
 block|,
+operator|.
+name|chainarg
+operator|=
 name|NULL
 block|,
+operator|.
+name|offset
+operator|=
 operator|&
 name|pmc_syscall_num
 block|,
+operator|.
+name|new_sysent
+operator|=
 operator|&
 name|pmc_sysent
 block|,
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|1100000
-operator|)
+operator|.
+name|old_sysent
+operator|=
 block|{
+operator|.
+name|sy_narg
+operator|=
 literal|0
 block|,
+operator|.
+name|sy_call
+operator|=
 name|NULL
 block|}
 block|,
+operator|.
+name|flags
+operator|=
 name|SY_THR_STATIC_KLD
-block|,
-else|#
-directive|else
-block|{
-literal|0
-block|,
-name|NULL
-block|}
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1619,13 +1630,22 @@ name|moduledata_t
 name|pmc_mod
 init|=
 block|{
+operator|.
+name|name
+operator|=
 name|PMC_MODULE_NAME
 block|,
+operator|.
+name|evhand
+operator|=
 name|syscall_module_handler
 block|,
+operator|.
+name|priv
+operator|=
 operator|&
 name|pmc_syscall_mod
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
