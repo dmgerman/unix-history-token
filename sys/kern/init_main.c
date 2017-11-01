@@ -1815,6 +1815,17 @@ name|struct
 name|uidinfo
 name|tmpuinfo
 decl_stmt|;
+name|struct
+name|loginclass
+name|tmplc
+init|=
+block|{
+operator|.
+name|lc_name
+operator|=
+literal|""
+block|, 	}
+decl_stmt|;
 name|vm_paddr_t
 name|pageablemem
 decl_stmt|;
@@ -2319,6 +2330,22 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|newcred
+operator|->
+name|cr_loginclass
+operator|=
+operator|&
+name|tmplc
+expr_stmt|;
+name|newcred
+operator|->
+name|cr_loginclass
+operator|=
+name|loginclass_find
+argument_list|(
+literal|"default"
+argument_list|)
+expr_stmt|;
 comment|/* End hack. creds get properly set later with thread_cow_get_proc */
 name|curthread
 operator|->
@@ -2332,15 +2359,6 @@ name|cr_prison
 operator|=
 operator|&
 name|prison0
-expr_stmt|;
-name|newcred
-operator|->
-name|cr_loginclass
-operator|=
-name|loginclass_find
-argument_list|(
-literal|"default"
-argument_list|)
 expr_stmt|;
 name|proc_set_cred_init
 argument_list|(
