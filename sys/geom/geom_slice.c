@@ -212,18 +212,35 @@ name|void
 name|g_slice_free
 parameter_list|(
 name|struct
+name|g_geom
+modifier|*
+name|gp
+parameter_list|)
+block|{
+name|struct
 name|g_slicer
 modifier|*
 name|gsp
-parameter_list|)
-block|{
+decl_stmt|;
+name|gsp
+operator|=
+name|gp
+operator|->
+name|softc
+expr_stmt|;
+name|gp
+operator|->
+name|softc
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 	 * We can get multiple spoiled events before wither-washer 	 * detaches our consumer, so this can get called multiple 	 * times. 	 */
 if|if
 condition|(
 name|gsp
 operator|==
 name|NULL
 condition|)
-comment|/* XXX: phk thinks about this */
 return|return;
 name|g_free
 argument_list|(
@@ -621,7 +638,7 @@ literal|0
 condition|)
 name|g_slice_free
 argument_list|(
-name|gsp
+name|gp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2653,8 +2670,6 @@ condition|)
 name|g_slice_free
 argument_list|(
 name|gp
-operator|->
-name|softc
 argument_list|)
 expr_stmt|;
 block|}
