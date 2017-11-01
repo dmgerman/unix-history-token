@@ -509,6 +509,11 @@ argument_list|)
 expr_stmt|;
 name|fman_get_bushandle
 argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
 operator|&
 name|sc
 operator|->

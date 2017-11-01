@@ -2157,6 +2157,9 @@ name|dtsec_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|device_t
+name|parent
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2168,6 +2171,13 @@ decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|parent
+operator|=
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
@@ -2260,6 +2270,8 @@ name|error
 operator|=
 name|fman_get_handle
 argument_list|(
+name|parent
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -2281,6 +2293,8 @@ name|error
 operator|=
 name|fman_get_muram_handle
 argument_list|(
+name|parent
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -2302,6 +2316,8 @@ name|error
 operator|=
 name|fman_get_bushandle
 argument_list|(
+name|parent
+argument_list|,
 operator|&
 name|sc
 operator|->
