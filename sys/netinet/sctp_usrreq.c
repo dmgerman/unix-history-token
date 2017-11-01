@@ -11522,7 +11522,7 @@ name|paddrp
 operator|->
 name|spp_pathmtu
 operator|-=
-name|SCTP_MIN_V4_OVERHEAD
+name|SCTP_MIN_OVERHEAD
 expr_stmt|;
 break|break;
 endif|#
