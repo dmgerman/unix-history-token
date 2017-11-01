@@ -784,7 +784,7 @@ name|NONE
 block|,
 name|NONE
 block|,
-name|NONE
+name|KEY_102ND
 block|,
 name|KEY_F11
 block|,
