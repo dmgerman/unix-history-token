@@ -3046,6 +3046,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* drop a reference to the fd */
+if|if
+condition|(
+name|po
+operator|->
+name|po_file
+operator|!=
+name|NULL
+condition|)
+block|{
 name|error
 operator|=
 name|fdrop
@@ -3062,6 +3071,12 @@ operator|->
 name|po_file
 operator|=
 name|NULL
+expr_stmt|;
+block|}
+else|else
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|po
 operator|->
