@@ -188,6 +188,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EVDEV_SUPPORT
+end_ifdef
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -248,6 +254,11 @@ literal|"Extract T-axis from 0-none, 1-ums, 2-psm"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
