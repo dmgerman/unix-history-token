@@ -687,7 +687,7 @@ name|u_long
 name|__read_mostly
 name|ncnegfactor
 init|=
-literal|16
+literal|12
 decl_stmt|;
 end_decl_stmt
 
