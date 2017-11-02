@@ -26353,6 +26353,11 @@ operator|=
 name|zfs_freebsd_access
 block|,
 operator|.
+name|vop_allocate
+operator|=
+name|VOP_EINVAL
+block|,
+operator|.
 name|vop_lookup
 operator|=
 name|zfs_cache_lookup
