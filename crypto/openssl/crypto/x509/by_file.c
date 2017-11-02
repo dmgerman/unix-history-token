@@ -175,6 +175,7 @@ name|ok
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file
@@ -196,10 +197,6 @@ condition|)
 block|{
 name|file
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|getenv
 argument_list|(
 name|X509_get_default_cert_file_env
@@ -424,7 +421,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -727,7 +724,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1007,7 +1004,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|""
 argument_list|)
 expr_stmt|;
 name|BIO_free

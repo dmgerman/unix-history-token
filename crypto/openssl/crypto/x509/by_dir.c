@@ -1865,6 +1865,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_X509_STORE
+argument_list|)
+expr_stmt|;
 name|X509err
 argument_list|(
 name|X509_F_GET_CERT_BY_SUBJECT

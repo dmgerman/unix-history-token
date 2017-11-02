@@ -1535,6 +1535,7 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/*          * Make sure the ex_data stack is at least |mx| elements long to avoid          * issues in the for loop that follows; so go get the |mx|'th element          * (if it does not exist CRYPTO_get_ex_data() returns NULL), and assign          * to itself. This is normally a no-op; but ensures the stack is the          * proper size          */
 if|if
 condition|(
 operator|!
@@ -1546,7 +1547,14 @@ name|mx
 operator|-
 literal|1
 argument_list|,
-name|NULL
+name|CRYPTO_get_ex_data
+argument_list|(
+name|to
+argument_list|,
+name|mx
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 condition|)
 goto|goto

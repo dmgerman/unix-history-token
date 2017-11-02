@@ -35,26 +35,11 @@ directive|include
 file|<openssl/objects.h>
 end_include
 
-begin_function_decl
-specifier|static
-name|void
-name|asn1_item_combine_free
-parameter_list|(
-name|ASN1_VALUE
-modifier|*
-modifier|*
-name|pval
-parameter_list|,
-specifier|const
-name|ASN1_ITEM
-modifier|*
-name|it
-parameter_list|,
-name|int
-name|combine
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"asn1_int.h"
+end_include
 
 begin_comment
 comment|/* Free up an ASN1 structure */
@@ -115,7 +100,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|asn1_item_combine_free
 parameter_list|(

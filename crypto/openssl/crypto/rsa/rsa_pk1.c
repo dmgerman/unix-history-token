@@ -856,7 +856,7 @@ name|mlen
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * We can't continue in constant-time because we need to copy the result      * and we cannot fake its length. This unavoidably leaks timing      * information at the API boundary.      * TODO(emilia): this could be addressed at the call site,      * see BoringSSL commit 0aa0767340baf925bda4804882aab0cb974b2d26.      */
+comment|/*      * We can't continue in constant-time because we need to copy the result      * and we cannot fake its length. This unavoidably leaks timing      * information at the API boundary.      */
 if|if
 condition|(
 operator|!
@@ -891,11 +891,20 @@ name|em
 operator|!=
 name|NULL
 condition|)
+block|{
+name|OPENSSL_cleanse
+argument_list|(
+name|em
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
 name|OPENSSL_free
 argument_list|(
 name|em
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mlen

@@ -1448,10 +1448,18 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|unsigned
 name|int
 name|lapse
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|unsigned
+name|int
 name|schlock
 decl_stmt|;
 end_decl_stmt
@@ -3591,6 +3599,10 @@ goto|goto
 name|end
 goto|;
 block|}
+name|evp_md
+operator|=
+name|NULL
+expr_stmt|;
 name|evp_cipher
 operator|=
 name|EVP_get_cipherbyname
