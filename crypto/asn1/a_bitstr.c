@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -406,6 +412,21 @@ block|{
 name|i
 operator|=
 name|ASN1_R_STRING_TOO_SHORT
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+if|if
+condition|(
+name|len
+operator|>
+name|INT_MAX
+condition|)
+block|{
+name|i
+operator|=
+name|ASN1_R_STRING_TOO_LONG
 expr_stmt|;
 goto|goto
 name|err

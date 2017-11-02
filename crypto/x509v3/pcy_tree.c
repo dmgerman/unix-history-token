@@ -2907,6 +2907,9 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|int
+name|calc_ret
+decl_stmt|;
 name|X509_POLICY_TREE
 modifier|*
 name|tree
@@ -3074,7 +3077,7 @@ literal|1
 return|;
 block|}
 comment|/* Tree is not empty: continue */
-name|ret
+name|calc_ret
 operator|=
 name|tree_calculate_authority_set
 argument_list|(
@@ -3087,14 +3090,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ret
+name|calc_ret
 condition|)
 goto|goto
 name|error
 goto|;
-if|if
-condition|(
-operator|!
+name|ret
+operator|=
 name|tree_calculate_user_set
 argument_list|(
 name|tree
@@ -3103,13 +3105,10 @@ name|policy_oids
 argument_list|,
 name|auth_nodes
 argument_list|)
-condition|)
-goto|goto
-name|error
-goto|;
+expr_stmt|;
 if|if
 condition|(
-name|ret
+name|calc_ret
 operator|==
 literal|2
 condition|)
@@ -3118,6 +3117,14 @@ argument_list|(
 name|auth_nodes
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ret
+condition|)
+goto|goto
+name|error
+goto|;
 if|if
 condition|(
 name|tree

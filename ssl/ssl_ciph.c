@@ -6854,6 +6854,10 @@ while|while
 condition|(
 name|isalnum
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 operator|||

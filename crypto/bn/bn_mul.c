@@ -6171,17 +6171,6 @@ goto|goto
 name|end
 goto|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (i == 1&& !BN_get_flags(b, BN_FLG_STATIC_DATA)) {             BIGNUM *tmp_bn = (BIGNUM *)b;             if (bn_wexpand(tmp_bn, al) == NULL)                 goto err;             tmp_bn->d[bl] = 0;             bl++;             i--;         } else if (i == -1&& !BN_get_flags(a, BN_FLG_STATIC_DATA)) {             BIGNUM *tmp_bn = (BIGNUM *)a;             if (bn_wexpand(tmp_bn, bl) == NULL)                 goto err;             tmp_bn->d[al] = 0;             al++;             i++;         }         if (i == 0) {
-comment|/* symmetric and> 4 */
-comment|/* 16 or larger */
-block|j = BN_num_bits_word((BN_ULONG)al);             j = 1<< (j - 1);             k = j + j;             t = BN_CTX_get(ctx);             if (al == j) {
-comment|/* exact multiple */
-block|if (bn_wexpand(t, k * 2) == NULL)                     goto err;                 if (bn_wexpand(rr, k * 2) == NULL)                     goto err;                 bn_mul_recursive(rr->d, a->d, b->d, al, t->d);             } else {                 if (bn_wexpand(t, k * 4) == NULL)                     goto err;                 if (bn_wexpand(rr, k * 4) == NULL)                     goto err;                 bn_mul_part_recursive(rr->d, a->d, b->d, al - j, j, t->d);             }             rr->top = top;             goto end;         }
-endif|#
-directive|endif
 block|}
 endif|#
 directive|endif

@@ -2191,6 +2191,15 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|q
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 block|}
 if|if
 condition|(
