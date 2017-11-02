@@ -19046,7 +19046,7 @@ literal|0
 decl_stmt|;
 union|union
 block|{
-name|u_long
+name|in_addr_t
 name|ival
 decl_stmt|;
 name|u_char
@@ -19060,7 +19060,7 @@ name|ip
 union|;
 union|union
 block|{
-name|u_short
+name|in_port_t
 name|sval
 decl_stmt|;
 name|u_char
@@ -19596,6 +19596,15 @@ name|sockaddr_in
 operator|*
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sad
+operator|->
+name|sin_family
+operator|==
+name|AF_INET
+condition|)
+block|{
 name|rad
 operator|->
 name|sin_addr
@@ -19614,6 +19623,7 @@ name|sin_port
 operator|=
 literal|0x0
 expr_stmt|;
+block|}
 name|clp
 operator|->
 name|lc_program
