@@ -269,6 +269,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|arm_get_vfpstate
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|void
+modifier|*
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Board-specific attributes */
 end_comment
