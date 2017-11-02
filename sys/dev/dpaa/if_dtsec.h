@@ -174,6 +174,7 @@ decl_stmt|;
 name|uint8_t
 name|sc_eth_id
 decl_stmt|;
+comment|/* Ethernet ID within its frame manager */
 name|uintptr_t
 name|sc_mac_mem_offset
 decl_stmt|;

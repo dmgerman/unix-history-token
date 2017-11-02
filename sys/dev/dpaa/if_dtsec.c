@@ -2194,15 +2194,6 @@ name|sc_mac_mdio_irq
 operator|=
 name|NO_IRQ
 expr_stmt|;
-name|sc
-operator|->
-name|sc_eth_id
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* Check if MallocSmart allocator is ready */
 if|if
 condition|(
