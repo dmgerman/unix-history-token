@@ -51,7 +51,7 @@ value|offsetof(struct tcb, tcb_dtv)
 end_define
 
 begin_comment
-comment|/*  * Variant II tcb, first two members are required by rtld.  */
+comment|/*  * Variant I tcb. The structure layout is fixed, don't blindly  * change it.  */
 end_comment
 
 begin_struct
