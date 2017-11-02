@@ -559,7 +559,7 @@ literal|'0'
 operator|)
 operator|&&
 operator|(
-name|buf
+name|bufp
 index|[
 literal|1
 index|]

@@ -1464,9 +1464,16 @@ argument_list|,
 name|eplen
 argument_list|)
 condition|)
+block|{
+name|OPENSSL_free
+argument_list|(
+name|ep
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 return|return
 literal|1
 return|;

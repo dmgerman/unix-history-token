@@ -3611,10 +3611,10 @@ operator|)
 condition|)
 block|{
 comment|/* if application doesn't support one buffer */
-name|state
-operator|->
+name|char
+modifier|*
 name|mac_data
-operator|=
+init|=
 name|OPENSSL_realloc
 argument_list|(
 name|state
@@ -3627,13 +3627,12 @@ name|mac_len
 operator|+
 name|count
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
-operator|!
-name|state
-operator|->
 name|mac_data
+operator|==
+name|NULL
 condition|)
 block|{
 name|printf
@@ -3647,6 +3646,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|state
+operator|->
+name|mac_data
+operator|=
+name|mac_data
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|state

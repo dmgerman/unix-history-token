@@ -4395,6 +4395,11 @@ name|num_extensions
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|new_serverinfo
+decl_stmt|;
 if|if
 condition|(
 name|ctx
@@ -4613,7 +4618,7 @@ name|end
 goto|;
 block|}
 comment|/* Append the decoded extension to the serverinfo buffer */
-name|serverinfo
+name|new_serverinfo
 operator|=
 name|OPENSSL_realloc
 argument_list|(
@@ -4626,7 +4631,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|serverinfo
+name|new_serverinfo
 operator|==
 name|NULL
 condition|)
@@ -4642,6 +4647,10 @@ goto|goto
 name|end
 goto|;
 block|}
+name|serverinfo
+operator|=
+name|new_serverinfo
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|serverinfo

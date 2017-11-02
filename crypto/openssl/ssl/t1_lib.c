@@ -4012,6 +4012,9 @@ name|SSL
 modifier|*
 name|s
 parameter_list|,
+name|int
+name|sent
+parameter_list|,
 specifier|const
 name|unsigned
 name|char
@@ -4079,6 +4082,8 @@ condition|(
 name|s
 operator|->
 name|server
+operator|==
+name|sent
 operator|&&
 name|s
 operator|->
@@ -4415,6 +4420,8 @@ name|tls12_get_psigalgs
 argument_list|(
 name|s
 argument_list|,
+literal|1
+argument_list|,
 operator|&
 name|sent_sigs
 argument_list|)
@@ -4645,6 +4652,8 @@ operator|=
 name|tls12_get_psigalgs
 argument_list|(
 name|s
+argument_list|,
+literal|1
 argument_list|,
 operator|&
 name|sigalgs
@@ -5832,6 +5841,8 @@ operator|=
 name|tls12_get_psigalgs
 argument_list|(
 name|s
+argument_list|,
+literal|1
 argument_list|,
 operator|&
 name|salg
@@ -7205,6 +7216,16 @@ literal|0
 argument_list|,
 name|ret
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* if we don't add the above TLSEXT, we can't add a session ticket later */
+name|s
+operator|->
+name|tlsext_ticket_expected
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -14706,6 +14727,12 @@ argument_list|,
 name|slen
 argument_list|)
 expr_stmt|;
+name|slen
+operator|-=
+name|p
+operator|-
+name|sdec
+expr_stmt|;
 name|OPENSSL_free
 argument_list|(
 name|sdec
@@ -14716,6 +14743,29 @@ condition|(
 name|sess
 condition|)
 block|{
+comment|/* Some additional consistency checks */
+if|if
+condition|(
+name|slen
+operator|!=
+literal|0
+operator|||
+name|sess
+operator|->
+name|session_id_length
+operator|!=
+literal|0
+condition|)
+block|{
+name|SSL_SESSION_free
+argument_list|(
+name|sess
+argument_list|)
+expr_stmt|;
+return|return
+literal|2
+return|;
+block|}
 comment|/*          * The session ID, if non-empty, is used by some clients to detect          * that the ticket has been accepted. So we copy it to the session          * structure. If it is empty set length to zero as required by          * standard.          */
 if|if
 condition|(
@@ -15809,6 +15859,8 @@ operator|=
 name|tls12_get_psigalgs
 argument_list|(
 name|s
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|conf

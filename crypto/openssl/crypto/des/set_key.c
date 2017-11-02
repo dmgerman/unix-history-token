@@ -675,7 +675,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Weak and semi week keys as take from  * %A D.W. Davies  * %A W.L. Price  * %T Security for Computer Networks  * %I John Wiley& Sons  * %D 1984  * Many thanks to smb@ulysses.att.com (Steven Bellovin) for the reference  * (and actual cblock values).  */
+comment|/*-  * Weak and semi weak keys as taken from  * %A D.W. Davies  * %A W.L. Price  * %T Security for Computer Networks  * %I John Wiley& Sons  * %D 1984  * Many thanks to smb@ulysses.att.com (Steven Bellovin) for the reference  * (and actual cblock values).  */
 end_comment
 
 begin_define

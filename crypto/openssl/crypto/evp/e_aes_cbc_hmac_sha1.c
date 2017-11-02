@@ -6248,6 +6248,15 @@ operator|>=
 name|TLS1_1_VERSION
 condition|)
 block|{
+if|if
+condition|(
+name|len
+operator|<
+name|AES_BLOCK_SIZE
+condition|)
+return|return
+literal|0
+return|;
 name|len
 operator|-=
 name|AES_BLOCK_SIZE

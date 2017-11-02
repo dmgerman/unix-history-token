@@ -11124,6 +11124,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|SSL_COMP_free_compression_methods
+argument_list|()
+expr_stmt|;
 name|apps_shutdown
 argument_list|()
 expr_stmt|;

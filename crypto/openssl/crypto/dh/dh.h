@@ -430,7 +430,8 @@ name|fp
 parameter_list|,
 name|x
 parameter_list|)
-value|(DH *)ASN1_d2i_fp((char *(*)())DH_new, \                 (char *(*)())d2i_DHparams,(fp),(unsigned char **)(x))
+define|\
+value|(DH *)ASN1_d2i_fp((char *(*)())DH_new, \                       (char *(*)())d2i_DHparams, \                       (fp), \                       (unsigned char **)(x))
 define|#
 directive|define
 name|i2d_DHparams_fp
@@ -439,7 +440,8 @@ name|fp
 parameter_list|,
 name|x
 parameter_list|)
-value|ASN1_i2d_fp(i2d_DHparams,(fp), \                 (unsigned char *)(x))
+define|\
+value|ASN1_i2d_fp(i2d_DHparams,(fp), (unsigned char *)(x))
 define|#
 directive|define
 name|d2i_DHparams_bio
@@ -448,7 +450,8 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-value|ASN1_d2i_bio_of(DH,DH_new,d2i_DHparams,bp,x)
+define|\
+value|ASN1_d2i_bio_of(DH, DH_new, d2i_DHparams, bp, x)
 define|#
 directive|define
 name|i2d_DHparams_bio
@@ -457,7 +460,48 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
+define|\
 value|ASN1_i2d_bio_of_const(DH,i2d_DHparams,bp,x)
+define|#
+directive|define
+name|d2i_DHxparams_fp
+parameter_list|(
+name|fp
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|(DH *)ASN1_d2i_fp((char *(*)())DH_new, \                       (char *(*)())d2i_DHxparams, \                       (fp), \                       (unsigned char **)(x))
+define|#
+directive|define
+name|i2d_DHxparams_fp
+parameter_list|(
+name|fp
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|ASN1_i2d_fp(i2d_DHxparams,(fp), (unsigned char *)(x))
+define|#
+directive|define
+name|d2i_DHxparams_bio
+parameter_list|(
+name|bp
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|ASN1_d2i_bio_of(DH, DH_new, d2i_DHxparams, bp, x)
+define|#
+directive|define
+name|i2d_DHxparams_bio
+parameter_list|(
+name|bp
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|ASN1_i2d_bio_of_const(DH, i2d_DHxparams, bp, x)
 name|DH
 modifier|*
 name|DHparams_dup

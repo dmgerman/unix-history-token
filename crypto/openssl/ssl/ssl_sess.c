@@ -3761,6 +3761,14 @@ name|sid_ctx_length
 operator|=
 name|sid_ctx_len
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|sid_ctx
+operator|!=
+name|sid_ctx
+condition|)
 name|memcpy
 argument_list|(
 name|s

@@ -1508,6 +1508,11 @@ argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
+name|OPENSSL_free
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;

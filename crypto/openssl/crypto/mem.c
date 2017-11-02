@@ -690,10 +690,6 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
-comment|/* Dummy call just to ensure OPENSSL_init() gets linked in */
-name|OPENSSL_init
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -725,6 +721,10 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* Dummy call just to ensure OPENSSL_init() gets linked in */
+name|OPENSSL_init
+argument_list|()
+expr_stmt|;
 name|malloc_func
 operator|=
 name|m

@@ -741,7 +741,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|irow
 index|[
 name|i
@@ -752,14 +751,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|row
-index|[
-name|i
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|irow
 index|[
 name|DB_NUMBER

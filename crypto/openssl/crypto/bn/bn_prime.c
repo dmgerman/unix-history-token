@@ -737,13 +737,6 @@ name|mont
 init|=
 name|NULL
 decl_stmt|;
-specifier|const
-name|BIGNUM
-modifier|*
-name|A
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|BN_cmp
@@ -875,64 +868,6 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/* A := abs(a) */
-if|if
-condition|(
-name|a
-operator|->
-name|neg
-condition|)
-block|{
-name|BIGNUM
-modifier|*
-name|t
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|t
-operator|=
-name|BN_CTX_get
-argument_list|(
-name|ctx
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|err
-goto|;
-if|if
-condition|(
-name|BN_copy
-argument_list|(
-name|t
-argument_list|,
-name|a
-argument_list|)
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|err
-goto|;
-name|t
-operator|->
-name|neg
-operator|=
-literal|0
-expr_stmt|;
-name|A
-operator|=
-name|t
-expr_stmt|;
-block|}
-else|else
-name|A
-operator|=
-name|a
-expr_stmt|;
 name|A1
 operator|=
 name|BN_CTX_get
@@ -963,7 +898,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* compute A1 := A - 1 */
+comment|/* compute A1 := a - 1 */
 if|if
 condition|(
 operator|!
@@ -971,7 +906,7 @@ name|BN_copy
 argument_list|(
 name|A1
 argument_list|,
-name|A
+name|a
 argument_list|)
 condition|)
 goto|goto
@@ -1039,7 +974,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* Montgomery setup for computations mod A */
+comment|/* Montgomery setup for computations mod a */
 name|mont
 operator|=
 name|BN_MONT_CTX_new
@@ -1061,7 +996,7 @@ name|BN_MONT_CTX_set
 argument_list|(
 name|mont
 argument_list|,
-name|A
+name|a
 argument_list|,
 name|ctx
 argument_list|)
@@ -1109,14 +1044,14 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* now 1<= check< A */
+comment|/* now 1<= check< a */
 name|j
 operator|=
 name|witness
 argument_list|(
 name|check
 argument_list|,
-name|A
+name|a
 argument_list|,
 name|A1
 argument_list|,

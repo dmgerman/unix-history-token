@@ -418,6 +418,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|CONF_R_VARIABLE_EXPANSION_TOO_LONG
+argument_list|)
+block|,
+literal|"variable expansion too long"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|CONF_R_VARIABLE_HAS_NO_VALUE
 argument_list|)
 block|,

@@ -10359,7 +10359,7 @@ name|SSL_R_COMPRESSION_ID_NOT_WITHIN_PRIVATE_RANGE
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+literal|1
 return|;
 block|}
 name|MemCheck_off
@@ -10411,6 +10411,14 @@ operator|->
 name|method
 operator|=
 name|cm
+expr_stmt|;
+name|comp
+operator|->
+name|name
+operator|=
+name|cm
+operator|->
+name|name
 expr_stmt|;
 name|load_builtin_compressions
 argument_list|()

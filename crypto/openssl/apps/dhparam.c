@@ -1358,6 +1358,8 @@ name|informat
 operator|==
 name|FORMAT_ASN1
 condition|)
+block|{
+comment|/*                  * We have no PEM header to determine what type of DH params it                  * is. We'll just try both.                  */
 name|dh
 operator|=
 name|d2i_DHparams_bio
@@ -1367,7 +1369,32 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* BIO_reset() returns 0 for success for file BIOs only!!! */
+if|if
+condition|(
+name|dh
+operator|==
+name|NULL
+operator|&&
+name|BIO_reset
+argument_list|(
+name|in
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|dh
+operator|=
+name|d2i_DHxparams_bio
+argument_list|(
+name|in
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 comment|/* informat == FORMAT_PEM */
 name|dh
 operator|=
@@ -1382,6 +1409,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dh
@@ -1873,6 +1901,25 @@ name|outformat
 operator|==
 name|FORMAT_ASN1
 condition|)
+block|{
+if|if
+condition|(
+name|dh
+operator|->
+name|q
+operator|!=
+name|NULL
+condition|)
+name|i
+operator|=
+name|i2d_DHxparams_bio
+argument_list|(
+name|out
+argument_list|,
+name|dh
+argument_list|)
+expr_stmt|;
+else|else
 name|i
 operator|=
 name|i2d_DHparams_bio
@@ -1882,6 +1929,7 @@ argument_list|,
 name|dh
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1895,6 +1943,8 @@ condition|(
 name|dh
 operator|->
 name|q
+operator|!=
+name|NULL
 condition|)
 name|i
 operator|=

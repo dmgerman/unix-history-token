@@ -939,11 +939,31 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* every DTLS ClientHello resets Finished MAC */
+if|if
+condition|(
+operator|!
 name|ssl3_init_finished_mac
 argument_list|(
 name|s
 argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+operator|-
+literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
+comment|/* fall thru */
 case|case
 name|SSL3_ST_CW_CLNT_HELLO_B
 case|:

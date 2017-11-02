@@ -406,6 +406,9 @@ block|{
 case|case
 name|GEN_OTHERNAME
 case|:
+if|if
+condition|(
+operator|!
 name|X509V3_add_value
 argument_list|(
 literal|"othername"
@@ -415,11 +418,17 @@ argument_list|,
 operator|&
 name|ret
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|NULL
+return|;
 break|break;
 case|case
 name|GEN_X400
 case|:
+if|if
+condition|(
+operator|!
 name|X509V3_add_value
 argument_list|(
 literal|"X400Name"
@@ -429,11 +438,17 @@ argument_list|,
 operator|&
 name|ret
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|NULL
+return|;
 break|break;
 case|case
 name|GEN_EDIPARTY
 case|:
+if|if
+condition|(
+operator|!
 name|X509V3_add_value
 argument_list|(
 literal|"EdiPartyName"
@@ -443,11 +458,17 @@ argument_list|,
 operator|&
 name|ret
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|NULL
+return|;
 break|break;
 case|case
 name|GEN_EMAIL
 case|:
+if|if
+condition|(
+operator|!
 name|X509V3_add_value_uchar
 argument_list|(
 literal|"email"
@@ -463,11 +484,17 @@ argument_list|,
 operator|&
 name|ret
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|NULL
+return|;
 break|break;
 case|case
 name|GEN_DNS
 case|:
+if|if
+condition|(
+operator|!
 name|X509V3_add_value_uchar
 argument_list|(
 literal|"DNS"
@@ -483,11 +510,17 @@ argument_list|,
 operator|&
 name|ret
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|NULL
+return|;
 break|break;
 case|case
 name|GEN_URI
 case|:
+if|if
+condition|(
+operator|!
 name|X509V3_add_value_uchar
 argument_list|(
 literal|"URI"
@@ -503,11 +536,16 @@ argument_list|,
 operator|&
 name|ret
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|NULL
+return|;
 break|break;
 case|case
 name|GEN_DIRNAME
 case|:
+if|if
+condition|(
 name|X509_NAME_oneline
 argument_list|(
 name|gen
@@ -520,7 +558,10 @@ name|oline
 argument_list|,
 literal|256
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+operator|||
+operator|!
 name|X509V3_add_value
 argument_list|(
 literal|"DirName"
@@ -530,7 +571,10 @@ argument_list|,
 operator|&
 name|ret
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|NULL
+return|;
 break|break;
 case|case
 name|GEN_IPADD
@@ -674,6 +718,9 @@ end_expr_stmt
 begin_block
 unit|} else
 block|{
+if|if
+condition|(
+operator|!
 name|X509V3_add_value
 argument_list|(
 literal|"IP Address"
@@ -683,12 +730,18 @@ argument_list|,
 operator|&
 name|ret
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|NULL
+return|;
 break|break;
 block|}
 end_block
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+operator|!
 name|X509V3_add_value
 argument_list|(
 literal|"IP Address"
@@ -698,8 +751,11 @@ argument_list|,
 operator|&
 name|ret
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+condition|)
+return|return
+name|NULL
+return|;
+end_if
 
 begin_break
 break|break;
@@ -727,7 +783,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+operator|!
 name|X509V3_add_value
 argument_list|(
 literal|"Registered ID"
@@ -737,8 +796,11 @@ argument_list|,
 operator|&
 name|ret
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+condition|)
+return|return
+name|NULL
+return|;
+end_if
 
 begin_break
 break|break;

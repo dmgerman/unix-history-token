@@ -2203,6 +2203,10 @@ expr_stmt|;
 name|uvalue
 operator|=
 operator|-
+operator|(
+name|unsigned
+name|LLONG
+operator|)
 name|value
 expr_stmt|;
 block|}

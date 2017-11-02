@@ -4764,7 +4764,7 @@ name|SSL3_MT_CCS
 operator|)
 condition|)
 block|{
-name|i
+name|al
 operator|=
 name|SSL_AD_ILLEGAL_PARAMETER
 expr_stmt|;
@@ -4776,7 +4776,7 @@ name|SSL_R_BAD_CHANGE_CIPHER_SPEC
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err
+name|f_err
 goto|;
 block|}
 name|rr
