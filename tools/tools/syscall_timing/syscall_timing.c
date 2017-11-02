@@ -4065,10 +4065,6 @@ operator|||
 name|ll
 operator|<
 literal|1
-operator|||
-name|ll
-operator|>
-literal|100000
 condition|)
 name|usage
 argument_list|()
