@@ -468,10 +468,10 @@ specifier|const
 name|unsigned
 name|char
 modifier|*
-name|p
+name|context
 parameter_list|,
 name|size_t
-name|plen
+name|contextlen
 parameter_list|,
 name|int
 name|use_context

@@ -912,6 +912,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CMS
 comment|/* RFC2631 KDF */
 name|int
 name|DH_KDF_X9_42
@@ -952,6 +955,8 @@ modifier|*
 name|md
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 define|#
 directive|define
 name|EVP_PKEY_CTX_set_dh_paramgen_prime_len

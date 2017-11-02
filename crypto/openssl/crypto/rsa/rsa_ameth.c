@@ -3826,6 +3826,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CMS
+end_ifndef
+
 begin_function
 specifier|static
 name|RSA_OAEP_PARAMS
@@ -3938,12 +3944,6 @@ name|pss
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_CMS
-end_ifndef
 
 begin_function
 specifier|static

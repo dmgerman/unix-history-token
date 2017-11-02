@@ -47,6 +47,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"asn1_int.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -746,11 +752,13 @@ literal|1
 return|;
 name|memerr2
 label|:
-name|ASN1_item_ex_free
+name|asn1_item_combine_free
 argument_list|(
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|combine
 argument_list|)
 expr_stmt|;
 name|memerr
@@ -781,11 +789,13 @@ literal|0
 return|;
 name|auxerr2
 label|:
-name|ASN1_item_ex_free
+name|asn1_item_combine_free
 argument_list|(
 name|pval
 argument_list|,
 name|it
+argument_list|,
+name|combine
 argument_list|)
 expr_stmt|;
 name|auxerr

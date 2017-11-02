@@ -793,6 +793,17 @@ argument_list|(
 name|mont
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|one
+operator|!=
+name|NULL
+condition|)
+name|BN_free
+argument_list|(
+name|one
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;

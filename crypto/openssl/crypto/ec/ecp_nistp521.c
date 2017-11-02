@@ -7083,7 +7083,8 @@ name|int
 name|felem_is_zero_int
 parameter_list|(
 specifier|const
-name|felem
+name|void
+modifier|*
 name|in
 parameter_list|)
 block|{
@@ -11937,17 +11938,6 @@ argument_list|)
 operator|)
 name|felem_one
 argument_list|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-specifier|const
-name|void
-operator|*
-argument_list|)
-operator|)
 name|felem_is_zero_int
 argument_list|,
 operator|(

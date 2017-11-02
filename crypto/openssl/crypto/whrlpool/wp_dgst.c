@@ -560,7 +560,7 @@ directive|endif
 if|if
 condition|(
 name|bits
-operator|>=
+operator|>
 literal|8
 condition|)
 block|{
@@ -681,7 +681,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* remaining less than 8 bits */
+comment|/* remaining less than or equal to 8 bits */
 name|b
 operator|=
 operator|(

@@ -8131,6 +8131,15 @@ argument_list|,
 name|BUFSIZZ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|seen
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|shut
+goto|;
 name|mbuf
 index|[
 name|seen

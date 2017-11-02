@@ -828,6 +828,13 @@ condition|)
 return|return
 literal|0
 return|;
+name|ASN1_TYPE_free
+argument_list|(
+name|oth
+operator|->
+name|value
+argument_list|)
+expr_stmt|;
 name|oth
 operator|->
 name|type_id
