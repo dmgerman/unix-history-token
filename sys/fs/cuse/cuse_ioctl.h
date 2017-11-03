@@ -74,6 +74,10 @@ begin_comment
 comment|/* units */
 end_comment
 
+begin_comment
+comment|/* All memory allocations must be less than the following limit */
+end_comment
+
 begin_define
 define|#
 directive|define
