@@ -195,6 +195,7 @@ name|c
 operator|==
 name|EOF
 condition|)
+block|{
 if|if
 condition|(
 name|s
@@ -212,6 +213,7 @@ goto|;
 block|}
 else|else
 break|break;
+block|}
 else|else
 operator|*
 name|s
