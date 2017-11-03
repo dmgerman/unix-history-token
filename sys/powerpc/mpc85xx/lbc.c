@@ -3233,7 +3233,7 @@ continue|continue;
 block|}
 name|debugf
 argument_list|(
-literal|"added child name='%s', node=%p\n"
+literal|"added child name='%s', node=%x\n"
 argument_list|,
 name|di
 operator|->
@@ -3241,10 +3241,6 @@ name|di_ofw
 operator|.
 name|obd_name
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|child
 argument_list|)
 expr_stmt|;
