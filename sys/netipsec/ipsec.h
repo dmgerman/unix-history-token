@@ -1082,6 +1082,16 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
+name|async_crypto
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
 name|natt_cksum_policy
 argument_list|)
 expr_stmt|;
@@ -1159,6 +1169,13 @@ define|#
 directive|define
 name|V_crypto_support
 value|VNET(crypto_support)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_async_crypto
+value|VNET(async_crypto)
 end_define
 
 begin_define
