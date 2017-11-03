@@ -21253,7 +21253,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * PMTU check versus smallest asoc MTU goes 				 * here 				 */
 if|if
 condition|(
 operator|(
@@ -21270,6 +21269,18 @@ operator|->
 name|ro
 operator|.
 name|_s_addr
+operator|)
+operator|&&
+operator|(
+operator|(
+name|net
+operator|->
+name|dest_state
+operator|&
+name|SCTP_ADDR_NO_PMTUD
+operator|)
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
@@ -23310,6 +23321,18 @@ operator|->
 name|ro
 operator|.
 name|_s_addr
+operator|)
+operator|&&
+operator|(
+operator|(
+name|net
+operator|->
+name|dest_state
+operator|&
+name|SCTP_ADDR_NO_PMTUD
+operator|)
+operator|==
+literal|0
 operator|)
 condition|)
 block|{

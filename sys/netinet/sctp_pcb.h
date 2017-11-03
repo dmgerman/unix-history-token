@@ -820,6 +820,9 @@ decl_stmt|;
 name|uint16_t
 name|default_keyid
 decl_stmt|;
+name|uint32_t
+name|default_mtu
+decl_stmt|;
 comment|/* various thresholds */
 comment|/* Max times I will init at a guy */
 name|uint16_t

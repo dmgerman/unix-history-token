@@ -5857,6 +5857,16 @@ name|initial_rto
 expr_stmt|;
 name|asoc
 operator|->
+name|default_mtu
+operator|=
+name|inp
+operator|->
+name|sctp_ep
+operator|.
+name|default_mtu
+expr_stmt|;
+name|asoc
+operator|->
 name|max_init_times
 operator|=
 name|inp

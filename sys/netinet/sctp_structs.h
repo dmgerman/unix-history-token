@@ -3283,6 +3283,9 @@ comment|/* total chunks floating around, 					 * locked by send socket buffer */
 name|uint32_t
 name|peers_adaptation
 decl_stmt|;
+name|uint32_t
+name|default_mtu
+decl_stmt|;
 name|uint16_t
 name|peer_hmac_id
 decl_stmt|;
