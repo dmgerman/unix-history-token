@@ -3369,6 +3369,16 @@ literal|"LTO-7"
 block|}
 block|,
 block|{
+literal|0x5D
+block|,
+literal|19107
+block|,
+literal|485318
+block|,
+literal|"LTO-M8"
+block|}
+block|,
+block|{
 literal|0x5E
 block|,
 literal|20669
