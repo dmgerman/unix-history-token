@@ -360,7 +360,7 @@ begin_define
 define|#
 directive|define
 name|TX_MAX_SEGS
-value|10
+value|20
 end_define
 
 begin_define
@@ -850,6 +850,9 @@ name|mtx
 decl_stmt|;
 name|if_t
 name|ifp
+decl_stmt|;
+name|device_t
+name|dev
 decl_stmt|;
 name|device_t
 name|miibus
@@ -2003,11 +2006,22 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"awg_setup_txbuf: m_collapse failed\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 operator|*
 name|mp
 operator|=
@@ -2051,11 +2065,22 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"awg_setup_txbuf: bus_dmamap_load_mbuf_sg failed\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -8256,6 +8281,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|dev
+operator|=
+name|dev
 expr_stmt|;
 name|sc
 operator|->
