@@ -1975,7 +1975,7 @@ comment|/* 	 * Yay, authentication succeeded! 	 */
 name|log_debugx
 argument_list|(
 literal|"authentication succeeded for user \"%s\"; "
-literal|"transitioning to Negotiation Phase"
+literal|"transitioning to operational parameter negotiation"
 argument_list|,
 name|auth
 operator|->
