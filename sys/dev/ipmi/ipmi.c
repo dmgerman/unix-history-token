@@ -307,7 +307,7 @@ specifier|static
 name|int
 name|wd_startup_countdown
 init|=
-literal|420
+literal|0
 decl_stmt|;
 end_decl_stmt
 
