@@ -334,6 +334,13 @@ name|NFSCLDS_DS
 value|0x0004
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSCLDS_CLOSED
+value|0x0008
+end_define
+
 begin_struct
 struct|struct
 name|nfsclclient
