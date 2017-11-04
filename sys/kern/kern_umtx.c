@@ -7627,17 +7627,13 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|MPASS
+argument_list|(
 name|pi
 operator|->
 name|pi_owner
-operator|!=
+operator|==
 name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"pi_owner != NULL"
 argument_list|)
 expr_stmt|;
 name|pi
