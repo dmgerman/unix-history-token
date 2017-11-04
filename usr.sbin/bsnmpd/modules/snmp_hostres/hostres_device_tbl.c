@@ -2031,6 +2031,23 @@ condition|)
 goto|goto
 name|again
 goto|;
+comment|/* Only refresh device table on a device add or remove event. */
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'+'
+operator|||
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
 name|refresh_device_tbl
 argument_list|(
 literal|1
