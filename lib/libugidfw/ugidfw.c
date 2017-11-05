@@ -2882,9 +2882,6 @@ name|unsigned
 name|long
 name|value
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 name|spec2
 operator|=
 name|spec
@@ -2940,8 +2937,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3027,8 +3022,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3118,9 +3111,6 @@ name|unsigned
 name|long
 name|value
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 name|spec2
 operator|=
 name|spec
@@ -3176,8 +3166,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3263,8 +3251,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3360,9 +3346,6 @@ decl_stmt|;
 name|int
 name|jid
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 name|long
 name|value
 decl_stmt|;
@@ -3441,8 +3424,6 @@ operator|>
 name|argc
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3466,8 +3447,6 @@ operator|&
 name|MBS_UID_DEFINED
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3562,8 +3541,6 @@ operator|>
 name|argc
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3587,8 +3564,6 @@ operator|&
 name|MBS_GID_DEFINED
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3683,8 +3658,6 @@ operator|>
 name|argc
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3708,8 +3681,6 @@ operator|&
 name|MBS_PRISON_DEFINED
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3751,8 +3722,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3824,8 +3793,6 @@ condition|(
 name|nextnot
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3853,8 +3820,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -3982,9 +3947,6 @@ modifier|*
 name|errstr
 parameter_list|)
 block|{
-name|size_t
-name|len
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -4094,8 +4056,6 @@ name|MBO_ALL_TYPE
 expr_stmt|;
 break|break;
 default|default:
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4147,9 +4107,6 @@ modifier|*
 name|errstr
 parameter_list|)
 block|{
-name|size_t
-name|len
-decl_stmt|;
 name|struct
 name|statfs
 name|buf
@@ -4167,8 +4124,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4261,9 +4216,6 @@ name|struct
 name|fsid
 name|fsid
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 name|current
 operator|=
 literal|0
@@ -4339,8 +4291,6 @@ operator|>
 name|argc
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4364,8 +4314,6 @@ operator|&
 name|MBO_UID_DEFINED
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4460,8 +4408,6 @@ operator|>
 name|argc
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4485,8 +4431,6 @@ operator|&
 name|MBO_GID_DEFINED
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4581,8 +4525,6 @@ operator|>
 name|argc
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4606,8 +4548,6 @@ operator|&
 name|MBO_FSID_DEFINED
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4855,8 +4795,6 @@ operator|>
 name|argc
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4880,8 +4818,6 @@ operator|&
 name|MBO_TYPE_DEFINED
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4969,8 +4905,6 @@ condition|(
 name|nextnot
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -4998,8 +4932,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -5143,9 +5075,6 @@ modifier|*
 name|errstr
 parameter_list|)
 block|{
-name|size_t
-name|len
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -5156,8 +5085,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -5181,8 +5108,6 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -5291,8 +5216,6 @@ case|:
 comment|/* ignore */
 break|break;
 default|default:
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -5377,9 +5300,6 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 name|bzero
 argument_list|(
 name|rule
@@ -5398,8 +5318,6 @@ operator|<
 literal|1
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -5431,8 +5349,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -5502,8 +5418,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -5565,8 +5479,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -5974,8 +5886,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6004,8 +5914,6 @@ operator|!=
 name|MB_VERSION
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6085,8 +5993,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6118,8 +6024,6 @@ name|rule_count
 argument_list|)
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6197,8 +6101,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6230,8 +6132,6 @@ name|rule_slots
 argument_list|)
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6335,8 +6235,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6419,8 +6317,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6459,8 +6355,6 @@ name|rule
 argument_list|)
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6567,8 +6461,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6633,8 +6525,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6742,8 +6632,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6808,8 +6696,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6926,8 +6812,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -6969,8 +6853,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
@@ -7032,8 +6914,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|len
-operator|=
 name|snprintf
 argument_list|(
 name|errstr
