@@ -10385,6 +10385,17 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_cache_src
+argument_list|)
+condition|)
+return|return;
 name|TAILQ_INIT
 argument_list|(
 operator|&
