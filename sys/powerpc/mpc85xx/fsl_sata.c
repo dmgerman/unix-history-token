@@ -5843,6 +5843,10 @@ expr_stmt|;
 name|j
 operator|++
 expr_stmt|;
+name|extlen
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|len
 operator|=
@@ -5867,7 +5871,7 @@ argument_list|)
 expr_stmt|;
 name|prd
 index|[
-name|i
+name|j
 index|]
 operator|.
 name|dba
@@ -5887,7 +5891,7 @@ argument_list|)
 expr_stmt|;
 name|prd
 index|[
-name|i
+name|j
 index|]
 operator|.
 name|dwc_flg
