@@ -12372,11 +12372,11 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|pc_marker_end
+name|pc_marker_end_b
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pc_marker_end
+name|pc_marker_end_b
 argument_list|)
 argument_list|)
 expr_stmt|;
