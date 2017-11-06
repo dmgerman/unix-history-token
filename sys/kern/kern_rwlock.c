@@ -3938,9 +3938,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
-name|uintptr_t
-name|state
-decl_stmt|;
 name|u_int
 name|sleep_cnt
 init|=
@@ -3969,6 +3966,9 @@ name|defined
 argument_list|(
 name|LOCK_PROFILING
 argument_list|)
+name|uintptr_t
+name|state
+decl_stmt|;
 name|int
 name|doing_lockprof
 decl_stmt|;
