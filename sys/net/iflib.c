@@ -13118,6 +13118,12 @@ condition|(
 name|eh_type
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 case|case
 name|ETHERTYPE_IPV6
 case|:
@@ -13153,6 +13159,14 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 case|case
 name|ETHERTYPE_IP
 case|:
@@ -13188,6 +13202,8 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 block|}
 return|return
 name|false
