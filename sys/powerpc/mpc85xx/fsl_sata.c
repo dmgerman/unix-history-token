@@ -5826,6 +5826,8 @@ index|]
 operator|.
 name|dba
 operator|=
+name|htole32
+argument_list|(
 name|FSL_SATA_CTP_BUS
 argument_list|(
 name|ch
@@ -5838,6 +5840,7 @@ argument_list|(
 name|j
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|j
