@@ -9705,6 +9705,15 @@ literal|0
 condition|)
 return|return;
 comment|/* Setup the queues for vlans */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_VLAN_HWTAGGING
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -9782,6 +9791,7 @@ name|vtag_strip
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
