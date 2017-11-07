@@ -2753,6 +2753,8 @@ name|sq
 operator|.
 name|memsize
 argument_list|,
+name|PROT_READ
+operator||
 name|PROT_WRITE
 argument_list|,
 name|MAP_SHARED
@@ -2942,6 +2944,8 @@ name|rq
 operator|.
 name|memsize
 argument_list|,
+name|PROT_READ
+operator||
 name|PROT_WRITE
 argument_list|,
 name|MAP_SHARED

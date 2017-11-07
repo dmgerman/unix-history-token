@@ -619,6 +619,10 @@ decl_stmt|;
 if|if
 condition|(
 name|dev
+operator|!=
+name|NULL
+operator|&&
+name|dev
 operator|->
 name|dma_mask
 condition|)

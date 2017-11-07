@@ -356,11 +356,11 @@ begin_define
 define|#
 directive|define
 name|T4_PAGESIZE_MASK
-value|0xffff000
+value|0xffffffff000
 end_define
 
 begin_comment
-comment|/* 4KB-128MB */
+comment|/* 4KB-8TB */
 end_comment
 
 begin_define
@@ -4059,7 +4059,7 @@ name|u8
 name|db_off
 decl_stmt|;
 name|u8
-name|pad1
+name|wc_supported
 decl_stmt|;
 name|u16
 name|pad2

@@ -2057,7 +2057,6 @@ expr_stmt|;
 name|BUG_ON
 argument_list|(
 operator|(
-operator|*
 name|cqe_flushed
 operator|==
 literal|0
