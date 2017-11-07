@@ -158,13 +158,11 @@ begin_function
 name|int
 name|exec_shell_imgact
 parameter_list|(
-name|imgp
-parameter_list|)
 name|struct
 name|image_params
 modifier|*
 name|imgp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -258,7 +256,7 @@ name|interpreted
 operator||=
 name|IMGACT_SHELL
 expr_stmt|;
-comment|/* 	 * At this point we have the first page of the file mapped. 	 * However, we don't know how far into the page the contents are 	 * valid -- the actual file might be much shorter than the page. 	 * So find out the file size.  	 */
+comment|/* 	 * At this point we have the first page of the file mapped. 	 * However, we don't know how far into the page the contents are 	 * valid -- the actual file might be much shorter than the page. 	 * So find out the file size. 	 */
 name|error
 operator|=
 name|VOP_GETATTR
