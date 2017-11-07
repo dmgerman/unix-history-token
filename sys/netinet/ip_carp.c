@@ -581,7 +581,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Brief design of carp(4).  *  * Any carp-capable ifnet may have a list of carp softcs hanging off  * its ifp->if_carp pointer. Each softc represents one unique virtual  * host id, or vhid. The softc has a back pointer to the ifnet. All  * softcs are joined in a global list, which has quite limited use.  *  * Any interface address that takes part in CARP negotiation has a  * pointer to the softc of its vhid, ifa->ifa_carp. That could be either  * AF_INET or AF_INET6 address.  *  * Although, one can get the softc's backpointer to ifnet and traverse  * through its ifp->if_addrhead queue to find all interface addresses  * involved in CARP, we keep a growable array of ifaddr pointers. This  * allows us to avoid grabbing the IF_ADDR_LOCK() in many traversals that  * do calls into the network stack, thus avoiding LORs.  *  * Locking:  *  * Each softc has a lock sc_mtx. It is used to synchronise carp_input_c(),  * callout-driven events and ioctl()s.  *  * To traverse the list of softcs on an ifnet we use CIF_LOCK(), to  * traverse the global list we use the mutex carp_mtx.  *  * Known issues with locking:  *  * - Sending ad, we put the pointer to the softc in an mtag, and no reference  *   counting is done on the softc.  * - On module unload we may race (?) with packet processing thread  *   dereferencing our function pointers.  */
+comment|/*  * Brief design of carp(4).  *  * Any carp-capable ifnet may have a list of carp softcs hanging off  * its ifp->if_carp pointer. Each softc represents one unique virtual  * host id, or vhid. The softc has a back pointer to the ifnet. All  * softcs are joined in a global list, which has quite limited use.  *  * Any interface address that takes part in CARP negotiation has a  * pointer to the softc of its vhid, ifa->ifa_carp. That could be either  * AF_INET or AF_INET6 address.  *  * Although, one can get the softc's backpointer to ifnet and traverse  * through its ifp->if_addrhead queue to find all interface addresses  * involved in CARP, we keep a growable array of ifaddr pointers. This  * allows us to avoid grabbing the IF_ADDR_LOCK() in many traversals that  * do calls into the network stack, thus avoiding LORs.  *  * Locking:  *  * Each softc has a lock sc_mtx. It is used to synchronise carp_input_c(),  * callout-driven events and ioctl()s.  *  * To traverse the list of softcs on an ifnet we use CIF_LOCK() or carp_sx.  * To traverse the global list we use the mutex carp_mtx.  *  * Known issues with locking:  *  * - Sending ad, we put the pointer to the softc in an mtag, and no reference  *   counting is done on the softc.  * - On module unload we may race (?) with packet processing thread  *   dereferencing our function pointers.  */
 end_comment
 
 begin_comment
@@ -1149,7 +1149,7 @@ parameter_list|,
 name|sc
 parameter_list|)
 define|\
-value|CIF_LOCK_ASSERT(ifp->if_carp);					\ 	TAILQ_FOREACH((sc),&(ifp)->if_carp->cif_vrs, sc_list)
+value|KASSERT(mtx_owned(&ifp->if_carp->cif_mtx) ||			\ 	    sx_xlocked(&carp_sx), ("cif_vrs not locked"));		\ 	TAILQ_FOREACH((sc),&(ifp)->if_carp->cif_vrs, sc_list)
 end_define
 
 begin_define
@@ -7712,6 +7712,14 @@ name|carp_if
 modifier|*
 name|cif
 decl_stmt|;
+name|sx_assert
+argument_list|(
+operator|&
+name|carp_sx
+argument_list|,
+name|SA_XLOCKED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8679,13 +8687,6 @@ operator|->
 name|if_carp
 condition|)
 block|{
-name|CIF_LOCK
-argument_list|(
-name|ifp
-operator|->
-name|if_carp
-argument_list|)
-expr_stmt|;
 name|IFNET_FOREACH_CARP
 argument_list|(
 argument|ifp
@@ -8703,13 +8704,6 @@ operator|.
 name|carpr_vhid
 condition|)
 break|break;
-name|CIF_UNLOCK
-argument_list|(
-name|ifp
-operator|->
-name|if_carp
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -9080,13 +9074,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|CIF_LOCK
-argument_list|(
-name|ifp
-operator|->
-name|if_carp
-argument_list|)
-expr_stmt|;
 name|IFNET_FOREACH_CARP
 argument_list|(
 argument|ifp
@@ -9104,13 +9091,6 @@ operator|.
 name|carpr_vhid
 condition|)
 break|break;
-name|CIF_UNLOCK
-argument_list|(
-name|ifp
-operator|->
-name|if_carp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -9162,13 +9142,6 @@ decl_stmt|;
 name|count
 operator|=
 literal|0
-expr_stmt|;
-name|CIF_LOCK
-argument_list|(
-name|ifp
-operator|->
-name|if_carp
-argument_list|)
 expr_stmt|;
 name|IFNET_FOREACH_CARP
 argument_list|(
@@ -9272,13 +9245,6 @@ name|i
 operator|++
 expr_stmt|;
 block|}
-name|CIF_UNLOCK
-argument_list|(
-name|ifp
-operator|->
-name|if_carp
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 block|}
@@ -9476,11 +9442,6 @@ name|ENOPROTOOPT
 operator|)
 return|;
 block|}
-name|CIF_LOCK
-argument_list|(
-name|cif
-argument_list|)
-expr_stmt|;
 name|IFNET_FOREACH_CARP
 argument_list|(
 argument|ifp
@@ -9496,11 +9457,6 @@ operator|==
 name|vhid
 condition|)
 break|break;
-name|CIF_UNLOCK
-argument_list|(
-name|cif
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc

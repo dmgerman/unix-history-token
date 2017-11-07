@@ -13911,6 +13911,12 @@ argument_list|,
 name|config
 argument_list|)
 expr_stmt|;
+else|else
+name|nvlist_free
+argument_list|(
+name|config
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|state
@@ -28215,13 +28221,6 @@ decl_stmt|;
 name|int
 name|tasks
 decl_stmt|;
-name|ASSERT
-argument_list|(
-name|spa
-operator|->
-name|spa_sync_on
-argument_list|)
-expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&

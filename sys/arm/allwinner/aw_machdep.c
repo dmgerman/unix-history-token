@@ -438,6 +438,37 @@ empty_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * To use early printf on Allwinner SoC, add to kernel config  * options SOCDEV_PA=0x01C00000  * options SOCDEV_VA=0x10000000  * options EARLY_PRINTF  * And remove the if 0 */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EARLY_PRINTF
+end_ifdef
+
+begin_endif
+unit|static void allwinner_early_putc(int c) { 	volatile uint32_t * UART_STAT_REG = (uint32_t *)0x1002807C; 	volatile uint32_t * UART_TX_REG   = (uint32_t *)0x10028000; 	const uint32_t      UART_TXRDY    = (1<< 2);  	while ((*UART_STAT_REG& UART_TXRDY) == 0) 		continue; 	*UART_TX_REG = c; } early_putc_t *early_putc = allwinner_early_putc;
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EARLY_PRINTF */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if

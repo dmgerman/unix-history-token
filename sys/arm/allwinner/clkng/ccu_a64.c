@@ -86,8 +86,220 @@ end_include
 begin_include
 include|#
 directive|include
+file|<gnu/dts/include/dt-bindings/clock/sun50i-a64-ccu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<gnu/dts/include/dt-bindings/reset/sun50i-a64-ccu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ccu_a64.h"
 end_include
+
+begin_comment
+comment|/* Non-exported clocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLK_OSC_12M
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_CPUX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_AUDIO_BASE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_AUDIO
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_AUDIO_2X
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_AUDIO_4X
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_AUDIO_8X
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_VIDEO0
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_VIDEO0_2X
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_VE
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_DDR0
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_PERIPH0_2X
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_PERIPH1
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_PERIPH1_2X
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_VIDEO1
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_GPU
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_HSIC
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_DE
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PLL_DDR1
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_CPUX
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_AXI
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_APB
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_AHB1
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_APB1
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_APB2
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_AHB2
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DRAM
+value|94
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_MBUS
+value|112
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -99,7 +311,7 @@ init|=
 block|{
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_USB_PHY0
+argument|RST_USB_PHY0
 argument_list|,
 literal|0x0cc
 argument_list|,
@@ -107,7 +319,7 @@ literal|0
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_USB_PHY1
+argument|RST_USB_PHY1
 argument_list|,
 literal|0x0cc
 argument_list|,
@@ -115,7 +327,7 @@ literal|1
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_USB_HSIC
+argument|RST_USB_HSIC
 argument_list|,
 literal|0x0cc
 argument_list|,
@@ -123,7 +335,7 @@ literal|2
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_MIPI_DSI
+argument|RST_BUS_MIPI_DSI
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -131,7 +343,7 @@ literal|1
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_CE
+argument|RST_BUS_CE
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -139,7 +351,7 @@ literal|5
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_DMA
+argument|RST_BUS_DMA
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -147,7 +359,7 @@ literal|6
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_MMC0
+argument|RST_BUS_MMC0
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -155,7 +367,7 @@ literal|8
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_MMC1
+argument|RST_BUS_MMC1
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -163,7 +375,7 @@ literal|9
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_MMC2
+argument|RST_BUS_MMC2
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -171,7 +383,7 @@ literal|10
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_NAND
+argument|RST_BUS_NAND
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -179,7 +391,7 @@ literal|13
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_DRAM
+argument|RST_BUS_DRAM
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -187,7 +399,7 @@ literal|14
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_EMAC
+argument|RST_BUS_EMAC
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -195,7 +407,7 @@ literal|17
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_TS
+argument|RST_BUS_TS
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -203,7 +415,7 @@ literal|18
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_HSTIMER
+argument|RST_BUS_HSTIMER
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -211,7 +423,7 @@ literal|19
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_SPI0
+argument|RST_BUS_SPI0
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -219,7 +431,7 @@ literal|20
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_SPI1
+argument|RST_BUS_SPI1
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -227,7 +439,7 @@ literal|21
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_OTG
+argument|RST_BUS_OTG
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -235,7 +447,7 @@ literal|23
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_EHCI0
+argument|RST_BUS_EHCI0
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -243,7 +455,7 @@ literal|24
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_EHCI1
+argument|RST_BUS_EHCI1
 argument_list|,
 literal|0x2c0
 argument_list|,
@@ -251,23 +463,23 @@ literal|25
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_OHCI0
+argument|RST_BUS_OHCI0
 argument_list|,
 literal|0x2c0
 argument_list|,
-literal|26
+literal|28
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_OHCI1
+argument|RST_BUS_OHCI1
 argument_list|,
 literal|0x2c0
 argument_list|,
-literal|27
+literal|29
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_VE
+argument|RST_BUS_VE
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -275,7 +487,7 @@ literal|0
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_TCON0
+argument|RST_BUS_TCON0
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -283,7 +495,7 @@ literal|3
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_TCON1
+argument|RST_BUS_TCON1
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -291,7 +503,7 @@ literal|4
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_DEINTERLACE
+argument|RST_BUS_DEINTERLACE
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -299,7 +511,7 @@ literal|5
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_CSI
+argument|RST_BUS_CSI
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -307,7 +519,7 @@ literal|8
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_HDMI0
+argument|RST_BUS_HDMI0
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -315,7 +527,7 @@ literal|10
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_HDMI1
+argument|RST_BUS_HDMI1
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -323,7 +535,7 @@ literal|11
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_DE
+argument|RST_BUS_DE
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -331,7 +543,7 @@ literal|12
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_GPU
+argument|RST_BUS_GPU
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -339,7 +551,7 @@ literal|20
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_MSGBOX
+argument|RST_BUS_MSGBOX
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -347,7 +559,7 @@ literal|21
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_SPINLOCK
+argument|RST_BUS_SPINLOCK
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -355,7 +567,7 @@ literal|22
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_DBG
+argument|RST_BUS_DBG
 argument_list|,
 literal|0x2c4
 argument_list|,
@@ -363,7 +575,7 @@ literal|31
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_LVDS
+argument|RST_BUS_LVDS
 argument_list|,
 literal|0x2C8
 argument_list|,
@@ -371,7 +583,7 @@ literal|31
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_CODEC
+argument|RST_BUS_CODEC
 argument_list|,
 literal|0x2D0
 argument_list|,
@@ -379,7 +591,7 @@ literal|0
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_SPDIF
+argument|RST_BUS_SPDIF
 argument_list|,
 literal|0x2D0
 argument_list|,
@@ -387,7 +599,7 @@ literal|1
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_THS
+argument|RST_BUS_THS
 argument_list|,
 literal|0x2D0
 argument_list|,
@@ -395,7 +607,7 @@ literal|8
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_I2S0
+argument|RST_BUS_I2S0
 argument_list|,
 literal|0x2D0
 argument_list|,
@@ -403,7 +615,7 @@ literal|12
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_I2S1
+argument|RST_BUS_I2S1
 argument_list|,
 literal|0x2D0
 argument_list|,
@@ -411,7 +623,7 @@ literal|13
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_I2S2
+argument|RST_BUS_I2S2
 argument_list|,
 literal|0x2D0
 argument_list|,
@@ -419,7 +631,7 @@ literal|14
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_I2C0
+argument|RST_BUS_I2C0
 argument_list|,
 literal|0x2D8
 argument_list|,
@@ -427,7 +639,7 @@ literal|0
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_I2C1
+argument|RST_BUS_I2C1
 argument_list|,
 literal|0x2D8
 argument_list|,
@@ -435,7 +647,7 @@ literal|1
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_I2C2
+argument|RST_BUS_I2C2
 argument_list|,
 literal|0x2D8
 argument_list|,
@@ -443,7 +655,7 @@ literal|2
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_SCR
+argument|RST_BUS_SCR
 argument_list|,
 literal|0x2D8
 argument_list|,
@@ -451,7 +663,7 @@ literal|5
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_UART0
+argument|RST_BUS_UART0
 argument_list|,
 literal|0x2D8
 argument_list|,
@@ -459,7 +671,7 @@ literal|16
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_UART1
+argument|RST_BUS_UART1
 argument_list|,
 literal|0x2D8
 argument_list|,
@@ -467,7 +679,7 @@ literal|17
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_UART2
+argument|RST_BUS_UART2
 argument_list|,
 literal|0x2D8
 argument_list|,
@@ -475,7 +687,7 @@ literal|18
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_UART3
+argument|RST_BUS_UART3
 argument_list|,
 literal|0x2D8
 argument_list|,
@@ -483,7 +695,7 @@ literal|19
 argument_list|)
 name|CCU_RESET
 argument_list|(
-argument|A64_RST_BUS_UART4
+argument|RST_BUS_UART4
 argument_list|,
 literal|0x2D8
 argument_list|,
@@ -503,7 +715,7 @@ init|=
 block|{
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_MIPI_DSI
+argument|CLK_BUS_MIPI_DSI
 argument_list|,
 literal|"bus-mipi-dsi"
 argument_list|,
@@ -515,7 +727,7 @@ literal|1
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_CE
+argument|CLK_BUS_CE
 argument_list|,
 literal|"bus-ce"
 argument_list|,
@@ -527,7 +739,7 @@ literal|5
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_DMA
+argument|CLK_BUS_DMA
 argument_list|,
 literal|"bus-dma"
 argument_list|,
@@ -539,7 +751,7 @@ literal|6
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_MMC0
+argument|CLK_BUS_MMC0
 argument_list|,
 literal|"bus-mmc0"
 argument_list|,
@@ -551,7 +763,7 @@ literal|8
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_MMC1
+argument|CLK_BUS_MMC1
 argument_list|,
 literal|"bus-mmc1"
 argument_list|,
@@ -563,7 +775,7 @@ literal|9
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_MMC2
+argument|CLK_BUS_MMC2
 argument_list|,
 literal|"bus-mmc2"
 argument_list|,
@@ -575,7 +787,7 @@ literal|10
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_NAND
+argument|CLK_BUS_NAND
 argument_list|,
 literal|"bus-nand"
 argument_list|,
@@ -587,7 +799,7 @@ literal|13
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_DRAM
+argument|CLK_BUS_DRAM
 argument_list|,
 literal|"bus-dram"
 argument_list|,
@@ -599,7 +811,7 @@ literal|14
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_EMAC
+argument|CLK_BUS_EMAC
 argument_list|,
 literal|"bus-emac"
 argument_list|,
@@ -611,7 +823,7 @@ literal|16
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_TS
+argument|CLK_BUS_TS
 argument_list|,
 literal|"bus-ts"
 argument_list|,
@@ -623,7 +835,7 @@ literal|18
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_HSTIMER
+argument|CLK_BUS_HSTIMER
 argument_list|,
 literal|"bus-hstimer"
 argument_list|,
@@ -635,7 +847,7 @@ literal|19
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_SPI0
+argument|CLK_BUS_SPI0
 argument_list|,
 literal|"bus-spi0"
 argument_list|,
@@ -647,7 +859,7 @@ literal|20
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_SPI1
+argument|CLK_BUS_SPI1
 argument_list|,
 literal|"bus-spi1"
 argument_list|,
@@ -659,7 +871,7 @@ literal|21
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_OTG
+argument|CLK_BUS_OTG
 argument_list|,
 literal|"bus-otg"
 argument_list|,
@@ -671,7 +883,7 @@ literal|23
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_EHCI0
+argument|CLK_BUS_EHCI0
 argument_list|,
 literal|"bus-ehci0"
 argument_list|,
@@ -683,7 +895,7 @@ literal|24
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_EHCI1
+argument|CLK_BUS_EHCI1
 argument_list|,
 literal|"bus-ehci1"
 argument_list|,
@@ -695,7 +907,7 @@ literal|25
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_OHCI0
+argument|CLK_BUS_OHCI0
 argument_list|,
 literal|"bus-ohci0"
 argument_list|,
@@ -703,11 +915,11 @@ literal|"ahb1"
 argument_list|,
 literal|0x60
 argument_list|,
-literal|26
+literal|28
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_OHCI1
+argument|CLK_BUS_OHCI1
 argument_list|,
 literal|"bus-ohci1"
 argument_list|,
@@ -715,11 +927,11 @@ literal|"ahb2"
 argument_list|,
 literal|0x60
 argument_list|,
-literal|27
+literal|29
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_VE
+argument|CLK_BUS_VE
 argument_list|,
 literal|"bus-ve"
 argument_list|,
@@ -731,7 +943,7 @@ literal|0
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_TCON0
+argument|CLK_BUS_TCON0
 argument_list|,
 literal|"bus-tcon0"
 argument_list|,
@@ -743,7 +955,7 @@ literal|3
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_TCON1
+argument|CLK_BUS_TCON1
 argument_list|,
 literal|"bus-tcon1"
 argument_list|,
@@ -755,7 +967,7 @@ literal|4
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_DEINTERLACE
+argument|CLK_BUS_DEINTERLACE
 argument_list|,
 literal|"bus-deinterlace"
 argument_list|,
@@ -767,7 +979,7 @@ literal|5
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_CSI
+argument|CLK_BUS_CSI
 argument_list|,
 literal|"bus-csi"
 argument_list|,
@@ -779,7 +991,7 @@ literal|8
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_HDMI
+argument|CLK_BUS_HDMI
 argument_list|,
 literal|"bus-hdmi"
 argument_list|,
@@ -791,7 +1003,7 @@ literal|11
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_DE
+argument|CLK_BUS_DE
 argument_list|,
 literal|"bus-de"
 argument_list|,
@@ -803,7 +1015,7 @@ literal|12
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_GPU
+argument|CLK_BUS_GPU
 argument_list|,
 literal|"bus-gpu"
 argument_list|,
@@ -815,7 +1027,7 @@ literal|20
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_MSGBOX
+argument|CLK_BUS_MSGBOX
 argument_list|,
 literal|"bus-msgbox"
 argument_list|,
@@ -827,7 +1039,7 @@ literal|21
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_SPINLOCK
+argument|CLK_BUS_SPINLOCK
 argument_list|,
 literal|"bus-spinlock"
 argument_list|,
@@ -839,7 +1051,7 @@ literal|22
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_CODEC
+argument|CLK_BUS_CODEC
 argument_list|,
 literal|"bus-codec"
 argument_list|,
@@ -851,7 +1063,7 @@ literal|0
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_SPDIF
+argument|CLK_BUS_SPDIF
 argument_list|,
 literal|"bus-spdif"
 argument_list|,
@@ -863,7 +1075,7 @@ literal|1
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_PIO
+argument|CLK_BUS_PIO
 argument_list|,
 literal|"bus-pio"
 argument_list|,
@@ -875,7 +1087,7 @@ literal|5
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_THS
+argument|CLK_BUS_THS
 argument_list|,
 literal|"bus-ths"
 argument_list|,
@@ -887,7 +1099,7 @@ literal|8
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_I2S0
+argument|CLK_BUS_I2S0
 argument_list|,
 literal|"bus-i2s0"
 argument_list|,
@@ -899,7 +1111,7 @@ literal|12
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_I2S1
+argument|CLK_BUS_I2S1
 argument_list|,
 literal|"bus-i2s1"
 argument_list|,
@@ -911,7 +1123,7 @@ literal|13
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_I2S2
+argument|CLK_BUS_I2S2
 argument_list|,
 literal|"bus-i2s2"
 argument_list|,
@@ -923,7 +1135,7 @@ literal|14
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_I2C0
+argument|CLK_BUS_I2C0
 argument_list|,
 literal|"bus-i2c0"
 argument_list|,
@@ -935,7 +1147,7 @@ literal|0
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_I2C1
+argument|CLK_BUS_I2C1
 argument_list|,
 literal|"bus-i2c1"
 argument_list|,
@@ -947,7 +1159,7 @@ literal|1
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_I2C2
+argument|CLK_BUS_I2C2
 argument_list|,
 literal|"bus-i2c2"
 argument_list|,
@@ -959,7 +1171,7 @@ literal|2
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_SCR
+argument|CLK_BUS_SCR
 argument_list|,
 literal|"bus-src"
 argument_list|,
@@ -971,7 +1183,7 @@ literal|5
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_UART0
+argument|CLK_BUS_UART0
 argument_list|,
 literal|"bus-uart0"
 argument_list|,
@@ -983,7 +1195,7 @@ literal|16
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_UART1
+argument|CLK_BUS_UART1
 argument_list|,
 literal|"bus-uart1"
 argument_list|,
@@ -995,7 +1207,7 @@ literal|17
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_UART2
+argument|CLK_BUS_UART2
 argument_list|,
 literal|"bus-uart2"
 argument_list|,
@@ -1007,7 +1219,7 @@ literal|18
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_UART3
+argument|CLK_BUS_UART3
 argument_list|,
 literal|"bus-uart3"
 argument_list|,
@@ -1019,7 +1231,7 @@ literal|19
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_UART4
+argument|CLK_BUS_UART4
 argument_list|,
 literal|"bus-uart4"
 argument_list|,
@@ -1031,7 +1243,7 @@ literal|20
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_BUS_DBG
+argument|CLK_BUS_DBG
 argument_list|,
 literal|"bus-dbg"
 argument_list|,
@@ -1043,7 +1255,7 @@ literal|7
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_USB_PHY0
+argument|CLK_USB_PHY0
 argument_list|,
 literal|"usb-phy0"
 argument_list|,
@@ -1055,7 +1267,7 @@ literal|8
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_USB_PHY1
+argument|CLK_USB_PHY1
 argument_list|,
 literal|"usb-phy1"
 argument_list|,
@@ -1067,7 +1279,7 @@ literal|9
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_USB_HSIC
+argument|CLK_USB_HSIC
 argument_list|,
 literal|"usb-hsic"
 argument_list|,
@@ -1079,7 +1291,7 @@ literal|10
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_USB_HSIC_12M
+argument|CLK_USB_HSIC_12M
 argument_list|,
 literal|"usb-hsic-12M"
 argument_list|,
@@ -1091,7 +1303,7 @@ literal|11
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_USB_OHCI0
+argument|CLK_USB_OHCI0
 argument_list|,
 literal|"usb-ohci0"
 argument_list|,
@@ -1103,7 +1315,7 @@ literal|16
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_USB_OHCI1
+argument|CLK_USB_OHCI1
 argument_list|,
 literal|"usb-ohci1"
 argument_list|,
@@ -1115,7 +1327,7 @@ literal|17
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_DRAM_VE
+argument|CLK_DRAM_VE
 argument_list|,
 literal|"dram-ve"
 argument_list|,
@@ -1127,7 +1339,7 @@ literal|0
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_DRAM_CSI
+argument|CLK_DRAM_CSI
 argument_list|,
 literal|"dram-csi"
 argument_list|,
@@ -1139,7 +1351,7 @@ literal|1
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_DRAM_DEINTERLACE
+argument|CLK_DRAM_DEINTERLACE
 argument_list|,
 literal|"dram-deinterlace"
 argument_list|,
@@ -1151,7 +1363,7 @@ literal|2
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_DRAM_TS
+argument|CLK_DRAM_TS
 argument_list|,
 literal|"dram-ts"
 argument_list|,
@@ -1163,7 +1375,7 @@ literal|3
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_CSI_MISC
+argument|CLK_CSI_MISC
 argument_list|,
 literal|"csi-misc"
 argument_list|,
@@ -1175,7 +1387,7 @@ literal|31
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_AC_DIG_4X
+argument|CLK_AC_DIG_4X
 argument_list|,
 literal|"ac-dig-4x"
 argument_list|,
@@ -1187,7 +1399,7 @@ literal|30
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_AC_DIG
+argument|CLK_AC_DIG
 argument_list|,
 literal|"ac-dig"
 argument_list|,
@@ -1199,7 +1411,7 @@ literal|31
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_AVS
+argument|CLK_AVS
 argument_list|,
 literal|"avs"
 argument_list|,
@@ -1211,7 +1423,7 @@ literal|31
 argument_list|)
 name|CCU_GATE
 argument_list|(
-argument|A64_CLK_HDMI_DDC
+argument|CLK_HDMI_DDC
 argument_list|,
 literal|"hdmi-ddc"
 argument_list|,
@@ -1244,7 +1456,7 @@ name|FIXED_CLK
 argument_list|(
 name|osc12m_clk
 argument_list|,
-name|A64_CLK_OSC_12M
+name|CLK_OSC_12M
 argument_list|,
 comment|/* id */
 literal|"osc12M"
@@ -1290,7 +1502,7 @@ name|NKMP_CLK
 argument_list|(
 name|pll_cpux_clk
 argument_list|,
-name|A64_CLK_PLL_CPUX
+name|CLK_PLL_CPUX
 argument_list|,
 comment|/* id */
 literal|"pll_cpux"
@@ -1377,7 +1589,7 @@ name|NKMP_CLK
 argument_list|(
 name|pll_audio_clk
 argument_list|,
-name|A64_CLK_PLL_AUDIO
+name|CLK_PLL_AUDIO
 argument_list|,
 comment|/* id */
 literal|"pll_audio"
@@ -1462,7 +1674,7 @@ name|FIXED_CLK
 argument_list|(
 name|pll_audio_2x_clk
 argument_list|,
-name|A64_CLK_PLL_AUDIO_2X
+name|CLK_PLL_AUDIO_2X
 argument_list|,
 comment|/* id */
 literal|"pll_audio-2x"
@@ -1494,7 +1706,7 @@ name|FIXED_CLK
 argument_list|(
 name|pll_audio_4x_clk
 argument_list|,
-name|A64_CLK_PLL_AUDIO_4X
+name|CLK_PLL_AUDIO_4X
 argument_list|,
 comment|/* id */
 literal|"pll_audio-4x"
@@ -1526,7 +1738,7 @@ name|FIXED_CLK
 argument_list|(
 name|pll_audio_8x_clk
 argument_list|,
-name|A64_CLK_PLL_AUDIO_8X
+name|CLK_PLL_AUDIO_8X
 argument_list|,
 comment|/* id */
 literal|"pll_audio-8x"
@@ -1572,7 +1784,7 @@ name|NM_CLK_WITH_FRAC
 argument_list|(
 name|pll_video0_clk
 argument_list|,
-name|A64_CLK_PLL_VIDEO0
+name|CLK_PLL_VIDEO0
 argument_list|,
 comment|/* id */
 literal|"pll_video0"
@@ -1646,7 +1858,7 @@ name|NM_CLK_WITH_FRAC
 argument_list|(
 name|pll_ve_clk
 argument_list|,
-name|A64_CLK_PLL_VE
+name|CLK_PLL_VE
 argument_list|,
 comment|/* id */
 literal|"pll_ve"
@@ -1720,7 +1932,7 @@ name|NKMP_CLK_WITH_UPDATE
 argument_list|(
 name|pll_ddr0_clk
 argument_list|,
-name|A64_CLK_PLL_DDR0
+name|CLK_PLL_DDR0
 argument_list|,
 comment|/* id */
 literal|"pll_ddr0"
@@ -1822,7 +2034,7 @@ name|NKMP_CLK
 argument_list|(
 name|pll_periph0_2x_clk
 argument_list|,
-name|A64_CLK_PLL_PERIPH0_2X
+name|CLK_PLL_PERIPH0_2X
 argument_list|,
 comment|/* id */
 literal|"pll_periph0_2x"
@@ -1893,7 +2105,7 @@ name|FIXED_CLK
 argument_list|(
 name|pll_periph0_clk
 argument_list|,
-name|A64_CLK_PLL_PERIPH0
+name|CLK_PLL_PERIPH0
 argument_list|,
 comment|/* id */
 literal|"pll_periph0"
@@ -1953,7 +2165,7 @@ name|NKMP_CLK
 argument_list|(
 name|pll_periph1_2x_clk
 argument_list|,
-name|A64_CLK_PLL_PERIPH1_2X
+name|CLK_PLL_PERIPH1_2X
 argument_list|,
 comment|/* id */
 literal|"pll_periph1_2x"
@@ -2024,7 +2236,7 @@ name|FIXED_CLK
 argument_list|(
 name|pll_periph1_clk
 argument_list|,
-name|A64_CLK_PLL_PERIPH1
+name|CLK_PLL_PERIPH1
 argument_list|,
 comment|/* id */
 literal|"pll_periph1"
@@ -2070,7 +2282,7 @@ name|NM_CLK_WITH_FRAC
 argument_list|(
 name|pll_video1_clk
 argument_list|,
-name|A64_CLK_PLL_VIDEO1
+name|CLK_PLL_VIDEO1
 argument_list|,
 comment|/* id */
 literal|"pll_video1"
@@ -2144,7 +2356,7 @@ name|NM_CLK_WITH_FRAC
 argument_list|(
 name|pll_gpu_clk
 argument_list|,
-name|A64_CLK_PLL_GPU
+name|CLK_PLL_GPU
 argument_list|,
 comment|/* id */
 literal|"pll_gpu"
@@ -2222,7 +2434,7 @@ name|NM_CLK_WITH_FRAC
 argument_list|(
 name|pll_hsic_clk
 argument_list|,
-name|A64_CLK_PLL_HSIC
+name|CLK_PLL_HSIC
 argument_list|,
 comment|/* id */
 literal|"pll_hsic"
@@ -2296,7 +2508,7 @@ name|NM_CLK_WITH_FRAC
 argument_list|(
 name|pll_de_clk
 argument_list|,
-name|A64_CLK_PLL_DE
+name|CLK_PLL_DE
 argument_list|,
 comment|/* id */
 literal|"pll_de"
@@ -2370,7 +2582,7 @@ name|NKMP_CLK_WITH_UPDATE
 argument_list|(
 name|pll_ddr1_clk
 argument_list|,
-name|A64_CLK_PLL_DDR1
+name|CLK_PLL_DDR1
 argument_list|,
 comment|/* id */
 literal|"pll_ddr1"
@@ -2462,7 +2674,7 @@ name|MUX_CLK
 argument_list|(
 name|cpux_clk
 argument_list|,
-name|A64_CLK_CPUX
+name|CLK_CPUX
 argument_list|,
 comment|/* id */
 literal|"cpux"
@@ -2502,7 +2714,7 @@ name|DIV_CLK
 argument_list|(
 name|axi_clk
 argument_list|,
-name|A64_CLK_AXI
+name|CLK_AXI
 argument_list|,
 comment|/* id */
 literal|"axi"
@@ -2548,7 +2760,7 @@ name|DIV_CLK
 argument_list|(
 name|apb_clk
 argument_list|,
-name|A64_CLK_APB
+name|CLK_APB
 argument_list|,
 comment|/* id */
 literal|"apb"
@@ -2600,7 +2812,7 @@ name|PREDIV_CLK
 argument_list|(
 name|ahb1_clk
 argument_list|,
-name|A64_CLK_AHB1
+name|CLK_AHB1
 argument_list|,
 comment|/* id */
 literal|"ahb1"
@@ -2727,7 +2939,7 @@ name|DIV_CLK
 argument_list|(
 name|apb1_clk
 argument_list|,
-name|A64_CLK_APB1
+name|CLK_APB1
 argument_list|,
 comment|/* id */
 literal|"apb1"
@@ -2780,7 +2992,7 @@ name|NM_CLK
 argument_list|(
 name|apb2_clk
 argument_list|,
-name|A64_CLK_APB2
+name|CLK_APB2
 argument_list|,
 comment|/* id */
 literal|"apb2"
@@ -2843,7 +3055,7 @@ name|PREDIV_CLK
 argument_list|(
 name|ahb2_clk
 argument_list|,
-name|A64_CLK_AHB2
+name|CLK_AHB2
 argument_list|,
 comment|/* id */
 literal|"ahb2"
@@ -2915,7 +3127,7 @@ name|NM_CLK
 argument_list|(
 name|nand_clk
 argument_list|,
-name|A64_CLK_NAND
+name|CLK_NAND
 argument_list|,
 literal|"nand"
 argument_list|,
@@ -2967,7 +3179,7 @@ name|NM_CLK
 argument_list|(
 name|mmc0_clk
 argument_list|,
-name|A64_CLK_MMC0
+name|CLK_MMC0
 argument_list|,
 literal|"mmc0"
 argument_list|,
@@ -3021,7 +3233,7 @@ name|NM_CLK
 argument_list|(
 name|mmc1_clk
 argument_list|,
-name|A64_CLK_MMC1
+name|CLK_MMC1
 argument_list|,
 literal|"mmc1"
 argument_list|,
@@ -3075,7 +3287,7 @@ name|NM_CLK
 argument_list|(
 name|mmc2_clk
 argument_list|,
-name|A64_CLK_MMC2
+name|CLK_MMC2
 argument_list|,
 literal|"mmc2"
 argument_list|,
@@ -3145,7 +3357,7 @@ name|NM_CLK
 argument_list|(
 name|ts_clk
 argument_list|,
-name|A64_CLK_TS
+name|CLK_TS
 argument_list|,
 literal|"ts"
 argument_list|,
@@ -3197,7 +3409,7 @@ name|NM_CLK
 argument_list|(
 name|ce_clk
 argument_list|,
-name|A64_CLK_CE
+name|CLK_CE
 argument_list|,
 literal|"ce"
 argument_list|,
@@ -3249,7 +3461,7 @@ name|NM_CLK
 argument_list|(
 name|spi0_clk
 argument_list|,
-name|A64_CLK_SPI0
+name|CLK_SPI0
 argument_list|,
 literal|"spi0"
 argument_list|,
@@ -3303,7 +3515,7 @@ name|NM_CLK
 argument_list|(
 name|spi1_clk
 argument_list|,
-name|A64_CLK_SPI1
+name|CLK_SPI1
 argument_list|,
 literal|"spi1"
 argument_list|,
@@ -3466,7 +3678,7 @@ name|NM_CLK
 argument_list|(
 name|spdif_clk
 argument_list|,
-name|A64_CLK_SPDIF
+name|CLK_SPDIF
 argument_list|,
 literal|"spdif"
 argument_list|,
@@ -3540,7 +3752,7 @@ name|NM_CLK
 argument_list|(
 name|dram_clk
 argument_list|,
-name|A64_CLK_DRAM
+name|CLK_DRAM
 argument_list|,
 literal|"dram"
 argument_list|,
@@ -3606,7 +3818,7 @@ name|NM_CLK
 argument_list|(
 name|de_clk
 argument_list|,
-name|A64_CLK_DE
+name|CLK_DE
 argument_list|,
 literal|"de"
 argument_list|,
@@ -3678,7 +3890,7 @@ name|NM_CLK
 argument_list|(
 name|deinterlace_clk
 argument_list|,
-name|A64_CLK_DEINTERLACE
+name|CLK_DEINTERLACE
 argument_list|,
 literal|"deinterlace"
 argument_list|,
@@ -3746,7 +3958,7 @@ name|NM_CLK
 argument_list|(
 name|csi_sclk_clk
 argument_list|,
-name|A64_CLK_CSI_SCLK
+name|CLK_CSI_SCLK
 argument_list|,
 literal|"csi-sclk"
 argument_list|,
@@ -3816,7 +4028,7 @@ name|NM_CLK
 argument_list|(
 name|csi_mclk_clk
 argument_list|,
-name|A64_CLK_CSI_MCLK
+name|CLK_CSI_MCLK
 argument_list|,
 literal|"csi-mclk"
 argument_list|,
@@ -3882,7 +4094,7 @@ name|NM_CLK
 argument_list|(
 name|ve_clk
 argument_list|,
-name|A64_CLK_VE
+name|CLK_VE
 argument_list|,
 literal|"ve"
 argument_list|,
@@ -3946,7 +4158,7 @@ name|NM_CLK
 argument_list|(
 name|hdmi_clk
 argument_list|,
-name|A64_CLK_HDMI
+name|CLK_HDMI
 argument_list|,
 literal|"hdmi"
 argument_list|,
@@ -4016,7 +4228,7 @@ name|NM_CLK
 argument_list|(
 name|mbus_clk
 argument_list|,
-name|A64_CLK_MBUS
+name|CLK_MBUS
 argument_list|,
 literal|"mbus"
 argument_list|,
@@ -4082,7 +4294,7 @@ name|NM_CLK
 argument_list|(
 name|gpu_clk
 argument_list|,
-name|A64_CLK_GPU
+name|CLK_GPU
 argument_list|,
 literal|"gpu"
 argument_list|,

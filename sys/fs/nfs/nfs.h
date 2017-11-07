@@ -944,6 +944,31 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * NFSDEV_MIRRORSTR - string of digits that number the DSs 0->999.  * (To support more than 1000 DSs on an MDS, this needs to be increased.)  * NFSDEV_MAXMIRRORS - Maximum # of mirrors for a DS.  * (Most will only have a single mirror, but this setting allows up to 3.)  * NFSDEV_MAXVERS - maximum number of NFS versions supported by Flex File.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSDEV_MIRRORSTR
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSDEV_MAXMIRRORS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSDEV_MAXVERS
+value|4
+end_define
+
+begin_comment
 comment|/*  * Arguments for use by the callback daemon.  */
 end_comment
 

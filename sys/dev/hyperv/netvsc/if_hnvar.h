@@ -42,15 +42,11 @@ name|HN_RXBUF_SIZE_COMPAT
 value|(15 * 1024 * 1024)
 end_define
 
-begin_comment
-comment|/* Claimed to be 12232B */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|HN_MTU_MAX
-value|(9 * 1024)
+value|(65535 - ETHER_ADDR_LEN)
 end_define
 
 begin_define
@@ -177,6 +173,10 @@ name|int
 name|hn_rx_flags
 decl_stmt|;
 comment|/* HN_RX_FLAG_ */
+name|uint32_t
+name|hn_mbuf_hash
+decl_stmt|;
+comment|/* NDIS_HASH_ */
 name|uint8_t
 modifier|*
 name|hn_rxbuf
@@ -289,6 +289,13 @@ define|#
 directive|define
 name|HN_RX_FLAG_XPNT_VF
 value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_RX_FLAG_UDP_HASH
+value|0x0008
 end_define
 
 begin_struct
@@ -730,7 +737,11 @@ decl_stmt|;
 name|uint32_t
 name|hn_rss_hash
 decl_stmt|;
-comment|/* NDIS_HASH_ */
+comment|/* setting, NDIS_HASH_ */
+name|uint32_t
+name|hn_rss_hcap
+decl_stmt|;
+comment|/* caps, NDIS_HASH_ */
 name|struct
 name|ndis_rssprm_toeplitz
 name|hn_rss
@@ -983,6 +994,13 @@ name|HN_CAP_HASHVAL
 value|0x0200
 end_define
 
+begin_define
+define|#
+directive|define
+name|HN_CAP_UDPHASH
+value|0x0400
+end_define
+
 begin_comment
 comment|/* Capability description for use with printf(9) %b identifier. */
 end_comment
@@ -992,7 +1010,7 @@ define|#
 directive|define
 name|HN_CAP_BITS
 define|\
-value|"\020\1VLAN\2MTU\3IPCS\4TCP4CS\5TCP6CS"	\ 	"\6UDP4CS\7UDP6CS\10TSO4\11TSO6\12HASHVAL"
+value|"\020\1VLAN\2MTU\3IPCS\4TCP4CS\5TCP6CS"	\ 	"\6UDP4CS\7UDP6CS\10TSO4\11TSO6\12HASHVAL\13UDPHASH"
 end_define
 
 begin_define

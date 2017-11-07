@@ -74,6 +74,12 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_SOCKET
+end_define
+
 begin_include
 include|#
 directive|include
@@ -846,10 +852,15 @@ name|so_error
 expr_stmt|;
 if|if
 condition|(
-name|SOLISTENING
-argument_list|(
+operator|(
 name|so
-argument_list|)
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|xso

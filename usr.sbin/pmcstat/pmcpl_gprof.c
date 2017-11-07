@@ -229,6 +229,30 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|min
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|((A)< (B) ? (A) : (B))
+end_define
+
+begin_define
+define|#
+directive|define
+name|max
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|((A)> (B) ? (A) : (B))
+end_define
+
+begin_define
+define|#
+directive|define
 name|WIDEHISTCOUNTER_MAX
 value|UINT64_MAX
 end_define
@@ -1915,6 +1939,9 @@ condition|)
 name|pmcstat_image_determine_type
 argument_list|(
 name|image
+argument_list|,
+operator|&
+name|args
 argument_list|)
 expr_stmt|;
 name|assert

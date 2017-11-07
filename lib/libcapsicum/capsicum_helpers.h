@@ -125,11 +125,15 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
+name|CAP_EVENT
+argument_list|,
 name|CAP_FCNTL
 argument_list|,
 name|CAP_FSTAT
 argument_list|,
 name|CAP_IOCTL
+argument_list|,
+name|CAP_SEEK
 argument_list|)
 expr_stmt|;
 if|if

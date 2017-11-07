@@ -178,17 +178,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RSS_HASHTYPE_RSS_UDP_IPV4_EX
-value|(1<< 8)
-end_define
-
-begin_comment
-comment|/* IPv4 UDP 4-tuple + ext hdrs */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|RSS_HASHTYPE_RSS_UDP_IPV6
 value|(1<< 9)
 end_define

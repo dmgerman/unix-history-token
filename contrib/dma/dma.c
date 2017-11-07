@@ -1336,11 +1336,6 @@ block|{
 case|case
 literal|0
 case|:
-name|delqueue
-argument_list|(
-name|it
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -1350,6 +1345,11 @@ argument_list|,
 name|it
 operator|->
 name|addr
+argument_list|)
+expr_stmt|;
+name|delqueue
+argument_list|(
+name|it
 argument_list|)
 expr_stmt|;
 name|exit

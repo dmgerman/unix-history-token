@@ -30973,8 +30973,8 @@ case|:
 case|case
 name|ICMP_ECHO
 case|:
-comment|/* route aedvertisement/solliciation is currently unsupported: */
-comment|/* it would require rewriting the ICMP data section            */
+comment|/* route advertisement/solicitation is currently unsupported: */
+comment|/* it would require rewriting the ICMP data section          */
 case|case
 name|ICMP_TSTAMP
 case|:

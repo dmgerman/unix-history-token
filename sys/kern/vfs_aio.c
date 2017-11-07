@@ -368,10 +368,6 @@ name|MAX_AIO_QUEUE_PER_PROC
 value|256
 end_define
 
-begin_comment
-comment|/* Bigger than AIO_LISTIO_MAX */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -391,7 +387,7 @@ value|1024
 end_define
 
 begin_comment
-comment|/* Bigger than AIO_LISTIO_MAX */
+comment|/* Bigger than MAX_AIO_QUEUE_PER_PROC */
 end_comment
 
 begin_endif
@@ -444,6 +440,19 @@ argument_list|,
 literal|"lio"
 argument_list|,
 literal|"listio aio control block list"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_AIOS
+argument_list|,
+literal|"aios"
+argument_list|,
+literal|"aio_suspend aio control block list"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -847,14 +856,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|aio_listio_max
-init|=
-name|AIO_LISTIO_MAX
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*   * Though redundant with vfs.aio.max_aio_queue_per_proc, POSIX requires  * sysconf(3) to support AIO_LISTIO_MAX, and we implement that with  * vfs.aio.aio_listio_max.  */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -865,12 +869,12 @@ name|CTL_P1003_1B_AIO_LISTIO_MAX
 argument_list|,
 name|aio_listio_max
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
 operator|&
-name|aio_listio_max
+name|max_aio_queue_per_proc
 argument_list|,
 literal|0
 argument_list|,
@@ -1832,7 +1836,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Zones for:  * 	kaio	Per process async io info  *	aiop	async io process data  *	aiocb	async io jobs  *	aiol	list io job pointer - internal to aio_suspend XXX  *	aiolio	list io jobs  */
+comment|/*  * Zones for:  * 	kaio	Per process async io info  *	aiop	async io process data  *	aiocb	async io jobs  *	aiolio	list io jobs  */
 end_comment
 
 begin_decl_stmt
@@ -1843,8 +1847,6 @@ decl_stmt|,
 name|aiop_zone
 decl_stmt|,
 name|aiocb_zone
-decl_stmt|,
-name|aiol_zone
 decl_stmt|,
 name|aiolio_zone
 decl_stmt|;
@@ -2041,36 +2043,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-name|aio_listio_max
-operator|<
-name|AIO_LISTIO_MAX
-condition|)
-name|aio_listio_max
-operator|=
-name|AIO_LISTIO_MAX
-expr_stmt|;
-if|if
-condition|(
-name|aio_listio_max
-operator|>
-name|MIN
-argument_list|(
-name|MAX_AIO_QUEUE_PER_PROC
-argument_list|,
-name|max_queue_count
-argument_list|)
-condition|)
-name|aio_listio_max
-operator|=
-name|MIN
-argument_list|(
-name|MAX_AIO_QUEUE_PER_PROC
-argument_list|,
-name|max_queue_count
-argument_list|)
-expr_stmt|;
 name|exit_tag
 operator|=
 name|EVENTHANDLER_REGISTER
@@ -2218,32 +2190,6 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|kaiocb
-argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|UMA_ALIGN_PTR
-argument_list|,
-name|UMA_ZONE_NOFREE
-argument_list|)
-expr_stmt|;
-name|aiol_zone
-operator|=
-name|uma_zcreate
-argument_list|(
-literal|"AIOL"
-argument_list|,
-name|aio_listio_max
-operator|*
-sizeof|sizeof
-argument_list|(
-name|intptr_t
 argument_list|)
 argument_list|,
 name|NULL
@@ -9582,7 +9528,7 @@ name|uap
 operator|->
 name|nent
 operator|>
-name|aio_listio_max
+name|max_aio_queue_per_proc
 condition|)
 return|return
 operator|(
@@ -9638,9 +9584,21 @@ name|NULL
 expr_stmt|;
 name|ujoblist
 operator|=
-name|uma_zalloc
+name|malloc
 argument_list|(
-name|aiol_zone
+name|uap
+operator|->
+name|nent
+operator|*
+sizeof|sizeof
+argument_list|(
+name|ujoblist
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|,
+name|M_AIOS
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -9689,11 +9647,11 @@ argument_list|,
 name|tsp
 argument_list|)
 expr_stmt|;
-name|uma_zfree
+name|free
 argument_list|(
-name|aiol_zone
-argument_list|,
 name|ujoblist
+argument_list|,
+name|M_AIOS
 argument_list|)
 expr_stmt|;
 return|return
@@ -10615,7 +10573,7 @@ literal|0
 operator|||
 name|nent
 operator|>
-name|aio_listio_max
+name|max_aio_queue_per_proc
 condition|)
 return|return
 operator|(
@@ -11335,7 +11293,7 @@ literal|0
 operator|||
 name|nent
 operator|>
-name|aio_listio_max
+name|max_aio_queue_per_proc
 condition|)
 return|return
 operator|(
@@ -11584,7 +11542,7 @@ literal|0
 operator|||
 name|nent
 operator|>
-name|aio_listio_max
+name|max_aio_queue_per_proc
 condition|)
 return|return
 operator|(
@@ -14051,7 +14009,7 @@ name|uap
 operator|->
 name|nent
 operator|>
-name|aio_listio_max
+name|max_aio_queue_per_proc
 condition|)
 return|return
 operator|(
@@ -14125,9 +14083,21 @@ name|NULL
 expr_stmt|;
 name|ujoblist
 operator|=
-name|uma_zalloc
+name|malloc
 argument_list|(
-name|aiol_zone
+name|uap
+operator|->
+name|nent
+operator|*
+sizeof|sizeof
+argument_list|(
+name|ujoblist
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|,
+name|M_AIOS
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -14177,9 +14147,11 @@ operator|=
 name|uap
 operator|->
 name|nent
+operator|-
+literal|1
 init|;
 name|i
-operator|>
+operator|>=
 literal|0
 condition|;
 name|i
@@ -14214,11 +14186,11 @@ name|tsp
 argument_list|)
 expr_stmt|;
 block|}
-name|uma_zfree
+name|free
 argument_list|(
-name|aiol_zone
-argument_list|,
 name|ujoblist
+argument_list|,
+name|M_AIOS
 argument_list|)
 expr_stmt|;
 return|return
@@ -14745,7 +14717,7 @@ literal|0
 operator|||
 name|nent
 operator|>
-name|aio_listio_max
+name|max_aio_queue_per_proc
 condition|)
 return|return
 operator|(
@@ -15058,7 +15030,7 @@ literal|0
 operator|||
 name|nent
 operator|>
-name|aio_listio_max
+name|max_aio_queue_per_proc
 condition|)
 return|return
 operator|(

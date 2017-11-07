@@ -166,7 +166,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Note: if you add or remove members of random_entropy_source, remember to also update the  * KASSERT regarding what valid members are in random_harvest_internal(), and remember the  * strings in the static array random_source_descr[] in random_harvestq.c.  *  * NOTE: complain loudly to markm@ or on the lists if this enum gets more than 32  * distinct values (0-31)! ENTROPYSOURCE may be == 32, but not> 32.  */
+comment|/*  * Note: if you add or remove members of random_entropy_source, remember to  * also update the strings in the static array random_source_descr[] in  * random_harvestq.c.  *  * NOTE: complain loudly to markm@ or on the lists if this enum gets more than 32  * distinct values (0-31)! ENTROPYSOURCE may be == 32, but not> 32.  */
 end_comment
 
 begin_enum
@@ -208,7 +208,11 @@ init|=
 name|RANDOM_UMA
 block|,
 comment|/* Fast hardware random-number sources from here on. */
+name|RANDOM_PURE_START
+block|,
 name|RANDOM_PURE_OCTEON
+init|=
+name|RANDOM_PURE_START
 block|,
 name|RANDOM_PURE_SAFE
 block|,
@@ -238,6 +242,13 @@ define|#
 directive|define
 name|RANDOM_HARVEST_EVERYTHING_MASK
 value|((1<< (RANDOM_ENVIRONMENTAL_END + 1)) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RANDOM_HARVEST_PURE_MASK
+value|(((1<< ENTROPYSOURCE) - 1)& (-1UL<< RANDOM_PURE_START))
 end_define
 
 begin_define
@@ -324,6 +335,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|random_harvest_register_source
+parameter_list|(
+name|enum
+name|random_entropy_source
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|random_harvest_deregister_source
+parameter_list|(
+name|enum
+name|random_entropy_source
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -373,6 +404,26 @@ parameter_list|,
 name|c
 parameter_list|,
 name|d
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|random_harvest_register_source
+parameter_list|(
+name|a
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|random_harvest_deregister_source
+parameter_list|(
+name|a
 parameter_list|)
 value|do {} while (0)
 end_define

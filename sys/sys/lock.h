@@ -939,6 +939,16 @@ end_function
 begin_define
 define|#
 directive|define
+name|lock_delay_spin
+parameter_list|(
+name|n
+parameter_list|)
+value|do {	\ 	u_int _i;			\ 					\ 	for (_i = (n); _i> 0; _i--)	\ 		cpu_spinwait();		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LOCK_DELAY_SYSINIT
 parameter_list|(
 name|func

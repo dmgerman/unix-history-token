@@ -752,7 +752,7 @@ expr_stmt|;
 if|if
 condition|(
 name|keylen
-operator|!=
+operator|>
 name|thash
 operator|->
 name|keysize
@@ -768,7 +768,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"%s: invalid keylength %d, algorithm %s requires "
-literal|"keysize %d\n"
+literal|"keysize less than %d\n"
 operator|,
 name|__func__
 operator|,
@@ -2801,6 +2801,18 @@ name|CRYPTO_F_IMBUF
 operator||
 name|CRYPTO_F_CBIFSYNC
 expr_stmt|;
+if|if
+condition|(
+name|V_async_crypto
+condition|)
+name|crp
+operator|->
+name|crp_flags
+operator||=
+name|CRYPTO_F_ASYNC
+operator||
+name|CRYPTO_F_ASYNC_KEEPORDER
+expr_stmt|;
 name|crp
 operator|->
 name|crp_buf
@@ -4817,6 +4829,18 @@ operator|=
 name|CRYPTO_F_IMBUF
 operator||
 name|CRYPTO_F_CBIFSYNC
+expr_stmt|;
+if|if
+condition|(
+name|V_async_crypto
+condition|)
+name|crp
+operator|->
+name|crp_flags
+operator||=
+name|CRYPTO_F_ASYNC
+operator||
+name|CRYPTO_F_ASYNC_KEEPORDER
 expr_stmt|;
 name|crp
 operator|->

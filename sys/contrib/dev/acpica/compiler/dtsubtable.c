@@ -13,12 +13,6 @@ directive|include
 file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/compiler/dtcompiler.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -70,7 +64,7 @@ expr_stmt|;
 comment|/* Create a new buffer for the subtable data */
 name|String
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|Length
 argument_list|)

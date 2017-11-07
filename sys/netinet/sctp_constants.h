@@ -182,24 +182,6 @@ value|4
 end_define
 
 begin_comment
-comment|/* constants for rto calc */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sctp_align_safe_nocopy
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|sctp_align_unsafe_makecopy
-value|1
-end_define
-
-begin_comment
 comment|/* JRS - Values defined for the HTCP algorithm */
 end_comment
 
@@ -2512,22 +2494,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_TIMER_TYPE_ZERO_COPY
-value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_TIMER_TYPE_ZCOPY_SENDQ
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_TIMER_TYPE_PRIM_DELETED
-value|20
+value|18
 end_define
 
 begin_comment
@@ -2538,7 +2506,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_TIMER_TYPE_LAST
-value|21
+value|19
 end_define
 
 begin_define
@@ -4428,20 +4396,6 @@ begin_define
 define|#
 directive|define
 name|SCTP_SO_NOT_LOCKED
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_HOLDS_LOCK
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_NOT_LOCKED
 value|0
 end_define
 

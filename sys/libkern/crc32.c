@@ -27,6 +27,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -89,6 +95,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_decl_stmt
 specifier|const
@@ -6007,6 +6022,9 @@ name|int
 name|length
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|_KERNEL
 if|#
 directive|if
 name|defined
@@ -6088,6 +6106,9 @@ block|}
 elseif|else
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* _KERNEL */
 if|if
 condition|(
 name|length

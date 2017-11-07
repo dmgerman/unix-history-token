@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: funcs.c,v 1.90 2016/10/19 20:51:17 christos Exp $"
+literal|"@(#)$File: funcs.c,v 1.93 2017/08/28 13:39:18 christos Exp $"
 argument_list|)
 end_macro
 
@@ -280,13 +280,16 @@ literal|0
 return|;
 name|out
 label|:
-name|file_error
+name|fprintf
 argument_list|(
-name|ms
+name|stderr
 argument_list|,
+literal|"vasprintf failed (%s)"
+argument_list|,
+name|strerror
+argument_list|(
 name|errno
-argument_list|,
-literal|"vasprintf failed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1663,10 +1666,15 @@ name|struct
 name|magic_set
 modifier|*
 name|ms
+parameter_list|,
+name|int
+name|checkloaded
 parameter_list|)
 block|{
 if|if
 condition|(
+name|checkloaded
+operator|&&
 name|ms
 operator|->
 name|mlist
@@ -2710,6 +2718,22 @@ operator|->
 name|rc
 operator|==
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* XXX: force initialization because glibc does not always do this */
+name|memset
+argument_list|(
+name|pmatch
+argument_list|,
+literal|0
+argument_list|,
+name|nmatch
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|pmatch
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

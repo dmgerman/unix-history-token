@@ -703,6 +703,17 @@ name|dctx
 operator|->
 name|kdf_type
 return|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_NO_CMS
+if|if
+condition|(
+name|p1
+operator|!=
+name|EVP_PKEY_DH_KDF_NONE
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|p1
@@ -713,6 +724,8 @@ name|p1
 operator|!=
 name|EVP_PKEY_DH_KDF_X9_42
 condition|)
+endif|#
+directive|endif
 return|return
 operator|-
 literal|2
@@ -1917,6 +1930,9 @@ return|return
 literal|1
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CMS
 elseif|else
 if|if
 condition|(
@@ -2097,6 +2113,8 @@ return|return
 name|ret
 return|;
 block|}
+endif|#
+directive|endif
 return|return
 literal|1
 return|;

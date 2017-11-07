@@ -580,7 +580,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/* 	 * XXX In between kern_open() and fget(), another process 	 * having the same filedesc could use that fd without 	 * checking below. 	*/
+comment|/* 	 * XXX In between kern_openat() and fget(), another process 	 * having the same filedesc could use that fd without 	 * checking below. 	*/
 name|fd
 operator|=
 name|td

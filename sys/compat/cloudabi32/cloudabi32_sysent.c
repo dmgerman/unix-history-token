@@ -1039,32 +1039,6 @@ comment|/* 37 = cloudabi32_sys_poll */
 block|{
 name|AS
 argument_list|(
-name|cloudabi32_sys_poll_fd_args
-argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|cloudabi32_sys_poll_fd
-block|,
-name|AUE_NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|SYF_CAPENABLED
-block|,
-name|SY_THR_STATIC
-block|}
-block|,
-comment|/* 38 = cloudabi32_sys_poll_fd */
-block|{
-name|AS
-argument_list|(
 name|cloudabi_sys_proc_exec_args
 argument_list|)
 block|,
@@ -1087,7 +1061,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 39 = cloudabi_sys_proc_exec */
+comment|/* 38 = cloudabi_sys_proc_exec */
 block|{
 name|AS
 argument_list|(
@@ -1113,7 +1087,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 40 = cloudabi_sys_proc_exit */
+comment|/* 39 = cloudabi_sys_proc_exit */
 block|{
 literal|0
 block|,
@@ -1136,7 +1110,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 41 = cloudabi_sys_proc_fork */
+comment|/* 40 = cloudabi_sys_proc_fork */
 block|{
 name|AS
 argument_list|(
@@ -1162,7 +1136,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 42 = cloudabi_sys_proc_raise */
+comment|/* 41 = cloudabi_sys_proc_raise */
 block|{
 name|AS
 argument_list|(
@@ -1188,7 +1162,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 43 = cloudabi_sys_random_get */
+comment|/* 42 = cloudabi_sys_random_get */
 block|{
 name|AS
 argument_list|(
@@ -1214,7 +1188,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 44 = cloudabi32_sys_sock_recv */
+comment|/* 43 = cloudabi32_sys_sock_recv */
 block|{
 name|AS
 argument_list|(
@@ -1240,7 +1214,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 45 = cloudabi32_sys_sock_send */
+comment|/* 44 = cloudabi32_sys_sock_send */
 block|{
 name|AS
 argument_list|(
@@ -1266,7 +1240,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 46 = cloudabi_sys_sock_shutdown */
+comment|/* 45 = cloudabi_sys_sock_shutdown */
 block|{
 name|AS
 argument_list|(
@@ -1292,7 +1266,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 47 = cloudabi32_sys_thread_create */
+comment|/* 46 = cloudabi32_sys_thread_create */
 block|{
 name|AS
 argument_list|(
@@ -1318,7 +1292,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 48 = cloudabi_sys_thread_exit */
+comment|/* 47 = cloudabi_sys_thread_exit */
 block|{
 literal|0
 block|,
@@ -1341,7 +1315,7 @@ block|,
 name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 49 = cloudabi_sys_thread_yield */
+comment|/* 48 = cloudabi_sys_thread_yield */
 block|}
 decl_stmt|;
 end_decl_stmt

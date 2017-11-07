@@ -509,6 +509,8 @@ name|td
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|NULL
 argument_list|,
 literal|0
@@ -583,6 +585,10 @@ name|dev
 argument_list|)
 argument_list|,
 name|td
+argument_list|,
+name|kda
+operator|->
+name|kda_compression
 argument_list|,
 name|kda
 operator|->
@@ -4258,6 +4264,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|curthread
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

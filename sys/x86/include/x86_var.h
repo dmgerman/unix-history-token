@@ -92,6 +92,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
+name|amd_extended_feature_extensions
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|via_feature_rng
 decl_stmt|;
 end_decl_stmt

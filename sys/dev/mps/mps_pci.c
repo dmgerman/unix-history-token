@@ -1255,8 +1255,8 @@ name|sc
 argument_list|,
 name|MPS_INIT
 argument_list|,
-literal|"Attempting to allocate %d MSI-X "
-literal|"messages\n"
+literal|"Attempting to allocate %d "
+literal|"MSI-X messages\n"
 argument_list|,
 name|msgs
 argument_list|)
@@ -1337,8 +1337,8 @@ name|sc
 argument_list|,
 name|MPS_INIT
 argument_list|,
-literal|"Attempting to allocate %d MSI "
-literal|"messages\n"
+literal|"Attempting to allocate %d "
+literal|"MSI messages\n"
 argument_list|,
 name|MPS_MSI_MAX
 argument_list|)

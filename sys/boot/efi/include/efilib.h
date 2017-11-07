@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -129,7 +135,7 @@ comment|/* link in device list */
 name|pdinfo_list_t
 name|pd_part
 decl_stmt|;
-comment|/* link of partitions */
+comment|/* list of partitions */
 name|EFI_HANDLE
 name|pd_handle
 decl_stmt|;
@@ -144,11 +150,11 @@ name|EFI_BLOCK_IO
 modifier|*
 name|pd_blkio
 decl_stmt|;
-name|int
+name|uint32_t
 name|pd_unit
 decl_stmt|;
 comment|/* unit number */
-name|int
+name|uint32_t
 name|pd_open
 decl_stmt|;
 comment|/* reference counter */
@@ -377,8 +383,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|bool
 name|efi_devpath_match
+parameter_list|(
+name|EFI_DEVICE_PATH
+modifier|*
+parameter_list|,
+name|EFI_DEVICE_PATH
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|efi_devpath_is_prefix
 parameter_list|(
 name|EFI_DEVICE_PATH
 modifier|*
@@ -478,7 +497,7 @@ end_function_decl
 
 begin_decl_stmt
 name|void
-name|exit
+name|efi_exit
 argument_list|(
 name|EFI_STATUS
 name|status

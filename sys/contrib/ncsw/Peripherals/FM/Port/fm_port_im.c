@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"memcpy_ext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"fm_muram_ext.h"
 end_include
 
@@ -47,56 +53,6 @@ directive|define
 name|TX_CONF_STATUS_UNSENT
 value|0x1
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CORE_8BIT_ACCESS_ERRATA
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|WRITE_UINT16
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|GET_UINT16
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WRITE_UINT16
-parameter_list|(
-name|addr
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|do{                             \             if((int)&(addr) % 4)    \                 WRITE_UINT32(*(uint32_t*)(uint32_t)((uint32_t)&addr& ~0x3L),                                           \                         ((GET_UINT32(*(uint32_t*)(uint32_t)((uint32_t)&addr& ~0x3L))& 0xffff0000) | (uint32_t)val));  \             else                    \                 WRITE_UINT32(*(uint32_t*)&addr,                                                                         \                         ((GET_UINT32(*(uint32_t*)&addr)& 0x0000ffff) | (uint32_t)val<<16));                            \       }while(0);
-end_define
-
-begin_define
-define|#
-directive|define
-name|GET_UINT16
-parameter_list|(
-name|addr
-parameter_list|)
-value|(((uint32_t)&addr%4) ?           \        ((uint16_t)GET_UINT32(*(uint32_t*)(uint32_t)((uint32_t)&addr& ~0x3L))):  \        ((uint16_t)(GET_UINT32(*(uint32_t*)(uint32_t)&addr)>> 16)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CORE_8BIT_ACCESS_ERRATA */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -150,7 +106,11 @@ operator|(
 operator|(
 name|event
 operator|&
+operator|(
 name|IM_EV_RX
+operator||
+name|IM_EV_BSY
+operator|)
 operator|)
 operator|&&
 name|FmIsMaster
@@ -569,7 +529,6 @@ name|length
 decl_stmt|;
 name|uint16_t
 name|errors
-comment|/*, reportErrors*/
 decl_stmt|;
 name|uint8_t
 modifier|*
@@ -723,10 +682,6 @@ operator|->
 name|im
 operator|.
 name|currBdId
-expr_stmt|;
-name|errors
-operator|=
-literal|0
 expr_stmt|;
 name|p_CurData
 operator|=
@@ -986,7 +941,7 @@ literal|4
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Pass the buffer if one of the conditions is true:         - There are no errors         - This is a part of a larger frame ( the application has already received some buffers )         - There is an error, but it was defined to be passed anyway. */
+comment|/* Pass the buffer if one of the conditions is true:         - There are no errors         - This is a part of a larger frame ( the application has already received some buffers ) */
 if|if
 condition|(
 operator|(
@@ -997,19 +952,6 @@ operator|)
 operator|||
 operator|!
 name|errors
-operator|||
-operator|(
-name|errors
-operator|&
-call|(
-name|uint16_t
-call|)
-argument_list|(
-name|BD_ERROR_PASS_FRAME
-operator|>>
-literal|16
-argument_list|)
-operator|)
 condition|)
 block|{
 if|if
@@ -1477,7 +1419,7 @@ name|p_FmPort
 operator|->
 name|exceptions
 operator|=
-name|DEFAULT_exception
+name|DEFAULT_PORT_exception
 expr_stmt|;
 if|if
 condition|(
@@ -1680,96 +1622,6 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FM_PARTITION_ARRAY
-block|{
-name|t_FmRevisionInfo
-name|revInfo
-decl_stmt|;
-name|FM_GetRevision
-argument_list|(
-name|p_FmPort
-operator|->
-name|h_Fm
-argument_list|,
-operator|&
-name|revInfo
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|revInfo
-operator|.
-name|majorRev
-operator|==
-literal|1
-operator|)
-operator|&&
-operator|(
-name|revInfo
-operator|.
-name|minorRev
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|p_FmPort
-operator|->
-name|p_FmPortDriverParam
-operator|->
-name|liodnOffset
-operator|>=
-name|MAX_LIODN_OFFSET
-condition|)
-block|{
-name|p_FmPort
-operator|->
-name|p_FmPortDriverParam
-operator|->
-name|liodnOffset
-operator|=
-call|(
-name|uint16_t
-call|)
-argument_list|(
-name|p_FmPort
-operator|->
-name|p_FmPortDriverParam
-operator|->
-name|liodnOffset
-operator|&
-operator|(
-name|MAX_LIODN_OFFSET
-operator|-
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-name|DBG
-argument_list|(
-name|WARNING
-argument_list|,
-operator|(
-literal|"liodnOffset number is out of rev1 range - MSB bits cleard."
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* FM_PARTITION_ARRAY */
-comment|/* TODO - add checks */
-block|}
-else|else
-block|{
-comment|/* TODO - add checks */
 block|}
 return|return
 name|E_OK
@@ -2250,8 +2102,6 @@ argument_list|)
 operator|-
 name|p_FmPort
 operator|->
-name|p_FmPortDriverParam
-operator|->
 name|fmMuramPhysBaseAddr
 operator|+
 literal|0x20
@@ -2377,8 +2227,6 @@ argument_list|)
 argument_list|)
 operator|-
 name|p_FmPort
-operator|->
-name|p_FmPortDriverParam
 operator|->
 name|fmMuramPhysBaseAddr
 argument_list|)
@@ -2804,8 +2652,6 @@ argument_list|)
 operator|-
 name|p_FmPort
 operator|->
-name|p_FmPortDriverParam
-operator|->
 name|fmMuramPhysBaseAddr
 operator|+
 literal|0x40
@@ -2904,8 +2750,6 @@ argument_list|)
 argument_list|)
 operator|-
 name|p_FmPort
-operator|->
-name|p_FmPortDriverParam
 operator|->
 name|fmMuramPhysBaseAddr
 argument_list|)

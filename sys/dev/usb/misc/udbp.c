@@ -1032,6 +1032,17 @@ block|,
 block|{
 name|USB_VPI
 argument_list|(
+argument|USB_VENDOR_PROLIFIC
+argument_list|,
+argument|USB_PRODUCT_PROLIFIC_PL27A1
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
 argument|USB_VENDOR_ANCHOR
 argument_list|,
 argument|USB_PRODUCT_ANCHOR_EZLINK

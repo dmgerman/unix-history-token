@@ -36,14 +36,17 @@ block|{
 name|public
 label|:
 comment|/* Constructors */
+comment|/* Default constructor: an Invalid guid */
 name|Guid
 argument_list|()
 expr_stmt|;
+comment|/* Construct a guid from a provided integer */
 name|Guid
 argument_list|(
 argument|uint64_t guid
 argument_list|)
 empty_stmt|;
+comment|/* Construct a guid from a string in base 8, 10, or 16 */
 name|Guid
 argument_list|(
 specifier|const
@@ -54,6 +57,11 @@ operator|&
 name|guid
 argument_list|)
 expr_stmt|;
+specifier|static
+name|Guid
+name|InvalidGuid
+parameter_list|()
+function_decl|;
 comment|/* Assignment */
 name|Guid
 modifier|&
@@ -106,6 +114,8 @@ name|bool
 argument_list|()
 specifier|const
 expr_stmt|;
+name|protected
+label|:
 specifier|static
 specifier|const
 name|uint64_t
@@ -113,8 +123,6 @@ name|INVALID_GUID
 init|=
 literal|0
 decl_stmt|;
-name|protected
-label|:
 comment|/* The integer value of the GUID. */
 name|uint64_t
 name|m_GUID
@@ -146,6 +154,22 @@ argument_list|(
 argument|guid
 argument_list|)
 block|{ }
+specifier|inline
+name|Guid
+name|Guid
+operator|::
+name|InvalidGuid
+argument_list|()
+block|{
+return|return
+operator|(
+name|Guid
+argument_list|(
+name|INVALID_GUID
+argument_list|)
+operator|)
+return|;
+block|}
 specifier|inline
 name|Guid
 operator|&

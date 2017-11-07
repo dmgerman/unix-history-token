@@ -3331,7 +3331,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Command building helper functions -- shared with CAM */
+comment|/*  * Command building helper functions -- shared with CAM  * These functions assume allocator zeros out cmd structure  * CAM's xpt_get_ccb and the request allocator for nvme both  * do zero'd allocations.  */
 end_comment
 
 begin_function
@@ -3423,24 +3423,6 @@ operator|=
 name|count
 operator|-
 literal|1
-expr_stmt|;
-name|cmd
-operator|->
-name|cdw13
-operator|=
-literal|0
-expr_stmt|;
-name|cmd
-operator|->
-name|cdw14
-operator|=
-literal|0
-expr_stmt|;
-name|cmd
-operator|->
-name|cdw15
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function

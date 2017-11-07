@@ -1585,20 +1585,35 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    va_type %d, va_nlink %x, va_fsid %lx, va_fileid %lx\n"
+literal|"    va_type %d, va_nlink %llx, va_fsid %llx, va_fileid %llx\n"
 argument_list|,
 name|vap
 operator|->
 name|va_type
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|vap
 operator|->
 name|va_nlink
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|vap
 operator|->
 name|va_fsid
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|vap
 operator|->
 name|va_fileid
@@ -1606,16 +1621,26 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    va_blocksize %lx, va_rdev %x, va_bytes %qx, va_gen %lx\n"
+literal|"    va_blocksize %lx, va_rdev %llx, va_bytes %llx, va_gen %lx\n"
 argument_list|,
 name|vap
 operator|->
 name|va_blocksize
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|vap
 operator|->
 name|va_rdev
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|vap
 operator|->
 name|va_bytes

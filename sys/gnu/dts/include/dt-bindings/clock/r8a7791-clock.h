@@ -618,6 +618,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|R8A7791_CLK_GYROADC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|R8A7791_CLK_GPIO7
 value|4
 end_define

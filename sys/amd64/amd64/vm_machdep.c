@@ -978,6 +978,23 @@ name|p2
 operator|->
 name|p_md
 expr_stmt|;
+if|if
+condition|(
+name|mdp1
+operator|->
+name|md_ldt
+operator|==
+name|NULL
+condition|)
+block|{
+name|mdp2
+operator|->
+name|md_ldt
+operator|=
+name|NULL
+expr_stmt|;
+return|return;
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1173,12 +1190,6 @@ name|td
 parameter_list|)
 block|{
 comment|/* 	 * If this process has a custom LDT, release it. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|dt_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|td
@@ -1189,18 +1200,11 @@ name|p_md
 operator|.
 name|md_ldt
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|user_ldt_free
 argument_list|(
 name|td
-argument_list|)
-expr_stmt|;
-else|else
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dt_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1894,6 +1898,22 @@ name|uintptr_t
 operator|)
 name|entry
 expr_stmt|;
+comment|/* Return address sentinel value to stop stack unwinding. */
+name|suword32
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|td
+operator|->
+name|td_frame
+operator|->
+name|tf_rsp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Pass the argument to the entry point. */
 name|suword32
 argument_list|(
@@ -2016,6 +2036,22 @@ operator|->
 name|tf_flags
 operator|=
 name|TF_HASSEGS
+expr_stmt|;
+comment|/* Return address sentinel value to stop stack unwinding. */
+name|suword
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|td
+operator|->
+name|td_frame
+operator|->
+name|tf_rsp
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Pass the argument to the entry point. */
 name|td

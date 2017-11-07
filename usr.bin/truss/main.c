@@ -107,9 +107,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: truss [-cfaedDS] [-o file] [-s strsize] -p pid"
+literal|"usage: truss [-cfaedDHS] [-o file] [-s strsize] -p pid"
 argument_list|,
-literal|"       truss [-cfaedDS] [-o file] [-s strsize] command [args]"
+literal|"       truss [-cfaedDHS] [-o file] [-s strsize] command [args]"
 argument_list|)
 expr_stmt|;
 name|exit

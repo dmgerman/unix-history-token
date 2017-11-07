@@ -28,7 +28,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: der.c,v 1.10 2016/10/24 18:02:17 christos Exp $"
+literal|"@(#)$File: der.c,v 1.12 2017/02/10 18:14:01 christos Exp $"
 argument_list|)
 end_macro
 
@@ -707,6 +707,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Read the length of a DER tag from the input.  *  * `c` is the input, `p` is an output parameter that specifies how much of the  * input we consumed, and `l` is the maximum input length.  *  * Returns the length, or DER_BAD if the end of the input is reached or the  * length exceeds the remaining input.  */
+end_comment
+
 begin_function
 specifier|static
 name|uint32_t
@@ -733,6 +737,9 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|int
+name|is_onebyte_result
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -743,6 +750,21 @@ condition|)
 return|return
 name|DER_BAD
 return|;
+comment|/* 	 * Digits can either be 0b0 followed by the result, or 0b1 	 * followed by the number of digits of the result. In either case, 	 * we verify that we can read so many bytes from the input. 	 */
+name|is_onebyte_result
+operator|=
+operator|(
+name|c
+index|[
+operator|*
+name|p
+index|]
+operator|&
+literal|0x80
+operator|)
+operator|==
+literal|0
+expr_stmt|;
 name|digits
 operator|=
 name|c
@@ -753,27 +775,8 @@ name|p
 operator|)
 operator|++
 index|]
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|digits
 operator|&
-literal|0x80
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-name|digits
-return|;
-name|digits
-operator|&=
 literal|0x7f
-expr_stmt|;
-name|len
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -787,6 +790,18 @@ condition|)
 return|return
 name|DER_BAD
 return|;
+if|if
+condition|(
+name|is_onebyte_result
+condition|)
+return|return
+name|digits
+return|;
+comment|/* 	 * Decode len. We've already verified that we're allowed to read 	 * `digits` bytes. 	 */
+name|len
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -830,7 +845,12 @@ return|return
 name|DER_BAD
 return|;
 return|return
+name|CAST
+argument_list|(
+name|uint32_t
+argument_list|,
 name|len
+argument_list|)
 return|;
 block|}
 end_function
@@ -1241,7 +1261,8 @@ operator|>
 name|nbytes
 condition|)
 return|return
-name|DER_BAD
+operator|-
+literal|1
 return|;
 name|ms
 operator|->
@@ -1258,9 +1279,14 @@ index|]
 operator|.
 name|off
 operator|=
+name|CAST
+argument_list|(
+name|int
+argument_list|,
 name|offs
 operator|+
 name|tlen
+argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -1292,7 +1318,12 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+name|CAST
+argument_list|(
+name|int32_t
+argument_list|,
 name|offs
+argument_list|)
 return|;
 block|}
 end_function

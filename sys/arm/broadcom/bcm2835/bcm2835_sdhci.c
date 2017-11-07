@@ -1112,19 +1112,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MMCCAM
-name|sdhci_cam_start_slot
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_slot
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|sdhci_start_slot
 argument_list|(
 operator|&
@@ -1133,8 +1120,6 @@ operator|->
 name|sc_slot
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -3240,6 +3225,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MMCCAM
+end_ifndef
+
 begin_expr_stmt
 name|MMC_DECLARE_BRIDGE
 argument_list|(
@@ -3247,6 +3238,11 @@ name|sdhci_bcm
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

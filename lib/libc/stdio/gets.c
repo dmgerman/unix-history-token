@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"un-namespace.h"
 end_include
 
@@ -201,6 +195,7 @@ name|c
 operator|==
 name|EOF
 condition|)
+block|{
 if|if
 condition|(
 name|s
@@ -218,6 +213,7 @@ goto|;
 block|}
 else|else
 break|break;
+block|}
 else|else
 operator|*
 name|s

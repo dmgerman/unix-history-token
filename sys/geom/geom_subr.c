@@ -3129,6 +3129,16 @@ operator|->
 name|mediasize
 condition|)
 block|{
+comment|/* 			 * XXX: g_dev_orphan method does deferred destroying 			 * and it is possible, that other event could already 			 * call the orphan method. Check consumer's flags to 			 * do not schedule it twice. 			 */
+if|if
+condition|(
+name|cp
+operator|->
+name|flags
+operator|&
+name|G_CF_ORPHAN
+condition|)
+continue|continue;
 name|cp
 operator|->
 name|flags
@@ -3945,6 +3955,13 @@ operator|->
 name|provider
 operator|=
 name|pp
+expr_stmt|;
+name|cp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|G_CF_ORPHAN
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(

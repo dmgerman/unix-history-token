@@ -12969,6 +12969,8 @@ name|topology_spec
 argument_list|,
 name|CTLTYPE_STRING
 operator||
+name|CTLFLAG_MPSAFE
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|NULL

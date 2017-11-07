@@ -15694,7 +15694,7 @@ name|BIO_puts
 argument_list|(
 name|io
 argument_list|,
-literal|"</BODY></HTML>\r\n\r\n"
+literal|"</pre></BODY></HTML>\r\n\r\n"
 argument_list|)
 expr_stmt|;
 break|break;

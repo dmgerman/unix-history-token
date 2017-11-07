@@ -39,6 +39,12 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_SOCKET
+end_define
+
 begin_include
 include|#
 directive|include

@@ -1012,6 +1012,15 @@ goto|goto
 name|dsaerr
 goto|;
 block|}
+name|BN_set_flags
+argument_list|(
+name|dsa
+operator|->
+name|priv_key
+argument_list|,
+name|BN_FLG_CONSTTIME
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

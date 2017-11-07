@@ -2235,7 +2235,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"msdosfs_inactive(): dep %p, refcnt %ld, mntflag %x, MNT_RDONLY %x\n"
+literal|"msdosfs_inactive(): dep %p, refcnt %ld, mntflag %llx, MNT_RDONLY %llx\n"
 argument_list|,
 name|dep
 argument_list|,
@@ -2243,12 +2243,22 @@ name|dep
 operator|->
 name|de_refcnt
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|vp
 operator|->
 name|v_mount
 operator|->
 name|mnt_flag
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|MNT_RDONLY
 argument_list|)
 expr_stmt|;

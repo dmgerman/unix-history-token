@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"xx_ext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fm_common.h"
 end_include
 
 begin_comment
@@ -68,6 +74,9 @@ name|t_TgecMiiAccessMemMap
 modifier|*
 name|p_MiiAccess
 decl_stmt|;
+name|uint32_t
+name|cfgStatusReg
+decl_stmt|;
 name|SANITY_CHECK_RETURN_ERROR
 argument_list|(
 name|p_Tgec
@@ -89,6 +98,55 @@ operator|=
 name|p_Tgec
 operator|->
 name|p_MiiMemMap
+expr_stmt|;
+comment|/* Configure MII */
+name|cfgStatusReg
+operator|=
+name|GET_UINT32
+argument_list|(
+name|p_MiiAccess
+operator|->
+name|mdio_cfg_status
+argument_list|)
+expr_stmt|;
+name|cfgStatusReg
+operator|&=
+operator|~
+name|MIIMCOM_DIV_MASK
+expr_stmt|;
+comment|/* (one half of fm clock => 2.5Mhz) */
+name|cfgStatusReg
+operator||=
+operator|(
+operator|(
+operator|(
+operator|(
+name|p_Tgec
+operator|->
+name|fmMacControllerDriver
+operator|.
+name|clkFreq
+operator|*
+literal|10
+operator|)
+operator|/
+literal|2
+operator|)
+operator|/
+literal|25
+operator|)
+operator|<<
+name|MIIMCOM_DIV_SHIFT
+operator|)
+expr_stmt|;
+name|WRITE_UINT32
+argument_list|(
+name|p_MiiAccess
+operator|->
+name|mdio_cfg_status
+argument_list|,
+name|cfgStatusReg
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -220,7 +278,7 @@ modifier|*
 name|p_MiiAccess
 decl_stmt|;
 name|uint32_t
-name|cfg_status
+name|cfgStatusReg
 decl_stmt|;
 name|SANITY_CHECK_RETURN_ERROR
 argument_list|(
@@ -243,6 +301,55 @@ operator|=
 name|p_Tgec
 operator|->
 name|p_MiiMemMap
+expr_stmt|;
+comment|/* Configure MII */
+name|cfgStatusReg
+operator|=
+name|GET_UINT32
+argument_list|(
+name|p_MiiAccess
+operator|->
+name|mdio_cfg_status
+argument_list|)
+expr_stmt|;
+name|cfgStatusReg
+operator|&=
+operator|~
+name|MIIMCOM_DIV_MASK
+expr_stmt|;
+comment|/* (one half of fm clock => 2.5Mhz) */
+name|cfgStatusReg
+operator||=
+operator|(
+operator|(
+operator|(
+operator|(
+name|p_Tgec
+operator|->
+name|fmMacControllerDriver
+operator|.
+name|clkFreq
+operator|*
+literal|10
+operator|)
+operator|/
+literal|2
+operator|)
+operator|/
+literal|25
+operator|)
+operator|<<
+name|MIIMCOM_DIV_SHIFT
+operator|)
+expr_stmt|;
+name|WRITE_UINT32
+argument_list|(
+name|p_MiiAccess
+operator|->
+name|mdio_cfg_status
+argument_list|,
+name|cfgStatusReg
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -351,7 +458,7 @@ operator|->
 name|mdio_data
 argument_list|)
 expr_stmt|;
-name|cfg_status
+name|cfgStatusReg
 operator|=
 name|GET_UINT32
 argument_list|(
@@ -362,7 +469,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cfg_status
+name|cfgStatusReg
 operator|&
 name|MIIMIND_READ_ERROR
 condition|)
@@ -373,7 +480,7 @@ argument_list|,
 name|E_INVALID_VALUE
 argument_list|,
 operator|(
-literal|"Read Error: phyAddr 0x%x, dev 0x%x, reg 0x%x, cfg_status 0x%x"
+literal|"Read Error: phyAddr 0x%x, dev 0x%x, reg 0x%x, cfgStatusReg 0x%x"
 operator|,
 operator|(
 operator|(
@@ -393,7 +500,7 @@ operator|)
 operator|,
 name|reg
 operator|,
-name|cfg_status
+name|cfgStatusReg
 operator|)
 argument_list|)
 expr_stmt|;

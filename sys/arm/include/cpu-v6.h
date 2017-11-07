@@ -367,7 +367,7 @@ name|aname
 modifier|...
 parameter_list|)
 define|\
-value|static __inline register_t						\ fname(void)								\ {									\ 	register_t reg;							\ 	__asm __volatile("mrc\t" _FX(aname): "=r" (reg));		\ 	return(reg);							\ }
+value|static __inline uint32_t						\ fname(void)								\ {									\ 	uint32_t reg;							\ 	__asm __volatile("mrc\t" _FX(aname): "=r" (reg));		\ 	return(reg);							\ }
 end_define
 
 begin_define
@@ -408,7 +408,7 @@ name|aname
 modifier|...
 parameter_list|)
 define|\
-value|static __inline void							\ fname(register_t reg)							\ {									\ 	__asm __volatile("mcr\t" _FX(aname):: "r" (reg));		\ }
+value|static __inline void							\ fname(uint32_t reg)							\ {									\ 	__asm __volatile("mcr\t" _FX(aname):: "r" (reg));		\ }
 end_define
 
 begin_define

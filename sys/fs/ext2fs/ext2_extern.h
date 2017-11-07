@@ -107,8 +107,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|daddr_t
-name|ext2_allocfacl
+name|e4fs_daddr_t
+name|ext2_alloc_meta
 parameter_list|(
 name|struct
 name|inode
@@ -235,6 +235,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ext4_bmapext
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|int32_t
+parameter_list|,
+name|int64_t
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ext2_clusteracct
 parameter_list|(
@@ -247,7 +269,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|daddr_t
+name|e4fs_daddr_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -269,6 +291,22 @@ parameter_list|,
 name|char
 modifier|*
 name|how
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ext2_fserr
+parameter_list|(
+name|struct
+name|m_ext2fs
+modifier|*
+parameter_list|,
+name|uid_t
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -309,7 +347,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ext2_i2ei
 parameter_list|(
 name|struct

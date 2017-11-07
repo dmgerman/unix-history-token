@@ -6699,6 +6699,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"AMD MCE Thresholding Extended LVT is already active\n"
@@ -6706,8 +6710,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|APIC_ELVT_MCA
 operator|)
 return|;
 block|}

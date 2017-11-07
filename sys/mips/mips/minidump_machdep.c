@@ -166,13 +166,6 @@ name|kdh
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|off_t
-name|dumplo
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Handle chunked writes. */
 end_comment
@@ -728,15 +721,13 @@ condition|)
 block|{
 name|error
 operator|=
-name|dump_write
+name|dump_append
 argument_list|(
 name|di
 argument_list|,
 name|ptr
 argument_list|,
 literal|0
-argument_list|,
-name|dumplo
 argument_list|,
 name|len
 argument_list|)
@@ -750,10 +741,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|dumplo
-operator|+=
-name|len
-expr_stmt|;
 name|ptr
 operator|+=
 name|len
@@ -1222,9 +1209,6 @@ name|di
 argument_list|,
 operator|&
 name|kdh
-argument_list|,
-operator|&
-name|dumplo
 argument_list|)
 expr_stmt|;
 if|if
@@ -1606,8 +1590,6 @@ name|di
 argument_list|,
 operator|&
 name|kdh
-argument_list|,
-name|dumplo
 argument_list|)
 expr_stmt|;
 if|if

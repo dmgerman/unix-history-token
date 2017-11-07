@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -250,6 +250,55 @@ name|NET_HEADER_FIELD_ETH_ALL_FIELDS
 value|((NET_HEADER_FIELD_ETH_DA<< 6) - 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_ETH_ADDR_SIZE
+value|6
+end_define
+
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|headerFieldIp_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_IP_VER
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_IP_DSCP
+value|(NET_HEADER_FIELD_IP_VER<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_IP_ECN
+value|(NET_HEADER_FIELD_IP_VER<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_IP_PROTO
+value|(NET_HEADER_FIELD_IP_VER<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_IP_PROTO_SIZE
+value|1
+end_define
+
 begin_typedef
 typedef|typedef
 name|uint16_t
@@ -369,6 +418,20 @@ name|NET_HEADER_FIELD_IPv4_ALL_FIELDS
 value|((NET_HEADER_FIELD_IPv4_VER<< 15) - 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_IPv4_ADDR_SIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_IPv4_PROTO_SIZE
+value|1
+end_define
+
 begin_typedef
 typedef|typedef
 name|uint8_t
@@ -435,6 +498,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|NET_HEADER_FIELD_IPv6_ADDR_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_IPv6_NEXT_HDR_SIZE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|NET_HEADER_FIELD_ICMP_TYPE
 value|(1)
 end_define
@@ -472,6 +549,20 @@ define|#
 directive|define
 name|NET_HEADER_FIELD_ICMP_ALL_FIELDS
 value|((NET_HEADER_FIELD_ICMP_TYPE<< 5) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_ICMP_CODE_SIZE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_ICMP_TYPE_SIZE
+value|1
 end_define
 
 begin_define
@@ -600,6 +691,13 @@ name|NET_HEADER_FIELD_TCP_ALL_FIELDS
 value|((NET_HEADER_FIELD_TCP_PORT_SRC<< 11) - 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_TCP_PORT_SIZE
+value|2
+end_define
+
 begin_typedef
 typedef|typedef
 name|uint8_t
@@ -642,6 +740,13 @@ name|NET_HEADER_FIELD_SCTP_ALL_FIELDS
 value|((NET_HEADER_FIELD_SCTP_PORT_SRC<< 4) - 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_SCTP_PORT_SIZE
+value|2
+end_define
+
 begin_typedef
 typedef|typedef
 name|uint8_t
@@ -668,6 +773,13 @@ define|#
 directive|define
 name|NET_HEADER_FIELD_DCCP_ALL_FIELDS
 value|((NET_HEADER_FIELD_DCCP_PORT_SRC<< 2) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_DCCP_PORT_SIZE
+value|2
 end_define
 
 begin_typedef
@@ -710,6 +822,48 @@ define|#
 directive|define
 name|NET_HEADER_FIELD_UDP_ALL_FIELDS
 value|((NET_HEADER_FIELD_UDP_PORT_SRC<< 4) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_UDP_PORT_SIZE
+value|2
+end_define
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|headerFieldUdpLite_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_UDP_LITE_PORT_SRC
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_UDP_LITE_PORT_DST
+value|(NET_HEADER_FIELD_UDP_LITE_PORT_SRC<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_UDP_LITE_ALL_FIELDS
+value|((NET_HEADER_FIELD_UDP_LITE_PORT_SRC<< 2) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_UDP_LITE_PORT_SIZE
+value|2
 end_define
 
 begin_typedef
@@ -766,6 +920,20 @@ define|#
 directive|define
 name|NET_HEADER_FIELD_UDP_ENCAP_ESP_ALL_FIELDS
 value|((NET_HEADER_FIELD_UDP_ENCAP_ESP_PORT_SRC<< 6) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_UDP_ENCAP_ESP_PORT_SIZE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_UDP_ENCAP_ESP_SPI_SIZE
+value|4
 end_define
 
 begin_define
@@ -1545,6 +1713,13 @@ name|NET_HEADER_FIELD_IPSEC_ESP_ALL_FIELDS
 value|((NET_HEADER_FIELD_IPSEC_ESP_SPI<< 2) - 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NET_HEADER_FIELD_IPSEC_ESP_SPI_SIZE
+value|4
+end_define
+
 begin_typedef
 typedef|typedef
 name|uint8_t
@@ -1605,9 +1780,13 @@ name|HEADER_TYPE_IPv4
 block|,
 name|HEADER_TYPE_IPv6
 block|,
+name|HEADER_TYPE_IP
+block|,
 name|HEADER_TYPE_TCP
 block|,
 name|HEADER_TYPE_UDP
+block|,
+name|HEADER_TYPE_UDP_LITE
 block|,
 name|HEADER_TYPE_IPHC
 block|,

@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/compiler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/interrupt.h>
 end_include
 
@@ -112,7 +118,7 @@ parameter_list|,
 name|new
 parameter_list|)
 define|\
-value|atomic_store_rel_ptr((volatile uintptr_t *)&(ts)->entry.tqe_prev, new)
+value|WRITE_ONCE(*(volatile uintptr_t *)&(ts)->entry.tqe_prev, new)
 end_define
 
 begin_define
@@ -123,7 +129,7 @@ parameter_list|(
 name|ts
 parameter_list|)
 define|\
-value|atomic_load_acq_ptr((volatile uintptr_t *)&(ts)->entry.tqe_prev)
+value|READ_ONCE(*(volatile uintptr_t *)&(ts)->entry.tqe_prev)
 end_define
 
 begin_struct

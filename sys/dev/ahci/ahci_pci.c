@@ -4506,12 +4506,6 @@ block|}
 end_function
 
 begin_decl_stmt
-name|devclass_t
-name|ahci_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|device_method_t
 name|ahci_methods

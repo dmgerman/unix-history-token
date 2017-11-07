@@ -2584,7 +2584,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|mps_config_get_sas_device_pg0
 argument_list|(
 name|sc
@@ -2599,14 +2598,27 @@ name|MPI2_SAS_DEVICE_PGAD_FORM_HANDLE
 argument_list|,
 name|handle
 argument_list|)
-operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: error reading SAS device page0\n"
+name|sc
 argument_list|,
-name|__func__
+name|MPS_INFO
+operator||
+name|MPS_MAPPING
+operator||
+name|MPS_FAULT
+argument_list|,
+literal|"Error reading SAS device %#x page0, iocstatus= 0x%x\n"
+argument_list|,
+name|handle
+argument_list|,
+name|mpi_reply
+operator|.
+name|IOCStatus
 argument_list|)
 expr_stmt|;
 name|error
@@ -2658,7 +2670,6 @@ name|parent_config_page
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|mps_config_get_sas_device_pg0
 argument_list|(
 name|sc
@@ -2678,7 +2689,8 @@ operator|.
 name|ParentDevHandle
 argument_list|)
 argument_list|)
-operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|mps_dprint
@@ -2689,9 +2701,8 @@ name|MPS_MAPPING
 operator||
 name|MPS_FAULT
 argument_list|,
-literal|"%s: error reading SAS device %#x page0\n"
-argument_list|,
-name|__func__
+literal|"Error reading parent SAS device %#x page0, "
+literal|"iocstatus= 0x%x\n"
 argument_list|,
 name|le16toh
 argument_list|(
@@ -2699,6 +2710,10 @@ name|config_page
 operator|.
 name|ParentDevHandle
 argument_list|)
+argument_list|,
+name|tmp_mpi_reply
+operator|.
+name|IOCStatus
 argument_list|)
 expr_stmt|;
 block|}
@@ -4446,11 +4461,17 @@ condition|)
 block|{
 comment|/* FIXME */
 comment|/*  		 * If the request returns an error then we need to do a diag  		 * reset  		 */
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: request for page completed with error %d"
+name|sc
 argument_list|,
-name|__func__
+name|MPS_INFO
+operator||
+name|MPS_FAULT
+operator||
+name|MPS_MAPPING
+argument_list|,
+literal|"Request for SATA PASSTHROUGH page completed with error %d"
 argument_list|,
 name|error
 argument_list|)
@@ -4500,11 +4521,19 @@ operator|!=
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: error reading SATA PASSTHRU; iocstatus = 0x%x\n"
+name|sc
 argument_list|,
-name|__func__
+name|MPS_INFO
+operator||
+name|MPS_MAPPING
+operator||
+name|MPS_FAULT
+argument_list|,
+literal|"Error reading device %#x SATA PASSTHRU; iocstatus= 0x%x\n"
+argument_list|,
+name|handle
 argument_list|,
 name|reply
 operator|->

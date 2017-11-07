@@ -15,6 +15,27 @@ directive|define
 name|_SYS_UNPCB_H_
 end_define
 
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|unp_gen_t
+typedef|;
+end_typedef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_UNPCB
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -30,13 +51,6 @@ end_include
 begin_comment
 comment|/*  * Protocol control block for an active  * instance of a UNIX internal protocol.  *  * A socket may be associated with a vnode in the  * filesystem.  If so, the unp_vnode pointer holds  * a reference count to this vnode, which should be irele'd  * when the socket goes away.  *  * A socket may be connected to another socket, in which  * case the control block of the socket to which it is connected  * is given by unp_conn.  *  * A socket may be referenced by a number of sockets (e.g. several  * sockets may be connected to a datagram socket.)  These sockets  * are in a linked list starting with unp_refs, linked through  * unp_nextref and null-terminated.  Note that a socket may be referenced  * by a number of other sockets and may also reference a socket (not  * necessarily one which is referencing it).  This generates  * the need for unp_refs and unp_nextref to be separate fields.  *  * Stream sockets keep copies of receive sockbuf sb_cc and sb_mbcnt  * so that changes in the sockbuf may be computed to modify  * back pressure on the sender accordingly.  */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|u_quad_t
-name|unp_gen_t
-typedef|;
-end_typedef
 
 begin_expr_stmt
 name|LIST_HEAD
@@ -105,12 +119,6 @@ modifier|*
 name|unp_addr
 decl_stmt|;
 comment|/* bound address of socket */
-name|int
-name|reserved1
-decl_stmt|;
-name|int
-name|reserved2
-decl_stmt|;
 name|unp_gen_t
 name|unp_gencnt
 decl_stmt|;
@@ -272,8 +280,17 @@ parameter_list|)
 value|((struct unpcb *)((so)->so_pcb))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Hack alert -- this structure depends on<sys/socketvar.h>. */
+comment|/* _KERNEL || _WANT_UNPCB */
+end_comment
+
+begin_comment
+comment|/*  * UNPCB structure exported to user-land via sysctl(3).  *  * Fields prefixed with "xu_" are unique to the export structure, and fields  * with "unp_" or other prefixes match corresponding fields of 'struct unpcb'.  *  * Legend:  * (s) - used by userland utilities in src  * (p) - used by utilities in ports  * (3) - is known to be used by third party software not in ports  * (n) - no known usage  *  * Evil hack: declare only if sys/socketvar.h have been included.  */
 end_comment
 
 begin_ifdef
@@ -290,22 +307,52 @@ name|size_t
 name|xu_len
 decl_stmt|;
 comment|/* length of this structure */
-name|struct
-name|unpcb
+name|void
 modifier|*
 name|xu_unpp
 decl_stmt|;
 comment|/* to help netstat, fstat */
-name|struct
-name|unpcb
-name|xu_unp
+name|void
+modifier|*
+name|unp_vnode
 decl_stmt|;
-comment|/* our information */
+comment|/* (s) */
+name|void
+modifier|*
+name|unp_conn
+decl_stmt|;
+comment|/* (s) */
+name|void
+modifier|*
+name|xu_firstref
+decl_stmt|;
+comment|/* (s) */
+name|void
+modifier|*
+name|xu_nextref
+decl_stmt|;
+comment|/* (s) */
+name|unp_gen_t
+name|unp_gencnt
+decl_stmt|;
+comment|/* (s) */
+name|int64_t
+name|xu_spare64
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|int32_t
+name|xu_spare32
+index|[
+literal|8
+index|]
+decl_stmt|;
 union|union
 block|{
 name|struct
 name|sockaddr_un
-name|xuu_addr
+name|xu_addr
 decl_stmt|;
 comment|/* our bound address */
 name|char
@@ -315,17 +362,12 @@ literal|256
 index|]
 decl_stmt|;
 block|}
-name|xu_au
 union|;
-define|#
-directive|define
-name|xu_addr
-value|xu_au.xuu_addr
 union|union
 block|{
 name|struct
 name|sockaddr_un
-name|xuu_caddr
+name|xu_caddr
 decl_stmt|;
 comment|/* their bound address */
 name|char
@@ -335,20 +377,16 @@ literal|256
 index|]
 decl_stmt|;
 block|}
-name|xu_cau
 union|;
-define|#
-directive|define
-name|xu_caddr
-value|xu_cau.xuu_caddr
 name|struct
 name|xsocket
 name|xu_socket
 decl_stmt|;
-name|u_quad_t
-name|xu_alignment_hack
-decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -369,8 +407,16 @@ name|so_gen_t
 name|xug_sogen
 decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_endif
 endif|#

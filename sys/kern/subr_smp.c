@@ -315,6 +315,8 @@ argument_list|,
 name|CTLFLAG_RD
 operator||
 name|CTLTYPE_INT
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,

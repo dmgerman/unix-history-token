@@ -329,7 +329,7 @@ comment|/* We must allocate a new string for the name (TargetPath gets deleted) 
 operator|*
 name|NewPath
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|ACPI_NAME_SIZE
 operator|+

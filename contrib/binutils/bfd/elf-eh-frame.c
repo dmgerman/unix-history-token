@@ -6255,6 +6255,9 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|+=
+operator|(
+name|bfd_vma
+operator|)
 name|ent
 operator|->
 name|offset
@@ -6481,6 +6484,9 @@ name|DW_EH_PE_pcrel
 case|:
 name|value
 operator|+=
+operator|(
+name|bfd_vma
+operator|)
 name|ent
 operator|->
 name|offset
@@ -6657,6 +6663,9 @@ name|DW_EH_PE_pcrel
 condition|)
 name|value
 operator|+=
+operator|(
+name|bfd_vma
+operator|)
 name|ent
 operator|->
 name|offset

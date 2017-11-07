@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/_bitset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_task.h>
 end_include
 
@@ -413,7 +419,7 @@ name|uma_zone_t
 name|uk_slabzone
 decl_stmt|;
 comment|/* Slab zone backing us, if OFFPAGE */
-name|uint16_t
+name|uint32_t
 name|uk_pgoff
 decl_stmt|;
 comment|/* Offset to uma_slab struct */

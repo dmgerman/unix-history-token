@@ -552,8 +552,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT_COUNT
+name|AT_EHDRFLAGS
 value|24
+end_define
+
+begin_comment
+comment|/* e_flags field from elf hdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_HWCAP
+value|25
+end_define
+
+begin_comment
+comment|/* CPU feature flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_HWCAP2
+value|26
+end_define
+
+begin_comment
+comment|/* CPU feature flags 2. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_COUNT
+value|27
 end_define
 
 begin_comment

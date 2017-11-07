@@ -299,6 +299,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|uint16_t
+name|u16
+decl_stmt|;
 block|}
 name|value
 union|;
@@ -326,6 +329,9 @@ name|diocskerneldump_arg
 block|{
 name|uint8_t
 name|kda_enable
+decl_stmt|;
+name|uint8_t
+name|kda_compression
 decl_stmt|;
 name|uint8_t
 name|kda_encryption

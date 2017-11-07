@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * CAM Target Layer, a SCSI device emulation subsystem.  *  * Author: Ken Merry<ken@FreeBSD.org>  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_CTL_C
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1975,6 +1969,47 @@ literal|"Size of per-port LUN map (max LUN + 1)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTL_TIME_IO
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ctl_time_io_secs
+init|=
+name|CTL_TIME_IO_DEFAULT_SECS
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_cam_ctl
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|time_io_secs
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|ctl_time_io_secs
+argument_list|,
+literal|0
+argument_list|,
+literal|"Log requests taking more seconds"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Supported pages (0x00), Serial number (0x80), Device ID (0x83),  * Extended INQUIRY Data (0x86), Mode Page Policy (0x87),  * SCSI Ports (0x88), Third-party Copy (0x8F), Block limits (0xB0),  * Block Device Characteristics (0xB1) and Logical Block Provisioning (0xB2)  */

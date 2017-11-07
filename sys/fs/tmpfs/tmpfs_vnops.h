@@ -79,6 +79,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vop_print_t
+name|tmpfs_print
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vop_reclaim_t
 name|tmpfs_reclaim
 decl_stmt|;

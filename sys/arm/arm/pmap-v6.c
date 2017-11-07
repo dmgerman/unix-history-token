@@ -12496,6 +12496,14 @@ do|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -12647,6 +12655,11 @@ condition|)
 do|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  Conditionally create a pv entry.  */
@@ -13330,6 +13343,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  *  Tries to promote the NPTE2_IN_PT2, contiguous 4KB page mappings that are  *  within a single page table page (PT2) to a single 1MB page mapping.  *  For promotion to occur, two conditions must be met: (1) the 4KB page  *  mappings must map aligned, contiguous physical memory and (2) the 4KB page  *  mappings must have identical characteristics.  *  *  Managed (PG_MANAGED) mappings within the kernel address space are not  *  promoted.  The reason is that kernel PTE1s are replicated in each pmap but  *  pmap_remove_write(), pmap_clear_modify(), and pmap_clear_reference() only  *  read the PTE1 from the kernel pmap.  */
 end_comment
@@ -13854,6 +13875,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VM_NRESERVLEVEL> 0 */
+end_comment
 
 begin_comment
 comment|/*  *  Zero L2 page table page.  */
@@ -16008,6 +16038,11 @@ comment|/* 		 * QQQ: In time when both access and not mofified bits are 		 *    
 block|panic("%s: pmap %p va %#x opte2 %x npte2 %x !!", __func__, pmap, 		    va, opte2, npte2); 	}
 endif|#
 directive|endif
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
 comment|/* 	 * If both the L2 page table page and the reservation are fully 	 * populated, then attempt promotion. 	 */
 if|if
 condition|(
@@ -16052,6 +16087,8 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sched_unpin
 argument_list|()
 expr_stmt|;
@@ -26269,6 +26306,64 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|INVARIANTS
+name|pte1
+operator|=
+name|pte1_load
+argument_list|(
+name|pmap_pte1
+argument_list|(
+name|pmap
+argument_list|,
+name|far
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pte1_is_link
+argument_list|(
+name|pte1
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Check in advance that associated L2 page table is mapped into 		 * PT2MAP space. Note that faulty access to not mapped L2 page 		 * table is caught in more general check above where "far" is 		 * checked that it does not lay in PT2MAP space. Note also that 		 * L1 page table and PT2TAB always exist and are mapped. 		 */
+name|pte2
+operator|=
+name|pt2tab_load
+argument_list|(
+name|pmap_pt2tab_entry
+argument_list|(
+name|pmap
+argument_list|,
+name|far
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pte2_is_valid
+argument_list|(
+name|pte2
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"%s: missing L2 page table (%p, %#x)"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+name|far
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|SMP
 comment|/* 	 * Special treatment is due to break-before-make approach done when 	 * pte1 is updated for userland mapping during section promotion or 	 * demotion. If not caught here, pmap_enter() can find a section 	 * mapping on faulting address. That is not allowed. 	 */
 if|if
@@ -26308,6 +26403,27 @@ operator|==
 name|FAULT_ACCESS_L2
 condition|)
 block|{
+name|pte1
+operator|=
+name|pte1_load
+argument_list|(
+name|pmap_pte1
+argument_list|(
+name|pmap
+argument_list|,
+name|far
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pte1_is_link
+argument_list|(
+name|pte1
+argument_list|)
+condition|)
+block|{
+comment|/* L2 page table should exist and be mapped. */
 name|pte2p
 operator|=
 name|pt2map_entry
@@ -26337,6 +26453,34 @@ argument_list|,
 name|pte2
 operator||
 name|PTE2_A
+argument_list|)
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|KERN_SUCCESS
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 			 * We got L2 access fault but PTE1 is not a link. 			 * Probably some race happened, do nothing. 			 */
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: FAULT_ACCESS_L2 - pmap %#x far %#x"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+name|far
 argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
@@ -26402,6 +26546,33 @@ name|KERN_SUCCESS
 operator|)
 return|;
 block|}
+else|else
+block|{
+comment|/* 			 * We got L1 access fault but PTE1 is not section 			 * mapping. Probably some race happened, do nothing. 			 */
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: FAULT_ACCESS_L1 - pmap %#x far %#x"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+name|far
+argument_list|)
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|KERN_SUCCESS
+operator|)
+return|;
+block|}
 block|}
 comment|/* 	 * Handle modify bits for page and section. Note that the modify 	 * bit is emulated by software. So PTEx_RO is software read only 	 * bit and PTEx_NM flag is real hardware read only bit. 	 * 	 * QQQ: This is hardware emulation, we do not call userret() 	 *      for aborts from user mode. 	 */
 if|if
@@ -26419,6 +26590,27 @@ name|FAULT_PERM_L2
 operator|)
 condition|)
 block|{
+name|pte1
+operator|=
+name|pte1_load
+argument_list|(
+name|pmap_pte1
+argument_list|(
+name|pmap
+argument_list|,
+name|far
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pte1_is_link
+argument_list|(
+name|pte1
+argument_list|)
+condition|)
+block|{
+comment|/* L2 page table should exist and be mapped. */
 name|pte2p
 operator|=
 name|pt2map_entry
@@ -26484,6 +26676,34 @@ operator|)
 return|;
 block|}
 block|}
+else|else
+block|{
+comment|/* 			 * We got L2 permission fault but PTE1 is not a link. 			 * Probably some race happened, do nothing. 			 */
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: FAULT_PERM_L2 - pmap %#x far %#x"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+name|far
+argument_list|)
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|KERN_SUCCESS
+operator|)
+return|;
+block|}
+block|}
 if|if
 condition|(
 operator|(
@@ -26521,7 +26741,10 @@ name|pte1_is_section
 argument_list|(
 name|pte1
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 operator|(
 name|pte1
@@ -26566,75 +26789,14 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * QQQ: The previous code, mainly fast handling of access and 	 *      modify bits aborts, could be moved to ASM. Now we are 	 *      starting to deal with not fast aborts. 	 */
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-comment|/* 	 * Read an entry in PT2TAB associated with both pmap and far. 	 * It's safe because PT2TAB is always mapped. 	 */
-name|pte2
-operator|=
-name|pt2tab_load
+else|else
+block|{
+comment|/* 			 * We got L1 permission fault but PTE1 is not section 			 * mapping. Probably some race happened, do nothing. 			 */
+name|CTR3
 argument_list|(
-name|pmap_pt2tab_entry
-argument_list|(
-name|pmap
+name|KTR_PMAP
 argument_list|,
-name|far
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pte2_is_valid
-argument_list|(
-name|pte2
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * Now, when we know that L2 page table is allocated, 		 * we can use PT2MAP to get L2 page table entry. 		 */
-name|pte2
-operator|=
-name|pte2_load
-argument_list|(
-name|pt2map_entry
-argument_list|(
-name|far
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pte2_is_valid
-argument_list|(
-name|pte2
-argument_list|)
-condition|)
-block|{
-comment|/* 			 * If L2 page table entry is valid, make sure that 			 * L1 page table entry is valid too.  Note that we 			 * leave L2 page entries untouched when promoted. 			 */
-name|pte1
-operator|=
-name|pte1_load
-argument_list|(
-name|pmap_pte1
-argument_list|(
-name|pmap
-argument_list|,
-name|far
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pte1_is_valid
-argument_list|(
-name|pte1
-argument_list|)
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"%s: missing L1 page entry (%p, %#x)"
+literal|"%s: FAULT_PERM_L1 - pmap %#x far %#x"
 argument_list|,
 name|__func__
 argument_list|,
@@ -26643,11 +26805,19 @@ argument_list|,
 name|far
 argument_list|)
 expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|KERN_SUCCESS
+operator|)
+return|;
 block|}
 block|}
-block|}
-endif|#
-directive|endif
+comment|/* 	 * QQQ: The previous code, mainly fast handling of access and 	 *      modify bits aborts, could be moved to ASM. Now we are 	 *      starting to deal with not fast aborts. 	 */
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap

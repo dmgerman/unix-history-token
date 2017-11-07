@@ -204,6 +204,9 @@ decl_stmt|;
 name|Boolean
 name|pairwise_set
 decl_stmt|;
+name|Boolean
+name|tk_already_set
+decl_stmt|;
 name|int
 name|keycount
 decl_stmt|;

@@ -137,5 +137,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|bnxt_create_hw_lro_sysctls
+parameter_list|(
+name|struct
+name|bnxt_softc
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bnxt_create_pause_fc_sysctls
+parameter_list|(
+name|struct
+name|bnxt_softc
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

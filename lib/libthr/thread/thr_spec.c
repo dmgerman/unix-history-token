@@ -77,8 +77,11 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_comment
+comment|/* Used in symbol lookup of libthread_db */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|struct
 name|pthread_key
 name|_thread_keytable

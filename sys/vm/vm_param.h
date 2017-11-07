@@ -164,8 +164,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_MAXID
+name|VM_OVERCOMMIT
 value|12
+end_define
+
+begin_comment
+comment|/* vm.overcommit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MAXID
+value|13
 end_define
 
 begin_comment

@@ -1351,6 +1351,12 @@ name|l_value1
 operator|=
 literal|1
 expr_stmt|;
+name|ios
+operator|->
+name|l_value2
+operator|=
+literal|0
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1368,9 +1374,11 @@ modifier|*
 name|ios
 parameter_list|)
 block|{
-name|ios
-operator|->
-name|l_value1
+name|int
+name|new_ios
+decl_stmt|;
+comment|/* 	 * Allow at least one IO per tick until all 	 * the IOs for this interval have been spent. 	 */
+name|new_ios
 operator|=
 call|(
 name|int
@@ -1396,18 +1404,71 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|new_ios
+operator|<
+literal|1
+operator|&&
 name|ios
 operator|->
-name|l_value1
-operator|<=
+name|l_value2
+operator|<
+name|ios
+operator|->
+name|current
+condition|)
+block|{
+name|new_ios
+operator|=
+literal|1
+expr_stmt|;
+name|ios
+operator|->
+name|l_value2
+operator|++
+expr_stmt|;
+block|}
+comment|/* 	 * If this a new accounting interval, discard any "unspent" ios 	 * granted in the previous interval.  Otherwise add the new ios to 	 * the previously granted ones that haven't been spent yet. 	 */
+if|if
+condition|(
+operator|(
+name|ios
+operator|->
+name|softc
+operator|->
+name|total_ticks
+operator|%
+name|ios
+operator|->
+name|softc
+operator|->
+name|quanta
+operator|)
+operator|==
 literal|0
 condition|)
+block|{
 name|ios
 operator|->
 name|l_value1
 operator|=
+name|new_ios
+expr_stmt|;
+name|ios
+operator|->
+name|l_value2
+operator|=
 literal|1
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ios
+operator|->
+name|l_value1
+operator|+=
+name|new_ios
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -1430,9 +1491,15 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-comment|/* 	 * So if we have any more IOPs left, allow it, 	 * otherwise wait. 	 */
+comment|/* 	 * So if we have any more IOPs left, allow it, 	 * otherwise wait. If current iops is 0, treat that 	 * as unlimited as a failsafe. 	 */
 if|if
 condition|(
+name|ios
+operator|->
+name|current
+operator|>
+literal|0
+operator|&&
 name|ios
 operator|->
 name|l_value1
@@ -1606,9 +1673,15 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-comment|/* 	 * So if we have any more bw quota left, allow it, 	 * otherwise wait. Note, we'll go negative and that's 	 * OK. We'll just get a little less next quota. 	 * 	 * Note on going negative: that allows us to process 	 * requests in order better, since we won't allow 	 * shorter reads to get around the long one that we 	 * don't have the quota to do just yet. It also prevents 	 * starvation by being a little more permissive about 	 * what we let through this quantum (to prevent the 	 * starvation), at the cost of getting a little less 	 * next quantum. 	 */
+comment|/* 	 * So if we have any more bw quota left, allow it, 	 * otherwise wait. Note, we'll go negative and that's 	 * OK. We'll just get a little less next quota. 	 * 	 * Note on going negative: that allows us to process 	 * requests in order better, since we won't allow 	 * shorter reads to get around the long one that we 	 * don't have the quota to do just yet. It also prevents 	 * starvation by being a little more permissive about 	 * what we let through this quantum (to prevent the 	 * starvation), at the cost of getting a little less 	 * next quantum. 	 * 	 * Also note that if the current limit is<= 0, 	 * we treat it as unlimited as a failsafe. 	 */
 if|if
 condition|(
+name|ios
+operator|->
+name|current
+operator|>
+literal|0
+operator|&&
 name|ios
 operator|->
 name|l_value1
@@ -1722,8 +1795,6 @@ operator|/
 name|isc
 operator|->
 name|quanta
-operator|-
-literal|1
 argument_list|,
 name|cam_iosched_ticker
 argument_list|,
@@ -2324,7 +2395,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Trim or similar currently pending completion */
+comment|/*  * Trim or similar currently pending completion. Should only be set for  * those drivers wishing only one Trim active at a time.  */
 end_comment
 
 begin_define
@@ -2717,11 +2788,6 @@ name|limiter
 operator|=
 name|none
 expr_stmt|;
-name|cam_iosched_limiter_init
-argument_list|(
-name|ios
-argument_list|)
-expr_stmt|;
 name|ios
 operator|->
 name|in
@@ -2731,6 +2797,10 @@ expr_stmt|;
 name|ios
 operator|->
 name|max
+operator|=
+name|ios
+operator|->
+name|current
 operator|=
 literal|300000
 expr_stmt|;
@@ -2781,6 +2851,11 @@ operator|->
 name|softc
 operator|=
 name|isc
+expr_stmt|;
+name|cam_iosched_limiter_init
+argument_list|(
+name|ios
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2988,8 +3063,6 @@ operator|/
 name|isc
 operator|->
 name|quanta
-operator|-
-literal|1
 argument_list|,
 name|cam_iosched_ticker
 argument_list|,
@@ -3433,6 +3506,103 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|cam_iosched_quanta_sysctl
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+modifier|*
+name|quanta
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|value
+decl_stmt|;
+name|quanta
+operator|=
+operator|(
+name|unsigned
+operator|*
+operator|)
+name|arg1
+expr_stmt|;
+name|value
+operator|=
+operator|*
+name|quanta
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|value
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|req
+operator|->
+name|newptr
+operator|==
+name|NULL
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|value
+operator|<
+literal|1
+operator|||
+name|value
+operator|>
+name|hz
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+operator|*
+name|quanta
+operator|=
+name|value
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -4348,8 +4518,6 @@ name|iscp
 operator|)
 operator|->
 name|quanta
-operator|-
-literal|1
 argument_list|,
 name|cam_iosched_ticker
 argument_list|,
@@ -4675,7 +4843,7 @@ argument_list|,
 literal|"How biased towards read should we be independent of limits"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
 argument_list|,
@@ -4685,6 +4853,8 @@ name|OID_AUTO
 argument_list|,
 literal|"quanta"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -4692,7 +4862,11 @@ name|isc
 operator|->
 name|quanta
 argument_list|,
-literal|200
+literal|0
+argument_list|,
+name|cam_iosched_quanta_sysctl
+argument_list|,
+literal|"I"
 argument_list|,
 literal|"How many quanta per second do we slice the I/O up into"
 argument_list|)
@@ -5521,14 +5695,8 @@ operator|(
 name|bp
 operator|->
 name|bio_cmd
-operator|==
-name|BIO_WRITE
-operator|||
-name|bp
-operator|->
-name|bio_cmd
-operator|==
-name|BIO_FLUSH
+operator|!=
+name|BIO_READ
 operator|)
 condition|)
 block|{
@@ -5746,7 +5914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Complete a trim request  */
+comment|/*  * Complete a trim request. Mark that we no longer have one in flight.  */
 end_comment
 
 begin_function
@@ -5992,7 +6160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Tell the io scheduler that you've pushed a trim down into the sim.  * xxx better place for this?  */
+comment|/*  * Tell the io scheduler that you've pushed a trim down into the sim.  * This also tells the I/O scheduler not to push any more trims down, so  * some periphs do not call it if they can cope with multiple trims in flight.  */
 end_comment
 
 begin_function

@@ -1034,12 +1034,25 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Wake up the other CPUs */
-asm|__asm __volatile("sev");
+asm|__asm __volatile(
+literal|"dsb ishst	\n"
+literal|"sev	\n"
+operator|::
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"Release APs\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|i
@@ -1065,27 +1078,29 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
+end_for
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"APs not started\n"
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_expr_stmt
-name|SYSINIT
-argument_list|(
+unit|} SYSINIT
+operator|(
 name|start_aps
-argument_list|,
+operator|,
 name|SI_SUB_SMP
-argument_list|,
+operator|,
 name|SI_ORDER_FIRST
-argument_list|,
+operator|,
 name|release_aps
-argument_list|,
+operator|,
 name|NULL
-argument_list|)
+operator|)
 expr_stmt|;
 end_expr_stmt
 

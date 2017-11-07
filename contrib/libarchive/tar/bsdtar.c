@@ -1669,6 +1669,9 @@ case|case
 name|OPTION_LZOP
 case|:
 comment|/* GNU tar beginning with 1.21 */
+case|case
+name|OPTION_ZSTD
+case|:
 if|if
 condition|(
 name|compression
@@ -1735,6 +1738,14 @@ case|:
 name|compression_name
 operator|=
 literal|"lzop"
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_ZSTD
+case|:
+name|compression_name
+operator|=
+literal|"zstd"
 expr_stmt|;
 break|break;
 block|}

@@ -2748,6 +2748,11 @@ name|bcma_erom
 modifier|*
 name|bcma_erom
 decl_stmt|;
+name|struct
+name|bhnd_erom_io
+modifier|*
+name|eio
+decl_stmt|;
 specifier|const
 name|struct
 name|bhnd_chipid
@@ -2784,6 +2789,15 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Allocate our EROM parser */
+name|eio
+operator|=
+name|bhnd_erom_iores_new
+argument_list|(
+name|bus
+argument_list|,
+name|BCMA_EROM_RID
+argument_list|)
+expr_stmt|;
 name|erom
 operator|=
 name|bhnd_erom_alloc
@@ -2793,9 +2807,7 @@ name|bcma_erom_parser
 argument_list|,
 name|cid
 argument_list|,
-name|bus
-argument_list|,
-name|BCMA_EROM_RID
+name|eio
 argument_list|)
 expr_stmt|;
 if|if
@@ -2804,11 +2816,18 @@ name|erom
 operator|==
 name|NULL
 condition|)
+block|{
+name|bhnd_erom_io_fini
+argument_list|(
+name|eio
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENODEV
 operator|)
 return|;
+block|}
 comment|/* Add all cores. */
 name|bcma_erom
 operator|=

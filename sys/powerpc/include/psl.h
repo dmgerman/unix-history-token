@@ -99,17 +99,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSL_BE
-value|0x00000200UL
-end_define
-
-begin_comment
-comment|/* branch trace enable */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PSL_FE1
 value|0x00000100UL
 end_define
@@ -127,6 +116,17 @@ end_define
 
 begin_comment
 comment|/* performance monitor mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_RI
+value|0x00000002UL
+end_define
+
+begin_comment
+comment|/* recoverable interrupt */
 end_comment
 
 begin_comment
@@ -154,6 +154,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|PSL_GS
+value|0x10000000UL
+end_define
+
+begin_comment
+comment|/* Guest state */
+end_comment
 
 begin_define
 define|#
@@ -316,6 +327,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PSL_BE
+value|0x00000200UL
+end_define
+
+begin_comment
+comment|/* branch trace enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PSL_IP
 value|0x00000040UL
 end_define
@@ -344,17 +366,6 @@ end_define
 
 begin_comment
 comment|/* data address relocation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSL_RI
-value|0x00000002UL
-end_define
-
-begin_comment
-comment|/* recoverable interrupt */
 end_comment
 
 begin_define

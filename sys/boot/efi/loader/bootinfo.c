@@ -116,16 +116,16 @@ directive|include
 file|<machine/specialreg.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|"framebuffer.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -1008,6 +1008,11 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
 name|struct
 name|efi_fb
 name|efifb
@@ -1030,7 +1035,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"addr, size     0x%lx, 0x%lx\n"
+literal|"addr, size     0x%jx, 0x%jx\n"
 argument_list|,
 name|efifb
 operator|.

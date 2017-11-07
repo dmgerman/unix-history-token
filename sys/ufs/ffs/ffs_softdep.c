@@ -9121,11 +9121,6 @@ operator|->
 name|wk_mp
 argument_list|)
 expr_stmt|;
-name|WORKLIST_REMOVE
-argument_list|(
-name|wk
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ump
@@ -9148,6 +9143,11 @@ operator|->
 name|wk_list
 operator|.
 name|le_prev
+expr_stmt|;
+name|WORKLIST_REMOVE
+argument_list|(
+name|wk
+argument_list|)
 expr_stmt|;
 name|ump
 operator|->
@@ -10342,14 +10342,6 @@ name|WK_HEAD
 argument_list|)
 expr_stmt|;
 block|}
-name|LIST_REMOVE
-argument_list|(
-operator|&
-name|sentinel
-argument_list|,
-name|wk_list
-argument_list|)
-expr_stmt|;
 comment|/* Sentinal could've become the tail from remove_from_worklist. */
 if|if
 condition|(
@@ -10374,6 +10366,14 @@ operator|.
 name|wk_list
 operator|.
 name|le_prev
+expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+operator|&
+name|sentinel
+argument_list|,
+name|wk_list
+argument_list|)
 expr_stmt|;
 name|PRELE
 argument_list|(
@@ -18412,9 +18412,6 @@ name|jmvref
 modifier|*
 name|jmvref
 decl_stmt|;
-name|int
-name|waiting
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -18447,24 +18444,12 @@ argument_list|(
 name|wk
 argument_list|)
 expr_stmt|;
-name|waiting
-operator|=
-name|wk
-operator|->
-name|wk_state
-operator|&
-name|IOWAITING
-expr_stmt|;
 name|wk
 operator|->
 name|wk_state
 operator|&=
 operator|~
-operator|(
 name|INPROGRESS
-operator||
-name|IOWAITING
-operator|)
 expr_stmt|;
 name|wk
 operator|->
@@ -18663,15 +18648,6 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-if|if
-condition|(
-name|waiting
-condition|)
-name|wakeup
-argument_list|(
-name|wk
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Release the self reference so the structure may be freed. */
 name|rele_jseg
@@ -54417,7 +54393,7 @@ name|inodedep
 operator|->
 name|id_savednlink
 operator|>
-name|LINK_MAX
+name|UFS_LINK_MAX
 condition|)
 name|panic
 argument_list|(
@@ -65429,7 +65405,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 		 * The lock argument must be bp->b_vp's mutex in 		 * this case. 		 */
 ifdef|#
 directive|ifdef
 name|DEBUG_VFS_LOCKS
@@ -66034,7 +66009,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wait for pending output on a vnode to complete.  * Must be called with vnode lock and interlock locked.  *  * XXX: Should just be a call to bufobj_wwait().  */
+comment|/*  * Wait for pending output on a vnode to complete.  */
 end_comment
 
 begin_function
@@ -66050,18 +66025,6 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-name|struct
-name|bufobj
-modifier|*
-name|bo
-decl_stmt|;
-name|bo
-operator|=
-operator|&
-name|vp
-operator|->
-name|v_bufobj
-expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
@@ -66069,49 +66032,21 @@ argument_list|,
 literal|"drain_output"
 argument_list|)
 expr_stmt|;
-name|ASSERT_BO_WLOCKED
-argument_list|(
-name|bo
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|bo
-operator|->
-name|bo_numoutput
-condition|)
-block|{
-name|bo
-operator|->
-name|bo_flag
-operator||=
-name|BO_WWAIT
-expr_stmt|;
-name|msleep
-argument_list|(
 operator|(
-name|caddr_t
+name|void
 operator|)
-operator|&
-name|bo
-operator|->
-name|bo_numoutput
-argument_list|,
-name|BO_LOCKPTR
+name|bufobj_wwait
 argument_list|(
-name|bo
-argument_list|)
+operator|&
+name|vp
+operator|->
+name|v_bufobj
 argument_list|,
-name|PRIBIO
-operator|+
-literal|1
-argument_list|,
-literal|"drainvp"
+literal|0
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

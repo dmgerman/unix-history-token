@@ -151,6 +151,14 @@ directive|include
 file|<sys/linker_set.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|bool
+name|sdt_probes_enabled
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -203,22 +211,6 @@ name|func
 parameter_list|,
 name|name
 parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDT_PROBE_ENABLED
-parameter_list|(
-name|prov
-parameter_list|,
-name|mod
-parameter_list|,
-name|func
-parameter_list|,
-name|name
-parameter_list|)
-value|0
 end_define
 
 begin_define
@@ -1062,23 +1054,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SDT_PROBE_ENABLED
-parameter_list|(
-name|prov
-parameter_list|,
-name|mod
-parameter_list|,
-name|func
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|__predict_false((sdt_##prov##_##mod##_##func##_##name->id))
-end_define
-
-begin_define
-define|#
-directive|define
 name|SDT_PROBE
 parameter_list|(
 name|prov
@@ -1099,7 +1074,7 @@ name|arg3
 parameter_list|,
 name|arg4
 parameter_list|)
-value|do {	\ 	if (__predict_false(sdt_##prov##_##mod##_##func##_##name->id))		\ 		(*sdt_probe_func)(sdt_##prov##_##mod##_##func##_##name->id,	\ 		    (uintptr_t) arg0, (uintptr_t) arg1, (uintptr_t) arg2,	\ 		    (uintptr_t) arg3, (uintptr_t) arg4);			\ } while (0)
+value|do {	\ 	if (__predict_false(sdt_probes_enabled)) {				\ 		if (__predict_false(sdt_##prov##_##mod##_##func##_##name->id))	\ 		(*sdt_probe_func)(sdt_##prov##_##mod##_##func##_##name->id,	\ 		    (uintptr_t) arg0, (uintptr_t) arg1, (uintptr_t) arg2,	\ 		    (uintptr_t) arg3, (uintptr_t) arg4);			\ 	} \ } while (0)
 end_define
 
 begin_define

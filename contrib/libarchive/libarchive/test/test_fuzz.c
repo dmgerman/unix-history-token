@@ -1687,6 +1687,26 @@ block|}
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|HAVE_ZSTD_H
+operator|&&
+name|HAVE_LIBZSTD
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|fileset10
+index|[]
+init|=
+block|{
+literal|"test_compat_zstd_1.tar.zst"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+endif|#
+directive|endif
 specifier|static
 specifier|const
 name|struct
@@ -1767,6 +1787,20 @@ name|fileset9
 block|}
 block|,
 comment|/* Exercise lzo decompressor. */
+endif|#
+directive|endif
+if|#
+directive|if
+name|HAVE_ZSTD_H
+operator|&&
+name|HAVE_LIBZSTD
+block|{
+literal|0
+block|,
+name|fileset10
+block|}
+block|,
+comment|/* Excercise zstd decompressor. */
 endif|#
 directive|endif
 block|{

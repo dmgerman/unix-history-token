@@ -89,6 +89,12 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_SOCKET
+end_define
+
 begin_include
 include|#
 directive|include
@@ -112,6 +118,12 @@ include|#
 directive|include
 file|<sys/un.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|_WANT_UNPCB
+end_define
 
 begin_include
 include|#
@@ -3441,6 +3453,20 @@ operator|.
 name|f_data
 expr_stmt|;
 break|break;
+case|case
+name|DTYPE_PROCDESC
+case|:
+name|type
+operator|=
+name|PS_FST_TYPE_PROCDESC
+expr_stmt|;
+name|data
+operator|=
+name|file
+operator|.
+name|f_data
+expr_stmt|;
+break|break;
 default|default:
 continue|continue;
 block|}
@@ -3819,6 +3845,12 @@ name|kftypes2fst
 index|[]
 init|=
 block|{
+block|{
+name|KF_TYPE_PROCDESC
+block|,
+name|PS_FST_TYPE_PROCDESC
+block|}
+block|,
 block|{
 name|KF_TYPE_CRYPTO
 block|,

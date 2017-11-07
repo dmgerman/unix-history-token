@@ -233,6 +233,8 @@ block|,
 name|noioctl
 block|,
 name|md_print
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

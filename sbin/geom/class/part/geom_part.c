@@ -3234,9 +3234,13 @@ argument_list|(
 name|last
 operator|+
 name|offset
+operator|+
+literal|1
 argument_list|,
 name|alignment
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(

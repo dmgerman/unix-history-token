@@ -118,11 +118,11 @@ begin_define
 define|#
 directive|define
 name|HPET_FREQ
-value|10000000
+value|16777216
 end_define
 
 begin_comment
-comment|/* 10.0 Mhz */
+comment|/* 16.7 (2^24) Mhz */
 end_comment
 
 begin_define

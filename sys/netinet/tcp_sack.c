@@ -384,13 +384,6 @@ literal|128
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_tcp_sack_maxholes
-value|VNET(tcp_sack_maxholes)
-end_define
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -429,13 +422,6 @@ literal|65536
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_tcp_sack_globalmaxholes
-value|VNET(tcp_sack_globalmaxholes)
-end_define
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -473,13 +459,6 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_sack_globalholes
-value|VNET(tcp_sack_globalholes)
-end_define
 
 begin_expr_stmt
 name|SYSCTL_INT

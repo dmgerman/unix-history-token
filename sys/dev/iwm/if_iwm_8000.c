@@ -51,6 +51,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IWM8265_FW
+value|"iwm8265fw"
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWM_NVM_HW_SECTION_NUM_FAMILY_8000
 value|10
 end_define
@@ -79,6 +86,33 @@ operator|.
 name|fw_name
 operator|=
 name|IWM8000_FW
+block|,
+name|IWM_DEVICE_8000_COMMON
+block|,
+operator|.
+name|host_interrupt_operation_mode
+operator|=
+literal|0
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|iwm_cfg
+name|iwm8265_cfg
+init|=
+block|{
+operator|.
+name|name
+operator|=
+literal|"Intel(R) Dual Band Wireless AC 8265"
+block|,
+operator|.
+name|fw_name
+operator|=
+name|IWM8265_FW
 block|,
 name|IWM_DEVICE_8000_COMMON
 block|,

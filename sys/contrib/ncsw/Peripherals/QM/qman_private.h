@@ -74,191 +74,6 @@ begin_comment
 comment|/* TODO: NB, we currently assume that CORE_MemoryBarier() and lwsync() imply compiler barriers  * and that dcbzl(), dcbfl(), and dcbi() won't fall victim to compiler or  * execution reordering with respect to other code/instructions that manipulate  * the same cacheline. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CORE_E500MC
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_DIAB_TOOL
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|hwsync
-parameter_list|()
-define|\
-value|do { \ __asm__ __volatile__ ("sync"); \ } while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|lwsync
-parameter_list|()
-define|\
-value|do { \ __asm__ __volatile__ ("lwsync"); \ } while(0)
-end_define
-
-begin_function
-name|__asm__
-specifier|__volatile__
-name|void
-name|dcbf
-parameter_list|(
-specifier|volatile
-name|void
-modifier|*
-name|addr
-parameter_list|)
-block|{
-operator|%
-name|reg
-name|addr
-name|dcbf
-name|r0
-operator|,
-name|addr
-block|}
-end_function
-
-begin_function
-name|__asm__
-specifier|__volatile__
-name|void
-name|dcbt_ro
-parameter_list|(
-specifier|volatile
-name|void
-modifier|*
-name|addr
-parameter_list|)
-block|{
-operator|%
-name|reg
-name|addr
-name|dcbt
-name|r0
-operator|,
-name|addr
-block|}
-end_function
-
-begin_function
-name|__asm__
-specifier|__volatile__
-name|void
-name|dcbt_rw
-parameter_list|(
-specifier|volatile
-name|void
-modifier|*
-name|addr
-parameter_list|)
-block|{
-operator|%
-name|reg
-name|addr
-name|dcbtst
-name|r0
-operator|,
-name|addr
-block|}
-end_function
-
-begin_function
-name|__asm__
-specifier|__volatile__
-name|void
-name|dcbzl
-parameter_list|(
-specifier|volatile
-name|void
-modifier|*
-name|addr
-parameter_list|)
-block|{
-operator|%
-name|reg
-name|addr
-name|dcbzl
-name|r0
-operator|,
-name|addr
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|dcbz_64
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|do { \         dcbzl(p); \     } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dcbf_64
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|do { \         dcbf(p); \     } while (0)
-end_define
-
-begin_comment
-comment|/* Commonly used combo */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|dcbit_ro
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|do { \         dcbi(p); \         dcbt_ro(p); \     } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* GNU C */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|hwsync
-parameter_list|()
-define|\
-value|do { \         __asm__ __volatile__ ("sync" : : : "memory"); \     } while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|lwsync
-parameter_list|()
-define|\
-value|do { \         __asm__ __volatile__ ("lwsync" : : : "memory"); \     } while(0)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -269,6 +84,12 @@ parameter_list|)
 define|\
 value|do { \         __asm__ __volatile__ ("dcbf 0, %0" : : "r" (addr)); \     } while(0)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CORE_E500MC
+end_ifdef
 
 begin_define
 define|#
@@ -340,44 +161,10 @@ define|\
 value|do { \         dcbi(p); \         dcbt_ro(p); \     } while (0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _DIAB_TOOL */
-end_comment
-
 begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|hwsync
-value|CORE_MemoryBarrier
-end_define
-
-begin_define
-define|#
-directive|define
-name|lwsync
-value|hwsync
-end_define
-
-begin_define
-define|#
-directive|define
-name|dcbf
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|do { \         __asm__ __volatile__ ("dcbf 0,%0" : : "r" (p)); \     } while(0)
-end_define
 
 begin_define
 define|#
@@ -420,7 +207,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|do { \         dcbz((uint32_t)p + 32); \         dcbz(p);    \     } while (0)
+value|do { \         dcbz((char *)p + 32); \         dcbz(p);    \     } while (0)
 end_define
 
 begin_define
@@ -431,7 +218,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|do { \         dcbf((uint32_t)p + 32); \         dcbf(p); \     } while (0)
+value|do { \         dcbf((char *)p + 32); \         dcbf(p); \     } while (0)
 end_define
 
 begin_comment
@@ -446,7 +233,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|do { \         dcbi(p); \         dcbi((uint32_t)p + 32); \         dcbt_ro(p); \         dcbt_ro((uint32_t)p + 32); \     } while (0)
+value|do { \         dcbi(p); \         dcbi((char *)p + 32); \         dcbt_ro(p); \         dcbt_ro((char *)p + 32); \     } while (0)
 end_define
 
 begin_endif

@@ -1329,8 +1329,8 @@ alignas|_Alignas
 argument_list|(
 literal|2
 argument_list|)
-name|cloudabi_subflags_t
-name|flags
+name|uint16_t
+name|unused
 decl_stmt|;
 alignas|_Alignas
 argument_list|(
@@ -1495,7 +1495,7 @@ name|offsetof
 argument_list|(
 name|cloudabi32_subscription_t
 argument_list|,
-name|flags
+name|unused
 argument_list|)
 operator|==
 literal|8

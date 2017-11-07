@@ -6733,6 +6733,8 @@ name|sb
 decl_stmt|;
 name|int
 name|ch
+decl_stmt|,
+name|tried_mkdir
 decl_stmt|;
 for|for
 control|(
@@ -6762,6 +6764,10 @@ literal|'/'
 operator|)
 condition|)
 block|{
+name|tried_mkdir
+operator|=
+literal|0
+expr_stmt|;
 name|ch
 operator|=
 operator|*
@@ -6792,6 +6798,8 @@ condition|(
 name|errno
 operator|!=
 name|ENOENT
+operator|||
+name|tried_mkdir
 condition|)
 name|err
 argument_list|(
@@ -6814,6 +6822,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|tried_mkdir
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|errno

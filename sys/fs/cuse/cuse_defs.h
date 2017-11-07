@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|CUSE_VERSION
-value|0x000122
+value|0x000123
 end_define
 
 begin_define
@@ -87,6 +87,13 @@ define|#
 directive|define
 name|CUSE_ERR_NOT_LOADED
 value|-8
+end_define
+
+begin_define
+define|#
+directive|define
+name|CUSE_ERR_NO_DEVICE
+value|-9
 end_define
 
 begin_define

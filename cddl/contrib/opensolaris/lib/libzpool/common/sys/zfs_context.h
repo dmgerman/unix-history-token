@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -128,6 +128,9 @@ file|<pthread.h>
 include|#
 directive|include
 file|<sched.h>
+include|#
+directive|include
+file|<setjmp.h>
 include|#
 directive|include
 file|<sys/debug.h>
@@ -307,25 +310,27 @@ function_decl|;
 specifier|extern
 name|void
 name|panic
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|__NORETURN
+decl_stmt|;
 specifier|extern
 name|void
 name|vpanic
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|__va_list
-parameter_list|)
-function_decl|;
+argument_list|)
+name|__NORETURN
+decl_stmt|;
 define|#
 directive|define
 name|fm_panic
@@ -1215,6 +1220,11 @@ define|#
 directive|define
 name|KM_NOSLEEP
 value|UMEM_DEFAULT
+define|#
+directive|define
+name|KM_NORMALPRI
+value|0
+comment|/* not needed with UMEM_DEFAULT */
 define|#
 directive|define
 name|KMC_NODEBUG
@@ -2295,6 +2305,8 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -2304,6 +2316,15 @@ parameter_list|(
 name|struct
 name|spa
 modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|set_global_var
+parameter_list|(
+name|char
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 typedef|typedef

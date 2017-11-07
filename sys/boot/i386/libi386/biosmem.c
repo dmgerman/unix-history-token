@@ -146,16 +146,16 @@ begin_comment
 comment|/*  * Products in this list need quirks to detect  * memory correctly. You need both maker and product as  * reported by smbios.  */
 end_comment
 
+begin_comment
+comment|/* e820 might not return useful extended memory */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BQ_DISTRUST_E820_EXTMEM
 value|0x1
 end_define
-
-begin_comment
-comment|/* e820 might not return useful 					   extended memory */
-end_comment
 
 begin_struct
 struct|struct
@@ -243,6 +243,7 @@ condition|;
 operator|++
 name|i
 control|)
+block|{
 if|if
 condition|(
 name|smbios_match
@@ -279,6 +280,7 @@ operator|.
 name|quirk
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -318,7 +320,7 @@ name|addr
 operator|=
 literal|0x15
 expr_stmt|;
-comment|/* int 0x15 function 0xe820*/
+comment|/* int 0x15 function 0xe820 */
 name|v86
 operator|.
 name|eax
@@ -466,7 +468,7 @@ operator||=
 name|B_EXTMEM_E820
 expr_stmt|;
 block|}
-comment|/* 	 * Look for the largest segment in 'extended' memory beyond 	 * 1MB but below 4GB. 	 */
+comment|/* 		 * Look for the highest segment in 'extended' memory beyond 		 * 1MB but below 4GB. 		 */
 if|if
 condition|(
 operator|(
@@ -500,7 +502,7 @@ name|smap
 operator|.
 name|length
 expr_stmt|;
-comment|/* 	     * If this segment crosses the 4GB boundary, truncate it. 	     */
+comment|/* 			 * If this segment crosses the 4GB boundary, 			 * truncate it. 			 */
 if|if
 condition|(
 name|smap
@@ -519,22 +521,33 @@ name|smap
 operator|.
 name|base
 expr_stmt|;
+comment|/* 			 * To make maximum space for the kernel and the modules, 			 * set heap to use highest HEAP_MIN bytes below 4GB. 			 */
 if|if
 condition|(
+name|high_heap_base
+operator|<
+name|smap
+operator|.
+name|base
+operator|&&
 name|size
-operator|>
-name|high_heap_size
+operator|>=
+name|HEAP_MIN
 condition|)
 block|{
-name|high_heap_size
-operator|=
-name|size
-expr_stmt|;
 name|high_heap_base
 operator|=
 name|smap
 operator|.
 name|base
+operator|+
+name|size
+operator|-
+name|HEAP_MIN
+expr_stmt|;
+name|high_heap_size
+operator|=
+name|HEAP_MIN
 expr_stmt|;
 block|}
 block|}
@@ -589,7 +602,7 @@ operator||=
 name|B_BASEMEM_12
 expr_stmt|;
 block|}
-comment|/* Fall back through several compatibility functions for extended memory */
+comment|/* 	 * Fall back through several compatibility functions for extended 	 * memory. 	 */
 if|if
 condition|(
 name|bios_extmem
@@ -609,7 +622,7 @@ name|addr
 operator|=
 literal|0x15
 expr_stmt|;
-comment|/* int 0x15 function 0xe801*/
+comment|/* int 0x15 function 0xe801 */
 name|v86
 operator|.
 name|eax
@@ -632,7 +645,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 	     * Clear high_heap; it may end up overlapping 	     * with the segment we're determining here. 	     * Let the default "steal stuff from top of 	     * bios_extmem" code below pick up on it. 	     */
+comment|/* 			 * Clear high_heap; it may end up overlapping 			 * with the segment we're determining here. 			 * Let the default "steal stuff from top of 			 * bios_extmem" code below pick up on it. 			 */
 name|high_heap_size
 operator|=
 literal|0
@@ -641,7 +654,7 @@ name|high_heap_base
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	     * %cx is the number of 1KiB blocks between 1..16MiB. 	     * It can only be up to 0x3c00; if it's smaller then 	     * there's a PC AT memory hole so we can't treat 	     * it as contiguous. 	     */
+comment|/* 			 * %cx is the number of 1KiB blocks between 1..16MiB. 			 * It can only be up to 0x3c00; if it's smaller then 			 * there's a PC AT memory hole so we can't treat 			 * it as contiguous. 			 */
 name|bios_extmem
 operator|=
 operator|(
@@ -714,7 +727,7 @@ name|addr
 operator|=
 literal|0x15
 expr_stmt|;
-comment|/* int 0x15 function 0x88*/
+comment|/* int 0x15 function 0x88 */
 name|v86
 operator|.
 name|eax
@@ -742,6 +755,22 @@ name|B_EXTMEM_8800
 expr_stmt|;
 block|}
 comment|/* Set memtop to actual top of memory */
+if|if
+condition|(
+name|high_heap_size
+operator|!=
+literal|0
+condition|)
+block|{
+name|memtop
+operator|=
+name|memtop_copyin
+operator|=
+name|high_heap_base
+expr_stmt|;
+block|}
+else|else
+block|{
 name|memtop
 operator|=
 name|memtop_copyin
@@ -750,7 +779,8 @@ literal|0x100000
 operator|+
 name|bios_extmem
 expr_stmt|;
-comment|/*      * If we have extended memory and did not find a suitable heap      * region in the SMAP, use the last HEAP_MIN of 'extended' memory as a      * high heap candidate.      */
+block|}
+comment|/* 	 * If we have extended memory and did not find a suitable heap 	 * region in the SMAP, use the last HEAP_MIN of 'extended' memory as a 	 * high heap candidate. 	 */
 if|if
 condition|(
 name|bios_extmem
@@ -771,6 +801,12 @@ operator|=
 name|memtop
 operator|-
 name|HEAP_MIN
+expr_stmt|;
+name|memtop
+operator|=
+name|memtop_copyin
+operator|=
+name|high_heap_base
 expr_stmt|;
 block|}
 block|}

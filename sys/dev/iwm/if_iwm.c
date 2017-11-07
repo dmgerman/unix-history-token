@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: if_iwm.c,v 1.42 2015/05/30 02:49:23 deraadt Exp $	*/
+comment|/*	$OpenBSD: if_iwm.c,v 1.167 2017/04/04 00:40:52 claudio Exp $	*/
 end_comment
 
 begin_comment
@@ -26334,6 +26334,13 @@ name|PCI_PRODUCT_INTEL_WL_8260_2
 value|0x24f4
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_INTEL_WL_8265_1
+value|0x24fd
+end_define
+
 begin_struct
 specifier|static
 specifier|const
@@ -26422,6 +26429,13 @@ name|PCI_PRODUCT_INTEL_WL_8260_2
 block|,
 operator|&
 name|iwm8260_cfg
+block|}
+block|,
+block|{
+name|PCI_PRODUCT_INTEL_WL_8265_1
+block|,
+operator|&
+name|iwm8265_cfg
 block|}
 block|, }
 struct|;

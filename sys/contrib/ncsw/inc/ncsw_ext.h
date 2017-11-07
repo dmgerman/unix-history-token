@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/* Copyright (c) 2008-2012 Freescale Semiconductor, Inc  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -40,12 +40,20 @@ name|WRITE_BLOCK
 value|IOMemSet32
 end_define
 
+begin_comment
+comment|/* include memcpy_ext.h */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|COPY_BLOCK
 value|Mem2IOCpy32
 end_define
+
+begin_comment
+comment|/* include memcpy_ext.h */
+end_comment
 
 begin_define
 define|#
@@ -90,6 +98,7 @@ name|data08
 parameter_list|,
 name|data24
 parameter_list|)
+define|\
 value|WRITE_UINT32(arg,((uint32_t)(data08)<<24)|((uint32_t)(data24)&0x00FFFFFF))
 end_define
 
@@ -104,6 +113,7 @@ name|data24
 parameter_list|,
 name|data08
 parameter_list|)
+define|\
 value|WRITE_UINT32(arg,((uint32_t)(data24)<< 8)|((uint32_t)(data08)&0x000000FF))
 end_define
 
@@ -267,9 +277,9 @@ define|#
 directive|define
 name|UNUSED
 parameter_list|(
-name|X
+name|_x
 parameter_list|)
-value|(X=X)
+value|((void)(_x))
 end_define
 
 begin_define
@@ -298,25 +308,41 @@ begin_define
 define|#
 directive|define
 name|GIGABYTE
-value|(KILOBYTE * MEGABYTE)
+value|((uint64_t)(KILOBYTE * MEGABYTE))
 end_define
 
 begin_comment
 comment|/* 1024*1024*1024 */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
+name|TERABYTE
+value|((uint64_t)(KILOBYTE * GIGABYTE))
+end_define
+
+begin_comment
+comment|/* 1024*1024*1024*1024 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NO_IRQ
-end_undef
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|NO_IRQ
-value|(-1)
+value|(0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -382,7 +408,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(((x)/(y)) + ((((((x)/(y)))*(y)) == (x)) ? 0 : 1))
+value|(((x)/(y)) + (((((x)/(y))*(y)) == (x)) ? 0 : 1))
 end_define
 
 begin_comment
@@ -496,30 +522,6 @@ end_define
 begin_comment
 comment|/* Min, Max macros */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NCSW_MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)< (b) ? (a) : (b))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NCSW_MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)> (b) ? (a) : (b))
-end_define
 
 begin_define
 define|#

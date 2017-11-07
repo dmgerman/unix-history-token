@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_xbox.h"
 end_include
 
@@ -1210,6 +1216,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -1226,6 +1240,11 @@ name|pa
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1471,6 +1490,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -1488,6 +1515,11 @@ name|va
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -11086,6 +11118,14 @@ do|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -11237,6 +11277,15 @@ condition|)
 do|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VM_NRESERVLEVEL> 0 */
+end_comment
 
 begin_function
 specifier|static
@@ -14681,6 +14730,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Tries to promote the 512 or 1024, contiguous 4KB page mappings that are  * within a single page table page (PTP) to a single 2- or 4MB page mapping.  * For promotion to occur, two conditions must be met: (1) the 4KB page  * mappings must map aligned, contiguous physical memory and (2) the 4KB page  * mappings must have identical characteristics.  *  * Managed (PG_MANAGED) mappings within the kernel address space are not  * promoted.  The reason is that kernel PDEs are replicated in each pmap but  * pmap_clear_ptes() and pmap_ts_referenced() only read the PDE from the kernel  * pmap.  */
 end_comment
@@ -15230,6 +15287,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VM_NRESERVLEVEL> 0 */
+end_comment
 
 begin_comment
 comment|/*  *	Insert the given physical page (p) at  *	the specified virtual address (v) in the  *	target physical map with the protection requested.  *  *	If specified, the page will be wired down, meaning  *	that the related pte can not be reclaimed.  *  *	NB:  This is the only routine which MAY NOT lazy-evaluate  *	or lose information.  That is, this routine must actually  *	insert this page into the given map NOW.  */
@@ -16190,6 +16256,11 @@ name|newpte
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
 comment|/* 	 * If both the page table page and the reservation are fully 	 * populated, then attempt promotion. 	 */
 if|if
 condition|(
@@ -16233,6 +16304,8 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sched_unpin
 argument_list|()
 expr_stmt|;

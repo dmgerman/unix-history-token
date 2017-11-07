@@ -2844,6 +2844,10 @@ operator|!
 operator|(
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 operator|||
@@ -2855,6 +2859,10 @@ operator|)
 operator|||
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 operator|)

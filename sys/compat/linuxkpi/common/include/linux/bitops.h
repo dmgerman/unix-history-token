@@ -1238,7 +1238,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|!!(atomic_load_acq_long(&((volatile unsigned long *)(a))[BIT_WORD(i)])&	\     BIT_MASK(i))
+value|!!(READ_ONCE(((volatile unsigned long *)(a))[BIT_WORD(i)])& BIT_MASK(i))
 end_define
 
 begin_function

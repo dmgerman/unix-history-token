@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ file|"fm_mac.h"
 end_include
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -70,6 +70,9 @@ name|t_FmMacControllerDriver
 modifier|*
 name|p_FmMacControllerDriver
 decl_stmt|;
+name|uint16_t
+name|fmClkFreq
+decl_stmt|;
 name|SANITY_CHECK_RETURN_VALUE
 argument_list|(
 name|p_FmMacParam
@@ -79,6 +82,44 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|fmClkFreq
+operator|=
+name|FmGetClockFreq
+argument_list|(
+name|p_FmMacParam
+operator|->
+name|h_Fm
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fmClkFreq
+operator|==
+literal|0
+condition|)
+block|{
+name|REPORT_ERROR
+argument_list|(
+name|MAJOR
+argument_list|,
+name|E_INVALID_STATE
+argument_list|,
+operator|(
+literal|"Can't get clock for MAC!"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|#
+directive|if
+operator|(
+name|DPAA_VERSION
+operator|==
+literal|10
+operator|)
 if|if
 condition|(
 name|ENET_SPEED_FROM_MODE
@@ -102,6 +143,11 @@ name|p_FmMacParam
 argument_list|)
 expr_stmt|;
 else|else
+if|#
+directive|if
+name|FM_MAX_NUM_OF_10G_MACS
+operator|>
+literal|0
 name|p_FmMacControllerDriver
 operator|=
 operator|(
@@ -113,6 +159,31 @@ argument_list|(
 name|p_FmMacParam
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|p_FmMacControllerDriver
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* FM_MAX_NUM_OF_10G_MACS> 0 */
+else|#
+directive|else
+name|p_FmMacControllerDriver
+operator|=
+operator|(
+name|t_FmMacControllerDriver
+operator|*
+operator|)
+name|MEMAC_Config
+argument_list|(
+name|p_FmMacParam
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* (DPAA_VERSION == 10) */
 if|if
 condition|(
 operator|!
@@ -151,6 +222,12 @@ name|resetOnInit
 operator|=
 name|DEFAULT_resetOnInit
 expr_stmt|;
+name|p_FmMacControllerDriver
+operator|->
+name|clkFreq
+operator|=
+name|fmClkFreq
+expr_stmt|;
 return|return
 operator|(
 name|t_Handle
@@ -161,7 +238,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -194,6 +271,11 @@ condition|(
 name|p_FmMacControllerDriver
 operator|->
 name|resetOnInit
+operator|&&
+operator|!
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_ConfigResetOnInit
 operator|&&
 operator|(
 name|FmResetMac
@@ -240,34 +322,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|p_FmMacControllerDriver
-operator|->
-name|clkFreq
-operator|=
-name|FmGetClockFreq
-argument_list|(
-name|p_FmMacControllerDriver
-operator|->
-name|h_Fm
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|RETURN_ERROR
-argument_list|(
-name|MAJOR
-argument_list|,
-name|E_INVALID_STATE
-argument_list|,
-operator|(
-literal|"Can't get clock for MAC!"
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|p_FmMacControllerDriver
 operator|->
 name|f_FM_MAC_Init
@@ -293,7 +347,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -348,7 +402,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -379,6 +433,22 @@ argument_list|,
 name|E_INVALID_HANDLE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_ConfigResetOnInit
+condition|)
+return|return
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_ConfigResetOnInit
+argument_list|(
+name|h_FmMac
+argument_list|,
+name|enable
+argument_list|)
+return|;
 name|p_FmMacControllerDriver
 operator|->
 name|resetOnInit
@@ -392,7 +462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -452,7 +522,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -512,7 +582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -572,7 +642,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -632,7 +702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -692,7 +762,67 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
+end_comment
+
+begin_function
+name|t_Error
+name|FM_MAC_ConfigTbiPhyAddr
+parameter_list|(
+name|t_Handle
+name|h_FmMac
+parameter_list|,
+name|uint8_t
+name|newVal
+parameter_list|)
+block|{
+name|t_FmMacControllerDriver
+modifier|*
+name|p_FmMacControllerDriver
+init|=
+operator|(
+name|t_FmMacControllerDriver
+operator|*
+operator|)
+name|h_FmMac
+decl_stmt|;
+name|SANITY_CHECK_RETURN_ERROR
+argument_list|(
+name|p_FmMacControllerDriver
+argument_list|,
+name|E_INVALID_HANDLE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_ConfigTbiPhyAddr
+condition|)
+return|return
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_ConfigTbiPhyAddr
+argument_list|(
+name|h_FmMac
+argument_list|,
+name|newVal
+argument_list|)
+return|;
+name|RETURN_ERROR
+argument_list|(
+name|MINOR
+argument_list|,
+name|E_NOT_SUPPORTED
+argument_list|,
+name|NO_MSG
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -752,7 +882,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -823,7 +953,7 @@ name|FM_TX_ECC_FRMS_ERRATA_10GMAC_A004
 end_ifdef
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -899,7 +1029,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -959,7 +1089,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1018,8 +1148,53 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|t_Error
+name|FM_MAC_Resume
+parameter_list|(
+name|t_Handle
+name|h_FmMac
+parameter_list|)
+block|{
+name|t_FmMacControllerDriver
+modifier|*
+name|p_FmMacControllerDriver
+init|=
+operator|(
+name|t_FmMacControllerDriver
+operator|*
+operator|)
+name|h_FmMac
+decl_stmt|;
+name|SANITY_CHECK_RETURN_ERROR
+argument_list|(
+name|p_FmMacControllerDriver
+argument_list|,
+name|E_INVALID_HANDLE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_Resume
+condition|)
+return|return
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_Resume
+argument_list|(
+name|h_FmMac
+argument_list|)
+return|;
+return|return
+name|E_OK
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1074,7 +1249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1129,7 +1304,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1189,7 +1364,77 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
+end_comment
+
+begin_function
+name|t_Error
+name|FM_MAC_SetTxPauseFrames
+parameter_list|(
+name|t_Handle
+name|h_FmMac
+parameter_list|,
+name|uint8_t
+name|priority
+parameter_list|,
+name|uint16_t
+name|pauseTime
+parameter_list|,
+name|uint16_t
+name|threshTime
+parameter_list|)
+block|{
+name|t_FmMacControllerDriver
+modifier|*
+name|p_FmMacControllerDriver
+init|=
+operator|(
+name|t_FmMacControllerDriver
+operator|*
+operator|)
+name|h_FmMac
+decl_stmt|;
+name|SANITY_CHECK_RETURN_ERROR
+argument_list|(
+name|p_FmMacControllerDriver
+argument_list|,
+name|E_INVALID_HANDLE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_SetTxPauseFrames
+condition|)
+return|return
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_SetTxPauseFrames
+argument_list|(
+name|h_FmMac
+argument_list|,
+name|priority
+argument_list|,
+name|pauseTime
+argument_list|,
+name|threshTime
+argument_list|)
+return|;
+name|RETURN_ERROR
+argument_list|(
+name|MAJOR
+argument_list|,
+name|E_NOT_SUPPORTED
+argument_list|,
+name|NO_MSG
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1249,7 +1494,67 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
+end_comment
+
+begin_function
+name|t_Error
+name|FM_MAC_SetWakeOnLan
+parameter_list|(
+name|t_Handle
+name|h_FmMac
+parameter_list|,
+name|bool
+name|en
+parameter_list|)
+block|{
+name|t_FmMacControllerDriver
+modifier|*
+name|p_FmMacControllerDriver
+init|=
+operator|(
+name|t_FmMacControllerDriver
+operator|*
+operator|)
+name|h_FmMac
+decl_stmt|;
+name|SANITY_CHECK_RETURN_ERROR
+argument_list|(
+name|p_FmMacControllerDriver
+argument_list|,
+name|E_INVALID_HANDLE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_SetWakeOnLan
+condition|)
+return|return
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_SetWakeOnLan
+argument_list|(
+name|h_FmMac
+argument_list|,
+name|en
+argument_list|)
+return|;
+name|RETURN_ERROR
+argument_list|(
+name|MINOR
+argument_list|,
+name|E_NOT_SUPPORTED
+argument_list|,
+name|NO_MSG
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1304,7 +1609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1369,7 +1674,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1429,7 +1734,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1490,7 +1795,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1551,7 +1856,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1612,7 +1917,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1673,7 +1978,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1734,7 +2039,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1795,7 +2100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1856,7 +2161,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1917,7 +2222,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -1977,7 +2282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -2042,7 +2347,62 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
+end_comment
+
+begin_function
+name|t_Error
+name|FM_MAC_RestartAutoneg
+parameter_list|(
+name|t_Handle
+name|h_FmMac
+parameter_list|)
+block|{
+name|t_FmMacControllerDriver
+modifier|*
+name|p_FmMacControllerDriver
+init|=
+operator|(
+name|t_FmMacControllerDriver
+operator|*
+operator|)
+name|h_FmMac
+decl_stmt|;
+name|SANITY_CHECK_RETURN_ERROR
+argument_list|(
+name|p_FmMacControllerDriver
+argument_list|,
+name|E_INVALID_HANDLE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_RestartAutoneg
+condition|)
+return|return
+name|p_FmMacControllerDriver
+operator|->
+name|f_FM_MAC_RestartAutoneg
+argument_list|(
+name|h_FmMac
+argument_list|)
+return|;
+name|RETURN_ERROR
+argument_list|(
+name|MINOR
+argument_list|,
+name|E_NOT_SUPPORTED
+argument_list|,
+name|NO_MSG
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -2112,7 +2472,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function
@@ -2183,7 +2543,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ........................................................................... */
+comment|/* ......................................................................... */
 end_comment
 
 begin_function

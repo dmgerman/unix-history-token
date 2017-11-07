@@ -168,6 +168,12 @@ begin_comment
 comment|/*  * Constants for the hash table of sleep queue chains.  * SC_TABLESIZE must be a power of two for SC_MASK to work properly.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_TABLESIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -175,9 +181,21 @@ name|SC_TABLESIZE
 value|256
 end_define
 
-begin_comment
-comment|/* Must be power of 2. */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|powerof2
+argument_list|(
+name|SC_TABLESIZE
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -316,6 +334,10 @@ comment|/* Max length of sc_queues. */
 endif|#
 directive|endif
 block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -4811,7 +4833,9 @@ name|stack_idx
 index|]
 operator|=
 name|stack_create
-argument_list|()
+argument_list|(
+name|M_WAITOK
+argument_list|)
 expr_stmt|;
 comment|/* Where we will store the td name, tid, etc. */
 name|td_infos
@@ -6154,9 +6178,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|td
 argument_list|,
-argument|&sq->sq_blocked[
-literal|0
-argument|]
+argument|&sq->sq_blocked[i]
 argument_list|,
 argument|td_slpq
 argument_list|)

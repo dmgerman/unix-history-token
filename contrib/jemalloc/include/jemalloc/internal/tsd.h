@@ -235,7 +235,12 @@ name|MALLOC_TSD
 undef|#
 directive|undef
 name|O
+comment|/* AddressSanitizer requires TLS data to be aligned to at least 8 bytes. */
 block|}
+name|JEMALLOC_ALIGNED
+argument_list|(
+literal|16
+argument_list|)
 struct|;
 end_struct
 

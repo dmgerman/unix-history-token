@@ -451,6 +451,8 @@ name|_LDP_CACHE
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -462,12 +464,9 @@ name|_PathLocale
 argument_list|,
 name|encoding
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|buf
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 return|return
 operator|(

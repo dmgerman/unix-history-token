@@ -1693,6 +1693,13 @@ operator|->
 name|tm_node_pool
 argument_list|)
 expr_stmt|;
+name|clear_unrhdr
+argument_list|(
+name|tmp
+operator|->
+name|tm_ino_unr
+argument_list|)
+expr_stmt|;
 name|delete_unrhdr
 argument_list|(
 name|tmp

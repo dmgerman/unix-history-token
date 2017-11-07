@@ -280,7 +280,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dk:lNnpqr"
+literal|"cdk:lNnpqr"
 argument_list|)
 operator|)
 operator|!=
@@ -292,6 +292,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'c'
+case|:
+name|howto
+operator||=
+name|RB_POWERCYCLE
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -429,6 +437,27 @@ condition|(
 operator|(
 name|howto
 operator|&
+name|RB_POWEROFF
+operator|)
+operator|&&
+operator|(
+name|howto
+operator|&
+name|RB_POWERCYCLE
+operator|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-c and -p cannot be used together"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|howto
+operator|&
 name|RB_REROOT
 operator|)
 operator|!=
@@ -442,7 +471,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-r cannot be used with -d, -n, or -p"
+literal|"-r cannot be used with -c, -d, -n, or -p"
 argument_list|)
 expr_stmt|;
 if|if
@@ -655,6 +684,64 @@ argument_list|(
 name|LOG_CRIT
 argument_list|,
 literal|"rerooted by %s"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|howto
+operator|&
+name|RB_POWEROFF
+condition|)
+block|{
+name|openlog
+argument_list|(
+literal|"reboot"
+argument_list|,
+literal|0
+argument_list|,
+name|LOG_AUTH
+operator||
+name|LOG_CONS
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"powered off by %s"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|howto
+operator|&
+name|RB_POWERCYCLE
+condition|)
+block|{
+name|openlog
+argument_list|(
+literal|"reboot"
+argument_list|,
+literal|0
+argument_list|,
+name|LOG_AUTH
+operator||
+name|LOG_CONS
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"power cycled by %s"
 argument_list|,
 name|user
 argument_list|)
@@ -1027,9 +1114,9 @@ name|stderr
 argument_list|,
 name|dohalt
 condition|?
-literal|"usage: halt [-lNnpq] [-k kernel]\n"
+literal|"usage: halt [-clNnpq] [-k kernel]\n"
 else|:
-literal|"usage: reboot [-dlNnpqr] [-k kernel]\n"
+literal|"usage: reboot [-cdlNnpqr] [-k kernel]\n"
 argument_list|)
 expr_stmt|;
 name|exit

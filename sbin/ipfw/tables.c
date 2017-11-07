@@ -4624,6 +4624,16 @@ operator|&
 name|sz
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|tent
 operator|=
 operator|(

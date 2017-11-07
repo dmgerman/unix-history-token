@@ -148,12 +148,6 @@ parameter_list|)
 value|roundup2((off_t)(x), PAGE_SIZE)
 end_define
 
-begin_decl_stmt
-name|off_t
-name|dumplo
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Handle buffered writes. */
 end_comment
@@ -464,15 +458,13 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|dump_write
+name|dump_append
 argument_list|(
 name|di
 argument_list|,
 name|buf
 argument_list|,
 literal|0
-argument_list|,
-name|dumplo
 argument_list|,
 name|nbytes
 argument_list|)
@@ -486,10 +478,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|dumplo
-operator|+=
-name|nbytes
-expr_stmt|;
 name|sz
 operator|-=
 name|nbytes
@@ -589,7 +577,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|dump_write
+name|dump_append
 argument_list|(
 name|di
 argument_list|,
@@ -598,8 +586,6 @@ operator|->
 name|blockbuf
 argument_list|,
 literal|0
-argument_list|,
-name|dumplo
 argument_list|,
 name|di
 operator|->
@@ -615,12 +601,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|dumplo
-operator|+=
-name|di
-operator|->
-name|blocksize
-expr_stmt|;
 name|fragsz
 operator|=
 literal|0
@@ -661,7 +641,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|dump_write
+name|dump_append
 argument_list|(
 name|di
 argument_list|,
@@ -671,18 +651,10 @@ name|blockbuf
 argument_list|,
 literal|0
 argument_list|,
-name|dumplo
-argument_list|,
 name|di
 operator|->
 name|blocksize
 argument_list|)
-expr_stmt|;
-name|dumplo
-operator|+=
-name|di
-operator|->
-name|blocksize
 expr_stmt|;
 name|fragsz
 operator|=
@@ -927,15 +899,13 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|dump_write
+name|dump_append
 argument_list|(
 name|di
 argument_list|,
 name|va
 argument_list|,
 literal|0
-argument_list|,
-name|dumplo
 argument_list|,
 name|sz
 argument_list|)
@@ -954,10 +924,6 @@ condition|(
 name|error
 condition|)
 break|break;
-name|dumplo
-operator|+=
-name|sz
-expr_stmt|;
 name|pgs
 operator|-=
 name|chunk
@@ -1648,9 +1614,6 @@ name|di
 argument_list|,
 operator|&
 name|kdh
-argument_list|,
-operator|&
-name|dumplo
 argument_list|)
 expr_stmt|;
 if|if
@@ -1729,7 +1692,7 @@ argument_list|(
 name|di
 argument_list|)
 expr_stmt|;
-comment|/* 	 * All headers are written using blocked I/O, so we know the 	 * current offset is (still) block aligned. Skip the alignement 	 * in the file to have the segment contents aligned at page 	 * boundary. We cannot use MD_ALIGN on dumplo, because we don't 	 * care and may very well be unaligned within the dump device. 	 */
+comment|/* 	 * All headers are written using blocked I/O, so we know the 	 * current offset is (still) block aligned. Skip the alignement 	 * in the file to have the segment contents aligned at page 	 * boundary. 	 */
 name|error
 operator|=
 name|dumpsys_buf_seek
@@ -1749,7 +1712,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* Dump memory chunks (updates dumplo) */
+comment|/* Dump memory chunks. */
 name|error
 operator|=
 name|dumpsys_foreach_chunk
@@ -1776,8 +1739,6 @@ name|di
 argument_list|,
 operator|&
 name|kdh
-argument_list|,
-name|dumplo
 argument_list|)
 expr_stmt|;
 if|if

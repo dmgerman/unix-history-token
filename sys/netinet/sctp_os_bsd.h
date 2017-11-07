@@ -1829,36 +1829,6 @@ value|rtalloc_ign_fib((struct route *)ro, 0UL, fibnum)
 end_define
 
 begin_comment
-comment|/* Future zero copy wakeup/send  function */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_ZERO_COPY_EVENT
-parameter_list|(
-name|inp
-parameter_list|,
-name|so
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* This is re-pulse ourselves for sendbuf */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_ZERO_COPY_SENDQ_EVENT
-parameter_list|(
-name|inp
-parameter_list|,
-name|so
-parameter_list|)
-end_define
-
-begin_comment
 comment|/*  * SCTP protocol specific mbuf flags.  */
 end_comment
 

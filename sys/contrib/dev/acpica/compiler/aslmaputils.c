@@ -177,7 +177,7 @@ case|:
 comment|/* Convert EISAID to a string */
 name|HidString
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|ACPI_EISAID_STRING_SIZE
 argument_list|)
@@ -314,7 +314,7 @@ case|:
 comment|/* Convert EISAID to a string */
 name|HidString
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|ACPI_EISAID_STRING_SIZE
 argument_list|)

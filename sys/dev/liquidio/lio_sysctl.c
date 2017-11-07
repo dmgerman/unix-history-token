@@ -3746,7 +3746,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"boardname:%s serialnum:%s maj:%ld min:%ld"
+literal|"boardname:%s serialnum:%s maj:%lld min:%lld"
 argument_list|,
 name|board_info
 operator|->
@@ -3756,13 +3756,19 @@ name|board_info
 operator|->
 name|serial_number
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|board_info
 operator|->
 name|major
+argument_list|)
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|board_info
 operator|->
 name|minor
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3771,7 +3777,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"boardname:%s serialnum:%s maj:%ld min:%ld\n%s"
+literal|"boardname:%s serialnum:%s maj:%lld min:%lld\n%s"
 argument_list|,
 name|board_info
 operator|->
@@ -3781,13 +3787,19 @@ name|board_info
 operator|->
 name|serial_number
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|board_info
 operator|->
 name|major
+argument_list|)
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|board_info
 operator|->
 name|minor
+argument_list|)
 argument_list|,
 operator|&
 name|oct_dev
@@ -4431,7 +4443,7 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_MAC%d_PF%d_RINFO): %016lx\n"
+literal|"[%08x] (SLI_PKT_MAC%d_PF%d_RINFO): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
@@ -4443,11 +4455,14 @@ name|oct
 operator|->
 name|pf_num
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4473,7 +4488,7 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_MAC%d_PF%d_INT_ENB): %016lx\n"
+literal|"[%08x] (SLI_MAC%d_PF%d_INT_ENB): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
@@ -4485,11 +4500,14 @@ name|oct
 operator|->
 name|pf_num
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4515,7 +4533,7 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_MAC%d_PF%d_INT_SUM): %016lx\n"
+literal|"[%08x] (SLI_MAC%d_PF%d_INT_SUM): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
@@ -4527,11 +4545,14 @@ name|oct
 operator|->
 name|pf_num
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4548,15 +4569,18 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_MEM_CTL): %016lx\n"
+literal|"[%08x] (SLI_PKT_MEM_CTL): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4587,7 +4611,7 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_MAC%d_PF%d_PKT_VF_INT): %016lx\n"
+literal|"[%08x] (SLI_MAC%d_PF%d_PKT_VF_INT): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
@@ -4599,11 +4623,14 @@ name|oct
 operator|->
 name|pf_num
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4634,7 +4661,7 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_MAC%d_PF%d_PP_VF_INT): %016lx\n"
+literal|"[%08x] (SLI_MAC%d_PF%d_PP_VF_INT): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
@@ -4646,11 +4673,14 @@ name|oct
 operator|->
 name|pf_num
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4667,15 +4697,18 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_CNT_INT): %016lx\n"
+literal|"[%08x] (SLI_PKT_CNT_INT): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4692,15 +4725,18 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_TIME_INT): %016lx\n"
+literal|"[%08x] (SLI_PKT_TIME_INT): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4717,15 +4753,18 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_INT): %016lx\n"
+literal|"[%08x] (SLI_PKT_INT): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4742,15 +4781,18 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_OUTPUT_WMARK): %016lx\n"
+literal|"[%08x] (SLI_PKT_OUTPUT_WMARK): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4767,15 +4809,18 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_RING_RST): %016lx\n"
+literal|"[%08x] (SLI_PKT_RING_RST): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4792,15 +4837,18 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_GBL_CONTROL): %016lx\n"
+literal|"[%08x] (SLI_PKT_GBL_CONTROL): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4817,15 +4865,18 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_BIST_STATUS): %016lx\n"
+literal|"[%08x] (SLI_PKT_BIST_STATUS): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4850,15 +4901,18 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_OUT_BP_EN_W1S):  %016lx\n"
+literal|"[%08x] (SLI_PKT_OUT_BP_EN_W1S):  %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4884,15 +4938,18 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_OUT_BP_EN2_W1S): %016lx\n"
+literal|"[%08x] (SLI_PKT_OUT_BP_EN2_W1S): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4926,17 +4983,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_OUT_SIZE): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_OUT_SIZE): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4971,17 +5031,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_IN_DONE%d_CNTS): %016lx\n"
+literal|"[%08x] (SLI_PKT_IN_DONE%d_CNTS): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5016,17 +5079,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_SLIST_BAOFF_DBELL): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_SLIST_BAOFF_DBELL): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5061,17 +5127,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_SLIST_FIFO_RSIZE): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_SLIST_FIFO_RSIZE): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5106,17 +5175,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d__OUTPUT_CONTROL): %016lx\n"
+literal|"[%08x] (SLI_PKT%d__OUTPUT_CONTROL): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5151,17 +5223,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_SLIST_BADDR): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_SLIST_BADDR): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5196,17 +5271,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_INT_LEVELS): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_INT_LEVELS): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5241,17 +5319,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_CNTS): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_CNTS): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5287,17 +5368,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_ERROR_INFO): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_ERROR_INFO): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5332,17 +5416,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_INPUT_CONTROL): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_INPUT_CONTROL): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5377,17 +5464,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_INSTR_BADDR): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_INSTR_BADDR): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5422,17 +5512,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_INSTR_BAOFF_DBELL): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_INSTR_BAOFF_DBELL): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5467,17 +5560,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT%d_INSTR_FIFO_RSIZE): %016lx\n"
+literal|"[%08x] (SLI_PKT%d_INSTR_FIFO_RSIZE): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5511,17 +5607,20 @@ name|s
 operator|+
 name|len
 argument_list|,
-literal|"[%08x] (SLI_PKT_IN_DONE%d_CNTS): %016lx\n"
+literal|"[%08x] (SLI_PKT_IN_DONE%d_CNTS): %016llx\n"
 argument_list|,
 name|reg
 argument_list|,
 name|i
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
 argument_list|,
 name|reg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8648,11 +8747,14 @@ name|lio_dev_info
 argument_list|(
 name|oct_dev
 argument_list|,
-literal|"Rx-Adaptive Interrupt moderation enabled:%lx\n"
+literal|"Rx-Adaptive Interrupt moderation enabled:%llx\n"
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|intr_cfg
 operator|->
 name|rx_enable
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|lio_free_soft_command

@@ -1065,7 +1065,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"file 5.29"
+value|"file 5.32"
 end_define
 
 begin_comment
@@ -1098,7 +1098,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.29"
+value|"5.32"
 end_define
 
 begin_comment
@@ -1238,7 +1238,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.29"
+value|"5.32"
 end_define
 
 begin_comment

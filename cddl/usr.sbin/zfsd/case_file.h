@@ -74,7 +74,7 @@ name|CaseFile
 block|{
 name|public
 label|:
-comment|/** 	 * \brief Find a CaseFile object by a vdev's pool/vdev GUID tuple. 	 * 	 * \param poolGUID  Pool GUID for the vdev of the CaseFile to find. 	 * \param vdevGUID  Vdev GUID for the vdev of the CaseFile to find. 	 * 	 * \return  If found, a pointer to a valid CaseFile object. 	 *          Otherwise NULL. 	 */
+comment|/** 	 * \brief Find a CaseFile object by a vdev's pool/vdev GUID tuple. 	 * 	 * \param poolGUID  Pool GUID for the vdev of the CaseFile to find. 	 * 		    If InvalidGuid, then only match the vdev GUID 	 * 		    instead of both pool and vdev GUIDs. 	 * \param vdevGUID  Vdev GUID for the vdev of the CaseFile to find. 	 * 	 * \return  If found, a pointer to a valid CaseFile object. 	 *          Otherwise NULL. 	 */
 specifier|static
 name|CaseFile
 modifier|*

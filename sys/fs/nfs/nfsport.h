@@ -3873,6 +3873,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NFSSTA_FLEXFILE
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Use Flex File Layout */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NFSSTA_NOLAYOUTCOMMIT
 value|0x04000000
 end_define
@@ -4164,6 +4175,16 @@ parameter_list|(
 name|n
 parameter_list|)
 value|((n)->nm_state& NFSSTA_PNFS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSHASFLEXFILE
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)->nm_state& NFSSTA_FLEXFILE)
 end_define
 
 begin_define

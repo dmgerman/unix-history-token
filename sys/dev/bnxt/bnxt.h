@@ -439,7 +439,7 @@ name|bnxt_wol_supported
 parameter_list|(
 name|softc
 parameter_list|)
-value|((softc)->flags& BNXT_FLAG_WOL_CAP)
+value|(!((softc)->flags& BNXT_FLAG_VF)&& \ 					  ((softc)->flags& BNXT_FLAG_WOL_CAP ))
 end_define
 
 begin_comment
@@ -627,6 +627,17 @@ parameter_list|)
 value|mtx_assert(&(_softc)->hwrm_lock,    \     MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BNXT_IS_FLOW_CTRL_CHANGED
+parameter_list|(
+name|link_info
+parameter_list|)
+define|\
+value|((link_info->last_flow_ctrl.tx != link_info->flow_ctrl.tx) ||       \          (link_info->last_flow_ctrl.rx != link_info->flow_ctrl.rx) ||       \ 	 (link_info->last_flow_ctrl.autoneg != link_info->flow_ctrl.autoneg))
+end_define
+
 begin_comment
 comment|/* Chip info */
 end_comment
@@ -680,6 +691,20 @@ parameter_list|,
 name|max
 parameter_list|)
 value|min_t(type, max_t(type, _x, min), max)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BNXT_IFMEDIA_ADD
+parameter_list|(
+name|supported
+parameter_list|,
+name|fw_speed
+parameter_list|,
+name|ifm_speed
+parameter_list|)
+value|do {			\ 	if ((supported)& HWRM_PORT_PHY_QCFG_OUTPUT_SUPPORT_ ## fw_speed)	\ 		ifmedia_add(softc->media, IFM_ETHER | (ifm_speed), 0, NULL);	\ } while(0)
 end_define
 
 begin_comment
@@ -913,6 +938,23 @@ end_struct
 
 begin_struct
 struct|struct
+name|bnxt_flow_ctrl
+block|{
+name|bool
+name|rx
+decl_stmt|;
+name|bool
+name|tx
+decl_stmt|;
+name|bool
+name|autoneg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|bnxt_link_info
 block|{
 name|uint8_t
@@ -945,17 +987,13 @@ decl_stmt|;
 name|uint8_t
 name|last_duplex
 decl_stmt|;
-name|uint8_t
-name|pause
+name|struct
+name|bnxt_flow_ctrl
+name|flow_ctrl
 decl_stmt|;
-name|uint8_t
-name|last_pause
-decl_stmt|;
-name|uint8_t
-name|auto_pause
-decl_stmt|;
-name|uint8_t
-name|force_pause
+name|struct
+name|bnxt_flow_ctrl
+name|last_flow_ctrl
 decl_stmt|;
 name|uint8_t
 name|duplex_setting
@@ -1008,9 +1046,6 @@ name|BNXT_AUTONEG_FLOW_CTRL
 value|2
 name|uint8_t
 name|req_duplex
-decl_stmt|;
-name|uint8_t
-name|req_flow_ctrl
 decl_stmt|;
 name|uint16_t
 name|req_link_speed
@@ -1241,13 +1276,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|BNXT_FLAG_VF
-value|(1<<1)
-end_define
 
 begin_define
 define|#
@@ -1707,6 +1735,29 @@ end_struct
 
 begin_struct
 struct|struct
+name|bnxt_hw_lro
+block|{
+name|uint16_t
+name|enable
+decl_stmt|;
+name|uint16_t
+name|is_mode_gro
+decl_stmt|;
+name|uint16_t
+name|max_agg_segs
+decl_stmt|;
+name|uint16_t
+name|max_aggs
+decl_stmt|;
+name|uint32_t
+name|min_agg_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|bnxt_softc
 block|{
 name|device_t
@@ -1740,12 +1791,16 @@ name|link_info
 decl_stmt|;
 define|#
 directive|define
+name|BNXT_FLAG_VF
+value|0x0001
+define|#
+directive|define
 name|BNXT_FLAG_NPAR
-value|0x1
+value|0x0002
 define|#
 directive|define
 name|BNXT_FLAG_WOL_CAP
-value|0x2
+value|0x0004
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -1899,6 +1954,24 @@ modifier|*
 name|hw_stats_oid
 decl_stmt|;
 name|struct
+name|sysctl_ctx_list
+name|hw_lro_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|hw_lro_oid
+decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|flow_ctrl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|flow_ctrl_oid
+decl_stmt|;
+name|struct
 name|bnxt_ver_info
 modifier|*
 name|ver_info
@@ -1910,6 +1983,10 @@ name|nvm_info
 decl_stmt|;
 name|bool
 name|wol
+decl_stmt|;
+name|struct
+name|bnxt_hw_lro
+name|hw_lro
 decl_stmt|;
 name|uint8_t
 name|wol_filter_id

@@ -219,6 +219,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpuinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pte.h>
 end_include
 
@@ -4058,14 +4064,16 @@ operator|==
 literal|1
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|CPU_HAVEFPU
-argument_list|)
 comment|/* FP (COP1) instruction */
+if|if
+condition|(
+name|cpuinfo
+operator|.
+name|fpu_id
+operator|==
+literal|0
+condition|)
+block|{
 name|log_illegal_instruction
 argument_list|(
 literal|"COP1_UNUSABLE"
@@ -4078,8 +4086,7 @@ operator|=
 name|SIGILL
 expr_stmt|;
 break|break;
-else|#
-directive|else
+block|}
 name|addr
 operator|=
 name|trapframe
@@ -4144,8 +4151,6 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-endif|#
-directive|endif
 block|}
 ifdef|#
 directive|ifdef

@@ -288,6 +288,15 @@ index|[]
 init|=
 block|{
 block|{
+literal|"arm,psci-1.0"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+name|psci_v0_2_init
+block|}
+block|,
+block|{
 literal|"arm,psci-0.2"
 block|,
 operator|(
@@ -1339,12 +1348,31 @@ name|node
 operator|==
 literal|0
 condition|)
-comment|/* TODO: Handle psci 0.1 */
+block|{
+name|node
+operator|=
+name|ofw_bus_find_compatible
+argument_list|(
+name|OF_peer
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+literal|"arm,psci-1.0"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|node
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
 name|PSCI_MISSING
 operator|)
 return|;
+block|}
 operator|*
 name|callfn
 operator|=
@@ -2086,21 +2114,12 @@ operator|==
 literal|2
 operator|)
 operator|||
-operator|(
 name|PSCI_VER_MAJOR
 argument_list|(
 name|version
 argument_list|)
 operator|==
 literal|1
-operator|&&
-name|PSCI_VER_MINOR
-argument_list|(
-name|version
-argument_list|)
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 if|if
@@ -2111,7 +2130,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"PSCI version 0.2 available\n"
+literal|"PSCI version 0.2 compatible\n"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We only register this for v0.2 since v0.1 doesn't support 		 * system_reset. 		 */

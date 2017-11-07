@@ -639,26 +639,38 @@ begin_comment
 comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  * Size ILP32: 28  *	 LP64: 48  * Compile-time assertions in uipc_mbuf.c test these values to ensure that  * they are correct.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|void
+name|m_ext_free_t
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|m_ext
 block|{
 union|union
 block|{
+comment|/* 		 * If EXT_FLAG_EMBREF is set, then we use refcount in the 		 * mbuf, the 'ext_count' member.  Otherwise, we have a 		 * shadow copy and we use pointer 'ext_cnt'.  The original 		 * mbuf is responsible to carry the pointer to free routine 		 * and its arguments.  They aren't copied into shadows in 		 * mb_dupcl() to avoid dereferencing next cachelines. 		 */
 specifier|volatile
 name|u_int
 name|ext_count
 decl_stmt|;
-comment|/* value of ref count info */
 specifier|volatile
 name|u_int
 modifier|*
 name|ext_cnt
 decl_stmt|;
-comment|/* pointer to ref count info */
 block|}
 union|;
-name|caddr_t
+name|char
+modifier|*
 name|ext_buf
 decl_stmt|;
 comment|/* start of buffer */
@@ -677,24 +689,16 @@ range|:
 literal|24
 decl_stmt|;
 comment|/* external storage mbuf flags */
-name|void
-function_decl|(
+comment|/* 	 * Fields below store the free context for the external storage. 	 * They are valid only in the refcount carrying mbuf, the one with 	 * EXT_FLAG_EMBREF flag, with exclusion for EXT_EXTREF type, where 	 * the free context is copied into all mbufs that use same external 	 * storage. 	 */
+define|#
+directive|define
+name|m_ext_copylen
+value|offsetof(struct m_ext, ext_free)
+name|m_ext_free_t
 modifier|*
 name|ext_free
-function_decl|)
+decl_stmt|;
 comment|/* free routine if not the usual */
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
 name|void
 modifier|*
 name|ext_arg1
@@ -1143,7 +1147,7 @@ value|(M_FLAG_BITS M_FLAG_PROTOBITS)
 end_define
 
 begin_comment
-comment|/*  * Network interface cards are able to hash protocol fields (such as IPv4  * addresses and TCP port numbers) classify packets into flows.  These flows  * can then be used to maintain ordering while delivering packets to the OS  * via parallel input queues, as well as to provide a stateless affinity  * model.  NIC drivers can pass up the hash via m->m_pkthdr.flowid, and set  * m_flag fields to indicate how the hash should be interpreted by the  * network stack.  *  * Most NICs support RSS, which provides ordering and explicit affinity, and  * use the hash m_flag bits to indicate what header fields were covered by  * the hash.  M_HASHTYPE_OPAQUE and M_HASHTYPE_OPAQUE_HASH can be set by non-  * RSS cards or configurations that provide an opaque flow identifier, allowing  * for ordering and distribution without explicit affinity.  Additionally,  * M_HASHTYPE_OPAQUE_HASH indicates that the flow identifier has hash  * properties.  */
+comment|/*  * Network interface cards are able to hash protocol fields (such as IPv4  * addresses and TCP port numbers) classify packets into flows.  These flows  * can then be used to maintain ordering while delivering packets to the OS  * via parallel input queues, as well as to provide a stateless affinity  * model.  NIC drivers can pass up the hash via m->m_pkthdr.flowid, and set  * m_flag fields to indicate how the hash should be interpreted by the  * network stack.  *  * Most NICs support RSS, which provides ordering and explicit affinity, and  * use the hash m_flag bits to indicate what header fields were covered by  * the hash.  M_HASHTYPE_OPAQUE and M_HASHTYPE_OPAQUE_HASH can be set by non-  * RSS cards or configurations that provide an opaque flow identifier, allowing  * for ordering and distribution without explicit affinity.  Additionally,  * M_HASHTYPE_OPAQUE_HASH indicates that the flow identifier has hash  * properties.  *  * The meaning of the IPV6_EX suffix:  * "o  Home address from the home address option in the IPv6 destination  *     options header.  If the extension header is not present, use the Source  *     IPv6 Address.  *  o  IPv6 address that is contained in the Routing-Header-Type-2 from the  *     associated extension header.  If the extension header is not present,  *     use the Destination IPv6 Address."  * Quoted from:  * https://docs.microsoft.com/en-us/windows-hardware/drivers/network/rss-hashing-types#ndishashipv6ex  */
 end_comment
 
 begin_define
@@ -1244,10 +1248,6 @@ begin_comment
 comment|/* TCPv6 4-tuple + 							    * ext hdrs */
 end_comment
 
-begin_comment
-comment|/* Non-standard RSS hash types */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1257,17 +1257,6 @@ end_define
 
 begin_comment
 comment|/* IPv4 UDP 4-tuple*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_HASHTYPE_RSS_UDP_IPV4_EX
-value|M_HASHTYPE_HASH(8)
-end_define
-
-begin_comment
-comment|/* IPv4 UDP 4-tuple + 							    * ext hdrs */
 end_comment
 
 begin_define
@@ -1610,17 +1599,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXT_SFBUF_NOCACHE
-value|8
-end_define
-
-begin_comment
-comment|/* sendfile(2)'s sf_buf not to be cached */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EXT_VENDOR1
 value|224
 end_define
@@ -1795,7 +1773,7 @@ value|0x010000
 end_define
 
 begin_comment
-comment|/* for vendor-internal use */
+comment|/* These flags are vendor */
 end_comment
 
 begin_define
@@ -1806,7 +1784,7 @@ value|0x020000
 end_define
 
 begin_comment
-comment|/* for vendor-internal use */
+comment|/* or submodule specific, */
 end_comment
 
 begin_define
@@ -1817,7 +1795,7 @@ value|0x040000
 end_define
 
 begin_comment
-comment|/* for vendor-internal use */
+comment|/* not used by mbuf code. */
 end_comment
 
 begin_define
@@ -1828,7 +1806,7 @@ value|0x080000
 end_define
 
 begin_comment
-comment|/* for vendor-internal use */
+comment|/* Set/read by submodule. */
 end_comment
 
 begin_define
@@ -1886,36 +1864,6 @@ name|EXT_FLAG_BITS
 define|\
 value|"\20\1EXT_FLAG_EMBREF\2EXT_FLAG_EXTREF\5EXT_FLAG_NOFREE" \     "\21EXT_FLAG_VENDOR1\22EXT_FLAG_VENDOR2\23EXT_FLAG_VENDOR3" \     "\24EXT_FLAG_VENDOR4\25EXT_FLAG_EXP1\26EXT_FLAG_EXP2\27EXT_FLAG_EXP3" \     "\30EXT_FLAG_EXP4"
 end_define
-
-begin_comment
-comment|/*  * External reference/free functions.  */
-end_comment
-
-begin_function_decl
-name|void
-name|sf_ext_free
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sf_ext_free_nocache
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Flags indicating checksum, segmentation and other offload work to be  * done, or already done, by hardware or lower layers.  It is split into  * separate inbound and outbound flags.  *  * Outbound flags that are set by upper protocol layers requesting lower  * layers, or ideally the hardware, to perform these offloading tasks.  * For outbound packets this field and its flags can be directly tested  * against ifnet if_hwassist.  */
@@ -2966,25 +2914,12 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|caddr_t
+name|char
+modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
+name|m_ext_free_t
 parameter_list|,
 name|void
 modifier|*
@@ -3404,7 +3339,8 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|caddr_t
+name|char
+modifier|*
 name|buf
 parameter_list|,
 name|u_int
@@ -3414,22 +3350,8 @@ name|u_int
 modifier|*
 name|ref_cnt
 parameter_list|,
-name|void
-function_decl|(
-modifier|*
+name|m_ext_free_t
 name|freef
-function_decl|)
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
 parameter_list|,
 name|void
 modifier|*
@@ -4312,7 +4234,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|m_extadd((m), (caddr_t)(buf), (size), (free), (arg1), (arg2),	\     (flags), (type))
+value|m_extadd((m), (char *)(buf), (size), (free), (arg1), (arg2),	\     (flags), (type))
 end_define
 
 begin_define

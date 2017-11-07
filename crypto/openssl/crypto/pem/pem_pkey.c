@@ -399,6 +399,13 @@ argument_list|(
 name|p8
 argument_list|)
 expr_stmt|;
+name|OPENSSL_cleanse
+argument_list|(
+name|psbuf
+argument_list|,
+name|klen
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

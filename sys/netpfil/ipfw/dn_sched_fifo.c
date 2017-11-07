@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -47,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -89,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_dummynet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netpfil/ipfw/ip_fw_private.h>
 end_include
 
 begin_include

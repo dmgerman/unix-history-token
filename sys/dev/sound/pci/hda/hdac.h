@@ -773,6 +773,24 @@ value|HDA_MODEL_CONSTRUCT(RDC, 0x3010)
 end_define
 
 begin_comment
+comment|/* Creative */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CREATIVE_VENDORID
+value|0x1102
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CREATIVE_ALL
+value|HDA_MODEL_CONSTRUCT(CREATIVE, 0xffff)
+end_define
+
+begin_comment
 comment|/* VIA */
 end_comment
 

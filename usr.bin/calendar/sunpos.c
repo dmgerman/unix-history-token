@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This code is created to match the formulas available at:  * Formula and examples obtained from "How to Calculate alt/az: SAAO" at  * http://www.saao.ac.za/public-info/sun-moon-stars/sun-index/how-to-calculate-altaz/  */
+comment|/*  * This code is created to match the formulas available at:  * Formula and examples obtained from "How to Calculate alt/az: SAAO" at  * http://old.saao.ac.za/public-info/sun-moon-stars/sun-index/how-to-calculate-altaz/  */
 end_comment
 
 begin_include

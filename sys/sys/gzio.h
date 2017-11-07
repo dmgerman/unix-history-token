@@ -80,6 +80,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|gzio_reset
+parameter_list|(
+name|struct
+name|gzio_stream
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|gzio_write
 parameter_list|(

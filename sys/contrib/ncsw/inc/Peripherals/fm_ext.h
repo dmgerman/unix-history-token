@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/* Copyright (c) 2008-2012 Freescale Semiconductor, Inc  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -45,6 +45,12 @@ directive|include
 file|"dpaa_ext.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"fsl_fman_sp.h"
+end_include
+
 begin_comment
 comment|/**************************************************************************/
 end_comment
@@ -62,7 +68,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Group         FM_lib_grp FM library   @Description   FM API functions, definitions and enums                 The FM module is the main driver module and is a mandatory module                 for FM driver users. Before any further module initialization,                 this module must be initialized.                 The FM is a "singletone" module. It is responsible of the common                 HW modules: FPM, DMA, common QMI, common BMI initializations and                 run-time control routines. This module must be initialized always                 when working with any of the FM modules.                 NOTE - We assumes that the FML will be initialize only by core No. 0!   @{ */
+comment|/**  @Group         FM_lib_grp FM library   @Description   FM API functions, definitions and enums.                  The FM module is the main driver module and is a mandatory module                 for FM driver users. This module must be initialized first prior                 to any other drivers modules.                 The FM is a "singleton" module. It is responsible of the common                 HW modules: FPM, DMA, common QMI and common BMI initializations and                 run-time control routines. This module must be initialized always                 when working with any of the FM modules.                 NOTE - We assume that the FM library will be initialized only by core No. 0!   @{ */
 end_comment
 
 begin_comment
@@ -74,7 +80,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   enum for defining port types */
+comment|/**  @Description   Enum for defining port types */
 end_comment
 
 begin_comment
@@ -90,22 +96,19 @@ name|e_FM_PORT_TYPE_OH_OFFLINE_PARSING
 init|=
 literal|0
 block|,
-comment|/**< Offline parsing port (id's: 0-6, share id's with                                                  host command, so must have exclusive id) */
-name|e_FM_PORT_TYPE_OH_HOST_COMMAND
-block|,
-comment|/**< Host command port (id's: 0-6, share id's with                                                  offline parsing ports, so must have exclusive id) */
+comment|/**< Offline parsing port */
 name|e_FM_PORT_TYPE_RX
 block|,
-comment|/**< 1G Rx port (id's: 0-3) */
+comment|/**< 1G Rx port */
 name|e_FM_PORT_TYPE_RX_10G
 block|,
-comment|/**< 10G Rx port (id's: 0) */
+comment|/**< 10G Rx port */
 name|e_FM_PORT_TYPE_TX
 block|,
-comment|/**< 1G Tx port (id's: 0-3) */
+comment|/**< 1G Tx port */
 name|e_FM_PORT_TYPE_TX_10G
 block|,
-comment|/**< 10G Tx port (id's: 0) */
+comment|/**< 10G Tx port */
 name|e_FM_PORT_TYPE_DUMMY
 block|}
 name|e_FmPortType
@@ -184,12 +187,6 @@ end_endif
 begin_comment
 comment|/* defined(__MWERKS__)&& ... */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MEM_MAP_START
-end_define
 
 begin_comment
 comment|/**************************************************************************/
@@ -282,20 +279,35 @@ specifier|volatile
 name|uint16_t
 name|cksum
 decl_stmt|;
-comment|/**< Checksum */
+comment|/**< Running-sum */
 specifier|volatile
-name|uint32_t
-name|lcv
+name|uint16_t
+name|flags_frag_off
 decl_stmt|;
-comment|/**< LCV */
+comment|/**< Flags& fragment-offset field of the last IP-header */
+specifier|volatile
+name|uint8_t
+name|route_type
+decl_stmt|;
+comment|/**< Routing type field of a IPv6 routing extension header */
+specifier|volatile
+name|uint8_t
+name|rhp_ip_valid
+decl_stmt|;
+comment|/**< Routing Extension Header Present; last bit is IP valid */
 specifier|volatile
 name|uint8_t
 name|shim_off
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 comment|/**< Shim offset */
+specifier|volatile
+name|uint8_t
+name|ip_pid_off
+decl_stmt|;
+comment|/**< IP PID (last IP-proto) offset */
 specifier|volatile
 name|uint8_t
 name|eth_off
@@ -524,8 +536,268 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FM_FD_ERR_UNSUPPORTED_FORMAT
+value|0x04000000
+end_define
+
+begin_comment
+comment|/**< Not for Rx-Port! Unsupported Format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_LENGTH
+value|0x02000000
+end_define
+
+begin_comment
+comment|/**< Not for Rx-Port! Length Error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_DMA
+value|0x01000000
+end_define
+
+begin_comment
+comment|/**< DMA Data error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_IPR
+value|0x00000001
+end_define
+
+begin_comment
+comment|/**< IPR frame (not error) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_IPR_NCSP
+value|(0x00100000 | FM_FD_IPR)
+end_define
+
+begin_comment
+comment|/**< IPR non-consistent-sp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_IPR
+value|(0x00200000 | FM_FD_IPR)
+end_define
+
+begin_comment
+comment|/**< IPR error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_IPR_TO
+value|(0x00300000 | FM_FD_IPR)
+end_define
+
+begin_comment
+comment|/**< IPR timeout */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FM_CAPWAP_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_CRE
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_CHE
+value|0x00100000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FM_CAPWAP_SUPPORT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_PHYSICAL
+value|0x00080000
+end_define
+
+begin_comment
+comment|/**< Rx FIFO overflow, FCS error, code error, running disparity                                                          error (SGMII and TBI modes), FIFO parity error. PHY                                                          Sequence error, PHY error control character detected. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_SIZE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/**< Frame too long OR Frame size exceeds max_length_frame  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_CLS_DISCARD
+value|0x00020000
+end_define
+
+begin_comment
+comment|/**< classification discard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_EXTRACTION
+value|0x00008000
+end_define
+
+begin_comment
+comment|/**< Extract Out of Frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_NO_SCHEME
+value|0x00004000
+end_define
+
+begin_comment
+comment|/**< No Scheme Selected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_KEYSIZE_OVERFLOW
+value|0x00002000
+end_define
+
+begin_comment
+comment|/**< Keysize Overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_COLOR_RED
+value|0x00000800
+end_define
+
+begin_comment
+comment|/**< Frame color is red */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_COLOR_YELLOW
+value|0x00000400
+end_define
+
+begin_comment
+comment|/**< Frame color is yellow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_ILL_PLCR
+value|0x00000200
+end_define
+
+begin_comment
+comment|/**< Illegal Policer Profile selected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_PLCR_FRAME_LEN
+value|0x00000100
+end_define
+
+begin_comment
+comment|/**< Policer frame length error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_PRS_TIMEOUT
+value|0x00000080
+end_define
+
+begin_comment
+comment|/**< Parser Time out Exceed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_PRS_ILL_INSTRUCT
+value|0x00000040
+end_define
+
+begin_comment
+comment|/**< Invalid Soft Parser instruction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_PRS_HDR_ERR
+value|0x00000020
+end_define
+
+begin_comment
+comment|/**< Header error was identified during parsing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_ERR_BLOCK_LIMIT_EXCEEDED
+value|0x00000008
+end_define
+
+begin_comment
+comment|/**< Frame parsed beyind 256 first bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FM_FD_TX_STATUS_ERR_MASK
-value|0x07000000
+value|(FM_FD_ERR_UNSUPPORTED_FORMAT   | \                                          FM_FD_ERR_LENGTH               | \                                          FM_FD_ERR_DMA)
 end_define
 
 begin_comment
@@ -536,11 +808,22 @@ begin_define
 define|#
 directive|define
 name|FM_FD_RX_STATUS_ERR_MASK
-value|0x070ee3f8
+value|(FM_FD_ERR_UNSUPPORTED_FORMAT   | \                                          FM_FD_ERR_LENGTH               | \                                          FM_FD_ERR_DMA                  | \                                          FM_FD_ERR_IPR                  | \                                          FM_FD_ERR_IPR_TO               | \                                          FM_FD_ERR_IPR_NCSP             | \                                          FM_FD_ERR_PHYSICAL             | \                                          FM_FD_ERR_SIZE                 | \                                          FM_FD_ERR_CLS_DISCARD          | \                                          FM_FD_ERR_COLOR_RED            | \                                          FM_FD_ERR_COLOR_YELLOW         | \                                          FM_FD_ERR_ILL_PLCR             | \                                          FM_FD_ERR_PLCR_FRAME_LEN       | \                                          FM_FD_ERR_EXTRACTION           | \                                          FM_FD_ERR_NO_SCHEME            | \                                          FM_FD_ERR_KEYSIZE_OVERFLOW     | \                                          FM_FD_ERR_PRS_TIMEOUT          | \                                          FM_FD_ERR_PRS_ILL_INSTRUCT     | \                                          FM_FD_ERR_PRS_HDR_ERR          | \                                          FM_FD_ERR_BLOCK_LIMIT_EXCEEDED)
 end_define
 
 begin_comment
 comment|/**< RX Error FD bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_FD_RX_STATUS_ERR_NON_FM
+value|0x00400000
+end_define
+
+begin_comment
+comment|/**< non Frame-Manager error */
 end_comment
 
 begin_comment
@@ -602,6 +885,143 @@ name|uint32_t
 name|t_FmContextB
 typedef|;
 end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Collection   Special Operation options */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|fmSpecialOperations_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**< typedef for defining Special Operation options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_SP_OP_IPSEC
+value|0x80000000
+end_define
+
+begin_comment
+comment|/**< activate features that related to IPSec (e.g fix Eth-type) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_SP_OP_IPSEC_UPDATE_UDP_LEN
+value|0x40000000
+end_define
+
+begin_comment
+comment|/**< update the UDP-Len after Encryption */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_SP_OP_IPSEC_MANIP
+value|0x20000000
+end_define
+
+begin_comment
+comment|/**< handle the IPSec-manip options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_SP_OP_RPD
+value|0x10000000
+end_define
+
+begin_comment
+comment|/**< Set the RPD bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_SP_OP_DCL4C
+value|0x08000000
+end_define
+
+begin_comment
+comment|/**< Set the DCL4C bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_SP_OP_CHECK_SEC_ERRORS
+value|0x04000000
+end_define
+
+begin_comment
+comment|/**< Check SEC errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_SP_OP_CLEAR_RPD
+value|0x02000000
+end_define
+
+begin_comment
+comment|/**< Clear the RPD bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_SP_OP_CAPWAP_DTLS_ENC
+value|0x01000000
+end_define
+
+begin_comment
+comment|/**< activate features that related to CAPWAP-DTLS post Encryption */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_SP_OP_CAPWAP_DTLS_DEC
+value|0x00800000
+end_define
+
+begin_comment
+comment|/**< activate features that related to CAPWAP-DTLS post Decryption */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_SP_OP_IPSEC_NO_ETH_HDR
+value|0x00400000
+end_define
+
+begin_comment
+comment|/**< activate features that related to IPSec without Eth hdr */
+end_comment
+
+begin_comment
+comment|/* @} */
+end_comment
 
 begin_comment
 comment|/**************************************************************************/
@@ -896,12 +1316,6 @@ begin_comment
 comment|/* @} */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MEM_MAP_END
-end_define
-
 begin_if
 if|#
 directive|if
@@ -953,17 +1367,22 @@ enum|enum
 name|e_FmExceptions
 block|{
 name|e_FM_EX_DMA_BUS_ERROR
+init|=
+literal|0
 block|,
 comment|/**< DMA bus error. */
 name|e_FM_EX_DMA_READ_ECC
 block|,
-comment|/**< Read Buffer ECC error */
+comment|/**< Read Buffer ECC error (Valid for FM rev< 6)*/
 name|e_FM_EX_DMA_SYSTEM_WRITE_ECC
 block|,
-comment|/**< Write Buffer ECC error on system side */
+comment|/**< Write Buffer ECC error on system side (Valid for FM rev< 6)*/
 name|e_FM_EX_DMA_FM_WRITE_ECC
 block|,
-comment|/**< Write Buffer ECC error on FM side */
+comment|/**< Write Buffer ECC error on FM side (Valid for FM rev< 6)*/
+name|e_FM_EX_DMA_SINGLE_PORT_ECC
+block|,
+comment|/**< Single Port ECC error on FM side (Valid for FM rev> 6)*/
 name|e_FM_EX_FPM_STALL_ON_TASKS
 block|,
 comment|/**< Stall of tasks on FPM */
@@ -981,13 +1400,13 @@ block|,
 comment|/**< Double bit ECC occurred on QMI */
 name|e_FM_EX_QMI_DEQ_FROM_UNKNOWN_PORTID
 block|,
-comment|/**< Dequeu from unknown port id */
+comment|/**< Dequeue from unknown port id */
 name|e_FM_EX_BMI_LIST_RAM_ECC
 block|,
 comment|/**< Linked List RAM ECC error */
-name|e_FM_EX_BMI_PIPELINE_ECC
+name|e_FM_EX_BMI_STORAGE_PROFILE_ECC
 block|,
-comment|/**< Pipeline Table ECC Error */
+comment|/**< Storage Profile ECC Error */
 name|e_FM_EX_BMI_STATISTICS_RAM_ECC
 block|,
 comment|/**< Statistics Count RAM ECC Error Enable */
@@ -1009,7 +1428,74 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Group         FM_init_grp FM Initialization Unit   @Description   FM Initialization Unit                  Initialization Flow                 Initialization of the FM Module will be carried out by the application                 according to the following sequence:                 a.  Calling the configuration routine with basic parameters.                 b.  Calling the advance initialization routines to change driver's defaults.                 c.  Calling the initialization routine.   @{ */
+comment|/**  @Description   Enum for defining port DMA swap mode */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|e_FmDmaSwapOption
+block|{
+name|e_FM_DMA_NO_SWP
+init|=
+name|FMAN_DMA_NO_SWP
+block|,
+comment|/**< No swap, transfer data as is.*/
+name|e_FM_DMA_SWP_PPC_LE
+init|=
+name|FMAN_DMA_SWP_PPC_LE
+block|,
+comment|/**< The transferred data should be swapped                                                 in PowerPc Little Endian mode. */
+name|e_FM_DMA_SWP_BE
+init|=
+name|FMAN_DMA_SWP_BE
+comment|/**< The transferred data should be swapped                                                 in Big Endian mode */
+block|}
+name|e_FmDmaSwapOption
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Description   Enum for defining port DMA cache attributes */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|e_FmDmaCacheOption
+block|{
+name|e_FM_DMA_NO_STASH
+init|=
+name|FMAN_DMA_NO_STASH
+block|,
+comment|/**< Cacheable, no Allocate (No Stashing) */
+name|e_FM_DMA_STASH
+init|=
+name|FMAN_DMA_STASH
+comment|/**< Cacheable and Allocate (Stashing on) */
+block|}
+name|e_FmDmaCacheOption
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Group         FM_init_grp FM Initialization Unit   @Description   FM Initialization Unit                  Initialization Flow                 Initialization of the FM Module will be carried out by the application                 according to the following sequence:                 -  Calling the configuration routine with basic parameters.                 -  Calling the advance initialization routines to change driver's defaults.                 -  Calling the initialization routine.   @{ */
 end_comment
 
 begin_comment
@@ -1089,7 +1575,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   structure for defining Ucode patch for loading. */
+comment|/**  @Description   A structure for defining buffer prefix area content. */
 end_comment
 
 begin_comment
@@ -1099,7 +1585,218 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|t_FmPcdFirmwareParams
+name|t_FmBufferPrefixContent
+block|{
+name|uint16_t
+name|privDataSize
+decl_stmt|;
+comment|/**< Number of bytes to be left at the beginning                                          of the external buffer; Note that the private-area will                                          start from the base of the buffer address. */
+name|bool
+name|passPrsResult
+decl_stmt|;
+comment|/**< TRUE to pass the parse result to/from the FM;                                          User may use FM_PORT_GetBufferPrsResult() in order to                                          get the parser-result from a buffer. */
+name|bool
+name|passTimeStamp
+decl_stmt|;
+comment|/**< TRUE to pass the timeStamp to/from the FM                                          User may use FM_PORT_GetBufferTimeStamp() in order to                                          get the parser-result from a buffer. */
+name|bool
+name|passHashResult
+decl_stmt|;
+comment|/**< TRUE to pass the KG hash result to/from the FM                                          User may use FM_PORT_GetBufferHashResult() in order to                                          get the parser-result from a buffer. */
+name|bool
+name|passAllOtherPCDInfo
+decl_stmt|;
+comment|/**< Add all other Internal-Context information:                                          AD, hash-result, key, etc. */
+name|uint16_t
+name|dataAlign
+decl_stmt|;
+comment|/**< 0 to use driver's default alignment [DEFAULT_FM_SP_bufferPrefixContent_dataAlign],                                          other value for selecting a data alignment (must be a power of 2);                                          if write optimization is used, must be>= 16. */
+name|uint8_t
+name|manipExtraSpace
+decl_stmt|;
+comment|/**< Maximum extra size needed (insertion-size minus removal-size);                                          Note that this field impacts the size of the buffer-prefix                                          (i.e. it pushes the data offset);                                          This field is irrelevant if DPAA_VERSION==10 */
+block|}
+name|t_FmBufferPrefixContent
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Description   A structure of information about each of the external                 buffer pools used by a port or storage-profile. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t_FmExtPoolParams
+block|{
+name|uint8_t
+name|id
+decl_stmt|;
+comment|/**< External buffer pool id */
+name|uint16_t
+name|size
+decl_stmt|;
+comment|/**< External buffer pool buffer size */
+block|}
+name|t_FmExtPoolParams
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Description   A structure for informing the driver about the external                 buffer pools allocated in the BM and used by a port or a                 storage-profile. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t_FmExtPools
+block|{
+name|uint8_t
+name|numOfPoolsUsed
+decl_stmt|;
+comment|/**< Number of pools use by this port */
+name|t_FmExtPoolParams
+name|extBufPool
+index|[
+name|FM_PORT_MAX_NUM_OF_EXT_POOLS
+index|]
+decl_stmt|;
+comment|/**< Parameters for each port */
+block|}
+name|t_FmExtPools
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Description   A structure for defining backup BM Pools. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t_FmBackupBmPools
+block|{
+name|uint8_t
+name|numOfBackupPools
+decl_stmt|;
+comment|/**< Number of BM backup pools -                                              must be smaller than the total number of                                              pools defined for the specified port.*/
+name|uint8_t
+name|poolIds
+index|[
+name|FM_PORT_MAX_NUM_OF_EXT_POOLS
+index|]
+decl_stmt|;
+comment|/**< numOfBackupPools pool id's, specifying which                                              pools should be used only as backup. Pool                                              id's specified here must be a subset of the                                              pools used by the specified port.*/
+block|}
+name|t_FmBackupBmPools
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Description   A structure for defining BM pool depletion criteria */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t_FmBufPoolDepletion
+block|{
+name|bool
+name|poolsGrpModeEnable
+decl_stmt|;
+comment|/**< select mode in which pause frames will be sent after                                                          a number of pools (all together!) are depleted */
+name|uint8_t
+name|numOfPools
+decl_stmt|;
+comment|/**< the number of depleted pools that will invoke                                                          pause frames transmission. */
+name|bool
+name|poolsToConsider
+index|[
+name|BM_MAX_NUM_OF_POOLS
+index|]
+decl_stmt|;
+comment|/**< For each pool, TRUE if it should be considered for                                                          depletion (Note - this pool must be used by this port!). */
+name|bool
+name|singlePoolModeEnable
+decl_stmt|;
+comment|/**< select mode in which pause frames will be sent after                                                          a single-pool is depleted; */
+name|bool
+name|poolsToConsiderForSingleMode
+index|[
+name|BM_MAX_NUM_OF_POOLS
+index|]
+decl_stmt|;
+comment|/**< For each pool, TRUE if it should be considered for                                                          depletion (Note - this pool must be used by this port!) */
+if|#
+directive|if
+operator|(
+name|DPAA_VERSION
+operator|>=
+literal|11
+operator|)
+name|bool
+name|pfcPrioritiesEn
+index|[
+name|FM_MAX_NUM_OF_PFC_PRIORITIES
+index|]
+decl_stmt|;
+comment|/**< This field is used by the MAC as the Priority Enable Vector in the PFC frame which is transmitted */
+endif|#
+directive|endif
+comment|/* (DPAA_VERSION>= 11) */
+block|}
+name|t_FmBufPoolDepletion
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Description   A Structure for defining Ucode patch for loading. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t_FmFirmwareParams
 block|{
 name|uint32_t
 name|size
@@ -1111,7 +1808,7 @@ name|p_Code
 decl_stmt|;
 comment|/**< A pointer to the uCode */
 block|}
-name|t_FmPcdFirmwareParams
+name|t_FmFirmwareParams
 typedef|;
 end_typedef
 
@@ -1120,19 +1817,12 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   structure representing FM initialization parameters */
+comment|/**  @Description   A Structure for defining FM initialization parameters */
 end_comment
 
 begin_comment
 comment|/***************************************************************************/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_SIZE_OF_LIODN_TABLE
-value|64
-end_define
 
 begin_typedef
 typedef|typedef
@@ -1150,54 +1840,67 @@ comment|/**< FM Partition Id */
 name|uintptr_t
 name|baseAddr
 decl_stmt|;
-comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          A pointer to base of memory mapped FM registers (virtual);                                                          NOTE that this should include ALL common regs of the FM including                                                          the PCD regs area. */
+comment|/**< A pointer to base of memory mapped FM registers (virtual);                                                          this field is optional when the FM runs in "guest-mode"                                                          (i.e. guestId != NCSW_MASTER_ID); in that case, the driver will                                                          use the memory-map instead of calling the IPC where possible;                                                          NOTE that this should include ALL common registers of the FM including                                                          the PCD registers area (i.e. until the VSP pages - 880KB). */
 name|t_Handle
 name|h_FmMuram
 decl_stmt|;
-comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          A handle of an initialized MURAM object,                                                          to be used by the FM */
+comment|/**< A handle of an initialized MURAM object,                                                          to be used by the FM. */
 name|uint16_t
 name|fmClkFreq
 decl_stmt|;
-comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          In Mhz */
-ifdef|#
-directive|ifdef
-name|FM_PARTITION_ARRAY
+comment|/**< In Mhz;                                                          Relevant when FM not runs in "guest-mode". */
 name|uint16_t
-name|liodnBasePerPort
-index|[
-name|FM_SIZE_OF_LIODN_TABLE
-index|]
+name|fmMacClkRatio
 decl_stmt|;
-comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          For each partition, LIODN should be configured here. */
-endif|#
-directive|endif
-comment|/* FM_PARTITION_ARRAY */
+comment|/**< FM MAC Clock ratio, for backward comparability:                                                                      when fmMacClkRatio = 0, ratio is 2:1                                                                      when fmMacClkRatio = 1, ratio is 1:1  */
 name|t_FmExceptionsCallback
 modifier|*
 name|f_Exception
 decl_stmt|;
-comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          An application callback routine to                                                          handle exceptions.*/
+comment|/**< An application callback routine to handle exceptions;                                                          Relevant when FM not runs in "guest-mode". */
 name|t_FmBusErrorCallback
 modifier|*
 name|f_BusError
 decl_stmt|;
-comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          An application callback routine to                                                          handle exceptions.*/
+comment|/**< An application callback routine to handle exceptions;                                                          Relevant when FM not runs in "guest-mode". */
 name|t_Handle
 name|h_App
 decl_stmt|;
-comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          A handle to an application layer object; This handle will                                                          be passed by the driver upon calling the above callbacks */
+comment|/**< A handle to an application layer object; This handle will                                                          be passed by the driver upon calling the above callbacks;                                                          Relevant when FM not runs in "guest-mode". */
 name|uintptr_t
 name|irq
 decl_stmt|;
-comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          FM interrupt source for normal events */
+comment|/**< FM interrupt source for normal events;                                                          Relevant when FM not runs in "guest-mode". */
 name|uintptr_t
 name|errIrq
 decl_stmt|;
-comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          FM interrupt source for errors */
-name|t_FmPcdFirmwareParams
+comment|/**< FM interrupt source for errors;                                                          Relevant when FM not runs in "guest-mode". */
+name|t_FmFirmwareParams
 name|firmware
 decl_stmt|;
-comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          Ucode */
+comment|/**< The firmware parameters structure;                                                          Relevant when FM not runs in "guest-mode". */
+if|#
+directive|if
+operator|(
+name|DPAA_VERSION
+operator|>=
+literal|11
+operator|)
+name|uintptr_t
+name|vspBaseAddr
+decl_stmt|;
+comment|/**< A pointer to base of memory mapped FM VSP registers (virtual);                                                          i.e. up to 24KB, depending on the specific chip. */
+name|uint8_t
+name|partVSPBase
+decl_stmt|;
+comment|/**< The first Virtual-Storage-Profile-id dedicated to this partition.                                                          NOTE: this parameter relevant only when working with multiple partitions. */
+name|uint8_t
+name|partNumOfVSPs
+decl_stmt|;
+comment|/**< Number of VSPs dedicated to this partition.                                                          NOTE: this parameter relevant only when working with multiple partitions. */
+endif|#
+directive|endif
+comment|/* (DPAA_VERSION>= 11) */
 block|}
 name|t_FmParams
 typedef|;
@@ -1208,7 +1911,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_Config   @Description   Creates descriptor for the FM module.                  The routine returns a handle (descriptor) to the FM object.                 This descriptor must be passed as first parameter to all other                 FM function calls.                  No actual initialization or configuration of FM hardware is                 done by this routine.   @Param[in]     p_FmParams  - A pointer to data structure of parameters   @Return        Handle to FM object, or NULL for Failure. */
+comment|/**  @Function      FM_Config   @Description   Creates the FM module and returns its handle (descriptor).                 This descriptor must be passed as first parameter to all other                 FM function calls.                  No actual initialization or configuration of FM hardware is                 done by this routine. All FM parameters get default values that                 may be changed by calling one or more of the advance config routines.   @Param[in]     p_FmParams  - A pointer to a data structure of mandatory FM parameters   @Return        A handle to the FM object, or NULL for Failure. */
 end_comment
 
 begin_comment
@@ -1231,7 +1934,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_Init   @Description   Initializes the FM module   @Param[in]     h_Fm - FM module descriptor   @Return        E_OK on success; Error code otherwise. */
+comment|/**  @Function      FM_Init   @Description   Initializes the FM module by defining the software structure                 and configuring the hardware registers.   @Param[in]     h_Fm - FM module descriptor   @Return        E_OK on success; Error code otherwise. */
 end_comment
 
 begin_comment
@@ -1275,7 +1978,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Group         FM_advanced_init_grp    FM Advanced Configuration Unit   @Description   Configuration functions used to change default values;                 Note: Advanced init routines are not available for guest partition.  @{ */
+comment|/**  @Group         FM_advanced_init_grp    FM Advanced Configuration Unit   @Description   Advanced configuration routines are optional routines that may                 be called in order to change the default driver settings.                  Note: Advanced configuration routines are not available for guest partition.  @{ */
 end_comment
 
 begin_comment
@@ -1287,7 +1990,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   DMA debug mode */
+comment|/**  @Description   Enum for selecting DMA debug mode */
 end_comment
 
 begin_comment
@@ -1334,7 +2037,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   DMA Cache Override */
+comment|/**  @Description   Enum for selecting DMA Cache Override */
 end_comment
 
 begin_comment
@@ -1369,7 +2072,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   DMA External Bus Priority */
+comment|/**  @Description   Enum for selecting DMA External Bus Priority */
 end_comment
 
 begin_comment
@@ -1404,7 +2107,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   enum for choosing the field that will be output on AID */
+comment|/**  @Description   Enum for choosing the field that will be output on AID */
 end_comment
 
 begin_comment
@@ -1433,7 +2136,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   FPM Catasrophic error behaviour */
+comment|/**  @Description   Enum for selecting FPM Catastrophic error behavior */
 end_comment
 
 begin_comment
@@ -1451,7 +2154,7 @@ literal|0
 block|,
 comment|/**< Port_ID is stalled (only reset can release it) */
 name|e_FM_CATASTROPHIC_ERR_STALL_TASK
-comment|/**< Only errornous task is stalled */
+comment|/**< Only erroneous task is stalled */
 block|}
 name|e_FmCatastrophicErr
 typedef|;
@@ -1462,7 +2165,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   FPM DMA error behaviour */
+comment|/**  @Description   Enum for selecting FPM DMA Error behavior */
 end_comment
 
 begin_comment
@@ -1478,7 +2181,7 @@ name|e_FM_DMA_ERR_CATASTROPHIC
 init|=
 literal|0
 block|,
-comment|/**< Dma error is treated as a catastrophic error */
+comment|/**< Dma error is treated as a catastrophic                                                  error (e_FmCatastrophicErr)*/
 name|e_FM_DMA_ERR_REPORT
 comment|/**< Dma error is just reported */
 block|}
@@ -1491,7 +2194,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   DMA Emergency level by BMI emergency signal */
+comment|/**  @Description   Enum for selecting DMA Emergency level by BMI emergency signal */
 end_comment
 
 begin_comment
@@ -1520,7 +2223,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Collection   DMA emergency options */
+comment|/**  @Collection   Enum for selecting DMA Emergency options */
 end_comment
 
 begin_comment
@@ -1610,7 +2313,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   structure for defining FM threshold */
+comment|/*  @Description   structure for defining FM threshold */
 end_comment
 
 begin_comment
@@ -1668,7 +2371,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   structure for defining DMA thresholds */
+comment|/*  @Description   structure for defining DMA thresholds */
 end_comment
 
 begin_comment
@@ -1698,7 +2401,32 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigResetOnInit   @Description   Tell the driver whether to reset the FM before initialization or                 not. It changes the default configuration [FALSE].   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     enable              When TRUE, FM will be reset before any initialization.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      t_FmResetOnInitOverrideCallback   @Description   FMan specific reset on init user callback routine,                 will be used to override the standard FMan reset on init procedure   @Param[in]     h_Fm  - FMan handler */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|t_FmResetOnInitOverrideCallback
+function_decl|)
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      FM_ConfigResetOnInit   @Description   Define whether to reset the FM before initialization.                 Change the default configuration [DEFAULT_resetOnInit].   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     enable              When TRUE, FM will be reset before any initialization.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -1723,7 +2451,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigTotalNumOfTasks   @Description   Change the total number of tasks from its default                 configuration [BMI_MAX_NUM_OF_TASKS]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     totalNumOfTasks     The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigResetOnInitOverrideCallback   @Description   Define a special reset of FM before initialization.                 Change the default configuration [DEFAULT_resetOnInitOverrideCallback].   @Param[in]     h_Fm                	A handle to an FM Module.  @Param[in]     f_ResetOnInitOverride   FM specific reset on init user callback routine.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -1732,13 +2460,14 @@ end_comment
 
 begin_function_decl
 name|t_Error
-name|FM_ConfigTotalNumOfTasks
+name|FM_ConfigResetOnInitOverrideCallback
 parameter_list|(
 name|t_Handle
 name|h_Fm
 parameter_list|,
-name|uint8_t
-name|totalNumOfTasks
+name|t_FmResetOnInitOverrideCallback
+modifier|*
+name|f_ResetOnInitOverride
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1748,7 +2477,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigTotalFifoSize   @Description   Change the total Fifo size from its default                 configuration [BMI_MAX_FIFO_SIZE]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     totalFifoSize       The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigTotalFifoSize   @Description   Define Total FIFO size for the whole FM.                 Calling this routine changes the total Fifo size in the internal driver                 data base from its default configuration [DEFAULT_totalFifoSize]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     totalFifoSize       The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -1773,58 +2502,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigMaxNumOfOpenDmas   @Description   Change the maximum allowed open DMA's for this FM from its default                 configuration [BMI_MAX_NUM_OF_DMAS]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     maxNumOfOpenDmas    The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Error
-name|FM_ConfigMaxNumOfOpenDmas
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|,
-name|uint8_t
-name|maxNumOfOpenDmas
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_ConfigThresholds   @Description   Calling this routine changes the internal driver data base                 from its default FM threshold configuration:                                           dispLimit:    [0]                                           prsDispTh:    [16]                                           plcrDispTh:   [16]                                           kgDispTh:     [16]                                           bmiDispTh:    [16]                                           qmiEnqDispTh: [16]                                           qmiDeqDispTh: [16]                                           fmCtl1DispTh:  [16]                                           fmCtl2DispTh:  [16]   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     p_FmThresholds  A structure of threshold parameters.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Error
-name|FM_ConfigThresholds
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|,
-name|t_FmThresholds
-modifier|*
-name|p_FmThresholds
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_ConfigDmaCacheOverride   @Description   Calling this routine changes the internal driver data base                 from its default configuration of cache override mode [e_FM_DMA_NO_CACHE_OR]   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     cacheOverride   The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigDmaCacheOverride   @Description   Define cache override mode.                 Calling this routine changes the cache override mode                 in the internal driver data base from its default configuration [DEFAULT_cacheOverride]   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     cacheOverride   The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -1849,7 +2527,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigDmaAidOverride   @Description   Calling this routine changes the internal driver data base                 from its default configuration of aid override mode [TRUE]   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     aidOverride     The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigDmaAidOverride   @Description   Define DMA AID override mode.                 Calling this routine changes the AID override mode                 in the internal driver data base from its default configuration  [DEFAULT_aidOverride]   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     aidOverride     The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -1874,7 +2552,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigDmaAidMode   @Description   Calling this routine changes the internal driver data base                 from its default configuration of aid mode [e_FM_DMA_AID_OUT_TNUM]   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     aidMode         The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigDmaAidMode   @Description   Define DMA AID  mode.                 Calling this routine changes the AID  mode in the internal                 driver data base from its default configuration [DEFAULT_aidMode]   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     aidMode         The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -1899,7 +2577,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigDmaAxiDbgNumOfBeats   @Description   Calling this routine changes the internal driver data base                 from its default configuration of axi debug [1]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     axiDbgNumOfBeats    The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigDmaAxiDbgNumOfBeats   @Description   Define DMA AXI number of beats.                 Calling this routine changes the AXI number of beats in the internal                 driver data base from its default configuration [DEFAULT_axiDbgNumOfBeats]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     axiDbgNumOfBeats    The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -1924,7 +2602,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigDmaCamNumOfEntries   @Description   Calling this routine changes the internal driver data base                 from its default configuration of number of CAM entries [32]   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     numOfEntries    The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigDmaCamNumOfEntries   @Description   Define number of CAM entries.                 Calling this routine changes the number of CAM entries in the internal                 driver data base from its default configuration [DEFAULT_dmaCamNumOfEntries].   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     numOfEntries    The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -1949,135 +2627,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigDmaWatchdog   @Description   Calling this routine changes the internal driver data base                 from its default watchdog configuration, which is disabled                 [0].   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     watchDogValue   The selected new value - in microseconds.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Error
-name|FM_ConfigDmaWatchdog
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|,
-name|uint32_t
-name|watchDogValue
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_ConfigDmaWriteBufThresholds   @Description   Calling this routine changes the internal driver data base                 from its default configuration of DMA write buffer threshold                 assertEmergency: [DMA_THRESH_MAX_BUF]                 clearEmergency:  [DMA_THRESH_MAX_BUF]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     p_FmDmaThresholds   A structure of thresholds to define emergency behavior -                                     When 'assertEmergency' value is reached, emergency is asserted,                                     then it is held until 'clearEmergency' value is reached.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Error
-name|FM_ConfigDmaWriteBufThresholds
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|,
-name|t_FmDmaThresholds
-modifier|*
-name|p_FmDmaThresholds
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_ConfigDmaCommQThresholds   @Description   Calling this routine changes the internal driver data base                 from its default configuration of DMA command queue threshold                 assertEmergency: [DMA_THRESH_MAX_COMMQ]                 clearEmergency:  [DMA_THRESH_MAX_COMMQ]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     p_FmDmaThresholds   A structure of thresholds to define emergency behavior -                                     When 'assertEmergency' value is reached, emergency is asserted,                                     then it is held until 'clearEmergency' value is reached..   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Error
-name|FM_ConfigDmaCommQThresholds
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|,
-name|t_FmDmaThresholds
-modifier|*
-name|p_FmDmaThresholds
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_ConfigDmaReadBufThresholds   @Description   Calling this routine changes the internal driver data base                 from its default configuration of DMA read buffer threshold                 assertEmergency: [DMA_THRESH_MAX_BUF]                 clearEmergency:  [DMA_THRESH_MAX_BUF]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     p_FmDmaThresholds   A structure of thresholds to define emergency behavior -                                     When 'assertEmergency' value is reached, emergency is asserted,                                     then it is held until 'clearEmergency' value is reached..   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Error
-name|FM_ConfigDmaReadBufThresholds
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|,
-name|t_FmDmaThresholds
-modifier|*
-name|p_FmDmaThresholds
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_ConfigDmaSosEmergencyThreshold   @Description   Calling this routine changes the internal driver data base                 from its default dma SOS emergency configuration [0]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     dmaSosEmergency     The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Error
-name|FM_ConfigDmaSosEmergencyThreshold
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|,
-name|uint32_t
-name|dmaSosEmergency
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_ConfigEnableCounters   @Description   Calling this routine changes the internal driver data base                 from its default counters configuration where counters are disabled.   @Param[in]     h_Fm    A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigEnableCounters   @Description   Obsolete, always return E_OK.   @Param[in]     h_Fm    A handle to an FM Module.   @Return        E_OK on success; Error code otherwise. */
 end_comment
 
 begin_comment
@@ -2099,7 +2649,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigDmaDbgCounter   @Description   Calling this routine changes the internal driver data base                 from its default DMA debug counters configuration [e_FM_DMA_DBG_NO_CNT]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     fmDmaDbgCntMode     An enum selecting the debug counter mode.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigDmaDbgCounter   @Description   Define DMA debug counter.                 Calling this routine changes the number of the DMA debug counter in the internal                 driver data base from its default configuration [DEFAULT_dmaDbgCntMode].   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     fmDmaDbgCntMode     An enum selecting the debug counter mode.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2124,7 +2674,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigDmaStopOnBusErr   @Description   Calling this routine changes the internal driver data base                 from its default selection of bus error behavior [FALSE]    @Param[in]     h_Fm    A handle to an FM Module.  @Param[in]     stop    TRUE to stop on bus error, FALSE to continue.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 Only if bus error is enabled. */
+comment|/**  @Function      FM_ConfigDmaStopOnBusErr   @Description   Define bus error behavior.                 Calling this routine changes the bus error behavior definition                 in the internal driver data base from its default                 configuration [DEFAULT_dmaStopOnBusError].   @Param[in]     h_Fm    A handle to an FM Module.  @Param[in]     stop    TRUE to stop on bus error, FALSE to continue.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 Only if bus error is enabled.                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2149,7 +2699,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigDmaEmergency   @Description   Calling this routine changes the internal driver data base                 from its default selection of DMA emergency where's it's disabled.   @Param[in]     h_Fm        A handle to an FM Module.  @Param[in]     p_Emergency An OR mask of all required options.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigDmaEmergency   @Description   Define DMA emergency.                 Calling this routine changes the DMA emergency definition                 in the internal driver data base from its default                 configuration where's it's disabled.   @Param[in]     h_Fm        A handle to an FM Module.  @Param[in]     p_Emergency An OR mask of all required options.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2175,32 +2725,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigDmaEmergencySmoother   @Description   sets the minimum amount of DATA beats transferred on the AXI                 READ and WRITE ports before lowering the emergency level.                 By default smother is disabled.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     emergencyCnt    emergency switching counter.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Error
-name|FM_ConfigDmaEmergencySmoother
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|,
-name|uint32_t
-name|emergencyCnt
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_ConfigDmaErr   @Description   Calling this routine changes the internal driver data base                 from its default DMA error treatment [e_FM_DMA_ERR_CATASTROPHIC]   @Param[in]     h_Fm    A handle to an FM Module.  @Param[in]     dmaErr  The selected new choice.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigDmaErr   @Description   DMA error treatment.                 Calling this routine changes the DMA error treatment                 in the internal driver data base from its default                 configuration [DEFAULT_dmaErr].   @Param[in]     h_Fm    A handle to an FM Module.  @Param[in]     dmaErr  The selected new choice.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2225,7 +2750,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigCatastrophicErr   @Description   Calling this routine changes the internal driver data base                 from its default behavior on catastrophic error [e_FM_CATASTROPHIC_ERR_STALL_PORT]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     catastrophicErr     The selected new choice.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigCatastrophicErr   @Description   Define FM behavior on catastrophic error.                 Calling this routine changes the FM behavior on catastrophic                 error in the internal driver data base from its default                 [DEFAULT_catastrophicErr].   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     catastrophicErr     The selected new choice.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2250,7 +2775,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigEnableMuramTestMode   @Description   Calling this routine changes the internal driver data base                 from its default selection of test mode where it's disabled.   @Param[in]     h_Fm    A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigEnableMuramTestMode   @Description   Enable MURAM test mode.                 Calling this routine changes the internal driver data base                 from its default selection of test mode where it's disabled.                 This routine is only avaiable on old FM revisions (FMan v2).   @Param[in]     h_Fm    A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2272,7 +2797,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigEnableIramTestMode   @Description   Calling this routine changes the internal driver data base                 from its default selection of test mode where it's disabled.   @Param[in]     h_Fm    A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigEnableIramTestMode   @Description   Enable IRAM test mode.                 Calling this routine changes the internal driver data base                 from its default selection of test mode where it's disabled.                 This routine is only avaiable on old FM revisions (FMan v2).   @Param[in]     h_Fm    A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2294,7 +2819,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigHaltOnExternalActivation   @Description   Calling this routine changes the internal driver data base                 from its default selection of FM behaviour on external halt                 activation [FALSE].   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     enable          TRUE to enable halt on external halt                                 activation.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigHaltOnExternalActivation   @Description   Define FM behavior on external halt activation.                 Calling this routine changes the FM behavior on external halt                 activation in the internal driver data base from its default                 [DEFAULT_haltOnExternalActivation].   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     enable          TRUE to enable halt on external halt                                 activation.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2319,7 +2844,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigHaltOnUnrecoverableEccError   @Description   Calling this routine changes the internal driver data base                 from its default selection of FM behaviour on unrecoverable                 Ecc error [FALSE].   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     enable          TRUE to enable halt on unrecoverable Ecc error   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigHaltOnUnrecoverableEccError   @Description   Define FM behavior on external halt activation.                 Calling this routine changes the FM behavior on unrecoverable                 ECC error in the internal driver data base from its default                 [DEFAULT_haltOnUnrecoverableEccError].                 This routine is only avaiable on old FM revisions (FMan v2).   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     enable          TRUE to enable halt on unrecoverable Ecc error   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2344,7 +2869,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigException   @Description   Calling this routine changes the internal driver data base                 from its default selection of exceptions enablement.                 By default all exceptions are enabled.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     exception       The exception to be selected.  @Param[in]     enable          TRUE to enable interrupt, FALSE to mask it.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigException   @Description   Define FM exceptions.                 Calling this routine changes the exceptions defaults in the                 internal driver data base where all exceptions are enabled.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     exception       The exception to be selected.  @Param[in]     enable          TRUE to enable interrupt, FALSE to mask it.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2372,7 +2897,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigExternalEccRamsEnable   @Description   Calling this routine changes the internal driver data base                 from its default [FALSE].                 When this option is enabled Rams ECC enable is not effected                 by the FPM RCR bit, but by a JTAG.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     enable          TRUE to enable this option.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigExternalEccRamsEnable   @Description   Select external ECC enabling.                 Calling this routine changes the ECC enabling control in the internal                 driver data base from its default [DEFAULT_externalEccRamsEnable].                 When this option is enabled Rams ECC enabling is not effected                 by FM_EnableRamsEcc/FM_DisableRamsEcc, but by a JTAG.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     enable          TRUE to enable this option.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2397,7 +2922,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ConfigTnumAgingPeriod   @Description   Calling this routine changes the internal driver data base                 from its default configuration for aging of dequeue TNUM's                 in the QMI.[0]                 Note that this functionality is not available in all chips.   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     tnumAgingPeriod     Tnum Aging Period in microseconds.                                     Note that period is recalculated in units of                                     64 FM clocks. Driver will pick the closest                                     possible period.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_ConfigTnumAgingPeriod   @Description   Define Tnum aging period.                 Calling this routine changes the Tnum aging of dequeue TNUMs                 in the QMI in the internal driver data base from its default                 [DEFAULT_tnumAgingPeriod].   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     tnumAgingPeriod     Tnum Aging Period in microseconds.                                     Note that period is recalculated in units of                                     64 FM clocks. Driver will pick the closest                                     possible period.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID)                 NOTE that if some MAC is configured for PFC, '0' value is NOT                 allowed. */
 end_comment
 
 begin_comment
@@ -2413,6 +2938,185 @@ name|h_Fm
 parameter_list|,
 name|uint16_t
 name|tnumAgingPeriod
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  @Function      FM_ConfigDmaEmergencySmoother   @Description   Define DMA emergency smoother.                 Calling this routine changes the definition of the minimum                 amount of DATA beats transferred on the AXI READ and WRITE                 ports before lowering the emergency level.                 By default smoother is disabled.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     emergencyCnt    emergency switching counter.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_ConfigDmaEmergencySmoother
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|uint32_t
+name|emergencyCnt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  @Function      FM_ConfigThresholds   @Description   Calling this routine changes the internal driver data base                 from its default FM threshold configuration:                     dispLimit:    [DEFAULT_dispLimit]                     prsDispTh:    [DEFAULT_prsDispTh]                     plcrDispTh:   [DEFAULT_plcrDispTh]                     kgDispTh:     [DEFAULT_kgDispTh]                     bmiDispTh:    [DEFAULT_bmiDispTh]                     qmiEnqDispTh: [DEFAULT_qmiEnqDispTh]                     qmiDeqDispTh: [DEFAULT_qmiDeqDispTh]                     fmCtl1DispTh: [DEFAULT_fmCtl1DispTh]                     fmCtl2DispTh: [DEFAULT_fmCtl2DispTh]    @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     p_FmThresholds  A structure of threshold parameters.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_ConfigThresholds
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|t_FmThresholds
+modifier|*
+name|p_FmThresholds
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  @Function      FM_ConfigDmaSosEmergencyThreshold   @Description   Calling this routine changes the internal driver data base                 from its default dma SOS emergency configuration [DEFAULT_dmaSosEmergency]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     dmaSosEmergency     The selected new value.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_ConfigDmaSosEmergencyThreshold
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|uint32_t
+name|dmaSosEmergency
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  @Function      FM_ConfigDmaWriteBufThresholds   @Description   Calling this routine changes the internal driver data base                 from its default configuration of DMA write buffer threshold                 assertEmergency: [DEFAULT_dmaWriteIntBufLow]                 clearEmergency:  [DEFAULT_dmaWriteIntBufHigh]                 This routine is only avaiable on old FM revisions (FMan v2).   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     p_FmDmaThresholds   A structure of thresholds to define emergency behavior -                                     When 'assertEmergency' value is reached, emergency is asserted,                                     then it is held until 'clearEmergency' value is reached.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_ConfigDmaWriteBufThresholds
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|t_FmDmaThresholds
+modifier|*
+name|p_FmDmaThresholds
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  @Function      FM_ConfigDmaCommQThresholds   @Description   Calling this routine changes the internal driver data base                 from its default configuration of DMA command queue threshold                 assertEmergency: [DEFAULT_dmaCommQLow]                 clearEmergency:  [DEFAULT_dmaCommQHigh]   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     p_FmDmaThresholds   A structure of thresholds to define emergency behavior -                                     When 'assertEmergency' value is reached, emergency is asserted,                                     then it is held until 'clearEmergency' value is reached..   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_ConfigDmaCommQThresholds
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|t_FmDmaThresholds
+modifier|*
+name|p_FmDmaThresholds
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  @Function      FM_ConfigDmaReadBufThresholds   @Description   Calling this routine changes the internal driver data base                 from its default configuration of DMA read buffer threshold                 assertEmergency: [DEFAULT_dmaReadIntBufLow]                 clearEmergency:  [DEFAULT_dmaReadIntBufHigh]                 This routine is only avaiable on old FM revisions (FMan v2).   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     p_FmDmaThresholds   A structure of thresholds to define emergency behavior -                                     When 'assertEmergency' value is reached, emergency is asserted,                                     then it is held until 'clearEmergency' value is reached..   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_ConfigDmaReadBufThresholds
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|t_FmDmaThresholds
+modifier|*
+name|p_FmDmaThresholds
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  @Function      FM_ConfigDmaWatchdog   @Description   Calling this routine changes the internal driver data base                 from its default watchdog configuration, which is disabled                 [DEFAULT_dmaWatchdog].   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     watchDogValue   The selected new value - in microseconds.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_ConfigDmaWatchdog
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|uint32_t
+name|watchDogValue
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2438,7 +3142,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Group         FM_runtime_control_grp FM Runtime Control Unit   @Description   FM Runtime control unit API functions, definitions and enums.                 The FM driver provides a set of control routines for each module.                 These routines may only be called after the module was fully                 initialized (both configuration and initialization routines were                 called). They are typically used to get information from hardware                 (status, counters/statistics, revision etc.), to modify a current                 state or to force/enable a required action. Run-time control may                 be called whenever necessary and as many times as needed.  @{ */
+comment|/**  @Group         FM_runtime_control_grp FM Runtime Control Unit   @Description   FM Runtime control unit API functions, definitions and enums.                 The FM driver provides a set of control routines.                 These routines may only be called after the module was fully                 initialized (both configuration and initialization routines were                 called). They are typically used to get information from hardware                 (status, counters/statistics, revision etc.), to modify a current                 state or to force/enable a required action. Run-time control may                 be called whenever necessary and as many times as needed.  @{ */
 end_comment
 
 begin_comment
@@ -2465,6 +3169,10 @@ value|(FM_MAX_NUM_OF_OH_PORTS +       \                                      FM_
 end_define
 
 begin_comment
+comment|/**< Number of available FM ports */
+end_comment
+
+begin_comment
 comment|/* @} */
 end_comment
 
@@ -2473,7 +3181,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   Structure for Port bandwidth requirement. Port is identified                 by type and relative id. */
+comment|/*  @Description   A Structure for Port bandwidth requirement. Port is identified                 by type and relative id. */
 end_comment
 
 begin_comment
@@ -2507,7 +3215,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   A Structure containing an array of Port bandwidth requirements.                 The user should state the ports requiring bandwidth in terms of                 percentage - i.e. all port's bandwidths in the array must add                 up to 100. */
+comment|/*  @Description   A Structure containing an array of Port bandwidth requirements.                 The user should state the ports requiring bandwidth in terms of                 percentage - i.e. all port's bandwidths in the array must add                 up to 100. */
 end_comment
 
 begin_comment
@@ -2522,7 +3230,7 @@ block|{
 name|uint8_t
 name|numOfPorts
 decl_stmt|;
-comment|/**< num of ports listed in the array below */
+comment|/**< The number of relevant ports, which is the                                                  number of valid entries in the array below */
 name|t_FmPortBandwidth
 name|portsBandwidths
 index|[
@@ -2567,7 +3275,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   enum for defining FM counters */
+comment|/**  @Description   Enum for defining FM counters */
 end_comment
 
 begin_comment
@@ -2609,16 +3317,7 @@ name|e_FM_COUNTERS_DEQ_FROM_FD
 block|,
 comment|/**< QMI dequeue from FD command field counter */
 name|e_FM_COUNTERS_DEQ_CONFIRM
-block|,
 comment|/**< QMI dequeue confirm counter */
-name|e_FM_COUNTERS_SEMAPHOR_ENTRY_FULL_REJECT
-block|,
-comment|/**< DMA semaphor reject due to full entry counter */
-name|e_FM_COUNTERS_SEMAPHOR_QUEUE_FULL_REJECT
-block|,
-comment|/**< DMA semaphor reject due to full CAM queue counter */
-name|e_FM_COUNTERS_SEMAPHOR_SYNC_REJECT
-comment|/**< DMA semaphor reject due to sync counter */
 block|}
 name|e_FmCounters
 typedef|;
@@ -2629,7 +3328,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   structure for returning revision information */
+comment|/**  @Description   A Structure for returning FM revision information */
 end_comment
 
 begin_comment
@@ -2659,7 +3358,41 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   struct for defining DMA status */
+comment|/**  @Description   A Structure for returning FM ctrl code revision information */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t_FmCtrlCodeRevisionInfo
+block|{
+name|uint16_t
+name|packageRev
+decl_stmt|;
+comment|/**< Package revision */
+name|uint8_t
+name|majorRev
+decl_stmt|;
+comment|/**< Major revision */
+name|uint8_t
+name|minorRev
+decl_stmt|;
+comment|/**< Minor revision */
+block|}
+name|t_FmCtrlCodeRevisionInfo
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Description   A Structure for defining DMA status */
 end_comment
 
 begin_comment
@@ -2682,17 +3415,50 @@ comment|/**< Bus error occurred */
 name|bool
 name|readBufEccError
 decl_stmt|;
-comment|/**< Double ECC error on buffer Read */
+comment|/**< Double ECC error on buffer Read (Valid for FM rev< 6)*/
 name|bool
 name|writeBufEccSysError
 decl_stmt|;
-comment|/**< Double ECC error on buffer write from system side */
+comment|/**< Double ECC error on buffer write from system side (Valid for FM rev< 6)*/
 name|bool
 name|writeBufEccFmError
 decl_stmt|;
-comment|/**< Double ECC error on buffer write from FM side */
+comment|/**< Double ECC error on buffer write from FM side (Valid for FM rev< 6) */
+name|bool
+name|singlePortEccError
+decl_stmt|;
+comment|/**< Single Port ECC error from FM side (Valid for FM rev>= 6)*/
 block|}
 name|t_FmDmaStatus
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Description   A Structure for obtaining FM controller monitor values */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|t_FmCtrlMon
+block|{
+name|uint8_t
+name|percentCnt
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/**< Percentage value */
+block|}
+name|t_FmCtrlMon
 typedef|;
 end_typedef
 
@@ -2718,7 +3484,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_DumpRegs   @Description   Dumps all FM registers   @Param[in]     h_Fm      A handle to an FM Module.   @Return        E_OK on success;   @Cautions      Allowed only FM_Init(). */
+comment|/**  @Function      FM_DumpRegs   @Description   Dumps all FM registers   @Param[in]     h_Fm      A handle to an FM Module.   @Return        E_OK on success;   @Cautions      Allowed only following FM_Init(). */
 end_comment
 
 begin_comment
@@ -2749,7 +3515,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_SetException   @Description   Calling this routine enables/disables the specified exception.                 Note: Not available for guest partition.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     exception       The exception to be selected.  @Param[in]     enable          TRUE to enable interrupt, FALSE to mask it.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init(). */
+comment|/**  @Function      FM_SetException   @Description   Calling this routine enables/disables the specified exception.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     exception       The exception to be selected.  @Param[in]     enable          TRUE to enable interrupt, FALSE to mask it.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2777,33 +3543,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_SetPortsBandwidth   @Description   Sets relative weights between ports when accessing common resources.                 Note: Not available for guest partition.   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     p_PortsBandwidth    A structure of ports bandwidths in percentage, i.e.                                     total must equal 100.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Error
-name|FM_SetPortsBandwidth
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|,
-name|t_FmPortsBandwidthParams
-modifier|*
-name|p_PortsBandwidth
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_EnableRamsEcc   @Description   Enables ECC mechanism for all the different FM RAM's; E.g. IRAM,                 MURAM, Parser, Keygen, Policer, etc.                 Note:                 If FM_ConfigExternalEccRamsEnable was called to enable external                 setting of ECC, this routine effects IRAM ECC only.                 This routine is also called by the driver if an ECC exception is                 enabled.                 Note: Not available for guest partition.   @Param[in]     h_Fm            A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_EnableRamsEcc   @Description   Enables ECC mechanism for all the different FM RAM's; E.g. IRAM,                 MURAM, Parser, Keygen, Policer, etc.                 Note:                 If FM_ConfigExternalEccRamsEnable was called to enable external                 setting of ECC, this routine effects IRAM ECC only.                 This routine is also called by the driver if an ECC exception is                 enabled.   @Param[in]     h_Fm            A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2825,7 +3565,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_DisableRamsEcc   @Description   Disables ECC mechanism for all the different FM RAM's; E.g. IRAM,                 MURAM, Parser, Keygen, Policer, etc.                 Note:                 If FM_ConfigExternalEccRamsEnable was called to enable external                 setting of ECC, this routine effects IRAM ECC only.                 In opposed to FM_EnableRamsEcc, this routine must be called                 explicitly to disable all Rams ECC.                 Note: Not available for guest partition.    @Param[in]     h_Fm            A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init(). */
+comment|/**  @Function      FM_DisableRamsEcc   @Description   Disables ECC mechanism for all the different FM RAM's; E.g. IRAM,                 MURAM, Parser, Keygen, Policer, etc.                 Note:                 If FM_ConfigExternalEccRamsEnable was called to enable external                 setting of ECC, this routine effects IRAM ECC only.                 In opposed to FM_EnableRamsEcc, this routine must be called                 explicitly to disable all Rams ECC.   @Param[in]     h_Fm            A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Config() and before FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2873,6 +3613,32 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/**  @Function      FM_GetFmanCtrlCodeRevision   @Description   Returns the Fman controller code revision   @Param[in]     h_Fm                A handle to an FM Module.  @Param[out]    p_RevisionInfo      A structure of revision information parameters.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init(). */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_GetFmanCtrlCodeRevision
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|t_FmCtrlCodeRevisionInfo
+modifier|*
+name|p_RevisionInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
 comment|/**  @Function      FM_GetCounter   @Description   Reads one of the FM counters.   @Param[in]     h_Fm        A handle to an FM Module.  @Param[in]     counter     The requested counter.   @Return        Counter's current value.   @Cautions      Allowed only following FM_Init().                 Note that it is user's responsibility to call this routine only                 for enabled counters, and there will be no indication if a                 disabled counter is accessed. */
 end_comment
 
@@ -2898,7 +3664,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ModifyCounter   @Description   Sets a value to an enabled counter. Use "0" to reset the counter.                 Note: Not available for guest partition.   @Param[in]     h_Fm        A handle to an FM Module.  @Param[in]     counter     The requested counter.  @Param[in]     val         The requested value to be written into the counter.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init(). */
+comment|/**  @Function      FM_ModifyCounter   @Description   Sets a value to an enabled counter. Use "0" to reset the counter.   @Param[in]     h_Fm        A handle to an FM Module.  @Param[in]     counter     The requested counter.  @Param[in]     val         The requested value to be written into the counter.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2926,7 +3692,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_Resume   @Description   Release FM after halt FM command or after unrecoverable ECC error.                 Note: Not available for guest partition.   @Param[in]     h_Fm        A handle to an FM Module.   @Return        E_OK on success; Error code otherwise. */
+comment|/**  @Function      FM_Resume   @Description   Release FM after halt FM command or after unrecoverable ECC error.   @Param[in]     h_Fm        A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2948,7 +3714,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_SetDmaEmergency   @Description   Manual emergency set                 Note: Not available for guest partition.   @Param[in]     h_Fm        A handle to an FM Module.  @Param[in]     muramPort   MURAM direction select.  @Param[in]     enable      TRUE to manually enable emergency, FALSE to disable.   @Return        None.   @Cautions      Allowed only following FM_Init(). */
+comment|/**  @Function      FM_SetDmaEmergency   @Description   Manual emergency set   @Param[in]     h_Fm        A handle to an FM Module.  @Param[in]     muramPort   MURAM direction select.  @Param[in]     enable      TRUE to manually enable emergency, FALSE to disable.   @Return        None.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -2976,7 +3742,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_SetDmaExtBusPri   @Description   Manual emergency set                 Note: Not available for guest partition.   @Param[in]     h_Fm    A handle to an FM Module.  @Param[in]     pri     External bus priority select   @Return        None.   @Cautions      Allowed only following FM_Init(). */
+comment|/**  @Function      FM_SetDmaExtBusPri   @Description   Set the DMA external bus priority   @Param[in]     h_Fm    A handle to an FM Module.  @Param[in]     pri     External bus priority select   @Return        None.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -3001,32 +3767,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_ForceIntr   @Description   Causes an interrupt event on the requested source.                 Note: Not available for guest partition.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     exception       An exception to be forced.   @Return        E_OK on success; Error code if the exception is not enabled,                 or is not able to create interrupt.   @Cautions      Allowed only following FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Error
-name|FM_ForceIntr
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|,
-name|e_FmExceptions
-name|exception
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_GetDmaStatus   @Description   Reads the DMA current status   @Param[in]     h_Fm                A handle to an FM Module.  @Param[out]    p_FmDmaStatus      A structure of DMA status parameters.   @Return        None   @Cautions      Allowed only following FM_Init(). */
+comment|/**  @Function      FM_GetDmaStatus   @Description   Reads the DMA current status   @Param[in]     h_Fm            A handle to an FM Module.  @Param[out]    p_FmDmaStatus   A structure of DMA status parameters.   @Cautions      Allowed only following FM_Init(). */
 end_comment
 
 begin_comment
@@ -3052,29 +3793,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_GetPcdHandle   @Description   Used by FMC in order to get PCD handle   @Param[in]     h_Fm     A handle to an FM Module.   @Return        A handle to the PCD module, NULL if uninitialized.   @Cautions      Allowed only following FM_Init(). */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_function_decl
-name|t_Handle
-name|FM_GetPcdHandle
-parameter_list|(
-name|t_Handle
-name|h_Fm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_ErrorIsr                 Note: Not available for guest partition.   @Description   FM interrupt-service-routine for errors.   @Param[in]     h_Fm            A handle to an FM Module.   @Return        E_OK on success; E_EMPTY if no errors found in register, other                 error code otherwise.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+comment|/**  @Function      FM_ErrorIsr   @Description   FM interrupt-service-routine for errors.   @Param[in]     h_Fm            A handle to an FM Module.   @Return        E_OK on success; E_EMPTY if no errors found in register, other                 error code otherwise.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -3096,7 +3815,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_EventIsr                 Note: Not available for guest partition.   @Description   FM interrupt-service-routine for normal events.   @Param[in]     h_Fm            A handle to an FM Module.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+comment|/**  @Function      FM_EventIsr   @Description   FM interrupt-service-routine for normal events.   @Param[in]     h_Fm            A handle to an FM Module.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
 
 begin_comment
@@ -3113,29 +3832,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|DEBUG_ERRORS
-argument_list|)
-operator|&&
-operator|(
-name|DEBUG_ERRORS
-operator|>
-literal|0
-operator|)
-operator|)
-end_if
-
 begin_comment
 comment|/**************************************************************************/
 end_comment
 
 begin_comment
-comment|/**  @Function      FmDumpPortRegs   @Description   Dumps FM port registers which are part of FM common registers   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     hardwarePortId    HW port id.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only FM_Init(). */
+comment|/**  @Function      FM_GetSpecialOperationCoding   @Description   Return a specific coding according to the input mask.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     spOper          special operation mask.  @Param[out]    p_SpOperCoding  special operation code.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init(). */
 end_comment
 
 begin_comment
@@ -3144,25 +3846,166 @@ end_comment
 
 begin_function_decl
 name|t_Error
-name|FmDumpPortRegs
+name|FM_GetSpecialOperationCoding
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|fmSpecialOperations_t
+name|spOper
+parameter_list|,
+name|uint8_t
+modifier|*
+name|p_SpOperCoding
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      FM_CtrlMonStart   @Description   Start monitoring utilization of all available FM controllers.                  In order to obtain FM controllers utilization the following sequence                 should be used:                 -# FM_CtrlMonStart()                 -# FM_CtrlMonStop()                 -# FM_CtrlMonGetCounters() - issued for each FM controller   @Param[in]     h_Fm            A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID). */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_CtrlMonStart
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      FM_CtrlMonStop   @Description   Stop monitoring utilization of all available FM controllers.                  In order to obtain FM controllers utilization the following sequence                 should be used:                 -# FM_CtrlMonStart()                 -# FM_CtrlMonStop()                 -# FM_CtrlMonGetCounters() - issued for each FM controller   @Param[in]     h_Fm            A handle to an FM Module.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID). */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_CtrlMonStop
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      FM_CtrlMonGetCounters   @Description   Obtain FM controller utilization parameters.                  In order to obtain FM controllers utilization the following sequence                 should be used:                 -# FM_CtrlMonStart()                 -# FM_CtrlMonStop()                 -# FM_CtrlMonGetCounters() - issued for each FM controller   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     fmCtrlIndex     FM Controller index for that utilization results                                 are requested.  @Param[in]     p_Mon           Pointer to utilization results structure.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID). */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_CtrlMonGetCounters
 parameter_list|(
 name|t_Handle
 name|h_Fm
 parameter_list|,
 name|uint8_t
-name|hardwarePortId
+name|fmCtrlIndex
+parameter_list|,
+name|t_FmCtrlMon
+modifier|*
+name|p_Mon
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/**************************************************************************/
+end_comment
 
 begin_comment
-comment|/* (defined(DEBUG_ERRORS)&& ... */
+comment|/*  @Function      FM_ForceIntr   @Description   Causes an interrupt event on the requested source.   @Param[in]     h_Fm            A handle to an FM Module.  @Param[in]     exception       An exception to be forced.   @Return        E_OK on success; Error code if the exception is not enabled,                 or is not able to create interrupt.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
 end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_ForceIntr
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|e_FmExceptions
+name|exception
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  @Function      FM_SetPortsBandwidth   @Description   Sets relative weights between ports when accessing common resources.   @Param[in]     h_Fm                A handle to an FM Module.  @Param[in]     p_PortsBandwidth    A structure of ports bandwidths in percentage, i.e.                                     total must equal 100.   @Return        E_OK on success; Error code otherwise.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_SetPortsBandwidth
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|,
+name|t_FmPortsBandwidthParams
+modifier|*
+name|p_PortsBandwidth
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  @Function      FM_GetMuramHandle   @Description   Gets the corresponding MURAM handle   @Param[in]     h_Fm                A handle to an FM Module.   @Return        MURAM handle; NULL otherwise.   @Cautions      Allowed only following FM_Init().                 This routine should NOT be called from guest-partition                 (i.e. guestId != NCSW_MASTER_ID) */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Handle
+name|FM_GetMuramHandle
+parameter_list|(
+name|t_Handle
+name|h_Fm
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/** @} */
@@ -3186,6 +4029,133 @@ end_comment
 
 begin_comment
 comment|/* end of FM_grp group */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NCSW_BACKWARD_COMPATIBLE_API
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|t_FmFirmwareParams
+name|t_FmPcdFirmwareParams
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|t_FmBufferPrefixContent
+name|t_FmPortBufferPrefixContent
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|t_FmExtPoolParams
+name|t_FmPortExtPoolParams
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|t_FmExtPools
+name|t_FmPortExtPools
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|t_FmBackupBmPools
+name|t_FmPortBackupBmPools
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|t_FmBufPoolDepletion
+name|t_FmPortBufPoolDepletion
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|e_FmDmaSwapOption
+name|e_FmPortDmaSwapOption
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|e_FmDmaCacheOption
+name|e_FmPortDmaCacheOption
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|FM_CONTEXTA_GET_OVVERIDE
+value|FM_CONTEXTA_GET_OVERRIDE
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_CONTEXTA_SET_OVVERIDE
+value|FM_CONTEXTA_SET_OVERRIDE
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_FM_EX_BMI_PIPELINE_ECC
+value|e_FM_EX_BMI_STORAGE_PROFILE_ECC
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_FM_PORT_DMA_NO_SWP
+value|e_FM_DMA_NO_SWP
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_FM_PORT_DMA_SWP_PPC_LE
+value|e_FM_DMA_SWP_PPC_LE
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_FM_PORT_DMA_SWP_BE
+value|e_FM_DMA_SWP_BE
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_FM_PORT_DMA_NO_STASH
+value|e_FM_DMA_NO_STASH
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_FM_PORT_DMA_STASH
+value|e_FM_DMA_STASH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NCSW_BACKWARD_COMPATIBLE_API */
 end_comment
 
 begin_endif

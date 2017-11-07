@@ -4134,6 +4134,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KEY_ASSISTANT
+value|0x247
+end_define
+
+begin_comment
+comment|/* AL Context-aware desktop assistant */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KEY_BRIGHTNESS_MIN
 value|0x250
 end_define

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2066,6 +2072,8 @@ operator|.
 name|nvs_mtu
 operator|=
 name|mtu
+operator|+
+name|ETHER_HDR_LEN
 expr_stmt|;
 name|conf
 operator|.
@@ -2514,6 +2522,21 @@ block|{
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|hyperv_ver_major
+operator|>=
+literal|10
+condition|)
+block|{
+comment|/* UDP 4-tuple hash is enforced. */
+name|sc
+operator|->
+name|hn_caps
+operator||=
+name|HN_CAP_UDPHASH
+expr_stmt|;
+block|}
 comment|/* 	 * Initialize NVS. 	 */
 name|error
 operator|=

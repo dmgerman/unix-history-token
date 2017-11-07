@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/* Copyright (c) 2008-2012 Freescale Semiconductor, Inc  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -26,6 +26,12 @@ define|#
 directive|define
 name|__ENET_EXT_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"fsl_enet.h"
+end_include
 
 begin_define
 define|#
@@ -120,57 +126,73 @@ name|e_EnetInterface
 block|{
 name|e_ENET_IF_MII
 init|=
-literal|0x00010000
+name|E_ENET_IF_MII
 block|,
 comment|/**< MII interface */
 name|e_ENET_IF_RMII
 init|=
-literal|0x00020000
+name|E_ENET_IF_RMII
 block|,
 comment|/**< RMII interface */
 name|e_ENET_IF_SMII
 init|=
-literal|0x00030000
+name|E_ENET_IF_SMII
 block|,
 comment|/**< SMII interface */
 name|e_ENET_IF_GMII
 init|=
-literal|0x00040000
+name|E_ENET_IF_GMII
 block|,
 comment|/**< GMII interface */
 name|e_ENET_IF_RGMII
 init|=
-literal|0x00050000
+name|E_ENET_IF_RGMII
 block|,
 comment|/**< RGMII interface */
 name|e_ENET_IF_TBI
 init|=
-literal|0x00060000
+name|E_ENET_IF_TBI
 block|,
 comment|/**< TBI interface */
 name|e_ENET_IF_RTBI
 init|=
-literal|0x00070000
+name|E_ENET_IF_RTBI
 block|,
 comment|/**< RTBI interface */
 name|e_ENET_IF_SGMII
 init|=
-literal|0x00080000
+name|E_ENET_IF_SGMII
 block|,
 comment|/**< SGMII interface */
 name|e_ENET_IF_XGMII
 init|=
-literal|0x00090000
+name|E_ENET_IF_XGMII
 block|,
 comment|/**< XGMII interface */
 name|e_ENET_IF_QSGMII
 init|=
-literal|0x000a0000
+name|E_ENET_IF_QSGMII
+block|,
 comment|/**< QSGMII interface */
+name|e_ENET_IF_XFI
+init|=
+name|E_ENET_IF_XFI
+comment|/**< XFI interface */
 block|}
 name|e_EnetInterface
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ENET_IF_SGMII_BASEX
+value|0x80000000
+end_define
+
+begin_comment
+comment|/**< SGMII/QSGII interface with 1000BaseX                                                     auto-negotiation between MAC and phy                                                     or backplane;                                                     Note: 1000BaseX auto-negotiation relates                                                     only to interface between MAC and phy/backplane,                                                     SGMII phy can still synchronize with far-end phy                                                     at 10Mbps, 100Mbps or 1000Mbps */
+end_comment
 
 begin_comment
 comment|/**************************************************************************/
@@ -218,22 +240,27 @@ name|e_EnetSpeed
 block|{
 name|e_ENET_SPEED_10
 init|=
-literal|10
+name|E_ENET_SPEED_10
 block|,
 comment|/**< 10 Mbps */
 name|e_ENET_SPEED_100
 init|=
-literal|100
+name|E_ENET_SPEED_100
 block|,
 comment|/**< 100 Mbps */
 name|e_ENET_SPEED_1000
 init|=
-literal|1000
+name|E_ENET_SPEED_1000
 block|,
 comment|/**< 1000 Mbps = 1 Gbps */
+name|e_ENET_SPEED_2500
+init|=
+name|E_ENET_SPEED_2500
+block|,
+comment|/**< 2500 Mbps = 2.5 Gbps */
 name|e_ENET_SPEED_10000
 init|=
-literal|10000
+name|E_ENET_SPEED_10000
 comment|/**< 10000 Mbps = 10 Gbps */
 block|}
 name|e_EnetSpeed
@@ -378,7 +405,7 @@ operator||
 name|e_ENET_SPEED_10
 operator|)
 block|,
-comment|/**<    10 Mbps SGMII */
+comment|/**< 10 Mbps SGMII with auto-negotiation between MAC and                                              SGMII phy according to Cisco SGMII specification */
 name|e_ENET_MODE_SGMII_100
 init|=
 operator|(
@@ -387,7 +414,7 @@ operator||
 name|e_ENET_SPEED_100
 operator|)
 block|,
-comment|/**<   100 Mbps SGMII */
+comment|/**< 100 Mbps SGMII with auto-negotiation between MAC and                                              SGMII phy according to Cisco SGMII specification */
 name|e_ENET_MODE_SGMII_1000
 init|=
 operator|(
@@ -396,7 +423,68 @@ operator||
 name|e_ENET_SPEED_1000
 operator|)
 block|,
-comment|/**<  1000 Mbps SGMII */
+comment|/**< 1000 Mbps SGMII with auto-negotiation between MAC and                                              SGMII phy according to Cisco SGMII specification */
+name|e_ENET_MODE_SGMII_2500
+init|=
+operator|(
+name|e_ENET_IF_SGMII
+operator||
+name|e_ENET_SPEED_2500
+operator|)
+block|,
+name|e_ENET_MODE_SGMII_BASEX_10
+init|=
+operator|(
+name|ENET_IF_SGMII_BASEX
+operator||
+name|e_ENET_IF_SGMII
+operator||
+name|e_ENET_SPEED_10
+operator|)
+block|,
+comment|/**< 10 Mbps SGMII with 1000BaseX auto-negotiation between                                              MAC and SGMII phy or backplane */
+name|e_ENET_MODE_SGMII_BASEX_100
+init|=
+operator|(
+name|ENET_IF_SGMII_BASEX
+operator||
+name|e_ENET_IF_SGMII
+operator||
+name|e_ENET_SPEED_100
+operator|)
+block|,
+comment|/**< 100 Mbps SGMII with 1000BaseX auto-negotiation between                                              MAC and SGMII phy or backplane */
+name|e_ENET_MODE_SGMII_BASEX_1000
+init|=
+operator|(
+name|ENET_IF_SGMII_BASEX
+operator||
+name|e_ENET_IF_SGMII
+operator||
+name|e_ENET_SPEED_1000
+operator|)
+block|,
+comment|/**< 1000 Mbps SGMII with 1000BaseX auto-negotiation between                                              MAC and SGMII phy or backplane */
+name|e_ENET_MODE_QSGMII_1000
+init|=
+operator|(
+name|e_ENET_IF_QSGMII
+operator||
+name|e_ENET_SPEED_1000
+operator|)
+block|,
+comment|/**< 1000 Mbps QSGMII with auto-negotiation between MAC and                                              QSGMII phy according to Cisco QSGMII specification */
+name|e_ENET_MODE_QSGMII_BASEX_1000
+init|=
+operator|(
+name|ENET_IF_SGMII_BASEX
+operator||
+name|e_ENET_IF_QSGMII
+operator||
+name|e_ENET_SPEED_1000
+operator|)
+block|,
+comment|/**< 1000 Mbps QSGMII with 1000BaseX auto-negotiation between                                              MAC and QSGMII phy or backplane */
 name|e_ENET_MODE_XGMII_10000
 init|=
 operator|(
@@ -406,14 +494,14 @@ name|e_ENET_SPEED_10000
 operator|)
 block|,
 comment|/**< 10000 Mbps XGMII */
-name|e_ENET_MODE_QSGMII_1000
+name|e_ENET_MODE_XFI_10000
 init|=
 operator|(
-name|e_ENET_IF_QSGMII
+name|e_ENET_IF_XFI
 operator||
-name|e_ENET_SPEED_1000
+name|e_ENET_SPEED_10000
 operator|)
-comment|/**<  1000 Mbps QSGMII */
+comment|/**< 10000 Mbps XFI */
 block|}
 name|e_EnetMode
 typedef|;
@@ -427,7 +515,7 @@ parameter_list|(
 name|mode
 parameter_list|)
 define|\
-value|(((mode) == e_ENET_MODE_MII_10     ) || \          ((mode) == e_ENET_MODE_MII_100    ) || \          ((mode) == e_ENET_MODE_RMII_10    ) || \          ((mode) == e_ENET_MODE_RMII_100   ) || \          ((mode) == e_ENET_MODE_SMII_10    ) || \          ((mode) == e_ENET_MODE_SMII_100   ) || \          ((mode) == e_ENET_MODE_GMII_1000  ) || \          ((mode) == e_ENET_MODE_RGMII_10   ) || \          ((mode) == e_ENET_MODE_RGMII_100  ) || \          ((mode) == e_ENET_MODE_RGMII_1000 ) || \          ((mode) == e_ENET_MODE_TBI_1000   ) || \          ((mode) == e_ENET_MODE_RTBI_1000  ) || \          ((mode) == e_ENET_MODE_SGMII_10   ) || \          ((mode) == e_ENET_MODE_SGMII_100  ) || \          ((mode) == e_ENET_MODE_SGMII_1000 ) || \          ((mode) == e_ENET_MODE_XGMII_10000) || \          ((mode) == e_ENET_MODE_QSGMII_1000))
+value|(((mode) == e_ENET_MODE_MII_10     ) || \          ((mode) == e_ENET_MODE_MII_100    ) || \          ((mode) == e_ENET_MODE_RMII_10    ) || \          ((mode) == e_ENET_MODE_RMII_100   ) || \          ((mode) == e_ENET_MODE_SMII_10    ) || \          ((mode) == e_ENET_MODE_SMII_100   ) || \          ((mode) == e_ENET_MODE_GMII_1000  ) || \          ((mode) == e_ENET_MODE_RGMII_10   ) || \          ((mode) == e_ENET_MODE_RGMII_100  ) || \          ((mode) == e_ENET_MODE_RGMII_1000 ) || \          ((mode) == e_ENET_MODE_TBI_1000   ) || \          ((mode) == e_ENET_MODE_RTBI_1000  ) || \          ((mode) == e_ENET_MODE_SGMII_10   ) || \          ((mode) == e_ENET_MODE_SGMII_100  ) || \          ((mode) == e_ENET_MODE_SGMII_1000 ) || \          ((mode) == e_ENET_MODE_SGMII_BASEX_10   ) || \          ((mode) == e_ENET_MODE_SGMII_BASEX_100  ) || \          ((mode) == e_ENET_MODE_SGMII_BASEX_1000 ) || \          ((mode) == e_ENET_MODE_XGMII_10000) || \          ((mode) == e_ENET_MODE_QSGMII_1000) || \          ((mode) == e_ENET_MODE_QSGMII_BASEX_1000) || \          ((mode) == e_ENET_MODE_XFI_10000))
 end_define
 
 begin_define
@@ -449,7 +537,7 @@ name|ENET_INTERFACE_FROM_MODE
 parameter_list|(
 name|mode
 parameter_list|)
-value|(e_EnetInterface)((mode)& 0xFFFF0000)
+value|(e_EnetInterface)((mode)& 0x0FFF0000)
 end_define
 
 begin_define
@@ -460,6 +548,30 @@ parameter_list|(
 name|mode
 parameter_list|)
 value|(e_EnetSpeed)((mode)& 0x0000FFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENET_ADDR_TO_UINT64
+parameter_list|(
+name|_enetAddr
+parameter_list|)
+define|\
+value|(uint64_t)(((uint64_t)(_enetAddr)[0]<< 40) |   \                    ((uint64_t)(_enetAddr)[1]<< 32) |   \                    ((uint64_t)(_enetAddr)[2]<< 24) |   \                    ((uint64_t)(_enetAddr)[3]<< 16) |   \                    ((uint64_t)(_enetAddr)[4]<< 8) |    \                    ((uint64_t)(_enetAddr)[5]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKE_ENET_ADDR_FROM_UINT64
+parameter_list|(
+name|_addr64
+parameter_list|,
+name|_enetAddr
+parameter_list|)
+define|\
+value|do {                                                        \             int i;                                                  \             for (i=0; i< ENET_NUM_OCTETS_PER_ADDRESS; i++)         \                 (_enetAddr)[i] = (uint8_t)((_addr64)>> ((5-i)*8)); \         } while (0)
 end_define
 
 begin_endif

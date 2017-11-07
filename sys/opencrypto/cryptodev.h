@@ -29,6 +29,12 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_task.h>
+end_include
+
 begin_comment
 comment|/* Some initial values */
 end_comment
@@ -221,55 +227,6 @@ end_define
 begin_comment
 comment|/* HMAC Key Length */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NULL_HMAC_KEY_LEN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD5_HMAC_KEY_LEN
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHA1_HMAC_KEY_LEN
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIPEMD160_HMAC_KEY_LEN
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHA2_256_HMAC_KEY_LEN
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHA2_384_HMAC_KEY_LEN
-value|48
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHA2_512_HMAC_KEY_LEN
-value|64
-end_define
 
 begin_define
 define|#
@@ -1042,6 +999,11 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
+name|COP_F_CIPHER_FIRST
+value|0x0001
+comment|/* Cipher before MAC. */
+define|#
+directive|define
 name|COP_F_BATCH
 value|0x0008
 comment|/* Batch op if possible */
@@ -1649,6 +1611,10 @@ argument|cryptop
 argument_list|)
 name|crp_next
 expr_stmt|;
+name|struct
+name|task
+name|crp_task
+decl_stmt|;
 name|u_int64_t
 name|crp_sid
 decl_stmt|;
@@ -1698,6 +1664,16 @@ directive|define
 name|CRYPTO_F_CBIFSYNC
 value|0x0040
 comment|/* Do CBIMM if op is synchronous */
+define|#
+directive|define
+name|CRYPTO_F_ASYNC
+value|0x0080
+comment|/* Dispatch crypto jobs on several threads 					 * if op is synchronous 					 */
+define|#
+directive|define
+name|CRYPTO_F_ASYNC_KEEPORDER
+value|0x0100
+comment|/* 					 * Dispatch the crypto jobs in the same 					 * order there are submitted. Applied only 					 * if CRYPTO_F_ASYNC flags is set 					 */
 name|caddr_t
 name|crp_buf
 decl_stmt|;
@@ -1729,9 +1705,39 @@ name|bintime
 name|crp_tstamp
 decl_stmt|;
 comment|/* performance time stamp */
+name|uint32_t
+name|crp_seq
+decl_stmt|;
+comment|/* used for ordered dispatch */
+name|uint32_t
+name|crp_retw_id
+decl_stmt|;
+comment|/* 					 * the return worker to be used, 					 *  used for ordered dispatch 					 */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CRYPTOP_ASYNC
+parameter_list|(
+name|crp
+parameter_list|)
+define|\
+value|(((crp)->crp_flags& CRYPTO_F_ASYNC)&& \ 	CRYPTO_SESID2CAPS((crp)->crp_sid)& CRYPTOCAP_F_SYNC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTOP_ASYNC_KEEPORDER
+parameter_list|(
+name|crp
+parameter_list|)
+define|\
+value|(CRYPTOP_ASYNC(crp)&& \ 	(crp)->crp_flags& CRYPTO_F_ASYNC_KEEPORDER)
+end_define
 
 begin_define
 define|#

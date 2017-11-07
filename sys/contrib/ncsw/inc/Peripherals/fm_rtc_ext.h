@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"std_ext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fsl_fman_rtc.h"
 end_include
 
 begin_comment
@@ -93,9 +99,13 @@ enum|enum
 name|e_FmRtcAlarmPolarity
 block|{
 name|e_FM_RTC_ALARM_POLARITY_ACTIVE_HIGH
+init|=
+name|E_FMAN_RTC_ALARM_POLARITY_ACTIVE_HIGH
 block|,
 comment|/**< Active-high output polarity */
 name|e_FM_RTC_ALARM_POLARITY_ACTIVE_LOW
+init|=
+name|E_FMAN_RTC_ALARM_POLARITY_ACTIVE_LOW
 comment|/**< Active-low output polarity */
 block|}
 name|e_FmRtcAlarmPolarity
@@ -120,9 +130,13 @@ enum|enum
 name|e_FmRtcTriggerPolarity
 block|{
 name|e_FM_RTC_TRIGGER_ON_RISING_EDGE
+init|=
+name|E_FMAN_RTC_TRIGGER_ON_RISING_EDGE
 block|,
 comment|/**< Trigger on rising edge */
 name|e_FM_RTC_TRIGGER_ON_FALLING_EDGE
+init|=
+name|E_FMAN_RTC_TRIGGER_ON_FALLING_EDGE
 comment|/**< Trigger on falling edge */
 block|}
 name|e_FmRtcTriggerPolarity
@@ -147,12 +161,18 @@ enum|enum
 name|e_FmSrcClock
 block|{
 name|e_FM_RTC_SOURCE_CLOCK_EXTERNAL
+init|=
+name|E_FMAN_RTC_SOURCE_CLOCK_EXTERNAL
 block|,
 comment|/**< external high precision timer reference clock */
 name|e_FM_RTC_SOURCE_CLOCK_SYSTEM
+init|=
+name|E_FMAN_RTC_SOURCE_CLOCK_SYSTEM
 block|,
 comment|/**< MAC system clock */
 name|e_FM_RTC_SOURCE_CLOCK_OSCILATOR
+init|=
+name|E_FMAN_RTC_SOURCE_CLOCK_OSCILATOR
 comment|/**< RTC clock oscilator */
 block|}
 name|e_FmSrcClk
@@ -277,7 +297,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_RTC_ConfigPeriod   @Description   Configures the period of the timestamp if different than                 default [1000].   @Param[in]     h_FmRtc         - Handle to FM RTC object.  @Param[in]     period          - Period in nano-seconds.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
+comment|/**  @Function      FM_RTC_ConfigPeriod   @Description   Configures the period of the timestamp if different than                 default [DEFAULT_clockPeriod].   @Param[in]     h_FmRtc         - Handle to FM RTC object.  @Param[in]     period          - Period in nano-seconds.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
 end_comment
 
 begin_comment
@@ -330,7 +350,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_RTC_ConfigPulseRealignment   @Description   Configures the RTC to automatic FIPER pulse realignment in                 response to timer adjustments [FALSE]                  In this mode, the RTC clock is identical to the source clock.                 This feature can be useful when the system contains an external                 RTC with inherent frequency compensation.   @Param[in]     h_FmRtc     - Handle to FM RTC object.  @Param[in]     enable      - TRUE to enable automatic realignment.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
+comment|/**  @Function      FM_RTC_ConfigPulseRealignment   @Description   Configures the RTC to automatic FIPER pulse realignment in                 response to timer adjustments [DEFAULT_pulseRealign]                  In this mode, the RTC clock is identical to the source clock.                 This feature can be useful when the system contains an external                 RTC with inherent frequency compensation.   @Param[in]     h_FmRtc     - Handle to FM RTC object.  @Param[in]     enable      - TRUE to enable automatic realignment.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
 end_comment
 
 begin_comment
@@ -355,7 +375,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_RTC_ConfigFrequencyBypass   @Description   Configures the RTC to bypass the frequency compensation                 mechanism. [FALSE]                  In this mode, the RTC clock is identical to the source clock.                 This feature can be useful when the system contains an external                 RTC with inherent frequency compensation.   @Param[in]     h_FmRtc     - Handle to FM RTC object.  @Param[in]     enabled     - TRUE to bypass frequency compensation;                               FALSE otherwise.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
+comment|/**  @Function      FM_RTC_ConfigFrequencyBypass   @Description   Configures the RTC to bypass the frequency compensation                 mechanism. [DEFAULT_bypass]                  In this mode, the RTC clock is identical to the source clock.                 This feature can be useful when the system contains an external                 RTC with inherent frequency compensation.   @Param[in]     h_FmRtc     - Handle to FM RTC object.  @Param[in]     enabled     - TRUE to bypass frequency compensation;                               FALSE otherwise.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
 end_comment
 
 begin_comment
@@ -380,7 +400,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_RTC_ConfigInvertedInputClockPhase   @Description   Configures the RTC to invert the source clock phase on input.                 [FALSE]   @Param[in]     h_FmRtc  - Handle to FM RTC object.  @Param[in]     inverted    - TRUE to invert the source clock phase on input.                               FALSE otherwise.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
+comment|/**  @Function      FM_RTC_ConfigInvertedInputClockPhase   @Description   Configures the RTC to invert the source clock phase on input.                 [DEFAULT_invertInputClkPhase]   @Param[in]     h_FmRtc  - Handle to FM RTC object.  @Param[in]     inverted    - TRUE to invert the source clock phase on input.                               FALSE otherwise.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
 end_comment
 
 begin_comment
@@ -405,7 +425,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_RTC_ConfigInvertedOutputClockPhase   @Description   Configures the RTC to invert the output clock phase.                 [FALSE]   @Param[in]     h_FmRtc  - Handle to FM RTC object.  @Param[in]     inverted    - TRUE to invert the output clock phase.                               FALSE otherwise.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
+comment|/**  @Function      FM_RTC_ConfigInvertedOutputClockPhase   @Description   Configures the RTC to invert the output clock phase.                 [DEFAULT_invertOutputClkPhase]   @Param[in]     h_FmRtc  - Handle to FM RTC object.  @Param[in]     inverted    - TRUE to invert the output clock phase.                               FALSE otherwise.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
 end_comment
 
 begin_comment
@@ -430,7 +450,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_RTC_ConfigOutputClockDivisor   @Description   Configures the divisor for generating the output clock from                 the RTC clock. [0x00000002]   @Param[in]     h_FmRtc  - Handle to FM RTC object.  @Param[in]     divisor     - Divisor for generation of the output clock.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
+comment|/**  @Function      FM_RTC_ConfigOutputClockDivisor   @Description   Configures the divisor for generating the output clock from                 the RTC clock. [DEFAULT_outputClockDivisor]   @Param[in]     h_FmRtc  - Handle to FM RTC object.  @Param[in]     divisor     - Divisor for generation of the output clock.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
 end_comment
 
 begin_comment
@@ -455,7 +475,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_RTC_ConfigAlarmPolarity   @Description   Configures the polarity (active-high/active-low) of a specific                 alarm signal. [e_FM_RTC_ALARM_POLARITY_ACTIVE_HIGH]   @Param[in]     h_FmRtc      - Handle to FM RTC object.  @Param[in]     alarmId         - Alarm ID.  @Param[in]     alarmPolarity   - Alarm polarity.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
+comment|/**  @Function      FM_RTC_ConfigAlarmPolarity   @Description   Configures the polarity (active-high/active-low) of a specific                 alarm signal. [DEFAULT_alarmPolarity]   @Param[in]     h_FmRtc      - Handle to FM RTC object.  @Param[in]     alarmId         - Alarm ID.  @Param[in]     alarmPolarity   - Alarm polarity.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
 end_comment
 
 begin_comment
@@ -483,7 +503,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_RTC_ConfigExternalTriggerPolarity   @Description   Configures the polarity (rising/falling edge) of a specific                 external trigger signal. [e_FM_RTC_TRIGGER_ON_FALLING_EDGE]   @Param[in]     h_FmRtc      - Handle to FM RTC object.  @Param[in]     triggerId       - Trigger ID.  @Param[in]     triggerPolarity - Trigger polarity.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
+comment|/**  @Function      FM_RTC_ConfigExternalTriggerPolarity   @Description   Configures the polarity (rising/falling edge) of a specific                 external trigger signal. [DEFAULT_triggerPolarity]   @Param[in]     h_FmRtc      - Handle to FM RTC object.  @Param[in]     triggerId       - Trigger ID.  @Param[in]     triggerPolarity - Trigger polarity.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously created using FM_RTC_Config(). */
 end_comment
 
 begin_comment
@@ -956,7 +976,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_RTC_GetFreqCompensation   @Description   TODO   @Param[in]     h_FmRtc         - Handle to FM RTC object.  @Param[out]    p_Compensation  - A pointer to the returned value of compensation.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously initialized using FM_RTC_Init(). */
+comment|/**  @Function      FM_RTC_GetFreqCompensation   @Description   Retrieves the frequency compensation value   @Param[in]     h_FmRtc         - Handle to FM RTC object.  @Param[out]    p_Compensation  - A pointer to the returned value of compensation.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously initialized using FM_RTC_Init(). */
 end_comment
 
 begin_comment
@@ -982,7 +1002,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_RTC_SetFreqCompensation   @Description   TODO   @Param[in]     h_FmRtc             - Handle to FM RTC object.  @Param[in]     freqCompensation    - the new desired compensation value to be set.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously initialized using FM_RTC_Init(). */
+comment|/**  @Function      FM_RTC_SetFreqCompensation   @Description   Sets a new frequency compensation value.   @Param[in]     h_FmRtc             - Handle to FM RTC object.  @Param[in]     freqCompensation    - The new frequency compensation value to set.   @Return        E_OK on success; Error code otherwise.   @Cautions      h_FmRtc must have been previously initialized using FM_RTC_Init(). */
 end_comment
 
 begin_comment
@@ -1001,6 +1021,67 @@ name|freqCompensation
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_PTP_1588_CLOCK_DPAA
+end_ifdef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/** *@Function      FM_RTC_EnableInterrupt * *@Description   Enable interrupt of FM RTC. * *@Param[in]     h_FmRtc             - Handle to FM RTC object. *@Param[in]     events              - Interrupt events. * *@Return        E_OK on success; Error code otherwise. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_RTC_EnableInterrupt
+parameter_list|(
+name|t_Handle
+name|h_FmRtc
+parameter_list|,
+name|uint32_t
+name|events
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/** *@Function      FM_RTC_DisableInterrupt * *@Description   Disable interrupt of FM RTC. * *@Param[in]     h_FmRtc             - Handle to FM RTC object. *@Param[in]     events              - Interrupt events. * *@Return        E_OK on success; Error code otherwise. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|t_Error
+name|FM_RTC_DisableInterrupt
+parameter_list|(
+name|t_Handle
+name|h_FmRtc
+parameter_list|,
+name|uint32_t
+name|events
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

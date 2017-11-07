@@ -164,6 +164,12 @@ name|archive_write_add_filter_xz
 block|}
 block|,
 block|{
+name|ARCHIVE_FILTER_ZSTD
+block|,
+name|archive_write_add_filter_zstd
+block|}
+block|,
+block|{
 operator|-
 literal|1
 block|,

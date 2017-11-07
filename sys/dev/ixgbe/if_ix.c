@@ -2809,23 +2809,6 @@ if|if
 condition|(
 name|rss_hash_config
 operator|&
-name|RSS_HASHTYPE_RSS_UDP_IPV4_EX
-condition|)
-name|device_printf
-argument_list|(
-name|adapter
-operator|->
-name|dev
-argument_list|,
-literal|"%s: RSS_HASHTYPE_RSS_UDP_IPV4_EX defined, but not supported\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rss_hash_config
-operator|&
 name|RSS_HASHTYPE_RSS_UDP_IPV6
 condition|)
 name|mrqc
@@ -9722,6 +9705,15 @@ literal|0
 condition|)
 return|return;
 comment|/* Setup the queues for vlans */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_VLAN_HWTAGGING
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -9799,6 +9791,7 @@ name|vtag_strip
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

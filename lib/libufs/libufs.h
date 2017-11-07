@@ -605,6 +605,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * crc32c.c  */
+end_comment
+
+begin_function_decl
+name|uint32_t
+name|calculate_crc32c
+parameter_list|(
+name|uint32_t
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro

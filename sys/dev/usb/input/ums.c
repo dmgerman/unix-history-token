@@ -1442,7 +1442,7 @@ operator|)
 condition|)
 block|{
 name|dt
-operator|-=
+operator|+=
 name|hid_get_data
 argument_list|(
 name|buf
@@ -1646,7 +1646,7 @@ name|buttons
 operator||=
 literal|1UL
 operator|<<
-literal|5
+literal|6
 expr_stmt|;
 block|}
 elseif|else
@@ -1676,7 +1676,7 @@ name|buttons
 operator||=
 literal|1UL
 operator|<<
-literal|6
+literal|5
 expr_stmt|;
 block|}
 name|sc

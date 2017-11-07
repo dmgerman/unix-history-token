@@ -16,7 +16,7 @@ name|_BHND_BHNDREG_H_
 end_define
 
 begin_comment
-comment|/**  * The default address at which the ChipCommon core is mapped on all siba(4)  * devices, and most bcma(4) devices.  */
+comment|/**  * The default address at which the ChipCommon core is mapped on all siba(4)  * devices, and most (all?) bcma(4) devices.  */
 end_comment
 
 begin_define
@@ -35,6 +35,17 @@ define|#
 directive|define
 name|BHND_DEFAULT_CORE_SIZE
 value|0x1000
+end_define
+
+begin_comment
+comment|/**  * The standard size of the siba(4) and bcma(4) enumeration space.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_DEFAULT_ENUM_SIZE
+value|0x00100000
 end_define
 
 begin_endif

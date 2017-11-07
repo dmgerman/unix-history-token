@@ -406,7 +406,9 @@ name|usb_disable_enumeration
 argument_list|,
 literal|0
 argument_list|,
-literal|"Set to disable all USB device enumeration."
+literal|"Set to disable all USB device enumeration. "
+literal|"This can secure against USB devices turning evil, "
+literal|"for example a USB memory stick becoming a USB keyboard."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -419,7 +419,7 @@ block|}
 comment|/* New string buffer, 3 extra chars per escape (4 total) */
 name|OutString
 operator|=
-name|UtLocalCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|InStringLength
 operator|+

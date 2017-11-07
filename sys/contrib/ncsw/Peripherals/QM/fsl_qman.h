@@ -291,7 +291,7 @@ name|int
 name|cpu
 decl_stmt|;
 comment|/* portal interrupt line */
-name|int
+name|uintptr_t
 name|irq
 decl_stmt|;
 comment|/* The portal's dedicated channel id, use this value for initializing      * frame queues to target this portal when scheduled. */

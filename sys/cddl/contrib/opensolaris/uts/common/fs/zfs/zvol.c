@@ -258,6 +258,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/zil_impl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/filio.h>
 end_include
 
@@ -1025,6 +1031,11 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|,
+name|struct
+name|lwb
+modifier|*
+name|lwb
 parameter_list|,
 name|zio_t
 modifier|*
@@ -6078,11 +6089,11 @@ name|zgd
 operator|->
 name|zgd_bp
 condition|)
-name|zil_add_block
+name|zil_lwb_add_block
 argument_list|(
 name|zgd
 operator|->
-name|zgd_zilog
+name|zgd_lwb
 argument_list|,
 name|zgd
 operator|->
@@ -6116,6 +6127,11 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|,
+name|struct
+name|lwb
+modifier|*
+name|lwb
 parameter_list|,
 name|zio_t
 modifier|*
@@ -6167,17 +6183,30 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ASSERT
+name|ASSERT3P
 argument_list|(
-name|zio
+name|lwb
+argument_list|,
 operator|!=
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|ASSERT
+name|ASSERT3P
+argument_list|(
+name|zio
+argument_list|,
+operator|!=
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|ASSERT3U
 argument_list|(
 name|size
+argument_list|,
 operator|!=
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -6195,12 +6224,19 @@ argument_list|)
 expr_stmt|;
 name|zgd
 operator|->
-name|zgd_zilog
+name|zgd_lwb
 operator|=
-name|zv
-operator|->
-name|zv_zilog
+name|lwb
 expr_stmt|;
+comment|/* 	 * Write records come in two flavors: immediate and indirect. 	 * For small writes it's cheaper to store the data with the 	 * log record (immediate); for large writes it's cheaper to 	 * sync the data and get a pointer to it (indirect) so that 	 * we don't have to write the data twice. 	 */
+if|if
+condition|(
+name|buf
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* immediate write */
 name|zgd
 operator|->
 name|zgd_rl
@@ -6219,15 +6255,6 @@ argument_list|,
 name|RL_READER
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Write records come in two flavors: immediate and indirect. 	 * For small writes it's cheaper to store the data with the 	 * log record (immediate); for large writes it's cheaper to 	 * sync the data and get a pointer to it (indirect) so that 	 * we don't have to write the data twice. 	 */
-if|if
-condition|(
-name|buf
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* immediate write */
 name|error
 operator|=
 name|dmu_read
@@ -6248,6 +6275,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* indirect write */
+comment|/* 		 * Have to lock the whole block to ensure when it's written out 		 * and its checksum is being calculated that no one can change 		 * the data. Contrarily to zfs_get_data we need not re-check 		 * blocksize after we get the lock because it cannot be changed. 		 */
 name|size
 operator|=
 name|zv
@@ -6261,6 +6290,24 @@ argument_list|(
 name|offset
 argument_list|,
 name|size
+argument_list|)
+expr_stmt|;
+name|zgd
+operator|->
+name|zgd_rl
+operator|=
+name|zfs_range_lock
+argument_list|(
+operator|&
+name|zv
+operator|->
+name|zv_znode
+argument_list|,
+name|offset
+argument_list|,
+name|size
+argument_list|,
+name|RL_READER
 argument_list|)
 expr_stmt|;
 name|error

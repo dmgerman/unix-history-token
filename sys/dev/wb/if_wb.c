@@ -349,14 +349,6 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-parameter_list|,
-name|void
-modifier|*
-name|addr
-parameter_list|,
-name|void
-modifier|*
-name|args
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3590,14 +3582,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|void
-modifier|*
-name|args
 parameter_list|)
 block|{ }
 end_function
@@ -3669,14 +3653,6 @@ operator|)
 return|;
 name|m_new
 operator|->
-name|m_data
-operator|=
-name|c
-operator|->
-name|wb_buf
-expr_stmt|;
-name|m_new
-operator|->
 name|m_pkthdr
 operator|.
 name|len
@@ -3687,7 +3663,7 @@ name|m_len
 operator|=
 name|WB_BUFBYTES
 expr_stmt|;
-name|MEXTADD
+name|m_extadd
 argument_list|(
 name|m_new
 argument_list|,
@@ -3699,9 +3675,7 @@ name|WB_BUFBYTES
 argument_list|,
 name|wb_bfree
 argument_list|,
-name|c
-operator|->
-name|wb_buf
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

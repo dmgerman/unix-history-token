@@ -265,6 +265,15 @@ name|iwm8260_cfg
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|iwm_cfg
+name|iwm8265_cfg
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

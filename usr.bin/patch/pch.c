@@ -6028,6 +6028,13 @@ argument_list|,
 name|p_input_line
 argument_list|)
 expr_stmt|;
+comment|/* Don't overrun if we don't have enough line */
+if|if
+condition|(
+name|len
+operator|>
+literal|2
+condition|)
 name|p_line
 index|[
 name|i
@@ -6038,6 +6045,17 @@ argument_list|(
 name|buf
 operator|+
 literal|2
+argument_list|)
+expr_stmt|;
+else|else
+name|p_line
+index|[
+name|i
+index|]
+operator|=
+name|savestr
+argument_list|(
+literal|""
 argument_list|)
 expr_stmt|;
 if|if

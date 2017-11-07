@@ -1025,13 +1025,16 @@ name|lio_dev_err
 argument_list|(
 name|oct
 argument_list|,
-literal|"IQ%d Transmit dropped: %lu\n"
+literal|"IQ%d Transmit dropped: %llu\n"
 argument_list|,
 name|iq_no
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|stats
 operator|->
 name|tx_dropped
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m_freem

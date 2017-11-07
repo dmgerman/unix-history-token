@@ -7145,7 +7145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * GNU PAX Format 1.0 requires the special name, which pattern is:  *<dir>/GNUSparseFile.<pid>/<original file name>  *  * Since reproducable archives are more important, use 0 as pid.  *  * This function is used for only Sparse file, a file type of which  * is regular file.  */
+comment|/*  * GNU PAX Format 1.0 requires the special name, which pattern is:  *<dir>/GNUSparseFile.<pid>/<original file name>  *  * Since reproducible archives are more important, use 0 as pid.  *  * This function is used for only Sparse file, a file type of which  * is regular file.  */
 end_comment
 
 begin_function

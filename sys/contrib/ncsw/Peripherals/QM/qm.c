@@ -14,6 +14,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"error_ext.h"
 end_include
 
@@ -1061,7 +1079,7 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-name|CORE_MemoryBarrier
+name|mb
 argument_list|()
 expr_stmt|;
 name|WRITE_UINT32
@@ -3099,6 +3117,19 @@ argument_list|,
 name|intFlags
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ans
+operator|<
+name|UINT32_MAX
+argument_list|,
+operator|(
+literal|"Oops, %lx> UINT32_MAX!\n"
+operator|,
+name|ans
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|uint32_t
@@ -4459,7 +4490,7 @@ argument_list|,
 name|dsSize
 argument_list|)
 expr_stmt|;
-name|CORE_MemoryBarrier
+name|mb
 argument_list|()
 expr_stmt|;
 for|for
@@ -4488,7 +4519,7 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|CORE_MemoryBarrier
+name|mb
 argument_list|()
 expr_stmt|;
 name|phyAddr

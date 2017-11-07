@@ -411,14 +411,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|void
-modifier|*
-name|arg1
-parameter_list|,
-name|void
-modifier|*
-name|arg2
 parameter_list|)
 block|{ }
 end_function
@@ -2394,10 +2386,6 @@ name|__FreeBSD__
 name|void_mbuf_dtor
 argument_list|(
 name|m
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 endif|#

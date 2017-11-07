@@ -855,6 +855,9 @@ literal|255
 index|]
 decl_stmt|;
 name|int
+name|ofsmodified
+decl_stmt|;
+name|int
 name|iovlen
 decl_stmt|;
 name|int
@@ -1868,7 +1871,7 @@ literal|"** Skipping journal, falling through to full fsck\n\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Write the superblock so we don't try to recover the 		 * journal on another pass. 		 */
+comment|/* 		 * Write the superblock so we don't try to recover the 		 * journal on another pass. If this is the only change 		 * to the filesystem, we do not want it to be called 		 * out as modified. 		 */
 name|sblock
 operator|.
 name|fs_mtime
@@ -1880,6 +1883,22 @@ argument_list|)
 expr_stmt|;
 name|sbdirty
 argument_list|()
+expr_stmt|;
+name|ofsmodified
+operator|=
+name|fsmodified
+expr_stmt|;
+name|flush
+argument_list|(
+name|fswritefd
+argument_list|,
+operator|&
+name|sblk
+argument_list|)
+expr_stmt|;
+name|fsmodified
+operator|=
+name|ofsmodified
 expr_stmt|;
 block|}
 comment|/* 	 * Cleared if any questions answered no. Used to decide if 	 * the superblock should be marked clean. 	 */

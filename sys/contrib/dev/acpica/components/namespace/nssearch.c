@@ -904,6 +904,12 @@ name|Flags
 operator||=
 name|ANOBJ_IS_EXTERNAL
 expr_stmt|;
+name|NewNode
+operator|->
+name|Flags
+operator||=
+name|IMPLICIT_EXTERNAL
+expr_stmt|;
 block|}
 endif|#
 directive|endif

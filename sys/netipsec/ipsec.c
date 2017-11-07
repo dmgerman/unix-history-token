@@ -658,6 +658,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Use asynchronous mode to parallelize crypto jobs:  *  *  0 - disabled  *  1 - enabled  */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|async_crypto
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * TCP/UDP checksum handling policy for transport mode NAT-T (RFC3948)  *  * 0 - auto: incrementally recompute, when checksum delta is known;  *     if checksum delta isn't known, reset checksum to zero for UDP,  *     and mark csum_flags as valid for TCP.  * 1 - fully recompute TCP/UDP checksum.  */
 end_comment
 
@@ -963,6 +979,32 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Crypto driver selection."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ipsec
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|async_crypto
+argument_list|,
+name|CTLFLAG_VNET
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|async_crypto
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use asynchronous mode to parallelize crypto jobs."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -7082,14 +7082,7 @@ specifier|extern
 name|void
 name|ndis_return_packet
 parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
+name|ndis_packet
 modifier|*
 parameter_list|)
 function_decl|;

@@ -213,6 +213,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ifconfig_get_orig_name
+parameter_list|(
+name|ifconfig_handle_t
+modifier|*
+name|h
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ifname
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|orig_name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ifconfig_set_mtu
 parameter_list|(
 name|ifconfig_handle_t

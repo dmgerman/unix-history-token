@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_term.c,v 1.56 2017/07/08 13:43:15 schwarze Exp $ */
+comment|/*	$Id: tbl_term.c,v 1.57 2017/07/31 16:14:10 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -264,7 +264,11 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-return|return
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
 name|term_hen
 argument_list|(
 operator|(
@@ -277,6 +281,15 @@ name|arg
 argument_list|,
 name|su
 argument_list|)
+expr_stmt|;
+return|return
+name|i
+operator|>
+literal|0
+condition|?
+name|i
+else|:
+literal|0
 return|;
 block|}
 end_function

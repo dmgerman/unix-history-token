@@ -272,7 +272,9 @@ block|,
 name|OPTION_UUENCODE
 block|,
 name|OPTION_VERSION
-block|}
+block|,
+name|OPTION_ZSTD
+block|, }
 enum|;
 end_enum
 

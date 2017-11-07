@@ -1777,7 +1777,7 @@ decl_stmt|;
 name|t_Handle
 name|h_App
 decl_stmt|;
-name|int
+name|uintptr_t
 name|errIrq
 decl_stmt|;
 comment|/**< error interrupt line; NO_IRQ if interrupts not used */

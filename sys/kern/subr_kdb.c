@@ -131,7 +131,8 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|int
+name|u_char
+name|__read_frequently
 name|kdb_active
 init|=
 literal|0

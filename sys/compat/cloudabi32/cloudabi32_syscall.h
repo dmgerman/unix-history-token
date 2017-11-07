@@ -272,92 +272,85 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi32_sys_poll_fd
+name|CLOUDABI32_SYS_cloudabi_sys_proc_exec
 value|38
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi_sys_proc_exec
+name|CLOUDABI32_SYS_cloudabi_sys_proc_exit
 value|39
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi_sys_proc_exit
+name|CLOUDABI32_SYS_cloudabi_sys_proc_fork
 value|40
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi_sys_proc_fork
+name|CLOUDABI32_SYS_cloudabi_sys_proc_raise
 value|41
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi_sys_proc_raise
+name|CLOUDABI32_SYS_cloudabi_sys_random_get
 value|42
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi_sys_random_get
+name|CLOUDABI32_SYS_cloudabi32_sys_sock_recv
 value|43
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi32_sys_sock_recv
+name|CLOUDABI32_SYS_cloudabi32_sys_sock_send
 value|44
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi32_sys_sock_send
+name|CLOUDABI32_SYS_cloudabi_sys_sock_shutdown
 value|45
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi_sys_sock_shutdown
+name|CLOUDABI32_SYS_cloudabi32_sys_thread_create
 value|46
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi32_sys_thread_create
+name|CLOUDABI32_SYS_cloudabi_sys_thread_exit
 value|47
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi_sys_thread_exit
+name|CLOUDABI32_SYS_cloudabi_sys_thread_yield
 value|48
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLOUDABI32_SYS_cloudabi_sys_thread_yield
-value|49
-end_define
-
-begin_define
-define|#
-directive|define
 name|CLOUDABI32_SYS_MAXSYSCALL
-value|50
+value|49
 end_define
 
 end_unit

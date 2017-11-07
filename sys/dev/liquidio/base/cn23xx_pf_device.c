@@ -458,12 +458,14 @@ name|lio_dev_dbg
 argument_list|(
 name|oct
 argument_list|,
-literal|"SLI_PKT_MAC(%d)_PF(%d)_RINFO : 0x%016lx\n"
+literal|"SLI_PKT_MAC(%d)_PF(%d)_RINFO : 0x%016llx\n"
 argument_list|,
 name|mac_no
 argument_list|,
 name|pf_num
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|lio_read_csr64
 argument_list|(
 name|oct
@@ -473,6 +475,7 @@ argument_list|(
 name|mac_no
 argument_list|,
 name|pf_num
+argument_list|)
 argument_list|)
 argument_list|)
 argument_list|)

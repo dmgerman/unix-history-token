@@ -15,6 +15,23 @@ directive|define
 name|_CAP_SYSCTL_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CASPER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WITH_CASPER
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -42,6 +59,12 @@ directive|define
 name|CAP_SYSCTL_RECURSIVE
 value|0x04
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_CASPER
+end_ifdef
 
 begin_function_decl
 name|int
@@ -74,6 +97,37 @@ name|newlen
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|cap_sysctlbyname
+parameter_list|(
+name|chan
+parameter_list|,
+name|name
+parameter_list|,
+name|oldp
+parameter_list|,
+name|oldlenp
+parameter_list|,
+name|newp
+parameter_list|,
+name|newlen
+parameter_list|)
+define|\
+value|sysctlbyname(name, oldp, oldlenp, newp, newlen)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -3071,9 +3071,9 @@ struct|struct
 name|zgd
 block|{
 name|struct
-name|zilog
+name|lwb
 modifier|*
-name|zgd_zilog
+name|zgd_lwb
 decl_stmt|;
 name|struct
 name|blkptr

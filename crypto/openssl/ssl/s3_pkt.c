@@ -5675,8 +5675,6 @@ operator|!
 operator|(
 name|s
 operator|->
-name|ctx
-operator|->
 name|options
 operator|&
 name|SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION

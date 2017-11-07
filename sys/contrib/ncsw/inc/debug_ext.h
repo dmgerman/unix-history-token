@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -107,6 +107,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DUMP_IDX_LEN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
 name|DUMP_MAX_STR
 value|64
 end_define
@@ -119,11 +126,10 @@ parameter_list|(
 name|phrase
 parameter_list|)
 define|\
-value|dumpTmpLevel = 0; dumpSubStr[0] = '\0'; \     sprintf(dumpTmpStr, "%s", #phrase); \     p_DumpToken = strtok(dumpTmpStr, (dumpIsArr[0] ? "[" : ".")); \     while (p_DumpToken != NULL) \     { \         strcat(dumpSubStr, p_DumpToken); \         if (dumpIsArr[dumpTmpLevel]) \         { \             strcat(dumpSubStr, dumpIdxStr[dumpTmpLevel]); \             p_DumpToken = strtok(NULL, "."); \         } \         if ((p_DumpToken = strtok(NULL, (dumpIsArr[++dumpTmpLevel] ? "[" : "."))) != 0) \             strcat(dumpSubStr, "."); \     }
+value|dumpTmpLevel = 0; dumpSubStr[0] = '\0'; \     snprintf(dumpTmpStr, DUMP_MAX_STR, "%s", #phrase); \     p_DumpToken = strtok(dumpTmpStr, (dumpIsArr[0] ? "[" : ".")); \     while ((p_DumpToken != NULL)&& (dumpTmpLevel< DUMP_MAX_LEVELS)) \     { \         strlcat(dumpSubStr, p_DumpToken, DUMP_MAX_STR); \         if (dumpIsArr[dumpTmpLevel]) \         { \             strlcat(dumpSubStr, dumpIdxStr[dumpTmpLevel], DUMP_MAX_STR); \             p_DumpToken = strtok(NULL, "."); \         } \         if ((p_DumpToken != NULL)&& \             ((p_DumpToken = strtok(NULL, (dumpIsArr[++dumpTmpLevel] ? "[" : "."))) != NULL)) \             strlcat(dumpSubStr, ".", DUMP_MAX_STR); \     }
 end_define
 
 begin_comment
-unit|\
 comment|/**************************************************************************/
 end_comment
 
@@ -164,9 +170,9 @@ define|#
 directive|define
 name|DECLARE_DUMP
 define|\
-value|char    dumpIdxStr[DUMP_MAX_LEVELS + 1][6] = { "", }; \     char    dumpSubStr[DUMP_MAX_STR] = ""; \     char    dumpTmpStr[DUMP_MAX_STR] = ""; \     char    *p_DumpToken = NULL; \     int     dumpArrIdx = 0, dumpArrSize = 0, dumpVarSize = 0, dumpLevel = 0, dumpTmpLevel = 0; \     uint8_t dumpIsArr[DUMP_MAX_LEVELS + 1] = { 0 }; \
+value|char    dumpIdxStr[DUMP_MAX_LEVELS + 1][DUMP_IDX_LEN] = { "", }; \     char    dumpSubStr[DUMP_MAX_STR] = ""; \     char    dumpTmpStr[DUMP_MAX_STR] = ""; \     char    *p_DumpToken = NULL; \     int     dumpArrIdx = 0, dumpArrSize = 0, dumpLevel = 0, dumpTmpLevel = 0; \     uint8_t dumpIsArr[DUMP_MAX_LEVELS + 1] = { 0 }; \
 comment|/* Prevent warnings if not all used */
-value|\     UNUSED(dumpIdxStr[0][0]); \     UNUSED(dumpSubStr[0]); \     UNUSED(dumpTmpStr[0]); \     UNUSED(p_DumpToken); \     UNUSED(dumpArrIdx); \     UNUSED(dumpArrSize); \     UNUSED(dumpVarSize); \     UNUSED(dumpLevel); \     UNUSED(dumpTmpLevel); \     UNUSED(dumpIsArr[0]);
+value|\     UNUSED(dumpIdxStr[0][0]); \     UNUSED(dumpSubStr[0]); \     UNUSED(dumpTmpStr[0]); \     UNUSED(p_DumpToken); \     UNUSED(dumpArrIdx); \     UNUSED(dumpArrSize); \     UNUSED(dumpLevel); \     UNUSED(dumpTmpLevel); \     UNUSED(dumpIsArr[0]);
 end_define
 
 begin_comment
@@ -191,7 +197,7 @@ parameter_list|,
 name|msg
 parameter_list|)
 define|\
-value|DUMP_Print("\r\n"); DUMP_Print msg; \     DUMP_Print(" (0x%p)\r\n" \                "---------------------------------------------------------\r\n", \                (addr))
+value|DUMP_Print("\r\n"); DUMP_Print msg; \     if (addr)                           \         DUMP_Print(" (%p)", (addr));    \     DUMP_Print("\r\n---------------------------------------------------------\r\n");
 end_define
 
 begin_comment
@@ -264,7 +270,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|for (idx=0, dumpIsArr[dumpLevel++] = 1; \          (idx< cnt)&& sprintf(dumpIdxStr[dumpLevel-1], "[%d]", idx); \          idx++, ((idx< cnt) || ((dumpIsArr[--dumpLevel] = 0) == 0)))
+value|for (idx=0, dumpIsArr[dumpLevel++] = 1; \          (idx< cnt)&& (dumpLevel> 0)&& snprintf(dumpIdxStr[dumpLevel-1], DUMP_IDX_LEN, "[%d]", idx); \          idx++, ((idx< cnt) || (dumpIsArr[--dumpLevel] = 0)))
 end_define
 
 begin_comment
@@ -289,7 +295,7 @@ parameter_list|,
 name|phrase
 parameter_list|)
 define|\
-value|do { \         void *addr = (void *)&((st)->phrase); \         _CREATE_DUMP_SUBSTR(phrase); \         dumpVarSize = sizeof((st)->phrase); \         switch (dumpVarSize) \         { \             case 1:  DUMP_Print("0x%08X: 0x%02x%14s\t%s\r\n", \                                 addr, GET_UINT8(*(uint8_t*)addr), "", dumpSubStr); break; \             case 2:  DUMP_Print("0x%08X: 0x%04x%12s\t%s\r\n", \                                 addr, GET_UINT16(*(uint16_t*)addr), "", dumpSubStr); break; \             case 4:  DUMP_Print("0x%08X: 0x%08x%8s\t%s\r\n", \                                 addr, GET_UINT32(*(uint32_t*)addr), "", dumpSubStr); break; \             case 8:  DUMP_Print("0x%08X: 0x%016llx\t%s\r\n", \                                 addr, GET_UINT64(*(uint64_t*)addr), dumpSubStr); break; \             default: DUMP_Print("Bad size %d (" #st "->" #phrase ")\r\n", dumpVarSize); \         } \     } while (0)
+value|do { \         void            *addr = (void *)&((st)->phrase); \         physAddress_t   physAddr = XX_VirtToPhys(addr); \         _CREATE_DUMP_SUBSTR(phrase); \         DUMP_Print("0x%010llX: 0x%08x%8s\t%s\r\n", \                    physAddr, GET_UINT32(*(uint32_t*)addr), "", dumpSubStr); \     } while (0)
 end_define
 
 begin_comment
@@ -314,7 +320,7 @@ parameter_list|,
 name|phrase
 parameter_list|)
 define|\
-value|do { \         _CREATE_DUMP_SUBSTR(phrase); \         dumpArrSize = ARRAY_SIZE((st)->phrase); \         dumpVarSize = sizeof((st)->phrase[0]); \         switch (dumpVarSize) \         { \             case 1: \                 for (dumpArrIdx=0; dumpArrIdx< dumpArrSize; dumpArrIdx++) { \                     DUMP_Print("0x%08X: 0x%02x%14s\t%s[%d]\r\n", \&((st)->phrase[dumpArrIdx]), GET_UINT8((st)->phrase[dumpArrIdx]), "", dumpSubStr, dumpArrIdx); \                 } break; \             case 2: \                 for (dumpArrIdx=0; dumpArrIdx< dumpArrSize; dumpArrIdx++) { \                     DUMP_Print("0x%08X: 0x%04x%12s\t%s[%d]\r\n", \&((st)->phrase[dumpArrIdx]), GET_UINT16((st)->phrase[dumpArrIdx]), "", dumpSubStr, dumpArrIdx); \                 } break; \             case 4: \                 for (dumpArrIdx=0; dumpArrIdx< dumpArrSize; dumpArrIdx++) { \                     DUMP_Print("0x%08X: 0x%08x%8s\t%s[%d]\r\n", \&((st)->phrase[dumpArrIdx]), GET_UINT32((st)->phrase[dumpArrIdx]), "", dumpSubStr, dumpArrIdx); \                 } break; \             case 8: \                 for (dumpArrIdx=0; dumpArrIdx< dumpArrSize; dumpArrIdx++) { \                     DUMP_Print("0x%08X: 0x%016llx\t%s[%d]\r\n", \&((st)->phrase[dumpArrIdx]), GET_UINT64((st)->phrase[dumpArrIdx]), dumpSubStr, dumpArrIdx); \                 } break; \             default: DUMP_Print("Bad size %d (" #st "->" #phrase "[0])\r\n", dumpVarSize); \         } \     } while (0)
+value|do { \         physAddress_t physAddr; \         _CREATE_DUMP_SUBSTR(phrase); \         dumpArrSize = ARRAY_SIZE((st)->phrase); \         for (dumpArrIdx=0; dumpArrIdx< dumpArrSize; dumpArrIdx++) { \             physAddr = XX_VirtToPhys((void *)&((st)->phrase[dumpArrIdx])); \             DUMP_Print("0x%010llX: 0x%08x%8s\t%s[%d]\r\n", \                        physAddr, GET_UINT32((st)->phrase[dumpArrIdx]), "", dumpSubStr, dumpArrIdx); \         } \     } while (0)
 end_define
 
 begin_endif

@@ -679,6 +679,9 @@ decl_stmt|;
 name|vm_paddr_t
 name|maxaddr
 decl_stmt|;
+name|devclass_t
+name|dc
+decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
@@ -804,6 +807,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|dc
+operator|=
+name|devclass_find
+argument_list|(
+literal|"ppt"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|bus
@@ -866,7 +876,22 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* Everything belongs to the host domain. */
+comment|/* Skip passthrough devices. */
+if|if
+condition|(
+name|dc
+operator|!=
+name|NULL
+operator|&&
+name|device_get_devclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|dc
+condition|)
+continue|continue;
+comment|/* 				 * Everything else belongs to the host 				 * domain. 				 */
 name|iommu_add_device
 argument_list|(
 name|host_domain

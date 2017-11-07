@@ -749,7 +749,7 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* timeout 5s */
+comment|/* timeout 30s */
 name|nvme_ns_flush_cmd
 argument_list|(
 operator|&
@@ -818,7 +818,7 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* timeout 5s */
+comment|/* timeout 30s */
 name|nvme_ns_trim_cmd
 argument_list|(
 operator|&
@@ -889,7 +889,7 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* timeout 5s */
+comment|/* timeout 30s */
 name|nvme_ns_write_cmd
 argument_list|(
 operator|&
@@ -1025,7 +1025,7 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* timeout 5s */
+comment|/* timeout 30s */
 name|nvme_ns_rw_cmd
 argument_list|(
 operator|&
@@ -1619,9 +1619,9 @@ decl_stmt|;
 name|u_int
 name|secsize
 decl_stmt|;
-name|union
-name|ccb
-name|ccb
+name|struct
+name|ccb_nvmeio
+name|nvmeio
 decl_stmt|;
 name|struct
 name|disk
@@ -1709,6 +1709,20 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* xpt_get_ccb returns a zero'd allocation for the ccb, mimic that here */
+name|memset
+argument_list|(
+operator|&
+name|nvmeio
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nvmeio
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|length
@@ -1719,7 +1733,7 @@ block|{
 name|xpt_setup_ccb
 argument_list|(
 operator|&
-name|ccb
+name|nvmeio
 operator|.
 name|ccb_h
 argument_list|,
@@ -1730,7 +1744,7 @@ argument_list|,
 name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
-name|ccb
+name|nvmeio
 operator|.
 name|ccb_h
 operator|.
@@ -1743,8 +1757,6 @@ argument_list|(
 name|softc
 argument_list|,
 operator|&
-name|ccb
-operator|.
 name|nvmeio
 argument_list|,
 name|virtual
@@ -1758,16 +1770,26 @@ argument_list|)
 expr_stmt|;
 name|xpt_polled_action
 argument_list|(
-operator|&
+operator|(
+expr|union
 name|ccb
+operator|*
+operator|)
+operator|&
+name|nvmeio
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|cam_periph_error
 argument_list|(
-operator|&
+operator|(
+expr|union
 name|ccb
+operator|*
+operator|)
+operator|&
+name|nvmeio
 argument_list|,
 literal|0
 argument_list|,
@@ -1781,7 +1803,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|ccb
+name|nvmeio
 operator|.
 name|ccb_h
 operator|.
@@ -1794,7 +1816,7 @@ literal|0
 condition|)
 name|cam_release_devq
 argument_list|(
-name|ccb
+name|nvmeio
 operator|.
 name|ccb_h
 operator|.
@@ -1839,7 +1861,7 @@ comment|/* Flush */
 name|xpt_setup_ccb
 argument_list|(
 operator|&
-name|ccb
+name|nvmeio
 operator|.
 name|ccb_h
 argument_list|,
@@ -1850,7 +1872,7 @@ argument_list|,
 name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
-name|ccb
+name|nvmeio
 operator|.
 name|ccb_h
 operator|.
@@ -1863,23 +1885,31 @@ argument_list|(
 name|softc
 argument_list|,
 operator|&
-name|ccb
-operator|.
 name|nvmeio
 argument_list|)
 expr_stmt|;
 name|xpt_polled_action
 argument_list|(
-operator|&
+operator|(
+expr|union
 name|ccb
+operator|*
+operator|)
+operator|&
+name|nvmeio
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|cam_periph_error
 argument_list|(
-operator|&
+operator|(
+expr|union
 name|ccb
+operator|*
+operator|)
+operator|&
+name|nvmeio
 argument_list|,
 literal|0
 argument_list|,
@@ -1893,7 +1923,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|ccb
+name|nvmeio
 operator|.
 name|ccb_h
 operator|.
@@ -1906,7 +1936,7 @@ literal|0
 condition|)
 name|cam_release_devq
 argument_list|(
-name|ccb
+name|nvmeio
 operator|.
 name|ccb_h
 operator|.
@@ -3635,13 +3665,7 @@ name|DEVSTAT_PRIORITY_DISK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add alias for older nvd drives to ease transition. 	 */
-name|disk_add_alias
-argument_list|(
-name|disk
-argument_list|,
-literal|"nvd"
-argument_list|)
-expr_stmt|;
+comment|/* disk_add_alias(disk, "nvd"); Have reports of this causing problems */
 comment|/* 	 * Acquire a reference to the periph before we register with GEOM. 	 * We'll release this reference once GEOM calls us back (via 	 * ndadiskgonecb()) telling us that our provider has been freed. 	 */
 if|if
 condition|(
@@ -4203,14 +4227,7 @@ name|flags
 operator||=
 name|CAM_UNLOCKED
 expr_stmt|;
-name|cam_iosched_submit_trim
-argument_list|(
-name|softc
-operator|->
-name|cam_iosched
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
+comment|/* 			 * Note: We can have multiple TRIMs in flight, so we don't call 			 * cam_iosched_submit_trim(softc->cam_iosched); 			 * since that forces the I/O scheduler to only schedule one at a time. 			 * On NVMe drives, this is a performance disaster. 			 */
 goto|goto
 name|out
 goto|;
@@ -4630,13 +4647,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|cam_iosched_trim_done
-argument_list|(
-name|softc
-operator|->
-name|cam_iosched
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Since we can have multiple trims in flight, we don't 			 * need to call this here. 			 * cam_iosched_trim_done(softc->cam_iosched); 			 */
 name|ndaschedule
 argument_list|(
 name|periph

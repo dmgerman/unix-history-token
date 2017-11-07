@@ -303,6 +303,17 @@ name|dev
 operator|->
 name|d_opendata
 expr_stmt|;
+comment|/* 	 * The strategy function assumes the offset is in units of 512 byte 	 * sectors. For larger sector sizes, we need to adjust the offset to 	 * match the actual sector size. 	 */
+name|offset
+operator|*=
+operator|(
+name|od
+operator|->
+name|sectorsize
+operator|/
+literal|512
+operator|)
+expr_stmt|;
 comment|/* 	 * As the GPT backup partition is located at the end of the disk, 	 * to avoid reading past disk end, flag bcache not to use RA. 	 */
 return|return
 operator|(

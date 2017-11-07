@@ -57,7 +57,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|exit
+name|efi_exit
 parameter_list|(
 name|EFI_STATUS
 name|exit_code
@@ -86,6 +86,22 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|exit
+parameter_list|(
+name|int
+name|status
+parameter_list|)
+block|{
+name|efi_exit
+argument_list|(
+name|EFI_LOAD_ERROR
 argument_list|)
 expr_stmt|;
 block|}
@@ -354,7 +370,7 @@ name|heapsize
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Use exit() from here on... */
+comment|/* Use efi_exit() from here on... */
 name|status
 operator|=
 name|BS
@@ -381,7 +397,7 @@ name|status
 operator|!=
 name|EFI_SUCCESS
 condition|)
-name|exit
+name|efi_exit
 argument_list|(
 name|status
 argument_list|)
@@ -744,7 +760,7 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|exit
+name|efi_exit
 argument_list|(
 name|status
 argument_list|)

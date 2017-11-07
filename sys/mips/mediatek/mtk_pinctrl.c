@@ -680,6 +680,14 @@ name|socid
 condition|)
 block|{
 case|case
+name|MTK_SOC_RT2880
+case|:
+name|pintable
+operator|=
+name|rt2880_pintable
+expr_stmt|;
+break|break;
+case|case
 name|MTK_SOC_RT3050
 case|:
 comment|/* fallthrough */

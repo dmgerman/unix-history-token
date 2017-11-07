@@ -90,6 +90,10 @@ define|#
 directive|define
 name|CARD_FEATURE_MMC
 value|0x1<< 4
+define|#
+directive|define
+name|CARD_FEATURE_18V
+value|0x1<< 5
 name|uint8_t
 name|sdio_func_count
 decl_stmt|;

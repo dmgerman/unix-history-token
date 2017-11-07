@@ -321,10 +321,6 @@ name|v_free_min
 decl_stmt|;
 comment|/* (c) pages desired free */
 name|u_int
-name|v_free_count
-decl_stmt|;
-comment|/* (f) pages free */
-name|u_int
 name|v_inactive_target
 decl_stmt|;
 comment|/* (c) pages desired inactive */
@@ -360,6 +356,11 @@ name|v_laundry_count
 name|VMMETER_ALIGNED
 decl_stmt|;
 comment|/* (a) pages eligible for 						  laundering */
+name|u_int
+name|v_free_count
+name|VMMETER_ALIGNED
+decl_stmt|;
+comment|/* (f) pages free */
 block|}
 struct|;
 end_struct
@@ -544,14 +545,13 @@ specifier|inline
 name|int
 name|vm_paging_needed
 parameter_list|(
-name|void
+name|u_int
+name|free_count
 parameter_list|)
 block|{
 return|return
 operator|(
-name|vm_cnt
-operator|.
-name|v_free_count
+name|free_count
 operator|<
 name|vm_pageout_wakeup_thresh
 operator|)

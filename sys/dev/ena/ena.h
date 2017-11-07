@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|DRV_MODULE_VER_MINOR
-value|7
+value|8
 end_define
 
 begin_define
@@ -265,7 +265,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENA_TX_CLEANUP_TRESHOLD
+name|ENA_TX_CLEANUP_THRESHOLD
 value|128
 end_define
 
@@ -984,19 +984,19 @@ begin_struct
 struct|struct
 name|ena_hw_stats
 block|{
-name|uint64_t
+name|counter_u64_t
 name|rx_packets
 decl_stmt|;
-name|uint64_t
+name|counter_u64_t
 name|tx_packets
 decl_stmt|;
-name|uint64_t
+name|counter_u64_t
 name|rx_bytes
 decl_stmt|;
-name|uint64_t
+name|counter_u64_t
 name|tx_bytes
 decl_stmt|;
-name|uint64_t
+name|counter_u64_t
 name|rx_drops
 decl_stmt|;
 block|}
@@ -1223,16 +1223,6 @@ decl_stmt|;
 name|uint32_t
 name|missing_tx_threshold
 decl_stmt|;
-comment|/* Task updating hw stats */
-name|struct
-name|task
-name|stats_task
-decl_stmt|;
-name|struct
-name|taskqueue
-modifier|*
-name|stats_tq
-decl_stmt|;
 comment|/* Statistics */
 name|struct
 name|ena_stats_dev
@@ -1241,6 +1231,10 @@ decl_stmt|;
 name|struct
 name|ena_hw_stats
 name|hw_stats
+decl_stmt|;
+name|enum
+name|ena_regs_reset_reason_types
+name|reset_reason
 decl_stmt|;
 block|}
 struct|;
@@ -1317,18 +1311,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|ena_unregister_adapter
-parameter_list|(
-name|struct
-name|ena_adapter
-modifier|*
-name|adapter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ena_update_stats_counters
 parameter_list|(
 name|struct
 name|ena_adapter

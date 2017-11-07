@@ -282,16 +282,8 @@ condition|)
 return|return
 name|_ThreadRuneLocale
 return|;
-if|if
-condition|(
-name|_CurrentRuneLocale
-condition|)
 return|return
 name|_CurrentRuneLocale
-return|;
-return|return
-operator|&
-name|_DefaultRuneLocale
 return|;
 block|}
 end_function

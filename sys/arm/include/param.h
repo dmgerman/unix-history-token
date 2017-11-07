@@ -53,13 +53,28 @@ if|#
 directive|if
 name|__ARM_ARCH
 operator|>=
-literal|6
+literal|7
 end_if
 
 begin_define
 define|#
 directive|define
-name|_V6_SUFFIX
+name|_V_SUFFIX
+value|"v7"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_elif
+
+begin_define
+define|#
+directive|define
+name|_V_SUFFIX
 value|"v6"
 end_define
 
@@ -71,7 +86,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|_V6_SUFFIX
+name|_V_SUFFIX
 value|""
 end_define
 
@@ -138,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|MACHINE_ARCH
-value|"arm" _V6_SUFFIX _EB_SUFFIX
+value|"arm" _V_SUFFIX _EB_SUFFIX
 end_define
 
 begin_endif

@@ -2838,8 +2838,6 @@ operator|->
 name|path
 argument_list|,
 name|CAM_DEBUG_TRACE
-operator||
-name|CAM_DEBUG_PERIPH
 argument_list|,
 operator|(
 literal|"sddaopen\n"
@@ -2945,8 +2943,6 @@ operator|->
 name|path
 argument_list|,
 name|CAM_DEBUG_TRACE
-operator||
-name|CAM_DEBUG_PERIPH
 argument_list|,
 operator|(
 literal|"sddaclose\n"

@@ -1725,7 +1725,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%s:%s(%d): DOODAD\n"
+literal|"%s:%s(%d): not implemented\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,

@@ -286,6 +286,10 @@ decl_stmt|;
 name|int
 name|ipmi_opened
 decl_stmt|;
+name|uint8_t
+name|ipmi_dev_support
+decl_stmt|;
+comment|/* IPMI_ADS_* */
 name|struct
 name|cdev
 modifier|*
@@ -302,10 +306,22 @@ name|int
 name|ipmi_driver_requests_polled
 decl_stmt|;
 name|eventhandler_tag
+name|ipmi_power_cycle_tag
+decl_stmt|;
+name|eventhandler_tag
 name|ipmi_watchdog_tag
+decl_stmt|;
+name|eventhandler_tag
+name|ipmi_shutdown_tag
 decl_stmt|;
 name|int
 name|ipmi_watchdog_active
+decl_stmt|;
+name|int
+name|ipmi_watchdog_actions
+decl_stmt|;
+name|int
+name|ipmi_watchdog_pretimeout
 decl_stmt|;
 name|struct
 name|intr_config_hook

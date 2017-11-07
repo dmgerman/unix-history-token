@@ -19,46 +19,6 @@ directive|define
 name|_CTL_IO_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_CTL_C
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|EXTERN
-parameter_list|(
-name|__var
-parameter_list|,
-name|__val
-parameter_list|)
-value|__var = __val
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXTERN
-parameter_list|(
-name|__var
-parameter_list|,
-name|__val
-parameter_list|)
-value|extern __var
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -88,19 +48,6 @@ directive|define
 name|CTL_TIME_IO_DEFAULT_SECS
 value|90
 end_define
-
-begin_macro
-name|EXTERN
-argument_list|(
-argument|int ctl_time_io_secs
-argument_list|,
-argument|CTL_TIME_IO_DEFAULT_SECS
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_endif
 endif|#

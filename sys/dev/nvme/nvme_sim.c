@@ -274,6 +274,7 @@ argument_list|(
 name|cpl
 argument_list|)
 condition|)
+block|{
 name|ccb
 operator|->
 name|ccb_h
@@ -282,7 +283,14 @@ name|status
 operator|=
 name|CAM_REQ_CMP_ERR
 expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|ccb
 operator|->
 name|ccb_h
@@ -291,11 +299,12 @@ name|status
 operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
-name|xpt_done
+name|xpt_done_direct
 argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1019,7 +1028,7 @@ modifier|*
 name|sim
 parameter_list|)
 block|{
-name|nvme_ctrlr_intx_handler
+name|nvme_ctrlr_poll
 argument_list|(
 name|sim2ctrlr
 argument_list|(

@@ -1081,7 +1081,7 @@ argument_list|)
 comment|/* XXX */
 name|printf
 argument_list|(
-literal|"%s:%s(%d): DOODAD\n"
+literal|"%s:%s(%d): aarch64 not implemented\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -1099,7 +1099,7 @@ argument_list|)
 comment|/* XXX */
 name|printf
 argument_list|(
-literal|"%s:%s(%d): DOODAD\n"
+literal|"%s:%s(%d): arm not implemented\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -1158,7 +1158,7 @@ argument_list|)
 comment|/* XXX */
 name|printf
 argument_list|(
-literal|"%s:%s(%d): DOODAD\n"
+literal|"%s:%s(%d): MIPS not implemented\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -1215,7 +1215,7 @@ argument_list|)
 comment|/* XXX */
 name|printf
 argument_list|(
-literal|"%s:%s(%d): DOODAD\n"
+literal|"%s:%s(%d): RISC-V not implemented\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -4480,7 +4480,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%s:%s(%d): DOODAD\n"
+literal|"%s:%s(%d): aarch64 not implemented\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -4537,7 +4537,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%s:%s(%d): DOODAD\n"
+literal|"%s:%s(%d): arm not implemented\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -4594,7 +4594,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%s:%s(%d): DOODAD\n"
+literal|"%s:%s(%d): MIPS not implemented\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -5008,7 +5008,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%s:%s(%d): DOODAD\n"
+literal|"%s:%s(%d): RISC-V implementation required\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,

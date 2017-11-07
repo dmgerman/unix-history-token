@@ -100,7 +100,7 @@ begin_define
 define|#
 directive|define
 name|MUTEX_FLAGS
-value|(SX_DUPOK | SX_NOWITNESS)
+value|(SX_DUPOK | SX_NEW | SX_NOWITNESS)
 end_define
 
 begin_else
@@ -112,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|MUTEX_FLAGS
-value|(SX_DUPOK)
+value|(SX_DUPOK | SX_NEW)
 end_define
 
 begin_endif
@@ -133,7 +133,7 @@ name|type
 parameter_list|,
 name|arg
 parameter_list|)
-value|do {			\ 	const char *_name;						\ 	ASSERT((type) == 0 || (type) == MUTEX_DEFAULT);			\ 	KASSERT(((lock)->lock_object.lo_flags& LO_ALLMASK) !=		\ 	    LO_EXPECTED, ("lock %s already initialized", #lock));	\ 	bzero((lock), sizeof(struct sx));				\ 	for (_name = #lock; *_name != '\0'; _name++) {			\ 		if (*_name>= 'a'&& *_name<= 'z')			\ 			break;						\ 	}								\ 	if (*_name == '\0')						\ 		_name = #lock;						\ 	sx_init_flags((lock), _name, MUTEX_FLAGS);			\ } while (0)
+value|do {			\ 	const char *_name;						\ 	ASSERT((type) == 0 || (type) == MUTEX_DEFAULT);			\ 	KASSERT(((lock)->lock_object.lo_flags& LO_ALLMASK) !=		\ 	    LO_EXPECTED, ("lock %s already initialized", #lock));	\ 	for (_name = #lock; *_name != '\0'; _name++) {			\ 		if (*_name>= 'a'&& *_name<= 'z')			\ 			break;						\ 	}								\ 	if (*_name == '\0')						\ 		_name = #lock;						\ 	sx_init_flags((lock), _name, MUTEX_FLAGS);			\ } while (0)
 end_define
 
 begin_define

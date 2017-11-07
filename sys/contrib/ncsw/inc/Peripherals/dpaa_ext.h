@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/* Copyright (c) 2008-2012 Freescale Semiconductor, Inc  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/******************************************************************************  @File          dpaa_ext.h   @Description   DPAA Application Programming Interface. */
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @File          dpaa_ext.h   @Description   DPAA Application Programming Interface. */
 end_comment
 
 begin_comment
@@ -82,10 +86,24 @@ begin_comment
 comment|/* defined(__MWERKS__)&& ... */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
 begin_define
 define|#
 directive|define
-name|MEM_MAP_START
+name|__BYTE_ORDER__
+value|BYTE_ORDER
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ORDER_BIG_ENDIAN__
+value|BIG_ENDIAN
 end_define
 
 begin_comment
@@ -106,16 +124,55 @@ name|_Packed
 struct|struct
 name|t_DpaaFD
 block|{
+if|#
+directive|if
+name|__BYTE_ORDER__
+operator|==
+name|__ORDER_BIG_ENDIAN__
 specifier|volatile
-name|uint32_t
-name|id
+name|uint8_t
+name|liodn
 decl_stmt|;
-comment|/**< FD id */
+specifier|volatile
+name|uint8_t
+name|bpid
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+name|elion
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+name|addrh
+decl_stmt|;
 specifier|volatile
 name|uint32_t
 name|addrl
 decl_stmt|;
-comment|/**< Data Address */
+else|#
+directive|else
+specifier|volatile
+name|uint32_t
+name|addrl
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+name|addrh
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+name|elion
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+name|bpid
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+name|liodn
+decl_stmt|;
+endif|#
+directive|endif
 specifier|volatile
 name|uint32_t
 name|length
@@ -294,53 +351,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DPAA_FD_GET_DD
-parameter_list|(
-name|fd
-parameter_list|)
-value|((((t_DpaaFD *)fd)->id& DPAA_FD_DD_MASK)>> (31-1))
-end_define
-
-begin_comment
-comment|/**< Macro to get FD DD field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DPAA_FD_GET_PID
-parameter_list|(
-name|fd
-parameter_list|)
-value|(((((t_DpaaFD *)fd)->id& DPAA_FD_PID_MASK)>> (31-7)) | \                                         ((((t_DpaaFD *)fd)->id& DPAA_FD_ELIODN_MASK)>> (31-19-6)))
-end_define
-
-begin_comment
-comment|/**< Macro to get FD PID field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DPAA_FD_GET_BPID
-parameter_list|(
-name|fd
-parameter_list|)
-value|((((t_DpaaFD *)fd)->id& DPAA_FD_BPID_MASK)>> (31-15))
-end_define
-
-begin_comment
-comment|/**< Macro to get FD BPID field */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DPAA_FD_GET_ADDRH
 parameter_list|(
 name|fd
 parameter_list|)
-value|(((t_DpaaFD *)fd)->id& DPAA_FD_ADDRH_MASK)
+value|((t_DpaaFD *)fd)->addrh
 end_define
 
 begin_comment
@@ -441,52 +456,8 @@ parameter_list|)
 value|XX_PhysToVirt(DPAA_FD_GET_PHYS_ADDR(fd))
 end_define
 
-begin_define
-define|#
-directive|define
-name|DPAA_FD_SET_DD
-parameter_list|(
-name|fd
-parameter_list|,
-name|val
-parameter_list|)
-value|(((t_DpaaFD *)fd)->id = ((((t_DpaaFD *)fd)->id& ~DPAA_FD_DD_MASK) | (((val)<< (31-1))& DPAA_FD_DD_MASK )))
-end_define
-
 begin_comment
-comment|/**< Macro to set FD DD field */
-end_comment
-
-begin_comment
-comment|/**< Macro to set FD PID field or LIODN offset*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DPAA_FD_SET_PID
-parameter_list|(
-name|fd
-parameter_list|,
-name|val
-parameter_list|)
-value|(((t_DpaaFD *)fd)->id = ((((t_DpaaFD *)fd)->id& ~(DPAA_FD_PID_MASK|DPAA_FD_ELIODN_MASK)) | ((((val)<< (31-7))& DPAA_FD_PID_MASK) | ((((val)>>6)<< (31-19))& DPAA_FD_ELIODN_MASK))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPAA_FD_SET_BPID
-parameter_list|(
-name|fd
-parameter_list|,
-name|val
-parameter_list|)
-value|(((t_DpaaFD *)fd)->id = ((((t_DpaaFD *)fd)->id& ~DPAA_FD_BPID_MASK) | (((val)<< (31-15))& DPAA_FD_BPID_MASK)))
-end_define
-
-begin_comment
-comment|/**< Macro to set FD BPID field */
+comment|/**< Macro to get FD ADDR (virtual) */
 end_comment
 
 begin_define
@@ -498,7 +469,7 @@ name|fd
 parameter_list|,
 name|val
 parameter_list|)
-value|(((t_DpaaFD *)fd)->id = ((((t_DpaaFD *)fd)->id& ~DPAA_FD_ADDRH_MASK) | ((val)& DPAA_FD_ADDRH_MASK)))
+value|((t_DpaaFD *)fd)->addrh = (val)
 end_define
 
 begin_comment
@@ -681,7 +652,7 @@ index|[
 name|DPAA_NUM_OF_SG_TABLE_ENTRY
 index|]
 decl_stmt|;
-comment|/**< structure that hold the information about                                          a single S/G entry. */
+comment|/**< Structure that holds information about                                          a single S/G entry. */
 block|}
 name|_PackedType
 name|t_DpaaSGT
@@ -709,11 +680,11 @@ block|{
 name|t_DpaaSGTE
 name|outputBuffInfo
 decl_stmt|;
-comment|/**< structure that holds the information about                                          the compound-frame output buffer;                                          NOTE: this may point to a S/G table */
+comment|/**< Structure that holds information about                                          the compound-frame output buffer;                                          NOTE: this may point to a S/G table */
 name|t_DpaaSGTE
 name|inputBuffInfo
 decl_stmt|;
-comment|/**< structure that holds the information about                                          the compound-frame input buffer;                                          NOTE: this may point to a S/G table */
+comment|/**< Structure that holds information about                                          the compound-frame input buffer;                                          NOTE: this may point to a S/G table */
 block|}
 name|_PackedType
 name|t_DpaaCompTbl
@@ -1064,12 +1035,6 @@ begin_comment
 comment|/* @} */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MEM_MAP_END
-end_define
-
 begin_if
 if|#
 directive|if
@@ -1102,6 +1067,13 @@ end_endif
 begin_comment
 comment|/* defined(__MWERKS__)&& ... */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DPAA_LIODN_DONT_OVERRIDE
+value|(-1)
+end_define
 
 begin_comment
 comment|/** @} */

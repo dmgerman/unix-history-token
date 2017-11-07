@@ -26,6 +26,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"xx_common.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bm_ext.h"
 end_include
 
@@ -991,7 +997,7 @@ index|[
 name|BM_NUM_OF_RINGS
 index|]
 decl_stmt|;
-name|int
+name|uintptr_t
 name|irq
 decl_stmt|;
 name|int
@@ -1117,7 +1123,7 @@ decl_stmt|;
 name|t_Handle
 name|h_App
 decl_stmt|;
-name|int
+name|uintptr_t
 name|errIrq
 decl_stmt|;
 comment|/**< error interrupt line; NO_IRQ if interrupts not used */
@@ -1355,7 +1361,7 @@ name|size
 init|=
 literal|1
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|alignment
 init|=
 literal|1
@@ -1390,9 +1396,6 @@ name|h_BpidMm
 argument_list|,
 name|base
 argument_list|,
-operator|(
-name|int
-operator|)
 name|size
 argument_list|,
 literal|"BM BPID MEM"
@@ -1647,6 +1650,19 @@ argument_list|,
 name|alignment
 argument_list|,
 literal|"BM BPID MEM"
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ans
+operator|<
+name|UINT32_MAX
+argument_list|,
+operator|(
+literal|"Oops, %lx> UINT32_MAX!\n"
+operator|,
+name|ans
+operator|)
 argument_list|)
 expr_stmt|;
 return|return

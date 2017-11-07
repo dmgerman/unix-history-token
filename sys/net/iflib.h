@@ -326,10 +326,6 @@ name|ipi_new_pidx
 decl_stmt|;
 comment|/* next available pidx post-encap */
 comment|/* offload handling */
-name|caddr_t
-name|ipi_hdr_data
-decl_stmt|;
-comment|/* raw header */
 name|uint8_t
 name|ipi_ehdrlen
 decl_stmt|;
@@ -527,6 +523,28 @@ name|PVID_END
 value|{0, 0, 0, 0, 0, 0, NULL}
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFLIB_PNP_DESCR
+value|"U32:vendor;U32:device;U32:subvendor;U32:subdevice;" \     "U32:revision;U32:class;D:human"
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFLIB_PNP_INFO
+parameter_list|(
+name|b
+parameter_list|,
+name|u
+parameter_list|,
+name|t
+parameter_list|)
+define|\
+value|MODULE_PNP_INFO(IFLIB_PNP_DESCR, b, u, t, sizeof(t[0]), nitems(t))
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -647,22 +665,6 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|ift_txd_errata
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mp
 parameter_list|)
 function_decl|;
 block|}
@@ -1033,13 +1035,13 @@ value|0x08
 end_define
 
 begin_comment
-comment|/*  *  */
+comment|/*  * Interface does checksum in place  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IFLIB_UNUSED___0
+name|IFLIB_NEED_SCRATCH
 value|0x10
 end_define
 
@@ -1360,8 +1362,8 @@ parameter_list|(
 name|if_ctx_t
 name|ctx
 parameter_list|,
-name|int
-name|rid
+name|if_irq_t
+name|irq
 parameter_list|,
 name|iflib_intr_type_t
 name|type
@@ -1582,7 +1584,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|sx
+name|mtx
 modifier|*
 name|iflib_ctx_lock_get
 parameter_list|(

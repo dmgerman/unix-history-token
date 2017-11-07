@@ -235,6 +235,10 @@ name|uint32_t
 name|i_flags
 decl_stmt|;
 comment|/* Status flags (chflags). */
+union|union
+block|{
+struct|struct
+block|{
 name|uint32_t
 name|i_db
 index|[
@@ -249,6 +253,18 @@ name|EXT2_NIADDR
 index|]
 decl_stmt|;
 comment|/* Indirect disk blocks. */
+block|}
+struct|;
+name|uint32_t
+name|i_data
+index|[
+name|EXT2_NDADDR
+operator|+
+name|EXT2_NIADDR
+index|]
+decl_stmt|;
+block|}
+union|;
 name|struct
 name|ext4_extent_cache
 name|i_ext_cache

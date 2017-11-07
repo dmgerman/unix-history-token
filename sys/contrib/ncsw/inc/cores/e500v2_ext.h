@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -103,6 +103,24 @@ end_function_decl
 begin_function_decl
 name|void
 name|L1ICache_Flush
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|L1ICache_IsEnabled
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|L1DCache_IsEnabled
 parameter_list|(
 name|void
 parameter_list|)
@@ -560,6 +578,20 @@ name|e_E500mcL2CacheMode
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CORE_E500MC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CORE_E5500
+argument_list|)
+end_if
+
 begin_comment
 comment|/**************************************************************************/
 end_comment
@@ -645,6 +677,142 @@ name|stashId
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(CORE_E500MC) || defined(CORE_E5500) */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CORE_E6500
+end_ifdef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      E6500_L2CacheEnable   @Description   Enables the cache for memory pages that are not cache inhibited.   @param[in]     mode - L2 cache mode: support data& instruction only.   @Return        None.   @Cautions      This routine must be call only ONCE for both caches. I.e. it is                 not possible to call this routine for i-cache and than to call                 again for d-cache; The second call will override the first one. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|void
+name|E6500_L2CacheEnable
+parameter_list|(
+name|uintptr_t
+name|clusterBase
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      E6500_L2CacheDisable   @Description   Disables the cache (data instruction or both).   @Return        None.  */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|void
+name|E6500_L2CacheDisable
+parameter_list|(
+name|uintptr_t
+name|clusterBase
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      E6500_L2CacheFlush   @Description   Flushes the cache.   @Return        None. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|void
+name|E6500_L2CacheFlush
+parameter_list|(
+name|uintptr_t
+name|clusterBase
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      E6500_L2SetStashId   @Description   Set Stash Id   @Param[in]     stashId     the stash id to be set.   @Return        None. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|void
+name|E6500_L2SetStashId
+parameter_list|(
+name|uintptr_t
+name|clusterBase
+parameter_list|,
+name|uint8_t
+name|stashId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Function      E6500_GetCcsrBase   @Description   Obtain SoC CCSR base address   @Param[in]     None.   @Return        Physical CCSR base address. */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_function_decl
+name|physAddress_t
+name|E6500_GetCcsrBase
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CORE_E6500 */
+end_comment
 
 begin_comment
 comment|/**************************************************************************/
@@ -930,12 +1098,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|CORE_E500MC
+ifndef|#
+directive|ifndef
+name|CORE_E500V2
 asm|__asm__ ("mbar 1");
 else|#
 directive|else
+comment|/* CORE_E500V2 */
 comment|/**** ERRATA WORK AROUND START ****/
 comment|/* ERRATA num:  CPU1 */
 comment|/* Description: "mbar MO = 1" instruction fails to order caching-inhibited                     guarded loads and stores. */
@@ -944,6 +1113,7 @@ asm|__asm__ ("msync");
 comment|/**** ERRATA WORK AROUND END ****/
 endif|#
 directive|endif
+comment|/* CORE_E500V2 */
 block|}
 end_function
 

@@ -719,7 +719,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -728,13 +727,6 @@ name|tcp_pmtud_blackhole_detect
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_pmtud_blackhole_detect
-value|VNET(tcp_pmtud_blackhole_detect)
-end_define
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -769,7 +761,6 @@ name|INET
 end_ifdef
 
 begin_expr_stmt
-specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -780,13 +771,6 @@ operator|=
 literal|1200
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_pmtud_blackhole_mss
-value|VNET(tcp_pmtud_blackhole_mss)
-end_define
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -826,7 +810,6 @@ name|INET6
 end_ifdef
 
 begin_expr_stmt
-specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -837,13 +820,6 @@ operator|=
 literal|1220
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_v6pmtud_blackhole_mss
-value|VNET(tcp_v6pmtud_blackhole_mss)
-end_define
 
 begin_expr_stmt
 name|SYSCTL_INT

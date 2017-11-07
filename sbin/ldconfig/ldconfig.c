@@ -2689,7 +2689,7 @@ name|msize
 argument_list|,
 name|PROT_READ
 argument_list|,
-name|MAP_COPY
+name|MAP_PRIVATE
 argument_list|,
 name|fd
 argument_list|,
@@ -2817,7 +2817,7 @@ name|fsize
 argument_list|,
 name|PROT_READ
 argument_list|,
-name|MAP_COPY
+name|MAP_PRIVATE
 argument_list|,
 name|fd
 argument_list|,

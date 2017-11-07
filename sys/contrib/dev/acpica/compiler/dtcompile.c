@@ -19,12 +19,6 @@ directive|include
 file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/compiler/dtcompiler.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -313,9 +307,6 @@ label|:
 name|AcpiUtDeleteCaches
 argument_list|()
 expr_stmt|;
-name|DtDeleteCaches
-argument_list|()
-expr_stmt|;
 name|CmCleanupAndExit
 argument_list|()
 expr_stmt|;
@@ -592,7 +583,7 @@ return|;
 block|}
 name|Gbl_Signature
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1113,7 +1104,7 @@ condition|)
 block|{
 name|String
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|Length
 argument_list|)
@@ -1755,7 +1746,7 @@ condition|)
 block|{
 name|String
 operator|=
-name|UtStringCacheCalloc
+name|UtLocalCacheCalloc
 argument_list|(
 name|Length
 argument_list|)

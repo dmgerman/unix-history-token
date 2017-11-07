@@ -473,7 +473,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|void
+name|u_int
 name|vm_phys_freecnt_adj
 parameter_list|(
 name|vm_page_t
@@ -491,12 +491,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|vm_cnt
-operator|.
-name|v_free_count
-operator|+=
-name|adj
-expr_stmt|;
 name|vm_phys_domain
 argument_list|(
 name|m
@@ -506,6 +500,15 @@ name|vmd_free_count
 operator|+=
 name|adj
 expr_stmt|;
+return|return
+operator|(
+name|vm_cnt
+operator|.
+name|v_free_count
+operator|+=
+name|adj
+operator|)
+return|;
 block|}
 end_function
 

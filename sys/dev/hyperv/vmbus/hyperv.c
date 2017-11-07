@@ -207,6 +207,12 @@ end_function_decl
 
 begin_decl_stmt
 name|u_int
+name|hyperv_ver_major
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
 name|hyperv_features
 decl_stmt|;
 end_decl_stmt
@@ -638,16 +644,20 @@ argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Hyper-V Version: %d.%d.%d [SP%d]\n"
-argument_list|,
+name|hyperv_ver_major
+operator|=
 name|regs
 index|[
 literal|1
 index|]
 operator|>>
 literal|16
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Hyper-V Version: %d.%d.%d [SP%d]\n"
+argument_list|,
+name|hyperv_ver_major
 argument_list|,
 name|regs
 index|[

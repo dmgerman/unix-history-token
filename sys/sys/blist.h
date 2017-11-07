@@ -105,8 +105,10 @@ name|bl_cursor
 decl_stmt|;
 comment|/* next-fit search starts at	*/
 name|blmeta_t
-modifier|*
 name|bl_root
+index|[
+literal|1
+index|]
 decl_stmt|;
 comment|/* root of radix tree		*/
 block|}

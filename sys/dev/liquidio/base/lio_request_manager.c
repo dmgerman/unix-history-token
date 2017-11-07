@@ -336,6 +336,10 @@ name|lio_dma_alloc
 argument_list|(
 name|q_size
 argument_list|,
+operator|(
+name|vm_paddr_t
+operator|*
+operator|)
 operator|&
 name|iq
 operator|->
@@ -423,7 +427,7 @@ name|lio_dev_dbg
 argument_list|(
 name|oct
 argument_list|,
-literal|"IQ[%d]: base: %p basedma: %lx count: %d\n"
+literal|"IQ[%d]: base: %p basedma: %llx count: %d\n"
 argument_list|,
 name|iq_no
 argument_list|,
@@ -431,9 +435,12 @@ name|iq
 operator|->
 name|base_addr
 argument_list|,
+name|LIO_CAST64
+argument_list|(
 name|iq
 operator|->
 name|base_addr_dma
+argument_list|)
 argument_list|,
 name|iq
 operator|->
@@ -3590,6 +3597,10 @@ name|lio_dma_alloc
 argument_list|(
 name|LIO_SOFT_COMMAND_BUFFER_SIZE
 argument_list|,
+operator|(
+name|vm_paddr_t
+operator|*
+operator|)
 operator|&
 name|dma_addr
 argument_list|)

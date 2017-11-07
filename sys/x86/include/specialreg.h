@@ -1683,6 +1683,31 @@ value|0x00000200
 end_define
 
 begin_comment
+comment|/*  * AMD extended function 8000_0008h ebx info (amd_extended_feature_extensions)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AMDFEID_CLZERO
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDFEID_IRPERF
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDFEID_XSAVEERPTR
+value|0x00000004
+end_define
+
+begin_comment
 comment|/*  * AMD extended function 8000_0008h ecx info  */
 end_comment
 

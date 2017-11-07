@@ -3549,7 +3549,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|smc_poll
 parameter_list|(
 name|struct
@@ -3599,7 +3599,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|SMC_UNLOCK
 argument_list|(
@@ -3624,6 +3628,11 @@ operator|->
 name|smc_intr
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

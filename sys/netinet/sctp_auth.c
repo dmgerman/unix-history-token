@@ -7258,12 +7258,16 @@ if|if
 condition|(
 name|size
 operator|>
-operator|(
+call|(
 name|uint32_t
-operator|)
+call|)
+argument_list|(
 name|SCTP_BUF_LEN
 argument_list|(
 name|m_tmp
+argument_list|)
+operator|-
+name|m_offset
 argument_list|)
 condition|)
 block|{
@@ -7277,6 +7281,8 @@ name|SCTP_BUF_LEN
 argument_list|(
 name|m_tmp
 argument_list|)
+operator|-
+name|m_offset
 argument_list|)
 expr_stmt|;
 name|size
@@ -7285,6 +7291,8 @@ name|SCTP_BUF_LEN
 argument_list|(
 name|m_tmp
 argument_list|)
+operator|-
+name|m_offset
 expr_stmt|;
 block|}
 else|else

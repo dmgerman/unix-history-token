@@ -2528,7 +2528,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\nDIFO 0x%p returns %s\n"
+literal|"\nDIFO %p returns %s\n"
 argument_list|,
 operator|(
 name|void

@@ -1374,15 +1374,36 @@ literal|0x6f2f8086
 block|,
 literal|"BDX IOAT Ch1 (RAID)"
 block|}
-block|,
-block|{
-literal|0x00000000
-block|,
-name|NULL
-block|}
-block|}
+block|, }
 struct|;
 end_struct
+
+begin_expr_stmt
+name|MODULE_PNP_INFO
+argument_list|(
+literal|"W32:vendor/device;D:human"
+argument_list|,
+name|pci
+argument_list|,
+name|ioat
+argument_list|,
+name|pci_ids
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pci_ids
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|,
+name|nitems
+argument_list|(
+name|pci_ids
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * OS<-> Driver linkage functions  */
@@ -1419,8 +1440,15 @@ operator|=
 name|pci_ids
 init|;
 name|ep
-operator|->
-name|type
+operator|<
+operator|&
+name|pci_ids
+index|[
+name|nitems
+argument_list|(
+name|pci_ids
+argument_list|)
+index|]
 condition|;
 name|ep
 operator|++

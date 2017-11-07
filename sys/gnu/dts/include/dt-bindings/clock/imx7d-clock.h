@@ -3098,8 +3098,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|IMX7D_CLK_END
+name|IMX7D_NAND_RAWNAND_CLK
 value|440
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX7D_NAND_USDHC_BUS_RAWNAND_CLK
+value|441
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX7D_CLK_END
+value|442
 end_define
 
 begin_endif

@@ -6942,7 +6942,7 @@ if|if
 condition|(
 name|nlink
 operator|>
-name|LINK_MAX
+name|UFS_LINK_MAX
 condition|)
 name|err_suj
 argument_list|(

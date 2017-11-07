@@ -4272,11 +4272,11 @@ block|{
 case|case
 name|PT_STEP
 case|:
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_PTRACE
 argument_list|,
-literal|"PT_STEP: tid %d (pid %d)"
+literal|"PT_STEP: tid %d (pid %d), sig = %d"
 argument_list|,
 name|td2
 operator|->
@@ -4285,6 +4285,8 @@ argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|data
 argument_list|)
 expr_stmt|;
 name|error
@@ -4684,6 +4686,13 @@ break|break;
 block|}
 name|sendsig
 label|:
+comment|/* 		 * Clear the pending event for the thread that just 		 * reported its event (p_xthread).  This may not be 		 * the thread passed to PT_CONTINUE, PT_STEP, etc. if 		 * the debugger is resuming a different thread. 		 */
+name|td2
+operator|=
+name|p
+operator|->
+name|p_xthread
+expr_stmt|;
 if|if
 condition|(
 name|proctree_locked

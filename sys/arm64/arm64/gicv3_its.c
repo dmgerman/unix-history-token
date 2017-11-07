@@ -1815,7 +1815,7 @@ operator|)
 operator|-
 literal|1
 argument_list|,
-name|PAGE_SIZE
+name|PAGE_SIZE_64K
 argument_list|,
 literal|0
 argument_list|)
@@ -2184,8 +2184,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|mp_ncpus
+operator|<=
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -3019,8 +3019,8 @@ init|=
 literal|0
 init|;
 name|cpu
-operator|<
-name|mp_ncpus
+operator|<=
+name|mp_maxid
 condition|;
 name|cpu
 operator|++

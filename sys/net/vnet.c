@@ -922,11 +922,13 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
-comment|/* Warn people before take off - in case we crash early. */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"WARNING: VIMAGE (virtualized network stack) is a highly "
-literal|"experimental feature.\n"
+literal|"VIMAGE (virtualized network stack) enabled\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We MUST clear curvnet in vi_init_done() before going SMP, 	 * otherwise CURVNET_SET() macros would scream about unnecessary 	 * curvnet recursions. 	 */

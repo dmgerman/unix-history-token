@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 2008-2011 Freescale Semiconductor, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright 2008-2012 Freescale Semiconductor Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *     * Redistributions of source code must retain the above copyright  *       notice, this list of conditions and the following disclaimer.  *     * Redistributions in binary form must reproduce the above copyright  *       notice, this list of conditions and the following disclaimer in the  *       documentation and/or other materials provided with the distribution.  *     * Neither the name of Freescale Semiconductor nor the  *       names of its contributors may be used to endorse or promote products  *       derived from this software without specific prior written permission.  *  *  * ALTERNATIVELY, this software may be distributed under the terms of the  * GNU General Public License ("GPL") as published by the Free Software  * Foundation, either version 2 of that License or (at your option) any  * later version.  *  * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -97,12 +97,6 @@ end_endif
 begin_comment
 comment|/* defined(__MWERKS__)&& ... */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MEM_MAP_START
-end_define
 
 begin_comment
 comment|/**************************************************************************/
@@ -206,6 +200,46 @@ name|t_FmIpcPhysAddr
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|_Packed
+struct|struct
+name|t_FmIpcPortOutInitParams
+block|{
+name|uint8_t
+name|numOfTasks
+decl_stmt|;
+comment|/**< OUT */
+name|uint8_t
+name|numOfExtraTasks
+decl_stmt|;
+comment|/**< OUT */
+name|uint8_t
+name|numOfOpenDmas
+decl_stmt|;
+comment|/**< OUT */
+name|uint8_t
+name|numOfExtraOpenDmas
+decl_stmt|;
+comment|/**< OUT */
+name|uint32_t
+name|sizeOfFifo
+decl_stmt|;
+comment|/**< OUT */
+name|uint32_t
+name|extraSizeOfFifo
+decl_stmt|;
+comment|/**< OUT */
+name|t_FmIpcPhysAddr
+name|ipcPhysAddr
+decl_stmt|;
+comment|/**< OUT */
+block|}
+name|_PackedType
+name|t_FmIpcPortOutInitParams
+typedef|;
+end_typedef
+
 begin_comment
 comment|/**************************************************************************/
 end_comment
@@ -268,6 +302,10 @@ name|uint8_t
 name|deqPipelineDepth
 decl_stmt|;
 comment|/**< IN. Port's requested resource */
+name|uint16_t
+name|maxFrameLength
+decl_stmt|;
+comment|/**< IN. Port's max frame length. */
 name|uint16_t
 name|liodnBase
 decl_stmt|;
@@ -391,16 +429,10 @@ name|uint32_t
 name|enumPortType
 decl_stmt|;
 comment|/**< IN. Port type */
-ifdef|#
-directive|ifdef
-name|FM_QMI_DEQ_OPTIONS_SUPPORT
 name|uint8_t
 name|deqPipelineDepth
 decl_stmt|;
 comment|/**< IN. Port's requested resource */
-endif|#
-directive|endif
-comment|/* FM_QMI_DEQ_OPTIONS_SUPPORT */
 block|}
 name|_PackedType
 name|t_FmIpcPortFreeParams
@@ -445,6 +477,10 @@ name|uint8_t
 name|boolWriteBufEccFmError
 decl_stmt|;
 comment|/**< Double ECC error on buffer write from FM side */
+name|uint8_t
+name|boolSinglePortEccError
+decl_stmt|;
+comment|/**< Single port ECC error from FM side */
 block|}
 name|_PackedType
 name|t_FmIpcDmaStatus
@@ -496,7 +532,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Description   structure for returning revision information */
+comment|/**  @Description   structure for returning FM parameters */
 end_comment
 
 begin_comment
@@ -507,8 +543,52 @@ begin_typedef
 typedef|typedef
 name|_Packed
 struct|struct
-name|t_FmIpcRevisionInfo
+name|t_FmIpcParams
 block|{
+name|uint16_t
+name|fmClkFreq
+decl_stmt|;
+comment|/**< OUT: FM Clock frequency */
+name|uint16_t
+name|fmMacClkFreq
+decl_stmt|;
+comment|/**< OUT: FM MAC clock frequence */
+name|uint8_t
+name|majorRev
+decl_stmt|;
+comment|/**< OUT: FM Major revision */
+name|uint8_t
+name|minorRev
+decl_stmt|;
+comment|/**< OUT: FM Minor revision */
+block|}
+name|_PackedType
+name|t_FmIpcParams
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/**  @Description   structure for returning Fman Ctrl Code revision information */
+end_comment
+
+begin_comment
+comment|/***************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+name|_Packed
+struct|struct
+name|t_FmIpcFmanCtrlCodeRevisionInfo
+block|{
+name|uint16_t
+name|packageRev
+decl_stmt|;
+comment|/**< OUT: Package revision */
 name|uint8_t
 name|majorRev
 decl_stmt|;
@@ -519,7 +599,7 @@ decl_stmt|;
 comment|/**< OUT: Minor revision */
 block|}
 name|_PackedType
-name|t_FmIpcRevisionInfo
+name|t_FmIpcFmanCtrlCodeRevisionInfo
 typedef|;
 end_typedef
 
@@ -549,6 +629,10 @@ name|uint8_t
 name|numOfFmanCtrls
 decl_stmt|;
 comment|/**< IN. Port type */
+name|t_FmFmanCtrl
+name|orFmanCtrl
+decl_stmt|;
+comment|/**< IN. fman controller for order restoration*/
 block|}
 name|t_FmIpcPortNumOfFmanCtrls
 typedef|;
@@ -586,11 +670,71 @@ name|t_FmIpcFmanEvents
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|_Packed
+struct|struct
+name|t_FmIpcResourceAllocParams
+block|{
+name|uint8_t
+name|guestId
+decl_stmt|;
+name|uint16_t
+name|base
+decl_stmt|;
+name|uint16_t
+name|num
+decl_stmt|;
+block|}
+name|_PackedType
+name|t_FmIpcResourceAllocParams
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|_Packed
+struct|struct
+name|t_FmIpcVspSetPortWindow
+block|{
+name|uint8_t
+name|hardwarePortId
+decl_stmt|;
+name|uint8_t
+name|baseStorageProfile
+decl_stmt|;
+name|uint8_t
+name|log2NumOfProfiles
+decl_stmt|;
+block|}
+name|_PackedType
+name|t_FmIpcVspSetPortWindow
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|_Packed
+struct|struct
+name|t_FmIpcSetCongestionGroupPfcPriority
+block|{
+name|uint32_t
+name|congestionGroupId
+decl_stmt|;
+name|uint8_t
+name|priorityBitMap
+decl_stmt|;
+block|}
+name|_PackedType
+name|t_FmIpcSetCongestionGroupPfcPriority
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
 name|FM_IPC_MAX_REPLY_BODY_SIZE
-value|16
+value|20
 end_define
 
 begin_define
@@ -648,12 +792,6 @@ name|_PackedType
 name|t_FmIpcReply
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|MEM_MAP_END
-end_define
 
 begin_if
 if|#
@@ -736,25 +874,6 @@ define|#
 directive|define
 name|FM_GET_COUNTER
 value|2
-end_define
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_DUMP_REGS   @Description   Used by FM front-end for the PORT module in order to set and get                 parameters in/from master FM module on FM PORT initialization time.   @Param         None */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_DUMP_REGS
-value|3
 end_define
 
 begin_comment
@@ -857,7 +976,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  @Function      FM_DUMP_PORT_REGS   @Description   Used by FM front-end for the PORT module in order to dump                 all port registers.   @Param[in]     uint8_t Pointer */
+comment|/**  @Function      FM_GET_PARAMS   @Description   Used by FM front-end for the PORT module in order to dump                 return FM parameters.   @Param[in]     uint8_t Pointer */
 end_comment
 
 begin_comment
@@ -867,26 +986,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FM_DUMP_PORT_REGS
-value|9
-end_define
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_GET_REV   @Description   Used by FM front-end for the PORT module in order to dump                 all port registers.   @Param[in]     uint8_t Pointer */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_GET_REV
+name|FM_GET_PARAMS
 value|10
 end_define
 
@@ -907,25 +1007,6 @@ define|#
 directive|define
 name|FM_REGISTER_INTR
 value|11
-end_define
-
-begin_comment
-comment|/**************************************************************************/
-end_comment
-
-begin_comment
-comment|/**  @Function      FM_GET_CLK_FREQ   @Description   Used by FM Front-end to read the FM clock frequency.   @Param[out]    uint32_t Pointer */
-end_comment
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FM_GET_CLK_FREQ
-value|12
 end_define
 
 begin_comment
@@ -1120,6 +1201,41 @@ define|#
 directive|define
 name|FM_SET_NUM_OF_OPEN_DMAS
 value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_VSP_ALLOC
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_VSP_FREE
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_VSP_SET_PORT_WINDOW
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_GET_FMAN_CTRL_CODE_REV
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|FM_SET_CONG_GRP_PFC_PRIO
+value|31
 end_define
 
 begin_ifdef

@@ -171,6 +171,11 @@ operator|.
 name|vop_setattr
 operator|=
 name|tmpfs_setattr
+block|,
+operator|.
+name|vop_print
+operator|=
+name|tmpfs_print
 block|, }
 decl_stmt|;
 end_decl_stmt

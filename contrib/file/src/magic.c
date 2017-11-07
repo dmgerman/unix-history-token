@@ -41,7 +41,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: magic.c,v 1.100 2016/07/18 11:43:05 christos Exp $"
+literal|"@(#)$File: magic.c,v 1.102 2017/08/28 13:39:18 christos Exp $"
 argument_list|)
 end_macro
 
@@ -748,7 +748,7 @@ operator|=
 name|hinstDLL
 expr_stmt|;
 return|return
-name|TRUE
+literal|1
 return|;
 block|}
 end_decl_stmt
@@ -1906,6 +1906,8 @@ condition|(
 name|file_reset
 argument_list|(
 name|ms
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 operator|-
@@ -2540,6 +2542,8 @@ condition|(
 name|file_reset
 argument_list|(
 name|ms
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 operator|-
@@ -2663,6 +2667,35 @@ operator|->
 name|error
 else|:
 literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|public
+name|int
+name|magic_getflags
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+name|ms
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ms
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+name|ms
+operator|->
+name|flags
 return|;
 block|}
 end_function

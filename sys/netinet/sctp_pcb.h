@@ -820,6 +820,9 @@ decl_stmt|;
 name|uint16_t
 name|default_keyid
 decl_stmt|;
+name|uint32_t
+name|default_mtu
+decl_stmt|;
 comment|/* various thresholds */
 comment|/* Max times I will init at a guy */
 name|uint16_t
@@ -862,16 +865,6 @@ comment|/* 	 * This timer is kept running per endpoint.  When it fires it will 	
 name|struct
 name|sctp_timer
 name|signature_change
-decl_stmt|;
-comment|/* Zero copy full buffer timer */
-name|struct
-name|sctp_timer
-name|zero_copy_timer
-decl_stmt|;
-comment|/* Zero copy app to transport (sendq) read repulse timer */
-name|struct
-name|sctp_timer
-name|zero_copy_sendq_timer
 decl_stmt|;
 name|uint32_t
 name|def_cookie_life

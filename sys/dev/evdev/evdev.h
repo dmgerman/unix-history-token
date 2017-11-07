@@ -1086,8 +1086,6 @@ argument_list|,
 name|code
 argument_list|,
 name|value
-operator|!=
-literal|0
 argument_list|)
 operator|)
 return|;
