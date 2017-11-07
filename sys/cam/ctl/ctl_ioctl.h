@@ -72,17 +72,6 @@ value|15
 end_define
 
 begin_comment
-comment|/*  * Maximum number of LUNs we support at the moment.  MUST be a power of 2.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_MAX_LUNS
-value|1024
-end_define
-
-begin_comment
 comment|/*  * Maximum number of initiators per port.  */
 end_comment
 
@@ -91,28 +80,6 @@ define|#
 directive|define
 name|CTL_MAX_INIT_PER_PORT
 value|2048
-end_define
-
-begin_comment
-comment|/*  * Maximum number of ports registered at one time.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_MAX_PORTS
-value|256
-end_define
-
-begin_comment
-comment|/*  * Maximum number of initiators we support.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_MAX_INITIATORS
-value|(CTL_MAX_INIT_PER_PORT * CTL_MAX_PORTS)
 end_define
 
 begin_comment
@@ -335,10 +302,8 @@ name|flags
 decl_stmt|;
 name|struct
 name|ctl_lun_io_port_stats
+modifier|*
 name|ports
-index|[
-name|CTL_MAX_PORTS
-index|]
 decl_stmt|;
 block|}
 struct|;
