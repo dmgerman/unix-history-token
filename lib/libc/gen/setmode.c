@@ -1397,8 +1397,7 @@ name|KERN_PROC
 operator|,
 name|KERN_PROC_UMASK
 operator|,
-name|getpid
-argument_list|()
+literal|0
 block|}
 operator|,
 literal|4
