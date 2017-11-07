@@ -471,7 +471,7 @@ name|uint32_t
 name|flowid
 decl_stmt|;
 comment|/* packet's 4-tuple system */
-name|uint64_t
+name|uint32_t
 name|csum_flags
 decl_stmt|;
 comment|/* checksum and offload features */
@@ -487,22 +487,37 @@ name|uint8_t
 name|rsstype
 decl_stmt|;
 comment|/* hash type */
+union|union
+block|{
+name|uint64_t
+name|rcv_tstmp
+decl_stmt|;
+comment|/* timestamp in ns */
+struct|struct
+block|{
 name|uint8_t
 name|l2hlen
 decl_stmt|;
-comment|/* layer 2 header length */
+comment|/* layer 2 hdr len */
 name|uint8_t
 name|l3hlen
 decl_stmt|;
-comment|/* layer 3 header length */
+comment|/* layer 3 hdr len */
 name|uint8_t
 name|l4hlen
 decl_stmt|;
-comment|/* layer 4 header length */
+comment|/* layer 4 hdr len */
 name|uint8_t
 name|l5hlen
 decl_stmt|;
-comment|/* layer 5 header length */
+comment|/* layer 5 hdr len */
+name|uint32_t
+name|spare
+decl_stmt|;
+block|}
+struct|;
+block|}
+union|;
 union|union
 block|{
 name|uint8_t
@@ -955,6 +970,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_TSTMP
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* rcv_tstmp field is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_TSTMP_HPREC
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* rcv_tstmp is high-prec, typically 				      hw-stamped on port (useful for IEEE 1588 				      and 802.1AS) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_PROTO1
 value|0x00001000
 end_define
@@ -1116,7 +1153,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_PROMISC|M_VLANTAG| \      M_PROTOFLAGS)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_PROMISC|M_VLANTAG|M_TSTMP| \      M_TSTMP_HPREC|M_PROTOFLAGS)
 end_define
 
 begin_comment
@@ -1128,7 +1165,7 @@ define|#
 directive|define
 name|M_FLAG_BITS
 define|\
-value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG"
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG\13M_TSTMP\14M_TSTMP_HPREC"
 end_define
 
 begin_define
@@ -6082,6 +6119,99 @@ literal|0
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_TIMESPEC_H_
+end_ifdef
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|mbuf_tstmp2timespec
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|ts
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"mbuf %p no M_PKTHDR"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_TSTMP
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"mbuf %p no M_TSTMP"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+name|ts
+operator|->
+name|tv_sec
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcv_tstmp
+operator|/
+literal|1000000000
+expr_stmt|;
+name|ts
+operator|->
+name|tv_nsec
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcv_tstmp
+operator|%
+literal|1000000000
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
