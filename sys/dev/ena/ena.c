@@ -778,6 +778,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|inline
 name|int
 name|validate_tx_req_id
 parameter_list|(
@@ -5799,6 +5800,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|int
 name|validate_tx_req_id
 parameter_list|(
