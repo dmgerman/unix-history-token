@@ -801,6 +801,20 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Wait until the specified zone can allocate an item.  */
+end_comment
+
+begin_function_decl
+name|void
+name|uma_zwait
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * XXX The rest of the prototypes in this header are h0h0 magic for the VM.  * If you think you need to use it for a normal zone you're probably incorrect.  */
 end_comment
 

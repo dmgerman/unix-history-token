@@ -9997,9 +9997,6 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * allocate the page directory page 	 */
-while|while
-condition|(
-operator|(
 name|pml4pg
 operator|=
 name|vm_page_alloc
@@ -10015,12 +10012,9 @@ operator||
 name|VM_ALLOC_WIRED
 operator||
 name|VM_ALLOC_ZERO
+operator||
+name|VM_ALLOC_WAITOK
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|VM_WAIT
 expr_stmt|;
 name|pml4phys
 operator|=

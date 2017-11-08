@@ -3132,6 +3132,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|vm_radix_wait
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uma_zwait
+argument_list|(
+name|vm_radix_node_zone
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -43,6 +43,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vm_radix_wait
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|boolean_t
 name|vm_radix_is_singleton
 parameter_list|(

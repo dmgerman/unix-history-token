@@ -1228,6 +1228,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_ALLOC_WAITOK
+value|0x0008
+end_define
+
+begin_comment
+comment|/* (acf) Sleep and retry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_WAITFAIL
+value|0x0010
+end_define
+
+begin_comment
+comment|/* (acf) Sleep and return error */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VM_ALLOC_WIRED
 value|0x0020
 end_define
@@ -1310,7 +1332,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* (gp) Do not sleep */
+comment|/* (acfgp) Do not sleep */
 end_comment
 
 begin_define
@@ -1413,6 +1435,30 @@ condition|)
 name|pflags
 operator||=
 name|VM_ALLOC_NODUMP
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|malloc_flags
+operator|&
+name|M_NOWAIT
+operator|)
+condition|)
+name|pflags
+operator||=
+name|VM_ALLOC_NOWAIT
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|malloc_flags
+operator|&
+name|M_WAITOK
+operator|)
+condition|)
+name|pflags
+operator||=
+name|VM_ALLOC_WAITOK
 expr_stmt|;
 return|return
 operator|(
