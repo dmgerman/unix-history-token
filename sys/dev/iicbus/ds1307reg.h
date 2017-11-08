@@ -43,6 +43,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MCP7941X_SECS_ST
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
 name|DS1307_MINS
 value|0x01
 end_define
@@ -99,6 +106,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MCP7941X_WEEKDAY_VBATEN
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|DS1307_WEEKDAY_MASK
 value|0x07
 end_define
@@ -122,6 +136,13 @@ define|#
 directive|define
 name|DS1307_MONTH
 value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCP7941X_MONTH_LPYR
+value|0x20
 end_define
 
 begin_define
