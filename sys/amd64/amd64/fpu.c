@@ -2852,6 +2852,14 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|addr
+operator|->
+name|sv_env
+operator|.
+name|en_mxcsr
+operator|&=
+name|cpu_mxcsr_mask
+expr_stmt|;
 name|pcb
 operator|=
 name|td
