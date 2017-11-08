@@ -1627,6 +1627,11 @@ argument_list|(
 literal|2000
 argument_list|)
 expr_stmt|;
+name|DEVICE_UNLOCK
+argument_list|(
+name|clk
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1679,6 +1684,11 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|2000
+argument_list|)
+expr_stmt|;
+name|DEVICE_UNLOCK
+argument_list|(
+name|clk
 argument_list|)
 expr_stmt|;
 block|}
