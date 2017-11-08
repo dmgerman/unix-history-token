@@ -3046,12 +3046,12 @@ name|out_l_
 index|[
 name|PADL_
 argument_list|(
-name|cloudabi32_event_t
+name|cloudabi_event_t
 operator|*
 argument_list|)
 index|]
 decl_stmt|;
-name|cloudabi32_event_t
+name|cloudabi_event_t
 modifier|*
 name|out
 decl_stmt|;
@@ -3060,7 +3060,7 @@ name|out_r_
 index|[
 name|PADR_
 argument_list|(
-name|cloudabi32_event_t
+name|cloudabi_event_t
 operator|*
 argument_list|)
 index|]

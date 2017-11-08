@@ -2025,7 +2025,7 @@ name|p
 operator|->
 name|out
 expr_stmt|;
-comment|/* cloudabi32_event_t * */
+comment|/* cloudabi_event_t * */
 name|uarg
 index|[
 literal|2
@@ -3968,7 +3968,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland cloudabi32_event_t *"
+literal|"userland cloudabi_event_t *"
 expr_stmt|;
 break|break;
 case|case
