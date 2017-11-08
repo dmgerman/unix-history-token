@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 RackTop Systems.  */
+comment|/*  * Copyright (c) 2012, 2017 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 RackTop Systems.  */
 end_comment
 
 begin_comment
@@ -447,6 +447,27 @@ name|resultp
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|ioc
+operator|==
+name|ZFS_IOC_CHANNEL_PROGRAM
+condition|)
+block|{
+name|zc
+operator|.
+name|zc_nvlist_dst_size
+operator|=
+name|fnvlist_lookup_uint64
+argument_list|(
+name|source
+argument_list|,
+name|ZCP_ARG_MEMLIMIT
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|zc
 operator|.
 name|zc_nvlist_dst_size
@@ -462,6 +483,7 @@ operator|*
 literal|1024
 argument_list|)
 expr_stmt|;
+block|}
 name|zc
 operator|.
 name|zc_nvlist_dst
@@ -528,7 +550,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * If ioctl exited with ENOMEM, we retry the ioctl after 		 * increasing the size of the destination nvlist. 		 * 		 * Channel programs that exit with ENOMEM probably ran over the 		 * lua memory sandbox; they should not be retried. 		 */
+comment|/* 		 * If ioctl exited with ENOMEM, we retry the ioctl after 		 * increasing the size of the destination nvlist. 		 * 		 * Channel programs that exit with ENOMEM ran over the 		 * lua memory sandbox; they should not be retried. 		 */
 if|if
 condition|(
 name|errno

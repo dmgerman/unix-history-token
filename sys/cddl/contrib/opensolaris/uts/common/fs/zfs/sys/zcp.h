@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * This file and its contents are supplied un
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2016 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2016, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -344,21 +344,6 @@ decl_stmt|;
 block|}
 name|zcp_lib_info_t
 typedef|;
-name|int
-name|zcp_nvlist_to_lua
-parameter_list|(
-name|lua_State
-modifier|*
-parameter_list|,
-name|nvlist_t
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

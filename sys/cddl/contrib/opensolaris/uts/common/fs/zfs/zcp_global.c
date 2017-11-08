@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * This file and its contents are supplied un
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2016 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2016, 2017 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -256,9 +256,39 @@ name|ERANGE
 block|}
 block|,
 block|{
+literal|"EDEADLK"
+block|,
+name|EDEADLK
+block|}
+block|,
+block|{
+literal|"ENOLCK"
+block|,
+name|ENOLCK
+block|}
+block|,
+block|{
+literal|"ECANCELED"
+block|,
+name|ECANCELED
+block|}
+block|,
+block|{
+literal|"ENOTSUP"
+block|,
+name|ENOTSUP
+block|}
+block|,
+block|{
 literal|"EDQUOT"
 block|,
 name|EDQUOT
+block|}
+block|,
+block|{
+literal|"ENAMETOOLONG"
+block|,
+name|ENAMETOOLONG
 block|}
 block|,
 block|{
