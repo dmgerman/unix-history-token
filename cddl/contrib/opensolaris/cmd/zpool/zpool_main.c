@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 by Prasad Joshi (sTec). All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  * Copyright 2016 Nexenta Systems, Inc.  * Copyright (c) 2017 Datto Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 by Prasad Joshi (sTec). All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  * Copyright 2016 Nexenta Systems, Inc.  * Copyright (c) 2017 Datto Inc.  */
 end_comment
 
 begin_include
@@ -23651,6 +23651,32 @@ name|ZPOOL_HIST_OUTPUT_NVL
 argument_list|)
 argument_list|,
 literal|8
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|nvlist_exists
+argument_list|(
+name|rec
+argument_list|,
+name|ZPOOL_HIST_ERRNO
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"    errno: %lld\n"
+argument_list|,
+name|fnvlist_lookup_int64
+argument_list|(
+name|rec
+argument_list|,
+name|ZPOOL_HIST_ERRNO
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

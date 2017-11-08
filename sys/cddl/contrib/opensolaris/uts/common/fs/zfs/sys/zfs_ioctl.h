@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2016 RackTop Systems.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright 2016 RackTop Systems.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_ifndef
@@ -923,6 +923,12 @@ value|0x1
 ifdef|#
 directive|ifdef
 name|_KERNEL
+struct_decl|struct
+name|objset
+struct_decl|;
+struct_decl|struct
+name|zfsvfs
+struct_decl|;
 typedef|typedef
 struct|struct
 name|zfs_creat
@@ -945,11 +951,9 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
 parameter_list|,
 name|cred_t
 modifier|*
-name|cr
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -959,16 +963,13 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|from
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|to
 parameter_list|,
 name|cred_t
 modifier|*
-name|cr
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -978,11 +979,9 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
 parameter_list|,
 name|cred_t
 modifier|*
-name|cr
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1007,6 +1006,20 @@ name|zfs_destroy_unmount_origin
 parameter_list|(
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|getzfsvfs_impl
+parameter_list|(
+name|struct
+name|objset
+modifier|*
+parameter_list|,
+name|struct
+name|zfsvfs
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
