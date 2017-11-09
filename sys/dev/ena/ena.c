@@ -13334,8 +13334,6 @@ expr_stmt|;
 name|io_sq
 operator|=
 operator|&
-name|adapter
-operator|->
 name|ena_dev
 operator|->
 name|io_sq_queues
