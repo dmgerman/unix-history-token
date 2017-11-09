@@ -7185,7 +7185,7 @@ name|ena_rx_ctx
 operator|->
 name|l3_proto
 operator|!=
-name|ENA_ETH_IO_L4_PROTO_UNKNOWN
+name|ENA_ETH_IO_L3_PROTO_UNKNOWN
 operator|)
 condition|)
 block|{
