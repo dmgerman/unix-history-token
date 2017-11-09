@@ -420,29 +420,12 @@ begin_comment
 comment|/* Detailed info about admin queue. 	      */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ENA_DEBUG_LEVEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ENA_DEBUG_LEVEL
-value|(ENA_ALERT | ENA_WARNING)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENA_TRACE
-end_ifdef
+begin_decl_stmt
+specifier|extern
+name|int
+name|ena_log_level
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -457,7 +440,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {							\ 		if (((level)& ENA_DEBUG_LEVEL) != (level))	\ 			break;					\ 		printf(fmt, ##args);				\ 	} while (0)
+value|do {							\ 		if (((level)& ena_log_level) != (level))	\ 			break;					\ 		printf(fmt, ##args);				\ 	} while (0)
 end_define
 
 begin_define
@@ -475,42 +458,6 @@ parameter_list|)
 define|\
 value|ena_trace_raw(level, "%s() [TID:%d]: "			\ 	    fmt " \n", __func__, curthread->td_tid, ##args)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ENA_TRACE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ena_trace_raw
-parameter_list|(
-modifier|...
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ena_trace
-parameter_list|(
-modifier|...
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ENA_TRACE */
-end_comment
 
 begin_define
 define|#

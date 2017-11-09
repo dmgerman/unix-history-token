@@ -1517,6 +1517,41 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Logging level for changing verbosity of the output  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ena_log_level
+init|=
+name|ENA_ALERT
+operator||
+name|ENA_WARNING
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ena
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|log_level
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|ena_log_level
+argument_list|,
+literal|0
+argument_list|,
+literal|"Logging level indicating verbosity of the logs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|ena_vendor_info_t
@@ -1758,13 +1793,11 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|ena_trace
 argument_list|(
-name|dmadev
+name|ENA_ALERT
 argument_list|,
-literal|"%s: bus_dma_tag_create failed: %d\n"
-argument_list|,
-name|__func__
+literal|"bus_dma_tag_create failed: %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1811,13 +1844,11 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|ena_trace
 argument_list|(
-name|dmadev
+name|ENA_ALERT
 argument_list|,
-literal|"%s: bus_dmamem_alloc(%ju) failed: %d\n"
-argument_list|,
-name|__func__
+literal|"bus_dmamem_alloc(%ju) failed: %d\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1885,13 +1916,11 @@ operator|)
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|ena_trace
 argument_list|(
-name|dmadev
+name|ENA_ALERT
 argument_list|,
-literal|"%s: bus_dmamap_load failed: %d\n"
-argument_list|,
-name|__func__
+literal|": bus_dmamap_load failed: %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -3176,24 +3205,6 @@ operator|->
 name|tx_buf_tag
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unlikely
-argument_list|(
-name|ret
-operator|!=
-literal|0
-argument_list|)
-condition|)
-name|device_printf
-argument_list|(
-name|adapter
-operator|->
-name|pdev
-argument_list|,
-literal|"Unable to create Tx DMA tag\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -3318,24 +3329,6 @@ operator|&
 name|adapter
 operator|->
 name|rx_buf_tag
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|unlikely
-argument_list|(
-name|ret
-operator|!=
-literal|0
-argument_list|)
-condition|)
-name|device_printf
-argument_list|(
-name|adapter
-operator|->
-name|pdev
-argument_list|,
-literal|"Unable to create Rx DMA tag\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3657,11 +3650,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_ALERT
 argument_list|,
 literal|"Unable to create Tx DMA map for buffer %d\n"
 argument_list|,
@@ -3718,11 +3709,9 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_ALERT
 argument_list|,
 literal|"Unable to create taskqueue for enqueue task\n"
 argument_list|)
@@ -4514,11 +4503,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_ALERT
 argument_list|,
 literal|"Unable to create Rx DMA map for buffer %d\n"
 argument_list|,
@@ -4763,13 +4750,6 @@ name|rx_buffer_info
 operator|=
 name|NULL
 expr_stmt|;
-name|ena_trace
-argument_list|(
-name|ENA_ALERT
-argument_list|,
-literal|"RX resource allocation fail"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -4810,17 +4790,6 @@ index|[
 name|qid
 index|]
 decl_stmt|;
-name|ena_trace
-argument_list|(
-name|ENA_INFO
-argument_list|,
-literal|"%s qid %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|qid
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|taskqueue_cancel
@@ -5301,11 +5270,9 @@ operator|)
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_WARNING
 argument_list|,
 literal|"failed to map mbuf, error: %d, "
 literal|"nsegs: %d\n"
@@ -5452,7 +5419,16 @@ name|mbuf
 operator|==
 name|NULL
 condition|)
+block|{
+name|ena_trace
+argument_list|(
+name|ENA_WARNING
+argument_list|,
+literal|"Trying to free unallocated buffer\n"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|bus_dmamap_unload
 argument_list|(
 name|adapter
@@ -5630,13 +5606,15 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_WARNING
 argument_list|,
-literal|"failed to alloc buffer for rx queue\n"
+literal|"failed to alloc buffer for rx queue %d\n"
+argument_list|,
+name|rx_ring
+operator|->
+name|qid
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5667,11 +5645,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_WARNING
 argument_list|,
 literal|"failed to add buffer for rx queue %d\n"
 argument_list|,
@@ -5715,19 +5691,19 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_WARNING
 argument_list|,
-literal|"refilled rx queue %d with %d pages only\n"
+literal|"refilled rx qid %d with only %d mbufs (from %d)\n"
 argument_list|,
 name|rx_ring
 operator|->
 name|qid
 argument_list|,
 name|i
+argument_list|,
+name|num
 argument_list|)
 expr_stmt|;
 block|}
@@ -5927,14 +5903,12 @@ operator|!=
 name|bufs_num
 argument_list|)
 condition|)
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_WARNING
 argument_list|,
-literal|"refilling Queue %d failed. allocated %d buffers"
-literal|" from: %d\n"
+literal|"refilling Queue %d failed. "
+literal|"Allocated %d buffers from: %d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -6005,6 +5979,11 @@ name|int
 name|qid
 parameter_list|)
 block|{
+name|bool
+name|print_once
+init|=
+name|true
+decl_stmt|;
 name|struct
 name|ena_ring
 modifier|*
@@ -6062,21 +6041,43 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|ena_trace
+if|if
+condition|(
+name|print_once
+condition|)
+block|{
+name|device_printf
 argument_list|(
-name|ENA_DBG
-operator||
-name|ENA_TXPTH
-operator||
-name|ENA_RSC
+name|adapter
+operator|->
+name|pdev
 argument_list|,
-literal|"free uncompleted Tx mbufs qid[%d] idx: 0x%x"
+literal|"free uncompleted tx mbuf qid %d idx 0x%x"
 argument_list|,
 name|qid
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|print_once
+operator|=
+name|false
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ena_trace
+argument_list|(
+name|ENA_DBG
+argument_list|,
+literal|"free uncompleted tx mbuf qid %d idx 0x%x"
+argument_list|,
+name|qid
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
 name|bus_dmamap_unload
 argument_list|(
 name|adapter
@@ -6293,6 +6294,15 @@ name|req_id
 parameter_list|)
 block|{
 name|struct
+name|ena_adapter
+modifier|*
+name|adapter
+init|=
+name|tx_ring
+operator|->
+name|adapter
+decl_stmt|;
+name|struct
 name|ena_tx_buffer
 modifier|*
 name|tx_info
@@ -6335,6 +6345,35 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|tx_info
+operator|->
+name|mbuf
+operator|==
+name|NULL
+condition|)
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|pdev
+argument_list|,
+literal|"tx_info doesn't have valid mbuf\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|pdev
+argument_list|,
+literal|"Invalid req_id: %hu\n"
+argument_list|,
+name|req_id
+argument_list|)
+expr_stmt|;
 name|counter_u64_add
 argument_list|(
 name|tx_ring
@@ -6972,6 +7011,21 @@ name|map
 argument_list|)
 expr_stmt|;
 block|}
+name|ena_trace
+argument_list|(
+name|ENA_DBG
+operator||
+name|ENA_TXPTH
+argument_list|,
+literal|"tx: q %d mbuf %p completed"
+argument_list|,
+name|tx_ring
+operator|->
+name|qid
+argument_list|,
+name|mbuf
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|mbuf
@@ -7065,6 +7119,21 @@ operator|=
 name|TX_BUDGET
 operator|-
 name|budget
+expr_stmt|;
+name|ena_trace
+argument_list|(
+name|ENA_DBG
+operator||
+name|ENA_TXPTH
+argument_list|,
+literal|"tx: q %d done. total pkts: %d"
+argument_list|,
+name|tx_ring
+operator|->
+name|qid
+argument_list|,
+name|work_done
+argument_list|)
 expr_stmt|;
 comment|/* If there is still something to commit update ring state */
 if|if
@@ -7722,6 +7791,21 @@ name|mbuf
 argument_list|)
 expr_stmt|;
 block|}
+name|ena_trace
+argument_list|(
+name|ENA_DBG
+operator||
+name|ENA_RXPTH
+argument_list|,
+literal|"rx mbuf updated. len %d"
+argument_list|,
+name|mbuf
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+argument_list|)
+expr_stmt|;
 comment|/* Free already appended mbuf, it won't be useful anymore */
 name|bus_dmamap_unload
 argument_list|(
@@ -7848,6 +7932,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|ena_trace
+argument_list|(
+name|ENA_DBG
+argument_list|,
+literal|"RX IPv4 header checksum error"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* if TCP/UDP */
@@ -7895,6 +7986,13 @@ operator|.
 name|bad_csum
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|ena_trace
+argument_list|(
+name|ENA_DBG
+argument_list|,
+literal|"RX L4 checksum error"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8112,6 +8210,15 @@ name|rx_ring
 operator|->
 name|next_to_clean
 expr_stmt|;
+name|ena_trace
+argument_list|(
+name|ENA_DBG
+argument_list|,
+literal|"rx: qid %d"
+argument_list|,
+name|qid
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|ena_rx_ctx
@@ -8172,6 +8279,36 @@ literal|0
 argument_list|)
 condition|)
 break|break;
+name|ena_trace
+argument_list|(
+name|ENA_DBG
+operator||
+name|ENA_RXPTH
+argument_list|,
+literal|"rx: q %d got packet from ena. "
+literal|"descs #: %d l3 proto %d l4 proto %d hash: %x"
+argument_list|,
+name|rx_ring
+operator|->
+name|qid
+argument_list|,
+name|ena_rx_ctx
+operator|.
+name|descs
+argument_list|,
+name|ena_rx_ctx
+operator|.
+name|l3_proto
+argument_list|,
+name|ena_rx_ctx
+operator|.
+name|l4_proto
+argument_list|,
+name|ena_rx_ctx
+operator|.
+name|hash
+argument_list|)
+expr_stmt|;
 comment|/* Receive mbuf from the ring */
 name|mbuf
 operator|=
@@ -8247,21 +8384,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-name|ena_trace
-argument_list|(
-name|ENA_DBG
-operator||
-name|ENA_RXPTH
-argument_list|,
-literal|"Rx: %d bytes"
-argument_list|,
-name|mbuf
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8930,11 +9052,11 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|ena_trace
 argument_list|(
-name|dev
+name|ENA_DBG
 argument_list|,
-literal|"Allocated msix_entries, vectors (cnt: %d)\n"
+literal|"trying to enable MSI-X, vectors: %d"
 argument_list|,
 name|msix_vecs
 argument_list|)
@@ -9191,13 +9313,6 @@ decl_stmt|;
 name|int
 name|irq_idx
 decl_stmt|;
-name|ena_trace
-argument_list|(
-name|ENA_DBG
-argument_list|,
-literal|"enter"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|int
@@ -9606,11 +9721,11 @@ operator|)
 return|;
 name|err_res_free
 label|:
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_INFO
+operator||
+name|ENA_ADMQ
 argument_list|,
 literal|"releasing resource for irq %d\n"
 argument_list|,
@@ -9724,7 +9839,7 @@ name|adapter
 operator|->
 name|pdev
 argument_list|,
-literal|"failed to request irq\n"
+literal|"failed to request I/O IRQ: MSI-X is not enabled\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9902,11 +10017,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RSS
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_INFO
 argument_list|,
 literal|"queue %d - RSS bucket %d\n"
 argument_list|,
@@ -9921,11 +10034,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|device_printf
+name|ena_trace
 argument_list|(
-name|adapter
-operator|->
-name|pdev
+name|ENA_INFO
 argument_list|,
 literal|"queue %d - cpu %d\n"
 argument_list|,
@@ -11407,7 +11518,7 @@ argument_list|)
 expr_stmt|;
 name|ena_trace
 argument_list|(
-name|ENA_WARNING
+name|ENA_INFO
 argument_list|,
 literal|"link_status = false"
 argument_list|)
@@ -12207,13 +12318,6 @@ name|caps
 init|=
 literal|0
 decl_stmt|;
-name|ena_trace
-argument_list|(
-name|ENA_DBG
-argument_list|,
-literal|"enter"
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|adapter
@@ -12235,9 +12339,9 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|ena_trace
 argument_list|(
-name|pdev
+name|ENA_ALERT
 argument_list|,
 literal|"can not allocate ifnet structure\n"
 argument_list|)
@@ -13682,9 +13786,11 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|ena_trace
+name|device_printf
 argument_list|(
-name|ENA_WARNING
+name|adapter
+operator|->
+name|pdev
 argument_list|,
 literal|"failed to prepare tx bufs\n"
 argument_list|)
@@ -13977,6 +14083,9 @@ name|mbuf
 operator|->
 name|m_flags
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|mbuf
 operator|->
 name|m_pkthdr
@@ -14982,7 +15091,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Cannot init RSS\n"
+literal|"Cannot init indirect table\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -15222,7 +15331,7 @@ condition|)
 block|{
 name|ena_trace
 argument_list|(
-name|ENA_DBG
+name|ENA_ALERT
 argument_list|,
 literal|"No devclass ena\n"
 argument_list|)
@@ -17777,9 +17886,18 @@ operator|!=
 literal|0
 argument_list|)
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|pdev
+argument_list|,
+literal|"Failed to create TX DMA tag\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|err_com_free
 goto|;
+block|}
 name|rc
 operator|=
 name|ena_setup_rx_dma_tag
@@ -17796,9 +17914,18 @@ operator|!=
 literal|0
 argument_list|)
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|pdev
+argument_list|,
+literal|"Failed to create RX DMA tag\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|err_tx_tag_free
 goto|;
+block|}
 comment|/* initialize rings basic information */
 name|device_printf
 argument_list|(
