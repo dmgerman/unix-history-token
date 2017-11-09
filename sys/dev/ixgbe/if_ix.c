@@ -3922,6 +3922,12 @@ argument_list|,
 name|ctrl_ext
 argument_list|)
 expr_stmt|;
+name|hw
+operator|->
+name|allow_unsupported_sfp
+operator|=
+name|allow_unsupported_sfp
+expr_stmt|;
 comment|/* 	 * Initialize the shared code 	 */
 if|if
 condition|(
@@ -3966,12 +3972,6 @@ name|init_params
 argument_list|(
 name|hw
 argument_list|)
-expr_stmt|;
-name|hw
-operator|->
-name|allow_unsupported_sfp
-operator|=
-name|allow_unsupported_sfp
 expr_stmt|;
 comment|/* Pick up the 82599 settings */
 if|if
