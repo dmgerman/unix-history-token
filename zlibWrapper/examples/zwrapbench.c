@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2016-present, Przemyslaw Skibinski, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_comment
@@ -833,9 +833,6 @@ decl_stmt|;
 name|U32
 name|nbBlocks
 decl_stmt|;
-name|UTIL_freq_t
-name|ticksPerSecond
-decl_stmt|;
 comment|/* checks */
 if|if
 condition|(
@@ -881,12 +878,6 @@ operator|-
 literal|17
 expr_stmt|;
 comment|/* can only display 17 characters */
-name|UTIL_initTimer
-argument_list|(
-operator|&
-name|ticksPerSecond
-argument_list|)
-expr_stmt|;
 comment|/* Init blockTable data */
 block|{
 name|z_const
@@ -1194,11 +1185,10 @@ name|ratio
 init|=
 literal|0.
 decl_stmt|;
-name|UTIL_getTime
-argument_list|(
-operator|&
 name|coolTime
-argument_list|)
+operator|=
+name|UTIL_getTime
+argument_list|()
 expr_stmt|;
 name|DISPLAYLEVEL
 argument_list|(
@@ -1236,8 +1226,6 @@ condition|(
 name|UTIL_clockSpanMicro
 argument_list|(
 name|coolTime
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 operator|>
 name|ACTIVEPERIOD_MICROSEC
@@ -1255,11 +1243,10 @@ argument_list|(
 name|COOLPERIOD_SEC
 argument_list|)
 expr_stmt|;
-name|UTIL_getTime
-argument_list|(
-operator|&
 name|coolTime
-argument_list|)
+operator|=
+name|UTIL_getTime
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* Compression */
@@ -1304,15 +1291,12 @@ argument_list|)
 expr_stmt|;
 comment|/* give processor time to other processes */
 name|UTIL_waitForNextTick
-argument_list|(
-name|ticksPerSecond
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|UTIL_getTime
-argument_list|(
-operator|&
 name|clockStart
-argument_list|)
+operator|=
+name|UTIL_getTime
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1369,8 +1353,7 @@ name|dictBuffer
 argument_list|,
 name|dictBufferSize
 argument_list|,
-literal|1
-comment|/*byRef*/
+name|ZSTD_dlm_byRef
 argument_list|,
 name|ZSTD_dm_auto
 argument_list|,
@@ -1537,8 +1520,6 @@ condition|(
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 operator|<
 name|clockLoop
@@ -1824,8 +1805,6 @@ condition|(
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 operator|<
 name|clockLoop
@@ -2154,8 +2133,6 @@ condition|(
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 operator|<
 name|clockLoop
@@ -2439,8 +2416,6 @@ condition|(
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 operator|<
 name|clockLoop
@@ -2455,8 +2430,6 @@ init|=
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 decl_stmt|;
 if|if
@@ -2608,15 +2581,12 @@ argument_list|)
 expr_stmt|;
 comment|/* give processor time to other processes */
 name|UTIL_waitForNextTick
-argument_list|(
-name|ticksPerSecond
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|UTIL_getTime
-argument_list|(
-operator|&
 name|clockStart
-argument_list|)
+operator|=
+name|UTIL_getTime
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2763,8 +2733,6 @@ condition|(
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 operator|<
 name|clockLoop
@@ -2997,8 +2965,6 @@ condition|(
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 operator|<
 name|clockLoop
@@ -3304,8 +3270,6 @@ condition|(
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 operator|<
 name|clockLoop
@@ -3595,8 +3559,6 @@ condition|(
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 operator|<
 name|clockLoop
@@ -3611,8 +3573,6 @@ init|=
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 decl_stmt|;
 if|if

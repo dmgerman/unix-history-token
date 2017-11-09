@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  * You may select, at your option, one of the above-listed licenses.  */
 end_comment
 
 begin_comment
@@ -1707,7 +1707,7 @@ decl_stmt|;
 name|U32
 name|end
 decl_stmt|;
-name|double
+name|U32
 name|score
 decl_stmt|;
 block|}
@@ -2117,6 +2117,9 @@ name|COVER_checkParameters
 parameter_list|(
 name|ZDICT_cover_params_t
 name|parameters
+parameter_list|,
+name|size_t
+name|maxDictSize
 parameter_list|)
 block|{
 comment|/* k and d are required parameters */
@@ -2133,6 +2136,20 @@ operator|.
 name|k
 operator|==
 literal|0
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/* k<= maxDictSize */
+if|if
+condition|(
+name|parameters
+operator|.
+name|k
+operator|>
+name|maxDictSize
 condition|)
 block|{
 return|return
@@ -2888,7 +2905,19 @@ argument_list|,
 name|parameters
 argument_list|)
 decl_stmt|;
-comment|/* Trim the segment if necessary and if it is empty then we are done */
+comment|/* If the segment covers no dmers, then we are out of content */
+if|if
+condition|(
+name|segment
+operator|.
+name|score
+operator|==
+literal|0
+condition|)
+block|{
+break|break;
+block|}
+comment|/* Trim the segment if necessary and if it is too small then we are done */
 name|segmentSize
 operator|=
 name|MIN
@@ -2913,8 +2942,10 @@ expr_stmt|;
 if|if
 condition|(
 name|segmentSize
-operator|==
-literal|0
+operator|<
+name|parameters
+operator|.
+name|d
 condition|)
 block|{
 break|break;
@@ -3034,6 +3065,8 @@ operator|!
 name|COVER_checkParameters
 argument_list|(
 name|parameters
+argument_list|,
+name|dictBufferCapacity
 argument_list|)
 condition|)
 block|{
@@ -3282,10 +3315,10 @@ typedef|typedef
 struct|struct
 name|COVER_best_s
 block|{
-name|pthread_mutex_t
+name|ZSTD_pthread_mutex_t
 name|mutex
 decl_stmt|;
-name|pthread_cond_t
+name|ZSTD_pthread_cond_t
 name|cond
 decl_stmt|;
 name|size_t
@@ -3334,7 +3367,7 @@ comment|/* compatible with init on NULL */
 operator|(
 name|void
 operator|)
-name|pthread_mutex_init
+name|ZSTD_pthread_mutex_init
 argument_list|(
 operator|&
 name|best
@@ -3347,7 +3380,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|pthread_cond_init
+name|ZSTD_pthread_cond_init
 argument_list|(
 operator|&
 name|best
@@ -3427,7 +3460,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|pthread_mutex_lock
+name|ZSTD_pthread_mutex_lock
 argument_list|(
 operator|&
 name|best
@@ -3444,7 +3477,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|pthread_cond_wait
+name|ZSTD_pthread_cond_wait
 argument_list|(
 operator|&
 name|best
@@ -3458,7 +3491,7 @@ name|mutex
 argument_list|)
 expr_stmt|;
 block|}
-name|pthread_mutex_unlock
+name|ZSTD_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|best
@@ -3511,7 +3544,7 @@ name|dict
 argument_list|)
 expr_stmt|;
 block|}
-name|pthread_mutex_destroy
+name|ZSTD_pthread_mutex_destroy
 argument_list|(
 operator|&
 name|best
@@ -3519,7 +3552,7 @@ operator|->
 name|mutex
 argument_list|)
 expr_stmt|;
-name|pthread_cond_destroy
+name|ZSTD_pthread_cond_destroy
 argument_list|(
 operator|&
 name|best
@@ -3552,7 +3585,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|pthread_mutex_lock
+name|ZSTD_pthread_mutex_lock
 argument_list|(
 operator|&
 name|best
@@ -3565,7 +3598,7 @@ name|best
 operator|->
 name|liveJobs
 expr_stmt|;
-name|pthread_mutex_unlock
+name|ZSTD_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|best
@@ -3615,7 +3648,7 @@ block|{
 name|size_t
 name|liveJobs
 decl_stmt|;
-name|pthread_mutex_lock
+name|ZSTD_pthread_mutex_lock
 argument_list|(
 operator|&
 name|best
@@ -3740,7 +3773,7 @@ operator|=
 name|compressedSize
 expr_stmt|;
 block|}
-name|pthread_mutex_unlock
+name|ZSTD_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|best
@@ -3755,7 +3788,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pthread_cond_broadcast
+name|ZSTD_pthread_cond_broadcast
 argument_list|(
 operator|&
 name|best
@@ -4158,7 +4191,7 @@ block|}
 comment|/* Compress each sample and sum their sizes (or error) */
 name|totalCompressedSize
 operator|=
-literal|0
+name|dictBufferCapacity
 expr_stmt|;
 for|for
 control|(
@@ -4617,11 +4650,13 @@ expr_stmt|;
 comment|/* Turn down global display level to clean up display at level 2 and below */
 name|g_displayLevel
 operator|=
-name|parameters
-operator|->
-name|zParams
-operator|.
-name|notificationLevel
+name|displayLevel
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+name|displayLevel
 operator|-
 literal|1
 expr_stmt|;
@@ -4846,6 +4881,16 @@ name|steps
 operator|=
 name|kSteps
 expr_stmt|;
+name|data
+operator|->
+name|parameters
+operator|.
+name|zParams
+operator|.
+name|notificationLevel
+operator|=
+name|g_displayLevel
+expr_stmt|;
 comment|/* Check the parameters */
 if|if
 condition|(
@@ -4855,6 +4900,8 @@ argument_list|(
 name|data
 operator|->
 name|parameters
+argument_list|,
+name|dictBufferCapacity
 argument_list|)
 condition|)
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  * You may select, at your option, one of the above-listed licenses.  */
 end_comment
 
 begin_comment
@@ -275,7 +275,7 @@ specifier|const
 name|int
 name|g_compressionLevel_default
 init|=
-literal|6
+literal|3
 decl_stmt|;
 end_decl_stmt
 
@@ -2560,7 +2560,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*! ZDICT_checkMerge     check if dictItem can be merged, do it if possible     @return : id of destination elt, 0 if not merged */
+comment|/*! ZDICT_tryMerge() :     check if dictItem can be merged, do it if possible     @return : id of destination elt, 0 if not merged */
 end_comment
 
 begin_function
@@ -3151,13 +3151,16 @@ name|U32
 name|id
 parameter_list|)
 block|{
-comment|/* convention : first element is nb of elts */
+comment|/* convention : table[0].pos stores nb of elts */
 name|U32
 specifier|const
 name|max
 init|=
 name|table
-operator|->
+index|[
+literal|0
+index|]
+operator|.
 name|pos
 decl_stmt|;
 name|U32
@@ -5102,7 +5105,7 @@ expr_stmt|;
 if|if
 condition|(
 name|compressionLevel
-operator|==
+operator|<=
 literal|0
 condition|)
 name|compressionLevel
@@ -7389,6 +7392,15 @@ operator|.
 name|steps
 operator|=
 literal|4
+expr_stmt|;
+comment|/* Default to level 6 since no compression level information is avaialble */
+name|params
+operator|.
+name|zParams
+operator|.
+name|compressionLevel
+operator|=
+literal|6
 expr_stmt|;
 return|return
 name|ZDICT_optimizeTrainFromBuffer_cover

@@ -328,6 +328,14 @@ name|U32
 name|val
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|val
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+block|{
 if|#
 directive|if
 name|defined
@@ -506,6 +514,7 @@ return|;
 endif|#
 directive|endif
 block|}
+block|}
 comment|/*=====    Local Constants   =====*/
 specifier|static
 specifier|const
@@ -567,9 +576,23 @@ block|,
 literal|0x1FFFFFF
 block|,
 literal|0x3FFFFFF
+block|,
+literal|0x7FFFFFF
+block|,
+literal|0xFFFFFFF
+block|,
+literal|0x1FFFFFFF
+block|,
+literal|0x3FFFFFFF
+block|,
+literal|0x7FFFFFFF
 block|}
 decl_stmt|;
-comment|/* up to 26 bits */
+comment|/* up to 31 bits */
+define|#
+directive|define
+name|BIT_MASK_SIZE
+value|(sizeof(BIT_mask) / sizeof(BIT_mask[0]))
 comment|/*-************************************************************** *  bitStream encoding ****************************************************************/
 comment|/*! BIT_initCStream() :  *  `dstCapacity` must be> sizeof(size_t)  *  @return : 0 if success,  *            otherwise an error code (can be tested using ERR_isError()) */
 name|MEM_STATIC
@@ -656,7 +679,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*! BIT_addBits() :  *  can add up to 26 bits into `bitC`.  *  Note : does not check for register overflow ! */
+comment|/*! BIT_addBits() :  *  can add up to 31 bits into `bitC`.  *  Note : does not check for register overflow ! */
 name|MEM_STATIC
 name|void
 name|BIT_addBits
@@ -672,6 +695,38 @@ name|unsigned
 name|nbBits
 parameter_list|)
 block|{
+name|MEM_STATIC_ASSERT
+argument_list|(
+name|BIT_MASK_SIZE
+operator|==
+literal|32
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|nbBits
+operator|<
+name|BIT_MASK_SIZE
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|nbBits
+operator|+
+name|bitC
+operator|->
+name|bitPos
+operator|<
+sizeof|sizeof
+argument_list|(
+name|bitC
+operator|->
+name|bitContainer
+argument_list|)
+operator|*
+literal|8
+argument_list|)
+expr_stmt|;
 name|bitC
 operator|->
 name|bitContainer
@@ -723,6 +778,24 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|nbBits
+operator|+
+name|bitC
+operator|->
+name|bitPos
+operator|<
+sizeof|sizeof
+argument_list|(
+name|bitC
+operator|->
+name|bitContainer
+argument_list|)
+operator|*
+literal|8
+argument_list|)
+expr_stmt|;
 name|bitC
 operator|->
 name|bitContainer
@@ -765,8 +838,7 @@ argument_list|(
 name|bitC
 operator|->
 name|bitPos
-operator|<=
-operator|(
+operator|<
 sizeof|sizeof
 argument_list|(
 name|bitC
@@ -775,7 +847,6 @@ name|bitContainer
 argument_list|)
 operator|*
 literal|8
-operator|)
 argument_list|)
 expr_stmt|;
 name|MEM_writeLEST
@@ -846,8 +917,7 @@ argument_list|(
 name|bitC
 operator|->
 name|bitPos
-operator|<=
-operator|(
+operator|<
 sizeof|sizeof
 argument_list|(
 name|bitC
@@ -856,7 +926,6 @@ name|bitContainer
 argument_list|)
 operator|*
 literal|8
-operator|)
 argument_list|)
 expr_stmt|;
 name|MEM_writeLEST
@@ -1542,6 +1611,13 @@ argument_list|)
 return|;
 else|#
 directive|else
+name|assert
+argument_list|(
+name|nbBits
+operator|<
+name|BIT_MASK_SIZE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|bitContainer
@@ -1569,6 +1645,13 @@ specifier|const
 name|nbBits
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|nbBits
+operator|<
+name|BIT_MASK_SIZE
+argument_list|)
+expr_stmt|;
 return|return
 name|bitContainer
 operator|&

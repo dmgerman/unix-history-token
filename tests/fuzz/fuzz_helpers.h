@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016-present, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
+comment|/*  * Copyright (c) 2016-present, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_comment
@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"zstd.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -43,7 +49,24 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_define
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 define|#
 directive|define
 name|MIN
@@ -53,9 +76,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((a)< (b) ? (a) : (b))
-end_define
-
-begin_define
 define|#
 directive|define
 name|MAX
@@ -65,9 +85,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((a)> (b) ? (a) : (b))
-end_define
-
-begin_define
 define|#
 directive|define
 name|FUZZ_QUOTE_IMPL
@@ -75,9 +92,6 @@ parameter_list|(
 name|str
 parameter_list|)
 value|#str
-end_define
-
-begin_define
 define|#
 directive|define
 name|FUZZ_QUOTE
@@ -85,13 +99,7 @@ parameter_list|(
 name|str
 parameter_list|)
 value|FUZZ_QUOTE_IMPL(str)
-end_define
-
-begin_comment
 comment|/**  * Asserts for fuzzing that are always enabled.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FUZZ_ASSERT_MSG
@@ -102,9 +110,6 @@ name|msg
 parameter_list|)
 define|\
 value|((cond) ? (void)0                                                            \           : (fprintf(stderr, "%s: %u: Assertion: `%s' failed. %s\n", __FILE__, \                      __LINE__, FUZZ_QUOTE(cond), (msg)),                       \              abort()))
-end_define
-
-begin_define
 define|#
 directive|define
 name|FUZZ_ASSERT
@@ -112,25 +117,24 @@ parameter_list|(
 name|cond
 parameter_list|)
 value|FUZZ_ASSERT_MSG((cond), "");
-end_define
-
-begin_if
+define|#
+directive|define
+name|FUZZ_ZASSERT
+parameter_list|(
+name|code
+parameter_list|)
+define|\
+value|FUZZ_ASSERT_MSG(!ZSTD_isError(code), ZSTD_getErrorName(code))
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
-end_if
-
-begin_define
 define|#
 directive|define
 name|FUZZ_STATIC
 value|static __inline __attribute__((unused))
-end_define
-
-begin_elif
 elif|#
 directive|elif
 name|defined
@@ -152,66 +156,52 @@ literal|199901L
 operator|)
 comment|/* C99 */
 operator|)
-end_elif
-
-begin_define
 define|#
 directive|define
 name|FUZZ_STATIC
 value|static inline
-end_define
-
-begin_elif
 elif|#
 directive|elif
 name|defined
 argument_list|(
 name|_MSC_VER
 argument_list|)
-end_elif
-
-begin_define
 define|#
 directive|define
 name|FUZZ_STATIC
 value|static __inline
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|FUZZ_STATIC
 value|static
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/**  * Determininistically constructs a seed based on the fuzz input.  * Only looks at the first FUZZ_RNG_SEED_SIZE bytes of the input.  */
-end_comment
-
-begin_function
+comment|/**  * Determininistically constructs a seed based on the fuzz input.  * Consumes up to the first FUZZ_RNG_SEED_SIZE bytes of the input.  */
 name|FUZZ_STATIC
 name|uint32_t
 name|FUZZ_seed
 parameter_list|(
-specifier|const
 name|uint8_t
+specifier|const
+modifier|*
 modifier|*
 name|src
 parameter_list|,
 name|size_t
+modifier|*
 name|size
 parameter_list|)
 block|{
+name|uint8_t
+specifier|const
+modifier|*
+name|data
+init|=
+operator|*
+name|src
+decl_stmt|;
 name|size_t
 specifier|const
 name|toHash
@@ -220,13 +210,24 @@ name|MIN
 argument_list|(
 name|FUZZ_RNG_SEED_SIZE
 argument_list|,
+operator|*
 name|size
 argument_list|)
 decl_stmt|;
+operator|*
+name|size
+operator|-=
+name|toHash
+expr_stmt|;
+operator|*
+name|src
+operator|+=
+name|toHash
+expr_stmt|;
 return|return
 name|XXH32
 argument_list|(
-name|src
+name|data
 argument_list|,
 name|toHash
 argument_list|,
@@ -234,9 +235,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_define
 define|#
 directive|define
 name|FUZZ_rotl32
@@ -246,9 +244,6 @@ parameter_list|,
 name|r
 parameter_list|)
 value|(((x)<< (r)) | ((x)>> (32 - (r))))
-end_define
-
-begin_function
 name|FUZZ_STATIC
 name|uint32_t
 name|FUZZ_rand
@@ -306,7 +301,56 @@ operator|>>
 literal|5
 return|;
 block|}
-end_function
+comment|/* Returns a random numer in the range [min, max]. */
+name|FUZZ_STATIC
+name|uint32_t
+name|FUZZ_rand32
+parameter_list|(
+name|uint32_t
+modifier|*
+name|state
+parameter_list|,
+name|uint32_t
+name|min
+parameter_list|,
+name|uint32_t
+name|max
+parameter_list|)
+block|{
+name|uint32_t
+name|random
+init|=
+name|FUZZ_rand
+argument_list|(
+name|state
+argument_list|)
+decl_stmt|;
+return|return
+name|min
+operator|+
+operator|(
+name|random
+operator|%
+operator|(
+name|max
+operator|-
+name|min
+operator|+
+literal|1
+operator|)
+operator|)
+return|;
+block|}
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

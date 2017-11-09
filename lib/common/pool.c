@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  * You may select, at your option, one of the above-listed licenses.  */
 end_comment
 
 begin_comment
@@ -107,8 +107,11 @@ begin_struct
 struct|struct
 name|POOL_ctx_s
 block|{
+name|ZSTD_customMem
+name|customMem
+decl_stmt|;
 comment|/* Keep track of the threads */
-name|pthread_t
+name|ZSTD_pthread_t
 modifier|*
 name|threads
 decl_stmt|;
@@ -138,15 +141,15 @@ name|int
 name|queueEmpty
 decl_stmt|;
 comment|/* The mutex protects the queue */
-name|pthread_mutex_t
+name|ZSTD_pthread_mutex_t
 name|queueMutex
 decl_stmt|;
 comment|/* Condition variable for pushers to wait on when the queue is full */
-name|pthread_cond_t
+name|ZSTD_pthread_cond_t
 name|queuePushCond
 decl_stmt|;
 comment|/* Condition variables for poppers to wait on when the queue is empty */
-name|pthread_cond_t
+name|ZSTD_pthread_cond_t
 name|queuePopCond
 decl_stmt|;
 comment|/* Indicates if the queue is shutting down */
@@ -200,7 +203,7 @@ condition|;
 control|)
 block|{
 comment|/* Lock the mutex and wait for a non-empty queue or until shutdown */
-name|pthread_mutex_lock
+name|ZSTD_pthread_mutex_lock
 argument_list|(
 operator|&
 name|ctx
@@ -220,7 +223,7 @@ operator|->
 name|shutdown
 condition|)
 block|{
-name|pthread_cond_wait
+name|ZSTD_pthread_cond_wait
 argument_list|(
 operator|&
 name|ctx
@@ -242,7 +245,7 @@ operator|->
 name|queueEmpty
 condition|)
 block|{
-name|pthread_mutex_unlock
+name|ZSTD_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|ctx
@@ -303,7 +306,7 @@ operator|->
 name|queueTail
 expr_stmt|;
 comment|/* Unlock the mutex, signal a pusher, and run the job */
-name|pthread_mutex_unlock
+name|ZSTD_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|ctx
@@ -311,7 +314,7 @@ operator|->
 name|queueMutex
 argument_list|)
 expr_stmt|;
-name|pthread_cond_signal
+name|ZSTD_pthread_cond_signal
 argument_list|(
 operator|&
 name|ctx
@@ -338,7 +341,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|pthread_mutex_lock
+name|ZSTD_pthread_mutex_lock
 argument_list|(
 operator|&
 name|ctx
@@ -351,7 +354,7 @@ operator|->
 name|numThreadsBusy
 operator|--
 expr_stmt|;
-name|pthread_mutex_unlock
+name|ZSTD_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|ctx
@@ -359,7 +362,7 @@ operator|->
 name|queueMutex
 argument_list|)
 expr_stmt|;
-name|pthread_cond_signal
+name|ZSTD_pthread_cond_signal
 argument_list|(
 operator|&
 name|ctx
@@ -387,6 +390,34 @@ name|size_t
 name|queueSize
 parameter_list|)
 block|{
+return|return
+name|POOL_create_advanced
+argument_list|(
+name|numThreads
+argument_list|,
+name|queueSize
+argument_list|,
+name|ZSTD_defaultCMem
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|POOL_ctx
+modifier|*
+name|POOL_create_advanced
+parameter_list|(
+name|size_t
+name|numThreads
+parameter_list|,
+name|size_t
+name|queueSize
+parameter_list|,
+name|ZSTD_customMem
+name|customMem
+parameter_list|)
+block|{
 name|POOL_ctx
 modifier|*
 name|ctx
@@ -409,14 +440,14 @@ operator|(
 name|POOL_ctx
 operator|*
 operator|)
-name|calloc
+name|ZSTD_calloc
 argument_list|(
-literal|1
-argument_list|,
 sizeof|sizeof
 argument_list|(
 name|POOL_ctx
 argument_list|)
+argument_list|,
+name|customMem
 argument_list|)
 expr_stmt|;
 if|if
@@ -485,7 +516,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|pthread_mutex_init
+name|ZSTD_pthread_mutex_init
 argument_list|(
 operator|&
 name|ctx
@@ -498,7 +529,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|pthread_cond_init
+name|ZSTD_pthread_cond_init
 argument_list|(
 operator|&
 name|ctx
@@ -511,7 +542,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|pthread_cond_init
+name|ZSTD_pthread_cond_init
 argument_list|(
 operator|&
 name|ctx
@@ -533,17 +564,19 @@ operator|->
 name|threads
 operator|=
 operator|(
-name|pthread_t
+name|ZSTD_pthread_t
 operator|*
 operator|)
-name|malloc
+name|ZSTD_malloc
 argument_list|(
 name|numThreads
 operator|*
 sizeof|sizeof
 argument_list|(
-name|pthread_t
+name|ZSTD_pthread_t
 argument_list|)
+argument_list|,
+name|customMem
 argument_list|)
 expr_stmt|;
 name|ctx
@@ -551,6 +584,12 @@ operator|->
 name|numThreads
 operator|=
 literal|0
+expr_stmt|;
+name|ctx
+operator|->
+name|customMem
+operator|=
+name|customMem
 expr_stmt|;
 comment|/* Check for errors */
 if|if
@@ -596,7 +635,7 @@ control|)
 block|{
 if|if
 condition|(
-name|pthread_create
+name|ZSTD_pthread_create
 argument_list|(
 operator|&
 name|ctx
@@ -659,7 +698,7 @@ name|ctx
 parameter_list|)
 block|{
 comment|/* Shut down the queue */
-name|pthread_mutex_lock
+name|ZSTD_pthread_mutex_lock
 argument_list|(
 operator|&
 name|ctx
@@ -673,7 +712,7 @@ name|shutdown
 operator|=
 literal|1
 expr_stmt|;
-name|pthread_mutex_unlock
+name|ZSTD_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|ctx
@@ -682,7 +721,7 @@ name|queueMutex
 argument_list|)
 expr_stmt|;
 comment|/* Wake up sleeping threads */
-name|pthread_cond_broadcast
+name|ZSTD_pthread_cond_broadcast
 argument_list|(
 operator|&
 name|ctx
@@ -690,7 +729,7 @@ operator|->
 name|queuePushCond
 argument_list|)
 expr_stmt|;
-name|pthread_cond_broadcast
+name|ZSTD_pthread_cond_broadcast
 argument_list|(
 operator|&
 name|ctx
@@ -719,7 +758,7 @@ operator|++
 name|i
 control|)
 block|{
-name|pthread_join
+name|ZSTD_pthread_join
 argument_list|(
 name|ctx
 operator|->
@@ -758,7 +797,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_destroy
+name|ZSTD_pthread_mutex_destroy
 argument_list|(
 operator|&
 name|ctx
@@ -766,7 +805,7 @@ operator|->
 name|queueMutex
 argument_list|)
 expr_stmt|;
-name|pthread_cond_destroy
+name|ZSTD_pthread_cond_destroy
 argument_list|(
 operator|&
 name|ctx
@@ -774,7 +813,7 @@ operator|->
 name|queuePushCond
 argument_list|)
 expr_stmt|;
-name|pthread_cond_destroy
+name|ZSTD_pthread_cond_destroy
 argument_list|(
 operator|&
 name|ctx
@@ -782,35 +821,35 @@ operator|->
 name|queuePopCond
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ctx
-operator|->
-name|queue
-condition|)
-name|free
+name|ZSTD_free
 argument_list|(
 name|ctx
 operator|->
 name|queue
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
 name|ctx
 operator|->
-name|threads
-condition|)
-name|free
+name|customMem
+argument_list|)
+expr_stmt|;
+name|ZSTD_free
 argument_list|(
 name|ctx
 operator|->
 name|threads
+argument_list|,
+name|ctx
+operator|->
+name|customMem
 argument_list|)
 expr_stmt|;
-name|free
+name|ZSTD_free
 argument_list|(
 name|ctx
+argument_list|,
+name|ctx
+operator|->
+name|customMem
 argument_list|)
 expr_stmt|;
 block|}
@@ -857,7 +896,7 @@ name|numThreads
 operator|*
 sizeof|sizeof
 argument_list|(
-name|pthread_t
+name|ZSTD_pthread_t
 argument_list|)
 return|;
 block|}
@@ -962,7 +1001,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|pthread_mutex_lock
+name|ZSTD_pthread_mutex_lock
 argument_list|(
 operator|&
 name|ctx
@@ -995,7 +1034,7 @@ operator|->
 name|shutdown
 condition|)
 block|{
-name|pthread_cond_wait
+name|ZSTD_pthread_cond_wait
 argument_list|(
 operator|&
 name|ctx
@@ -1053,7 +1092,7 @@ name|queueSize
 expr_stmt|;
 block|}
 block|}
-name|pthread_mutex_unlock
+name|ZSTD_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|ctx
@@ -1061,7 +1100,7 @@ operator|->
 name|queueMutex
 argument_list|)
 expr_stmt|;
-name|pthread_cond_signal
+name|ZSTD_pthread_cond_signal
 argument_list|(
 operator|&
 name|ctx
@@ -1094,11 +1133,18 @@ struct|struct
 name|POOL_ctx_s
 block|{
 name|int
-name|data
+name|dummy
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|POOL_ctx
+name|g_ctx
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|POOL_ctx
@@ -1112,6 +1158,34 @@ name|size_t
 name|queueSize
 parameter_list|)
 block|{
+return|return
+name|POOL_create_advanced
+argument_list|(
+name|numThreads
+argument_list|,
+name|queueSize
+argument_list|,
+name|ZSTD_defaultCMem
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|POOL_ctx
+modifier|*
+name|POOL_create_advanced
+parameter_list|(
+name|size_t
+name|numThreads
+parameter_list|,
+name|size_t
+name|queueSize
+parameter_list|,
+name|ZSTD_customMem
+name|customMem
+parameter_list|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1122,18 +1196,14 @@ name|void
 operator|)
 name|queueSize
 expr_stmt|;
-return|return
 operator|(
-name|POOL_ctx
-operator|*
+name|void
 operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|POOL_ctx
-argument_list|)
-argument_list|)
+name|customMem
+expr_stmt|;
+return|return
+operator|&
+name|g_ctx
 return|;
 block|}
 end_function
@@ -1147,10 +1217,21 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-name|free
+name|assert
 argument_list|(
+operator|!
 name|ctx
+operator|||
+name|ctx
+operator|==
+operator|&
+name|g_ctx
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ctx
 expr_stmt|;
 block|}
 end_function
@@ -1203,6 +1284,14 @@ return|return
 literal|0
 return|;
 comment|/* supports sizeof NULL */
+name|assert
+argument_list|(
+name|ctx
+operator|==
+operator|&
+name|g_ctx
+argument_list|)
+expr_stmt|;
 return|return
 sizeof|sizeof
 argument_list|(

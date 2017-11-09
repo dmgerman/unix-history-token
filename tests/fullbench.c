@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2015-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  * You may select, at your option, one of the above-listed licenses.  */
 end_comment
 
 begin_comment
@@ -2203,6 +2203,11 @@ else|:
 name|srcSize
 expr_stmt|;
 comment|/* speed relative to block */
+name|ZSTD_decompressBegin
+argument_list|(
+name|g_zdc
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 case|case
@@ -2464,15 +2469,6 @@ name|TIMELOOP_S
 operator|*
 name|TIME_SEC_MICROSEC
 decl_stmt|;
-name|UTIL_freq_t
-name|ticksPerSecond
-decl_stmt|;
-name|UTIL_initTimer
-argument_list|(
-operator|&
-name|ticksPerSecond
-argument_list|)
-expr_stmt|;
 name|DISPLAY
 argument_list|(
 literal|"%2i- %-30.30s : \r"
@@ -2514,15 +2510,12 @@ argument_list|)
 expr_stmt|;
 comment|/* give processor time to other processes */
 name|UTIL_waitForNextTick
-argument_list|(
-name|ticksPerSecond
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|UTIL_getTime
-argument_list|(
-operator|&
 name|clockStart
-argument_list|)
+operator|=
+name|UTIL_getTime
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -2533,8 +2526,6 @@ init|;
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 operator|<
 name|clockLoop
@@ -2593,8 +2584,6 @@ init|=
 name|UTIL_clockSpanMicro
 argument_list|(
 name|clockStart
-argument_list|,
-name|ticksPerSecond
 argument_list|)
 decl_stmt|;
 name|double

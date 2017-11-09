@@ -359,10 +359,10 @@ modifier|*
 name|FSE_createCTable
 parameter_list|(
 name|unsigned
-name|tableLog
+name|maxSymbolValue
 parameter_list|,
 name|unsigned
-name|maxSymbolValue
+name|tableLog
 parameter_list|)
 function_decl|;
 name|FSE_PUBLIC_API

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  * You may select, at your option, one of the above-listed licenses.  */
 end_comment
 
 begin_comment
@@ -33,16 +33,10 @@ directive|include
 file|"error_private.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|ZSTD_STATIC_LINKING_ONLY
-end_define
-
 begin_include
 include|#
 directive|include
-file|"zstd.h"
+file|"zstd_internal.h"
 end_include
 
 begin_comment

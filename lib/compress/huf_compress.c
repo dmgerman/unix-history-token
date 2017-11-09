@@ -811,7 +811,8 @@ modifier|*
 name|CTable
 parameter_list|,
 name|U32
-name|maxSymbolValue
+modifier|*
+name|maxSymbolValuePtr
 parameter_list|,
 specifier|const
 name|void
@@ -894,7 +895,8 @@ if|if
 condition|(
 name|nbSymbols
 operator|>
-name|maxSymbolValue
+operator|*
+name|maxSymbolValuePtr
 operator|+
 literal|1
 condition|)
@@ -1128,8 +1130,8 @@ operator|=
 literal|0
 init|;
 name|n
-operator|<=
-name|maxSymbolValue
+operator|<
+name|nbSymbols
 condition|;
 name|n
 operator|++
@@ -1154,6 +1156,13 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+operator|*
+name|maxSymbolValuePtr
+operator|=
+name|nbSymbols
+operator|-
+literal|1
+expr_stmt|;
 return|return
 name|readSize
 return|;

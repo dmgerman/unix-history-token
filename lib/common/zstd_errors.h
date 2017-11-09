@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  * You may select, at your option, one of the above-listed licenses.  */
 end_comment
 
 begin_ifndef
@@ -193,6 +193,7 @@ name|ZSTD_error_srcSize_wrong
 init|=
 literal|72
 block|,
+comment|/* following error codes are not stable and may be removed or changed in a future version */
 name|ZSTD_error_frameIndex_tooLarge
 init|=
 literal|100
@@ -204,7 +205,7 @@ block|,
 name|ZSTD_error_maxCode
 init|=
 literal|120
-comment|/* never EVER use this value directly, it may change in future versions! Use ZSTD_isError() instead */
+comment|/* never EVER use this value directly, it can change in future versions! Use ZSTD_isError() instead */
 block|}
 name|ZSTD_ErrorCode
 typedef|;

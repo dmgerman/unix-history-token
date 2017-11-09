@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016-present, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
+comment|/*  * Copyright (c) 2016-present, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_include
@@ -136,13 +136,35 @@ argument_list|,
 name|kFollowLinks
 argument_list|)
 expr_stmt|;
-name|FUZZ_ASSERT
-argument_list|(
+if|if
+condition|(
+operator|!
 name|files
-argument_list|)
+condition|)
+name|numFiles
+operator|=
+literal|0
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|numFiles
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: No files passed to %s\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -186,7 +208,7 @@ decl_stmt|;
 comment|/* Check that it is a regular file, and that the fileSize is valid */
 name|FUZZ_ASSERT_MSG
 argument_list|(
-name|UTIL_isRegFile
+name|UTIL_isRegularFile
 argument_list|(
 name|fileName
 argument_list|)

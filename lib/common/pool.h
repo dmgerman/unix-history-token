@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  * You may select, at your option, one of the above-listed licenses.  */
 end_comment
 
 begin_ifndef
@@ -34,6 +34,10 @@ include|#
 directive|include
 file|<stddef.h>
 comment|/* size_t */
+include|#
+directive|include
+file|"zstd_internal.h"
+comment|/* ZSTD_customMem */
 typedef|typedef
 name|struct
 name|POOL_ctx_s
@@ -49,6 +53,20 @@ name|numThreads
 parameter_list|,
 name|size_t
 name|queueSize
+parameter_list|)
+function_decl|;
+name|POOL_ctx
+modifier|*
+name|POOL_create_advanced
+parameter_list|(
+name|size_t
+name|numThreads
+parameter_list|,
+name|size_t
+name|queueSize
+parameter_list|,
+name|ZSTD_customMem
+name|customMem
 parameter_list|)
 function_decl|;
 comment|/*! POOL_free() :     Free a thread pool returned by POOL_create(). */

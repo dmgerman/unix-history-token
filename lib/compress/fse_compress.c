@@ -2706,6 +2706,14 @@ name|minBitsSrc
 else|:
 name|minBitsSymbols
 decl_stmt|;
+name|assert
+argument_list|(
+name|srcSize
+operator|>
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Not supported, RLE should be used instead */
 return|return
 name|minBits
 return|;
@@ -2761,6 +2769,14 @@ argument_list|,
 name|maxSymbolValue
 argument_list|)
 decl_stmt|;
+name|assert
+argument_list|(
+name|srcSize
+operator|>
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Not supported, RLE should be used instead */
 if|if
 condition|(
 name|tableLog
@@ -3496,6 +3512,7 @@ argument_list|)
 return|;
 comment|/* Too small tableLog, compression potentially impossible */
 block|{
+specifier|static
 name|U32
 specifier|const
 name|rtbTable

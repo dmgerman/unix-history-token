@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016 Tino Reichardt  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  *  * You can contact the author at:  * - zstdmt source repository: https://github.com/mcmilk/zstdmt  */
+comment|/**  * Copyright (c) 2016 Tino Reichardt  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  *  * You can contact the author at:  * - zstdmt source repository: https://github.com/mcmilk/zstdmt  */
 end_comment
 
 begin_comment
@@ -8,14 +8,14 @@ comment|/**  * This file will hold wrapper for systems, which do not support pth
 end_comment
 
 begin_comment
-comment|/* When ZSTD_MULTITHREAD is not defined, this file would become an empty translation unit. * Include some ISO C header code to prevent this and portably avoid related warnings. * (Visual C++: C4206 / GCC: -Wpedantic / Clang: -Wempty-translation-unit) */
+comment|/* create fake symbol to avoid empty trnaslation unit warning */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
+begin_decl_stmt
+name|int
+name|g_ZSTD_threading_useles_symbol
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -72,13 +72,13 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|pthread_t
+name|ZSTD_pthread_t
 modifier|*
 specifier|const
 name|thread
 init|=
 operator|(
-name|pthread_t
+name|ZSTD_pthread_t
 operator|*
 operator|)
 name|arg
@@ -104,9 +104,9 @@ end_function
 
 begin_function
 name|int
-name|pthread_create
+name|ZSTD_pthread_create
 parameter_list|(
-name|pthread_t
+name|ZSTD_pthread_t
 modifier|*
 name|thread
 parameter_list|,
@@ -189,10 +189,9 @@ end_function
 
 begin_function
 name|int
-name|_pthread_join
+name|ZSTD_pthread_join
 parameter_list|(
-name|pthread_t
-modifier|*
+name|ZSTD_pthread_t
 name|thread
 parameter_list|,
 name|void
@@ -208,7 +207,7 @@ if|if
 condition|(
 operator|!
 name|thread
-operator|->
+operator|.
 name|handle
 condition|)
 return|return
@@ -219,7 +218,7 @@ operator|=
 name|WaitForSingleObject
 argument_list|(
 name|thread
-operator|->
+operator|.
 name|handle
 argument_list|,
 name|INFINITE
@@ -241,7 +240,7 @@ operator|*
 name|value_ptr
 operator|=
 name|thread
-operator|->
+operator|.
 name|arg
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  */
+comment|/*  * Copyright (c) 2016-present, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
 end_comment
 
 begin_comment
@@ -49,7 +49,7 @@ name|size_t
 specifier|const
 name|kBufSize
 init|=
-name|ZSTD_BLOCKSIZE_ABSOLUTEMAX
+name|ZSTD_BLOCKSIZE_MAX
 decl_stmt|;
 end_decl_stmt
 
@@ -229,8 +229,10 @@ name|seed
 operator|=
 name|FUZZ_seed
 argument_list|(
+operator|&
 name|src
 argument_list|,
+operator|&
 name|size
 argument_list|)
 expr_stmt|;
@@ -383,7 +385,7 @@ name|error
 label|:
 ifndef|#
 directive|ifndef
-name|STATEFULL_FUZZING
+name|STATEFUL_FUZZING
 name|ZSTD_freeDStream
 argument_list|(
 name|dstream
