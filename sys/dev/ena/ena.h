@@ -284,6 +284,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ENA_MIN_MTU
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
 name|ENA_TSO_MAXSIZE
 value|65536
 end_define
@@ -967,6 +974,9 @@ name|rx_buf_tag
 decl_stmt|;
 name|int
 name|dma_width
+decl_stmt|;
+name|uint32_t
+name|max_mtu
 decl_stmt|;
 name|uint16_t
 name|max_tx_sgl_size
