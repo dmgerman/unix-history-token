@@ -13639,21 +13639,7 @@ argument_list|,
 literal|"failed to prepare tx bufs\n"
 argument_list|)
 expr_stmt|;
-name|counter_enter
-argument_list|()
-expr_stmt|;
-name|counter_u64_add_protected
-argument_list|(
-name|tx_ring
-operator|->
-name|tx_stats
-operator|.
-name|queue_stop
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|counter_u64_add_protected
+name|counter_u64_add
 argument_list|(
 name|tx_ring
 operator|->
@@ -13663,9 +13649,6 @@ name|prepare_ctx_err
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-name|counter_exit
-argument_list|()
 expr_stmt|;
 goto|goto
 name|dma_error

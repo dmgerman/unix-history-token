@@ -718,28 +718,10 @@ name|counter_u64_t
 name|bytes
 decl_stmt|;
 name|counter_u64_t
-name|queue_stop
-decl_stmt|;
-name|counter_u64_t
 name|prepare_ctx_err
 decl_stmt|;
 name|counter_u64_t
-name|queue_wakeup
-decl_stmt|;
-name|counter_u64_t
 name|dma_mapping_err
-decl_stmt|;
-comment|/* Not counted */
-name|counter_u64_t
-name|unsupported_desc_num
-decl_stmt|;
-comment|/* Not counted */
-name|counter_u64_t
-name|napi_comp
-decl_stmt|;
-comment|/* Not counted */
-name|counter_u64_t
-name|tx_poll
 decl_stmt|;
 name|counter_u64_t
 name|doorbells
@@ -776,10 +758,6 @@ decl_stmt|;
 name|counter_u64_t
 name|bad_csum
 decl_stmt|;
-comment|/* Not counted */
-name|counter_u64_t
-name|page_alloc_fail
-decl_stmt|;
 name|counter_u64_t
 name|mbuf_alloc_fail
 decl_stmt|;
@@ -788,10 +766,6 @@ name|dma_mapping_err
 decl_stmt|;
 name|counter_u64_t
 name|bad_desc_num
-decl_stmt|;
-comment|/* Not counted */
-name|counter_u64_t
-name|small_copy_len_pkt
 decl_stmt|;
 name|counter_u64_t
 name|bad_req_id
@@ -979,19 +953,6 @@ begin_struct
 struct|struct
 name|ena_stats_dev
 block|{
-comment|/* Not counted */
-name|counter_u64_t
-name|tx_timeout
-decl_stmt|;
-comment|/* Not counted */
-name|counter_u64_t
-name|io_suspend
-decl_stmt|;
-comment|/* Not counted */
-name|counter_u64_t
-name|io_resume
-decl_stmt|;
-comment|/* Not counted */
 name|counter_u64_t
 name|wd_expired
 decl_stmt|;
@@ -1001,7 +962,6 @@ decl_stmt|;
 name|counter_u64_t
 name|interface_down
 decl_stmt|;
-comment|/* Not counted */
 name|counter_u64_t
 name|admin_q_pause
 decl_stmt|;
