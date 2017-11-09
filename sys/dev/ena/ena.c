@@ -3253,7 +3253,9 @@ comment|/* filter, filterarg 	     */
 name|MJUM16BYTES
 argument_list|,
 comment|/* maxsize 		     */
-literal|1
+name|adapter
+operator|->
+name|max_rx_sgl_size
 argument_list|,
 comment|/* nsegments 		     */
 name|MJUM16BYTES
@@ -5066,6 +5068,9 @@ name|nsegs
 decl_stmt|,
 name|error
 decl_stmt|;
+name|int
+name|mlen
+decl_stmt|;
 comment|/* if previous allocated frag is not used */
 if|if
 condition|(
@@ -5117,6 +5122,42 @@ name|rx_ring
 operator|->
 name|rx_stats
 operator|.
+name|mjum_alloc_fail
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|rx_info
+operator|->
+name|mbuf
+operator|=
+name|m_getcl
+argument_list|(
+name|M_NOWAIT
+argument_list|,
+name|MT_DATA
+argument_list|,
+name|M_PKTHDR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unlikely
+argument_list|(
+name|rx_info
+operator|->
+name|mbuf
+operator|==
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|counter_u64_add
+argument_list|(
+name|rx_ring
+operator|->
+name|rx_stats
+operator|.
 name|mbuf_alloc_fail
 argument_list|,
 literal|1
@@ -5127,6 +5168,18 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
+name|mlen
+operator|=
+name|MCLBYTES
+expr_stmt|;
+block|}
+else|else
+block|{
+name|mlen
+operator|=
+name|MJUM16BYTES
+expr_stmt|;
 block|}
 comment|/* Set mbuf length*/
 name|rx_info
@@ -5143,7 +5196,7 @@ name|mbuf
 operator|->
 name|m_len
 operator|=
-name|MJUM16BYTES
+name|mlen
 expr_stmt|;
 comment|/* Map packets for DMA */
 name|ena_trace
@@ -5275,7 +5328,7 @@ name|ena_buf
 operator|->
 name|len
 operator|=
-name|MJUM16BYTES
+name|mlen
 expr_stmt|;
 name|ena_trace
 argument_list|(

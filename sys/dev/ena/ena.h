@@ -681,6 +681,9 @@ name|counter_u64_t
 name|bad_csum
 decl_stmt|;
 name|counter_u64_t
+name|mjum_alloc_fail
+decl_stmt|;
+name|counter_u64_t
 name|mbuf_alloc_fail
 decl_stmt|;
 name|counter_u64_t

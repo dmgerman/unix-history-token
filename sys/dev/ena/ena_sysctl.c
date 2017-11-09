@@ -910,6 +910,26 @@ name|rx_list
 argument_list|,
 name|OID_AUTO
 argument_list|,
+literal|"mjum_alloc_fail"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|rx_stats
+operator|->
+name|mjum_alloc_fail
+argument_list|,
+literal|"Failed jumbo mbuf allocs"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_COUNTER_U64
+argument_list|(
+name|ctx
+argument_list|,
+name|rx_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
 literal|"dma_mapping_err"
 argument_list|,
 name|CTLFLAG_RD
