@@ -481,6 +481,12 @@ block|,
 name|IB_MGMT_DEVICE_DATA
 init|=
 literal|192
+block|,
+name|IB_MGMT_MAD_SIZE
+init|=
+name|IB_MGMT_MAD_HDR
+operator|+
+name|IB_MGMT_MAD_DATA
 block|, }
 enum|;
 end_enum

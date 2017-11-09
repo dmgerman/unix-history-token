@@ -218,7 +218,10 @@ begin_define
 define|#
 directive|define
 name|WARN_ON
-value|BUG_ON
+parameter_list|(
+name|cond
+parameter_list|)
+value|({					\       bool __ret = (cond);					\       if (__ret) {						\ 		printf("WARNING %s failed at %s:%d\n",		\ 		    __stringify(cond), __FILE__, __LINE__);	\       }								\       unlikely(__ret);						\ })
 end_define
 
 begin_undef
