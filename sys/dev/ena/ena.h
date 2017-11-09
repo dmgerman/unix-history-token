@@ -160,36 +160,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENA_DEFAULT_SMALL_PACKET_LEN
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_DEFAULT_MAX_RX_BUFF_ALLOC_SIZE
-value|1536
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_RX_REFILL_THRESH_DEVIDER
+name|ENA_RX_REFILL_THRESH_DIVIDER
 value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_MAX_PUSH_PKT_SIZE
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_NAME_MAX_LEN
-value|20
 end_define
 
 begin_define
@@ -204,13 +176,6 @@ define|#
 directive|define
 name|ENA_PKT_MAX_BUFS
 value|19
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_STALL_TIMEOUT
-value|100
 end_define
 
 begin_define
@@ -237,13 +202,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENA_DMA_BITS_MASK
-value|40
-end_define
-
-begin_define
-define|#
-directive|define
 name|ENA_MAX_FRAME_LEN
 value|10000
 end_define
@@ -253,20 +211,6 @@ define|#
 directive|define
 name|ENA_MIN_FRAME_LEN
 value|60
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_RX_HASH_KEY_NUM
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_RX_THASH_TABLE_SIZE
-value|(1<< 8)
 end_define
 
 begin_define
@@ -340,29 +284,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENA_MAX_MTU
-value|9216
-end_define
-
-begin_define
-define|#
-directive|define
 name|ENA_TSO_MAXSIZE
 value|65536
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_TSO_NSEGS
-value|ENA_PKT_MAX_BUFS
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_RX_OFFSET
-value|NET_SKB_PAD + NET_IP_ALIGN
 end_define
 
 begin_define
@@ -394,21 +317,6 @@ parameter_list|,
 name|ring_size
 parameter_list|)
 value|(((idx) + 1)& ((ring_size) - 1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_RX_RING_IDX_ADD
-parameter_list|(
-name|idx
-parameter_list|,
-name|n
-parameter_list|,
-name|ring_size
-parameter_list|)
-define|\
-value|(((idx) + (n))& ((ring_size) - 1))
 end_define
 
 begin_define
@@ -821,20 +729,15 @@ name|ena_com_io_sq
 modifier|*
 name|ena_com_io_sq
 decl_stmt|;
-comment|/* The maximum length the driver can push to the device (For LLQ) */
+name|uint16_t
+name|qid
+decl_stmt|;
+comment|/* Determines if device will use LLQ or normal mode for TX */
 name|enum
 name|ena_admin_placement_policy_type
 name|tx_mem_queue_type
 decl_stmt|;
-name|uint16_t
-name|rx_small_copy_len
-decl_stmt|;
-name|uint16_t
-name|qid
-decl_stmt|;
-name|uint16_t
-name|mtu
-decl_stmt|;
+comment|/* The maximum length the driver can push to the device (For LLQ) */
 name|uint8_t
 name|tx_max_header_size
 decl_stmt|;
@@ -845,6 +748,7 @@ index|[
 name|ENA_PKT_MAX_BUFS
 index|]
 decl_stmt|;
+comment|/* 	 * Fields used for Adaptive Interrupt Modulation - to be implemented in 	 * the future releases 	 */
 name|uint32_t
 name|smoothed_interval
 decl_stmt|;
@@ -1064,11 +968,6 @@ decl_stmt|;
 name|int
 name|dma_width
 decl_stmt|;
-comment|/* 	 * RX packets that shorter that this len will be copied to the skb 	 * header 	 */
-name|unsigned
-name|int
-name|small_copy_len
-decl_stmt|;
 name|uint16_t
 name|max_tx_sgl_size
 decl_stmt|;
@@ -1082,13 +981,6 @@ comment|/* Tx fast path data */
 name|int
 name|num_queues
 decl_stmt|;
-name|unsigned
-name|int
-name|tx_usecs
-decl_stmt|,
-name|rx_usecs
-decl_stmt|;
-comment|/* Interrupt coalescing */
 name|unsigned
 name|int
 name|tx_ring_size
@@ -1107,9 +999,6 @@ decl_stmt|;
 name|bool
 name|rss_support
 decl_stmt|;
-name|uint32_t
-name|msg_enable
-decl_stmt|;
 name|uint8_t
 name|mac_addr
 index|[
@@ -1117,12 +1006,6 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* mdio and phy*/
-name|char
-name|name
-index|[
-name|ENA_NAME_MAX_LEN
-index|]
-decl_stmt|;
 name|bool
 name|link_status
 decl_stmt|;
@@ -1134,9 +1017,6 @@ name|up
 decl_stmt|;
 name|bool
 name|running
-decl_stmt|;
-name|uint32_t
-name|wol
 decl_stmt|;
 comment|/* Queue will represent one TX and one RX ring */
 name|struct
@@ -1239,20 +1119,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ENA_DEV_LOCK
-value|mtx_lock(&adapter->global_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENA_DEV_UNLOCK
-value|mtx_unlock(&adapter->global_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ENA_RING_MTX_LOCK
 parameter_list|(
 name|_ring
@@ -1279,42 +1145,6 @@ name|_ring
 parameter_list|)
 value|mtx_unlock(&(_ring)->ring_mtx)
 end_define
-
-begin_function_decl
-name|struct
-name|ena_dev
-modifier|*
-name|ena_efa_enadev_get
-parameter_list|(
-name|device_t
-name|pdev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ena_register_adapter
-parameter_list|(
-name|struct
-name|ena_adapter
-modifier|*
-name|adapter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ena_unregister_adapter
-parameter_list|(
-name|struct
-name|ena_adapter
-modifier|*
-name|adapter
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
