@@ -115,11 +115,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ENA_ADMIN_MSIX_VEC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|ENA_MAX_MSIX_VEC
 parameter_list|(
 name|io_queues
 parameter_list|)
-value|(1 + (io_queues))
+value|(ENA_ADMIN_MSIX_VEC + (io_queues))
 end_define
 
 begin_define
