@@ -979,6 +979,26 @@ argument_list|,
 literal|"Bad request id count"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_COUNTER_U64
+argument_list|(
+name|ctx
+argument_list|,
+name|rx_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"empty_rx_ring"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|rx_stats
+operator|->
+name|empty_rx_ring
+argument_list|,
+literal|"RX descriptors depletion count"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Stats read from device */
 name|hw_node

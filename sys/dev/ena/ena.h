@@ -922,6 +922,10 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
 name|struct
 name|task
 name|enqueue_task
@@ -931,6 +935,10 @@ name|taskqueue
 modifier|*
 name|enqueue_tq
 decl_stmt|;
+block|}
+struct|;
+struct|struct
+block|{
 name|struct
 name|task
 name|cmpl_task
@@ -940,6 +948,10 @@ name|taskqueue
 modifier|*
 name|cmpl_tq
 decl_stmt|;
+block|}
+struct|;
+block|}
+union|;
 union|union
 block|{
 name|struct
@@ -952,6 +964,9 @@ name|rx_stats
 decl_stmt|;
 block|}
 union|;
+name|int
+name|empty_rx_queue
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
