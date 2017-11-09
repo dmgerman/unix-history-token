@@ -1602,6 +1602,8 @@ block|{
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return;
 operator|*
@@ -1618,7 +1620,6 @@ index|]
 operator|.
 name|ds_addr
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1652,7 +1653,15 @@ argument_list|)
 decl_stmt|;
 name|uint32_t
 name|maxsize
-init|=
+decl_stmt|;
+name|uint64_t
+name|dma_space_addr
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|maxsize
+operator|=
 operator|(
 operator|(
 name|size
@@ -1666,20 +1675,16 @@ literal|1
 operator|)
 operator|*
 name|PAGE_SIZE
-decl_stmt|;
-name|uint64_t
+expr_stmt|;
 name|dma_space_addr
-init|=
+operator|=
 name|ENA_DMA_BIT_MASK
 argument_list|(
 name|adapter
 operator|->
 name|dma_width
 argument_list|)
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|dma_space_addr
@@ -1743,6 +1748,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -1791,6 +1798,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -1849,13 +1858,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
+operator|!=
+literal|0
+operator|)
 operator|||
+operator|(
 name|dma
 operator|->
 name|paddr
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|device_printf
@@ -2071,7 +2086,6 @@ name|registers
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2241,6 +2255,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -4071,6 +4087,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -4157,7 +4175,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4479,6 +4496,7 @@ block|}
 comment|/* Create LRO for the ring */
 if|if
 condition|(
+operator|(
 name|adapter
 operator|->
 name|ifp
@@ -4486,6 +4504,9 @@ operator|->
 name|if_capenable
 operator|&
 name|IFCAP_LRO
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|int
@@ -4502,6 +4523,8 @@ decl_stmt|;
 if|if
 condition|(
 name|err
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -4912,7 +4935,6 @@ name|free_rx_ids
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4966,6 +4988,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -5052,7 +5076,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5219,7 +5242,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
+operator|!=
+literal|0
+operator|)
 operator|||
 operator|(
 name|nsegs
@@ -5404,7 +5431,6 @@ name|mbuf
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5522,6 +5548,8 @@ condition|(
 name|unlikely
 argument_list|(
 name|rc
+operator|!=
+literal|0
 argument_list|)
 condition|)
 break|break;
@@ -5585,6 +5613,8 @@ condition|(
 name|unlikely
 argument_list|(
 name|rc
+operator|!=
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -5747,6 +5777,8 @@ condition|(
 name|rx_info
 operator|->
 name|mbuf
+operator|!=
+name|NULL
 condition|)
 name|ena_free_rx_mbuf
 argument_list|(
@@ -5758,7 +5790,6 @@ name|rx_info
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5897,7 +5928,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6022,7 +6052,6 @@ argument_list|(
 name|tx_ring
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6060,7 +6089,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6243,9 +6271,13 @@ condition|(
 name|tx_info
 operator|->
 name|mbuf
+operator|!=
+name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|counter_u64_add
@@ -6385,6 +6417,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -6436,6 +6470,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -6540,6 +6576,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -6591,6 +6629,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -6806,6 +6846,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 break|break;
 name|tx_info
@@ -7056,11 +7098,13 @@ name|ena_rx_ctx
 operator|->
 name|frag
 operator|&&
+operator|(
 name|ena_rx_ctx
 operator|->
 name|l3_proto
 operator|!=
 name|ENA_ETH_IO_L4_PROTO_UNKNOWN
+operator|)
 condition|)
 block|{
 name|M_HASHTYPE_SET
@@ -7691,11 +7735,9 @@ operator|==
 name|ENA_ETH_IO_L3_PROTO_IPV4
 operator|)
 operator|&&
-operator|(
 name|ena_rx_ctx
 operator|->
 name|l3_csum_err
-operator|)
 condition|)
 block|{
 comment|/* ipv4 checksum error */
@@ -7788,7 +7830,6 @@ name|CSUM_IP_VALID
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -7887,7 +7928,6 @@ name|ena_com_io_sq
 modifier|*
 name|io_sq
 decl_stmt|;
-comment|/* struct ena_eth_io_intr_reg intr_reg; */
 name|if_t
 name|ifp
 decl_stmt|;
@@ -8022,6 +8062,8 @@ condition|(
 name|unlikely
 argument_list|(
 name|rc
+operator|!=
+literal|0
 argument_list|)
 condition|)
 goto|goto
@@ -8062,8 +8104,9 @@ if|if
 condition|(
 name|unlikely
 argument_list|(
-operator|!
 name|mbuf
+operator|==
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -8131,19 +8174,27 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|ifp
 operator|->
 name|if_capenable
 operator|&
 name|IFCAP_RXCSUM
 operator|)
+operator|!=
+literal|0
+operator|)
 operator|||
+operator|(
 operator|(
 name|ifp
 operator|->
 name|if_capenable
 operator|&
 name|IFCAP_RXCSUM_IPV6
+operator|)
+operator|!=
+literal|0
 operator|)
 condition|)
 block|{
@@ -8202,13 +8253,18 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|ifp
 operator|->
 name|if_capenable
 operator|&
 name|IFCAP_LRO
 operator|)
+operator|!=
+literal|0
+operator|)
 operator|&&
+operator|(
 operator|(
 name|mbuf
 operator|->
@@ -8218,17 +8274,23 @@ name|csum_flags
 operator|&
 name|CSUM_IP_VALID
 operator|)
+operator|!=
+literal|0
+operator|)
 operator|&&
+operator|(
 name|ena_rx_ctx
 operator|.
 name|l4_proto
 operator|==
 name|ENA_ETH_IO_L4_PROTO_TCP
+operator|)
 condition|)
 block|{
 comment|/* 			 * Send to the stack if: 			 *  - LRO not enabled, or 			 *  - no LRO resources, or 			 *  - lro enqueue fails 			 */
 if|if
 condition|(
+operator|(
 name|rx_ring
 operator|->
 name|lro
@@ -8236,7 +8298,9 @@ operator|.
 name|lro_cnt
 operator|!=
 literal|0
+operator|)
 operator|&&
+operator|(
 name|tcp_lro_rx
 argument_list|(
 operator|&
@@ -8250,6 +8314,7 @@ literal|0
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 name|do_if_input
 operator|=
@@ -8259,6 +8324,8 @@ block|}
 if|if
 condition|(
 name|do_if_input
+operator|!=
+literal|0
 condition|)
 block|{
 name|ena_trace
@@ -8530,9 +8597,10 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+name|if_getdrvflags
+argument_list|(
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
 operator|)
@@ -8605,6 +8673,8 @@ name|ENA_RING_MTX_TRYLOCK
 argument_list|(
 name|rx_ring
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|rxc
@@ -8648,9 +8718,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|if_getdrvflags
+argument_list|(
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
 operator|)
@@ -8660,13 +8731,17 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
 name|txc
 operator|!=
 name|TX_BUDGET
+operator|)
 operator|&&
+operator|(
 name|rxc
 operator|!=
 name|RX_BUDGET
+operator|)
 condition|)
 break|break;
 block|}
@@ -8954,7 +9029,6 @@ index|]
 operator|.
 name|vector
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9172,7 +9246,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-return|return;
 block|}
 end_function
 
@@ -9266,9 +9339,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|(
 name|rc
 operator|=
 name|bus_activate_resource
@@ -9287,7 +9357,10 @@ name|irq
 operator|->
 name|res
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
 operator|!=
 literal|0
 condition|)
@@ -9310,9 +9383,6 @@ goto|goto
 name|err_res_free
 goto|;
 block|}
-if|if
-condition|(
-operator|(
 name|rc
 operator|=
 name|bus_setup_intr
@@ -9342,7 +9412,10 @@ name|irq
 operator|->
 name|cookie
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
 operator|!=
 literal|0
 condition|)
@@ -9418,6 +9491,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rcc
+operator|!=
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -9480,10 +9555,11 @@ name|rcc
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|adapter
 operator|->
 name|msix_enabled
+operator|==
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -9590,9 +9666,6 @@ goto|goto
 name|err
 goto|;
 block|}
-if|if
-condition|(
-operator|(
 name|rc
 operator|=
 name|bus_setup_intr
@@ -9624,7 +9697,10 @@ name|irq
 operator|->
 name|cookie
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
 operator|!=
 literal|0
 condition|)
@@ -9738,8 +9814,6 @@ condition|(
 name|irq
 operator|->
 name|requested
-operator|==
-name|true
 condition|)
 name|rcc
 operator|=
@@ -9761,6 +9835,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rcc
+operator|!=
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -9815,6 +9891,8 @@ block|}
 if|if
 condition|(
 name|rcc
+operator|!=
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -9920,6 +9998,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -9992,6 +10072,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -10008,7 +10090,6 @@ name|vector
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -10098,6 +10179,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -10172,6 +10255,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -10191,7 +10276,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -10391,15 +10475,23 @@ if|if
 condition|(
 name|unlikely
 argument_list|(
+operator|(
 name|rc
+operator|!=
+literal|0
+operator|)
 operator|&&
+operator|(
 name|rc
 operator|!=
 name|EOPNOTSUPP
+operator|)
 argument_list|)
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 comment|/* Configure hash function (if supported) */
 name|rc
@@ -10413,7 +10505,11 @@ if|if
 condition|(
 name|unlikely
 argument_list|(
+operator|(
 name|rc
+operator|!=
+literal|0
+operator|)
 operator|&&
 operator|(
 name|rc
@@ -10423,7 +10519,9 @@ operator|)
 argument_list|)
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 comment|/* Configure hash inputs (if supported) */
 name|rc
@@ -10437,7 +10535,11 @@ if|if
 condition|(
 name|unlikely
 argument_list|(
+operator|(
 name|rc
+operator|!=
+literal|0
+operator|)
 operator|&&
 operator|(
 name|rc
@@ -10447,10 +10549,14 @@ operator|)
 argument_list|)
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -10486,6 +10592,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -10569,13 +10677,14 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|device_is_attached
 argument_list|(
 name|adapter
 operator|->
 name|pdev
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -10599,6 +10708,8 @@ operator|!
 name|adapter
 operator|->
 name|running
+operator|==
+name|false
 condition|)
 block|{
 name|device_printf
@@ -10649,6 +10760,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|ena_trace
@@ -10673,6 +10786,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|ena_trace
@@ -10697,6 +10812,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|ena_trace
@@ -10721,6 +10838,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|ena_trace
@@ -10759,6 +10878,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|err_up_complete
@@ -11086,7 +11207,6 @@ name|IFM_FDX
 expr_stmt|;
 name|ENA_DEV_UNLOCK
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11114,11 +11234,10 @@ name|arg
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|adapter
 operator|->
 name|up
-operator|==
-name|false
 condition|)
 block|{
 name|sx_xlock
@@ -11143,7 +11262,6 @@ name|ioctl_sx
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -11246,26 +11364,34 @@ name|SIOCSIFFLAGS
 case|:
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_UP
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
 condition|(
 operator|(
+name|if_getdrvflags
+argument_list|(
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_flags
@@ -11275,6 +11401,9 @@ name|IFF_PROMISC
 operator||
 name|IFF_ALLMULTI
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -11319,11 +11448,16 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
+name|if_getdrvflags
+argument_list|(
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|sx_xlock
@@ -11415,14 +11549,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|reinit
+operator|!=
+literal|0
+operator|)
 operator|&&
 operator|(
+operator|(
+name|if_getdrvflags
+argument_list|(
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
 operator|)
 condition|)
 block|{
@@ -11497,6 +11640,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|feat
 operator|->
 name|offload
@@ -11510,6 +11654,9 @@ name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_TX_L4_IPV4_CSUM_PART_MASK
 operator||
 name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_TX_L3_CSUM_IPV4_MASK
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|caps
 operator||=
@@ -11517,6 +11664,7 @@ name|IFCAP_TXCSUM
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|feat
 operator|->
 name|offload
@@ -11528,6 +11676,9 @@ name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_TX_L4_IPV6_CSUM_FULL_MASK
 operator||
 name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_TX_L4_IPV6_CSUM_PART_MASK
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|caps
 operator||=
@@ -11535,6 +11686,7 @@ name|IFCAP_TXCSUM_IPV6
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|feat
 operator|->
 name|offload
@@ -11542,6 +11694,9 @@ operator|.
 name|tx
 operator|&
 name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_TSO_IPV4_MASK
+operator|)
+operator|!=
+literal|0
 condition|)
 name|caps
 operator||=
@@ -11549,6 +11704,7 @@ name|IFCAP_TSO4
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|feat
 operator|->
 name|offload
@@ -11556,6 +11712,9 @@ operator|.
 name|tx
 operator|&
 name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_TSO_IPV6_MASK
+operator|)
+operator|!=
+literal|0
 condition|)
 name|caps
 operator||=
@@ -11563,6 +11722,7 @@ name|IFCAP_TSO6
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|feat
 operator|->
 name|offload
@@ -11574,6 +11734,9 @@ name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_RX_L4_IPV4_CSUM_MASK
 operator||
 name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_RX_L3_CSUM_IPV4_MASK
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|caps
 operator||=
@@ -11581,6 +11744,7 @@ name|IFCAP_RXCSUM
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|feat
 operator|->
 name|offload
@@ -11588,6 +11752,9 @@ operator|.
 name|rx_supported
 operator|&
 name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_RX_L4_IPV6_CSUM_MASK
+operator|)
+operator|!=
+literal|0
 condition|)
 name|caps
 operator||=
@@ -11684,16 +11851,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cap
 operator|&
 name|IFCAP_TXCSUM
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|feat
 operator|&
 name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_TX_L3_CSUM_IPV4_MASK
+operator|)
+operator|!=
+literal|0
 condition|)
 name|flags
 operator||=
@@ -11701,6 +11876,7 @@ name|CSUM_IP
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|feat
 operator|&
 operator|(
@@ -11708,6 +11884,9 @@ name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_TX_L4_IPV4_CSUM_FULL_MASK
 operator||
 name|ENA_ADMIN_FEATURE_OFFLOAD_DESC_TX_L4_IPV4_CSUM_PART_MASK
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|flags
 operator||=
@@ -11718,9 +11897,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|cap
 operator|&
 name|IFCAP_TXCSUM_IPV6
+operator|)
+operator|!=
+literal|0
 condition|)
 name|flags
 operator||=
@@ -11730,9 +11913,13 @@ name|CSUM_IP6_TCP
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cap
 operator|&
 name|IFCAP_TSO4
+operator|)
+operator|!=
+literal|0
 condition|)
 name|flags
 operator||=
@@ -11740,9 +11927,13 @@ name|CSUM_IP_TSO
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cap
 operator|&
 name|IFCAP_TSO6
+operator|)
+operator|!=
+literal|0
 condition|)
 name|flags
 operator||=
@@ -11809,7 +12000,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|device_printf
@@ -12154,6 +12345,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -12202,7 +12395,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -12324,9 +12516,8 @@ name|true
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|offload
-operator|==
-name|false
 condition|)
 block|{
 name|ena_tx_ctx
@@ -12544,6 +12735,7 @@ name|ENA_ETH_IO_L4_PROTO_TCP
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|mbuf
 operator|->
 name|m_pkthdr
@@ -12555,6 +12747,9 @@ name|CSUM_IP_TCP
 operator||
 name|CSUM_IP6_TCP
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|ena_tx_ctx
 operator|->
@@ -12588,6 +12783,7 @@ name|ENA_ETH_IO_L4_PROTO_UDP
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|mbuf
 operator|->
 name|m_pkthdr
@@ -12599,6 +12795,9 @@ name|CSUM_IP_UDP
 operator||
 name|CSUM_IP6_UDP
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|ena_tx_ctx
 operator|->
@@ -12899,14 +13098,6 @@ index|[
 name|ena_qid
 index|]
 expr_stmt|;
-name|ENA_ASSERT
-argument_list|(
-operator|*
-name|mbuf
-argument_list|,
-literal|"mbuf is NULL\n"
-argument_list|)
-expr_stmt|;
 name|rc
 operator|=
 name|ena_check_and_collapse_mbuf
@@ -12919,6 +13110,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|ena_trace
@@ -13053,7 +13246,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|rc
+operator|!=
+literal|0
+operator|)
 operator|||
 operator|(
 name|nsegs
@@ -13460,11 +13657,12 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+name|if_getdrvflags
+argument_list|(
 name|adapter
 operator|->
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
 operator|)
@@ -13655,11 +13853,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|if_getdrvflags
+argument_list|(
 name|adapter
 operator|->
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
 operator|)
@@ -13715,6 +13914,8 @@ block|}
 if|if
 condition|(
 name|acum_pkts
+operator|!=
+literal|0
 condition|)
 block|{
 name|wmb
@@ -13794,6 +13995,7 @@ name|ifp
 decl_stmt|;
 while|while
 condition|(
+operator|!
 name|drbr_empty
 argument_list|(
 name|ifp
@@ -13802,13 +14004,12 @@ name|tx_ring
 operator|->
 name|br
 argument_list|)
-operator|==
-name|FALSE
 operator|&&
 operator|(
+name|if_getdrvflags
+argument_list|(
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
 operator|)
@@ -13874,11 +14075,12 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+name|if_getdrvflags
+argument_list|(
 name|adapter
 operator|->
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
 operator|)
@@ -14003,6 +14205,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
+operator|!=
+literal|0
 condition|)
 block|{
 name|taskqueue_enqueue
@@ -14025,12 +14229,20 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|is_drbr_empty
+operator|!=
+literal|0
+operator|)
 operator|&&
+operator|(
 name|ENA_RING_MTX_TRYLOCK
 argument_list|(
 name|tx_ring
 argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|ena_start_xmit
@@ -14117,6 +14329,7 @@ name|tx_ring
 control|)
 if|if
 condition|(
+operator|!
 name|drbr_empty
 argument_list|(
 name|ifp
@@ -14125,8 +14338,6 @@ name|tx_ring
 operator|->
 name|br
 argument_list|)
-operator|==
-name|FALSE
 condition|)
 block|{
 name|ENA_RING_MTX_LOCK
@@ -14154,7 +14365,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14267,7 +14477,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|io_queue_num
+operator|)
 return|;
 block|}
 end_function
@@ -14355,6 +14567,8 @@ name|powerof2
 argument_list|(
 name|queue_size
 argument_list|)
+operator|!=
+literal|0
 condition|)
 break|break;
 name|v
@@ -14388,8 +14602,9 @@ if|if
 condition|(
 name|unlikely
 argument_list|(
-operator|!
 name|queue_size
+operator|==
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -14403,7 +14618,9 @@ literal|"Invalid queue size\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENA_COM_FAULT
+operator|)
 return|;
 block|}
 operator|*
@@ -14439,7 +14656,9 @@ name|max_packet_rx_descs
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|queue_size
+operator|)
 return|;
 block|}
 end_function
@@ -14492,6 +14711,8 @@ condition|(
 name|unlikely
 argument_list|(
 name|rc
+operator|!=
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -14570,7 +14791,11 @@ if|if
 condition|(
 name|unlikely
 argument_list|(
+operator|(
 name|rc
+operator|!=
+literal|0
+operator|)
 operator|&&
 operator|(
 name|rc
@@ -14611,7 +14836,11 @@ if|if
 condition|(
 name|unlikely
 argument_list|(
+operator|(
 name|rc
+operator|!=
+literal|0
+operator|)
 operator|&&
 operator|(
 name|rc
@@ -14643,7 +14872,11 @@ if|if
 condition|(
 name|unlikely
 argument_list|(
+operator|(
 name|rc
+operator|!=
+literal|0
+operator|)
 operator|&&
 operator|(
 name|rc
@@ -14778,6 +15011,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -14787,7 +15022,7 @@ operator|->
 name|pdev
 argument_list|,
 literal|"WARNING: RSS was not properly initialized,"
-literal|" it will affect bandwith\n"
+literal|" it will affect bandwidth\n"
 argument_list|)
 expr_stmt|;
 name|adapter
@@ -14848,6 +15083,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|ena_trace
@@ -14944,6 +15181,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -15036,6 +15275,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -15046,7 +15287,9 @@ literal|"failed to init mmio read less\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 comment|/* 	 * The PCIe configuration space revision id indicate if mmio reg 	 * read is disabled 	 */
@@ -15081,6 +15324,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -15104,6 +15349,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -15170,6 +15417,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -15209,6 +15458,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -15271,6 +15522,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -15301,7 +15554,9 @@ argument_list|)
 operator|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|err_admin_init
 label|:
@@ -15323,7 +15578,9 @@ name|ena_dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -15364,6 +15621,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -15376,7 +15635,9 @@ literal|"Error with MSI-X enablement\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 name|ena_setup_mgmnt_intr
@@ -15394,6 +15655,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -15422,7 +15685,9 @@ name|ena_dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|err_disable_msix
 label|:
@@ -15432,7 +15697,9 @@ name|adapter
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -15665,13 +15932,14 @@ if|if
 condition|(
 name|unlikely
 argument_list|(
-operator|!
 name|ena_com_get_admin_running_state
 argument_list|(
 name|adapter
 operator|->
 name|ena_dev
 argument_list|)
+operator|==
+name|false
 argument_list|)
 condition|)
 block|{
@@ -15780,7 +16048,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|bintime_isset
 argument_list|(
 operator|&
@@ -15788,6 +16055,8 @@ name|tx_buf
 operator|->
 name|timestamp
 argument_list|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 name|time
@@ -16011,6 +16280,8 @@ condition|(
 name|unlikely
 argument_list|(
 name|rc
+operator|!=
+literal|0
 argument_list|)
 condition|)
 return|return;
@@ -16272,6 +16543,8 @@ expr_stmt|;
 if|if
 condition|(
 name|host_info
+operator|!=
+name|NULL
 condition|)
 name|ena_update_host_info
 argument_list|(
@@ -16498,6 +16771,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -16529,6 +16804,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -16560,6 +16837,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -16706,16 +16985,6 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
-name|struct
-name|sysctl_ctx_list
-modifier|*
-name|ctx
-decl_stmt|;
-name|struct
-name|sysctl_oid_list
-modifier|*
-name|children
-decl_stmt|;
 name|adapter
 operator|=
 name|device_get_softc
@@ -16728,23 +16997,6 @@ operator|->
 name|pdev
 operator|=
 name|pdev
-expr_stmt|;
-name|ctx
-operator|=
-name|device_get_sysctl_ctx
-argument_list|(
-name|pdev
-argument_list|)
-expr_stmt|;
-name|children
-operator|=
-name|SYSCTL_CHILDREN
-argument_list|(
-name|device_get_sysctl_tree
-argument_list|(
-name|pdev
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -16768,113 +17020,6 @@ operator|->
 name|ioctl_sx
 argument_list|,
 literal|"ENA ioctl sx"
-argument_list|)
-expr_stmt|;
-comment|/* Sysctl calls for Watchdog service */
-name|SYSCTL_ADD_INT
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"wd_active"
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|wd_active
-argument_list|,
-literal|0
-argument_list|,
-literal|"Watchdog is active"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_QUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"keep_alive_timeout"
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|keep_alive_timeout
-argument_list|,
-literal|"Timeout for Keep Alive messages"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_QUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"missing_tx_timeout"
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|missing_tx_timeout
-argument_list|,
-literal|"Timeout for TX completion"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_U32
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"missing_tx_max_queues"
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|missing_tx_max_queues
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of TX queues to check per run"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_U32
-argument_list|(
-name|ctx
-argument_list|,
-name|children
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"missing_tx_threshold"
-argument_list|,
-name|CTLFLAG_RWTUN
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|missing_tx_threshold
-argument_list|,
-literal|0
-argument_list|,
-literal|"Max number of timeouted packets"
 argument_list|)
 expr_stmt|;
 comment|/* Set up the timer service */
@@ -16943,6 +17088,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -17119,6 +17266,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -17292,6 +17441,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|err_com_free
@@ -17306,6 +17457,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|err_tx_tag_free
@@ -17341,6 +17494,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -17366,6 +17521,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -17796,6 +17953,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -17816,6 +17975,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -18073,7 +18234,6 @@ name|link_status
 operator|=
 name|status
 expr_stmt|;
-return|return;
 block|}
 end_function
 
