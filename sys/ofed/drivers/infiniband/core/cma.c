@@ -157,37 +157,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|unify_tcp_port_space
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|module_param
-argument_list|(
-name|unify_tcp_port_space
-argument_list|,
-name|int
-argument_list|,
-literal|0644
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_PARM_DESC
-argument_list|(
-name|unify_tcp_port_space
-argument_list|,
-literal|"Unify the host TCP and RDMA port "
-literal|"space allocation (default=1)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
