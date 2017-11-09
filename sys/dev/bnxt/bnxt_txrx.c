@@ -2525,7 +2525,11 @@ if|if
 condition|(
 name|flags2
 operator|&
+operator|(
 name|RX_PKT_CMPL_FLAGS2_L4_CS_CALC
+operator||
+name|RX_PKT_CMPL_FLAGS2_T_L4_CS_CALC
+operator|)
 condition|)
 block|{
 name|ri
@@ -2540,7 +2544,11 @@ operator|!
 operator|(
 name|errors
 operator|&
+operator|(
 name|RX_PKT_CMPL_ERRORS_L4_CS_ERROR
+operator||
+name|RX_PKT_CMPL_ERRORS_T_L4_CS_ERROR
+operator|)
 operator|)
 condition|)
 block|{
