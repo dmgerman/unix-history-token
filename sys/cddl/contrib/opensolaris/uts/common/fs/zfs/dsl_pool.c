@@ -1881,10 +1881,6 @@ argument_list|,
 name|txg
 argument_list|)
 decl_stmt|;
-name|objset_t
-modifier|*
-name|os
-decl_stmt|;
 name|dsl_dataset_t
 modifier|*
 name|ds
@@ -2180,6 +2176,14 @@ name|ds
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+block|{
+name|objset_t
+modifier|*
+name|os
+decl_stmt|;
 name|rrw_enter
 argument_list|(
 operator|&
@@ -2222,9 +2226,6 @@ argument_list|,
 name|FTAG
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
 name|zfs_create_fs
 argument_list|(
 name|os
@@ -2236,6 +2237,7 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|dsl_dataset_rele
