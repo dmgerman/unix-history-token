@@ -793,6 +793,12 @@ comment|/* Not counted */
 name|counter_u64_t
 name|small_copy_len_pkt
 decl_stmt|;
+name|counter_u64_t
+name|bad_req_id
+decl_stmt|;
+name|counter_u64_t
+name|empty_rx_ring
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -801,11 +807,19 @@ begin_struct
 struct|struct
 name|ena_ring
 block|{
-comment|/* Holds the empty requests for TX out of order completions */
+comment|/* Holds the empty requests for TX/RX out of order completions */
+union|union
+block|{
 name|uint16_t
 modifier|*
 name|free_tx_ids
 decl_stmt|;
+name|uint16_t
+modifier|*
+name|free_rx_ids
+decl_stmt|;
+block|}
+union|;
 name|struct
 name|ena_com_dev
 modifier|*
