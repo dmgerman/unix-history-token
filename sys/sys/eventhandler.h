@@ -116,10 +116,7 @@ decl_stmt|;
 name|int
 name|el_flags
 decl_stmt|;
-define|#
-directive|define
-name|EHL_INITTED
-value|(1<<0)
+comment|/* Unused. */
 name|u_int
 name|el_runcount
 decl_stmt|;
@@ -200,11 +197,38 @@ name|list
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {			\ 	struct eventhandler_entry *_ep;					\ 	struct eventhandler_entry_ ## name *_t;				\ 									\ 	KASSERT((list)->el_flags& EHL_INITTED,				\  	   ("eventhandler_invoke: running non-inited list"));		\ 	EHL_LOCK_ASSERT((list), MA_OWNED);				\ 	(list)->el_runcount++;						\ 	KASSERT((list)->el_runcount> 0,				\ 	    ("eventhandler_invoke: runcount overflow"));		\ 	CTR0(KTR_EVH, "eventhandler_invoke(\"" __STRING(name) "\")");	\ 	TAILQ_FOREACH(_ep,&((list)->el_entries), ee_link) {		\ 		if (_ep->ee_priority != EHE_DEAD_PRIORITY) {		\ 			EHL_UNLOCK((list));				\ 			_t = (struct eventhandler_entry_ ## name *)_ep;	\ 			CTR1(KTR_EVH, "eventhandler_invoke: executing %p", \  			    (void *)_t->eh_func);			\ 			_t->eh_func(_ep->ee_arg , ## __VA_ARGS__);	\ 			EHL_LOCK((list));				\ 		}							\ 	}								\ 	KASSERT((list)->el_runcount> 0,				\ 	    ("eventhandler_invoke: runcount underflow"));		\ 	(list)->el_runcount--;						\ 	if ((list)->el_runcount == 0)					\ 		eventhandler_prune_list(list);				\ 	EHL_UNLOCK((list));						\ } while (0)
+value|do {			\ 	struct eventhandler_entry *_ep;					\ 	struct eventhandler_entry_ ## name *_t;				\ 									\ 	EHL_LOCK_ASSERT((list), MA_OWNED);				\ 	(list)->el_runcount++;						\ 	KASSERT((list)->el_runcount> 0,				\ 	    ("eventhandler_invoke: runcount overflow"));		\ 	CTR0(KTR_EVH, "eventhandler_invoke(\"" __STRING(name) "\")");	\ 	TAILQ_FOREACH(_ep,&((list)->el_entries), ee_link) {		\ 		if (_ep->ee_priority != EHE_DEAD_PRIORITY) {		\ 			EHL_UNLOCK((list));				\ 			_t = (struct eventhandler_entry_ ## name *)_ep;	\ 			CTR1(KTR_EVH, "eventhandler_invoke: executing %p", \  			    (void *)_t->eh_func);			\ 			_t->eh_func(_ep->ee_arg , ## __VA_ARGS__);	\ 			EHL_LOCK((list));				\ 		}							\ 	}								\ 	KASSERT((list)->el_runcount> 0,				\ 	    ("eventhandler_invoke: runcount underflow"));		\ 	(list)->el_runcount--;						\ 	if ((list)->el_runcount == 0)					\ 		eventhandler_prune_list(list);				\ 	EHL_UNLOCK((list));						\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * Slow handlers are entirely dynamic; lists are created  * when entries are added to them, and thus have no concept of "owner",  *  * Slow handlers need to be declared, but do not need to be defined. The  * declaration must be in scope wherever the handler is to be invoked.  */
+comment|/*  * You can optionally use the EVENTHANDLER_LIST and EVENTHANDLER_DIRECT macros  * to pre-define a symbol for the eventhandler list. This symbol can be used by  * EVENTHANDLER_DIRECT_INVOKE, which has the advantage of not needing to do a  * locked search of the global list of eventhandler lists. At least  * EVENTHANDLER_LIST_DEFINE must be be used for EVENTHANDLER_DIRECT_INVOKE to  * work. EVENTHANDLER_LIST_DECLARE is only needed if the call to  * EVENTHANDLER_DIRECT_INVOKE is in a different compilation unit from  * EVENTHANDLER_LIST_DEFINE. If the events are even relatively high frequency  * it is suggested that you directly define a list for them.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVENTHANDLER_LIST_DECLARE
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|extern struct eventhandler_list *_eventhandler_list_ ## name		\  #define	EVENTHANDLER_LIST_DEFINE(name)					\ struct eventhandler_list *_eventhandler_list_ ## name ;			\ static void _ehl_init_ ## name (void * ctx __unused)			\ {									\ 	_eventhandler_list_ ## name = eventhandler_create_list(#name);	\ }									\ SYSINIT(name ## _ehl_init, SI_SUB_EVENTHANDLER, SI_ORDER_ANY,		\ 	    _ehl_init_ ## name, NULL);					\ 	struct __hack
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVENTHANDLER_DIRECT_INVOKE
+parameter_list|(
+name|name
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {			\ 	struct eventhandler_list *_el;					\ 									\ 	_el = _eventhandler_list_ ## name ;				\ 	if (!TAILQ_EMPTY(&_el->el_entries)) {				\ 		EHL_LOCK(_el);						\ 		_EVENTHANDLER_INVOKE(name, _el , ## __VA_ARGS__);	\ 	}								\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * Event handlers need to be declared, but do not need to be defined. The  * declaration must be in scope wherever the handler is to be invoked.  */
 end_comment
 
 begin_define
@@ -373,6 +397,20 @@ name|struct
 name|eventhandler_list
 modifier|*
 name|list
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|eventhandler_list
+modifier|*
+name|eventhandler_create_list
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
