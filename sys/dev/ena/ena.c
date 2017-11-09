@@ -14776,7 +14776,7 @@ name|get_feat_ctx
 operator|->
 name|max_queues
 operator|.
-name|max_sq_num
+name|max_cq_num
 expr_stmt|;
 name|io_queue_num
 operator|=
