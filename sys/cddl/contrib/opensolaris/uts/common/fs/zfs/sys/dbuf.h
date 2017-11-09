@@ -934,6 +934,16 @@ name|_db
 parameter_list|)
 define|\
 value|((_db)->db_objset->os_secondary_cache == ZFS_CACHE_ALL ||	\ 	(dbuf_is_metadata(_db)&&					\ 	((_db)->db_objset->os_secondary_cache == ZFS_CACHE_METADATA)))
+define|#
+directive|define
+name|DNODE_LEVEL_IS_L2CACHEABLE
+parameter_list|(
+name|_dn
+parameter_list|,
+name|_level
+parameter_list|)
+define|\
+value|((_dn)->dn_objset->os_secondary_cache == ZFS_CACHE_ALL ||	\ 	(((_level)> 0 ||						\ 	DMU_OT_IS_METADATA((_dn)->dn_handle->dnh_dnode->dn_type))&&	\ 	((_dn)->dn_objset->os_secondary_cache == ZFS_CACHE_METADATA)))
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG
