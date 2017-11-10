@@ -1923,6 +1923,9 @@ name|hca_cap_union
 argument_list|)
 index|]
 decl_stmt|;
+name|phys_addr_t
+name|iseg_base
+decl_stmt|;
 name|struct
 name|mlx5_init_seg
 name|__iomem
