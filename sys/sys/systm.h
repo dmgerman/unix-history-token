@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -31,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/callout.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
 end_include
 
 begin_include
