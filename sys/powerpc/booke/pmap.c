@@ -13071,6 +13071,14 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
+name|m
+operator|->
+name|md
+operator|.
+name|pv_tracked
+operator|=
+literal|0
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
