@@ -1774,6 +1774,23 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|mlx5_eqe_general_notification_event
+block|{
+name|u32
+name|rq_user_index_delay_drop
+decl_stmt|;
+name|u32
+name|rsvd0
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_union
 union|union
 name|ev_data
@@ -1827,6 +1844,10 @@ decl_stmt|;
 name|struct
 name|mlx5_eqe_vport_change
 name|vport_change
+decl_stmt|;
+name|struct
+name|mlx5_eqe_general_notification_event
+name|general_notifications
 decl_stmt|;
 block|}
 name|__packed
@@ -5067,6 +5088,16 @@ literal|2
 return|;
 block|}
 end_function
+
+begin_enum
+enum|enum
+block|{
+name|MLX5_GEN_EVENT_SUBTYPE_DELAY_DROP_TIMEOUT
+init|=
+literal|0x1
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/* 8 regular priorities + 1 for multicast */
