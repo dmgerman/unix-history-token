@@ -2994,8 +2994,11 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* 	 * XXX If the number of MSI-X vectors changes during re-init, this 	 * won't see it and adjust. 	 */
 if|if
 condition|(
+name|attaching
+operator|&&
 operator|(
 name|error
 operator|=
