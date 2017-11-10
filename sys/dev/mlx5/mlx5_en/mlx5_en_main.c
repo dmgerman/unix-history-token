@@ -11525,6 +11525,12 @@ name|err
 operator|)
 return|;
 block|}
+name|ifp
+operator|->
+name|if_mtu
+operator|=
+name|sw_mtu
+expr_stmt|;
 name|err
 operator|=
 name|mlx5_query_port_oper_mtu
@@ -11548,6 +11554,11 @@ literal|"Query port MTU, after setting new "
 literal|"MTU value, failed\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -11607,11 +11618,13 @@ name|sw_mtu
 argument_list|)
 expr_stmt|;
 block|}
-name|ifp
+name|priv
 operator|->
-name|if_mtu
+name|params_ethtool
+operator|.
+name|hw_mtu
 operator|=
-name|sw_mtu
+name|hw_mtu
 expr_stmt|;
 return|return
 operator|(
