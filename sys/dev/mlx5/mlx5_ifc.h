@@ -180,6 +180,20 @@ end_enum
 begin_enum
 enum|enum
 block|{
+name|MLX5_SET_HCA_CAP_OP_MOD_GENERAL_DEVICE
+init|=
+literal|0x0
+block|,
+name|MLX5_SET_HCA_CAP_OP_MOD_ATOMIC
+init|=
+literal|0x3
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
 name|MLX5_CMD_OP_QUERY_HCA_CAP
 init|=
 literal|0x100
