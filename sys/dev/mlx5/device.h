@@ -3989,6 +3989,10 @@ block|,
 name|MLX5_FLOW_TABLE_TYPE_SNIFFER_TX
 init|=
 literal|6
+block|,
+name|MLX5_FLOW_TABLE_TYPE_NIC_RX_RDMA
+init|=
+literal|7
 block|, }
 enum|;
 end_enum
