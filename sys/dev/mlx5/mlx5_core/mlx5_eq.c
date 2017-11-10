@@ -2162,7 +2162,7 @@ name|priv
 operator|.
 name|eq_table
 decl_stmt|;
-name|u32
+name|u64
 name|async_event_mask
 init|=
 name|MLX5_ASYNC_EVENT_MASK
