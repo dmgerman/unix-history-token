@@ -14927,8 +14927,6 @@ operator||
 name|fc
 operator||
 name|fec
-operator||
-name|mdi
 expr_stmt|;
 if|if
 condition|(
@@ -14965,6 +14963,10 @@ operator|->
 name|supported
 expr_stmt|;
 block|}
+name|rcap
+operator||=
+name|mdi
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
