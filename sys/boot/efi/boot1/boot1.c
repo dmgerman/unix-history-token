@@ -2027,6 +2027,13 @@ operator|->
 name|FilePath
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|text
+operator|!=
+name|NULL
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"   Load Path: %S\n"
@@ -2114,6 +2121,7 @@ argument_list|(
 name|text
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Get all the device handles */
