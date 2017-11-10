@@ -3438,6 +3438,7 @@ name|mlx5_core_dev
 modifier|*
 name|dev
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|inb
