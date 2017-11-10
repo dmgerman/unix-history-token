@@ -294,15 +294,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|swapout_procs
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|kernacc
 parameter_list|(
