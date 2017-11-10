@@ -6153,10 +6153,14 @@ name|defined
 argument_list|(
 name|NO_SWAPPING
 argument_list|)
-comment|/* 	 * Idle process swapout -- run once per second. 	 */
+comment|/* 	 * Idle process swapout -- run once per second when we are reclaiming 	 * pages. 	 */
 if|if
 condition|(
 name|vm_swap_idle_enabled
+operator|&&
+name|pass
+operator|>
+literal|0
 condition|)
 block|{
 specifier|static
