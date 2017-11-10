@@ -1399,6 +1399,14 @@ operator|=
 name|AcpiDmTableInfoNfit6
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_NFIT_TYPE_CAPABILITIES
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoNfit7
+expr_stmt|;
+break|break;
 default|default:
 name|DtFatal
 argument_list|(
@@ -1544,9 +1552,6 @@ name|LineCount
 operator|=
 name|Count
 expr_stmt|;
-name|DtPopSubtable
-argument_list|()
-expr_stmt|;
 break|break;
 case|case
 name|ACPI_NFIT_TYPE_SMBIOS
@@ -1681,9 +1686,6 @@ operator|(
 name|UINT16
 operator|)
 name|Count
-expr_stmt|;
-name|DtPopSubtable
-argument_list|()
 expr_stmt|;
 break|break;
 default|default:

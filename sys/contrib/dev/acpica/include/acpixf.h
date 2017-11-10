@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20170929
+value|0x20171110
 end_define
 
 begin_include

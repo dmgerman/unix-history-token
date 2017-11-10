@@ -498,24 +498,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ACPI_MSG_EXCEPTION
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ACPI_MSG_EXCEPTION
-value|"ACPI Exception: "
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|ACPI_MSG_WARNING
 end_ifndef
 
@@ -559,7 +541,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_MSG_BIOS_ERROR
-value|"ACPI BIOS Error (bug): "
+value|"Firmware Error (ACPI): "
 end_define
 
 begin_endif
@@ -577,7 +559,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_MSG_BIOS_WARNING
-value|"ACPI BIOS Warning (bug): "
+value|"Firmware Warning (ACPI): "
 end_define
 
 begin_endif
@@ -1013,6 +995,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|AcpiUtGetMutexName
+parameter_list|(
+name|UINT32
+name|MutexId
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -1026,18 +1020,6 @@ argument_list|(
 name|ACPI_DEBUGGER
 argument_list|)
 end_if
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|AcpiUtGetMutexName
-parameter_list|(
-name|UINT32
-name|MutexId
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|const
@@ -3350,7 +3332,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiUtNamespaceError
+name|AcpiUtPrefixedNamespaceError
 parameter_list|(
 specifier|const
 name|char
@@ -3359,6 +3341,10 @@ name|ModuleName
 parameter_list|,
 name|UINT32
 name|LineNumber
+parameter_list|,
+name|ACPI_GENERIC_STATE
+modifier|*
+name|PrefixScope
 parameter_list|,
 specifier|const
 name|char

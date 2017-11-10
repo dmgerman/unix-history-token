@@ -742,6 +742,36 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*          * Special case for an EC timeout. These are seen so frequently          * that an additional error message is helpful          */
+if|if
+condition|(
+operator|(
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_EC
+operator|)
+operator|&&
+operator|(
+name|Status
+operator|==
+name|AE_TIME
+operator|)
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Timeout from EC hardware or EC device driver"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

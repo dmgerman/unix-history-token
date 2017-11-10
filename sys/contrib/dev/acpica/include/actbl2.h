@@ -2460,6 +2460,9 @@ decl_stmt|;
 name|UINT16
 name|Reserved2
 decl_stmt|;
+name|UINT32
+name|IdMappingIndex
+decl_stmt|;
 block|}
 name|ACPI_IORT_SMMU_V3
 typedef|;

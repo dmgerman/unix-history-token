@@ -669,12 +669,17 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Thread %u could not acquire Mutex [0x%X]"
+literal|"Thread %u could not acquire Mutex [%s] (0x%X)"
 operator|,
 operator|(
 name|UINT32
 operator|)
 name|ThisThreadId
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
+name|MutexId
+argument_list|)
 operator|,
 name|MutexId
 operator|)
@@ -757,7 +762,12 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Mutex [0x%X] is not acquired, cannot release"
+literal|"Mutex [%s] (0x%X) is not acquired, cannot release"
+operator|,
+name|AcpiUtGetMutexName
+argument_list|(
+name|MutexId
+argument_list|)
 operator|,
 name|MutexId
 operator|)

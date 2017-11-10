@@ -4350,7 +4350,7 @@ name|ACPI_OBJECT_TYPE
 modifier|*
 name|Types
 decl_stmt|;
-comment|/*      * Arguments to be passed to method for the command      * Threads -      *   the Number of threads, ID of current thread and      *   Index of current thread inside all them created.      */
+comment|/*      * Arguments to be passed to method for the commands Threads and      * Background. Note, ACPI specifies a maximum of 7 arguments (0 - 6).      *      * For the Threads command, the Number of threads, ID of current      * thread and Index of current thread inside all them created.      */
 name|char
 name|InitArgs
 decl_stmt|;
@@ -4360,7 +4360,7 @@ name|ACPI_DEBUGGER
 name|ACPI_OBJECT_TYPE
 name|ArgTypes
 index|[
-literal|4
+name|ACPI_METHOD_NUM_ARGS
 index|]
 decl_stmt|;
 endif|#
@@ -4369,7 +4369,7 @@ name|char
 modifier|*
 name|Arguments
 index|[
-literal|4
+name|ACPI_METHOD_NUM_ARGS
 index|]
 decl_stmt|;
 name|char

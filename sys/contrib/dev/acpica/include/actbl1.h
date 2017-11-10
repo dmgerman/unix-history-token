@@ -3622,10 +3622,14 @@ name|ACPI_NFIT_TYPE_FLUSH_ADDRESS
 init|=
 literal|6
 block|,
-name|ACPI_NFIT_TYPE_RESERVED
+name|ACPI_NFIT_TYPE_CAPABILITIES
 init|=
 literal|7
-comment|/* 7 and greater are reserved */
+block|,
+name|ACPI_NFIT_TYPE_RESERVED
+init|=
+literal|8
+comment|/* 8 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -3655,7 +3659,7 @@ decl_stmt|;
 name|UINT32
 name|Reserved
 decl_stmt|;
-comment|/* Reseved, must be zero */
+comment|/* Reserved, must be zero */
 name|UINT32
 name|ProximityDomain
 decl_stmt|;
@@ -4100,6 +4104,249 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* 7: Platform Capabilities Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_nfit_capabilities
+block|{
+name|ACPI_NFIT_HEADER
+name|Header
+decl_stmt|;
+name|UINT8
+name|HighestCapability
+decl_stmt|;
+name|UINT8
+name|Reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Reserved, must be zero */
+name|UINT32
+name|Capabilities
+decl_stmt|;
+name|UINT32
+name|Reserved2
+decl_stmt|;
+block|}
+name|ACPI_NFIT_CAPABILITIES
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Capabilities Flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_CAPABILITY_CACHE_FLUSH
+value|(1)
+end_define
+
+begin_comment
+comment|/* 00: Cache Flush to NVDIMM capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_CAPABILITY_MEM_FLUSH
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* 01: Memory Flush to NVDIMM capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_CAPABILITY_MEM_MIRRORING
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* 02: Memory Mirroring capable */
+end_comment
+
+begin_comment
+comment|/*  * NFIT/DVDIMM device handle support - used as the _ADR for each NVDIMM  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|nfit_device_handle
+block|{
+name|UINT32
+name|Handle
+decl_stmt|;
+block|}
+name|NFIT_DEVICE_HANDLE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Device handle construction and extraction macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_DIMM_NUMBER_MASK
+value|0x0000000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_CHANNEL_NUMBER_MASK
+value|0x000000F0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_MEMORY_ID_MASK
+value|0x00000F00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_SOCKET_ID_MASK
+value|0x0000F000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_NODE_ID_MASK
+value|0x0FFF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_DIMM_NUMBER_OFFSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_CHANNEL_NUMBER_OFFSET
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_MEMORY_ID_OFFSET
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_SOCKET_ID_OFFSET
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_NODE_ID_OFFSET
+value|16
+end_define
+
+begin_comment
+comment|/* Macro to construct a NFIT/NVDIMM device handle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_BUILD_DEVICE_HANDLE
+parameter_list|(
+name|dimm
+parameter_list|,
+name|channel
+parameter_list|,
+name|memory
+parameter_list|,
+name|socket
+parameter_list|,
+name|node
+parameter_list|)
+define|\
+value|((dimm)                                         | \     ((channel)<< ACPI_NFIT_CHANNEL_NUMBER_OFFSET)  | \     ((memory)<< ACPI_NFIT_MEMORY_ID_OFFSET)       | \     ((socket)<< ACPI_NFIT_SOCKET_ID_OFFSET)       | \     ((node)<< ACPI_NFIT_NODE_ID_OFFSET))
+end_define
+
+begin_comment
+comment|/* Macros to extract individual fields from a NFIT/NVDIMM device handle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_GET_DIMM_NUMBER
+parameter_list|(
+name|handle
+parameter_list|)
+define|\
+value|((handle)& ACPI_NFIT_DIMM_NUMBER_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_GET_CHANNEL_NUMBER
+parameter_list|(
+name|handle
+parameter_list|)
+define|\
+value|(((handle)& ACPI_NFIT_CHANNEL_NUMBER_MASK)>> ACPI_NFIT_CHANNEL_NUMBER_OFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_GET_MEMORY_ID
+parameter_list|(
+name|handle
+parameter_list|)
+define|\
+value|(((handle)& ACPI_NFIT_MEMORY_ID_MASK)>> ACPI_NFIT_MEMORY_ID_OFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_GET_SOCKET_ID
+parameter_list|(
+name|handle
+parameter_list|)
+define|\
+value|(((handle)& ACPI_NFIT_SOCKET_ID_MASK)>> ACPI_NFIT_SOCKET_ID_OFFSET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_GET_NODE_ID
+parameter_list|(
+name|handle
+parameter_list|)
+define|\
+value|(((handle)& ACPI_NFIT_NODE_ID_MASK)>> ACPI_NFIT_NODE_ID_OFFSET)
+end_define
+
+begin_comment
 comment|/*******************************************************************************  *  * PDTT - Platform Debug Trigger Table (ACPI 6.2)  *        Version 0  *  ******************************************************************************/
 end_comment
 
@@ -4163,7 +4410,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_PPTT_WAIT_COMPLETION
+name|ACPI_PDTT_WAIT_COMPLETION
 value|(1<<1)
 end_define
 
@@ -4427,6 +4674,120 @@ end_define
 
 begin_comment
 comment|/* Write policy */
+end_comment
+
+begin_comment
+comment|/* Attributes describing cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_CACHE_READ_ALLOCATE
+value|(0x0)
+end_define
+
+begin_comment
+comment|/* Cache line is allocated on read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_CACHE_WRITE_ALLOCATE
+value|(0x01)
+end_define
+
+begin_comment
+comment|/* Cache line is allocated on write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_CACHE_RW_ALLOCATE
+value|(0x02)
+end_define
+
+begin_comment
+comment|/* Cache line is allocated on read and write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_CACHE_RW_ALLOCATE_ALT
+value|(0x03)
+end_define
+
+begin_comment
+comment|/* Alternate representation of above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_CACHE_TYPE_DATA
+value|(0x0)
+end_define
+
+begin_comment
+comment|/* Data cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_CACHE_TYPE_INSTR
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* Instruction cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_CACHE_TYPE_UNIFIED
+value|(2<<2)
+end_define
+
+begin_comment
+comment|/* Unified I& D cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_CACHE_TYPE_UNIFIED_ALT
+value|(3<<2)
+end_define
+
+begin_comment
+comment|/* Alternate representation of above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_CACHE_POLICY_WB
+value|(0x0)
+end_define
+
+begin_comment
+comment|/* Cache is write back */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PPTT_CACHE_POLICY_WT
+value|(1<<4)
+end_define
+
+begin_comment
+comment|/* Cache is write through */
 end_comment
 
 begin_comment

@@ -967,24 +967,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ACPI_DEBUG_OUTPUT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ACPI_DEBUGGER
-argument_list|)
-end_if
-
-begin_comment
-comment|/*  * Strings and procedures used for debug only  */
-end_comment
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetMutexName  *  * PARAMETERS:  MutexId         - The predefined ID for this mutex.  *  * RETURN:      Decoded name of the internal mutex  *  * DESCRIPTION: Translate a mutex ID into a name string (Debug only)  *  ******************************************************************************/
 end_comment
@@ -1052,6 +1034,24 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_DEBUG_OUTPUT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_DEBUGGER
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * Strings and procedures used for debug only  */
+end_comment
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetNotifyName  *  * PARAMETERS:  NotifyValue     - Value from the Notify() request  *  * RETURN:      Decoded name for the notify value  *  * DESCRIPTION: Translate a Notify Value to a notify namestring.  *  ******************************************************************************/
