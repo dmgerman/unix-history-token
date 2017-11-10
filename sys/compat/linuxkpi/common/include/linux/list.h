@@ -1590,10 +1590,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * list_is_singular - tests whether a list has just one entry.  * @head: the list to test.  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
@@ -1701,10 +1697,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * list_cut_position - cut a list into two  * @list: a new list to add all removed entries  * @head: a list with entries  * @entry: an entry within head, could be the head itself  *	and if so we won't cut the list  *  * This helper moves the initial part of @head, up to and  * including @entry, from @head to @list. You should  * pass on @entry an element you know is on @head. @list  * should be an empty list or a list you do not care about  * losing its data.  *  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
@@ -1778,10 +1770,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/**  *  list_is_last - tests whether @list is the last entry in list @head  *   @list: the entry to test  *    @head: the head of the list  */
-end_comment
 
 begin_function
 specifier|static
