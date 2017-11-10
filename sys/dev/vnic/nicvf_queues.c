@@ -4550,6 +4550,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Send a copy of the frame to the BPF listener */
+name|ETHER_BPF_MTAP
+argument_list|(
+name|ifp
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|nicvf_tx_mbuf_locked
@@ -4603,14 +4611,6 @@ argument_list|,
 name|sq
 operator|->
 name|br
-argument_list|)
-expr_stmt|;
-comment|/* Send a copy of the frame to the BPF listener */
-name|ETHER_BPF_MTAP
-argument_list|(
-name|ifp
-argument_list|,
-name|next
 argument_list|)
 expr_stmt|;
 block|}
