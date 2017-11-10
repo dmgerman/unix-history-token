@@ -18124,8 +18124,6 @@ name|index
 operator|++
 control|)
 block|{
-name|tryagain
-label|:
 comment|/* 		 * note: must allocate system pages since blocking here 		 * could interfere with paging I/O, no matter which 		 * process we are. 		 */
 name|p
 operator|=
@@ -18151,21 +18149,10 @@ operator|)
 operator|>>
 name|PAGE_SHIFT
 argument_list|)
+operator||
+name|VM_ALLOC_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-block|{
-name|VM_WAIT
-expr_stmt|;
-goto|goto
-name|tryagain
-goto|;
-block|}
 name|pmap_qenter
 argument_list|(
 name|pg

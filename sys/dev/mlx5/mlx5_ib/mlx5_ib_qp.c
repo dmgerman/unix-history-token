@@ -139,36 +139,6 @@ block|, }
 enum|;
 end_enum
 
-begin_enum
-enum|enum
-block|{
-name|MLX5_RQ_NUM_STATE
-init|=
-name|MLX5_RQC_STATE_ERR
-operator|+
-literal|1
-block|,
-name|MLX5_SQ_NUM_STATE
-init|=
-name|MLX5_SQC_STATE_ERR
-operator|+
-literal|1
-block|,
-name|MLX5_QP_STATE
-init|=
-name|MLX5_QP_NUM_STATE
-operator|+
-literal|1
-block|,
-name|MLX5_QP_STATE_BAD
-init|=
-name|MLX5_QP_STATE
-operator|+
-literal|1
-block|, }
-enum|;
-end_enum
-
 begin_decl_stmt
 specifier|static
 specifier|const

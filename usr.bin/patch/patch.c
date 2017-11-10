@@ -5034,16 +5034,6 @@ name|unsigned
 name|short
 name|plinelen
 decl_stmt|;
-comment|/* Patch does not match if we don't have anymore context to use */
-if|if
-condition|(
-name|pline
-operator|>
-name|pat_lines
-condition|)
-return|return
-name|false
-return|;
 for|for
 control|(
 name|iline

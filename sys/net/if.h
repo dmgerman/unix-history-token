@@ -934,6 +934,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_HWRXTSTMP
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* hardware rx timestamping */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM_IPV6
 value|(IFCAP_RXCSUM_IPV6 | IFCAP_TXCSUM_IPV6)
 end_define

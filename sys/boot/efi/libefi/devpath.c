@@ -656,7 +656,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|bool
 name|efi_devpath_is_prefix
 parameter_list|(
 name|EFI_DEVICE_PATH
@@ -668,7 +668,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 if|if
@@ -683,7 +683,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|false
 operator|)
 return|;
 while|while
@@ -723,7 +723,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|false
 operator|)
 return|;
 name|len
@@ -744,7 +744,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|false
 operator|)
 return|;
 if|if
@@ -755,9 +755,6 @@ name|prefix
 argument_list|,
 name|path
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|len
 argument_list|)
 operator|!=
@@ -765,7 +762,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|false
 operator|)
 return|;
 name|prefix
@@ -785,7 +782,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|1
+name|true
 operator|)
 return|;
 block|}

@@ -742,6 +742,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|EVENTHANDLER_LIST_DECLARE
+argument_list|(
+name|process_exec
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -4785,7 +4793,7 @@ operator|=
 name|sv
 expr_stmt|;
 comment|/* May be called with Giant held */
-name|EVENTHANDLER_INVOKE
+name|EVENTHANDLER_DIRECT_INVOKE
 argument_list|(
 name|process_exec
 argument_list|,

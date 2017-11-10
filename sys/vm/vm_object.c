@@ -5477,7 +5477,8 @@ argument_list|(
 name|orig_object
 argument_list|)
 expr_stmt|;
-name|VM_WAIT
+name|vm_radix_wait
+argument_list|()
 expr_stmt|;
 name|VM_OBJECT_WLOCK
 argument_list|(
@@ -5732,13 +5733,15 @@ argument_list|(
 name|backing_object
 argument_list|)
 expr_stmt|;
+comment|/* The page is only NULL when rename fails. */
 if|if
 condition|(
 name|p
 operator|==
 name|NULL
 condition|)
-name|VM_WAIT
+name|vm_radix_wait
+argument_list|()
 expr_stmt|;
 else|else
 name|vm_page_busy_sleep

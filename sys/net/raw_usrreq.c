@@ -857,7 +857,6 @@ name|m_len
 operator|)
 condition|)
 block|{
-comment|/* XXXRW: Should control also be freed here? */
 if|if
 condition|(
 name|m
@@ -867,6 +866,17 @@ condition|)
 name|m_freem
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|control
+operator|!=
+name|NULL
+condition|)
+name|m_freem
+argument_list|(
+name|control
 argument_list|)
 expr_stmt|;
 return|return

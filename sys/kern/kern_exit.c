@@ -364,6 +364,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|EVENTHANDLER_LIST_DECLARE
+argument_list|(
+name|process_exit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|struct
 name|proc
@@ -1205,7 +1213,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Check if any loadable modules need anything done at process exit. 	 * E.g. SYSV IPC stuff. 	 * Event handler could change exit status. 	 * XXX what if one of these generates an error? 	 */
-name|EVENTHANDLER_INVOKE
+name|EVENTHANDLER_DIRECT_INVOKE
 argument_list|(
 name|process_exit
 argument_list|,

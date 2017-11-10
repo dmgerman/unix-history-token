@@ -49,6 +49,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/dsl_dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -984,7 +990,7 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
-comment|/* 	 * Make sure the name is not too long. 	 */
+comment|/* 	 * Make sure the name is not too long. 	 * If we're creating a pool with version>= SPA_VERSION_DSL_SCRUB (v11) 	 * we need to account for additional space needed by the origin ds which 	 * will also be snapshotted: "poolname"+"/"+"$ORIGIN"+"@"+"$ORIGIN". 	 * Play it safe and enforce this limit even if the pool version is< 11 	 * so it can be upgraded without issues. 	 */
 if|if
 condition|(
 name|strlen
@@ -992,7 +998,18 @@ argument_list|(
 name|pool
 argument_list|)
 operator|>=
+operator|(
 name|ZFS_MAX_DATASET_NAME_LEN
+operator|-
+literal|2
+operator|-
+name|strlen
+argument_list|(
+name|ORIGIN_DIR_NAME
+argument_list|)
+operator|*
+literal|2
+operator|)
 condition|)
 block|{
 if|if

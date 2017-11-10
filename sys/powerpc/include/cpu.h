@@ -181,6 +181,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PPC_FEATURE2_ISEL
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PPC_FEATURE2_HAS_VCRYPTO
 value|0x02000000
 end_define
@@ -198,7 +205,7 @@ define|#
 directive|define
 name|PPC_FEATURE2_BITMASK
 define|\
-value|"\20"								\ 	"\040ARCH207\037HTM\032VCRYPTO"
+value|"\20"								\ 	"\040ARCH207\037HTM\034ISEL\032VCRYPTO"
 end_define
 
 begin_define

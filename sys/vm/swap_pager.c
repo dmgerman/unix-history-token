@@ -6586,7 +6586,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|VM_WAIT
+name|uma_zwait
+argument_list|(
+name|swblk_zone
+argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK
 argument_list|(
@@ -6713,7 +6716,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|VM_WAIT
+name|uma_zwait
+argument_list|(
+name|swpctrie_zone
+argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK
 argument_list|(

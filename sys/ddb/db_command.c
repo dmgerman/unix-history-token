@@ -1950,7 +1950,7 @@ block|{
 name|db_printf
 argument_list|(
 literal|"This is ddb(4), the kernel debugger; "
-literal|"see http://man.freebsd.org/ddb/4 for help.\n"
+literal|"see https://man.FreeBSD.org/ddb/4 for help.\n"
 argument_list|)
 expr_stmt|;
 name|db_printf

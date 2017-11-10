@@ -2958,6 +2958,59 @@ begin_comment
 comment|/* timestamp (struct timespec) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCM_TIME_INFO
+value|0x07
+end_define
+
+begin_comment
+comment|/* timestamp info */
+end_comment
+
+begin_struct
+struct|struct
+name|sock_timestamp_info
+block|{
+name|__uint32_t
+name|st_info_flags
+decl_stmt|;
+name|__uint32_t
+name|st_info_pad0
+decl_stmt|;
+name|__uint64_t
+name|st_info_rsv
+index|[
+literal|7
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ST_INFO_HW
+value|0x0001
+end_define
+
+begin_comment
+comment|/* SCM_TIMESTAMP was hw */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_INFO_HW_HPREC
+value|0x0002
+end_define
+
+begin_comment
+comment|/* SCM_TIMESTAMP was hw-assisted 						   on entrance */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ******************************************************************************** **        OS    : FreeBSD **   FILE NAME  : arcmsr.c **        BY    : Erich Chen, Ching Huang **   Description: SCSI RAID Device Driver for  **                ARECA (ARC11XX/ARC12XX/ARC13XX/ARC16XX/ARC188x) **                SATA/SAS RAID HOST Adapter ******************************************************************************** ******************************************************************************** ** ** Copyright (C) 2002 - 2012, Areca Technology Corporation All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION)HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT **(INCLUDING NEGLIGENCE OR OTHERWISE)ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ******************************************************************************** ** History ** **    REV#         DATE         NAME        DESCRIPTION ** 1.00.00.00   03/31/2004  Erich Chen      First release ** 1.20.00.02   11/29/2004  Erich Chen      bug fix with arcmsr_bus_reset when PHY error ** 1.20.00.03   04/19/2005  Erich Chen      add SATA 24 Ports adapter type support **                                          clean unused function ** 1.20.00.12   09/12/2005  Erich Chen      bug fix with abort command handling,  **                                          firmware version check  **                                          and firmware update notify for hardware bug fix **                                          handling if none zero high part physical address  **                                          of srb resource  ** 1.20.00.13   08/18/2006  Erich Chen      remove pending srb and report busy **                                          add iop message xfer  **                                          with scsi pass-through command **                                          add new device id of sas raid adapters  **                                          code fit for SPARC64& PPC  ** 1.20.00.14   02/05/2007  Erich Chen      bug fix for incorrect ccb_h.status report **                                          and cause g_vfs_done() read write error ** 1.20.00.15   10/10/2007  Erich Chen      support new RAID adapter type ARC120x ** 1.20.00.16   10/10/2009  Erich Chen      Bug fix for RAID adapter type ARC120x **                                          bus_dmamem_alloc() with BUS_DMA_ZERO ** 1.20.00.17   07/15/2010  Ching Huang     Added support ARC1880 **                                          report CAM_DEV_NOT_THERE instead of CAM_SEL_TIMEOUT when device failed, **                                          prevent cam_periph_error removing all LUN devices of one Target id **                                          for any one LUN device failed ** 1.20.00.18   10/14/2010  Ching Huang     Fixed "inquiry data fails comparion at DV1 step" **              10/25/2010  Ching Huang     Fixed bad range input in bus_alloc_resource for ADAPTER_TYPE_B ** 1.20.00.19   11/11/2010  Ching Huang     Fixed arcmsr driver prevent arcsas support for Areca SAS HBA ARC13x0 ** 1.20.00.20   12/08/2010  Ching Huang     Avoid calling atomic_set_int function ** 1.20.00.21   02/08/2011  Ching Huang     Implement I/O request timeout **              02/14/2011  Ching Huang     Modified pktRequestCount ** 1.20.00.21   03/03/2011  Ching Huang     if a command timeout, then wait its ccb back before free it ** 1.20.00.22   07/04/2011  Ching Huang     Fixed multiple MTX panic ** 1.20.00.23   10/28/2011  Ching Huang     Added TIMEOUT_DELAY in case of too many HDDs need to start  ** 1.20.00.23   11/08/2011  Ching Huang     Added report device transfer speed  ** 1.20.00.23   01/30/2012  Ching Huang     Fixed Request requeued and Retrying command ** 1.20.00.24   06/11/2012  Ching Huang     Fixed return sense data condition ** 1.20.00.25   08/17/2012  Ching Huang     Fixed hotplug device no function on type A adapter ** 1.20.00.26   12/14/2012  Ching Huang     Added support ARC1214,1224,1264,1284 ** 1.20.00.27   05/06/2013  Ching Huang     Fixed out standing cmd full on ARC-12x4 ** 1.20.00.28   09/13/2013  Ching Huang     Removed recursive mutex in arcmsr_abort_dr_ccbs ** 1.20.00.29   12/18/2013  Ching Huang     Change simq allocation number, support ARC1883 ** 1.30.00.00   11/30/2015  Ching Huang     Added support ARC1203 ** 1.40.00.00   07/11/2017  Ching Huang     Added support ARC1884 ****************************************************************************************** */
+comment|/* ******************************************************************************** **        OS    : FreeBSD **   FILE NAME  : arcmsr.c **        BY    : Erich Chen, Ching Huang **   Description: SCSI RAID Device Driver for  **                ARECA (ARC11XX/ARC12XX/ARC13XX/ARC16XX/ARC188x) **                SATA/SAS RAID HOST Adapter ******************************************************************************** ******************************************************************************** ** ** Copyright (C) 2002 - 2012, Areca Technology Corporation All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION)HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT **(INCLUDING NEGLIGENCE OR OTHERWISE)ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ******************************************************************************** ** History ** **    REV#         DATE         NAME        DESCRIPTION ** 1.00.00.00   03/31/2004  Erich Chen      First release ** 1.20.00.02   11/29/2004  Erich Chen      bug fix with arcmsr_bus_reset when PHY error ** 1.20.00.03   04/19/2005  Erich Chen      add SATA 24 Ports adapter type support **                                          clean unused function ** 1.20.00.12   09/12/2005  Erich Chen      bug fix with abort command handling,  **                                          firmware version check  **                                          and firmware update notify for hardware bug fix **                                          handling if none zero high part physical address  **                                          of srb resource  ** 1.20.00.13   08/18/2006  Erich Chen      remove pending srb and report busy **                                          add iop message xfer  **                                          with scsi pass-through command **                                          add new device id of sas raid adapters  **                                          code fit for SPARC64& PPC  ** 1.20.00.14   02/05/2007  Erich Chen      bug fix for incorrect ccb_h.status report **                                          and cause g_vfs_done() read write error ** 1.20.00.15   10/10/2007  Erich Chen      support new RAID adapter type ARC120x ** 1.20.00.16   10/10/2009  Erich Chen      Bug fix for RAID adapter type ARC120x **                                          bus_dmamem_alloc() with BUS_DMA_ZERO ** 1.20.00.17   07/15/2010  Ching Huang     Added support ARC1880 **                                          report CAM_DEV_NOT_THERE instead of CAM_SEL_TIMEOUT when device failed, **                                          prevent cam_periph_error removing all LUN devices of one Target id **                                          for any one LUN device failed ** 1.20.00.18   10/14/2010  Ching Huang     Fixed "inquiry data fails comparion at DV1 step" **              10/25/2010  Ching Huang     Fixed bad range input in bus_alloc_resource for ADAPTER_TYPE_B ** 1.20.00.19   11/11/2010  Ching Huang     Fixed arcmsr driver prevent arcsas support for Areca SAS HBA ARC13x0 ** 1.20.00.20   12/08/2010  Ching Huang     Avoid calling atomic_set_int function ** 1.20.00.21   02/08/2011  Ching Huang     Implement I/O request timeout **              02/14/2011  Ching Huang     Modified pktRequestCount ** 1.20.00.21   03/03/2011  Ching Huang     if a command timeout, then wait its ccb back before free it ** 1.20.00.22   07/04/2011  Ching Huang     Fixed multiple MTX panic ** 1.20.00.23   10/28/2011  Ching Huang     Added TIMEOUT_DELAY in case of too many HDDs need to start  ** 1.20.00.23   11/08/2011  Ching Huang     Added report device transfer speed  ** 1.20.00.23   01/30/2012  Ching Huang     Fixed Request requeued and Retrying command ** 1.20.00.24   06/11/2012  Ching Huang     Fixed return sense data condition ** 1.20.00.25   08/17/2012  Ching Huang     Fixed hotplug device no function on type A adapter ** 1.20.00.26   12/14/2012  Ching Huang     Added support ARC1214,1224,1264,1284 ** 1.20.00.27   05/06/2013  Ching Huang     Fixed out standing cmd full on ARC-12x4 ** 1.20.00.28   09/13/2013  Ching Huang     Removed recursive mutex in arcmsr_abort_dr_ccbs ** 1.20.00.29   12/18/2013  Ching Huang     Change simq allocation number, support ARC1883 ** 1.30.00.00   11/30/2015  Ching Huang     Added support ARC1203 ** 1.40.00.00   07/11/2017  Ching Huang     Added support ARC1884 ** 1.40.00.01   10/30/2017  Ching Huang     Fixed release memory resource ****************************************************************************************** */
 end_comment
 
 begin_include
@@ -373,7 +373,7 @@ begin_define
 define|#
 directive|define
 name|ARCMSR_DRIVER_VERSION
-value|"arcmsr version 1.40.00.00 2017-07-11"
+value|"arcmsr version 1.40.00.01 2017-10-30"
 end_define
 
 begin_include
@@ -827,6 +827,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|arcmsr_teardown_intr
 parameter_list|(
@@ -4319,6 +4320,33 @@ name|adapter_type
 condition|)
 block|{
 case|case
+name|ACB_ADAPTER_TYPE_A
+case|:
+case|case
+name|ACB_ADAPTER_TYPE_B
+case|:
+name|srb
+operator|=
+operator|(
+expr|struct
+name|CommandControlBlock
+operator|*
+operator|)
+operator|(
+name|acb
+operator|->
+name|vir2phy_offset
+operator|+
+operator|(
+name|flag_srb
+operator|<<
+literal|5
+operator|)
+operator|)
+expr_stmt|;
+comment|/*frame must be 32 bytes aligned*/
+break|break;
+case|case
 name|ACB_ADAPTER_TYPE_C
 case|:
 case|case
@@ -4358,12 +4386,6 @@ name|flag_srb
 index|]
 expr_stmt|;
 break|break;
-case|case
-name|ACB_ADAPTER_TYPE_A
-case|:
-case|case
-name|ACB_ADAPTER_TYPE_B
-case|:
 default|default:
 name|srb
 operator|=
@@ -7705,29 +7727,11 @@ name|iop_len
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|acb
 operator|->
 name|adapter_type
-operator|==
-name|ACB_ADAPTER_TYPE_C
-operator|)
-operator|||
-operator|(
-name|acb
-operator|->
-name|adapter_type
-operator|==
-name|ACB_ADAPTER_TYPE_D
-operator|)
-operator|||
-operator|(
-name|acb
-operator|->
-name|adapter_type
-operator|==
-name|ACB_ADAPTER_TYPE_E
-operator|)
+operator|>=
+name|ACB_ADAPTER_TYPE_B
 condition|)
 block|{
 return|return
@@ -8187,29 +8191,11 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|acb
 operator|->
 name|adapter_type
-operator|==
-name|ACB_ADAPTER_TYPE_C
-operator|)
-operator|||
-operator|(
-name|acb
-operator|->
-name|adapter_type
-operator|==
-name|ACB_ADAPTER_TYPE_D
-operator|)
-operator|||
-operator|(
-name|acb
-operator|->
-name|adapter_type
-operator|==
-name|ACB_ADAPTER_TYPE_E
-operator|)
+operator|>=
+name|ACB_ADAPTER_TYPE_B
 condition|)
 block|{
 name|arcmsr_Write_data_2iop_wqbuffer_D
@@ -11701,6 +11687,7 @@ comment|/* *********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|u_int32_t
 name|arcmsr_iop_ioctlcmd
 parameter_list|(
@@ -12601,6 +12588,7 @@ comment|/* *********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|CommandControlBlock
 modifier|*
@@ -20606,7 +20594,7 @@ name|phbbmu
 operator|->
 name|iop2drv_doorbell
 argument_list|,
-name|ARCMSR_MESSAGE_INT_CLEAR_PATTERN
+name|ARCMSR_DOORBELL_INT_CLEAR_PATTERN
 argument_list|)
 expr_stmt|;
 comment|/*clear interrupt and message state*/
@@ -21992,6 +21980,14 @@ name|SRB_SIZE
 operator|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|acb
+operator|->
+name|adapter_type
+operator|==
+name|ACB_ADAPTER_TYPE_E
+condition|)
 name|acb
 operator|->
 name|pCompletionQ
@@ -22295,11 +22291,29 @@ name|ACB_ADAPTER_TYPE_C
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|acb
 operator|->
 name|sub_device_id
 operator|==
 name|ARECA_SUB_DEV_ID_1883
+operator|)
+operator|||
+operator|(
+name|acb
+operator|->
+name|sub_device_id
+operator|==
+name|ARECA_SUB_DEV_ID_1216
+operator|)
+operator|||
+operator|(
+name|acb
+operator|->
+name|sub_device_id
+operator|==
+name|ARECA_SUB_DEV_ID_1226
+operator|)
 condition|)
 name|acb
 operator|->
@@ -22741,9 +22755,9 @@ argument|]); 		acb->bhandle[
 literal|0
 argument|] = rman_get_bushandle(acb->sys_res_arcmsr[
 literal|0
-argument|]); 		acb->pmu = (struct MessageUnit_UNION *)mem_base0; 		acb->rid =
+argument|]); 		acb->pmu = (struct MessageUnit_UNION *)mem_base0; 		acb->rid[
 literal|0
-argument|; 		} 		break; 	case ACB_ADAPTER_TYPE_B: { 		struct HBB_MessageUnit *phbbmu; 		struct CommandControlBlock *freesrb; 		u_int32_t rid[]={ PCIR_BAR(
+argument|] = rid0; 		} 		break; 	case ACB_ADAPTER_TYPE_B: { 		struct HBB_MessageUnit *phbbmu; 		struct CommandControlBlock *freesrb; 		u_int32_t rid[]={ PCIR_BAR(
 literal|0
 argument|)
 argument_list|,
@@ -22753,13 +22767,11 @@ argument|) }; 		vm_offset_t	mem_base[]={
 literal|0
 argument_list|,
 literal|0
-argument|}; 		u_long	size; 		if (vendor_dev_id == PCIDevVenIDARC1203) 			size = sizeof(struct HBB_DOORBELL_1203); 		else 			size = sizeof(struct HBB_DOORBELL); 		for(i=
+argument|}; 		for(i=
 literal|0
 argument|; i<
 literal|2
-argument|; i++) { 			if(i ==
-literal|0
-argument|) { 				acb->sys_res_arcmsr[i] = bus_alloc_resource_any(dev,SYS_RES_MEMORY,&rid[i], 										RF_ACTIVE); 			} else { 				acb->sys_res_arcmsr[i] = bus_alloc_resource_any(dev, SYS_RES_MEMORY,&rid[i], 										RF_ACTIVE); 			} 			if(acb->sys_res_arcmsr[i] == NULL) { 				arcmsr_free_resource(acb); 				printf(
+argument|; i++) { 			acb->sys_res_arcmsr[i] = bus_alloc_resource_any(dev, SYS_RES_MEMORY,&rid[i], RF_ACTIVE); 			if(acb->sys_res_arcmsr[i] == NULL) { 				arcmsr_free_resource(acb); 				printf(
 literal|"arcmsr%d: bus_alloc_resource %d failure!\n"
 argument|, device_get_unit(dev), i); 				return ENOMEM; 			} 			if(rman_get_start(acb->sys_res_arcmsr[i])<=
 literal|0
@@ -22773,9 +22785,15 @@ argument|, device_get_unit(dev), i); 				return ENXIO; 			} 			acb->btag[i] = rm
 literal|0
 argument|]; 		phbbmu->hbb_rwbuffer = (struct HBB_RWBUFFER *)mem_base[
 literal|1
-argument|]; 		if (vendor_dev_id == PCIDevVenIDARC1203) { 			phbbmu->drv2iop_doorbell = offsetof(struct HBB_DOORBELL_1203, drv2iop_doorbell); 			phbbmu->drv2iop_doorbell_mask = offsetof(struct HBB_DOORBELL_1203, drv2iop_doorbell_mask); 			phbbmu->iop2drv_doorbell = offsetof(struct HBB_DOORBELL_1203, iop2drv_doorbell); 			phbbmu->iop2drv_doorbell_mask = offsetof(struct HBB_DOORBELL_1203, iop2drv_doorbell_mask); 		} else { 			phbbmu->drv2iop_doorbell = offsetof(struct HBB_DOORBELL, drv2iop_doorbell); 			phbbmu->drv2iop_doorbell_mask = offsetof(struct HBB_DOORBELL, drv2iop_doorbell_mask); 			phbbmu->iop2drv_doorbell = offsetof(struct HBB_DOORBELL, iop2drv_doorbell); 			phbbmu->iop2drv_doorbell_mask = offsetof(struct HBB_DOORBELL, iop2drv_doorbell_mask); 		} 		acb->rid =
+argument|]; 		if (vendor_dev_id == PCIDevVenIDARC1203) { 			phbbmu->drv2iop_doorbell = offsetof(struct HBB_DOORBELL_1203, drv2iop_doorbell); 			phbbmu->drv2iop_doorbell_mask = offsetof(struct HBB_DOORBELL_1203, drv2iop_doorbell_mask); 			phbbmu->iop2drv_doorbell = offsetof(struct HBB_DOORBELL_1203, iop2drv_doorbell); 			phbbmu->iop2drv_doorbell_mask = offsetof(struct HBB_DOORBELL_1203, iop2drv_doorbell_mask); 		} else { 			phbbmu->drv2iop_doorbell = offsetof(struct HBB_DOORBELL, drv2iop_doorbell); 			phbbmu->drv2iop_doorbell_mask = offsetof(struct HBB_DOORBELL, drv2iop_doorbell_mask); 			phbbmu->iop2drv_doorbell = offsetof(struct HBB_DOORBELL, iop2drv_doorbell); 			phbbmu->iop2drv_doorbell_mask = offsetof(struct HBB_DOORBELL, iop2drv_doorbell_mask); 		} 		acb->rid[
 literal|0
-argument|; 		} 		break; 	case ACB_ADAPTER_TYPE_C: { 		u_int32_t rid0 = PCIR_BAR(
+argument|] = rid[
+literal|0
+argument|]; 		acb->rid[
+literal|1
+argument|] = rid[
+literal|1
+argument|]; 		} 		break; 	case ACB_ADAPTER_TYPE_C: { 		u_int32_t rid0 = PCIR_BAR(
 literal|1
 argument|); 		vm_offset_t	mem_base0;  		acb->sys_res_arcmsr[
 literal|0
@@ -22803,9 +22821,9 @@ argument|]); 		acb->bhandle[
 literal|0
 argument|] = rman_get_bushandle(acb->sys_res_arcmsr[
 literal|0
-argument|]); 		acb->pmu = (struct MessageUnit_UNION *)mem_base0; 		acb->rid =
-literal|1
-argument|; 		} 		break; 	case ACB_ADAPTER_TYPE_D: { 		struct HBD_MessageUnit0 *phbdmu; 		u_int32_t rid0 = PCIR_BAR(
+argument|]); 		acb->pmu = (struct MessageUnit_UNION *)mem_base0; 		acb->rid[
+literal|0
+argument|] = rid0; 		} 		break; 	case ACB_ADAPTER_TYPE_D: { 		struct HBD_MessageUnit0 *phbdmu; 		u_int32_t rid0 = PCIR_BAR(
 literal|0
 argument|); 		vm_offset_t	mem_base0;  		acb->sys_res_arcmsr[
 literal|0
@@ -22833,17 +22851,13 @@ argument|]); 		acb->bhandle[
 literal|0
 argument|] = rman_get_bushandle(acb->sys_res_arcmsr[
 literal|0
-argument|]); 		acb->pmu = (struct MessageUnit_UNION *)((unsigned long)acb->uncacheptr+ARCMSR_SRBS_POOL_SIZE); 		phbdmu = (struct HBD_MessageUnit0 *)acb->pmu; 		phbdmu->phbdmu = (struct HBD_MessageUnit *)mem_base0; 		acb->rid =
+argument|]); 		acb->pmu = (struct MessageUnit_UNION *)((unsigned long)acb->uncacheptr+ARCMSR_SRBS_POOL_SIZE); 		phbdmu = (struct HBD_MessageUnit0 *)acb->pmu; 		phbdmu->phbdmu = (struct HBD_MessageUnit *)mem_base0; 		acb->rid[
 literal|0
-argument|; 		} 		break; 	case ACB_ADAPTER_TYPE_E: { 		u_int32_t rid0 = PCIR_BAR(
+argument|] = rid0; 		} 		break; 	case ACB_ADAPTER_TYPE_E: { 		u_int32_t rid0 = PCIR_BAR(
 literal|1
 argument|); 		vm_offset_t	mem_base0;  		acb->sys_res_arcmsr[
 literal|0
-argument|] = bus_alloc_resource(dev,SYS_RES_MEMORY,&rid0,
-literal|0ul
-argument|, ~
-literal|0ul
-argument|, sizeof(struct HBE_MessageUnit), RF_ACTIVE); 		if(acb->sys_res_arcmsr[
+argument|] = bus_alloc_resource_any(dev, SYS_RES_MEMORY,&rid0, RF_ACTIVE); 		if(acb->sys_res_arcmsr[
 literal|0
 argument|] == NULL) { 			arcmsr_free_resource(acb); 			printf(
 literal|"arcmsr%d: bus_alloc_resource failure!\n"
@@ -22873,9 +22887,9 @@ argument|; 		acb->in_doorbell =
 literal|0
 argument|; 		acb->out_doorbell =
 literal|0
-argument|; 		acb->rid =
-literal|1
-argument|; 		CHIP_REG_WRITE32(HBE_MessageUnit,
+argument|; 		acb->rid[
+literal|0
+argument|] = rid0; 		CHIP_REG_WRITE32(HBE_MessageUnit,
 literal|0
 argument|, host_int_status,
 literal|0
@@ -22897,7 +22911,9 @@ argument|; j< ARCMSR_MAX_TARGETLUN; j++) { 			acb->devstate[i][j] = ARECA_RAID_G
 literal|0
 argument|); }  static int arcmsr_setup_msix(struct AdapterControlBlock *acb) { 	int i;  	for (i =
 literal|0
-argument|; i< acb->msix_vectors; i++) { 		acb->irq_id[i] = acb->rid + i; 		acb->irqres[i] = bus_alloc_resource_any(acb->pci_dev, 		    SYS_RES_IRQ,&acb->irq_id[i], RF_ACTIVE); 		if (acb->irqres[i] == NULL) { 			printf(
+argument|; i< acb->msix_vectors; i++) { 		acb->irq_id[i] =
+literal|1
+argument|+ i; 		acb->irqres[i] = bus_alloc_resource_any(acb->pci_dev, 		    SYS_RES_IRQ,&acb->irq_id[i], RF_ACTIVE); 		if (acb->irqres[i] == NULL) { 			printf(
 literal|"arcmsr: Can't allocate MSI-X resource\n"
 argument|); 			goto irq_alloc_failed; 		} 		if (bus_setup_intr(acb->pci_dev, acb->irqres[i], 		    INTR_MPSAFE | INTR_TYPE_CAM, NULL, arcmsr_intr_handler, 		    acb,&acb->ih[i])) { 			printf(
 literal|"arcmsr: Cannot set up MSI-X interrupt handler\n"
@@ -22917,7 +22933,9 @@ argument|acb->msix_vectors = ARCMSR_NUM_MSIX_VECTORS; 	if (pci_alloc_msix(dev,&a
 literal|0
 argument|) { 		if (arcmsr_setup_msix(acb) == TRUE) 			goto irqx; 	} 	acb->irq_id[
 literal|0
-argument|] = acb->rid; 	irqres = bus_alloc_resource_any(dev, SYS_RES_IRQ,&acb->irq_id[
+argument|] =
+literal|0
+argument|; 	irqres = bus_alloc_resource_any(dev, SYS_RES_IRQ,&acb->irq_id[
 literal|0
 argument|], RF_SHAREABLE | RF_ACTIVE); 	if(irqres == NULL ||
 if|#
@@ -23545,9 +23563,23 @@ name|PCIDevVenIDARC1223
 case|:
 if|if
 condition|(
+operator|(
 name|sub_device_id
 operator|==
 name|ARECA_SUB_DEV_ID_1883
+operator|)
+operator|||
+operator|(
+name|sub_device_id
+operator|==
+name|ARECA_SUB_DEV_ID_1216
+operator|)
+operator|||
+operator|(
+name|sub_device_id
+operator|==
+name|ARECA_SUB_DEV_ID_1226
+operator|)
 condition|)
 name|type
 operator|=
@@ -23830,6 +23862,7 @@ operator|)
 return|;
 block|}
 comment|/* ************************************************************************ ************************************************************************ */
+specifier|static
 name|void
 name|arcmsr_teardown_intr
 parameter_list|(
@@ -24104,10 +24137,12 @@ name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|PCIR_BAR
-argument_list|(
+name|acb
+operator|->
+name|rid
+index|[
 name|i
-argument_list|)
+index|]
 argument_list|,
 name|acb
 operator|->

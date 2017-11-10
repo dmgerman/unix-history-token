@@ -338,6 +338,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|EVENTHANDLER_LIST_DECLARE
+argument_list|(
+name|process_fork
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2990,7 +2998,7 @@ name|fr_pd_flags
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Both processes are set up, now check if any loadable modules want 	 * to adjust anything. 	 */
-name|EVENTHANDLER_INVOKE
+name|EVENTHANDLER_DIRECT_INVOKE
 argument_list|(
 name|process_fork
 argument_list|,

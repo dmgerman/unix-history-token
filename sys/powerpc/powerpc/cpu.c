@@ -643,6 +643,8 @@ name|PPC_FEATURE2_ARCH_2_07
 operator||
 name|PPC_FEATURE2_HAS_HTM
 operator||
+name|PPC_FEATURE2_ISEL
+operator||
 name|PPC_FEATURE2_HAS_VCRYPTO
 block|,
 name|NULL
@@ -672,6 +674,8 @@ block|,
 name|PPC_FEATURE2_ARCH_2_07
 operator||
 name|PPC_FEATURE2_HAS_HTM
+operator||
+name|PPC_FEATURE2_ISEL
 operator||
 name|PPC_FEATURE2_HAS_VCRYPTO
 block|,
@@ -831,7 +835,7 @@ name|PPC_FEATURE_HAS_SPE
 operator||
 name|PPC_FEATURE_HAS_EFP_SINGLE
 block|,
-literal|0
+name|PPC_FEATURE2_ISEL
 block|,
 name|cpu_booke_setup
 block|}
@@ -851,7 +855,7 @@ name|PPC_FEATURE_HAS_EFP_SINGLE
 operator||
 name|PPC_FEATURE_HAS_EFP_DOUBLE
 block|,
-literal|0
+name|PPC_FEATURE2_ISEL
 block|,
 name|cpu_booke_setup
 block|}
@@ -867,7 +871,7 @@ name|PPC_FEATURE_BOOKE
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
-literal|0
+name|PPC_FEATURE2_ISEL
 block|,
 name|cpu_booke_setup
 block|}
@@ -885,7 +889,7 @@ name|PPC_FEATURE_64
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
-literal|0
+name|PPC_FEATURE2_ISEL
 block|,
 name|cpu_booke_setup
 block|}
@@ -905,7 +909,7 @@ name|PPC_FEATURE_HAS_ALTIVEC
 operator||
 name|PPC_FEATURE_HAS_FPU
 block|,
-literal|0
+name|PPC_FEATURE2_ISEL
 block|,
 name|cpu_booke_setup
 block|}

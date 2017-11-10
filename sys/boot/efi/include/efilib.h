@@ -396,7 +396,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|bool
 name|efi_devpath_is_prefix
 parameter_list|(
 name|EFI_DEVICE_PATH

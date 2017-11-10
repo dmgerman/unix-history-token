@@ -5186,7 +5186,7 @@ decl_stmt|;
 name|vm_object_t
 name|obj
 decl_stmt|;
-name|vm_offset_t
+name|vm_ooffset_t
 name|foff
 decl_stmt|;
 name|struct
