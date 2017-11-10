@@ -5623,6 +5623,26 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|shutdown_one
+parameter_list|(
+name|struct
+name|pci_dev
+modifier|*
+name|pdev
+parameter_list|)
+block|{
+comment|/* prevent device from accessing host memory after shutdown */
+name|pci_clear_master
+argument_list|(
+name|pdev
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -5961,6 +5981,11 @@ operator|.
 name|id_table
 operator|=
 name|mlx5_core_pci_table
+block|,
+operator|.
+name|shutdown
+operator|=
+name|shutdown_one
 block|,
 operator|.
 name|probe
