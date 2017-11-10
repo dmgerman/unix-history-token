@@ -383,6 +383,64 @@ parameter_list|)
 value|be64_to_cpu(*((__be64 *)(p) + __mlx5_64_off(typ, fld)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|MLX5_GET64_BE
+parameter_list|(
+name|typ
+parameter_list|,
+name|p
+parameter_list|,
+name|fld
+parameter_list|)
+value|(*((__be64 *)(p) +\ 	__mlx5_64_off(typ, fld)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_GET_BE
+parameter_list|(
+name|type_t
+parameter_list|,
+name|typ
+parameter_list|,
+name|p
+parameter_list|,
+name|fld
+parameter_list|)
+value|({				  \ 		type_t tmp;						  \ 		switch (sizeof(tmp)) {					  \ 		case sizeof(u8):					  \ 			tmp = (__force type_t)MLX5_GET(typ, p, fld);	  \ 			break;						  \ 		case sizeof(u16):					  \ 			tmp = (__force type_t)cpu_to_be16(MLX5_GET(typ, p, fld)); \ 			break;						  \ 		case sizeof(u32):					  \ 			tmp = (__force type_t)cpu_to_be32(MLX5_GET(typ, p, fld)); \ 			break;						  \ 		case sizeof(u64):					  \ 			tmp = (__force type_t)MLX5_GET64_BE(typ, p, fld); \ 			break;						  \ 			}						  \ 		tmp;							  \ 		})
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_BY_PASS_NUM_REGULAR_PRIOS
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_BY_PASS_NUM_DONT_TRAP_PRIOS
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_BY_PASS_NUM_MULTICAST_PRIOS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_BY_PASS_NUM_PRIOS
+value|(MLX5_BY_PASS_NUM_REGULAR_PRIOS +\                                     MLX5_BY_PASS_NUM_DONT_TRAP_PRIOS +\                                     MLX5_BY_PASS_NUM_MULTICAST_PRIOS)
+end_define
+
 begin_enum
 enum|enum
 block|{
@@ -1221,6 +1279,25 @@ name|MLX5_CAP_OFF_CMDIF_CSUM
 init|=
 literal|46
 block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+comment|/* 	 * Max wqe size for rdma read is 512 bytes, so this 	 * limits our max_sge_rd as the wqe needs to fit: 	 * - ctrl segment (16 bytes) 	 * - rdma segment (16 bytes) 	 * - scatter elements (16 bytes each) 	 */
+name|MLX5_MAX_SGE_RD
+init|=
+operator|(
+literal|512
+operator|-
+literal|16
+operator|-
+literal|16
+operator|)
+operator|/
+literal|16
+block|}
 enum|;
 end_enum
 
@@ -2423,15 +2500,15 @@ end_enum
 begin_enum
 enum|enum
 block|{
-name|CQE_ROCE_L3_HEADER_TYPE_GRH
+name|MLX5_CQE_ROCE_L3_HEADER_TYPE_GRH
 init|=
 literal|0x0
 block|,
-name|CQE_ROCE_L3_HEADER_TYPE_IPV6
+name|MLX5_CQE_ROCE_L3_HEADER_TYPE_IPV6
 init|=
 literal|0x1
 block|,
-name|CQE_ROCE_L3_HEADER_TYPE_IPV4
+name|MLX5_CQE_ROCE_L3_HEADER_TYPE_IPV4
 init|=
 literal|0x2
 block|, }
@@ -4714,6 +4791,10 @@ block|,
 name|MLX5_PHYSICAL_LAYER_COUNTERS_GROUP
 init|=
 literal|0x12
+block|,
+name|MLX5_PHYSICAL_LAYER_STATISTICAL_GROUP
+init|=
+literal|0x16
 block|,
 name|MLX5_INFINIBAND_PORT_COUNTERS_GROUP
 init|=
