@@ -5157,7 +5157,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:vnode-page-outs/%9u} {N:vnode pager pages paged out}\n"
+literal|"{:vnode-page-out-pages/%9u} {N:vnode pager pages paged out}\n"
 argument_list|,
 name|sum
 operator|.
