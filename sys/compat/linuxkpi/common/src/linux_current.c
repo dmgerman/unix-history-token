@@ -239,11 +239,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|atomic_set
+argument_list|(
+operator|&
 name|ts
 operator|->
 name|state
-operator|=
+argument_list|,
 name|TASK_RUNNING
+argument_list|)
 expr_stmt|;
 name|init_completion
 argument_list|(
