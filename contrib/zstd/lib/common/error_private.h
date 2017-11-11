@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  * You may select, at your option, one of the above-listed licenses.  */
 end_comment
 
 begin_comment
@@ -110,18 +110,20 @@ name|name
 parameter_list|)
 value|ZSTD_error_##name
 comment|/*-**************************************** *  Error codes handling ******************************************/
-ifdef|#
-directive|ifdef
-name|ERROR
 undef|#
 directive|undef
 name|ERROR
 comment|/* reported already defined on VS 2015 (Rich Geldreich) */
-endif|#
-directive|endif
 define|#
 directive|define
 name|ERROR
+parameter_list|(
+name|name
+parameter_list|)
+value|ZSTD_ERROR(name)
+define|#
+directive|define
+name|ZSTD_ERROR
 parameter_list|(
 name|name
 parameter_list|)

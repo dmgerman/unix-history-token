@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  * You may select, at your option, one of the above-listed licenses.  */
 end_comment
 
 begin_ifndef
@@ -287,7 +287,7 @@ name|pledgedSrcSize
 parameter_list|)
 function_decl|;
 comment|/* note : zero means empty */
-comment|/* ZSDTMT_parameter :  * List of parameters that can be set using ZSTDMT_setMTCtxParameter() */
+comment|/* ZSTDMT_parameter :  * List of parameters that can be set using ZSTDMT_setMTCtxParameter() */
 typedef|typedef
 enum|enum
 block|{
@@ -297,7 +297,7 @@ comment|/* size of input "section". Each section is compressed in parallel. 0 me
 name|ZSTDMT_p_overlapSectionLog
 comment|/* Log of overlapped section; 0 == no overlap, 6(default) == use 1/8th of window,>=9 == use full window */
 block|}
-name|ZSDTMT_parameter
+name|ZSTDMT_parameter
 typedef|;
 comment|/* ZSTDMT_setMTCtxParameter() :  * allow setting individual parameters, one at a time, among a list of enums defined in ZSTDMT_parameter.  * The function must be called typically after ZSTD_createCCtx().  * Parameters not explicitly reset by ZSTDMT_init*() remain the same in consecutive compression sessions.  * @return : 0, or an error code (which can be tested using ZSTD_isError()) */
 name|ZSTDLIB_API
@@ -308,7 +308,7 @@ name|ZSTDMT_CCtx
 modifier|*
 name|mtctx
 parameter_list|,
-name|ZSDTMT_parameter
+name|ZSTDMT_parameter
 name|parameter
 parameter_list|,
 name|unsigned
@@ -334,6 +334,65 @@ name|input
 parameter_list|,
 name|ZSTD_EndDirective
 name|endOp
+parameter_list|)
+function_decl|;
+comment|/* ===   Private definitions; never ever use directly  === */
+name|size_t
+name|ZSTDMT_CCtxParam_setMTCtxParameter
+parameter_list|(
+name|ZSTD_CCtx_params
+modifier|*
+name|params
+parameter_list|,
+name|ZSTDMT_parameter
+name|parameter
+parameter_list|,
+name|unsigned
+name|value
+parameter_list|)
+function_decl|;
+name|size_t
+name|ZSTDMT_initializeCCtxParameters
+parameter_list|(
+name|ZSTD_CCtx_params
+modifier|*
+name|params
+parameter_list|,
+name|unsigned
+name|nbThreads
+parameter_list|)
+function_decl|;
+comment|/*! ZSTDMT_initCStream_internal() :  *  Private use only. Init streaming operation.  *  expects params to be valid.  *  must receive dict, or cdict, or none, but not both.  *  @return : 0, or an error code */
+name|size_t
+name|ZSTDMT_initCStream_internal
+parameter_list|(
+name|ZSTDMT_CCtx
+modifier|*
+name|zcs
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|dict
+parameter_list|,
+name|size_t
+name|dictSize
+parameter_list|,
+name|ZSTD_dictMode_e
+name|dictMode
+parameter_list|,
+specifier|const
+name|ZSTD_CDict
+modifier|*
+name|cdict
+parameter_list|,
+name|ZSTD_CCtx_params
+name|params
+parameter_list|,
+name|unsigned
+name|long
+name|long
+name|pledgedSrcSize
 parameter_list|)
 function_decl|;
 if|#

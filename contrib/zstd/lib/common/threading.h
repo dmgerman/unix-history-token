@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * Copyright (c) 2016 Tino Reichardt  * All rights reserved.  *  * This source code is licensed under the BSD-style license found in the  * LICENSE file in the root directory of this source tree. An additional grant  * of patent rights can be found in the PATENTS file in the same directory.  *  * You can contact the author at:  * - zstdmt source repository: https://github.com/mcmilk/zstdmt  */
+comment|/**  * Copyright (c) 2016 Tino Reichardt  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  *  * You can contact the author at:  * - zstdmt source repository: https://github.com/mcmilk/zstdmt  */
 end_comment
 
 begin_ifndef
@@ -74,17 +74,31 @@ directive|define
 name|WIN32_LEAN_AND_MEAN
 endif|#
 directive|endif
+undef|#
+directive|undef
+name|ERROR
+comment|/* reported already defined on VS 2015 (Rich Geldreich) */
 include|#
 directive|include
 file|<windows.h>
+undef|#
+directive|undef
+name|ERROR
+define|#
+directive|define
+name|ERROR
+parameter_list|(
+name|name
+parameter_list|)
+value|ZSTD_ERROR(name)
 comment|/* mutex */
 define|#
 directive|define
-name|pthread_mutex_t
+name|ZSTD_pthread_mutex_t
 value|CRITICAL_SECTION
 define|#
 directive|define
-name|pthread_mutex_init
+name|ZSTD_pthread_mutex_init
 parameter_list|(
 name|a
 parameter_list|,
@@ -93,21 +107,21 @@ parameter_list|)
 value|(InitializeCriticalSection((a)), 0)
 define|#
 directive|define
-name|pthread_mutex_destroy
+name|ZSTD_pthread_mutex_destroy
 parameter_list|(
 name|a
 parameter_list|)
 value|DeleteCriticalSection((a))
 define|#
 directive|define
-name|pthread_mutex_lock
+name|ZSTD_pthread_mutex_lock
 parameter_list|(
 name|a
 parameter_list|)
 value|EnterCriticalSection((a))
 define|#
 directive|define
-name|pthread_mutex_unlock
+name|ZSTD_pthread_mutex_unlock
 parameter_list|(
 name|a
 parameter_list|)
@@ -115,11 +129,11 @@ value|LeaveCriticalSection((a))
 comment|/* condition variable */
 define|#
 directive|define
-name|pthread_cond_t
+name|ZSTD_pthread_cond_t
 value|CONDITION_VARIABLE
 define|#
 directive|define
-name|pthread_cond_init
+name|ZSTD_pthread_cond_init
 parameter_list|(
 name|a
 parameter_list|,
@@ -128,14 +142,14 @@ parameter_list|)
 value|(InitializeConditionVariable((a)), 0)
 define|#
 directive|define
-name|pthread_cond_destroy
+name|ZSTD_pthread_cond_destroy
 parameter_list|(
 name|a
 parameter_list|)
 comment|/* No delete */
 define|#
 directive|define
-name|pthread_cond_wait
+name|ZSTD_pthread_cond_wait
 parameter_list|(
 name|a
 parameter_list|,
@@ -144,19 +158,19 @@ parameter_list|)
 value|SleepConditionVariableCS((a), (b), INFINITE)
 define|#
 directive|define
-name|pthread_cond_signal
+name|ZSTD_pthread_cond_signal
 parameter_list|(
 name|a
 parameter_list|)
 value|WakeConditionVariable((a))
 define|#
 directive|define
-name|pthread_cond_broadcast
+name|ZSTD_pthread_cond_broadcast
 parameter_list|(
 name|a
 parameter_list|)
 value|WakeAllConditionVariable((a))
-comment|/* pthread_create() and pthread_join() */
+comment|/* ZSTD_pthread_create() and ZSTD_pthread_join() */
 typedef|typedef
 struct|struct
 block|{
@@ -179,12 +193,12 @@ modifier|*
 name|arg
 decl_stmt|;
 block|}
-name|pthread_t
+name|ZSTD_pthread_t
 typedef|;
 name|int
-name|pthread_create
+name|ZSTD_pthread_create
 parameter_list|(
-name|pthread_t
+name|ZSTD_pthread_t
 modifier|*
 name|thread
 parameter_list|,
@@ -209,20 +223,10 @@ modifier|*
 name|arg
 parameter_list|)
 function_decl|;
-define|#
-directive|define
-name|pthread_join
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|_pthread_join(&(a), (b))
 name|int
-name|_pthread_join
+name|ZSTD_pthread_join
 parameter_list|(
-name|pthread_t
-modifier|*
+name|ZSTD_pthread_t
 name|thread
 parameter_list|,
 name|void
@@ -243,18 +247,120 @@ comment|/* ===   POSIX Systems   === */
 include|#
 directive|include
 file|<pthread.h>
+define|#
+directive|define
+name|ZSTD_pthread_mutex_t
+value|pthread_mutex_t
+define|#
+directive|define
+name|ZSTD_pthread_mutex_init
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|pthread_mutex_init((a), (b))
+define|#
+directive|define
+name|ZSTD_pthread_mutex_destroy
+parameter_list|(
+name|a
+parameter_list|)
+value|pthread_mutex_destroy((a))
+define|#
+directive|define
+name|ZSTD_pthread_mutex_lock
+parameter_list|(
+name|a
+parameter_list|)
+value|pthread_mutex_lock((a))
+define|#
+directive|define
+name|ZSTD_pthread_mutex_unlock
+parameter_list|(
+name|a
+parameter_list|)
+value|pthread_mutex_unlock((a))
+define|#
+directive|define
+name|ZSTD_pthread_cond_t
+value|pthread_cond_t
+define|#
+directive|define
+name|ZSTD_pthread_cond_init
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|pthread_cond_init((a), (b))
+define|#
+directive|define
+name|ZSTD_pthread_cond_destroy
+parameter_list|(
+name|a
+parameter_list|)
+value|pthread_cond_destroy((a))
+define|#
+directive|define
+name|ZSTD_pthread_cond_wait
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|pthread_cond_wait((a), (b))
+define|#
+directive|define
+name|ZSTD_pthread_cond_signal
+parameter_list|(
+name|a
+parameter_list|)
+value|pthread_cond_signal((a))
+define|#
+directive|define
+name|ZSTD_pthread_cond_broadcast
+parameter_list|(
+name|a
+parameter_list|)
+value|pthread_cond_broadcast((a))
+define|#
+directive|define
+name|ZSTD_pthread_t
+value|pthread_t
+define|#
+directive|define
+name|ZSTD_pthread_create
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|pthread_create((a), (b), (c), (d))
+define|#
+directive|define
+name|ZSTD_pthread_join
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|pthread_join((a),(b))
 else|#
 directive|else
 comment|/* ZSTD_MULTITHREAD not defined */
 comment|/* No multithreading support */
+typedef|typedef
+name|int
+name|ZSTD_pthread_mutex_t
+typedef|;
 define|#
 directive|define
-name|pthread_mutex_t
-value|int
-comment|/* #define rather than typedef, because sometimes pthread support is implicit, resulting in duplicated symbols */
-define|#
-directive|define
-name|pthread_mutex_init
+name|ZSTD_pthread_mutex_init
 parameter_list|(
 name|a
 parameter_list|,
@@ -263,29 +369,29 @@ parameter_list|)
 value|((void)a, 0)
 define|#
 directive|define
-name|pthread_mutex_destroy
+name|ZSTD_pthread_mutex_destroy
 parameter_list|(
 name|a
 parameter_list|)
 define|#
 directive|define
-name|pthread_mutex_lock
+name|ZSTD_pthread_mutex_lock
 parameter_list|(
 name|a
 parameter_list|)
 define|#
 directive|define
-name|pthread_mutex_unlock
+name|ZSTD_pthread_mutex_unlock
 parameter_list|(
 name|a
 parameter_list|)
+typedef|typedef
+name|int
+name|ZSTD_pthread_cond_t
+typedef|;
 define|#
 directive|define
-name|pthread_cond_t
-value|int
-define|#
-directive|define
-name|pthread_cond_init
+name|ZSTD_pthread_cond_init
 parameter_list|(
 name|a
 parameter_list|,
@@ -294,13 +400,13 @@ parameter_list|)
 value|((void)a, 0)
 define|#
 directive|define
-name|pthread_cond_destroy
+name|ZSTD_pthread_cond_destroy
 parameter_list|(
 name|a
 parameter_list|)
 define|#
 directive|define
-name|pthread_cond_wait
+name|ZSTD_pthread_cond_wait
 parameter_list|(
 name|a
 parameter_list|,
@@ -308,17 +414,17 @@ name|b
 parameter_list|)
 define|#
 directive|define
-name|pthread_cond_signal
+name|ZSTD_pthread_cond_signal
 parameter_list|(
 name|a
 parameter_list|)
 define|#
 directive|define
-name|pthread_cond_broadcast
+name|ZSTD_pthread_cond_broadcast
 parameter_list|(
 name|a
 parameter_list|)
-comment|/* do not use pthread_t */
+comment|/* do not use ZSTD_pthread_t */
 endif|#
 directive|endif
 comment|/* ZSTD_MULTITHREAD */

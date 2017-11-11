@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  */
+comment|/*  * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.  * All rights reserved.  *  * This source code is licensed under both the BSD-style license (found in the  * LICENSE file in the root directory of this source tree) and the GPLv2 (found  * in the COPYING file in the root directory of this source tree).  * You may select, at your option, one of the above-listed licenses.  */
 end_comment
 
 begin_comment
@@ -157,24 +157,6 @@ return|;
 case|case
 name|PREFIX
 argument_list|(
-name|dstSize_tooSmall
-argument_list|)
-case|:
-return|return
-literal|"Destination buffer is too small"
-return|;
-case|case
-name|PREFIX
-argument_list|(
-name|srcSize_wrong
-argument_list|)
-case|:
-return|return
-literal|"Src size is incorrect"
-return|;
-case|case
-name|PREFIX
-argument_list|(
 name|tableLog_tooLarge
 argument_list|)
 case|:
@@ -226,6 +208,25 @@ case|:
 return|return
 literal|"Cannot create Dictionary from provided samples"
 return|;
+case|case
+name|PREFIX
+argument_list|(
+name|dstSize_tooSmall
+argument_list|)
+case|:
+return|return
+literal|"Destination buffer is too small"
+return|;
+case|case
+name|PREFIX
+argument_list|(
+name|srcSize_wrong
+argument_list|)
+case|:
+return|return
+literal|"Src size is incorrect"
+return|;
+comment|/* following error codes are not stable and may be removed or changed in a future version */
 case|case
 name|PREFIX
 argument_list|(

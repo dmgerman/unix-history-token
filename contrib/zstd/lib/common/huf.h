@@ -838,7 +838,8 @@ modifier|*
 name|CTable
 parameter_list|,
 name|unsigned
-name|maxSymbolValue
+modifier|*
+name|maxSymbolValuePtr
 parameter_list|,
 specifier|const
 name|void
