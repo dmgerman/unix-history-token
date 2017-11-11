@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -126,6 +138,9 @@ name|next
 operator|=
 name|handlers
 expr_stmt|;
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 name|handlers
 operator|=
 name|h
@@ -174,11 +189,16 @@ name|h
 operator|->
 name|next
 control|)
+block|{
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 name|h
 operator|->
 name|cleanup
 argument_list|()
 expr_stmt|;
+block|}
 name|_Exit
 argument_list|(
 name|status
