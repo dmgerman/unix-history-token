@@ -157,6 +157,10 @@ name|I386_PAGE_PS_MASK_PAE
 value|(I386_NBPDR_PAE - 1)
 end_define
 
+begin_comment
+comment|/* Source: i386/include/pmap.h */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -167,8 +171,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|I386_PG_RW
+value|0x002
+end_define
+
+begin_define
+define|#
+directive|define
 name|I386_PG_PS
 value|0x080
+end_define
+
+begin_define
+define|#
+directive|define
+name|I386_PG_NX
+value|(1ULL<< 63)
 end_define
 
 begin_define
