@@ -2053,6 +2053,7 @@ argument_list|(
 name|text
 argument_list|)
 expr_stmt|;
+block|}
 name|status
 operator|=
 name|BS
@@ -2102,6 +2103,13 @@ argument_list|(
 name|imgpath
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|text
+operator|!=
+name|NULL
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"   Load Device: %S\n"
