@@ -33,11 +33,27 @@ directive|include
 file|<nlist.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
+begin_comment
+comment|/*  * Including vm/vm.h causes namespace pollution issues.  For the  * most part, only things using kvm_walk_pages() need to #include it.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_H
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|u_char
+name|vm_prot_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Default version symbol. */

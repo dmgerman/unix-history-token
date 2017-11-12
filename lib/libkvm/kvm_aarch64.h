@@ -82,14 +82,14 @@ begin_define
 define|#
 directive|define
 name|AARCH64_ATTR_UXN
-value|(1UL<< 54)
+value|(1ULL<< 54)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AARCH64_ATTR_PXN
-value|(1UL<< 53)
+value|(1ULL<< 53)
 end_define
 
 begin_define

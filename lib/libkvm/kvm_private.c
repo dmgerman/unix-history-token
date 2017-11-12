@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kvm.h>
 end_include
 
@@ -1221,7 +1227,7 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|off_t
+name|uintptr_t
 name|off
 init|=
 name|idx
@@ -1230,6 +1236,9 @@ name|len
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|off_t
+operator|)
 name|off
 operator|>=
 name|kd
@@ -1743,7 +1752,7 @@ name|program
 argument_list|,
 literal|"cannot map %"
 name|PRIu64
-literal|" bytes from fd %d offset %ld for sparse map: %s"
+literal|" bytes from fd %d offset %jd for sparse map: %s"
 argument_list|,
 name|kd
 operator|->
@@ -1753,6 +1762,9 @@ name|kd
 operator|->
 name|pmfd
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|kd
 operator|->
 name|pt_sparse_off
@@ -1880,10 +1892,13 @@ operator|->
 name|program
 argument_list|,
 literal|"cannot read %d bytes from "
-literal|"offset %ld for page map"
+literal|"offset %jd for page map"
 argument_list|,
 name|pmap_size
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|pmap_off
 argument_list|)
 expr_stmt|;

@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kvm.h>
 end_include
 
@@ -1471,6 +1477,16 @@ operator|=
 name|VM_PROT_READ
 operator||
 name|VM_PROT_EXECUTE
+expr_stmt|;
+operator|*
+name|pa
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|va
+operator|=
+literal|0
 expr_stmt|;
 operator|*
 name|dva

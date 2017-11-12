@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kvm.h>
 end_include
 
@@ -151,7 +157,7 @@ condition|(
 operator|(
 name|entry
 operator|&
-name|PG_RW
+name|AMD64_PG_RW
 operator|)
 operator|!=
 literal|0
@@ -165,7 +171,7 @@ condition|(
 operator|(
 name|entry
 operator|&
-name|PG_NX
+name|AMD64_PG_NX
 operator|)
 operator|==
 literal|0
@@ -1853,7 +1859,7 @@ name|pdeindex
 operator|++
 control|)
 block|{
-name|pd_entry_t
+name|amd64_pde_t
 name|pde
 init|=
 name|_amd64_pde_get
@@ -1863,7 +1869,7 @@ argument_list|,
 name|pdeindex
 argument_list|)
 decl_stmt|;
-name|pt_entry_t
+name|amd64_pte_t
 modifier|*
 name|ptes
 decl_stmt|;
@@ -1889,7 +1895,7 @@ condition|(
 operator|(
 name|pde
 operator|&
-name|PG_V
+name|AMD64_PG_V
 operator|)
 operator|==
 literal|0
@@ -1909,9 +1915,11 @@ block|{
 comment|/* 			 * Large page.  Iterate on each 4K page section 			 * within this page.  This differs from 4K pages in 			 * that every page here uses the same PDE to 			 * generate permissions. 			 */
 name|pa
 operator|=
+operator|(
 name|pde
 operator|&
 name|AMD64_PG_PS_FRAME
+operator|)
 operator|+
 operator|(
 operator|(
@@ -2008,13 +2016,13 @@ literal|0
 init|;
 name|i
 operator|<
-name|NPTEPG
+name|AMD64_NPTEPG
 condition|;
 name|i
 operator|++
 control|)
 block|{
-name|pt_entry_t
+name|amd64_pte_t
 name|pte
 init|=
 operator|(
@@ -2046,7 +2054,7 @@ condition|(
 operator|(
 name|pte
 operator|&
-name|PG_V
+name|AMD64_PG_V
 operator|)
 operator|!=
 literal|0
