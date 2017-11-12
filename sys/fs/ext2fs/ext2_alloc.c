@@ -681,7 +681,7 @@ specifier|static
 name|int
 name|doreallocblks
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
