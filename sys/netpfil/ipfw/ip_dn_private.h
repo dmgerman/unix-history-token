@@ -916,6 +916,48 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/*  * Packets processed by dummynet have an mbuf tag associated with  * them that carries their dummynet state.  * Outside dummynet, only the 'rule' field is relevant, and it must  * be at the beginning of the structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|dn_pkt_tag
+block|{
+name|struct
+name|ipfw_rule_ref
+name|rule
+decl_stmt|;
+comment|/* matching rule	*/
+comment|/* second part, dummynet specific */
+name|int
+name|dn_dir
+decl_stmt|;
+comment|/* action when packet comes out.*/
+comment|/* see ip_fw_private.h		*/
+name|uint64_t
+name|output_time
+decl_stmt|;
+comment|/* when the pkt is due for delivery*/
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+comment|/* interface, for ip_output	*/
+name|struct
+name|_ip6dn_args
+name|ip6opt
+decl_stmt|;
+comment|/* XXX ipv6 options	*/
+name|uint16_t
+name|iphdr_off
+decl_stmt|;
+comment|/* IP header offset for mtodo()	*/
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -969,6 +1011,20 @@ name|void
 name|dn_reschedule
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|dn_pkt_tag
+modifier|*
+name|dn_tag_get
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
