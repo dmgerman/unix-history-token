@@ -2997,6 +2997,438 @@ value|0xda0
 end_define
 
 begin_comment
+comment|/*  * Intel Processor Trace (PT) MSRs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_OUTPUT_BASE
+value|0x560
+end_define
+
+begin_comment
+comment|/* Trace Output Base Register (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_OUTPUT_MASK_PTRS
+value|0x561
+end_define
+
+begin_comment
+comment|/* Trace Output Mask Pointers Register (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_CTL
+value|0x570
+end_define
+
+begin_comment
+comment|/* Trace Control Register (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_TRACEEN
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_CYCEN
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_OS
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_USER
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_PWREVTEN
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_FUPONPTW
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_FABRICEN
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_CR3FILTER
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_TOPA
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_MTCEN
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_TSCEN
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_DISRETC
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_PTWEN
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_BRANCHEN
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_MTC_FREQ_S
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_MTC_FREQ
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)<< RTIT_CTL_MTC_FREQ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_MTC_FREQ_M
+value|(0xf<< RTIT_CTL_MTC_FREQ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_CYC_THRESH_S
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_CYC_THRESH_M
+value|(0xf<< RTIT_CTL_CYC_THRESH_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_PSB_FREQ_S
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_PSB_FREQ_M
+value|(0xf<< RTIT_CTL_PSB_FREQ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_ADDR_CFG_S
+parameter_list|(
+name|n
+parameter_list|)
+value|(32 + (n) * 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_ADDR0_CFG_S
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_ADDR0_CFG_M
+value|(0xfULL<< RTIT_CTL_ADDR0_CFG_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_ADDR1_CFG_S
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_ADDR1_CFG_M
+value|(0xfULL<< RTIT_CTL_ADDR1_CFG_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_ADDR2_CFG_S
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_ADDR2_CFG_M
+value|(0xfULL<< RTIT_CTL_ADDR2_CFG_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_ADDR3_CFG_S
+value|44
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_CTL_ADDR3_CFG_M
+value|(0xfULL<< RTIT_CTL_ADDR3_CFG_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_STATUS
+value|0x571
+end_define
+
+begin_comment
+comment|/* Tracing Status Register (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTIT_STATUS_FILTEREN
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_STATUS_CONTEXTEN
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_STATUS_TRIGGEREN
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_STATUS_ERROR
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_STATUS_STOPPED
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_STATUS_PACKETBYTECNT_S
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTIT_STATUS_PACKETBYTECNT_M
+value|(0x1ffffULL<< RTIT_STATUS_PACKETBYTECNT_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_CR3_MATCH
+value|0x572
+end_define
+
+begin_comment
+comment|/* Trace Filter CR3 Match Register (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_ADDR_A
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x580 + (n) * 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_ADDR_B
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x581 + (n) * 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_ADDR0_A
+value|0x580
+end_define
+
+begin_comment
+comment|/* Region 0 Start Address (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_ADDR0_B
+value|0x581
+end_define
+
+begin_comment
+comment|/* Region 0 End Address (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_ADDR1_A
+value|0x582
+end_define
+
+begin_comment
+comment|/* Region 1 Start Address (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_ADDR1_B
+value|0x583
+end_define
+
+begin_comment
+comment|/* Region 1 End Address (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_ADDR2_A
+value|0x584
+end_define
+
+begin_comment
+comment|/* Region 2 Start Address (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_ADDR2_B
+value|0x585
+end_define
+
+begin_comment
+comment|/* Region 2 End Address (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_ADDR3_A
+value|0x586
+end_define
+
+begin_comment
+comment|/* Region 3 Start Address (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_RTIT_ADDR3_B
+value|0x587
+end_define
+
+begin_comment
+comment|/* Region 3 End Address (R/W) */
+end_comment
+
+begin_comment
 comment|/*  * Constants related to MSR's.  */
 end_comment
 
