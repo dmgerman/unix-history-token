@@ -1236,49 +1236,10 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Packets processed by dummynet have an mbuf tag associated with  * them that carries their dummynet state.  * Outside dummynet, only the 'rule' field is relevant, and it must  * be at the beginning of the structure.  */
-end_comment
-
-begin_struct
-struct|struct
-name|dn_pkt_tag
-block|{
-name|struct
-name|ipfw_rule_ref
-name|rule
-decl_stmt|;
-comment|/* matching rule	*/
-comment|/* second part, dummynet specific */
-name|int
-name|dn_dir
-decl_stmt|;
-comment|/* action when packet comes out.*/
-comment|/* see ip_fw_private.h		*/
-name|uint64_t
-name|output_time
-decl_stmt|;
-comment|/* when the pkt is due for delivery*/
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-comment|/* interface, for ip_output	*/
-name|struct
-name|_ip6dn_args
-name|ip6opt
-decl_stmt|;
-comment|/* XXX ipv6 options	*/
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Return the mbuf tag holding the dummynet state (it should  * be the first one on the list).  */
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|dn_pkt_tag
 modifier|*
@@ -1941,13 +1902,21 @@ name|ip
 decl_stmt|;
 name|ip
 operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
+operator|(
 expr|struct
 name|ip
 operator|*
+operator|)
+name|mtodo
+argument_list|(
+name|m
+argument_list|,
+name|dn_tag_get
+argument_list|(
+name|m
+argument_list|)
+operator|->
+name|iphdr_off
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2099,14 +2068,12 @@ name|ip6_hdr
 modifier|*
 name|ip6
 init|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
+operator|(
 expr|struct
 name|ip6_hdr
 operator|*
-argument_list|)
+operator|)
+name|ip
 decl_stmt|;
 name|u_int32_t
 name|flowlabel
@@ -3921,6 +3888,20 @@ operator|=
 name|dn_cfg
 operator|.
 name|curr_time
+expr_stmt|;
+name|dt
+operator|->
+name|iphdr_off
+operator|=
+operator|(
+name|dir
+operator|&
+name|PROTO_LAYER2
+operator|)
+condition|?
+name|ETHER_HDR_LEN
+else|:
+literal|0
 expr_stmt|;
 return|return
 literal|0
