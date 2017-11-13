@@ -4694,6 +4694,8 @@ operator|(
 name|TDB_XSIG
 operator||
 name|TDB_FSTP
+operator||
+name|TDB_SUSPEND
 operator|)
 expr_stmt|;
 block|}
@@ -4803,27 +4805,6 @@ name|p_flag
 operator||=
 name|P_WKILLED
 expr_stmt|;
-if|if
-condition|(
-name|req
-operator|==
-name|PT_DETACH
-condition|)
-block|{
-name|FOREACH_THREAD_IN_PROC
-argument_list|(
-argument|p
-argument_list|,
-argument|td3
-argument_list|)
-name|td3
-operator|->
-name|td_dbgflags
-operator|&=
-operator|~
-name|TDB_SUSPEND
-expr_stmt|;
-block|}
 comment|/* 		 * Unsuspend all threads.  To leave a thread 		 * suspended, use PT_SUSPEND to suspend it before 		 * continuing the process. 		 */
 name|PROC_SLOCK
 argument_list|(
