@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<boot/userboot/userboot.h>
+file|<userboot.h>
 end_include
 
 begin_decl_stmt
