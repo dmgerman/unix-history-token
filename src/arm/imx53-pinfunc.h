@@ -3592,6 +3592,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX53_PAD_EIM_D26__UART2_RXD_MUX
+value|0x144 0x48c 0x880 0x2 0x0
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX53_PAD_EIM_D26__UART2_TXD_MUX
 value|0x144 0x48c 0x000 0x2 0x0
 end_define
@@ -3655,6 +3662,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX53_PAD_EIM_D27__UART2_TXD_MUX
+value|0x148 0x490 0x000 0x2 0x0
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX53_PAD_EIM_D27__FIRI_TXD
 value|0x148 0x490 0x000 0x3 0x0
 end_define
@@ -3711,6 +3725,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX53_PAD_EIM_D28__UART2_RTS
+value|0x14c 0x494 0x87c 0x2 0x0
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX53_PAD_EIM_D28__IPU_DISPB0_SER_DIO
 value|0x14c 0x494 0x82c 0x3 0x1
 end_define
@@ -3755,6 +3776,13 @@ define|#
 directive|define
 name|MX53_PAD_EIM_D29__GPIO3_29
 value|0x150 0x498 0x000 0x1 0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX53_PAD_EIM_D29__UART2_CTS
+value|0x150 0x498 0x000 0x2 0x0
 end_define
 
 begin_define

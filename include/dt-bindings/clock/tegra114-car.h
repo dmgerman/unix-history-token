@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* SPDX-License-Identifier: GPL-2.0 */
+end_comment
+
+begin_comment
 comment|/*  * This header provides constants for binding nvidia,tegra114-car.  *  * The first 160 clocks are numbered to match the bits in the CAR's CLK_OUT_ENB  * registers. These IDs often match those in the CAR's RST_DEVICES registers,  * but not in all cases. Some bits in CLK_OUT_ENB affect multiple clocks. In  * this case, those clocks are assigned IDs above 160 in order to highlight  * this issue. Implementations that interpret these clock IDs as bit values  * within the CLK_OUT_ENB or RST_DEVICES registers should be careful to  * explicitly handle these special cases.  *  * The balance of the clocks controlled by the CAR are assigned IDs of 160 and  * above.  */
 end_comment
 
