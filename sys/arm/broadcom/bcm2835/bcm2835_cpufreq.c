@@ -475,6 +475,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"brcm,bcm2836"
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
