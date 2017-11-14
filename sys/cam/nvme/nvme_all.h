@@ -28,17 +28,6 @@ name|ccb_nvmeio
 struct_decl|;
 end_struct_decl
 
-begin_define
-define|#
-directive|define
-name|NVME_REV_1
-value|1
-end_define
-
-begin_comment
-comment|/* Supports NVMe 1.2 or earlier */
-end_comment
-
 begin_function_decl
 name|void
 name|nvme_ns_cmd

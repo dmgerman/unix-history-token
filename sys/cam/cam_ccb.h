@@ -3463,25 +3463,37 @@ define|#
 directive|define
 name|CTS_NVME_VALID_CAPS
 value|0x02
-name|u_int
-name|spec_major
+define|#
+directive|define
+name|CTS_NVME_VALID_LINK
+value|0x04
+name|uint32_t
+name|spec
 decl_stmt|;
-comment|/* Major version of spec supported */
-name|u_int
-name|spec_minor
-decl_stmt|;
-comment|/* Minor verison of spec supported */
-name|u_int
-name|spec_tiny
-decl_stmt|;
-comment|/* Tiny version of spec supported */
-name|u_int
+comment|/* NVMe spec implemented -- same as vs register */
+name|uint32_t
 name|max_xfer
 decl_stmt|;
 comment|/* Max transfer size (0 -> unlimited */
-name|u_int
+name|uint32_t
 name|caps
 decl_stmt|;
+name|uint8_t
+name|lanes
+decl_stmt|;
+comment|/* Number of PCIe lanes */
+name|uint8_t
+name|speed
+decl_stmt|;
+comment|/* PCIe generation for each lane */
+name|uint8_t
+name|max_lanes
+decl_stmt|;
+comment|/* Number of PCIe lanes */
+name|uint8_t
+name|max_speed
+decl_stmt|;
+comment|/* PCIe generation for each lane */
 block|}
 struct|;
 end_struct
