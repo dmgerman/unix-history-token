@@ -260,6 +260,15 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+name|URE_DEV
+argument_list|(
+name|TPLINK
+argument_list|,
+name|RTL8153
+argument_list|,
+literal|0
+argument_list|)
+block|,
 undef|#
 directive|undef
 name|URE_DEV
