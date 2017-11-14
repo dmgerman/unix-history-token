@@ -2011,9 +2011,9 @@ name|ats
 operator|->
 name|tv_sec
 operator|>
-literal|9999ULL
+literal|8000ULL
 operator|*
-literal|366
+literal|365
 operator|*
 literal|24
 operator|*
