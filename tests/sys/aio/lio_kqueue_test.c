@@ -95,12 +95,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEBUG
-end_define
-
-begin_define
-define|#
-directive|define
 name|LIO_MAX
 value|5
 end_define
@@ -557,8 +551,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"hello iocb[k] %ld\n"
+literal|"hello iocb[k] %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|iocb
 index|[
 name|k
@@ -640,12 +637,21 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Time %ld %ld %ld result -> %d\n"
+literal|"Time %jd %jd %jd result -> %d\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time1
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time2
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time2
 operator|-
 name|time1
