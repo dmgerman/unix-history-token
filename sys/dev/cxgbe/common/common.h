@@ -1255,6 +1255,14 @@ name|uint32_t
 name|mps_bg_map
 decl_stmt|;
 comment|/* rx buffer group map for all ports (upto 4) */
+name|bool
+name|ulptx_memwrite_dsgl
+decl_stmt|;
+comment|/* use of T5 DSGL allowed */
+name|bool
+name|fr_nsmr_tpte_wr_support
+decl_stmt|;
+comment|/* FW support for FR_NSMR_TPTE_WR */
 block|}
 struct|;
 end_struct
