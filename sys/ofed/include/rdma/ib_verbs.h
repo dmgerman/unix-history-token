@@ -3649,7 +3649,14 @@ block|,
 name|IB_WR_RESERVED9
 block|,
 name|IB_WR_RESERVED10
-block|, }
+block|,
+name|IB_WR_DUMMY
+init|=
+operator|-
+literal|1
+block|,
+comment|/* force enum type signed */
+block|}
 enum|;
 end_enum
 

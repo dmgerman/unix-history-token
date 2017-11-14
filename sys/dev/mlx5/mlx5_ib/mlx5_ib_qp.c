@@ -13874,6 +13874,12 @@ argument_list|(
 name|wr
 operator|->
 name|opcode
+operator|<
+literal|0
+operator|||
+name|wr
+operator|->
+name|opcode
 operator|>=
 name|ARRAY_SIZE
 argument_list|(
