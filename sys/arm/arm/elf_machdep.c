@@ -132,6 +132,18 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+name|u_long
+name|elf_hwcap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_long
+name|elf_hwcap2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|sysentvec
 name|elf32_freebsd_sysvec
@@ -281,6 +293,8 @@ directive|endif
 name|SV_ABI_FREEBSD
 operator||
 name|SV_ILP32
+operator||
+name|SV_HWCAP
 block|,
 operator|.
 name|sv_set_syscall_retval
@@ -321,6 +335,18 @@ operator|.
 name|sv_trap
 operator|=
 name|NULL
+block|,
+operator|.
+name|sv_hwcap
+operator|=
+operator|&
+name|elf_hwcap
+block|,
+operator|.
+name|sv_hwcap2
+operator|=
+operator|&
+name|elf_hwcap2
 block|, }
 decl_stmt|;
 end_decl_stmt

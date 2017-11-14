@@ -513,8 +513,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT_COUNT
+name|AT_HWCAP2
 value|26
+end_define
+
+begin_comment
+comment|/* CPU feature flags 2. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_COUNT
+value|27
 end_define
 
 begin_comment
