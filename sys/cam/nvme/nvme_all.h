@@ -77,6 +77,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|nvme_print_ident
@@ -89,6 +95,10 @@ parameter_list|,
 specifier|const
 name|struct
 name|nvme_namespace_data
+modifier|*
+parameter_list|,
+name|struct
+name|sbuf
 modifier|*
 parameter_list|)
 function_decl|;
