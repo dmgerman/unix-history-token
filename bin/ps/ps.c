@@ -2412,6 +2412,7 @@ operator|&
 name|nentries
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Ignore ESRCH to preserve behaviour of "ps -p nonexistent-pid" 	 * not reporting an error. 	 */
 if|if
 condition|(
 operator|(
@@ -2419,9 +2420,9 @@ name|kp
 operator|==
 name|NULL
 operator|&&
-name|nentries
-operator|>
-literal|0
+name|errno
+operator|!=
+name|ESRCH
 operator|)
 operator|||
 operator|(
