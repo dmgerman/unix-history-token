@@ -490,7 +490,7 @@ name|SYSCTL_INT
 argument_list|(
 name|_vm
 argument_list|,
-name|OID_AUTO
+name|VM_OVERCOMMIT
 argument_list|,
 name|overcommit
 argument_list|,
