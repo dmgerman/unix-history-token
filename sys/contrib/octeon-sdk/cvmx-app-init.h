@@ -782,7 +782,7 @@ name|CVMX_BOARD_TYPE_CUST_UBIQUITI_E100
 init|=
 literal|20002
 block|,
-name|CVMX_BOARD_TYPE_CUST_UBIQUITI_USG
+name|CVMX_BOARD_TYPE_CUST_UBIQUITI_E110
 init|=
 literal|20004
 block|,
@@ -1317,7 +1317,7 @@ argument|CVMX_BOARD_TYPE_CUST_UBIQUITI_E100
 argument_list|)
 name|ENUM_BRD_TYPE_CASE
 argument_list|(
-argument|CVMX_BOARD_TYPE_CUST_UBIQUITI_USG
+argument|CVMX_BOARD_TYPE_CUST_UBIQUITI_E110
 argument_list|)
 endif|#
 directive|endif
