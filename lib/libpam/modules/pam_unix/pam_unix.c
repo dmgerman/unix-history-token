@@ -394,6 +394,11 @@ operator|(
 name|PAM_SUCCESS
 operator|)
 return|;
+name|PAM_LOG
+argument_list|(
+literal|"Password is empty, using fake password"
+argument_list|)
+expr_stmt|;
 name|realpw
 operator|=
 literal|"*"
@@ -474,6 +479,30 @@ argument_list|(
 literal|"Got password"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strnlen
+argument_list|(
+name|pass
+argument_list|,
+name|_PASSWORD_LEN
+operator|+
+literal|1
+argument_list|)
+operator|>
+name|_PASSWORD_LEN
+condition|)
+block|{
+name|PAM_LOG
+argument_list|(
+literal|"Password is too long, using fake password"
+argument_list|)
+expr_stmt|;
+name|realpw
+operator|=
+literal|"*"
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|strcmp
