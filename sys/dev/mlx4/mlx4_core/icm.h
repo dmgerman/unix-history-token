@@ -189,6 +189,9 @@ name|table
 parameter_list|,
 name|u32
 name|obj
+parameter_list|,
+name|gfp_t
+name|gfp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -279,7 +282,7 @@ parameter_list|,
 name|int
 name|obj_size
 parameter_list|,
-name|u64
+name|u32
 name|nobj
 parameter_list|,
 name|int

@@ -929,7 +929,7 @@ block|{
 name|u64
 name|block_shift
 init|=
-name|MLX4_MAX_MTT_SHIFT
+literal|31
 decl_stmt|;
 name|u64
 name|current_block_len
@@ -2564,6 +2564,8 @@ name|dev
 operator|->
 name|dev
 operator|->
+name|persist
+operator|->
 name|pdev
 operator|->
 name|dev
@@ -2679,6 +2681,8 @@ operator|&
 name|dev
 operator|->
 name|dev
+operator|->
+name|persist
 operator|->
 name|pdev
 operator|->

@@ -110,6 +110,8 @@ name|pci_unmap_sg
 argument_list|(
 name|dev
 operator|->
+name|persist
+operator|->
 name|pdev
 argument_list|,
 name|chunk
@@ -205,6 +207,8 @@ name|dma_free_coherent
 argument_list|(
 operator|&
 name|dev
+operator|->
+name|persist
 operator|->
 name|pdev
 operator|->
@@ -545,8 +549,10 @@ operator|=
 name|kmalloc_node
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|icm
+argument_list|)
 argument_list|,
 name|gfp_mask
 operator|&
@@ -573,8 +579,10 @@ operator|=
 name|kmalloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|icm
+argument_list|)
 argument_list|,
 name|gfp_mask
 operator|&
@@ -634,8 +642,10 @@ operator|=
 name|kmalloc_node
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|chunk
+argument_list|)
 argument_list|,
 name|gfp_mask
 operator|&
@@ -662,8 +672,10 @@ operator|=
 name|kmalloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|chunk
+argument_list|)
 argument_list|,
 name|gfp_mask
 operator|&
@@ -740,6 +752,8 @@ name|mlx4_alloc_icm_coherent
 argument_list|(
 operator|&
 name|dev
+operator|->
+name|persist
 operator|->
 name|pdev
 operator|->
@@ -834,6 +848,8 @@ name|pci_map_sg
 argument_list|(
 name|dev
 operator|->
+name|persist
+operator|->
 name|pdev
 argument_list|,
 name|chunk
@@ -893,6 +909,8 @@ operator|=
 name|pci_map_sg
 argument_list|(
 name|dev
+operator|->
+name|persist
 operator|->
 name|pdev
 argument_list|,
@@ -1089,6 +1107,9 @@ name|table
 parameter_list|,
 name|u32
 name|obj
+parameter_list|,
+name|gfp_t
+name|gfp
 parameter_list|)
 block|{
 name|u32
@@ -1171,7 +1192,7 @@ name|table
 operator|->
 name|lowmem
 condition|?
-name|GFP_KERNEL
+name|gfp
 else|:
 name|GFP_HIGHUSER
 operator|)
@@ -1367,9 +1388,6 @@ name|i
 operator|*
 name|MLX4_TABLE_CHUNK_SIZE
 expr_stmt|;
-if|if
-condition|(
-operator|!
 name|mlx4_UNMAP_ICM
 argument_list|(
 name|dev
@@ -1384,8 +1402,7 @@ name|MLX4_TABLE_CHUNK_SIZE
 operator|/
 name|MLX4_ICM_PAGE_SIZE
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
 name|mlx4_free_icm
 argument_list|(
 name|dev
@@ -1411,15 +1428,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-block|}
-else|else
-block|{
-name|pr_warn
-argument_list|(
-literal|"mlx4_core: mlx4_UNMAP_ICM failed.\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|mutex_unlock
 argument_list|(
@@ -1752,6 +1760,8 @@ argument_list|,
 name|table
 argument_list|,
 name|i
+argument_list|,
+name|GFP_KERNEL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1868,7 +1878,7 @@ parameter_list|,
 name|int
 name|obj_size
 parameter_list|,
-name|u64
+name|u32
 name|nobj
 parameter_list|,
 name|int
@@ -1904,8 +1914,6 @@ name|obj_size
 expr_stmt|;
 name|num_icm
 operator|=
-name|div_u64
-argument_list|(
 operator|(
 name|nobj
 operator|+
@@ -1913,9 +1921,8 @@ name|obj_per_chunk
 operator|-
 literal|1
 operator|)
-argument_list|,
+operator|/
 name|obj_per_chunk
-argument_list|)
 expr_stmt|;
 name|table
 operator|->
@@ -2172,9 +2179,6 @@ name|i
 index|]
 condition|)
 block|{
-if|if
-condition|(
-operator|!
 name|mlx4_UNMAP_ICM
 argument_list|(
 name|dev
@@ -2189,8 +2193,7 @@ name|MLX4_TABLE_CHUNK_SIZE
 operator|/
 name|MLX4_ICM_PAGE_SIZE
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
 name|mlx4_free_icm
 argument_list|(
 name|dev
@@ -2205,19 +2208,6 @@ argument_list|,
 name|use_coherent
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|pr_warn
-argument_list|(
-literal|"mlx4_core: mlx4_UNMAP_ICM failed.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-name|ENOMEM
-return|;
-block|}
 block|}
 name|kfree
 argument_list|(
@@ -2250,10 +2240,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|err
-init|=
-literal|0
 decl_stmt|;
 for|for
 control|(
@@ -2280,8 +2266,6 @@ name|i
 index|]
 condition|)
 block|{
-name|err
-operator|=
 name|mlx4_UNMAP_ICM
 argument_list|(
 name|dev
@@ -2299,12 +2283,6 @@ operator|/
 name|MLX4_ICM_PAGE_SIZE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|err
-condition|)
-block|{
 name|mlx4_free_icm
 argument_list|(
 name|dev
@@ -2322,21 +2300,6 @@ name|coherent
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|pr_warn
-argument_list|(
-literal|"mlx4_core: mlx4_UNMAP_ICM failed.\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-if|if
-condition|(
-operator|!
-name|err
-condition|)
 name|kfree
 argument_list|(
 name|table

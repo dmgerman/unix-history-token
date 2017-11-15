@@ -176,7 +176,7 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|u64
+name|u32
 name|num
 decl_stmt|;
 name|int
@@ -193,10 +193,6 @@ name|struct
 name|mlx4_resource
 modifier|*
 name|profile
-decl_stmt|;
-name|struct
-name|mlx4_resource
-name|tmp
 decl_stmt|;
 name|int
 name|i
@@ -475,14 +471,9 @@ index|]
 operator|.
 name|num
 operator|=
-operator|(
-operator|(
-name|u64
-operator|)
 name|request
 operator|->
-name|num_mtt_segs
-operator|)
+name|num_mtt
 operator|*
 operator|(
 literal|1
@@ -641,36 +632,21 @@ index|]
 operator|.
 name|size
 condition|)
-block|{
-name|tmp
-operator|=
+name|swap
+argument_list|(
 name|profile
 index|[
 name|j
 index|]
-expr_stmt|;
-name|profile
-index|[
-name|j
-index|]
-operator|=
+argument_list|,
 name|profile
 index|[
 name|j
 operator|-
 literal|1
 index|]
+argument_list|)
 expr_stmt|;
-name|profile
-index|[
-name|j
-operator|-
-literal|1
-index|]
-operator|=
-name|tmp
-expr_stmt|;
-block|}
 block|}
 for|for
 control|(
@@ -728,8 +704,7 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"Profile requires 0x%llx bytes; "
-literal|"won't fit in 0x%llx bytes of context memory.\n"
+literal|"Profile requires 0x%llx bytes; won't fit in 0x%llx bytes of context memory\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -771,8 +746,7 @@ name|mlx4_dbg
 argument_list|(
 name|dev
 argument_list|,
-literal|"  profile[%2d] (%6s): 2^%02d entries @ 0x%10llx, "
-literal|"size 0x%10llx\n"
+literal|"  profile[%2d] (%6s): 2^%02d entries @ 0x%10llx, size 0x%10llx\n"
 argument_list|,
 name|i
 argument_list|,

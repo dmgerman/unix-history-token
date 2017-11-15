@@ -1916,6 +1916,8 @@ name|dev
 operator|->
 name|dev
 operator|->
+name|persist
+operator|->
 name|pdev
 argument_list|)
 argument_list|,
@@ -3797,6 +3799,8 @@ name|device
 operator|->
 name|dev
 operator|->
+name|persist
+operator|->
 name|num_vfs
 condition|;
 operator|++
@@ -3860,6 +3864,8 @@ operator|=
 name|device
 operator|->
 name|dev
+operator|->
+name|persist
 operator|->
 name|num_vfs
 init|;
