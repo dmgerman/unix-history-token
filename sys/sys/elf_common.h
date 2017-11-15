@@ -5552,6 +5552,17 @@ begin_comment
 comment|/* x86 XSAVE extended state. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NT_ARM_VFP
+value|0x400
+end_define
+
+begin_comment
+comment|/* ARM VFP registers */
+end_comment
+
 begin_comment
 comment|/* Symbol Binding - ELFNN_ST_BIND - st_info */
 end_comment
