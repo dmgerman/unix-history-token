@@ -31308,7 +31308,7 @@ name|max
 operator|=
 name|ah
 operator|->
-name|keysize
+name|hashsize
 expr_stmt|;
 if|if
 condition|(
