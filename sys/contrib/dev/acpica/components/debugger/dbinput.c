@@ -267,6 +267,8 @@ name|CMD_UNLOAD
 block|,
 name|CMD_TERMINATE
 block|,
+name|CMD_BACKGROUND
+block|,
 name|CMD_THREADS
 block|,
 name|CMD_TEST
@@ -672,6 +674,12 @@ literal|0
 block|}
 block|,
 block|{
+literal|"BACKGROUND"
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"THREADS"
 block|,
 literal|3
@@ -695,7 +703,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Help for all debugger commands. First argument is the number of lines  * of help to output for the command.  */
+comment|/*  * Help for all debugger commands. First argument is the number of lines  * of help to output for the command.  *  * Note: Some commands are not supported by the kernel-level version of  * the debugger.  */
 end_comment
 
 begin_decl_stmt
@@ -709,7 +717,260 @@ block|{
 block|{
 literal|0
 block|,
-literal|"\nGeneral-Purpose Commands:"
+literal|"\nNamespace Access:"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Businfo"
+block|,
+literal|"Display system bus info\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Disassemble<Method>"
+block|,
+literal|"Disassemble a control method\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Find<AcpiName> (? is wildcard)"
+block|,
+literal|"Find ACPI name(s) with wildcards\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Integrity"
+block|,
+literal|"Validate namespace integrity\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Methods"
+block|,
+literal|"Display list of loaded control methods\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Namespace [Object] [Depth]"
+block|,
+literal|"Display loaded namespace tree/subtree\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Notify<Object><Value>"
+block|,
+literal|"Send a notification on Object\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Objects [ObjectType]"
+block|,
+literal|"Display summary of all objects or just given type\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Owner<OwnerId> [Depth]"
+block|,
+literal|"Display loaded namespace by object owner\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Paths"
+block|,
+literal|"Display full pathnames of namespace objects\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Predefined"
+block|,
+literal|"Check all predefined names\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Prefix [<Namepath>]"
+block|,
+literal|"Set or Get current execution prefix\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  References<Addr>"
+block|,
+literal|"Find all references to object at addr\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Resources [DeviceName]"
+block|,
+literal|"Display Device resources (no arg = all devices)\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Set N<NamedObject><Value>"
+block|,
+literal|"Set value for named integer\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Template<Object>"
+block|,
+literal|"Format/dump a Buffer/ResourceTemplate\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Type<Object>"
+block|,
+literal|"Display object type\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"\nControl Method Execution:"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Evaluate<Namepath> [Arguments]"
+block|,
+literal|"Evaluate object or control method\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Execute<Namepath> [Arguments]"
+block|,
+literal|"Synonym for Evaluate\n"
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+block|{
+literal|1
+block|,
+literal|"  Background<Namepath> [Arguments]"
+block|,
+literal|"Evaluate object/method in a separate thread\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Thread<Threads><Loops><NamePath>"
+block|,
+literal|"Spawn threads to execute method(s)\n"
+block|}
+block|,
+endif|#
+directive|endif
+block|{
+literal|1
+block|,
+literal|"  Debug<Namepath> [Arguments]"
+block|,
+literal|"Single-Step a control method\n"
+block|}
+block|,
+block|{
+literal|7
+block|,
+literal|"  [Arguments] formats:"
+block|,
+literal|"Control method argument formats\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Hex Integer"
+block|,
+literal|"Integer\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     \"Ascii String\""
+block|,
+literal|"String\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     (Hex Byte List)"
+block|,
+literal|"Buffer\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"         (01 42 7A BF)"
+block|,
+literal|"Buffer example (4 bytes)\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     [Package Element List]"
+block|,
+literal|"Package\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"         [0x01 0x1234 \"string\"]"
+block|,
+literal|"Package example (3 elements)\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"\nMiscellaneous:"
 block|,
 literal|"\n"
 block|}
@@ -866,6 +1127,19 @@ block|,
 literal|"Display info about loaded ACPI tables\n"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+block|{
+literal|1
+block|,
+literal|"  Terminate"
+block|,
+literal|"Delete namespace and all internal objects\n"
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|1
 block|,
@@ -885,151 +1159,87 @@ block|,
 block|{
 literal|0
 block|,
-literal|"\nNamespace Access Commands:"
+literal|"\nMethod and Namespace Debugging:"
 block|,
 literal|"\n"
 block|}
 block|,
 block|{
-literal|1
+literal|5
 block|,
-literal|"  Businfo"
+literal|"  Trace<State> [<Namepath>] [Once]"
 block|,
-literal|"Display system bus info\n"
+literal|"Trace control method execution\n"
 block|}
 block|,
 block|{
 literal|1
 block|,
-literal|"  Disassemble<Method>"
+literal|"     Enable"
 block|,
-literal|"Disassemble a control method\n"
+literal|"Enable all messages\n"
 block|}
 block|,
 block|{
 literal|1
 block|,
-literal|"  Find<AcpiName> (? is wildcard)"
+literal|"     Disable"
 block|,
-literal|"Find ACPI name(s) with wildcards\n"
+literal|"Disable tracing\n"
 block|}
 block|,
 block|{
 literal|1
 block|,
-literal|"  Integrity"
+literal|"     Method"
 block|,
-literal|"Validate namespace integrity\n"
+literal|"Enable method execution messages\n"
 block|}
 block|,
 block|{
 literal|1
 block|,
-literal|"  Methods"
+literal|"     Opcode"
 block|,
-literal|"Display list of loaded control methods\n"
+literal|"Enable opcode execution messages\n"
+block|}
+block|,
+block|{
+literal|3
+block|,
+literal|"  Test<TestName>"
+block|,
+literal|"Invoke a debug test\n"
 block|}
 block|,
 block|{
 literal|1
 block|,
-literal|"  Namespace [Object] [Depth]"
+literal|"     Objects"
 block|,
-literal|"Display loaded namespace tree/subtree\n"
+literal|"Read/write/compare all namespace data objects\n"
 block|}
 block|,
 block|{
 literal|1
 block|,
-literal|"  Notify<Object><Value>"
+literal|"     Predefined"
 block|,
-literal|"Send a notification on Object\n"
+literal|"Validate all ACPI predefined names (_STA, etc.)\n"
 block|}
 block|,
 block|{
 literal|1
 block|,
-literal|"  Objects [ObjectType]"
+literal|"  Execute predefined"
 block|,
-literal|"Display summary of all objects or just given type\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Owner<OwnerId> [Depth]"
-block|,
-literal|"Display loaded namespace by object owner\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Paths"
-block|,
-literal|"Display full pathnames of namespace objects\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Predefined"
-block|,
-literal|"Check all predefined names\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Prefix [<Namepath>]"
-block|,
-literal|"Set or Get current execution prefix\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  References<Addr>"
-block|,
-literal|"Find all references to object at addr\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Resources [DeviceName]"
-block|,
-literal|"Display Device resources (no arg = all devices)\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Set N<NamedObject><Value>"
-block|,
-literal|"Set value for named integer\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Template<Object>"
-block|,
-literal|"Format/dump a Buffer/ResourceTemplate\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Type<Object>"
-block|,
-literal|"Display object type\n"
+literal|"Execute all predefined (public) methods\n"
 block|}
 block|,
 block|{
 literal|0
 block|,
-literal|"\nControl Method Execution Commands:"
+literal|"\nControl Method Single-Step Execution:"
 block|,
 literal|"\n"
 block|}
@@ -1056,70 +1266,6 @@ block|,
 literal|"  Call"
 block|,
 literal|"Run to next control method invocation\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Debug<Namepath> [Arguments]"
-block|,
-literal|"Single Step a control method\n"
-block|}
-block|,
-block|{
-literal|6
-block|,
-literal|"  Evaluate"
-block|,
-literal|"Synonym for Execute\n"
-block|}
-block|,
-block|{
-literal|5
-block|,
-literal|"  Execute<Namepath> [Arguments]"
-block|,
-literal|"Execute control method\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"     Hex Integer"
-block|,
-literal|"Integer method argument\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"     \"Ascii String\""
-block|,
-literal|"String method argument\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"     (Hex Byte List)"
-block|,
-literal|"Buffer method argument\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"     [Package Element List]"
-block|,
-literal|"Package method argument\n"
-block|}
-block|,
-block|{
-literal|5
-block|,
-literal|"  Execute predefined"
-block|,
-literal|"Execute all predefined (public) methods\n"
 block|}
 block|,
 block|{
@@ -1187,46 +1333,6 @@ literal|"Terminate control method\n"
 block|}
 block|,
 block|{
-literal|5
-block|,
-literal|"  Trace<State> [<Namepath>] [Once]"
-block|,
-literal|"Trace control method execution\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"     Enable"
-block|,
-literal|"Enable all messages\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"     Disable"
-block|,
-literal|"Disable tracing\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"     Method"
-block|,
-literal|"Enable method execution messages\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"     Opcode"
-block|,
-literal|"Enable opcode execution messages\n"
-block|}
-block|,
-block|{
 literal|1
 block|,
 literal|"  Tree"
@@ -1248,7 +1354,47 @@ name|ACPI_APPLICATION
 block|{
 literal|0
 block|,
-literal|"\nHardware Simulation Commands:"
+literal|"\nFile Operations:"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Close"
+block|,
+literal|"Close debug output file\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Load<Input Filename>"
+block|,
+literal|"Load ACPI table from a file\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Open<Output Filename>"
+block|,
+literal|"Open a file for debug output\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Unload<Namepath>"
+block|,
+literal|"Unload an ACPI table via namespace object\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"\nHardware Simulation:"
 block|,
 literal|"\n"
 block|}
@@ -1299,102 +1445,6 @@ block|,
 literal|"  Sleep [SleepState]"
 block|,
 literal|"Simulate sleep/wake sequence(s) (0-5)\n"
-block|}
-block|,
-block|{
-literal|0
-block|,
-literal|"\nFile I/O Commands:"
-block|,
-literal|"\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Close"
-block|,
-literal|"Close debug output file\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Load<Input Filename>"
-block|,
-literal|"Load ACPI table from a file\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Open<Output Filename>"
-block|,
-literal|"Open a file for debug output\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Unload<Namepath>"
-block|,
-literal|"Unload an ACPI table via namespace object\n"
-block|}
-block|,
-block|{
-literal|0
-block|,
-literal|"\nUser Space Commands:"
-block|,
-literal|"\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Terminate"
-block|,
-literal|"Delete namespace and all internal objects\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Thread<Threads><Loops><NamePath>"
-block|,
-literal|"Spawn threads to execute method(s)\n"
-block|}
-block|,
-block|{
-literal|0
-block|,
-literal|"\nDebug Test Commands:"
-block|,
-literal|"\n"
-block|}
-block|,
-block|{
-literal|3
-block|,
-literal|"  Test<TestName>"
-block|,
-literal|"Invoke a debug test\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"     Objects"
-block|,
-literal|"Read/write/compare all namespace data objects\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"     Predefined"
-block|,
-literal|"Execute all ACPI predefined names (_STA, etc.)\n"
 block|}
 block|,
 endif|#
@@ -1654,6 +1704,11 @@ name|Command
 condition|)
 block|{
 comment|/* No argument to help, display help for all commands */
+name|AcpiOsPrintf
+argument_list|(
+literal|"\nSummary of AML Debugger Commands\n\n"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|Next
@@ -1678,6 +1733,11 @@ name|Next
 operator|++
 expr_stmt|;
 block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3344,6 +3404,30 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/*  AcpiInitialize (NULL);  */
+break|break;
+case|case
+name|CMD_BACKGROUND
+case|:
+name|AcpiDbCreateExecutionThread
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|AcpiGbl_DbArgs
+index|[
+literal|2
+index|]
+argument_list|,
+operator|&
+name|AcpiGbl_DbArgTypes
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|CMD_THREADS

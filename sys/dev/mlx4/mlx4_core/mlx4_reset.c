@@ -141,8 +141,7 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"Couldn't allocate memory to save HCA "
-literal|"PCI header, aborting.\n"
+literal|"Couldn't allocate memory to save HCA PCI header, aborting\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -154,6 +153,8 @@ operator|=
 name|pci_pcie_cap
 argument_list|(
 name|dev
+operator|->
+name|persist
 operator|->
 name|pdev
 argument_list|)
@@ -189,6 +190,8 @@ name|pci_read_config_dword
 argument_list|(
 name|dev
 operator|->
+name|persist
+operator|->
 name|pdev
 argument_list|,
 name|i
@@ -210,8 +213,7 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"Couldn't save HCA "
-literal|"PCI header, aborting.\n"
+literal|"Couldn't save HCA PCI header, aborting\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -226,6 +228,8 @@ argument_list|(
 name|pci_resource_start
 argument_list|(
 name|dev
+operator|->
+name|persist
 operator|->
 name|pdev
 argument_list|,
@@ -252,7 +256,7 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"Couldn't map HCA reset register, aborting.\n"
+literal|"Couldn't map HCA reset register, aborting\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -340,10 +344,10 @@ argument_list|(
 name|reset
 argument_list|)
 expr_stmt|;
-comment|/* wait half a second before accessing device */
+comment|/* Docs say to wait one second before accessing device */
 name|msleep
 argument_list|(
-literal|500
+literal|1000
 argument_list|)
 expr_stmt|;
 name|end
@@ -360,6 +364,8 @@ operator|!
 name|pci_read_config_word
 argument_list|(
 name|dev
+operator|->
+name|persist
 operator|->
 name|pdev
 argument_list|,
@@ -406,8 +412,7 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"PCI device did not come back after reset, "
-literal|"aborting.\n"
+literal|"PCI device did not come back after reset, aborting\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -439,6 +444,8 @@ name|pcie_capability_write_word
 argument_list|(
 name|dev
 operator|->
+name|persist
+operator|->
 name|pdev
 argument_list|,
 name|PCI_EXP_DEVCTL
@@ -456,8 +463,7 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"Couldn't restore HCA PCI Express "
-literal|"Device Control register, aborting.\n"
+literal|"Couldn't restore HCA PCI Express Device Control register, aborting\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -483,6 +489,8 @@ name|pcie_capability_write_word
 argument_list|(
 name|dev
 operator|->
+name|persist
+operator|->
 name|pdev
 argument_list|,
 name|PCI_EXP_LNKCTL
@@ -500,8 +508,7 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"Couldn't restore HCA PCI Express "
-literal|"Link control register, aborting.\n"
+literal|"Couldn't restore HCA PCI Express Link control register, aborting\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -538,6 +545,8 @@ name|pci_write_config_dword
 argument_list|(
 name|dev
 operator|->
+name|persist
+operator|->
 name|pdev
 argument_list|,
 name|i
@@ -560,8 +569,7 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"Couldn't restore HCA reg %x, "
-literal|"aborting.\n"
+literal|"Couldn't restore HCA reg %x, aborting\n"
 argument_list|,
 name|i
 argument_list|)
@@ -576,6 +584,8 @@ condition|(
 name|pci_write_config_dword
 argument_list|(
 name|dev
+operator|->
+name|persist
 operator|->
 name|pdev
 argument_list|,
@@ -599,8 +609,7 @@ name|mlx4_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"Couldn't restore HCA COMMAND, "
-literal|"aborting.\n"
+literal|"Couldn't restore HCA COMMAND, aborting\n"
 argument_list|)
 expr_stmt|;
 goto|goto

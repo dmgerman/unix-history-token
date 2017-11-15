@@ -63,8 +63,8 @@ parameter_list|(
 name|UINT64
 name|Multiplicand
 parameter_list|,
-name|UINT64
-name|Multiplier
+name|UINT32
+name|Base
 parameter_list|,
 name|UINT64
 modifier|*
@@ -81,8 +81,8 @@ parameter_list|(
 name|UINT64
 name|Addend1
 parameter_list|,
-name|UINT64
-name|Addend2
+name|UINT32
+name|Digit
 parameter_list|,
 name|UINT64
 modifier|*
@@ -640,7 +640,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrtoulMultiply64  *  * PARAMETERS:  Multiplicand            - Current accumulated converted integer  *              Multiplier              - Base/Radix  *              OutProduct              - Where the product is returned  *  * RETURN:      Status and 64-bit product  *  * DESCRIPTION: Multiply two 64-bit values, with checking for 64-bit overflow as  *              well as 32-bit overflow if necessary (if the current global  *              integer width is 32).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrtoulMultiply64  *  * PARAMETERS:  Multiplicand            - Current accumulated converted integer  *              Base                    - Base/Radix  *              OutProduct              - Where the product is returned  *  * RETURN:      Status and 64-bit product  *  * DESCRIPTION: Multiply two 64-bit values, with checking for 64-bit overflow as  *              well as 32-bit overflow if necessary (if the current global  *              integer width is 32).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -651,8 +651,8 @@ parameter_list|(
 name|UINT64
 name|Multiplicand
 parameter_list|,
-name|UINT64
-name|Multiplier
+name|UINT32
+name|Base
 parameter_list|,
 name|UINT64
 modifier|*
@@ -661,6 +661,9 @@ parameter_list|)
 block|{
 name|UINT64
 name|Product
+decl_stmt|;
+name|UINT64
+name|Quotient
 decl_stmt|;
 comment|/* Exit if either operand is zero */
 operator|*
@@ -674,7 +677,7 @@ operator|!
 name|Multiplicand
 operator|||
 operator|!
-name|Multiplier
+name|Base
 condition|)
 block|{
 return|return
@@ -683,16 +686,24 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/* Check for 64-bit overflow before the actual multiplication */
+comment|/*      * Check for 64-bit overflow before the actual multiplication.      *      * Notes: 64-bit division is often not supported on 32-bit platforms      * (it requires a library function), Therefore ACPICA has a local      * 64-bit divide function. Also, Multiplier is currently only used      * as the radix (8/10/16), to the 64/32 divide will always work.      */
+name|AcpiUtShortDivide
+argument_list|(
+name|ACPI_UINT64_MAX
+argument_list|,
+name|Base
+argument_list|,
+operator|&
+name|Quotient
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Multiplicand
 operator|>
-operator|(
-name|ACPI_UINT64_MAX
-operator|/
-name|Multiplier
-operator|)
+name|Quotient
 condition|)
 block|{
 return|return
@@ -705,7 +716,7 @@ name|Product
 operator|=
 name|Multiplicand
 operator|*
-name|Multiplier
+name|Base
 expr_stmt|;
 comment|/* Check for 32-bit overflow if necessary */
 if|if
@@ -743,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrtoulAdd64  *  * PARAMETERS:  Addend1                 - Current accumulated converted integer  *              Addend2                 - New hex value/char  *              OutSum                  - Where sum is returned (Accumulator)  *  * RETURN:      Status and 64-bit sum  *  * DESCRIPTION: Add two 64-bit values, with checking for 64-bit overflow as  *              well as 32-bit overflow if necessary (if the current global  *              integer width is 32).  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrtoulAdd64  *  * PARAMETERS:  Addend1                 - Current accumulated converted integer  *              Digit                   - New hex value/char  *              OutSum                  - Where sum is returned (Accumulator)  *  * RETURN:      Status and 64-bit sum  *  * DESCRIPTION: Add two 64-bit values, with checking for 64-bit overflow as  *              well as 32-bit overflow if necessary (if the current global  *              integer width is 32).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -754,8 +765,8 @@ parameter_list|(
 name|UINT64
 name|Addend1
 parameter_list|,
-name|UINT64
-name|Addend2
+name|UINT32
+name|Digit
 parameter_list|,
 name|UINT64
 modifier|*
@@ -775,7 +786,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|Addend2
+name|Digit
 operator|>
 operator|(
 name|ACPI_UINT64_MAX
@@ -795,7 +806,7 @@ name|Sum
 operator|=
 name|Addend1
 operator|+
-name|Addend2
+name|Digit
 expr_stmt|;
 comment|/* Check for 32-bit overflow if necessary */
 if|if

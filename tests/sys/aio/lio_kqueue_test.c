@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 2005 IronPort Systems, Inc. All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*  * Note: it is a good idea to run this against a physical drive to  * exercise the physio fast path (ie. lio_kqueue /dev/<something safe>)  * This will ensure op's counting is correct.  It is currently broken.  *  * Also note that LIO& kqueue is not implemented in FreeBSD yet, LIO  * is also broken with respect to op's and some paths.  *  * A patch to make this work is at:  * 	http://www.ambrisko.com/doug/listio_kqueue/listio_kqueue.patch  */
+comment|/*  * Note: it is a good idea to run this against a physical drive to  * exercise the physio fast path (ie. lio_kqueue_test /dev/<something safe>)  */
 end_comment
 
 begin_include
@@ -102,15 +102,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IOCBS_PER_LIO
-value|16
+name|MAX_IOCBS_PER_LIO
+value|64
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAX_IOCBS
-value|(LIO_MAX * IOCBS_PER_LIO)
+value|(LIO_MAX * MAX_IOCBS_PER_LIO)
 end_define
 
 begin_define
@@ -169,6 +169,16 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|k
+decl_stmt|,
+name|max_queue_per_proc
+decl_stmt|;
+name|int
+name|max_iocbs
+decl_stmt|,
+name|iocbs_per_lio
+decl_stmt|;
+name|size_t
+name|max_queue_per_proc_size
 decl_stmt|;
 name|char
 name|buffer
@@ -230,6 +240,51 @@ name|PLAIN_REQUIRE_UNSAFE_AIO
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|max_queue_per_proc_size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|max_queue_per_proc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"vfs.aio.max_aio_queue_per_proc"
+argument_list|,
+operator|&
+name|max_queue_per_proc
+argument_list|,
+operator|&
+name|max_queue_per_proc_size
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"sysctlbyname"
+argument_list|)
+expr_stmt|;
+name|iocbs_per_lio
+operator|=
+name|max_queue_per_proc
+operator|/
+name|LIO_MAX
+expr_stmt|;
+name|max_iocbs
+operator|=
+name|LIO_MAX
+operator|*
+name|iocbs_per_lio
 expr_stmt|;
 name|kq
 operator|=
@@ -388,7 +443,7 @@ name|aiocb
 operator|*
 argument_list|)
 operator|*
-name|IOCBS_PER_LIO
+name|iocbs_per_lio
 argument_list|)
 expr_stmt|;
 for|for
@@ -399,7 +454,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|IOCBS_PER_LIO
+name|iocbs_per_lio
 condition|;
 name|i
 operator|++
@@ -408,7 +463,7 @@ block|{
 name|k
 operator|=
 operator|(
-name|IOCBS_PER_LIO
+name|iocbs_per_lio
 operator|*
 name|j
 operator|)
@@ -496,8 +551,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"hello iocb[k] %ld\n"
+literal|"hello iocb[k] %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|iocb
 index|[
 name|k
@@ -558,7 +616,7 @@ index|[
 name|j
 index|]
 argument_list|,
-name|IOCBS_PER_LIO
+name|iocbs_per_lio
 argument_list|,
 operator|&
 name|sig
@@ -579,12 +637,21 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Time %ld %ld %ld result -> %d\n"
+literal|"Time %jd %jd %jd result -> %d\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time1
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time2
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time2
 operator|-
 name|time1
@@ -972,7 +1039,7 @@ literal|0
 init|;
 name|k
 operator|<
-name|MAX_IOCBS
+name|max_iocbs
 operator|/
 name|LIO_MAX
 condition|;
@@ -995,7 +1062,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Return Resulto for %d %d is %d\n"
+literal|"Return Result for %d %d is %d\n"
 argument_list|,
 name|j
 argument_list|,
@@ -1080,7 +1147,7 @@ literal|0
 init|;
 name|k
 operator|<
-name|MAX_IOCBS
+name|max_iocbs
 operator|/
 name|LIO_MAX
 condition|;

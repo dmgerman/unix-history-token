@@ -749,6 +749,26 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiDbCreateExecutionThread
+parameter_list|(
+name|char
+modifier|*
+name|MethodNameArg
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|Arguments
+parameter_list|,
+name|ACPI_OBJECT_TYPE
+modifier|*
+name|Types
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiDbCreateExecutionThreads
 parameter_list|(
 name|char

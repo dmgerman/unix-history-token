@@ -504,6 +504,7 @@ name|_KERNEL
 end_ifndef
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|_umtx_op
 parameter_list|(
@@ -528,46 +529,41 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
+begin_decl_stmt
+name|__END_DECLS
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/*  * The umtx_key structure is used by both the Linux futex code and the  * umtx implementation to map userland addresses to unique keys.  */
-end_comment
-
-begin_enum
-enum|enum
-block|{
+name|enum
+type|{
 name|TYPE_SIMPLE_WAIT
-block|,
+decl_stmt|,
 name|TYPE_CV
-block|,
+decl_stmt|,
 name|TYPE_SEM
-block|,
+decl_stmt|,
 name|TYPE_SIMPLE_LOCK
-block|,
+decl_stmt|,
 name|TYPE_NORMAL_UMUTEX
-block|,
+decl_stmt|,
 name|TYPE_PI_UMUTEX
-block|,
+decl_stmt|,
 name|TYPE_PP_UMUTEX
-block|,
+decl_stmt|,
 name|TYPE_RWLOCK
-block|,
+decl_stmt|,
 name|TYPE_FUTEX
-block|,
+decl_stmt|,
 name|TYPE_SHM
-block|,
+decl_stmt|,
 name|TYPE_PI_ROBUST_UMUTEX
-block|,
+decl_stmt|,
 name|TYPE_PP_ROBUST_UMUTEX
-block|, }
-enum|;
-end_enum
+decl_stmt|,
+end_decl_stmt
 
 begin_comment
+unit|};
 comment|/* Key to represent a unique userland synchronous object */
 end_comment
 

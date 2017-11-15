@@ -549,8 +549,8 @@ end_endif
 
 begin_function_decl
 name|__BEGIN_DECLS
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|__BSD_VISIBLE
 name|int
 name|shmsys

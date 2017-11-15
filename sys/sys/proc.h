@@ -4762,6 +4762,21 @@ begin_function_decl
 name|struct
 name|proc
 modifier|*
+name|pfind_any
+parameter_list|(
+name|pid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Find (zombie) process by id. */
+end_comment
+
+begin_function_decl
+name|struct
+name|proc
+modifier|*
 name|pfind_locked
 parameter_list|(
 name|pid_t

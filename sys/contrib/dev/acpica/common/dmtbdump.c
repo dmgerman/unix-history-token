@@ -8293,6 +8293,15 @@ name|UINT64
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_NFIT_TYPE_CAPABILITIES
+case|:
+comment|/* ACPI 6.0A */
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoNfit7
+expr_stmt|;
+break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(

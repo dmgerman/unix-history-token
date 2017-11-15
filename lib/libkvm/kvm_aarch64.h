@@ -67,11 +67,53 @@ name|AARCH64_PAGE_MASK
 value|(AARCH64_PAGE_SIZE - 1)
 end_define
 
+begin_comment
+comment|/* Source: arm64/include/pte.h */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AARCH64_ATTR_MASK
 value|0xfff0000000000fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARCH64_ATTR_UXN
+value|(1ULL<< 54)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARCH64_ATTR_PXN
+value|(1ULL<< 53)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARCH64_ATTR_XN
+value|(AARCH64_ATTR_PXN | AARCH64_ATTR_UXN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARCH64_ATTR_AP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARCH64_ATTR_AP_RO
+value|(1<< 1)
 end_define
 
 begin_define

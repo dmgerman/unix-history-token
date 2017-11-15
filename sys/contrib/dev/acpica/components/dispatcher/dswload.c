@@ -470,6 +470,10 @@ condition|)
 block|{
 name|ACPI_ERROR_NAMESPACE
 argument_list|(
+name|WalkState
+operator|->
+name|ScopeInfo
+argument_list|,
 name|Path
 argument_list|,
 name|Status
@@ -861,6 +865,10 @@ condition|)
 block|{
 name|ACPI_ERROR_NAMESPACE
 argument_list|(
+name|WalkState
+operator|->
+name|ScopeInfo
+argument_list|,
 name|Path
 argument_list|,
 name|Status

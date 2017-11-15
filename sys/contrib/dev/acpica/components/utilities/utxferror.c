@@ -122,7 +122,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiException  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              Status              - Status value to be decoded/formatted  *              Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print "ACPI Exception" message with module/line/version info  *              and decoded ACPI_STATUS.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiException  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              Status              - Status value to be decoded/formatted  *              Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print an "ACPI Error" message with module/line/version  *              info as well as decoded ACPI_STATUS.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -165,7 +165,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_MSG_EXCEPTION
+name|ACPI_MSG_ERROR
 argument_list|)
 expr_stmt|;
 block|}
@@ -173,7 +173,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-name|ACPI_MSG_EXCEPTION
+name|ACPI_MSG_ERROR
 literal|"%s, "
 argument_list|,
 name|AcpiFormatException

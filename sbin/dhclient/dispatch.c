@@ -1265,8 +1265,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|syslog
+name|cap_syslog
 argument_list|(
+name|capsyslog
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"ioctl(SIOCGIFFLAGS) on %s: %m"
@@ -1366,8 +1368,10 @@ operator|!=
 name|EINVAL
 condition|)
 block|{
-name|syslog
+name|cap_syslog
 argument_list|(
+name|capsyslog
+argument_list|,
 name|LOG_DEBUG
 argument_list|,
 literal|"ioctl(SIOCGIFMEDIA) on %s: %m"
@@ -2072,8 +2076,10 @@ name|errno
 operator|!=
 name|EINVAL
 condition|)
-name|syslog
+name|cap_syslog
 argument_list|(
+name|capsyslog
+argument_list|,
 name|LOG_DEBUG
 argument_list|,
 literal|"ioctl(SIOCGIFMEDIA) on %s: %m"

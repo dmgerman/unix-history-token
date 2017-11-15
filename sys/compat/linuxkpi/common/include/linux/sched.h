@@ -189,7 +189,7 @@ decl_stmt|;
 name|atomic_t
 name|usage
 decl_stmt|;
-name|int
+name|atomic_t
 name|state
 decl_stmt|;
 name|atomic_t
@@ -306,8 +306,7 @@ name|task
 parameter_list|,
 name|x
 parameter_list|)
-define|\
-value|atomic_store_rel_int((volatile int *)&task->state, (x))
+value|atomic_set(&(task)->state, (x))
 end_define
 
 begin_define
@@ -319,7 +318,7 @@ name|task
 parameter_list|,
 name|x
 parameter_list|)
-value|(task->state = (x))
+value|((task)->state.counter = (x))
 end_define
 
 begin_define

@@ -296,7 +296,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|atomic_load_acq_int
+name|atomic_read
 argument_list|(
 operator|&
 name|task
@@ -1048,7 +1048,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_load_acq_int
+name|atomic_read
 argument_list|(
 operator|&
 name|task
@@ -1187,7 +1187,7 @@ argument_list|)
 expr_stmt|;
 name|state
 operator|=
-name|atomic_load_acq_int
+name|atomic_read
 argument_list|(
 operator|&
 name|task

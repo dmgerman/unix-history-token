@@ -1213,6 +1213,9 @@ block|{
 comment|/* Check if we are resolving a named reference within a package */
 name|ACPI_ERROR_NAMESPACE
 argument_list|(
+operator|&
+name|ScopeInfo
+argument_list|,
 name|OriginalObject
 operator|->
 name|String

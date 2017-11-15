@@ -215,6 +215,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|INIT_OWNER_BIT
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
 name|STAMP_STRIDE
 value|64
 end_define
@@ -446,6 +453,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MLX4_EN_NO_VLAN
+value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
 name|MLX4_EN_DEF_TX_RING_SIZE
 value|1024
 end_define
@@ -465,7 +479,7 @@ begin_define
 define|#
 directive|define
 name|MLX4_EN_RX_COAL_TARGET
-value|0x20000
+value|44
 end_define
 
 begin_define
@@ -788,6 +802,29 @@ comment|/* MLX4_EN_PERF_STAT */
 end_comment
 
 begin_comment
+comment|/* Constants for TX flow */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|MAX_INLINE
+init|=
+literal|104
+block|,
+comment|/* 128 - 16 - 4 - 4 */
+name|MAX_BF
+init|=
+literal|256
+block|,
+name|MIN_PKT_LEN
+init|=
+literal|17
+block|, }
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Configurables  */
 end_comment
 
@@ -1064,9 +1101,6 @@ decl_stmt|;
 name|u8
 name|queue_index
 decl_stmt|;
-name|cpuset_t
-name|affinity_mask
-decl_stmt|;
 name|struct
 name|buf_ring
 modifier|*
@@ -1094,36 +1128,28 @@ name|struct
 name|mlx4_srq
 name|dummy
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|bytes
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|packets
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|tx_csum
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|queue_stopped
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|oversized_packets
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|wake_queue
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|tso_packets
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|defrag_attempts
 decl_stmt|;
 name|struct
@@ -1262,41 +1288,33 @@ name|mlx4_en_rx_mbuf
 modifier|*
 name|mbuf
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|errors
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|bytes
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|packets
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|LL_EXTENDED_STATS
-name|unsigned
-name|long
+name|u64
 name|yields
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|misses
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|cleaned
 decl_stmt|;
 endif|#
 directive|endif
-name|unsigned
-name|long
+name|u64
 name|csum_ok
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|csum_none
 decl_stmt|;
 name|int
@@ -1471,40 +1489,40 @@ name|state
 decl_stmt|;
 define|#
 directive|define
-name|MLX4_EN_CQ_STATEIDLE
+name|MLX4_EN_CQ_STATE_IDLE
 value|0
 define|#
 directive|define
-name|MLX4_EN_CQ_STATENAPI
+name|MLX4_EN_CQ_STATE_NAPI
 value|1
 comment|/* NAPI owns this CQ */
 define|#
 directive|define
-name|MLX4_EN_CQ_STATEPOLL
+name|MLX4_EN_CQ_STATE_POLL
 value|2
 comment|/* poll owns this CQ */
 define|#
 directive|define
 name|MLX4_CQ_LOCKED
-value|(MLX4_EN_CQ_STATENAPI | MLX4_EN_CQ_STATEPOLL)
+value|(MLX4_EN_CQ_STATE_NAPI | MLX4_EN_CQ_STATE_POLL)
 define|#
 directive|define
-name|MLX4_EN_CQ_STATENAPI_YIELD
+name|MLX4_EN_CQ_STATE_NAPI_YIELD
 value|4
 comment|/* NAPI yielded this CQ */
 define|#
 directive|define
-name|MLX4_EN_CQ_STATEPOLL_YIELD
+name|MLX4_EN_CQ_STATE_POLL_YIELD
 value|8
 comment|/* poll yielded this CQ */
 define|#
 directive|define
 name|CQ_YIELD
-value|(MLX4_EN_CQ_STATENAPI_YIELD | MLX4_EN_CQ_STATEPOLL_YIELD)
+value|(MLX4_EN_CQ_STATE_NAPI_YIELD | MLX4_EN_CQ_STATE_POLL_YIELD)
 define|#
 directive|define
 name|CQ_USER_PEND
-value|(MLX4_EN_CQ_STATEPOLL | MLX4_EN_CQ_STATEPOLL_YIELD)
+value|(MLX4_EN_CQ_STATE_POLL | MLX4_EN_CQ_STATE_POLL_YIELD)
 name|spinlock_t
 name|poll_lock
 decl_stmt|;
@@ -1549,6 +1567,9 @@ name|tx_ppp
 decl_stmt|;
 name|int
 name|rss_rings
+decl_stmt|;
+name|int
+name|inline_thold
 decl_stmt|;
 block|}
 struct|;
@@ -1715,6 +1736,28 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+name|mlx4_en_port_flag
+block|{
+name|MLX4_EN_PORT_ANC
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+comment|/* Auto-negotiation complete */
+name|MLX4_EN_PORT_ANE
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+comment|/* Auto-negotiation enabled */
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|mlx4_en_port_state
@@ -1726,10 +1769,10 @@ name|int
 name|link_speed
 decl_stmt|;
 name|int
-name|transciver
+name|transceiver
 decl_stmt|;
-name|int
-name|autoneg
+name|u32
+name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -1737,27 +1780,27 @@ end_struct
 
 begin_enum
 enum|enum
-name|mlx4_en_mclist_act
+name|mlx4_en_addr_list_act
 block|{
-name|MCLIST_NONE
+name|MLX4_ADDR_LIST_NONE
 block|,
-name|MCLIST_REM
+name|MLX4_ADDR_LIST_REM
 block|,
-name|MCLIST_ADD
+name|MLX4_ADDR_LIST_ADD
 block|, }
 enum|;
 end_enum
 
 begin_struct
 struct|struct
-name|mlx4_en_mc_list
+name|mlx4_en_addr_list
 block|{
 name|struct
 name|list_head
 name|list
 decl_stmt|;
 name|enum
-name|mlx4_en_mclist_act
+name|mlx4_en_addr_list_act
 name|action
 decl_stmt|;
 name|u8
@@ -1768,6 +1811,9 @@ index|]
 decl_stmt|;
 name|u64
 name|reg_id
+decl_stmt|;
+name|u64
+name|tunnel_reg_id
 decl_stmt|;
 block|}
 struct|;
@@ -1800,6 +1846,13 @@ end_define
 begin_comment
 comment|/* Utilize 100% of the line */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MLX4_EN_TC_VENDOR
+value|0
+end_define
 
 begin_define
 define|#
@@ -2039,6 +2092,9 @@ name|int
 name|registered
 decl_stmt|;
 name|int
+name|gone
+decl_stmt|;
+name|int
 name|allocated
 decl_stmt|;
 name|int
@@ -2152,11 +2208,26 @@ name|mlx4_en_pkt_stats
 name|pkstats_last
 decl_stmt|;
 name|struct
-name|mlx4_en_flow_stats
-name|flowstats
+name|mlx4_en_flow_stats_rx
+name|rx_priority_flowstats
 index|[
 name|MLX4_NUM_PRIORITIES
 index|]
+decl_stmt|;
+name|struct
+name|mlx4_en_flow_stats_tx
+name|tx_priority_flowstats
+index|[
+name|MLX4_NUM_PRIORITIES
+index|]
+decl_stmt|;
+name|struct
+name|mlx4_en_flow_stats_rx
+name|rx_flowstats
+decl_stmt|;
+name|struct
+name|mlx4_en_flow_stats_tx
+name|tx_flowstats
 decl_stmt|;
 name|struct
 name|mlx4_en_port_stats
@@ -2176,7 +2247,15 @@ name|mc_list
 decl_stmt|;
 name|struct
 name|list_head
-name|curr_list
+name|uc_list
+decl_stmt|;
+name|struct
+name|list_head
+name|curr_mc_list
+decl_stmt|;
+name|struct
+name|list_head
+name|curr_uc_list
 decl_stmt|;
 name|u64
 name|broadcast_id
@@ -2243,17 +2322,6 @@ name|struct
 name|sysctl_ctx_list
 name|stat_ctx
 decl_stmt|;
-define|#
-directive|define
-name|MLX4_EN_MAC_HASH_IDX
-value|5
-name|struct
-name|hlist_head
-name|mac_hash
-index|[
-name|MLX4_EN_MAC_HASH_SIZE
-index|]
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CONFIG_MLX4_EN_DCB
@@ -2296,6 +2364,9 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+name|u64
+name|tunnel_reg_id
+decl_stmt|;
 name|struct
 name|en_port
 modifier|*
@@ -2365,6 +2436,42 @@ block|}
 struct|;
 end_struct
 
+begin_function
+specifier|static
+specifier|inline
+name|struct
+name|mlx4_cqe
+modifier|*
+name|mlx4_en_get_cqe
+parameter_list|(
+name|u8
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|idx
+parameter_list|,
+name|int
+name|cqe_sz
+parameter_list|)
+block|{
+return|return
+operator|(
+expr|struct
+name|mlx4_cqe
+operator|*
+operator|)
+operator|(
+name|buf
+operator|+
+name|idx
+operator|*
+name|cqe_sz
+operator|)
+return|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2395,7 +2502,7 @@ name|cq
 operator|->
 name|state
 operator|=
-name|MLX4_EN_CQ_STATEIDLE
+name|MLX4_EN_CQ_STATE_IDLE
 expr_stmt|;
 block|}
 end_function
@@ -2444,14 +2551,14 @@ name|cq
 operator|->
 name|state
 operator|&
-name|MLX4_EN_CQ_STATENAPI
+name|MLX4_EN_CQ_STATE_NAPI
 argument_list|)
 expr_stmt|;
 name|cq
 operator|->
 name|state
 operator||=
-name|MLX4_EN_CQ_STATENAPI_YIELD
+name|MLX4_EN_CQ_STATE_NAPI_YIELD
 expr_stmt|;
 name|rc
 operator|=
@@ -2464,7 +2571,7 @@ name|cq
 operator|->
 name|state
 operator|=
-name|MLX4_EN_CQ_STATENAPI
+name|MLX4_EN_CQ_STATE_NAPI
 expr_stmt|;
 name|spin_unlock
 argument_list|(
@@ -2516,9 +2623,9 @@ operator|->
 name|state
 operator|&
 operator|(
-name|MLX4_EN_CQ_STATEPOLL
+name|MLX4_EN_CQ_STATE_POLL
 operator||
-name|MLX4_EN_CQ_STATENAPI_YIELD
+name|MLX4_EN_CQ_STATE_NAPI_YIELD
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2528,7 +2635,7 @@ name|cq
 operator|->
 name|state
 operator|&
-name|MLX4_EN_CQ_STATEPOLL_YIELD
+name|MLX4_EN_CQ_STATE_POLL_YIELD
 condition|)
 name|rc
 operator|=
@@ -2538,7 +2645,7 @@ name|cq
 operator|->
 name|state
 operator|=
-name|MLX4_EN_CQ_STATEIDLE
+name|MLX4_EN_CQ_STATE_IDLE
 expr_stmt|;
 name|spin_unlock
 argument_list|(
@@ -2631,7 +2738,7 @@ name|cq
 operator|->
 name|state
 operator||=
-name|MLX4_EN_CQ_STATEPOLL_YIELD
+name|MLX4_EN_CQ_STATE_POLL_YIELD
 expr_stmt|;
 name|rc
 operator|=
@@ -2654,7 +2761,7 @@ name|cq
 operator|->
 name|state
 operator||=
-name|MLX4_EN_CQ_STATEPOLL
+name|MLX4_EN_CQ_STATE_POLL
 expr_stmt|;
 name|spin_unlock_bh
 argument_list|(
@@ -2706,7 +2813,7 @@ operator|->
 name|state
 operator|&
 operator|(
-name|MLX4_EN_CQ_STATENAPI
+name|MLX4_EN_CQ_STATE_NAPI
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2716,7 +2823,7 @@ name|cq
 operator|->
 name|state
 operator|&
-name|MLX4_EN_CQ_STATEPOLL_YIELD
+name|MLX4_EN_CQ_STATE_POLL_YIELD
 condition|)
 name|rc
 operator|=
@@ -2726,7 +2833,7 @@ name|cq
 operator|->
 name|state
 operator|=
-name|MLX4_EN_CQ_STATEIDLE
+name|MLX4_EN_CQ_STATE_IDLE
 expr_stmt|;
 name|spin_unlock_bh
 argument_list|(
@@ -2750,7 +2857,7 @@ begin_function
 specifier|static
 specifier|inline
 name|bool
-name|mlx4_en_cq_ll_polling
+name|mlx4_en_cq_busy_polling
 parameter_list|(
 name|struct
 name|mlx4_en_cq
@@ -2875,7 +2982,7 @@ begin_function
 specifier|static
 specifier|inline
 name|bool
-name|mlx4_en_cq_ll_polling
+name|mlx4_en_cq_busy_polling
 parameter_list|(
 name|struct
 name|mlx4_en_cq
@@ -3247,6 +3354,18 @@ name|struct
 name|mlx4_en_tx_ring
 modifier|*
 name|ring
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mlx4_en_set_num_rx_rings
+parameter_list|(
+name|struct
+name|mlx4_en_dev
+modifier|*
+name|mdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4026,7 +4145,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|{                                                       \         if ((priv)->registered)                                 \                 printk(level "%s: %s: " format, DRV_NAME,       \                         (priv->dev)->if_xname, ## arg); \         else                                                    \                 printk(level "%s: %s: Port %d: " format,        \                         DRV_NAME, dev_name(&priv->mdev->pdev->dev), \                         (priv)->port, ## arg);                  \         }
+value|{                                                       \         if ((priv)->registered)                                 \                 printk(level "%s: %s: " format, DRV_NAME,       \                         (priv)->dev->if_xname, ## arg); \         else                                                    \                 printk(level "%s: %s: Port %d: " format,        \                         DRV_NAME, dev_name(&(priv)->mdev->pdev->dev), \                         (priv)->port, ## arg);                  \         }
 end_define
 
 begin_define
@@ -4108,7 +4227,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|pr_err("%s %s: " format, DRV_NAME,		\ 	       dev_name(&mdev->pdev->dev), ##arg)
+value|pr_err("%s %s: " format, DRV_NAME,		\ 	       dev_name(&(mdev)->pdev->dev), ##arg)
 end_define
 
 begin_define
@@ -4124,7 +4243,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|pr_info("%s %s: " format, DRV_NAME,		\ 		dev_name(&mdev->pdev->dev), ##arg)
+value|pr_info("%s %s: " format, DRV_NAME,		\ 		dev_name(&(mdev)->pdev->dev), ##arg)
 end_define
 
 begin_define
@@ -4140,7 +4259,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|pr_warning("%s %s: " format, DRV_NAME,		\ 		   dev_name(&mdev->pdev->dev), ##arg)
+value|pr_warning("%s %s: " format, DRV_NAME,		\ 		   dev_name(&(mdev)->pdev->dev), ##arg)
 end_define
 
 begin_endif

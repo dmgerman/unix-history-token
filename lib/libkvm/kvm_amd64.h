@@ -174,8 +174,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|AMD64_PG_NX
+value|(1ULL<< 63)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AMD64_PG_V
 value|0x001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMD64_PG_RW
+value|0x002
 end_define
 
 begin_define

@@ -119,6 +119,13 @@ name|cap_channel_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|CASPER_SUPPORT
+value|(1)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -142,6 +149,13 @@ name|cap_channel
 name|cap_channel_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|CASPER_SUPPORT
+value|(0)
+end_define
 
 begin_endif
 endif|#

@@ -285,6 +285,138 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtPrefixedNamespaceError  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              PrefixScope         - Scope/Path that prefixes the internal path  *              InternalPath        - Name or path of the namespace node  *              LookupStatus        - Exception code from NS lookup  *  * RETURN:      None  *  * DESCRIPTION: Print error message with the full pathname constructed this way:  *  *                  PrefixScopeNodeFullPath.ExternalizedInternalPath  *  * NOTE:        10/2017: Treat the major NsLookup errors as firmware errors  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiUtPrefixedNamespaceError
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ModuleName
+parameter_list|,
+name|UINT32
+name|LineNumber
+parameter_list|,
+name|ACPI_GENERIC_STATE
+modifier|*
+name|PrefixScope
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|InternalPath
+parameter_list|,
+name|ACPI_STATUS
+name|LookupStatus
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|FullPath
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|Message
+decl_stmt|;
+comment|/*      * Main cases:      * 1) Object creation, object must not already exist      * 2) Object lookup, object must exist      */
+switch|switch
+condition|(
+name|LookupStatus
+condition|)
+block|{
+case|case
+name|AE_ALREADY_EXISTS
+case|:
+name|AcpiOsPrintf
+argument_list|(
+name|ACPI_MSG_BIOS_ERROR
+argument_list|)
+expr_stmt|;
+name|Message
+operator|=
+literal|"Failure creating"
+expr_stmt|;
+break|break;
+case|case
+name|AE_NOT_FOUND
+case|:
+name|AcpiOsPrintf
+argument_list|(
+name|ACPI_MSG_BIOS_ERROR
+argument_list|)
+expr_stmt|;
+name|Message
+operator|=
+literal|"Failure looking up"
+expr_stmt|;
+break|break;
+default|default:
+name|AcpiOsPrintf
+argument_list|(
+name|ACPI_MSG_ERROR
+argument_list|)
+expr_stmt|;
+name|Message
+operator|=
+literal|"Failure looking up"
+expr_stmt|;
+break|break;
+block|}
+comment|/* Concatenate the prefix path and the internal path */
+name|FullPath
+operator|=
+name|AcpiNsBuildPrefixedPathname
+argument_list|(
+name|PrefixScope
+argument_list|,
+name|InternalPath
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"%s [%s], %s"
+argument_list|,
+name|Message
+argument_list|,
+name|FullPath
+condition|?
+name|FullPath
+else|:
+literal|"Could not get pathname"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|LookupStatus
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|FullPath
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
+name|FullPath
+argument_list|)
+expr_stmt|;
+block|}
+name|ACPI_MSG_SUFFIX
+expr_stmt|;
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__OBSOLETE_FUNCTION
+end_ifdef
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtNamespaceError  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              InternalName        - Name or path of the namespace node  *              LookupStatus        - Exception code from NS lookup  *  * RETURN:      None  *  * DESCRIPTION: Print error message with the full pathname for the NS node.  *  ******************************************************************************/
 end_comment
 
@@ -427,6 +559,11 @@ name|ACPI_MSG_REDIRECT_END
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtMethodError  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              Message             - Error message to use on failure  *              PrefixNode          - Prefix relative to the path  *              Path                - Path to the node (optional)  *              MethodStatus        - Execution status  *  * RETURN:      None  *  * DESCRIPTION: Print error message with the full pathname for the method.  *  ******************************************************************************/

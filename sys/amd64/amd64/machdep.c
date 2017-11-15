@@ -9008,6 +9008,9 @@ name|md_saved_flags
 operator|=
 name|flags
 expr_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 name|td
@@ -9016,9 +9019,6 @@ name|td_md
 operator|.
 name|md_spinlock_count
 operator|++
-expr_stmt|;
-name|critical_enter
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -9041,9 +9041,6 @@ decl_stmt|;
 name|td
 operator|=
 name|curthread
-expr_stmt|;
-name|critical_exit
-argument_list|()
 expr_stmt|;
 name|flags
 operator|=
@@ -9070,11 +9067,16 @@ name|md_spinlock_count
 operator|==
 literal|0
 condition|)
+block|{
+name|critical_exit
+argument_list|()
+expr_stmt|;
 name|intr_restore
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

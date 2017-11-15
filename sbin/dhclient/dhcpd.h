@@ -172,6 +172,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libcasper.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<casper/cap_syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dhcp.h"
 end_include
 
@@ -1885,6 +1897,14 @@ end_function_decl
 begin_comment
 comment|/* dhclient.c */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|cap_channel_t
+modifier|*
+name|capsyslog
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

@@ -67,6 +67,42 @@ value|_IOWR('n', 101, struct nvme_io_test)
 end_define
 
 begin_comment
+comment|/*  * Macros to deal with NVME revisions, as defined VS register  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NVME_REV
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x)<< 16) | ((y)<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MAJOR
+parameter_list|(
+name|r
+parameter_list|)
+value|(((r)>> 16)& 0xffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MINOR
+parameter_list|(
+name|r
+parameter_list|)
+value|(((r)>> 8)& 0xff)
+end_define
+
+begin_comment
 comment|/*  * Use to mark a command to apply to all namespaces, or to retrieve global  *  log pages.  */
 end_comment
 

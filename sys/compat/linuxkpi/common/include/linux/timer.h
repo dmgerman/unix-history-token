@@ -171,7 +171,7 @@ name|del_timer
 parameter_list|(
 name|timer
 parameter_list|)
-value|callout_stop(&(timer)->timer_callout)
+value|(void)callout_stop(&(timer)->timer_callout)
 end_define
 
 begin_define
@@ -181,7 +181,7 @@ name|del_timer_sync
 parameter_list|(
 name|timer
 parameter_list|)
-value|callout_drain(&(timer)->timer_callout)
+value|(void)callout_drain(&(timer)->timer_callout)
 end_define
 
 begin_define

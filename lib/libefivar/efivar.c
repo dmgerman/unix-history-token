@@ -691,8 +691,6 @@ argument_list|,
 name|attributes
 operator||
 name|EFI_VARIABLE_APPEND_WRITE
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -720,8 +718,6 @@ argument_list|,
 name|name
 argument_list|,
 name|NULL
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -1640,10 +1636,6 @@ name|data_size
 parameter_list|,
 name|uint32_t
 name|attributes
-parameter_list|,
-name|mode_t
-name|mode
-name|__unused
 parameter_list|)
 block|{
 name|struct

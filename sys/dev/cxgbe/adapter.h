@@ -1589,7 +1589,7 @@ modifier|*
 name|desc
 decl_stmt|;
 comment|/* KVA of descriptor ring */
-name|uint16_t
+name|uint8_t
 name|doorbells
 decl_stmt|;
 specifier|volatile
@@ -2491,7 +2491,7 @@ name|uint16_t
 name|dbidx
 decl_stmt|;
 comment|/* pidx of the most recent doorbell */
-name|uint16_t
+name|uint8_t
 name|doorbells
 decl_stmt|;
 specifier|volatile
@@ -2922,7 +2922,7 @@ name|struct
 name|tid_info
 name|tids
 decl_stmt|;
-name|uint16_t
+name|uint8_t
 name|doorbells
 decl_stmt|;
 name|int

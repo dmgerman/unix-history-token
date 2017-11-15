@@ -2097,9 +2097,11 @@ name|ACPI_ERROR_NAMESPACE
 parameter_list|(
 name|s
 parameter_list|,
+name|p
+parameter_list|,
 name|e
 parameter_list|)
-value|AcpiUtNamespaceError (AE_INFO, s, e);
+value|AcpiUtPrefixedNamespaceError (AE_INFO, s, p, e);
 end_define
 
 begin_define

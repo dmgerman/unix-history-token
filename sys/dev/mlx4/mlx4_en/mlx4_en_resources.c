@@ -322,7 +322,7 @@ name|pri_path
 operator|.
 name|vlan_control
 operator||=
-name|MLX4_VLAN_CTRL_ETH_SRC_CHECK_IF_COUNTER
+name|MLX4_CTRL_ETH_SRC_CHECK_IF_COUNTER
 expr_stmt|;
 block|}
 name|context

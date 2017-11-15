@@ -2373,7 +2373,7 @@ case|case
 name|CVMX_BOARD_TYPE_CUST_UBIQUITI_E100
 case|:
 case|case
-name|CVMX_BOARD_TYPE_CUST_UBIQUITI_USG
+name|CVMX_BOARD_TYPE_CUST_UBIQUITI_E110
 case|:
 if|if
 condition|(
@@ -6218,7 +6218,7 @@ argument_list|()
 operator|->
 name|board_type
 operator|==
-name|CVMX_BOARD_TYPE_CUST_UBIQUITI_USG
+name|CVMX_BOARD_TYPE_CUST_UBIQUITI_E110
 condition|)
 block|{
 comment|/* Configure ASX cloks for all ports on interface 0.  */
@@ -6610,7 +6610,7 @@ case|case
 name|CVMX_BOARD_TYPE_CUST_UBIQUITI_E100
 case|:
 case|case
-name|CVMX_BOARD_TYPE_CUST_UBIQUITI_USG
+name|CVMX_BOARD_TYPE_CUST_UBIQUITI_E110
 case|:
 endif|#
 directive|endif

@@ -1701,7 +1701,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%u(0x%X) Outstanding allocations"
+literal|"%u (0x%X) Outstanding cache allocations"
 operator|,
 name|NumOutstanding
 operator|,

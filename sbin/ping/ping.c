@@ -3879,7 +3879,7 @@ name|NULL
 condition|)
 name|cansandbox
 operator|=
-name|true
+name|CASPER_SUPPORT
 expr_stmt|;
 else|else
 name|cansandbox

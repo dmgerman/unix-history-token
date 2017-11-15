@@ -27,6 +27,12 @@ directive|include
 file|<linux/types.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|mlx4_counter
+struct_decl|;
+end_struct_decl
+
 begin_enum
 enum|enum
 block|{
@@ -147,10 +153,26 @@ name|MLX4_CMD_SET_ICM_SIZE
 init|=
 literal|0xffd
 block|,
+name|MLX4_CMD_ACCESS_REG
+init|=
+literal|0x3b
+block|,
+name|MLX4_CMD_ALLOCATE_VPP
+init|=
+literal|0x80
+block|,
+name|MLX4_CMD_SET_VPORT_QOS
+init|=
+literal|0x81
+block|,
 comment|/*master notify fw on finish for slave's flr*/
 name|MLX4_CMD_INFORM_FLR_DONE
 init|=
 literal|0x5b
+block|,
+name|MLX4_CMD_VIRT_PORT_MAP
+init|=
+literal|0x5c
 block|,
 name|MLX4_CMD_GET_OP_REQ
 init|=
@@ -302,6 +324,10 @@ name|MLX4_CMD_MAD_IFC
 init|=
 literal|0x24
 block|,
+name|MLX4_CMD_MAD_DEMUX
+init|=
+literal|0x203
+block|,
 comment|/* multicast commands */
 name|MLX4_CMD_READ_MCG
 init|=
@@ -323,6 +349,10 @@ block|,
 name|MLX4_CMD_NOP
 init|=
 literal|0x31
+block|,
+name|MLX4_CMD_CONFIG_DEV
+init|=
+literal|0x3a
 block|,
 name|MLX4_CMD_ACCESS_MEM
 init|=
@@ -413,6 +443,11 @@ block|,
 name|MLX4_FLOW_STEERING_IB_UC_QP_RANGE
 init|=
 literal|0x64
+block|,
+comment|/* Update and read QCN parameters */
+name|MLX4_CMD_CONGESTION_CTRL_OPCODE
+init|=
+literal|0x68
 block|, }
 enum|;
 end_enum
@@ -438,6 +473,21 @@ end_enum
 begin_enum
 enum|enum
 block|{
+comment|/* virtual to physical port mapping opcode modifiers */
+name|MLX4_GET_PORT_VIRT2PHY
+init|=
+literal|0x0
+block|,
+name|MLX4_SET_PORT_VIRT2PHY
+init|=
+literal|0x1
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
 name|MLX4_MAILBOX_SIZE
 init|=
 literal|4096
@@ -452,7 +502,26 @@ end_enum
 begin_enum
 enum|enum
 block|{
-comment|/* set port opcode modifiers */
+comment|/* Set port opcode modifiers */
+name|MLX4_SET_PORT_IB_OPCODE
+init|=
+literal|0x0
+block|,
+name|MLX4_SET_PORT_ETH_OPCODE
+init|=
+literal|0x1
+block|,
+name|MLX4_SET_PORT_BEACON_OPCODE
+init|=
+literal|0x4
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+comment|/* Set port Ethernet input modifiers */
 name|MLX4_SET_PORT_GENERAL
 init|=
 literal|0x0
@@ -484,6 +553,34 @@ block|,
 name|MLX4_SET_PORT_SCHEDULER
 init|=
 literal|0x9
+block|,
+name|MLX4_SET_PORT_VXLAN
+init|=
+literal|0xB
+block|,
+name|MLX4_SET_PORT_ROCE_ADDR
+init|=
+literal|0xD
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|MLX4_CMD_MAD_DEMUX_CONFIG
+init|=
+literal|0
+block|,
+name|MLX4_CMD_MAD_DEMUX_QUERY_STATE
+init|=
+literal|1
+block|,
+name|MLX4_CMD_MAD_DEMUX_QUERY_RESTR
+init|=
+literal|2
+block|,
+comment|/* Query mad demux restrictions */
 block|}
 enum|;
 end_enum
@@ -495,6 +592,84 @@ name|MLX4_CMD_WRAPPED
 block|,
 name|MLX4_CMD_NATIVE
 block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * MLX4_RX_CSUM_MODE_VAL_NON_TCP_UDP -  * Receive checksum value is reported in CQE also for non TCP/UDP packets.  *  * MLX4_RX_CSUM_MODE_L4 -  * L4_CSUM bit in CQE, which indicates whether or not L4 checksum  * was validated correctly, is supported.  *  * MLX4_RX_CSUM_MODE_IP_OK_IP_NON_TCP_UDP -  * IP_OK CQE's field is supported also for non TCP/UDP IP packets.  *  * MLX4_RX_CSUM_MODE_MULTI_VLAN -  * Receive Checksum offload is supported for packets with more than 2 vlan headers.  */
+end_comment
+
+begin_enum
+enum|enum
+name|mlx4_rx_csum_mode
+block|{
+name|MLX4_RX_CSUM_MODE_VAL_NON_TCP_UDP
+init|=
+literal|1UL
+operator|<<
+literal|0
+block|,
+name|MLX4_RX_CSUM_MODE_L4
+init|=
+literal|1UL
+operator|<<
+literal|1
+block|,
+name|MLX4_RX_CSUM_MODE_IP_OK_IP_NON_TCP_UDP
+init|=
+literal|1UL
+operator|<<
+literal|2
+block|,
+name|MLX4_RX_CSUM_MODE_MULTI_VLAN
+init|=
+literal|1UL
+operator|<<
+literal|3
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|mlx4_config_dev_params
+block|{
+name|u16
+name|vxlan_udp_dport
+decl_stmt|;
+name|u8
+name|rx_csum_flags_port_1
+decl_stmt|;
+name|u8
+name|rx_csum_flags_port_2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+name|mlx4_en_congestion_control_algorithm
+block|{
+name|MLX4_CTRL_ALGO_802_1_QAU_REACTION_POINT
+init|=
+literal|0
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|mlx4_en_congestion_control_opmod
+block|{
+name|MLX4_CONGESTION_CONTROL_GET_PARAMS
+block|,
+name|MLX4_CONGESTION_CONTROL_GET_STATISTICS
+block|,
+name|MLX4_CONGESTION_CONTROL_SET_PARAMS
+init|=
+literal|4
+block|, }
 enum|;
 end_enum
 
@@ -777,6 +952,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|mlx4_get_counter_stats
+parameter_list|(
+name|struct
+name|mlx4_dev
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|counter_index
+parameter_list|,
+name|struct
+name|mlx4_counter
+modifier|*
+name|counter_stats
+parameter_list|,
+name|int
+name|reset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u32
 name|mlx4_comm_get_version
 parameter_list|(
@@ -800,8 +998,7 @@ parameter_list|,
 name|int
 name|vf
 parameter_list|,
-name|u8
-modifier|*
+name|u64
 name|mac
 parameter_list|)
 function_decl|;
@@ -827,6 +1024,33 @@ name|vlan
 parameter_list|,
 name|u8
 name|qos
+parameter_list|,
+name|__be16
+name|proto
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mlx4_set_vf_rate
+parameter_list|(
+name|struct
+name|mlx4_dev
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|port
+parameter_list|,
+name|int
+name|vf
+parameter_list|,
+name|int
+name|min_tx_rate
+parameter_list|,
+name|int
+name|max_tx_rate
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -854,45 +1078,47 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mlx4_set_vf_link_state
+name|mlx4_config_dev_retrieval
 parameter_list|(
 name|struct
 name|mlx4_dev
 modifier|*
 name|dev
 parameter_list|,
-name|int
-name|port
-parameter_list|,
-name|int
-name|vf
-parameter_list|,
-name|int
-name|link_state
+name|struct
+name|mlx4_config_dev_params
+modifier|*
+name|params
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|mlx4_get_vf_link_state
+name|void
+name|mlx4_cmd_wake_completions
 parameter_list|(
 name|struct
 name|mlx4_dev
 modifier|*
 name|dev
-parameter_list|,
-name|int
-name|port
-parameter_list|,
-name|int
-name|vf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mlx4_report_internal_err_comm_event
+parameter_list|(
+name|struct
+name|mlx4_dev
+modifier|*
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * mlx4_get_slave_default_vlan -  * retrun true if VST ( default vlan)  * if VST will fill vlan& qos (if not NULL)  */
+comment|/*  * mlx4_get_slave_default_vlan -  * return true if VST ( default vlan)  * if VST, will return vlan& qos (if not NULL)  */
 end_comment
 
 begin_function_decl
@@ -921,23 +1147,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_enum
-enum|enum
-block|{
-name|IFLA_VF_LINK_STATE_AUTO
-block|,
-comment|/* link state of the uplink */
-name|IFLA_VF_LINK_STATE_ENABLE
-block|,
-comment|/* link always up */
-name|IFLA_VF_LINK_STATE_DISABLE
-block|,
-comment|/* link always down */
-name|__IFLA_VF_LINK_STATE_MAX
-block|, }
-enum|;
-end_enum
-
 begin_define
 define|#
 directive|define
@@ -946,6 +1155,13 @@ parameter_list|(
 name|cmd_chan_ver
 parameter_list|)
 value|(u8)((cmd_chan_ver)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMM_CHAN_EVENT_INTERNAL_ERR
+value|(1<< 17)
 end_define
 
 begin_endif

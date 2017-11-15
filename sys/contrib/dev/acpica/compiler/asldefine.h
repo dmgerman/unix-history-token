@@ -69,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|ASL_COMPLIANCE
-value|"Supports ACPI Specification Revision 6.2"
+value|"Supports ACPI Specification Revision 6.2A"
 end_define
 
 begin_comment

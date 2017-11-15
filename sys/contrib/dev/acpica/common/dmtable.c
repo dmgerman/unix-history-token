@@ -562,6 +562,9 @@ comment|/* ACPI_NFIT_TYPE_DATA_REGION */
 literal|"Flush Hint Address"
 block|,
 comment|/* ACPI_NFIT_TYPE_FLUSH_ADDRESS */
+literal|"Platform Capabilities"
+block|,
+comment|/* ACPI_NFIT_TYPE_CAPABILITIES */
 literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
