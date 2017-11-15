@@ -125,42 +125,39 @@ comment|/* 36 = cloudabi_sys_mem_unmap */
 literal|"cloudabi32_sys_poll"
 block|,
 comment|/* 37 = cloudabi32_sys_poll */
-literal|"cloudabi32_sys_poll_fd"
-block|,
-comment|/* 38 = cloudabi32_sys_poll_fd */
 literal|"cloudabi_sys_proc_exec"
 block|,
-comment|/* 39 = cloudabi_sys_proc_exec */
+comment|/* 38 = cloudabi_sys_proc_exec */
 literal|"cloudabi_sys_proc_exit"
 block|,
-comment|/* 40 = cloudabi_sys_proc_exit */
+comment|/* 39 = cloudabi_sys_proc_exit */
 literal|"cloudabi_sys_proc_fork"
 block|,
-comment|/* 41 = cloudabi_sys_proc_fork */
+comment|/* 40 = cloudabi_sys_proc_fork */
 literal|"cloudabi_sys_proc_raise"
 block|,
-comment|/* 42 = cloudabi_sys_proc_raise */
+comment|/* 41 = cloudabi_sys_proc_raise */
 literal|"cloudabi_sys_random_get"
 block|,
-comment|/* 43 = cloudabi_sys_random_get */
+comment|/* 42 = cloudabi_sys_random_get */
 literal|"cloudabi32_sys_sock_recv"
 block|,
-comment|/* 44 = cloudabi32_sys_sock_recv */
+comment|/* 43 = cloudabi32_sys_sock_recv */
 literal|"cloudabi32_sys_sock_send"
 block|,
-comment|/* 45 = cloudabi32_sys_sock_send */
+comment|/* 44 = cloudabi32_sys_sock_send */
 literal|"cloudabi_sys_sock_shutdown"
 block|,
-comment|/* 46 = cloudabi_sys_sock_shutdown */
+comment|/* 45 = cloudabi_sys_sock_shutdown */
 literal|"cloudabi32_sys_thread_create"
 block|,
-comment|/* 47 = cloudabi32_sys_thread_create */
+comment|/* 46 = cloudabi32_sys_thread_create */
 literal|"cloudabi_sys_thread_exit"
 block|,
-comment|/* 48 = cloudabi_sys_thread_exit */
+comment|/* 47 = cloudabi_sys_thread_exit */
 literal|"cloudabi_sys_thread_yield"
 block|,
-comment|/* 49 = cloudabi_sys_thread_yield */
+comment|/* 48 = cloudabi_sys_thread_yield */
 block|}
 decl_stmt|;
 end_decl_stmt
