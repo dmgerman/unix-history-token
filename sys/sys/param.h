@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1200053
+value|1200054
 end_define
 
 begin_comment
@@ -144,6 +144,13 @@ define|#
 directive|define
 name|P_OSREL_WRFSBASE
 value|1200041
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_OSREL_VMTOTAL64
+value|1200054
 end_define
 
 begin_define
