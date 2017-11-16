@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>.  All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>.  All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2017 Joyent, Inc.  */
 end_comment
 
 begin_comment
@@ -249,6 +249,12 @@ begin_include
 include|#
 directive|include
 file|<libnvpair.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libcmdutils.h>
 end_include
 
 begin_decl_stmt
@@ -2241,13 +2247,13 @@ decl_stmt|;
 name|char
 name|nice_vdev_size
 index|[
-literal|10
+name|NN_NUMBUF_SZ
 index|]
 decl_stmt|;
 name|char
 name|nice_gang_bang
 index|[
-literal|10
+name|NN_NUMBUF_SZ
 index|]
 decl_stmt|;
 name|FILE
@@ -2267,6 +2273,11 @@ operator|->
 name|zo_vdev_size
 argument_list|,
 name|nice_vdev_size
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nice_vdev_size
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nicenum
@@ -2276,6 +2287,11 @@ operator|->
 name|zo_metaslab_gang_bang
 argument_list|,
 name|nice_gang_bang
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nice_gang_bang
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -15682,12 +15698,12 @@ block|{
 name|char
 name|oldnumbuf
 index|[
-literal|6
+name|NN_NUMBUF_SZ
 index|]
 decl_stmt|,
 name|newnumbuf
 index|[
-literal|6
+name|NN_NUMBUF_SZ
 index|]
 decl_stmt|;
 name|nicenum
@@ -15695,6 +15711,11 @@ argument_list|(
 name|old_class_space
 argument_list|,
 name|oldnumbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|oldnumbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nicenum
@@ -15702,6 +15723,11 @@ argument_list|(
 name|new_class_space
 argument_list|,
 name|newnumbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|newnumbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -30455,7 +30481,7 @@ decl_stmt|;
 name|char
 name|numbuf
 index|[
-literal|6
+name|NN_NUMBUF_SZ
 index|]
 decl_stmt|;
 name|spa_t
@@ -31165,6 +31191,11 @@ operator|->
 name|zs_space
 argument_list|,
 name|numbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|numbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
