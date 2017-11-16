@@ -2455,6 +2455,10 @@ name|intr_type
 decl_stmt|;
 comment|/* INTx, MSI, or MSI-X */
 name|uint16_t
+name|num_vis
+decl_stmt|;
+comment|/* number of VIs for each port */
+name|uint16_t
 name|nirq
 decl_stmt|;
 comment|/* Total # of vectors */
@@ -2716,10 +2720,6 @@ parameter_list|(
 name|struct
 name|adapter
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 parameter_list|,
 name|struct
 name|intrs_and_queues
@@ -5745,49 +5745,6 @@ goto|goto
 name|done
 goto|;
 comment|/* error message displayed already */
-comment|/* 	 * Number of VIs to create per-port.  The first VI is the "main" regular 	 * VI for the port.  The rest are additional virtual interfaces on the 	 * same physical port.  Note that the main VI does not have native 	 * netmap support but the extra VIs do. 	 * 	 * Limit the number of VIs per port to the number of available 	 * MAC addresses per port. 	 */
-if|if
-condition|(
-name|t4_num_vis
-operator|>=
-literal|1
-condition|)
-name|num_vis
-operator|=
-name|t4_num_vis
-expr_stmt|;
-else|else
-name|num_vis
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|num_vis
-operator|>
-name|nitems
-argument_list|(
-name|vi_mac_funcs
-argument_list|)
-condition|)
-block|{
-name|num_vis
-operator|=
-name|nitems
-argument_list|(
-name|vi_mac_funcs
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Number of VIs limited to %d\n"
-argument_list|,
-name|num_vis
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * First pass over all the ports - allocate VIs and initialize some 	 * basic parameters like mac address, port type, etc. 	 */
 name|for_each_port
 argument_list|(
@@ -5853,7 +5810,7 @@ expr|struct
 name|vi_info
 argument_list|)
 operator|*
-name|num_vis
+name|t4_num_vis
 argument_list|,
 name|M_CXGBE
 argument_list|,
@@ -6077,10 +6034,6 @@ name|cfg_itype_and_nqueues
 argument_list|(
 name|sc
 argument_list|,
-name|nports
-argument_list|,
-name|num_vis
-argument_list|,
 operator|&
 name|iaq
 argument_list|)
@@ -6095,25 +6048,11 @@ goto|goto
 name|done
 goto|;
 comment|/* error message displayed already */
-if|if
-condition|(
-name|iaq
-operator|.
-name|nrxq_vi
-operator|+
-name|iaq
-operator|.
-name|nofldrxq_vi
-operator|+
-name|iaq
-operator|.
-name|nnmrxq_vi
-operator|==
-literal|0
-condition|)
 name|num_vis
 operator|=
-literal|1
+name|iaq
+operator|.
+name|num_vis
 expr_stmt|;
 name|sc
 operator|->
@@ -14572,12 +14511,6 @@ name|adapter
 modifier|*
 name|sc
 parameter_list|,
-name|int
-name|nports
-parameter_list|,
-name|int
-name|num_vis
-parameter_list|,
 name|struct
 name|intrs_and_queues
 modifier|*
@@ -14593,6 +14526,8 @@ name|navail
 decl_stmt|,
 name|nrxq
 decl_stmt|,
+name|nports
+decl_stmt|,
 name|n
 decl_stmt|;
 name|int
@@ -14600,6 +14535,14 @@ name|nofldrxq
 init|=
 literal|0
 decl_stmt|;
+name|nports
+operator|=
+name|sc
+operator|->
+name|params
+operator|.
+name|nports
+expr_stmt|;
 name|MPASS
 argument_list|(
 name|nports
@@ -14617,6 +14560,12 @@ operator|*
 name|iaq
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|iaq
+operator|->
+name|num_vis
+operator|=
+name|t4_num_vis
 expr_stmt|;
 name|iaq
 operator|->
@@ -14815,6 +14764,8 @@ operator|+=
 name|nports
 operator|*
 operator|(
+name|iaq
+operator|->
 name|num_vis
 operator|-
 literal|1
@@ -14839,6 +14790,8 @@ operator|+=
 name|nports
 operator|*
 operator|(
+name|iaq
+operator|->
 name|num_vis
 operator|-
 literal|1
@@ -14883,6 +14836,8 @@ block|}
 comment|/* Disable the VIs (and netmap) if there aren't enough intrs */
 if|if
 condition|(
+name|iaq
+operator|->
 name|num_vis
 operator|>
 literal|1
@@ -14900,6 +14855,8 @@ literal|"(nrxq=%u, nofldrxq=%u, nrxq_vi=%u nofldrxq_vi=%u, "
 literal|"nnmrxq_vi=%u) would need %u interrupts but "
 literal|"only %u are available.\n"
 argument_list|,
+name|iaq
+operator|->
 name|num_vis
 argument_list|,
 name|nrxq
@@ -14925,6 +14882,8 @@ argument_list|,
 name|navail
 argument_list|)
 expr_stmt|;
+name|iaq
+operator|->
 name|num_vis
 operator|=
 literal|1
@@ -55992,6 +55951,42 @@ name|INTR_MSI
 operator||
 name|INTR_INTX
 expr_stmt|;
+comment|/* 	 * Number of VIs to create per-port.  The first VI is the "main" regular 	 * VI for the port.  The rest are additional virtual interfaces on the 	 * same physical port.  Note that the main VI does not have native 	 * netmap support but the extra VIs do. 	 * 	 * Limit the number of VIs per port to the number of available 	 * MAC addresses per port. 	 */
+if|if
+condition|(
+name|t4_num_vis
+operator|<
+literal|1
+condition|)
+name|t4_num_vis
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|t4_num_vis
+operator|>
+name|nitems
+argument_list|(
+name|vi_mac_funcs
+argument_list|)
+condition|)
+block|{
+name|t4_num_vis
+operator|=
+name|nitems
+argument_list|(
+name|vi_mac_funcs
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"cxgbe: number of VIs limited to %d\n"
+argument_list|,
+name|t4_num_vis
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
