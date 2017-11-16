@@ -2178,23 +2178,6 @@ operator|*=
 name|secperblk
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|getosreldate
-argument_list|()
-operator|<
-name|__FreeBSD_version
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"%s is newer than the running kernel and may not be compatible"
-argument_list|,
-name|getprogname
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
 name|mkfs
 argument_list|(
 name|pp

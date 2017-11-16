@@ -149,6 +149,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|P_OSREL_CK_CLYGRP
+value|1200046
+end_define
+
+begin_define
+define|#
+directive|define
 name|P_OSREL_VMTOTAL64
 value|1200054
 end_define
