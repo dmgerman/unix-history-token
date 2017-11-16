@@ -717,7 +717,6 @@ name|void
 modifier|*
 name|sg
 decl_stmt|;
-name|unsigned
 name|int
 name|size
 decl_stmt|;
@@ -1011,7 +1010,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * struct iser_reg_resources - Fast registration recources  *  * @mr:         memory region  * @frpl:       fast reg page list  * @mr_valid:   is mr valid indicator  */
+comment|/**  * struct iser_reg_resources - Fast registration recources  *  * @mr:         memory region  * @mr_valid:   is mr valid indicator  */
 end_comment
 
 begin_struct
@@ -1022,11 +1021,6 @@ name|struct
 name|ib_mr
 modifier|*
 name|mr
-decl_stmt|;
-name|struct
-name|ib_fast_reg_page_list
-modifier|*
-name|frpl
 decl_stmt|;
 name|u8
 name|mr_valid
