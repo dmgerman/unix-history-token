@@ -57,11 +57,6 @@ block|{
 name|ssize_t
 name|n
 decl_stmt|;
-name|PHOLD
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|n
 operator|=
 name|proc_readmem
@@ -75,11 +70,6 @@ argument_list|,
 name|kaddr
 argument_list|,
 name|len
-argument_list|)
-expr_stmt|;
-name|PRELE
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -123,11 +113,6 @@ block|{
 name|ssize_t
 name|n
 decl_stmt|;
-name|PHOLD
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|n
 operator|=
 name|proc_writemem
@@ -141,11 +126,6 @@ argument_list|,
 name|kaddr
 argument_list|,
 name|len
-argument_list|)
-expr_stmt|;
-name|PRELE
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 if|if
