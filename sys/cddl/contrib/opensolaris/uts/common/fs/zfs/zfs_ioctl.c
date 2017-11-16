@@ -25136,14 +25136,6 @@ name|char
 modifier|*
 name|fromname
 decl_stmt|;
-comment|/* LINTED E_FUNC_SET_NOT_USED */
-name|boolean_t
-name|largeblockok
-decl_stmt|;
-comment|/* LINTED E_FUNC_SET_NOT_USED */
-name|boolean_t
-name|embedok
-decl_stmt|;
 name|boolean_t
 name|compressok
 decl_stmt|;
@@ -25207,24 +25199,6 @@ name|error
 operator|)
 return|;
 block|}
-name|largeblockok
-operator|=
-name|nvlist_exists
-argument_list|(
-name|innvl
-argument_list|,
-literal|"largeblockok"
-argument_list|)
-expr_stmt|;
-name|embedok
-operator|=
-name|nvlist_exists
-argument_list|(
-name|innvl
-argument_list|,
-literal|"embedok"
-argument_list|)
-expr_stmt|;
 name|compressok
 operator|=
 name|nvlist_exists
@@ -25389,7 +25363,7 @@ block|}
 block|}
 else|else
 block|{
-comment|// If estimating the size of a full send, use dmu_send_estimate
+comment|/* 		 * If estimating the size of a full send, use dmu_send_estimate. 		 */
 name|error
 operator|=
 name|dmu_send_estimate
