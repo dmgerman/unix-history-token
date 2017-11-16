@@ -181,14 +181,6 @@ name|__be64
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|uint
-typedef|;
-end_typedef
-
 begin_endif
 endif|#
 directive|endif
