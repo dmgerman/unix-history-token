@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_xbox.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -310,23 +304,6 @@ begin_include
 include|#
 directive|include
 file|<machine/smp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XBOX
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/xbox.h>
 end_include
 
 begin_endif
@@ -2330,17 +2307,6 @@ operator|=
 name|va
 expr_stmt|;
 comment|/* 	 * Leave in place an identity mapping (virt == phys) for the low 1 MB 	 * physical memory region that is used by the ACPI wakeup code.  This 	 * mapping must not have PG_G set.  	 */
-ifdef|#
-directive|ifdef
-name|XBOX
-comment|/* FIXME: This is gross, but needed for the XBOX. Since we are in such 	 * an early stadium, we cannot yet neatly map video memory ... :-( 	 * Better fixes are very welcome! */
-if|if
-condition|(
-operator|!
-name|arch_i386_is_xbox
-condition|)
-endif|#
-directive|endif
 for|for
 control|(
 name|i
