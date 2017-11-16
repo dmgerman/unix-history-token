@@ -2475,10 +2475,6 @@ name|nrxq
 decl_stmt|;
 comment|/* # of NIC rxq's for each port */
 name|uint16_t
-name|rsrv_noflowq
-decl_stmt|;
-comment|/* Flag whether to reserve queue 0 */
-name|uint16_t
 name|nofldtxq
 decl_stmt|;
 comment|/* # of TOE txq's for each port */
@@ -6758,9 +6754,7 @@ name|vi
 operator|->
 name|rsrv_noflowq
 operator|=
-name|iaq
-operator|.
-name|rsrv_noflowq
+name|t4_rsrv_noflowq
 condition|?
 literal|1
 else|:
@@ -14592,12 +14586,6 @@ operator|->
 name|nrxq_vi
 operator|=
 name|t4_nrxq_vi
-expr_stmt|;
-name|iaq
-operator|->
-name|rsrv_noflowq
-operator|=
-name|t4_rsrv_noflowq
 expr_stmt|;
 ifdef|#
 directive|ifdef
