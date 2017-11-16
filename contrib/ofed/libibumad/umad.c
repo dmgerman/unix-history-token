@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<infiniband/umad.h>
 end_include
 
@@ -137,6 +143,25 @@ name|ib_user_mad_reg_req_t
 typedef|;
 end_typedef
 
+begin_expr_stmt
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ib_user_mad_reg_req
+argument_list|)
+operator|==
+name|IOCPARM_LEN
+argument_list|(
+name|IB_USER_MAD_REGISTER_AGENT
+argument_list|)
+argument_list|,
+literal|"Invalid structure size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|ib_user_mad_reg_req2
@@ -180,6 +205,25 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ib_user_mad_reg_req2
+argument_list|)
+operator|==
+name|IOCPARM_LEN
+argument_list|(
+name|IB_USER_MAD_REGISTER_AGENT2
+argument_list|)
+argument_list|,
+literal|"Invalid structure size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#

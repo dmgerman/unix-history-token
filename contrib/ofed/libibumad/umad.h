@@ -364,7 +364,10 @@ begin_define
 define|#
 directive|define
 name|IB_USER_MAD_REGISTER_AGENT
-value|_IOWR(IB_IOCTL_MAGIC, 1, \ 					      struct ib_user_mad_reg_req)
+define|\
+value|_IOWR(IB_IOCTL_MAGIC, 1, uint8_t [28]
+comment|/* struct ib_user_mad_reg_req */
+value|)
 end_define
 
 begin_define
@@ -385,7 +388,10 @@ begin_define
 define|#
 directive|define
 name|IB_USER_MAD_REGISTER_AGENT2
-value|_IOWR(IB_IOCTL_MAGIC, 4, \ 					      struct ib_user_mad_reg_req2)
+define|\
+value|_IOWR(IB_IOCTL_MAGIC, 4, uint8_t [40]
+comment|/* struct ib_user_mad_reg_req2 */
+value|)
 end_define
 
 begin_define
