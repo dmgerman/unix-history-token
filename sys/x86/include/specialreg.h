@@ -1006,6 +1006,219 @@ value|0x00000001
 end_define
 
 begin_comment
+comment|/* Intel Processor Trace CPUID. */
+end_comment
+
+begin_comment
+comment|/* Leaf 0 ebx. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_CR3
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* CR3 Filtering Support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_PSB
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Configurable PSB and Cycle-Accurate Mode Supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_IPF
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* IP Filtering and TraceStop supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_MTC
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* MTC Supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_PRW
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* PTWRITE Supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_PWR
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* Power Event Trace Supported */
+end_comment
+
+begin_comment
+comment|/* Leaf 0 ecx. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_TOPA
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* ToPA Output Supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_TOPA_MULTI
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* ToPA Tables Allow Multiple Output Entries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_SINGLE
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Single-Range Output Supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_TT_OUT
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Output to Trace Transport Subsystem Supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_LINEAR_IP
+value|(1<< 31)
+end_define
+
+begin_comment
+comment|/* IP Payloads are Linear IP, otherwise IP is effective */
+end_comment
+
+begin_comment
+comment|/* Leaf 1 eax. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_NADDR_S
+value|0
+end_define
+
+begin_comment
+comment|/* Number of Address Ranges */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_NADDR_M
+value|(0x7<< CPUPT_NADDR_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUPT_MTC_BITMAP_S
+value|16
+end_define
+
+begin_comment
+comment|/* Bitmap of supported MTC Period Encodings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_MTC_BITMAP_M
+value|(0xffff<< CPUPT_MTC_BITMAP_S)
+end_define
+
+begin_comment
+comment|/* Leaf 1 ebx. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_CT_BITMAP_S
+value|0
+end_define
+
+begin_comment
+comment|/* Bitmap of supported Cycle Threshold values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_CT_BITMAP_M
+value|(0xffff<< CPUPT_CT_BITMAP_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUPT_PFE_BITMAP_S
+value|16
+end_define
+
+begin_comment
+comment|/* Bitmap of supported Configurable PSB Frequency encoding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUPT_PFE_BITMAP_M
+value|(0xffff<< CPUPT_PFE_BITMAP_S)
+end_define
+
+begin_comment
 comment|/*  * Important bits in the AMD extended cpuid flags  */
 end_comment
 
@@ -3427,6 +3640,157 @@ end_define
 begin_comment
 comment|/* Region 3 End Address (R/W) */
 end_comment
+
+begin_comment
+comment|/* Intel Processor Trace Table of Physical Addresses (ToPA). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_S
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_M
+value|(0xf<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_4K
+value|(0<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_8K
+value|(1<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_16K
+value|(2<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_32K
+value|(3<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_64K
+value|(4<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_128K
+value|(5<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_256K
+value|(6<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_512K
+value|(7<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_1M
+value|(8<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_2M
+value|(9<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_4M
+value|(10<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_8M
+value|(11<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_16M
+value|(12<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_32M
+value|(13<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_64M
+value|(14<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_SIZE_128M
+value|(15<< TOPA_SIZE_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_STOP
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_INT
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPA_END
+value|(1<< 0)
+end_define
 
 begin_comment
 comment|/*  * Constants related to MSR's.  */
