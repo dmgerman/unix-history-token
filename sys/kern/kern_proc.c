@@ -8054,11 +8054,6 @@ argument_list|)
 control|)
 block|{
 comment|/* 			 * Skip embryonic processes. 			 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -8067,14 +8062,12 @@ name|p_state
 operator|==
 name|PRS_NEW
 condition|)
-block|{
-name|PROC_UNLOCK
+continue|continue;
+name|PROC_LOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
 name|KASSERT
 argument_list|(
 name|p
