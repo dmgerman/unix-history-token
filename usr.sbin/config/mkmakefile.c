@@ -2520,6 +2520,25 @@ name|filetype
 expr_stmt|;
 if|if
 condition|(
+name|filetype
+operator|==
+name|LOCAL
+condition|)
+name|tp
+operator|->
+name|f_srcprefix
+operator|=
+literal|""
+expr_stmt|;
+else|else
+name|tp
+operator|->
+name|f_srcprefix
+operator|=
+literal|"$S/"
+expr_stmt|;
+if|if
+condition|(
 name|imp_rule
 condition|)
 name|tp
@@ -2925,7 +2944,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"$S/%s "
+literal|"%s%s "
+argument_list|,
+name|tp
+operator|->
+name|f_srcprefix
 argument_list|,
 name|tp
 operator|->
@@ -3312,31 +3335,15 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|tp
-operator|->
-name|f_type
-operator|!=
-name|LOCAL
-condition|)
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"$S/%s "
+literal|"%s%s "
 argument_list|,
 name|tp
 operator|->
-name|f_fn
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"%s "
+name|f_srcprefix
 argument_list|,
 name|tp
 operator|->
@@ -3569,7 +3576,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s%so:\n\t-cp $S/%so .\n\n"
+literal|"%s%so:\n\t-cp %s%so .\n\n"
 argument_list|,
 name|ftp
 operator|->
@@ -3579,6 +3586,10 @@ name|tail
 argument_list|(
 name|np
 argument_list|)
+argument_list|,
+name|ftp
+operator|->
+name|f_srcprefix
 argument_list|,
 name|np
 argument_list|)
@@ -3596,7 +3607,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s%so: $S/%s%c %s\n"
+literal|"%s%so: %s%s%c %s\n"
 argument_list|,
 name|ftp
 operator|->
@@ -3606,6 +3617,10 @@ name|tail
 argument_list|(
 name|np
 argument_list|)
+argument_list|,
+name|ftp
+operator|->
+name|f_srcprefix
 argument_list|,
 name|np
 argument_list|,
@@ -3623,7 +3638,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s%so: $S/%s%c\n"
+literal|"%s%so: %s%s%c\n"
 argument_list|,
 name|ftp
 operator|->
@@ -3633,6 +3648,10 @@ name|tail
 argument_list|(
 name|np
 argument_list|)
+argument_list|,
+name|ftp
+operator|->
+name|f_srcprefix
 argument_list|,
 name|np
 argument_list|,
@@ -3754,9 +3773,13 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t%s $S/%s\n"
+literal|"\t%s %s%s\n"
 argument_list|,
 name|compilewith
+argument_list|,
+name|ftp
+operator|->
+name|f_srcprefix
 argument_list|,
 name|np
 argument_list|)
