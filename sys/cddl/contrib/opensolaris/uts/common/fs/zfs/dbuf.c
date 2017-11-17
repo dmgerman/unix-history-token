@@ -11958,6 +11958,19 @@ decl_stmt|;
 name|zbookmark_phys_t
 name|zb
 decl_stmt|;
+comment|/* flag if L2ARC eligible, l2arc_noprefetch then decides */
+if|if
+condition|(
+name|dpa
+operator|->
+name|dpa_aflags
+operator|&
+name|ARC_FLAG_L2CACHE
+condition|)
+name|iter_aflags
+operator||=
+name|ARC_FLAG_L2CACHE
+expr_stmt|;
 name|ASSERT3U
 argument_list|(
 name|dpa
@@ -12479,6 +12492,22 @@ name|dpa_zio
 operator|=
 name|pio
 expr_stmt|;
+comment|/* flag if L2ARC eligible, l2arc_noprefetch then decides */
+if|if
+condition|(
+name|DNODE_LEVEL_IS_L2CACHEABLE
+argument_list|(
+name|dn
+argument_list|,
+name|level
+argument_list|)
+condition|)
+name|dpa
+operator|->
+name|dpa_aflags
+operator||=
+name|ARC_FLAG_L2CACHE
+expr_stmt|;
 comment|/* 	 * If we have the indirect just above us, no need to do the asynchronous 	 * prefetch chain; we'll just run the last step ourselves.  If we're at 	 * a higher level, though, we want to issue the prefetches for all the 	 * indirect blocks asynchronously, so we can go on with whatever we were 	 * doing. 	 */
 if|if
 condition|(
@@ -12526,6 +12555,20 @@ decl_stmt|;
 name|zbookmark_phys_t
 name|zb
 decl_stmt|;
+comment|/* flag if L2ARC eligible, l2arc_noprefetch then decides */
+if|if
+condition|(
+name|DNODE_LEVEL_IS_L2CACHEABLE
+argument_list|(
+name|dn
+argument_list|,
+name|level
+argument_list|)
+condition|)
+name|iter_aflags
+operator||=
+name|ARC_FLAG_L2CACHE
+expr_stmt|;
 name|SET_BOOKMARK
 argument_list|(
 operator|&
