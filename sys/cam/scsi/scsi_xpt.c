@@ -4507,6 +4507,13 @@ name|pinfo
 operator|.
 name|priority
 expr_stmt|;
+name|cam_periph_assert
+argument_list|(
+name|periph
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|softc
