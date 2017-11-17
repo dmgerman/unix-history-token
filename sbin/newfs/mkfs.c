@@ -2907,7 +2907,7 @@ operator|&&
 name|getosreldate
 argument_list|()
 operator|>=
-name|P_OSREL_CK_CLYGRP
+name|P_OSREL_CK_CYLGRP
 condition|)
 name|sblock
 operator|.

@@ -149,7 +149,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|P_OSREL_CK_CLYGRP
+name|P_OSREL_CK_CYLGRP
 value|1200046
 end_define
 
