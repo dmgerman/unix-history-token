@@ -2802,6 +2802,10 @@ name|g_displayLevel
 operator|=
 literal|1
 expr_stmt|;
+name|g_removeSrcFile
+operator|=
+literal|0
+expr_stmt|;
 block|}
 if|if
 condition|(
