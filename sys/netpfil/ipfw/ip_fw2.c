@@ -10822,6 +10822,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* exit outer loop */
+comment|/* 				 * Ensure that we do not invoke NAT handler for 				 * non IPv4 packets. Libalias expects only IPv4. 				 */
 if|if
 condition|(
 operator|!
