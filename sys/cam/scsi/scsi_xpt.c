@@ -11273,15 +11273,13 @@ name|physpath
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|device
 operator|->
 name|physpath_len
 operator|=
-name|cdai
-operator|->
-name|bufsiz
+literal|0
 expr_stmt|;
+block|}
 comment|/* Clear existing buffer if zero length */
 if|if
 condition|(
@@ -11326,6 +11324,14 @@ name|CAM_REQ_ABORTED
 expr_stmt|;
 return|return;
 block|}
+name|device
+operator|->
+name|physpath_len
+operator|=
+name|cdai
+operator|->
+name|bufsiz
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|device
