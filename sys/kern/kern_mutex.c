@@ -2368,7 +2368,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ADAPTIVE_MUTEXES
-specifier|volatile
 name|struct
 name|thread
 modifier|*
@@ -4891,6 +4890,8 @@ name|ts
 decl_stmt|;
 name|uintptr_t
 name|tid
+decl_stmt|,
+name|v
 decl_stmt|;
 if|if
 condition|(
