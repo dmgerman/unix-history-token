@@ -12310,26 +12310,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-specifier|static
-name|void
-name|iterate_rules_in_ns
-parameter_list|(
-name|struct
-name|mlx5_flow_namespace
-modifier|*
-name|ns
-parameter_list|,
-name|rule_event_fn
-name|add_rule_cb
-parameter_list|,
-name|void
-modifier|*
-name|context
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|void
