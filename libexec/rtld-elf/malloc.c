@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|NPOOLPAGES
-value|(32*1024/pagesz)
+value|(128*1024/pagesz)
 end_define
 
 begin_decl_stmt
