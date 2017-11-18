@@ -57,6 +57,13 @@ name|CLKID_AO_IR_BLASTER
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLKID_AO_CEC_32K
+value|6
+end_define
+
 begin_endif
 endif|#
 directive|endif

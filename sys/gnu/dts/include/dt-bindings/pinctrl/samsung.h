@@ -325,8 +325,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXYNOS_PIN_FUNC_F
+name|EXYNOS_PIN_FUNC_EINT
 value|0xf
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXYNOS_PIN_FUNC_F
+value|EXYNOS_PIN_FUNC_EINT
 end_define
 
 begin_comment

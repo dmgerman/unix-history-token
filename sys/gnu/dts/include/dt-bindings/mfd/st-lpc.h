@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* SPDX-License-Identifier: GPL-2.0 */
+end_comment
+
+begin_comment
 comment|/*  * This header provides shared DT/Driver defines for ST's LPC device  *  * Copyright (C) 2014 STMicroelectronics -- All Rights Reserved  *  * Author: Lee Jones<lee.jones@linaro.org> for STMicroelectronics  */
 end_comment
 

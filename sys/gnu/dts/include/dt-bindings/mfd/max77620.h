@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* SPDX-License-Identifier: GPL-2.0 */
+end_comment
+
+begin_comment
 comment|/*  * This header provides macros for MAXIM MAX77620 device bindings.  *  * Copyright (c) 2016, NVIDIA Corporation.  * Author: Laxman Dewangan<ldewangan@nvidia.com>  */
 end_comment
 

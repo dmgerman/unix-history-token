@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+end_comment
+
+begin_comment
 comment|/*  * Input event codes  *  *    *** IMPORTANT ***  * This file is not only included from C-code but also from devicetree source  * files. As such this file MUST only contain comments and defines.  *  * Copyright (c) 1999-2002 Vojtech Pavlik  * Copyright (c) 2015 Hans de Goede<hdegoede@redhat.com>  *  * This program is free software; you can redistribute it and/or modify it  * under the terms of the GNU General Public License version 2 as published by  * the Free Software Foundation.  */
 end_comment
 
