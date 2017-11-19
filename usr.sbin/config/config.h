@@ -111,6 +111,12 @@ modifier|*
 name|f_objprefix
 decl_stmt|;
 comment|/* prefix string for object name */
+specifier|const
+name|char
+modifier|*
+name|f_srcprefix
+decl_stmt|;
+comment|/* source prefix such as $S/ */
 block|}
 struct|;
 end_struct

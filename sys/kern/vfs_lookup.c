@@ -2355,7 +2355,7 @@ operator|+
 name|ndp
 operator|->
 name|ni_pathlen
-operator|>=
+operator|>
 name|MAXPATHLEN
 condition|)
 block|{

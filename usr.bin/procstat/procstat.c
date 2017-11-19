@@ -1595,6 +1595,10 @@ case|:
 if|if
 condition|(
 name|cmd
+operator|!=
+name|NULL
+operator|&&
+name|cmd
 operator|->
 name|cmd
 operator|==

@@ -236,6 +236,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCLK_SDIO_SRC
+value|120
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCLK_EMMC_SAMPLE
 value|121
 end_define

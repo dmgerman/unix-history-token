@@ -1112,6 +1112,10 @@ decl_stmt|;
 comment|/* VF-only */
 name|unsigned
 name|int
+name|core_vdd
+decl_stmt|;
+name|unsigned
+name|int
 name|sf_size
 decl_stmt|;
 comment|/* serial flash size in bytes */

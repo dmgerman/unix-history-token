@@ -4358,28 +4358,14 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|t4_ntxq10g
+name|t4_ntxq
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|t4_nrxq10g
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|t4_ntxq1g
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|t4_nrxq1g
+name|t4_nrxq
 decl_stmt|;
 end_decl_stmt
 
@@ -4393,28 +4379,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|t4_tmr_idx_10g
+name|t4_tmr_idx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|t4_pktc_idx_10g
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|t4_tmr_idx_1g
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|t4_pktc_idx_1g
+name|t4_pktc_idx
 decl_stmt|;
 end_decl_stmt
 

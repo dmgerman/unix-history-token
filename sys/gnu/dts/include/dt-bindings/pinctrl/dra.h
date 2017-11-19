@@ -372,6 +372,30 @@ parameter_list|)
 value|(((pa)& 0xffff) - 0x3400) (val)
 end_define
 
+begin_comment
+comment|/* DRA7 IODELAY configuration parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_DELAY_PS
+parameter_list|(
+name|val
+parameter_list|)
+value|((val)& 0xffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_DELAY_PS
+parameter_list|(
+name|val
+parameter_list|)
+value|((val)& 0xffff)
+end_define
+
 begin_endif
 endif|#
 directive|endif

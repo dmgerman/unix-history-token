@@ -34,6 +34,42 @@ begin_struct
 struct|struct
 name|vmtotal
 block|{
+name|uint64_t
+name|t_vm
+decl_stmt|;
+comment|/* total virtual memory */
+name|uint64_t
+name|t_avm
+decl_stmt|;
+comment|/* active virtual memory */
+name|uint64_t
+name|t_rm
+decl_stmt|;
+comment|/* total real memory in use */
+name|uint64_t
+name|t_arm
+decl_stmt|;
+comment|/* active real memory */
+name|uint64_t
+name|t_vmshr
+decl_stmt|;
+comment|/* shared virtual memory */
+name|uint64_t
+name|t_avmshr
+decl_stmt|;
+comment|/* active shared virtual memory */
+name|uint64_t
+name|t_rmshr
+decl_stmt|;
+comment|/* shared real memory */
+name|uint64_t
+name|t_armshr
+decl_stmt|;
+comment|/* active shared real memory */
+name|uint64_t
+name|t_free
+decl_stmt|;
+comment|/* free memory pages */
 name|int16_t
 name|t_rq
 decl_stmt|;
@@ -41,7 +77,7 @@ comment|/* length of the run queue */
 name|int16_t
 name|t_dw
 decl_stmt|;
-comment|/* jobs in ``disk wait'' (neg priority) */
+comment|/* jobs in ``disk wait'' (neg 					   priority) */
 name|int16_t
 name|t_pw
 decl_stmt|;
@@ -53,43 +89,13 @@ comment|/* jobs sleeping in core */
 name|int16_t
 name|t_sw
 decl_stmt|;
-comment|/* swapped out runnable/short block jobs */
-name|int32_t
-name|t_vm
+comment|/* swapped out runnable/short 					   block jobs */
+name|uint16_t
+name|t_pad
+index|[
+literal|3
+index|]
 decl_stmt|;
-comment|/* total virtual memory */
-name|int32_t
-name|t_avm
-decl_stmt|;
-comment|/* active virtual memory */
-name|int32_t
-name|t_rm
-decl_stmt|;
-comment|/* total real memory in use */
-name|int32_t
-name|t_arm
-decl_stmt|;
-comment|/* active real memory */
-name|int32_t
-name|t_vmshr
-decl_stmt|;
-comment|/* shared virtual memory */
-name|int32_t
-name|t_avmshr
-decl_stmt|;
-comment|/* active shared virtual memory */
-name|int32_t
-name|t_rmshr
-decl_stmt|;
-comment|/* shared real memory */
-name|int32_t
-name|t_armshr
-decl_stmt|;
-comment|/* active shared real memory */
-name|int32_t
-name|t_free
-decl_stmt|;
-comment|/* free memory pages */
 block|}
 struct|;
 end_struct

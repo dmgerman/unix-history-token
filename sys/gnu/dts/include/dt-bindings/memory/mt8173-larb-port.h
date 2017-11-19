@@ -27,34 +27,6 @@ parameter_list|)
 value|(((larb)<< 5) | (port))
 end_define
 
-begin_comment
-comment|/* Local arbiter ID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTK_M4U_TO_LARB
-parameter_list|(
-name|id
-parameter_list|)
-value|(((id)>> 5)& 0x7)
-end_define
-
-begin_comment
-comment|/* PortID within the local arbiter */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTK_M4U_TO_PORT
-parameter_list|(
-name|id
-parameter_list|)
-value|((id)& 0x1f)
-end_define
-
 begin_define
 define|#
 directive|define

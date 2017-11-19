@@ -4507,6 +4507,13 @@ name|pinfo
 operator|.
 name|priority
 expr_stmt|;
+name|cam_periph_assert
+argument_list|(
+name|periph
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|softc
@@ -11273,15 +11280,13 @@ name|physpath
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|device
 operator|->
 name|physpath_len
 operator|=
-name|cdai
-operator|->
-name|bufsiz
+literal|0
 expr_stmt|;
+block|}
 comment|/* Clear existing buffer if zero length */
 if|if
 condition|(
@@ -11326,6 +11331,14 @@ name|CAM_REQ_ABORTED
 expr_stmt|;
 return|return;
 block|}
+name|device
+operator|->
+name|physpath_len
+operator|=
+name|cdai
+operator|->
+name|bufsiz
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|device

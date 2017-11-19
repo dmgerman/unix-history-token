@@ -2802,6 +2802,11 @@ name|g_displayLevel
 operator|=
 literal|1
 expr_stmt|;
+name|FIO_setRemoveSrcFile
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

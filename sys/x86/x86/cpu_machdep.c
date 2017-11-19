@@ -95,12 +95,6 @@ directive|include
 file|"opt_apic.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_xbox.h"
-end_include
-
 begin_endif
 endif|#
 directive|endif

@@ -18867,13 +18867,6 @@ argument_list|(
 name|new_bus
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|path
-argument_list|,
-name|M_CAMXPT
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|CAM_RESRC_UNAVAIL

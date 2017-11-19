@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* SPDX-License-Identifier: GPL-2.0 */
+end_comment
+
+begin_comment
 comment|/*  * This header provides clock numbers for the ingenic,jz4780-cgu DT binding.  *  * They are roughly ordered as:  *   - external clocks  *   - PLLs  *   - muxes/dividers in the order they appear in the jz4780 programmers manual  *   - gates in order of their bit in the CLKGR* registers  */
 end_comment
 

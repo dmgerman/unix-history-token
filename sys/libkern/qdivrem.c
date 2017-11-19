@@ -187,23 +187,16 @@ begin_function
 name|u_quad_t
 name|__qdivrem
 parameter_list|(
-name|uq
-parameter_list|,
-name|vq
-parameter_list|,
-name|arq
-parameter_list|)
 name|u_quad_t
 name|uq
-decl_stmt|,
+parameter_list|,
+name|u_quad_t
 name|vq
-decl_stmt|,
-decl|*
+parameter_list|,
+name|u_quad_t
+modifier|*
 name|arq
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|union
 name|uu
@@ -1260,7 +1253,7 @@ name|q
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -69,12 +69,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -8583,9 +8577,6 @@ break|break;
 case|case
 name|O_IPSEC
 case|:
-ifdef|#
-directive|ifdef
-name|IPSEC
 name|match
 operator|=
 operator|(
@@ -8601,8 +8592,6 @@ operator|!=
 name|NULL
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* otherwise no match */
 break|break;
 ifdef|#
@@ -10833,8 +10822,12 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* exit outer loop */
+comment|/* 				 * Ensure that we do not invoke NAT handler for 				 * non IPv4 packets. Libalias expects only IPv4. 				 */
 if|if
 condition|(
+operator|!
+name|is_ipv4
+operator|||
 operator|!
 name|IPFW_NAT_LOADED
 condition|)

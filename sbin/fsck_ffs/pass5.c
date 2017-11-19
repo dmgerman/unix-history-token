@@ -44,6 +44,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|IN_RTLD
+end_define
+
+begin_comment
+comment|/* So we pickup the P_OSREL defines */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -301,6 +311,11 @@ name|CK_CYLGRP
 operator|)
 operator|==
 literal|0
+operator|&&
+name|getosreldate
+argument_list|()
+operator|>=
+name|P_OSREL_CK_CYLGRP
 operator|&&
 name|reply
 argument_list|(

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* SPDX-License-Identifier: GPL-2.0 */
+end_comment
+
+begin_comment
 comment|/*  * This header provides constants for most GPIO bindings.  *  * Most GPIO bindings include a flags cell as part of the GPIO specifier.  * In most cases, the format of the flags cell uses the standard values  * defined in this header.  */
 end_comment
 
