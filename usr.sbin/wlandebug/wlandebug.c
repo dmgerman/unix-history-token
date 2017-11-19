@@ -904,18 +904,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errc
-argument_list|(
-literal|1
-argument_list|,
-name|ifconfig_err_errno
-argument_list|(
-name|h
-argument_list|)
-argument_list|,
-literal|"cannot get interface name"
-argument_list|)
+block|{
+comment|/* check for original interface name. */
+name|orig_name
+operator|=
+name|name
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|strlen
@@ -929,6 +924,17 @@ literal|"wlan"
 argument_list|)
 operator|+
 literal|1
+operator|||
+name|strncmp
+argument_list|(
+name|orig_name
+argument_list|,
+literal|"wlan"
+argument_list|,
+literal|4
+argument_list|)
+operator|!=
+literal|0
 condition|)
 name|errx
 argument_list|(
@@ -951,6 +957,12 @@ argument_list|,
 name|orig_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|orig_name
+operator|!=
+name|name
+condition|)
 name|free
 argument_list|(
 name|orig_name
