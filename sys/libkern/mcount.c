@@ -82,23 +82,15 @@ end_comment
 begin_macro
 name|_MCOUNT_DECL
 argument_list|(
-argument|frompc
+argument|uintfptr_t frompc
 argument_list|,
-argument|selfpc
+argument|uintfptr_t selfpc
 argument_list|)
 end_macro
 
 begin_comment
 comment|/* _mcount; may be static, inline, etc */
 end_comment
-
-begin_decl_stmt
-name|uintfptr_t
-name|frompc
-decl_stmt|,
-name|selfpc
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -645,11 +637,9 @@ name|GUPROF
 name|void
 name|mexitcount
 parameter_list|(
-name|selfpc
-parameter_list|)
 name|uintfptr_t
 name|selfpc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gmonparam

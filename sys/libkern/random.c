@@ -51,11 +51,9 @@ begin_function
 name|void
 name|srandom
 parameter_list|(
-name|seed
-parameter_list|)
 name|u_long
 name|seed
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i

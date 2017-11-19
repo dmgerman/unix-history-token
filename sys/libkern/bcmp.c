@@ -74,29 +74,19 @@ begin_function
 name|int
 name|bcmp
 parameter_list|(
-name|b1
-parameter_list|,
-name|b2
-parameter_list|,
-name|length
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|b1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|b2
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|size_t
 name|length
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -544,7 +534,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 end_unit
 
