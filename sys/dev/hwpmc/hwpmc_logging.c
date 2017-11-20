@@ -3171,6 +3171,13 @@ name|po_error
 operator|=
 literal|0
 expr_stmt|;
+name|po
+operator|->
+name|po_flags
+operator|&=
+operator|~
+name|PMC_PO_OWNS_LOGFILE
+expr_stmt|;
 return|return
 operator|(
 name|error
