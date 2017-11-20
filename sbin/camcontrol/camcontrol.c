@@ -7373,6 +7373,45 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
+literal|"Zoned-Device Commands "
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|parm
+operator|->
+name|support3
+operator|&
+name|ATA_SUPPORT_ZONE_MASK
+condition|)
+block|{
+case|case
+name|ATA_SUPPORT_ZONE_DEV_MANAGED
+case|:
+name|printf
+argument_list|(
+literal|"device managed\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ATA_SUPPORT_ZONE_HOST_AWARE
+case|:
+name|printf
+argument_list|(
+literal|"host aware\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"no\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
 literal|"\nFeature                      "
 literal|"Support  Enabled   Value           Vendor\n"
 argument_list|)
