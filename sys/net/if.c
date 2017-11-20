@@ -7285,6 +7285,8 @@ operator||
 name|RTF_HOST
 operator||
 name|RTF_STATIC
+operator||
+name|RTF_PINNED
 expr_stmt|;
 name|info
 operator|.
