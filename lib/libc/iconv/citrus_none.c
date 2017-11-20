@@ -764,6 +764,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|*
 name|s
 operator|==
 name|NULL
@@ -825,6 +826,7 @@ expr_stmt|;
 operator|*
 name|nresult
 operator|=
+operator|*
 operator|*
 name|s
 operator|==
