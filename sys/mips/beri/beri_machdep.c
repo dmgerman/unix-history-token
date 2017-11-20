@@ -713,18 +713,8 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|FDT
-name|char
-name|buf
-index|[
-literal|2048
-index|]
-decl_stmt|;
-comment|/* early stack supposedly big enough */
 name|vm_offset_t
 name|dtbp
-decl_stmt|;
-name|phandle_t
-name|chosen
 decl_stmt|;
 name|void
 modifier|*
