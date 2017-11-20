@@ -733,7 +733,7 @@ name|KEY_SLASH
 block|,
 name|KEY_RIGHTSHIFT
 block|,
-name|NONE
+name|KEY_KPASTERISK
 block|,
 name|KEY_LEFTALT
 block|,
@@ -989,7 +989,7 @@ name|NONE
 block|,
 name|NONE
 block|,
-name|KEY_KPASTERISK
+name|KEY_KPSLASH
 block|,
 name|NONE
 block|,
