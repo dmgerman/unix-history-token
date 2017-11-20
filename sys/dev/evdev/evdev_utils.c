@@ -262,7 +262,7 @@ name|KEY_UP
 block|,
 name|KEY_NUMLOCK
 block|,
-name|KEY_SLASH
+name|KEY_KPSLASH
 block|,
 name|KEY_KPASTERISK
 block|,
