@@ -395,6 +395,28 @@ begin_comment
 comment|/* Use backslash escaping in option parsing */
 end_comment
 
+begin_decl_stmt
+name|public
+name|LWCHAR
+name|rscroll_char
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Char which marks chopped lines with -S */
+end_comment
+
+begin_decl_stmt
+name|public
+name|int
+name|rscroll_attr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Attribute of rscroll_char */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -1114,6 +1136,20 @@ name|use_backslash_optname
 init|=
 block|{
 literal|"use-backslash"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|optname
+name|rscroll_optname
+init|=
+block|{
+literal|"rscroll"
 block|,
 name|NULL
 block|}
@@ -2239,6 +2275,33 @@ block|{
 literal|"Use backslash escaping in command line parameters"
 block|,
 literal|"Don't use backslash escaping in command line parameters"
+block|,
+name|NULL
+block|}
+block|}
+block|,
+block|{
+name|OLETTER_NONE
+block|,
+operator|&
+name|rscroll_optname
+block|,
+name|STRING
+operator||
+name|REPAINT
+operator||
+name|INIT_HANDLER
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|opt_rscroll
+block|,
+block|{
+literal|"right scroll character: "
+block|,
+name|NULL
 block|,
 name|NULL
 block|}

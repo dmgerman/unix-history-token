@@ -758,6 +758,9 @@ name|nlines
 operator|==
 literal|0
 operator|&&
+operator|!
+name|ignore_eoi
+operator|&&
 name|same_pos_bell
 condition|)
 name|eof_bell
@@ -1283,7 +1286,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get line count of file up to the screen height + 1 char  */
+comment|/*  * Return number of displayable lines in the file.  * Stop counting at screen height + 1.  */
 end_comment
 
 begin_function
@@ -1297,12 +1300,10 @@ name|nlines
 decl_stmt|;
 name|POSITION
 name|pos
-decl_stmt|;
-name|pos
-operator|=
+init|=
 name|ch_zero
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 for|for
 control|(
 name|nlines

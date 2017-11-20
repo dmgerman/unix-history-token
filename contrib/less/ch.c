@@ -2800,7 +2800,7 @@ name|thisfile
 operator|->
 name|flags
 operator|=
-literal|0
+name|flags
 expr_stmt|;
 name|thisfile
 operator|->
@@ -2832,10 +2832,6 @@ operator|->
 name|fsize
 operator|=
 name|NULL_POSITION
-expr_stmt|;
-name|ch_flags
-operator|=
-name|flags
 expr_stmt|;
 name|init_hashtbl
 argument_list|()
@@ -2917,6 +2913,7 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
 name|ch_flags
 operator|&
 operator|(
@@ -2925,6 +2922,14 @@ operator||
 name|CH_POPENED
 operator||
 name|CH_HELPFILE
+operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|ch_flags
+operator|&
+name|CH_KEEPOPEN
 operator|)
 condition|)
 block|{

@@ -9,6 +9,12 @@ directive|include
 file|"less.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"position.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -19,6 +25,23 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|OS2
+end_if
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_endif
@@ -204,23 +227,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|char
-modifier|*
-name|curr_altfilename
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|curr_altpipe
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Textlist functions deal with a list of words separated by spaces.  * init_textlist sets up a textlist structure.  * forw_textlist uses that structure to iterate thru the list of  * words, returning each one as a standard null-terminated string.  * back_textlist does the same, but runs thru the list backwards.  */
@@ -639,6 +645,50 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Close a pipe opened via popen.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|close_pipe
+parameter_list|(
+name|FILE
+modifier|*
+name|pipefd
+parameter_list|)
+block|{
+if|if
+condition|(
+name|pipefd
+operator|==
+name|NULL
+condition|)
+return|return;
+if|#
+directive|if
+name|OS2
+comment|/* 	 * The pclose function of OS/2 emx sometimes fails. 	 * Send SIGINT to the piped process before closing it. 	 */
+name|kill
+argument_list|(
+name|pipefd
+operator|->
+name|_pid
+argument_list|,
+name|SIGINT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|pclose
+argument_list|(
+name|pipefd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Close the current input file.  */
 end_comment
 
@@ -652,6 +702,17 @@ name|struct
 name|scrpos
 name|scrpos
 decl_stmt|;
+name|int
+name|chflags
+decl_stmt|;
+name|FILE
+modifier|*
+name|altpipe
+decl_stmt|;
+name|char
+modifier|*
+name|altfilename
+decl_stmt|;
 if|if
 condition|(
 name|curr_ifile
@@ -664,6 +725,8 @@ name|get_scrpos
 argument_list|(
 operator|&
 name|scrpos
+argument_list|,
+name|TOP
 argument_list|)
 expr_stmt|;
 if|if
@@ -688,37 +751,79 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * Close the file descriptor, unless it is a pipe. 	 */
+name|chflags
+operator|=
+name|ch_getflags
+argument_list|()
+expr_stmt|;
 name|ch_close
 argument_list|()
 expr_stmt|;
 comment|/* 	 * If we opened a file using an alternate name, 	 * do special stuff to close it. 	 */
+name|altfilename
+operator|=
+name|get_altfilename
+argument_list|(
+name|curr_ifile
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|curr_altfilename
+name|altfilename
 operator|!=
 name|NULL
 condition|)
 block|{
+name|altpipe
+operator|=
+name|get_altpipe
+argument_list|(
+name|curr_ifile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|altpipe
+operator|!=
+name|NULL
+operator|&&
+operator|!
+operator|(
+name|chflags
+operator|&
+name|CH_KEEPOPEN
+operator|)
+condition|)
+block|{
+name|close_pipe
+argument_list|(
+name|altpipe
+argument_list|)
+expr_stmt|;
+name|set_altpipe
+argument_list|(
+name|curr_ifile
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 name|close_altfile
 argument_list|(
-name|curr_altfilename
+name|altfilename
 argument_list|,
 name|get_filename
 argument_list|(
 name|curr_ifile
 argument_list|)
-argument_list|,
-name|curr_altpipe
 argument_list|)
 expr_stmt|;
-name|free
+name|set_altfilename
 argument_list|(
-name|curr_altfilename
-argument_list|)
-expr_stmt|;
-name|curr_altfilename
-operator|=
+name|curr_ifile
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 name|curr_ifile
@@ -822,15 +927,11 @@ name|open_filename
 decl_stmt|;
 name|char
 modifier|*
-name|qopen_filename
-decl_stmt|;
-name|char
-modifier|*
 name|alt_filename
 decl_stmt|;
 name|void
 modifier|*
-name|alt_pipe
+name|altpipe
 decl_stmt|;
 name|IFILE
 name|was_curr_ifile
@@ -939,21 +1040,35 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * See if LESSOPEN specifies an "alternate" file to open. 	 */
-name|alt_pipe
+name|altpipe
 operator|=
+name|get_altpipe
+argument_list|(
+name|ifile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|altpipe
+operator|!=
 name|NULL
+condition|)
+block|{
+comment|/* 		 * File is already open. 		 * chflags and f are not used by ch_init if ifile has  		 * filestate which should be the case if we're here.  		 * Set them here to avoid uninitialized variable warnings. 		 */
+name|chflags
+operator|=
+literal|0
+expr_stmt|;
+name|f
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|alt_filename
 operator|=
-name|open_altfile
+name|get_altfilename
 argument_list|(
-name|filename
-argument_list|,
-operator|&
-name|f
-argument_list|,
-operator|&
-name|alt_pipe
+name|ifile
 argument_list|)
 expr_stmt|;
 name|open_filename
@@ -968,12 +1083,58 @@ name|alt_filename
 else|:
 name|filename
 expr_stmt|;
-name|qopen_filename
-operator|=
-name|shell_unquote
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|strcmp
 argument_list|(
-name|open_filename
+name|filename
+argument_list|,
+name|FAKE_HELPFILE
 argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|filename
+argument_list|,
+name|FAKE_EMPTYFILE
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|alt_filename
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+name|alt_filename
+operator|=
+name|open_altfile
+argument_list|(
+name|filename
+argument_list|,
+operator|&
+name|f
+argument_list|,
+operator|&
+name|altpipe
+argument_list|)
+expr_stmt|;
+name|open_filename
+operator|=
+operator|(
+name|alt_filename
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|alt_filename
+else|:
+name|filename
 expr_stmt|;
 name|chflags
 operator|=
@@ -981,15 +1142,30 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|alt_pipe
+name|altpipe
 operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * The alternate "file" is actually a pipe. 		 * f has already been set to the file descriptor of the pipe 		 * in the call to open_altfile above. 		 * Keep the file descriptor open because it was opened  		 * via popen(), and pclose() wants to close it. 		 */
+comment|/* 			 * The alternate "file" is actually a pipe. 			 * f has already been set to the file descriptor of the pipe 			 * in the call to open_altfile above. 			 * Keep the file descriptor open because it was opened  			 * via popen(), and pclose() wants to close it. 			 */
 name|chflags
 operator||=
 name|CH_POPENED
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|filename
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|chflags
+operator||=
+name|CH_KEEPOPEN
 expr_stmt|;
 block|}
 elseif|else
@@ -997,7 +1173,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|open_filename
+name|filename
 argument_list|,
 literal|"-"
 argument_list|)
@@ -1005,7 +1181,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*  		 * Use standard input. 		 * Keep the file descriptor open because we can't reopen it. 		 */
+comment|/*  			 * Use standard input. 			 * Keep the file descriptor open because we can't reopen it. 			 */
 name|f
 operator|=
 name|fd0
@@ -1014,7 +1190,7 @@ name|chflags
 operator||=
 name|CH_KEEPOPEN
 expr_stmt|;
-comment|/* 		 * Must switch stdin to BINARY mode. 		 */
+comment|/* 			 * Must switch stdin to BINARY mode. 			 */
 name|SET_BINARY
 argument_list|(
 name|f
@@ -1025,7 +1201,7 @@ directive|if
 name|MSDOS_COMPILER
 operator|==
 name|DJGPPC
-comment|/* 		 * Setting stdin to binary by default causes 		 * Ctrl-C to not raise SIGINT.  We must undo 		 * that side-effect. 		 */
+comment|/* 			 * Setting stdin to binary by default causes 			 * Ctrl-C to not raise SIGINT.  We must undo 			 * that side-effect. 			 */
 name|__djgpp_set_ctrl_c
 argument_list|(
 literal|1
@@ -1097,7 +1273,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * It looks like a bad file.  Don't try to open it. 		 */
+comment|/* 			 * It looks like a bad file.  Don't try to open it. 			 */
 name|error
 argument_list|(
 literal|"%s"
@@ -1122,13 +1298,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|close_pipe
+argument_list|(
+name|altpipe
+argument_list|)
+expr_stmt|;
 name|close_altfile
 argument_list|(
 name|alt_filename
 argument_list|,
 name|filename
-argument_list|,
-name|alt_pipe
 argument_list|)
 expr_stmt|;
 name|free
@@ -1144,15 +1323,10 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|qopen_filename
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Re-open the current file. 		 */
+comment|/* 			 * Re-open the current file. 			 */
 if|if
 condition|(
 name|was_curr_ifile
@@ -1160,7 +1334,7 @@ operator|==
 name|ifile
 condition|)
 block|{
-comment|/* 			 * Whoops.  The "current" ifile is the one we just deleted. 			 * Just give up. 			 */
+comment|/* 				 * Whoops.  The "current" ifile is the one we just deleted. 				 * Just give up. 				 */
 name|quit
 argument_list|(
 name|QUIT_ERROR
@@ -1186,7 +1360,7 @@ name|f
 operator|=
 name|open
 argument_list|(
-name|qopen_filename
+name|open_filename
 argument_list|,
 name|OPEN_READ
 argument_list|)
@@ -1195,7 +1369,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 		 * Got an error trying to open it. 		 */
+comment|/* 			 * Got an error trying to open it. 			 */
 name|parg
 operator|.
 name|p_string
@@ -1247,7 +1421,7 @@ name|f
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Looks like a binary file.   			 * Ask user if we should proceed. 			 */
+comment|/* 				 * Looks like a binary file.   				 * Ask user if we should proceed. 				 */
 name|parg
 operator|.
 name|p_string
@@ -1286,6 +1460,7 @@ goto|;
 block|}
 block|}
 block|}
+block|}
 comment|/* 	 * Get the new ifile. 	 * Get the saved position for the file. 	 */
 if|if
 condition|(
@@ -1308,13 +1483,19 @@ name|curr_ifile
 operator|=
 name|ifile
 expr_stmt|;
-name|curr_altfilename
-operator|=
+name|set_altfilename
+argument_list|(
+name|curr_ifile
+argument_list|,
 name|alt_filename
+argument_list|)
 expr_stmt|;
-name|curr_altpipe
-operator|=
-name|alt_pipe
+name|set_altpipe
+argument_list|(
+name|curr_ifile
+argument_list|,
+name|altpipe
+argument_list|)
 expr_stmt|;
 name|set_open
 argument_list|(
@@ -1373,6 +1554,17 @@ if|#
 directive|if
 name|HAVE_STAT_INO
 comment|/* Remember the i-number and device of the opened file. */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|open_filename
+argument_list|,
+literal|"-"
+argument_list|)
+operator|!=
+literal|0
+condition|)
 block|{
 name|struct
 name|stat
@@ -1383,7 +1575,7 @@ name|r
 init|=
 name|stat
 argument_list|(
-name|qopen_filename
+name|open_filename
 argument_list|,
 operator|&
 name|statbuf
@@ -1431,11 +1623,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|free
-argument_list|(
-name|qopen_filename
-argument_list|)
-expr_stmt|;
 name|no_display
 operator|=
 operator|!
@@ -1568,6 +1755,10 @@ name|char
 modifier|*
 name|gfilename
 decl_stmt|;
+name|char
+modifier|*
+name|qfilename
+decl_stmt|;
 name|struct
 name|textlist
 name|tl_files
@@ -1651,11 +1842,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|qfilename
+operator|=
+name|shell_unquote
+argument_list|(
+name|gfilename
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|edit
 argument_list|(
-name|gfilename
+name|qfilename
 argument_list|)
 operator|==
 literal|0
@@ -1669,6 +1867,11 @@ operator|=
 name|get_filename
 argument_list|(
 name|curr_ifile
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|qfilename
 argument_list|)
 expr_stmt|;
 block|}
@@ -2371,13 +2574,6 @@ condition|)
 comment|/* 		 * Can't currently use a log file on a file that can seek. 		 */
 return|return;
 comment|/* 	 * {{ We could use access() here. }} 	 */
-name|filename
-operator|=
-name|shell_unquote
-argument_list|(
-name|filename
-argument_list|)
-expr_stmt|;
 name|exists
 operator|=
 name|open
@@ -2569,18 +2765,8 @@ operator|&
 name|parg
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|filename
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
-name|free
-argument_list|(
-name|filename
-argument_list|)
-expr_stmt|;
 name|SET_BINARY
 argument_list|(
 name|logfile

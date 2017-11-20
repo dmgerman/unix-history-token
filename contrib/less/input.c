@@ -132,6 +132,9 @@ name|int
 name|endline
 decl_stmt|;
 name|int
+name|chopped
+decl_stmt|;
+name|int
 name|backchars
 decl_stmt|;
 name|get_forw_line
@@ -403,6 +406,10 @@ literal|'\r'
 operator|)
 expr_stmt|;
 comment|/* 	 * Read each character in the line and append to the line buffer. 	 */
+name|chopped
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -565,6 +572,10 @@ name|quit_if_one_screen
 operator|=
 name|FALSE
 expr_stmt|;
+name|chopped
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -591,6 +602,8 @@ block|}
 name|pdone
 argument_list|(
 name|endline
+argument_list|,
+name|chopped
 argument_list|,
 literal|1
 argument_list|)
@@ -731,6 +744,9 @@ name|c
 decl_stmt|;
 name|int
 name|endline
+decl_stmt|;
+name|int
+name|chopped
 decl_stmt|;
 name|int
 name|backchars
@@ -1023,6 +1039,10 @@ argument_list|(
 name|new_pos
 argument_list|)
 expr_stmt|;
+name|chopped
+operator|=
+name|FALSE
+expr_stmt|;
 do|do
 block|{
 name|c
@@ -1124,6 +1144,10 @@ name|endline
 operator|=
 name|TRUE
 expr_stmt|;
+name|chopped
+operator|=
+name|TRUE
+expr_stmt|;
 name|quit_if_one_screen
 operator|=
 name|FALSE
@@ -1168,6 +1192,8 @@ do|;
 name|pdone
 argument_list|(
 name|endline
+argument_list|,
+name|chopped
 argument_list|,
 literal|0
 argument_list|)

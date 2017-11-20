@@ -646,6 +646,13 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|utf_mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|quitting
 decl_stmt|;
 end_decl_stmt
@@ -665,6 +672,24 @@ name|win32_deinit_term
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENABLE_VIRTUAL_TERMINAL_PROCESSING
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ENABLE_VIRTUAL_TERMINAL_PROCESSING
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -701,7 +726,7 @@ name|fg
 parameter_list|,
 name|bg
 parameter_list|)
-value|{ curr_attr = MAKEATTR(fg,bg); \ 				if (SetConsoleTextAttribute(con_out, curr_attr) == 0) \ 				error("SETCOLORS failed"); }
+value|{ curr_attr = MAKEATTR(fg,bg); \ 				if (SetConsoleTextAttribute(con_out, curr_attr) == 0) \ 				error("SETCOLORS failed", NULL_PARG); }
 end_define
 
 begin_endif
@@ -833,6 +858,30 @@ end_decl_stmt
 begin_comment
 comment|/* Honor ANSI sequences rather than using above */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|MSDOS_COMPILER
+operator|==
+name|WIN32C
+end_if
+
+begin_decl_stmt
+name|public
+name|int
+name|have_ul
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Is underline available? */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -1134,6 +1183,20 @@ end_decl_stmt
 
 begin_comment
 comment|/* Some capability is missing */
+end_comment
+
+begin_decl_stmt
+name|public
+name|char
+modifier|*
+name|kent
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Keypad ENTER sequence */
 end_comment
 
 begin_decl_stmt
@@ -4967,6 +5030,16 @@ name|sc_e_keypad
 operator|=
 literal|""
 expr_stmt|;
+name|kent
+operator|=
+name|ltgetstr
+argument_list|(
+literal|"@8"
+argument_list|,
+operator|&
+name|sp
+argument_list|)
+expr_stmt|;
 name|sc_init
 operator|=
 name|ltgetstr
@@ -6055,6 +6128,9 @@ operator|==
 name|INVALID_HANDLE_VALUE
 condition|)
 block|{
+name|DWORD
+name|output_mode
+decl_stmt|;
 comment|/* 		 * Create our own screen buffer, so that we 		 * may restore the original when done. 		 */
 name|con_out_ours
 operator|=
@@ -6079,6 +6155,26 @@ operator|(
 name|LPVOID
 operator|)
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Enable underline, if available. 		 */
+name|GetConsoleMode
+argument_list|(
+name|con_out_ours
+argument_list|,
+operator|&
+name|output_mode
+argument_list|)
+expr_stmt|;
+name|have_ul
+operator|=
+name|SetConsoleMode
+argument_list|(
+name|con_out_ours
+argument_list|,
+name|output_mode
+operator||
+name|ENABLE_VIRTUAL_TERMINAL_PROCESSING
 argument_list|)
 expr_stmt|;
 block|}
@@ -7189,6 +7285,12 @@ name|void
 name|lower_left
 parameter_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|init_done
+condition|)
+return|return;
 if|#
 directive|if
 operator|!
@@ -7483,10 +7585,10 @@ name|public
 name|void
 name|goto_line
 parameter_list|(
-name|slinenum
+name|sindex
 parameter_list|)
 name|int
-name|slinenum
+name|sindex
 decl_stmt|;
 block|{
 if|#
@@ -7501,7 +7603,7 @@ name|sc_move
 argument_list|,
 literal|0
 argument_list|,
-name|slinenum
+name|sindex
 argument_list|)
 argument_list|,
 literal|1
@@ -7516,7 +7618,7 @@ argument_list|()
 expr_stmt|;
 name|_settextposition
 argument_list|(
-name|slinenum
+name|sindex
 operator|+
 literal|1
 argument_list|,
@@ -9691,6 +9793,62 @@ name|WIN32C
 name|DWORD
 name|written
 decl_stmt|;
+if|if
+condition|(
+name|utf_mode
+operator|==
+literal|2
+condition|)
+block|{
+comment|/* 		 * We've got UTF-8 text in a non-UTF-8 console.  Convert it to 		 * wide and use WriteConsoleW. 		 */
+name|WCHAR
+name|wtext
+index|[
+literal|1024
+index|]
+decl_stmt|;
+name|len
+operator|=
+name|MultiByteToWideChar
+argument_list|(
+name|CP_UTF8
+argument_list|,
+literal|0
+argument_list|,
+name|text
+argument_list|,
+name|len
+argument_list|,
+name|wtext
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|wtext
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|wtext
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|WriteConsoleW
+argument_list|(
+name|con_out
+argument_list|,
+name|wtext
+argument_list|,
+name|len
+argument_list|,
+operator|&
+name|written
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|WriteConsole
 argument_list|(
 name|con_out
