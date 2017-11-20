@@ -90,6 +90,12 @@ name|A_B_WINDOW
 block|}
 block|,
 block|{
+literal|"clear-mark"
+block|,
+name|A_CLRMARK
+block|}
+block|,
+block|{
 literal|"debug"
 block|,
 name|A_DEBUG
@@ -369,6 +375,12 @@ block|{
 literal|"set-mark"
 block|,
 name|A_SETMARK
+block|}
+block|,
+block|{
+literal|"set-mark-bottom"
+block|,
+name|A_SETMARKBOT
 block|}
 block|,
 block|{

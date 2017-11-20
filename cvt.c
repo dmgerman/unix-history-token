@@ -298,6 +298,8 @@ name|dst
 operator|>
 name|odst
 operator|&&
+name|utf_mode
+operator|&&
 operator|!
 name|IS_ASCII_OCTET
 argument_list|(

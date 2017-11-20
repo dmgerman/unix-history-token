@@ -961,7 +961,7 @@ name|on
 decl_stmt|;
 block|{
 name|int
-name|slinenum
+name|sindex
 decl_stmt|;
 name|POSITION
 name|pos
@@ -1013,11 +1013,11 @@ return|return;
 block|}
 for|for
 control|(
-name|slinenum
+name|sindex
 operator|=
 name|TOP
 init|;
-name|slinenum
+name|sindex
 operator|<
 name|TOP
 operator|+
@@ -1025,7 +1025,7 @@ name|sc_height
 operator|-
 literal|1
 condition|;
-name|slinenum
+name|sindex
 operator|++
 control|)
 block|{
@@ -1033,7 +1033,7 @@ name|pos
 operator|=
 name|position
 argument_list|(
-name|slinenum
+name|sindex
 argument_list|)
 expr_stmt|;
 if|if
@@ -1053,7 +1053,7 @@ argument_list|)
 expr_stmt|;
 name|goto_line
 argument_list|(
-name|slinenum
+name|sindex
 argument_list|)
 expr_stmt|;
 name|put_line
@@ -1081,7 +1081,7 @@ name|clear_attn
 parameter_list|()
 block|{
 name|int
-name|slinenum
+name|sindex
 decl_stmt|;
 name|POSITION
 name|old_start_attnpos
@@ -1141,11 +1141,11 @@ argument_list|()
 expr_stmt|;
 for|for
 control|(
-name|slinenum
+name|sindex
 operator|=
 name|TOP
 init|;
-name|slinenum
+name|sindex
 operator|<
 name|TOP
 operator|+
@@ -1153,7 +1153,7 @@ name|sc_height
 operator|-
 literal|1
 condition|;
-name|slinenum
+name|sindex
 operator|++
 control|)
 block|{
@@ -1161,7 +1161,7 @@ name|pos
 operator|=
 name|position
 argument_list|(
-name|slinenum
+name|sindex
 argument_list|)
 expr_stmt|;
 if|if
@@ -1175,7 +1175,7 @@ name|epos
 operator|=
 name|position
 argument_list|(
-name|slinenum
+name|sindex
 operator|+
 literal|1
 argument_list|)
@@ -1183,7 +1183,7 @@ expr_stmt|;
 if|if
 condition|(
 name|pos
-operator|<
+operator|<=
 name|old_end_attnpos
 operator|&&
 operator|(
@@ -1207,7 +1207,7 @@ argument_list|)
 expr_stmt|;
 name|goto_line
 argument_list|(
-name|slinenum
+name|sindex
 argument_list|)
 expr_stmt|;
 name|put_line
@@ -1254,6 +1254,15 @@ name|search_info
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|hilite_anchor
+operator|.
+name|first
+operator|==
+name|NULL
+condition|)
+block|{
 name|error
 argument_list|(
 literal|"No previous regular expression"
@@ -1263,6 +1272,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|clr_hilite
+argument_list|()
+expr_stmt|;
+comment|/* Next time, hilite_anchor.first will be NULL. */
+block|}
+name|clear_pattern
+argument_list|(
+operator|&
+name|search_info
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|HILITE_SEARCH
@@ -2199,10 +2219,16 @@ return|;
 if|if
 condition|(
 name|p_matches
-operator|!=
+operator|==
 name|NULL
 condition|)
-comment|/* 		 * Report matches, even if we're hiding highlights. 		 */
+comment|/* 		 * Kinda kludgy way to recognize that caller is checking for 		 * hilite in status column. In this case we want to return 		 * hilite status even if hiliting is disabled or hidden. 		 */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* 	 * Report matches, even if we're hiding highlights. 	 */
 operator|*
 name|p_matches
 operator|=
@@ -3725,6 +3751,8 @@ name|get_scrpos
 argument_list|(
 operator|&
 name|scrpos
+argument_list|,
+name|TOP
 argument_list|)
 expr_stmt|;
 if|if
@@ -3814,7 +3842,7 @@ name|POSITION
 name|pos
 decl_stmt|;
 name|int
-name|linenum
+name|sindex
 decl_stmt|;
 if|if
 condition|(
@@ -3863,7 +3891,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|linenum
+name|sindex
 operator|=
 literal|0
 expr_stmt|;
@@ -3889,7 +3917,7 @@ name|search_type
 operator|&
 name|SRCH_FORW
 condition|)
-name|linenum
+name|sindex
 operator|=
 name|sc_height
 operator|-
@@ -3897,7 +3925,7 @@ literal|1
 expr_stmt|;
 comment|/* BOTTOM_PLUS_ONE */
 else|else
-name|linenum
+name|sindex
 operator|=
 literal|0
 expr_stmt|;
@@ -3925,13 +3953,13 @@ name|search_type
 operator|&
 name|SRCH_FORW
 condition|)
-name|linenum
+name|sindex
 operator|=
 literal|0
 expr_stmt|;
 comment|/* TOP */
 else|else
-name|linenum
+name|sindex
 operator|=
 name|sc_height
 operator|-
@@ -3942,9 +3970,9 @@ block|}
 else|else
 block|{
 comment|/* 			 * Search includes the part of current screen beyond the jump target. 			 * It starts at the jump target (if searching backwards), 			 * or at the jump target plus one (if forwards). 			 */
-name|linenum
+name|sindex
 operator|=
-name|adjsline
+name|sindex_from_sline
 argument_list|(
 name|jump_sline
 argument_list|)
@@ -3964,7 +3992,7 @@ name|pos
 operator|=
 name|position
 argument_list|(
-name|linenum
+name|sindex
 argument_list|)
 expr_stmt|;
 if|if
@@ -4010,7 +4038,7 @@ block|{
 if|if
 condition|(
 operator|++
-name|linenum
+name|sindex
 operator|>=
 name|sc_height
 condition|)
@@ -4019,7 +4047,7 @@ name|pos
 operator|=
 name|position
 argument_list|(
-name|linenum
+name|sindex
 argument_list|)
 expr_stmt|;
 block|}
@@ -4036,7 +4064,7 @@ block|{
 if|if
 condition|(
 operator|--
-name|linenum
+name|sindex
 operator|<
 literal|0
 condition|)
@@ -4045,7 +4073,7 @@ name|pos
 operator|=
 name|position
 argument_list|(
-name|linenum
+name|sindex
 argument_list|)
 expr_stmt|;
 block|}
@@ -4923,6 +4951,8 @@ condition|(
 name|hilite_search
 operator|==
 name|OPT_ON
+operator|||
+name|status_col
 condition|)
 block|{
 comment|/* 			 * Erase the highlights currently on screen. 			 * If the search fails, we'll redisplay them later. 			 */
@@ -4986,6 +5016,8 @@ name|HILITE_SEARCH
 if|if
 condition|(
 name|hilite_search
+operator|||
+name|status_col
 condition|)
 block|{
 comment|/* 			 * Erase the highlights currently on screen. 			 * Also permanently delete them from the hilite list. 			 */
@@ -5007,6 +5039,8 @@ condition|(
 name|hilite_search
 operator|==
 name|OPT_ONPLUS
+operator|||
+name|status_col
 condition|)
 block|{
 comment|/* 			 * Highlight any matches currently on screen, 			 * before we actually start the search. 			 */
@@ -5044,7 +5078,19 @@ operator|(
 name|n
 operator|)
 return|;
-comment|/* repaint(); -- why was this here? */
+if|if
+condition|(
+name|hilite_search
+operator|==
+name|OPT_ON
+operator|||
+name|status_col
+condition|)
+name|repaint_hilite
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"Nothing to search"
@@ -5097,9 +5143,13 @@ directive|if
 name|HILITE_SEARCH
 if|if
 condition|(
+operator|(
 name|hilite_search
 operator|==
 name|OPT_ON
+operator|||
+name|status_col
+operator|)
 operator|&&
 name|n
 operator|>
@@ -5146,6 +5196,8 @@ condition|(
 name|hilite_search
 operator|==
 name|OPT_ON
+operator|||
+name|status_col
 condition|)
 comment|/* 		 * Display new hilites in the matching line. 		 */
 name|repaint_hilite
