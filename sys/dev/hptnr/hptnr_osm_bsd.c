@@ -49,6 +49,9 @@ name|hpt_match
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
+name|scan
 parameter_list|)
 block|{
 name|PCI_ID
@@ -98,6 +101,8 @@ control|)
 block|{
 if|if
 condition|(
+name|scan
+operator|&&
 name|him
 operator|->
 name|get_controller_count
@@ -173,6 +178,8 @@ operator|=
 name|hpt_match
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -295,6 +302,8 @@ operator|=
 name|hpt_match
 argument_list|(
 name|dev
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|hba
