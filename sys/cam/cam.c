@@ -1085,6 +1085,9 @@ expr_stmt|;
 name|str_len
 operator|--
 expr_stmt|;
+name|pattern
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1106,12 +1109,8 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-operator|(
-name|pc
-operator|=
 operator|*
 name|pattern
-operator|)
 operator|!=
 literal|']'
 operator|)
@@ -1122,9 +1121,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|pattern
-operator|++
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1166,20 +1162,28 @@ operator|=
 literal|1
 expr_stmt|;
 name|pattern
-operator|+=
-literal|2
+operator|++
 expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-name|pc
+operator|*
+name|pattern
 operator|==
 name|sc
 condition|)
 name|ok
 operator|=
 literal|1
+expr_stmt|;
+name|pc
+operator|=
+operator|*
+name|pattern
+expr_stmt|;
+name|pattern
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -1193,6 +1197,9 @@ operator|(
 literal|1
 operator|)
 return|;
+name|pattern
+operator|++
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1203,8 +1210,7 @@ operator|==
 literal|'?'
 condition|)
 block|{
-comment|/* NB: || *str == ' ' of the old code is a bug and was removed */
-comment|/* if you add it back, keep this the last if before the naked else */
+comment|/* 			 * NB: || *str == ' ' of the old code is a bug and was 			 * removed.  If you add it back, keep this the last if 			 * before the naked else */
 name|pattern
 operator|++
 expr_stmt|;
@@ -1241,6 +1247,33 @@ operator|--
 expr_stmt|;
 block|}
 block|}
+comment|/* '*' is allowed to match nothing, so gobble it */
+while|while
+condition|(
+operator|*
+name|pattern
+operator|==
+literal|'*'
+condition|)
+name|pattern
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pattern
+operator|!=
+literal|'\0'
+condition|)
+block|{
+comment|/* Pattern not fully consumed.  Not a match */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+comment|/* Eat trailing spaces, which get added by SAT */
 while|while
 condition|(
 name|str_len
