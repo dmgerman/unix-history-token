@@ -905,6 +905,7 @@ argument_list|,
 name|pcb
 argument_list|)
 expr_stmt|;
+block|}
 name|PCPU_SET
 argument_list|(
 name|fpcurthread
@@ -912,24 +913,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|KASSERT
-argument_list|(
-name|PCPU_GET
-argument_list|(
-name|fpcurthread
-argument_list|)
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"invalid fpcurthread"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 name|vfp_enable
 argument_list|()
 expr_stmt|;
