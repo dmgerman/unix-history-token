@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: unxz.c,v 1.6 2016/01/29 15:19:01 christos Exp $	*/
+comment|/*	$NetBSD: unxz.c,v 1.7 2017/08/04 07:27:08 mrg Exp $	*/
 end_comment
 
 begin_comment
@@ -176,6 +176,13 @@ argument_list|(
 literal|"read failed"
 argument_list|)
 expr_stmt|;
+name|infile_newdata
+argument_list|(
+name|strm
+operator|.
+name|avail_in
+argument_list|)
+expr_stmt|;
 name|strm
 operator|.
 name|avail_in
@@ -274,6 +281,9 @@ init|;
 condition|;
 control|)
 block|{
+name|check_siginfo
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|strm
@@ -334,6 +344,13 @@ name|LZMA_FINISH
 expr_stmt|;
 break|break;
 default|default:
+name|infile_newdata
+argument_list|(
+name|strm
+operator|.
+name|avail_in
+argument_list|)
+expr_stmt|;
 operator|*
 name|bytes_in
 operator|+=
