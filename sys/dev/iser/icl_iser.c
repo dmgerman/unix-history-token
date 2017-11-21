@@ -1166,7 +1166,7 @@ name|beacon
 operator|.
 name|flush_lock
 argument_list|,
-literal|"flush_lock"
+literal|"iser_flush_lock"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1196,7 +1196,7 @@ name|ib_conn
 operator|.
 name|lock
 argument_list|,
-literal|"lock"
+literal|"iser_lock"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1276,6 +1276,16 @@ decl_stmt|;
 name|iser_conn_release
 argument_list|(
 name|ic
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|iser_conn
+operator|->
+name|ib_conn
+operator|.
+name|lock
 argument_list|)
 expr_stmt|;
 name|cv_destroy
@@ -2364,7 +2374,7 @@ name|ig
 operator|.
 name|connlist_mutex
 argument_list|,
-literal|"global_conn_lock"
+literal|"iser_global_conn_lock"
 argument_list|,
 name|NULL
 argument_list|,
