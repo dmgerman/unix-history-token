@@ -1668,6 +1668,8 @@ argument_list|,
 name|IFF_BROADCAST
 operator||
 name|IFF_SIMPLEX
+operator||
+name|IFF_MULTICAST
 argument_list|)
 expr_stmt|;
 name|if_settransmitfn
