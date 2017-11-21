@@ -58,10 +58,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|eventloop
+name|decode_siginfo
 parameter_list|(
-name|struct
-name|trussinfo
+name|FILE
+modifier|*
+parameter_list|,
+name|siginfo_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -69,14 +71,12 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ioctlname
+name|void
+name|eventloop
 parameter_list|(
-name|unsigned
-name|long
-name|val
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
