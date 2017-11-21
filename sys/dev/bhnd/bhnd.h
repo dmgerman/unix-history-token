@@ -560,6 +560,125 @@ struct|;
 end_struct
 
 begin_comment
+comment|/**  * bhnd(4) DMA address widths.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|BHND_DMA_ADDR_30BIT
+init|=
+literal|30
+block|,
+comment|/**< 30-bit DMA */
+name|BHND_DMA_ADDR_32BIT
+init|=
+literal|32
+block|,
+comment|/**< 32-bit DMA */
+name|BHND_DMA_ADDR_64BIT
+init|=
+literal|64
+block|,
+comment|/**< 64-bit DMA */
+block|}
+name|bhnd_dma_addrwidth
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**  * Convert an address width (in bits) to its corresponding mask.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_DMA_ADDR_BITMASK
+parameter_list|(
+name|_width
+parameter_list|)
+define|\
+value|((_width>= 64) ? ~0ULL :	\ 	 (_width == 0) ? 0x0 :		\ 	 ((1ULL<< (_width)) - 1))
+end_define
+
+begin_comment
+unit|\
+comment|/**  * bhnd(4) DMA address translation descriptor.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bhnd_dma_translation
+block|{
+comment|/** 	 * Host-to-device physical address translation. 	 *  	 * This may be added to the host physical address to produce a device 	 * DMA address. 	 */
+name|bhnd_addr_t
+name|base_addr
+decl_stmt|;
+comment|/** 	 * Device-addressable address mask. 	 *  	 * This defines the device's DMA address range, excluding any bits 	 * reserved for mapping the address to the base_addr. 	 */
+name|bhnd_addr_t
+name|addr_mask
+decl_stmt|;
+comment|/** 	 * Device-addressable extended address mask. 	 * 	 * If a per-core bhnd(4) DMA engine supports the 'addrext' control 	 * field, it can be used to provide address bits excluded by addr_mask. 	 * 	 * Support for DMA extended address changes â including coordination 	 * with the core providing DMA translation â is handled transparently by 	 * the DMA engine. For example, on PCI(e) Wi-Fi chipsets, the Wi-Fi 	 * core DMA engine will (in effect) update the PCI core's DMA 	 * sbtopcitranslation base address to map the full address prior to 	 * performing a DMA transaction. 	 */
+name|bhnd_addr_t
+name|addrext_mask
+decl_stmt|;
+comment|/** 	 * Translation flags (see bhnd_dma_translation_flags) 	 */
+name|uint32_t
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BHND_DMA_TRANSLATION_TABLE_END
+value|{ 0, 0, 0, 0 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_DMA_IS_TRANSLATION_TABLE_END
+parameter_list|(
+name|_dt
+parameter_list|)
+define|\
+value|((_dt)->base_addr == 0&& (_dt)->addr_mask == 0&&	\ 	 (_dt)->addrext_mask == 0&& (_dt)->flags == 0)
+end_define
+
+begin_comment
+comment|/**  * bhnd(4) DMA address translation flags.  */
+end_comment
+
+begin_enum
+enum|enum
+name|bhnd_dma_translation_flags
+block|{
+comment|/** 	 * The translation remaps the device's physical address space. 	 *  	 * This is used in conjunction with BHND_DMA_TRANSLATION_BYTESWAPPED to 	 * define a DMA translation that provides byteswapped access to 	 * physical memory on big-endian MIPS SoCs. 	 */
+name|BHND_DMA_TRANSLATION_PHYSMAP
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+comment|/** 	 * Provides a byte-swapped mapping; write requests will be byte-swapped 	 * before being written to memory, and read requests will be 	 * byte-swapped before being returned. 	 * 	 * This is primarily used to perform efficient byte swapping of DMA 	 * data on embedded MIPS SoCs executing in big-endian mode. 	 */
+name|BHND_DMA_TRANSLATION_BYTESWAPPED
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,	 }
+enum|;
+end_enum
+
+begin_comment
 comment|/** * A bhnd(4) bus resource. *  * This provides an abstract interface to per-core resources that may require * bus-level remapping of address windows prior to access. */
 end_comment
 
@@ -1994,6 +2113,34 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|bhnd_bus_generic_get_dma_translation
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|u_int
+name|width
+parameter_list|,
+name|uint32_t
+name|flags
+parameter_list|,
+name|bus_dma_tag_t
+modifier|*
+name|dmat
+parameter_list|,
+name|struct
+name|bhnd_dma_translation
+modifier|*
+name|translation
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|bhnd_bus_generic_read_board_info
 parameter_list|(
 name|device_t
@@ -2736,6 +2883,59 @@ name|dev
 argument_list|)
 argument_list|,
 name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Find the best available DMA address translation capable of mapping a  * physical host address to a BHND DMA device address of @p width with  * @p flags.  *  * @param dev A bhnd bus child device.  * @param width The address width within which the translation window must  * reside (see BHND_DMA_ADDR_*).  * @param flags Required translation flags (see BHND_DMA_TRANSLATION_*).  * @param[out] dmat On success, will be populated with a DMA tag specifying the  * @p translation DMA address restrictions. This argment may be NULL if the DMA  * tag is not desired.  * the set of valid host DMA addresses reachable via @p translation.  * @param[out] translation On success, will be populated with a DMA address  * translation descriptor for @p child. This argment may be NULL if the  * descriptor is not desired.  *  * @retval 0 success  * @retval ENODEV If DMA is not supported.  * @retval ENOENT If no DMA translation matching @p width and @p flags is  * available.  * @retval non-zero If determining the DMA address translation for @p child  * otherwise fails, a regular unix error code will be returned.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_get_dma_translation
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|width
+parameter_list|,
+name|uint32_t
+name|flags
+parameter_list|,
+name|bus_dma_tag_t
+modifier|*
+name|dmat
+parameter_list|,
+name|struct
+name|bhnd_dma_translation
+modifier|*
+name|translation
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_GET_DMA_TRANSLATION
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|width
+argument_list|,
+name|flags
+argument_list|,
+name|dmat
+argument_list|,
+name|translation
 argument_list|)
 operator|)
 return|;

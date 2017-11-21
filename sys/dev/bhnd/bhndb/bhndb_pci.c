@@ -1902,12 +1902,14 @@ name|error
 operator|=
 name|bhndb_alloc_host_resources
 argument_list|(
+operator|&
+name|hr
+argument_list|,
+name|dev
+argument_list|,
 name|parent_dev
 argument_list|,
 name|cfg
-argument_list|,
-operator|&
-name|hr
 argument_list|)
 operator|)
 condition|)

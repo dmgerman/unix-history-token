@@ -15,6 +15,36 @@ directive|define
 name|_BHND_CORES_PCIE2_BHND_PCIE2_REG_H_
 end_define
 
+begin_comment
+comment|/*  * PCIe-Gen2 DMA Constants  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE2_DMA64_TRANSLATION
+value|0x8000000000000000
+end_define
+
+begin_comment
+comment|/**< PCIe-Gen2 DMA64 address translation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE2_DMA64_MASK
+value|0xc000000000000000
+end_define
+
+begin_comment
+comment|/**< PCIe-Gen2 DMA64 translation mask */
+end_comment
+
+begin_comment
+comment|/*  * PCIe-Gen2 Core Registers  */
+end_comment
+
 begin_define
 define|#
 directive|define

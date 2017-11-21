@@ -292,20 +292,23 @@ begin_function_decl
 name|int
 name|bhndb_alloc_host_resources
 parameter_list|(
+name|struct
+name|bhndb_host_resources
+modifier|*
+modifier|*
+name|resources
+parameter_list|,
 name|device_t
 name|dev
+parameter_list|,
+name|device_t
+name|parent_dev
 parameter_list|,
 specifier|const
 name|struct
 name|bhndb_hwcfg
 modifier|*
 name|hwcfg
-parameter_list|,
-name|struct
-name|bhndb_host_resources
-modifier|*
-modifier|*
-name|resources
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -583,6 +586,15 @@ modifier|*
 name|resources
 decl_stmt|;
 comment|/**< allocated resource table */
+name|bus_dma_tag_t
+modifier|*
+name|dma_tags
+decl_stmt|;
+comment|/**< DMA tags for all hwcfg DMA translations, or NULL 								     if DMA is not supported */
+name|size_t
+name|num_dma_tags
+decl_stmt|;
+comment|/**< DMA tag count */
 block|}
 struct|;
 end_struct

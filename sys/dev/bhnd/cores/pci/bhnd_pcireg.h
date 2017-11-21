@@ -27,55 +27,73 @@ value|0x40000000
 end_define
 
 begin_comment
-comment|/* Client Mode sb2pcitranslation2 (1 GB) */
+comment|/**< PCI DMA32 address translation (sbtopci2) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BHND_PCI_DMA32_SZ
-value|0x40000000
+name|BHND_PCI_DMA32_MASK
+value|BHND_PCI_SBTOPCI2_MASK
 end_define
 
 begin_comment
-comment|/* Client Mode sb2pcitranslation2 size in bytes */
+comment|/**< PCI DMA32 translation mask */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BHND_PCIE_DMA32_TRANSLATION
-value|BHND_PCI_DMA32_TRANSLATION
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_DMA32_SZ
-value|BHND_PCI_DMA32_SZ
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_DMA64_L32
-value|0x00000000
-end_define
-
-begin_comment
-comment|/**< 64-bit client mode sb2pcitranslation2 (2 ZettaBytes, low 32 bits) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_PCIE_DMA64_H32
 value|0x80000000
 end_define
 
 begin_comment
-comment|/**< 64-bit client mode sb2pcitranslation2 (2 ZettaBytes, high 32 bits) */
+comment|/**< PCIe-Gen1 DMA32 address translation (sb2pcitranslation2) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_DMA32_MASK
+value|BHND_PCIE_SBTOPCI2_MASK
+end_define
+
+begin_comment
+comment|/**< PCIe-Gen1 DMA32 translation mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_DMA64_TRANSLATION
+value|_BHND_PCIE_DMA64(TRANSLATION)
+end_define
+
+begin_comment
+comment|/**< PCIe-Gen1 DMA64 address translation (sb2pcitranslation2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_PCIE_DMA64_MASK
+value|_BHND_PCIE_DMA64(MASK)
+end_define
+
+begin_comment
+comment|/**< PCIe-Gen1 DMA64 translation mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BHND_PCIE_DMA64
+parameter_list|(
+name|_x
+parameter_list|)
+value|((uint64_t)BHND_PCIE_DMA32_ ## _x<< 32)
+end_define
 
 begin_comment
 comment|/*  * PCI Core Registers  */
