@@ -545,45 +545,12 @@ name|char
 modifier|*
 name|ra_desc
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|rm_args_flags
-block|{
-name|struct
-name|rmlock
-modifier|*
-name|ra_rm
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|ra_desc
-decl_stmt|;
 name|int
-name|ra_opts
+name|ra_flags
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|RM_SYSINIT
-parameter_list|(
-name|name
-parameter_list|,
-name|rm
-parameter_list|,
-name|desc
-parameter_list|)
-define|\
-value|static struct rm_args name##_args = {				\ 		(rm),							\ 		(desc),							\ 	};								\ 	SYSINIT(name##_rm_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_sysinit,&name##_args);					\ 	SYSUNINIT(name##_rm_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_destroy, (rm))
-end_define
 
 begin_define
 define|#
@@ -596,10 +563,24 @@ name|rm
 parameter_list|,
 name|desc
 parameter_list|,
-name|opts
+name|flags
 parameter_list|)
 define|\
-value|static struct rm_args name##_args = {				\ 		(rm),							\ 		(desc),							\                 (opts),							\ 	};								\ 	SYSINIT(name##_rm_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_sysinit_flags,&name##_args);				\ 	SYSUNINIT(name##_rm_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_destroy, (rm))
+value|static struct rm_args name##_args = {				\ 		(rm),							\ 		(desc),							\ 		(flags),						\ 	};								\ 	SYSINIT(name##_rm_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_sysinit,&name##_args);					\ 	SYSUNINIT(name##_rm_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rm_destroy, (rm))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RM_SYSINIT
+parameter_list|(
+name|name
+parameter_list|,
+name|rm
+parameter_list|,
+name|desc
+parameter_list|)
+value|RM_SYSINIT_FLAGS(name, rm, desc, 0)
 end_define
 
 begin_if
