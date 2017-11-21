@@ -1069,7 +1069,10 @@ name|ok
 decl_stmt|;
 name|uint8_t
 name|pc
-decl_stmt|,
+init|=
+name|UCHAR_MAX
+decl_stmt|;
+name|uint8_t
 name|sc
 decl_stmt|;
 name|ok
