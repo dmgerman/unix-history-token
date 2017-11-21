@@ -1904,7 +1904,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<efimedia>HD(%d,MBR,%d,%#jx,%#jx)"
+literal|"%s<efimedia>HD(%d,MBR,%#08x,%#jx,%#jx)"
 argument_list|,
 name|indent
 argument_list|,
