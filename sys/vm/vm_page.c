@@ -7797,17 +7797,38 @@ name|m
 operator|->
 name|flags
 operator|&
-operator|(
-name|PG_FICTITIOUS
-operator||
 name|PG_MARKER
-operator|)
 operator|)
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"page %p is PG_FICTITIOUS or PG_MARKER"
+literal|"page %p is PG_MARKER"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+operator|)
+operator|==
+literal|0
+operator|||
+name|m
+operator|->
+name|wire_count
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"fictitious page %p has invalid wire count"
 operator|,
 name|m
 operator|)
