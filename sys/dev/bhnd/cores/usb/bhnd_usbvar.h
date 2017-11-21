@@ -77,9 +77,14 @@ name|uint8_t
 name|sdi_unit
 decl_stmt|;
 comment|/* core index on bus */
-name|uint8_t
+name|rman_res_t
 name|sdi_irq
 decl_stmt|;
+comment|/**< child IRQ, if mapped */
+name|bool
+name|sdi_irq_mapped
+decl_stmt|;
+comment|/**< true if IRQ mapped, false otherwise */
 name|char
 name|sdi_name
 index|[

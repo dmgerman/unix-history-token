@@ -202,27 +202,6 @@ directive|include
 file|"pic_if.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|NHARD_IRQS
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSOFT_IRQS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|NREAL_IRQS
-value|(NHARD_IRQS + NSOFT_IRQS)
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|mips_pic_softc

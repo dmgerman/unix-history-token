@@ -78,12 +78,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIBA_CORE_NUM_INTR
-value|1
+name|SIBA_MAX_INTR
+value|32
 end_define
 
 begin_comment
-comment|/**< number of per-core interrupt lines */
+comment|/**< maximum number of backplane interrupt vectors */
 end_comment
 
 begin_define
@@ -162,6 +162,20 @@ end_define
 begin_comment
 comment|/**< cfg register block size */
 end_comment
+
+begin_comment
+comment|/* Return the SIBA_CORE_ADDR-relative offset for the given siba configuration  * register block; configuration blocks are allocated starting at  * SIBA_CFG0_OFFSET, growing downwards. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIBA_CFG_OFFSET
+parameter_list|(
+name|_n
+parameter_list|)
+value|(SIBA_CFG0_OFFSET - ((_n) * SIBA_CFG_SIZE))
+end_define
 
 begin_comment
 comment|/* Return the SIBA_CORE_ADDR-relative offset for a SIBA_CFG* register. */
@@ -566,6 +580,26 @@ define|#
 directive|define
 name|SIBA_IPS_INT4_SHIFT
 value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_IPS_INT_SHIFT
+parameter_list|(
+name|_i
+parameter_list|)
+value|((_i - 1) * 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_IPS_INT_MASK
+parameter_list|(
+name|_i
+parameter_list|)
+value|(SIBA_IPS_INT1_MASK<< SIBA_IPS_INT_SHIFT(_i))
 end_define
 
 begin_comment

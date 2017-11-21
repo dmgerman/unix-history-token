@@ -385,17 +385,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// FIXME: IRQ shouldn't be hard-coded
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIPC_MIPS_IRQ
-value|2
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -1169,13 +1158,11 @@ block|}
 comment|/* Both OTP and external SPROM are mapped at CHIPC_SPROM_OTP */
 name|error
 operator|=
-name|chipc_set_resource
+name|chipc_set_mem_resource
 argument_list|(
 name|sc
 argument_list|,
 name|child
-argument_list|,
-name|SYS_RES_MEMORY
 argument_list|,
 literal|0
 argument_list|,
@@ -1192,11 +1179,25 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"failed to set OTP memory "
+literal|"resource: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 comment|/* 	 * PMU/PWR_CTRL 	 *  	 * On AOB ("Always on Bus") devices, the PMU core (if it exists) is 	 * attached directly to the bhnd(4) bus -- not chipc. 	 */
 if|if
@@ -1304,6 +1305,19 @@ name|i
 operator|++
 control|)
 block|{
+name|int
+name|irq_rid
+decl_stmt|,
+name|mem_rid
+decl_stmt|;
+name|irq_rid
+operator|=
+literal|0
+expr_stmt|;
+name|mem_rid
+operator|=
+literal|0
+expr_stmt|;
 name|child
 operator|=
 name|BUS_ADD_CHILD
@@ -1347,17 +1361,15 @@ block|}
 comment|/* Shared IRQ */
 name|error
 operator|=
-name|bus_set_resource
+name|chipc_set_irq_resource
 argument_list|(
+name|sc
+argument_list|,
 name|child
 argument_list|,
-name|SYS_RES_IRQ
+name|irq_rid
 argument_list|,
 literal|0
-argument_list|,
-name|CHIPC_MIPS_IRQ
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1375,7 +1387,7 @@ literal|"failed to set uart%u irq %u\n"
 argument_list|,
 name|i
 argument_list|,
-name|CHIPC_MIPS_IRQ
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1387,15 +1399,13 @@ block|}
 comment|/* UART registers are mapped sequentially */
 name|error
 operator|=
-name|chipc_set_resource
+name|chipc_set_mem_resource
 argument_list|(
 name|sc
 argument_list|,
 name|child
 argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-literal|0
+name|mem_rid
 argument_list|,
 name|CHIPC_UART
 argument_list|(
@@ -1413,11 +1423,27 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"failed to set uart%u memory "
+literal|"resource: %d\n"
+argument_list|,
+name|i
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 comment|/* Flash */
 name|flash_bus
@@ -1438,6 +1464,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|int
+name|rid
+decl_stmt|;
 name|child
 operator|=
 name|BUS_ADD_CHILD
@@ -1479,17 +1508,19 @@ operator|)
 return|;
 block|}
 comment|/* flash memory mapping */
+name|rid
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
-name|chipc_set_resource
+name|chipc_set_mem_resource
 argument_list|(
 name|sc
 argument_list|,
 name|child
 argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-literal|0
+name|rid
 argument_list|,
 literal|0
 argument_list|,
@@ -1504,23 +1535,40 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"failed to set flash memory "
+literal|"resource %d: %d\n"
+argument_list|,
+name|rid
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* flashctrl registers */
+name|rid
+operator|++
+expr_stmt|;
 name|error
 operator|=
-name|chipc_set_resource
+name|chipc_set_mem_resource
 argument_list|(
 name|sc
 argument_list|,
 name|child
 argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-literal|1
+name|rid
 argument_list|,
 name|CHIPC_SFLASH_BASE
 argument_list|,
@@ -1535,11 +1583,27 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"failed to set flash memory "
+literal|"resource %d: %d\n"
+argument_list|,
+name|rid
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 return|return
 operator|(
@@ -2619,6 +2683,12 @@ operator|->
 name|resources
 argument_list|)
 expr_stmt|;
+name|dinfo
+operator|->
+name|irq_mapped
+operator|=
+name|false
+expr_stmt|;
 name|device_set_ivars
 argument_list|(
 name|child
@@ -2663,6 +2733,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Free the child's resource list */
 name|resource_list_free
 argument_list|(
 operator|&
@@ -2671,6 +2742,30 @@ operator|->
 name|resources
 argument_list|)
 expr_stmt|;
+comment|/* Unmap the child's IRQ */
+if|if
+condition|(
+name|dinfo
+operator|->
+name|irq_mapped
+condition|)
+block|{
+name|bhnd_unmap_intr
+argument_list|(
+name|dev
+argument_list|,
+name|dinfo
+operator|->
+name|irq
+argument_list|)
+expr_stmt|;
+name|dinfo
+operator|->
+name|irq_mapped
+operator|=
+name|false
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|dinfo
@@ -3218,7 +3313,7 @@ return|;
 case|case
 name|SYS_RES_IRQ
 case|:
-comment|/* IRQs can be used with RF_SHAREABLE, so we don't perform 		 * any local proxying of resource requests. */
+comment|/* We delegate IRQ resource management to the parent bus */
 return|return
 operator|(
 name|NULL

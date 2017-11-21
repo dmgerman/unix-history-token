@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015 Landon Fuller<landon@landonf.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *   * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landon@landonf.org>  * Copyright (c) 2017 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by Landon Fuller  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *   * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -58,6 +58,12 @@ end_comment
 begin_struct_decl
 struct_decl|struct
 name|siba_addrspace
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|siba_cfg_block
 struct_decl|;
 end_struct_decl
 
@@ -124,7 +130,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|u_int
 name|siba_get_intr_count
 parameter_list|(
 name|device_t
@@ -138,7 +144,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|siba_get_core_ivec
+name|siba_get_intr_ivec
 parameter_list|(
 name|device_t
 name|dev
@@ -149,7 +155,7 @@ parameter_list|,
 name|u_int
 name|intr
 parameter_list|,
-name|uint32_t
+name|u_int
 modifier|*
 name|ivec
 parameter_list|)
@@ -236,6 +242,9 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+name|device_t
+name|child
+parameter_list|,
 name|struct
 name|siba_devinfo
 modifier|*
@@ -246,20 +255,30 @@ end_function_decl
 
 begin_function_decl
 name|u_int
-name|siba_addrspace_port_count
+name|siba_port_count
 parameter_list|(
-name|u_int
-name|num_addrspace
+name|struct
+name|siba_core_id
+modifier|*
+name|core_id
+parameter_list|,
+name|bhnd_port_type
+name|port_type
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
-name|siba_addrspace_region_count
+name|bool
+name|siba_is_port_valid
 parameter_list|(
-name|u_int
-name|num_addrspace
+name|struct
+name|siba_core_id
+modifier|*
+name|core_id
+parameter_list|,
+name|bhnd_port_type
+name|port_type
 parameter_list|,
 name|u_int
 name|port
@@ -269,20 +288,43 @@ end_function_decl
 
 begin_function_decl
 name|u_int
-name|siba_addrspace_port
+name|siba_port_region_count
 parameter_list|(
+name|struct
+name|siba_core_id
+modifier|*
+name|core_id
+parameter_list|,
+name|bhnd_port_type
+name|port_type
+parameter_list|,
 name|u_int
-name|addrspace
+name|port
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
-name|siba_addrspace_region
+name|int
+name|siba_cfg_index
 parameter_list|(
+name|struct
+name|siba_core_id
+modifier|*
+name|core_id
+parameter_list|,
+name|bhnd_port_type
+name|type
+parameter_list|,
 name|u_int
-name|addrspace
+name|port
+parameter_list|,
+name|u_int
+name|region
+parameter_list|,
+name|u_int
+modifier|*
+name|cfgidx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -291,8 +333,10 @@ begin_function_decl
 name|int
 name|siba_addrspace_index
 parameter_list|(
-name|u_int
-name|num_addrspace
+name|struct
+name|siba_core_id
+modifier|*
+name|core_id
 parameter_list|,
 name|bhnd_port_type
 name|type
@@ -311,17 +355,41 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
-name|siba_is_port_valid
+name|u_int
+name|siba_addrspace_device_port
 parameter_list|(
 name|u_int
-name|num_addrspace
-parameter_list|,
-name|bhnd_port_type
-name|type
-parameter_list|,
+name|addrspace
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
-name|port
+name|siba_addrspace_device_region
+parameter_list|(
+name|u_int
+name|addrspace
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|siba_cfg_agent_port
+parameter_list|(
+name|u_int
+name|cfg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|siba_cfg_agent_region
+parameter_list|(
+name|u_int
+name|cfg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -331,6 +399,29 @@ name|struct
 name|siba_addrspace
 modifier|*
 name|siba_find_addrspace
+parameter_list|(
+name|struct
+name|siba_devinfo
+modifier|*
+name|dinfo
+parameter_list|,
+name|bhnd_port_type
+name|type
+parameter_list|,
+name|u_int
+name|port
+parameter_list|,
+name|u_int
+name|region
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|siba_cfg_block
+modifier|*
+name|siba_find_cfg_block
 parameter_list|(
 name|struct
 name|siba_devinfo
@@ -574,6 +665,58 @@ struct|;
 end_struct
 
 begin_comment
+comment|/** siba(4) config block descriptor */
+end_comment
+
+begin_struct
+struct|struct
+name|siba_cfg_block
+block|{
+name|uint32_t
+name|cb_base
+decl_stmt|;
+comment|/**< base address */
+name|uint32_t
+name|cb_size
+decl_stmt|;
+comment|/**< size */
+name|int
+name|cb_rid
+decl_stmt|;
+comment|/**< bus resource id */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/** siba(4) backplane interrupt flag descriptor */
+end_comment
+
+begin_struct
+struct|struct
+name|siba_intr
+block|{
+name|u_int
+name|flag
+decl_stmt|;
+comment|/**< backplane flag # */
+name|bool
+name|mapped
+decl_stmt|;
+comment|/**< if an irq has been mapped */
+name|int
+name|rid
+decl_stmt|;
+comment|/**< bus resource id, or -1 if unassigned */
+name|rman_res_t
+name|irq
+decl_stmt|;
+comment|/**< the mapped bus irq, if any */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/**  * siba(4) per-core identification info.  */
 end_comment
 
@@ -633,21 +776,38 @@ index|]
 decl_stmt|;
 comment|/**< memory map descriptors */
 name|struct
-name|bhnd_resource
-modifier|*
+name|siba_cfg_block
 name|cfg
 index|[
 name|SIBA_MAX_CFG
 index|]
 decl_stmt|;
-comment|/**< SIBA_CFG_* registers */
+comment|/**< config block descriptors */
+name|struct
+name|siba_intr
+name|intr
+decl_stmt|;
+comment|/**< interrupt flag descriptor, if any */
+name|bool
+name|intr_en
+decl_stmt|;
+comment|/**< if true, core has an assigned interrupt flag */
+name|struct
+name|bhnd_resource
+modifier|*
+name|cfg_res
+index|[
+name|SIBA_MAX_CFG
+index|]
+decl_stmt|;
+comment|/**< bus-mapped config block registers */
 name|int
 name|cfg_rid
 index|[
 name|SIBA_MAX_CFG
 index|]
 decl_stmt|;
-comment|/**< SIBA_CFG_* resource IDs */
+comment|/**< bus-mapped config block resource IDs */
 name|struct
 name|bhnd_core_pmu_info
 modifier|*

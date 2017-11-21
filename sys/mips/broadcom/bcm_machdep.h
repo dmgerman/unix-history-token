@@ -86,6 +86,15 @@ name|uint32_t
 name|cc_caps_ext
 decl_stmt|;
 comment|/**< chipc extended capabilies */
+name|struct
+name|bhnd_core_info
+name|cpu_id
+decl_stmt|;
+comment|/**< cpu core info */
+name|uintptr_t
+name|cpu_addr
+decl_stmt|;
+comment|/**< cpu core phys address */
 comment|/* On non-AOB devices, the PMU register block is mapped to chipc; 	 * the pmu_id and pmu_addr values will be copied from cc_id 	 * and cc_addr. */
 name|struct
 name|bhnd_core_info
@@ -95,7 +104,7 @@ comment|/**< PMU core info */
 name|uintptr_t
 name|pmu_addr
 decl_stmt|;
-comment|/**< PMU core phys address, or 						     0x0 if no PMU */
+comment|/**< PMU core phys address, or 							     0x0 if no PMU */
 name|struct
 name|bhnd_pmu_query
 name|pmu
@@ -395,6 +404,34 @@ name|_val
 parameter_list|)
 define|\
 value|BCM_CORE_WRITE_4(_bp, cc_addr, (_reg), (_val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM_CPU_READ_4
+parameter_list|(
+name|_bp
+parameter_list|,
+name|_reg
+parameter_list|)
+define|\
+value|BCM_CORE_READ_4(_bp, cpu_addr, (_reg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM_CPU_WRITE_4
+parameter_list|(
+name|_bp
+parameter_list|,
+name|_reg
+parameter_list|,
+name|_val
+parameter_list|)
+define|\
+value|BCM_CORE_WRITE_4(_bp, cpu_addr, (_reg), (_val))
 end_define
 
 begin_define

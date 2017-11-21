@@ -87,6 +87,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* forward declarations */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|bhndb_intr_isrc
+struct_decl|;
+end_struct_decl
+
 begin_struct_decl
 struct_decl|struct
 name|bhndb_resources
@@ -235,6 +245,45 @@ name|struct
 name|bhnd_core_info
 modifier|*
 name|core
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|bhndb_intr_isrc
+modifier|*
+name|bhndb_alloc_intr_isrc
+parameter_list|(
+name|device_t
+name|owner
+parameter_list|,
+name|int
+name|rid
+parameter_list|,
+name|rman_res_t
+name|start
+parameter_list|,
+name|rman_res_t
+name|end
+parameter_list|,
+name|rman_res_t
+name|count
+parameter_list|,
+name|u_int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bhndb_free_intr_isrc
+parameter_list|(
+name|struct
+name|bhndb_intr_isrc
+modifier|*
+name|isrc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -477,6 +526,32 @@ struct|;
 end_struct
 
 begin_comment
+comment|/**  * Host interrupt source to which bridged interrupts may be routed.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bhndb_intr_isrc
+block|{
+name|device_t
+name|is_owner
+decl_stmt|;
+comment|/**< host device (e.g. the pci device). */
+name|struct
+name|resource
+modifier|*
+name|is_res
+decl_stmt|;
+comment|/**< irq resource */
+name|int
+name|is_rid
+decl_stmt|;
+comment|/**< irq resource ID */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/**  * Host resources allocated for a bridge hardware configuration.  */
 end_comment
 
@@ -558,6 +633,14 @@ modifier|*
 name|bus_res
 decl_stmt|;
 comment|/**< bus resource state */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|bhndb_intr_handler
+argument_list|)
+name|bus_intrs
+expr_stmt|;
+comment|/**< attached child interrupt handlers */
 block|}
 struct|;
 end_struct

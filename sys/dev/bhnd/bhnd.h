@@ -641,7 +641,7 @@ parameter_list|,
 name|_flags
 parameter_list|)
 define|\
-value|{{ BHND_CHIP_IR(BCM ## _chip, _rev) }, (_flags) }
+value|{{ BHND_MATCH_CHIP_IR(BCM ## _chip, _rev) }, (_flags) }
 end_define
 
 begin_define
@@ -656,7 +656,7 @@ parameter_list|,
 name|_flags
 parameter_list|)
 define|\
-value|{{ BHND_CHIP_IP(BCM ## _chip, BCM ## _chip ## _pkg) }, (_flags) }
+value|{{ BHND_MATCH_CHIP_IP(BCM ## _chip, BCM ## _chip ## _pkg) }, (_flags) }
 end_define
 
 begin_define
@@ -2117,14 +2117,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bhnd_attach_type
-name|bhnd_bus_generic_get_attach_type
+name|uintptr_t
+name|bhnd_bus_generic_get_intr_domain
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
 name|device_t
 name|child
+parameter_list|,
+name|bool
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2777,13 +2780,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Return the number of interrupts to be assigned to @p child via  * BHND_BUS_ASSIGN_INTR().  *   * @param dev A bhnd bus child device.  */
+comment|/**  * Return the number of interrupt lines assigned to @p dev.  *   * @param dev A bhnd bus child device.  */
 end_comment
 
 begin_function
 specifier|static
 specifier|inline
-name|int
+name|u_int
 name|bhnd_get_intr_count
 parameter_list|(
 name|device_t
@@ -2807,14 +2810,14 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Return the backplane interrupt vector corresponding to @p dev's given  * @p intr number.  *   * @param dev A bhnd bus child device.  * @param intr The interrupt number being queried. This is equivalent to the  * bus resource ID for the interrupt.  * @param[out] ivec On success, the assigned hardware interrupt vector be  * written to this pointer.  *  * On bcma(4) devices, this returns the OOB bus line assigned to the  * interrupt.  *  * On siba(4) devices, this returns the target OCP slave flag number assigned  * to the interrupt.  *  * @retval 0		success  * @retval ENXIO	If @p intr exceeds the number of interrupts available  *			to @p child.  */
+comment|/**  * Get the backplane interrupt vector of the @p intr line attached to @p dev.  *   * @param dev A bhnd bus child device.  * @param intr The index of the interrupt line being queried.  * @param[out] ivec On success, the assigned hardware interrupt vector will be  * written to this pointer.  *  * On bcma(4) devices, this returns the OOB bus line assigned to the  * interrupt.  *  * On siba(4) devices, this returns the target OCP slave flag number assigned  * to the interrupt.  *  * @retval 0		success  * @retval ENXIO	If @p intr exceeds the number of interrupt lines  *			assigned to @p child.  */
 end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|int
-name|bhnd_get_core_ivec
+name|bhnd_get_intr_ivec
 parameter_list|(
 name|device_t
 name|dev
@@ -2822,14 +2825,14 @@ parameter_list|,
 name|u_int
 name|intr
 parameter_list|,
-name|uint32_t
+name|u_int
 modifier|*
 name|ivec
 parameter_list|)
 block|{
 return|return
 operator|(
-name|BHND_BUS_GET_CORE_IVEC
+name|BHND_BUS_GET_INTR_IVEC
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -2841,6 +2844,82 @@ argument_list|,
 name|intr
 argument_list|,
 name|ivec
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Map the given @p intr to an IRQ number; until unmapped, this IRQ may be used  * to allocate a resource of type SYS_RES_IRQ.  *   * On success, the caller assumes ownership of the interrupt mapping, and  * is responsible for releasing the mapping via bhnd_unmap_intr().  *   * @param dev The requesting device.  * @param intr The interrupt being mapped.  * @param[out] irq On success, the bus interrupt value mapped for @p intr.  *  * @retval 0		If an interrupt was assigned.  * @retval non-zero	If mapping an interrupt otherwise fails, a regular  *			unix error code will be returned.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_map_intr
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|intr
+parameter_list|,
+name|rman_res_t
+modifier|*
+name|irq
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_MAP_INTR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|intr
+argument_list|,
+name|irq
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Unmap an bus interrupt previously mapped via bhnd_map_intr().  *   * @param dev The requesting device.  * @param intr The interrupt number being unmapped. This is equivalent to the  * bus resource ID for the interrupt.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|bhnd_unmap_intr
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|rman_res_t
+name|irq
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_UNMAP_INTR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|irq
 argument_list|)
 operator|)
 return|;

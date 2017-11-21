@@ -109,6 +109,27 @@ end_endif
 begin_define
 define|#
 directive|define
+name|NHARD_IRQS
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSOFT_IRQS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NREAL_IRQS
+value|(NHARD_IRQS + NSOFT_IRQS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INTR_IRQ_NSPC_SWI
 value|4
 end_define
