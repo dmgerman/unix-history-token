@@ -1343,7 +1343,9 @@ end_comment
 begin_function
 name|uint32_t
 name|net_parse_rootpath
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|n_long
 name|addr
