@@ -750,6 +750,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ARECA_SUB_DEV_ID_1216
+value|0x1216
+end_define
+
+begin_comment
+comment|/* Subsystem Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ARECA_SUB_DEV_ID_1222
 value|0x1222
 end_define
@@ -763,6 +774,17 @@ define|#
 directive|define
 name|ARECA_SUB_DEV_ID_1223
 value|0x1223
+end_define
+
+begin_comment
+comment|/* Subsystem Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARECA_SUB_DEV_ID_1226
+value|0x1226
 end_define
 
 begin_comment
@@ -5238,6 +5260,9 @@ name|msix_vectors
 decl_stmt|;
 name|int
 name|rid
+index|[
+literal|2
+index|]
 decl_stmt|;
 block|}
 struct|;
