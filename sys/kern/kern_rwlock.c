@@ -1753,18 +1753,72 @@ begin_comment
 comment|/*  * Determines whether a new reader can acquire a lock.  Succeeds if the  * reader already owns a read lock and the lock is locked for read to  * prevent deadlock from reader recursion.  Also succeeds if the lock  * is unlocked and has no writer waiters or spinners.  Failing otherwise  * prioritizes writers before readers.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RW_CAN_READ
+begin_function
+specifier|static
+name|bool
+name|__always_inline
+name|__rw_can_read
 parameter_list|(
+name|struct
+name|thread
+modifier|*
 name|td
 parameter_list|,
-name|_rw
+name|uintptr_t
+name|v
+parameter_list|,
+name|bool
+name|fp
 parameter_list|)
-define|\
-value|(((_rw)& (RW_LOCK_READ | RW_LOCK_WRITE_WAITERS | RW_LOCK_WRITE_SPINNER)) ==\     RW_LOCK_READ || ((td)->td_rw_rlocks&& (_rw)& RW_LOCK_READ))
-end_define
+block|{
+if|if
+condition|(
+operator|(
+name|v
+operator|&
+operator|(
+name|RW_LOCK_READ
+operator||
+name|RW_LOCK_WRITE_WAITERS
+operator||
+name|RW_LOCK_WRITE_SPINNER
+operator|)
+operator|)
+operator|==
+name|RW_LOCK_READ
+condition|)
+return|return
+operator|(
+name|true
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|fp
+operator|&&
+name|td
+operator|->
+name|td_rw_rlocks
+operator|&&
+operator|(
+name|v
+operator|&
+name|RW_LOCK_READ
+operator|)
+condition|)
+return|return
+operator|(
+name|true
+operator|)
+return|;
+return|return
+operator|(
+name|false
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -1785,18 +1839,23 @@ parameter_list|,
 name|uintptr_t
 modifier|*
 name|vp
+parameter_list|,
+name|bool
+name|fp
 name|LOCK_FILE_LINE_ARG_DEF
 parameter_list|)
 block|{
 comment|/* 	 * Handle the easy case.  If no other thread has a write 	 * lock, then try to bump up the count of read locks.  Note 	 * that we have to preserve the current state of the 	 * RW_LOCK_WRITE_WAITERS flag.  If we fail to acquire a 	 * read lock, then rw_lock must have changed, so restart 	 * the loop.  Note that this handles the case of a 	 * completely unlocked rwlock since such a lock is encoded 	 * as a read lock with no waiters. 	 */
 while|while
 condition|(
-name|RW_CAN_READ
+name|__rw_can_read
 argument_list|(
 name|td
 argument_list|,
 operator|*
 name|vp
+argument_list|,
+name|fp
 argument_list|)
 condition|)
 block|{
@@ -2120,7 +2179,9 @@ argument|rw
 argument_list|,
 argument|td
 argument_list|,
-argument|&v LOCK_FILE_LINE_ARG
+argument|&v
+argument_list|,
+argument|false LOCK_FILE_LINE_ARG
 argument_list|)
 condition|)
 break|break;
@@ -2345,11 +2406,13 @@ operator|)
 operator|==
 literal|0
 operator|||
-name|RW_CAN_READ
+name|__rw_can_read
 argument_list|(
 name|td
 argument_list|,
 name|v
+argument_list|,
+name|false
 argument_list|)
 condition|)
 break|break;
@@ -2412,11 +2475,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|RW_CAN_READ
+name|__rw_can_read
 argument_list|(
 name|td
 argument_list|,
 name|v
+argument_list|,
+name|false
 argument_list|)
 condition|)
 block|{
@@ -2929,7 +2994,9 @@ argument|rw
 argument_list|,
 argument|td
 argument_list|,
-argument|&v LOCK_FILE_LINE_ARG
+argument|&v
+argument_list|,
+argument|true LOCK_FILE_LINE_ARG
 argument_list|)
 argument_list|)
 condition|)
