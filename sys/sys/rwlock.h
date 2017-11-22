@@ -271,7 +271,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = RW_UNLOCKED;					\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(rw__acquire) ||	\ 	    !_rw_write_lock_fetch((rw),&_v, _tid)))			\ 		_rw_wlock_hard((rw), _v, _tid, (file), (line));		\ } while (0)
+value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = RW_UNLOCKED;					\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(rw__acquire) ||	\ 	    !_rw_write_lock_fetch((rw),&_v, _tid)))			\ 		_rw_wlock_hard((rw), _v, (file), (line));		\ } while (0)
 end_define
 
 begin_comment
@@ -387,6 +387,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|__rw_try_wlock_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|__rw_try_wlock
 parameter_list|(
 specifier|volatile
@@ -427,6 +440,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|__rw_rlock_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|__rw_rlock
 parameter_list|(
 specifier|volatile
@@ -447,6 +473,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|__rw_try_rlock_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|__rw_try_rlock
 parameter_list|(
 specifier|volatile
@@ -461,6 +500,19 @@ name|file
 parameter_list|,
 name|int
 name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_rw_runlock_cookie_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -496,17 +548,7 @@ name|c
 parameter_list|,
 name|uintptr_t
 name|v
-parameter_list|,
-name|uintptr_t
-name|tid
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
+name|LOCK_FILE_LINE_ARG_DEF
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -521,15 +563,21 @@ modifier|*
 name|c
 parameter_list|,
 name|uintptr_t
-name|tid
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
+name|v
+name|LOCK_FILE_LINE_ARG_DEF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
-name|line
+name|__rw_try_upgrade_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -550,6 +598,19 @@ name|file
 parameter_list|,
 name|int
 name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__rw_downgrade_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -719,21 +780,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_rw_rlock
-parameter_list|(
-name|rw
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|__rw_rlock(&(rw)->rw_lock, f, l)
-end_define
-
-begin_define
-define|#
-directive|define
 name|_rw_try_rlock
 parameter_list|(
 name|rw
@@ -744,6 +790,29 @@ name|l
 parameter_list|)
 define|\
 value|__rw_try_rlock(&(rw)->rw_lock, f, l)
+end_define
+
+begin_if
+if|#
+directive|if
+name|LOCK_DEBUG
+operator|>
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|_rw_rlock
+parameter_list|(
+name|rw
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_rlock(&(rw)->rw_lock, f, l)
 end_define
 
 begin_define
@@ -761,6 +830,54 @@ define|\
 value|_rw_runlock_cookie(&(rw)->rw_lock, f, l)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_rw_rlock
+parameter_list|(
+name|rw
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_rlock_int((struct rwlock *)rw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_rw_runlock
+parameter_list|(
+name|rw
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|_rw_runlock_cookie_int((struct rwlock *)rw)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|LOCK_DEBUG
+operator|>
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -770,14 +887,12 @@ name|rw
 parameter_list|,
 name|v
 parameter_list|,
-name|t
-parameter_list|,
 name|f
 parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__rw_wlock_hard(&(rw)->rw_lock, v, t, f, l)
+value|__rw_wlock_hard(&(rw)->rw_lock, v, f, l)
 end_define
 
 begin_define
@@ -787,14 +902,14 @@ name|_rw_wunlock_hard
 parameter_list|(
 name|rw
 parameter_list|,
-name|t
+name|v
 parameter_list|,
 name|f
 parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__rw_wunlock_hard(&(rw)->rw_lock, t, f, l)
+value|__rw_wunlock_hard(&(rw)->rw_lock, v, f, l)
 end_define
 
 begin_define
@@ -826,6 +941,80 @@ parameter_list|)
 define|\
 value|__rw_downgrade(&(rw)->rw_lock, f, l)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_rw_wlock_hard
+parameter_list|(
+name|rw
+parameter_list|,
+name|v
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_wlock_hard(&(rw)->rw_lock, v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_rw_wunlock_hard
+parameter_list|(
+name|rw
+parameter_list|,
+name|v
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_wunlock_hard(&(rw)->rw_lock, v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_rw_try_upgrade
+parameter_list|(
+name|rw
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_try_upgrade_int(rw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_rw_downgrade
+parameter_list|(
+name|rw
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_downgrade_int(rw)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

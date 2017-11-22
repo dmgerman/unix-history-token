@@ -274,6 +274,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|_mtx_trylock_flags_int
+parameter_list|(
+name|struct
+name|mtx
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|opts
+name|LOCK_FILE_LINE_ARG_DEF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|_mtx_trylock_flags_
 parameter_list|(
 specifier|volatile
