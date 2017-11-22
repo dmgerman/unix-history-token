@@ -3950,7 +3950,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -e and mutually exclusive"
+literal|"-a and -e are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3963,7 +3963,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -p and mutually exclusive"
+literal|"-a and -p are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3976,7 +3976,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -t and mutually exclusive"
+literal|"-a and -t are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3989,7 +3989,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -u and mutually exclusive"
+literal|"-a and -u are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4002,7 +4002,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -s and mutually exclusive"
+literal|"-a and -s are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4015,7 +4015,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -n and mutually exclusive"
+literal|"-a and -n are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4028,7 +4028,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -d and mutually exclusive"
+literal|"-a and -d are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4041,7 +4041,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -r and mutually exclusive"
+literal|"-a and -r are mutually exclusive"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4063,7 +4063,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -e and mutually exclusive"
+literal|"-n and -e are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4076,7 +4076,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -p and mutually exclusive"
+literal|"-n and -p are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4089,7 +4089,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -t and mutually exclusive"
+literal|"-n and -t are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4102,7 +4102,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -u and mutually exclusive"
+literal|"-n and -u are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4115,7 +4115,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -s and mutually exclusive"
+literal|"-n and -s are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4128,7 +4128,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -d and mutually exclusive"
+literal|"-n and -d are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4141,7 +4141,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -r and mutually exclusive"
+literal|"-n and -r are mutually exclusive"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4163,7 +4163,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-d and -p and mutually exclusive"
+literal|"-d and -p are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4176,7 +4176,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-d and -t and mutually exclusive"
+literal|"-d and -t are mutually exclusive"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4335,7 +4335,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -e and mutually exclusive"
+literal|"-n and -e are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4348,7 +4348,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -p and mutually exclusive"
+literal|"-n and -p are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4361,7 +4361,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -t and mutually exclusive"
+literal|"-n and -t are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4374,7 +4374,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -u and mutually exclusive"
+literal|"-n and -u are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4387,7 +4387,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -s and mutually exclusive"
+literal|"-n and -s are mutually exclusive"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4483,7 +4483,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -p and mutually exclusive"
+literal|"-a and -p are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4496,7 +4496,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -t and mutually exclusive"
+literal|"-a and -t are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4509,7 +4509,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-a and -n and mutually exclusive"
+literal|"-a and -n are mutually exclusive"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4531,7 +4531,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -p and mutually exclusive"
+literal|"-n and -p are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4544,7 +4544,7 @@ name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-n and -t and mutually exclusive"
+literal|"-n and -t are mutually exclusive"
 argument_list|)
 expr_stmt|;
 block|}
