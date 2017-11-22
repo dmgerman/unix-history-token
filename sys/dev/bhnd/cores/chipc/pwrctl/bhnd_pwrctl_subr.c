@@ -1158,7 +1158,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|bhnd_pwrctl_get_clksrc
+name|bhnd_pwrctl_hostb_get_clksrc
 argument_list|(
 name|sc
 operator|->
@@ -1702,7 +1702,7 @@ comment|/* return the value suitable for writing to the dot11 core  * FAST_PWRUP
 end_comment
 
 begin_function
-name|uint16_t
+name|u_int
 name|bhnd_pwrctl_fast_pwrup_delay
 parameter_list|(
 name|struct
@@ -1711,12 +1711,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|uint32_t
+name|u_int
 name|pll_on_delay
 decl_stmt|,
 name|slowminfreq
 decl_stmt|;
-name|uint16_t
+name|u_int
 name|fpdelay
 decl_stmt|;
 name|fpdelay
@@ -1897,7 +1897,7 @@ operator||=
 name|CHIPC_SCC_IP
 expr_stmt|;
 comment|/* force xtal back on before clearing SCC_DYN_XTAL.. */
-name|bhnd_pwrctl_ungate_clock
+name|bhnd_pwrctl_hostb_ungate_clock
 argument_list|(
 name|sc
 operator|->
@@ -2027,7 +2027,7 @@ operator|&
 name|CHIPC_SCC_XC
 condition|)
 block|{
-name|bhnd_pwrctl_gate_clock
+name|bhnd_pwrctl_hostb_gate_clock
 argument_list|(
 name|sc
 operator|->

@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bhnd_pwrctl_hostb_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhndbvar.h"
 end_include
 
@@ -345,7 +351,7 @@ block|{
 comment|/* Delegate to parent bridge */
 return|return
 operator|(
-name|BHND_BUS_PWRCTL_GET_CLKSRC
+name|BHND_PWRCTL_HOSTB_GET_CLKSRC
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -379,7 +385,7 @@ block|{
 comment|/* Delegate to parent bridge */
 return|return
 operator|(
-name|BHND_BUS_PWRCTL_GATE_CLOCK
+name|BHND_PWRCTL_HOSTB_GATE_CLOCK
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -413,7 +419,7 @@ block|{
 comment|/* Delegate to parent bridge */
 return|return
 operator|(
-name|BHND_BUS_PWRCTL_UNGATE_CLOCK
+name|BHND_PWRCTL_HOSTB_UNGATE_CLOCK
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -632,23 +638,24 @@ argument_list|,
 name|bhnd_bhndb_unmap_intr
 argument_list|)
 block|,
+comment|/* BHND PWRCTL hostb interface */
 name|DEVMETHOD
 argument_list|(
-name|bhnd_bus_pwrctl_get_clksrc
+name|bhnd_pwrctl_hostb_get_clksrc
 argument_list|,
 name|bhnd_bhndb_pwrctl_get_clksrc
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bhnd_bus_pwrctl_gate_clock
+name|bhnd_pwrctl_hostb_gate_clock
 argument_list|,
 name|bhnd_bhndb_pwrctl_gate_clock
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bhnd_bus_pwrctl_ungate_clock
+name|bhnd_pwrctl_hostb_ungate_clock
 argument_list|,
 name|bhnd_bhndb_pwrctl_ungate_clock
 argument_list|)

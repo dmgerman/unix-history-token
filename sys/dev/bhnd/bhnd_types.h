@@ -124,6 +124,9 @@ block|{
 name|BHND_SERVICE_CHIPC
 block|,
 comment|/**< chipcommon service; implements the bhnd_chipc interface */
+name|BHND_SERVICE_PWRCTL
+block|,
+comment|/**< legacy pwrctl service; implements the bhnd_pwrctl interface */
 name|BHND_SERVICE_PMU
 block|,
 comment|/**< pmu service; implements the bhnd_pmu interface */

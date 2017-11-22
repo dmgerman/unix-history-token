@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bhnd_pwrctl_hostb_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhndb_pcireg.h"
 end_include
 
@@ -4142,7 +4148,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|ENODEV
+name|BHND_CLKSRC_UNKNOWN
 operator|)
 return|;
 comment|/* Only ILP is supported */
@@ -4154,7 +4160,7 @@ name|BHND_CLOCK_ILP
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|BHND_CLKSRC_UNKNOWN
 operator|)
 return|;
 name|gpio_out
@@ -5522,28 +5528,6 @@ argument_list|,
 name|bhndb_pci_detach
 argument_list|)
 block|,
-comment|/* BHND interface */
-name|DEVMETHOD
-argument_list|(
-name|bhnd_bus_pwrctl_get_clksrc
-argument_list|,
-name|bhndb_pci_pwrctl_get_clksrc
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bhnd_bus_pwrctl_gate_clock
-argument_list|,
-name|bhndb_pci_pwrctl_gate_clock
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bhnd_bus_pwrctl_ungate_clock
-argument_list|,
-name|bhndb_pci_pwrctl_ungate_clock
-argument_list|)
-block|,
 comment|/* BHNDB interface */
 name|DEVMETHOD
 argument_list|(
@@ -5571,6 +5555,28 @@ argument_list|(
 name|bhndb_route_interrupts
 argument_list|,
 name|bhndb_pci_route_interrupts
+argument_list|)
+block|,
+comment|/* BHND PWRCTL hostb interface */
+name|DEVMETHOD
+argument_list|(
+name|bhnd_pwrctl_hostb_get_clksrc
+argument_list|,
+name|bhndb_pci_pwrctl_get_clksrc
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_pwrctl_hostb_gate_clock
+argument_list|,
+name|bhndb_pci_pwrctl_gate_clock
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_pwrctl_hostb_ungate_clock
+argument_list|,
+name|bhndb_pci_pwrctl_ungate_clock
 argument_list|)
 block|,
 name|DEVMETHOD_END

@@ -388,6 +388,12 @@ argument_list|)
 expr_stmt|;
 name|dinfo
 operator|->
+name|pmu_state
+operator|=
+name|SIBA_PMU_NONE
+expr_stmt|;
+name|dinfo
+operator|->
 name|intr_en
 operator|=
 name|false

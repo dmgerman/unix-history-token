@@ -36,6 +36,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -76,6 +88,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|siba_core_id
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|siba_softc
 struct_decl|;
 end_struct_decl
 
@@ -750,6 +768,28 @@ struct|;
 end_struct
 
 begin_comment
+comment|/**  * siba(4) per-core PMU allocation state.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|SIBA_PMU_NONE
+block|,
+comment|/**< If the core has not yet allocated PMU state */
+name|SIBA_PMU_BHND
+block|,
+comment|/**< If standard bhnd(4) PMU support should be used */
+name|SIBA_PMU_PWRCTL
+block|,
+comment|/**< If legacy PWRCTL PMU support should be used */
+block|}
+name|siba_pmu_state
+typedef|;
+end_typedef
+
+begin_comment
 comment|/**  * siba(4) per-device info  */
 end_comment
 
@@ -808,12 +848,24 @@ name|SIBA_MAX_CFG
 index|]
 decl_stmt|;
 comment|/**< bus-mapped config block resource IDs */
-name|struct
-name|bhnd_core_pmu_info
-modifier|*
-name|pmu_info
+name|siba_pmu_state
+name|pmu_state
 decl_stmt|;
-comment|/**< Bus-managed PMU state, or NULL */
+comment|/**< per-core PMU state */
+union|union
+block|{
+name|void
+modifier|*
+name|bhnd_info
+decl_stmt|;
+comment|/**< if SIBA_PMU_BHND, bhnd(4)-managed per-core PMU info. */
+name|device_t
+name|pwrctl
+decl_stmt|;
+comment|/**< if SIBA_PMU_PWRCTL, legacy PWRCTL provider. */
+block|}
+name|pmu
+union|;
 block|}
 struct|;
 end_struct
@@ -835,9 +887,67 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/**< siba device */
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+comment|/**< state mutex */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SIBA_LOCK_INIT
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|mtx_init(&(sc)->mtx, device_get_nameunit((sc)->dev), NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|,
+name|what
+parameter_list|)
+value|mtx_assert(&(sc)->mtx, what)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIBA_LOCK_DESTROY
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_destroy(&(sc)->mtx)
+end_define
 
 begin_endif
 endif|#

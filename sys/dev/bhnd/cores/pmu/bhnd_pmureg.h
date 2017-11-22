@@ -803,14 +803,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|BHND_PMU_CHIPCTL_ADDR
+name|BHND_PMU_CHIP_CONTROL_ADDR
 value|0x650
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_PMU_CHIPCTL_DATA
+name|BHND_PMU_CHIP_CONTROL_DATA
 value|0x654
 end_define
 
@@ -2481,7 +2481,7 @@ value|(1<<14)
 end_define
 
 begin_comment
-comment|/* extPA in CHIPCTL1, bit 14 */
+comment|/* extPA in CHIPCTRL1, bit 14 */
 end_comment
 
 begin_define
@@ -2492,7 +2492,7 @@ value|(1<<15)
 end_define
 
 begin_comment
-comment|/* 2o3 in CHIPCTL1, bit 15 */
+comment|/* 2o3 in CHIPCTRL1, bit 15 */
 end_comment
 
 begin_comment
@@ -3517,14 +3517,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_PMU_CCTRL_43224_GPIO_TOGGLE
+name|BHND_PMU_CCTRL43224_GPIO_TOGGLE
 value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_PMU_CCTRL_43224A0_12MA_LED_DRIVE
+name|BHND_PMU_CCTRL43224A0_12MA_LED_DRIVE
 value|0x00F000F0
 end_define
 
@@ -3535,7 +3535,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_PMU_CCTRL_43224B0_12MA_LED_DRIVE
+name|BHND_PMU_CCTRL43224B0_12MA_LED_DRIVE
 value|0xF0
 end_define
 
@@ -4126,28 +4126,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|BHND_PMU_CCTL_4319USB_XTAL_SEL_MASK
+name|BHND_PMU_CCTRL4319USB_XTAL_SEL_MASK
 value|0x00180000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_PMU_CCTL_4319USB_XTAL_SEL_SHIFT
+name|BHND_PMU_CCTRL4319USB_XTAL_SEL_SHIFT
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_PMU_CCTL_4319USB_48MHZ_PLL_SEL
+name|BHND_PMU_CCTRL4319USB_48MHZ_PLL_SEL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|BHND_PMU_CCTL_4319USB_24MHZ_PLL_SEL
+name|BHND_PMU_CCTRL4319USB_24MHZ_PLL_SEL
 value|2
 end_define
 
@@ -4660,7 +4660,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_PMU_CCTRL_4313_12MA_LED_DRIVE
+name|BHND_PMU_CCTRL4313_12MA_LED_DRIVE
 value|0x00000007
 end_define
 

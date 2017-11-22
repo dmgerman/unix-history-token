@@ -676,7 +676,7 @@ name|bhnd_resource
 modifier|*
 name|res_agent
 decl_stmt|;
-comment|/**< Agent (wrapper) resource, or NULL. Not 							  *  all bcma(4) cores have or require an agent. */
+comment|/**< Agent (wrapper) resource, or NULL. Not 						  *  all bcma(4) cores have or require an agent. */
 name|int
 name|rid_agent
 decl_stmt|;
@@ -690,8 +690,7 @@ name|bcma_intr_list
 name|intrs
 decl_stmt|;
 comment|/**< interrupt descriptors */
-name|struct
-name|bhnd_core_pmu_info
+name|void
 modifier|*
 name|pmu_info
 decl_stmt|;

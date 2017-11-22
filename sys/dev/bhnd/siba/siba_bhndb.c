@@ -361,9 +361,11 @@ name|dev
 argument_list|)
 operator|)
 condition|)
-goto|goto
-name|failed
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* Fetch bus-level quirks required by the host bridge core */
 if|if
 condition|(
@@ -436,7 +438,7 @@ operator|)
 return|;
 name|failed
 label|:
-name|device_delete_children
+name|siba_detach
 argument_list|(
 name|dev
 argument_list|)
