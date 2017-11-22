@@ -133,6 +133,9 @@ comment|/**< pmu service; implements the bhnd_pmu interface */
 name|BHND_SERVICE_NVRAM
 block|,
 comment|/**< nvram service; implements the bhnd_nvram interface */
+name|BHND_SERVICE_GPIO
+block|,
+comment|/**< gpio service; implements the standard gpio interface */
 name|BHND_SERVICE_ANY
 init|=
 literal|1000

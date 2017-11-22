@@ -1594,7 +1594,7 @@ name|cr
 operator|->
 name|cr_count
 argument_list|,
-literal|0
+name|RF_SHAREABLE
 argument_list|)
 expr_stmt|;
 if|if
