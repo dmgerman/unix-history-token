@@ -531,7 +531,7 @@ modifier|*
 name|sx
 parameter_list|,
 name|uintptr_t
-name|tid
+name|x
 name|LOCK_FILE_LINE_ARG_DEF
 parameter_list|)
 function_decl|;
@@ -798,7 +798,7 @@ name|line
 parameter_list|)
 block|{
 name|uintptr_t
-name|tid
+name|x
 init|=
 operator|(
 name|uintptr_t
@@ -815,14 +815,15 @@ name|sx__release
 argument_list|)
 operator|||
 operator|!
-name|atomic_cmpset_rel_ptr
+name|atomic_fcmpset_rel_ptr
 argument_list|(
 operator|&
 name|sx
 operator|->
 name|sx_lock
 argument_list|,
-name|tid
+operator|&
+name|x
 argument_list|,
 name|SX_LOCK_UNLOCKED
 argument_list|)
@@ -832,7 +833,7 @@ name|_sx_xunlock_hard
 argument_list|(
 name|sx
 argument_list|,
-name|tid
+name|x
 argument_list|)
 expr_stmt|;
 block|}
