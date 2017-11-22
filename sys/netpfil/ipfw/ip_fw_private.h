@@ -2556,6 +2556,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ipfw_add_protected_rule
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
+name|struct
+name|ip_fw
+modifier|*
+name|rule
+parameter_list|,
+name|int
+name|locked
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ipfw_reap_add
 parameter_list|(
