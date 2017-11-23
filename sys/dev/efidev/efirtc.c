@@ -354,6 +354,17 @@ operator|&
 name|ct
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|tm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tm
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|tm
 operator|.
 name|tm_sec
