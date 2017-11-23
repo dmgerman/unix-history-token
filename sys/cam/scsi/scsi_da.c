@@ -3530,6 +3530,24 @@ name|DA_Q_4K
 block|}
 block|,
 block|{
+comment|/* 		 * Same as for SAMSUNG MZ7* but enable the quirks for SSD 		 * starting with MZ7* too 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"ATA"
+block|,
+literal|"MZ7*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
 comment|/* 		 * SuperTalent TeraDrive CT SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
 block|{
 name|T_DIRECT

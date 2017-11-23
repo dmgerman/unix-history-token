@@ -1971,6 +1971,26 @@ name|ADA_Q_NCQ_TRIM_BROKEN
 block|}
 block|,
 block|{
+comment|/* 		 * Same as for SAMSUNG MZ7* but enable the quirks for SSD 		 * starting with MZ7* too 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"MZ7*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+operator||
+name|ADA_Q_NCQ_TRIM_BROKEN
+block|}
+block|,
+block|{
 comment|/* 		 * Samsung PM851 Series SSDs Dell OEM 		 * device model          "SAMSUNG SSD PM851 mSATA 256GB" 		 * 4k optimised, NCQ broken 		 */
 block|{
 name|T_DIRECT
