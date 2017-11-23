@@ -45,22 +45,11 @@ directive|ifndef
 name|__GNUCLIKE_ASM
 end_ifndef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_error
 error|#
 directive|error
 literal|"no assembler code for your compiler"
 end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

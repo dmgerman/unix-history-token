@@ -120,24 +120,9 @@ else|#
 directive|else
 end_else
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_macro
 name|__extension__
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LONGLONG */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -147,24 +132,9 @@ name|__int64_t
 typedef|;
 end_typedef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_macro
 name|__extension__
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LONGLONG */
-end_comment
 
 begin_typedef
 typedef|typedef

@@ -1457,7 +1457,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The alloca() function can't be implemented in C, and on some  * platforms it can't be implemented at all as a callable function.  * The GNU C compiler provides a built-in alloca() which we can use;  * in all other cases, provide a prototype, mainly to pacify various  * incarnations of lint.  On platforms where alloca() is not in libc,  * programs which use it will fail to link when compiled with non-GNU  * compilers.  */
+comment|/*  * The alloca() function can't be implemented in C, and on some  * platforms it can't be implemented at all as a callable function.  * The GNU C compiler provides a built-in alloca() which we can use.  * On platforms where alloca() is not in libc, programs which use it  * will fail to link when compiled with non-GNU compilers.  */
 end_comment
 
 begin_if
@@ -1492,25 +1492,6 @@ name|sz
 parameter_list|)
 value|__builtin_alloca(sz)
 end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_elif
-
-begin_function_decl
-name|void
-modifier|*
-name|alloca
-parameter_list|(
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

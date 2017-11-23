@@ -98,86 +98,9 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|lint
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pcpu
-modifier|*
-name|pcpup
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|get_pcpu
-parameter_list|()
-value|(pcpup)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCPU_GET
-parameter_list|(
-name|member
-parameter_list|)
-value|(pcpup->pc_ ## member)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCPU_ADD
-parameter_list|(
-name|member
-parameter_list|,
-name|val
-parameter_list|)
-value|(pcpup->pc_ ## member += (val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCPU_INC
-parameter_list|(
-name|member
-parameter_list|)
-value|PCPU_ADD(member, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCPU_PTR
-parameter_list|(
-name|member
-parameter_list|)
-value|(&pcpup->pc_ ## member)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCPU_SET
-parameter_list|(
-name|member
-parameter_list|,
-name|val
-parameter_list|)
-value|(pcpup->pc_ ## member = (val))
-end_define
-
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__GNUCLIKE_ASM
@@ -187,7 +110,7 @@ name|defined
 argument_list|(
 name|__GNUCLIKE___TYPEOF
 argument_list|)
-end_elif
+end_if
 
 begin_comment
 comment|/*  * Evaluates to the byte offset of the per-cpu variable name.  */
@@ -509,7 +432,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !lint || defined(__GNUCLIKE_ASM)&& defined(__GNUCLIKE___TYPEOF) */
+comment|/* !__GNUCLIKE_ASM || !__GNUCLIKE___TYPEOF */
 end_comment
 
 begin_error
@@ -524,7 +447,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* lint, etc. */
+comment|/* __GNUCLIKE_ASM&& __GNUCLIKE___TYPEOF */
 end_comment
 
 begin_endif

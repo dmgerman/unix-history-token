@@ -282,12 +282,6 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|lint
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
 name|STRIP_FBSDID
 argument_list|)
 end_if
@@ -326,7 +320,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint and not STRIP_FBSDID */
+comment|/* not STRIP_FBSDID */
 end_comment
 
 begin_endif
