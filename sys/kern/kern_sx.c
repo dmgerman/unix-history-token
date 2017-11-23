@@ -3880,17 +3880,6 @@ name|SX_LOCK_UNLOCKED
 argument_list|)
 condition|)
 return|return;
-name|MPASS
-argument_list|(
-name|x
-operator|&
-operator|(
-name|SX_LOCK_SHARED_WAITERS
-operator||
-name|SX_LOCK_EXCLUSIVE_WAITERS
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|LOCK_LOG_TEST
@@ -3927,6 +3916,17 @@ operator|=
 name|SX_READ_VALUE
 argument_list|(
 name|sx
+argument_list|)
+expr_stmt|;
+name|MPASS
+argument_list|(
+name|x
+operator|&
+operator|(
+name|SX_LOCK_SHARED_WAITERS
+operator||
+name|SX_LOCK_EXCLUSIVE_WAITERS
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The wake up algorithm here is quite simple and probably not 	 * ideal.  It gives precedence to shared waiters if they are 	 * present.  For this condition, we have to preserve the 	 * state of the exclusive waiters flag. 	 * If interruptible sleeps left the shared queue empty avoid a 	 * starvation for the threads sleeping on the exclusive queue by giving 	 * them precedence and cleaning up the shared waiters bit anyway. 	 */
