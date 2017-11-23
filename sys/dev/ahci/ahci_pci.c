@@ -299,6 +299,56 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x79001022
+block|,
+literal|0x00
+block|,
+literal|"AMD KERNCZ"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x79011022
+block|,
+literal|0x00
+block|,
+literal|"AMD KERNCZ"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x79021022
+block|,
+literal|0x00
+block|,
+literal|"AMD KERNCZ"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x79031022
+block|,
+literal|0x00
+block|,
+literal|"AMD KERNCZ"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x79041022
+block|,
+literal|0x00
+block|,
+literal|"AMD KERNCZ"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x06011b21
 block|,
 literal|0x00
