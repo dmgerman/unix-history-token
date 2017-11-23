@@ -16,7 +16,7 @@ name|__AW_CLK_H__
 end_define
 
 begin_comment
-comment|/*   Allwinner clocks formula :  PLLs:  (24MHz*N*K)/(M*P) (24MHz*N)/(M*P) (24MHz*N*2)/M (24MHz*N)/M (24MHz*N*K)/M (24MHz*N*K/2) (24MHz*N)/M (24MHz*N*K/2) (24MHz*N)/M  Periph clocks:  Clock Source/Divider N/Divider M Clock Source/Divider N/Divider M/2   */
+comment|/*   Allwinner clocks formula :  PLLs:  (24MHz*N*K)/(M*P) (24MHz*N)/(M*P) (24MHz*N*2)/M (24MHz*N)/M (24MHz*N*K)/M (24MHz*N*K/2) (24MHz*N)/M (24MHz*N*K/2) (24MHz*N)/M  Periph clocks:  Clock Source/Divider N/Divider M Clock Source/Divider N/Divider M/2 Clock Source*N/(Divider M+1)/(Divider P+1)   */
 end_comment
 
 begin_struct
@@ -877,6 +877,49 @@ name|_prediv_cond_value
 parameter_list|)
 define|\
 value|static struct aw_clk_prediv_mux_def _clkname = {	\ 		.clkdef = {					\ 			.id = _id,				\ 			.name = _name,				\ 			.parent_names = _pnames,		\ 			.parent_cnt = nitems(_pnames),		\ 		},						\ 		.offset = _offset,				\ 		.mux_shift = _mux_shift,			\ 		.mux_width = _mux_width,			\ 		.div.shift = _div_shift,			\ 		.div.width = _div_width,			\ 		.div.value = _div_value,			\ 		.div.flags = _div_flags,			\ 		.prediv.shift = _prediv_shift,			\ 		.prediv.width = _prediv_width,			\ 		.prediv.value = _prediv_value,			\ 		.prediv.flags = _prediv_flags,			\ 		.prediv.cond_shift = _prediv_cond_shift,	\ 		.prediv.cond_width = _prediv_cond_width,	\ 		.prediv.cond_value = _prediv_cond_value,	\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|PREDIV_CLK_WITH_MASK
+parameter_list|(
+name|_clkname
+parameter_list|,
+name|_id
+parameter_list|,
+name|_name
+parameter_list|,
+name|_pnames
+parameter_list|,	\
+name|_offset
+parameter_list|,							\
+name|_mux_shift
+parameter_list|,
+name|_mux_width
+parameter_list|,					\
+name|_div_shift
+parameter_list|,
+name|_div_width
+parameter_list|,
+name|_div_value
+parameter_list|,
+name|_div_flags
+parameter_list|,		\
+name|_prediv_shift
+parameter_list|,
+name|_prediv_width
+parameter_list|,
+name|_prediv_value
+parameter_list|,
+name|_prediv_flags
+parameter_list|,	\
+name|_prediv_cond_mask
+parameter_list|,
+name|_prediv_cond_value
+parameter_list|)
+define|\
+value|static struct aw_clk_prediv_mux_def _clkname = {	\ 		.clkdef = {					\ 			.id = _id,				\ 			.name = _name,				\ 			.parent_names = _pnames,		\ 			.parent_cnt = nitems(_pnames),		\ 		},						\ 		.offset = _offset,				\ 		.mux_shift = _mux_shift,			\ 		.mux_width = _mux_width,			\ 		.div.shift = _div_shift,			\ 		.div.width = _div_width,			\ 		.div.value = _div_value,			\ 		.div.flags = _div_flags,			\ 		.prediv.shift = _prediv_shift,			\ 		.prediv.width = _prediv_width,			\ 		.prediv.value = _prediv_value,			\ 		.prediv.flags = _prediv_flags,			\ 		.prediv.cond_shift = 0,				\ 		.prediv.cond_width = 0,				\ 		.prediv.cond_mask = _prediv_cond_mask,		\ 		.prediv.cond_value = _prediv_cond_value,	\ 	}
 end_define
 
 begin_define
