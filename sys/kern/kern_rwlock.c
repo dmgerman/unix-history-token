@@ -2541,11 +2541,13 @@ comment|/* 		 * The lock is held in write mode or it already has waiters. 		 */
 name|MPASS
 argument_list|(
 operator|!
-name|RW_CAN_READ
+name|__rw_can_read
 argument_list|(
 name|td
 argument_list|,
 name|v
+argument_list|,
+name|false
 argument_list|)
 argument_list|)
 expr_stmt|;
