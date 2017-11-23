@@ -313,7 +313,7 @@ begin_define
 define|#
 directive|define
 name|DEF_METACHARS
-value|"; *?\t\n'\"()<>[]|&^`#\\$%=~"
+value|"; *?\t\n'\"()<>[]|&^`#\\$%=~{},"
 end_define
 
 begin_define

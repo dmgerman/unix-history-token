@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: unbzip2.c,v 1.13 2009/12/05 03:23:37 mrg Exp $	*/
+comment|/*	$NetBSD: unbzip2.c,v 1.14 2017/08/04 07:27:08 mrg Exp $	*/
 end_comment
 
 begin_comment
@@ -174,6 +174,9 @@ operator|==
 name|BZ_OK
 condition|)
 block|{
+name|check_siginfo
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|bzs
@@ -220,6 +223,11 @@ condition|)
 name|end_of_file
 operator|=
 literal|1
+expr_stmt|;
+name|infile_newdata
+argument_list|(
+name|n
+argument_list|)
 expr_stmt|;
 name|bzs
 operator|.

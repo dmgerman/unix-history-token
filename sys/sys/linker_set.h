@@ -104,38 +104,11 @@ begin_comment
 comment|/* !__GNUCLIKE___SECTION */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_error
 error|#
 directive|error
 error|this file needs to be ported to your compiler
 end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lint */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MAKE_SET
-parameter_list|(
-name|set
-parameter_list|,
-name|sym
-parameter_list|)
-value|extern void const * const (__set_##set##_sym_##sym)
-end_define
 
 begin_endif
 endif|#

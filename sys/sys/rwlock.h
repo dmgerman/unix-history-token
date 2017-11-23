@@ -250,6 +250,19 @@ define|\
 value|atomic_cmpset_rel_ptr(&(rw)->rw_lock, (tid), RW_UNLOCKED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|_rw_write_unlock_fetch
+parameter_list|(
+name|rw
+parameter_list|,
+name|tid
+parameter_list|)
+define|\
+value|atomic_fcmpset_rel_ptr(&(rw)->rw_lock, (tid), RW_UNLOCKED)
+end_define
+
 begin_comment
 comment|/*  * Full lock operations that are suitable to be inlined in non-debug  * kernels.  If the lock cannot be acquired or released trivially then  * the work is deferred to another function.  */
 end_comment
@@ -271,7 +284,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = RW_UNLOCKED;					\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(rw__acquire) ||	\ 	    !_rw_write_lock_fetch((rw),&_v, _tid)))			\ 		_rw_wlock_hard((rw), _v, _tid, (file), (line));		\ } while (0)
+value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = RW_UNLOCKED;					\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(rw__acquire) ||	\ 	    !_rw_write_lock_fetch((rw),&_v, _tid)))			\ 		_rw_wlock_hard((rw), _v, (file), (line));		\ } while (0)
 end_define
 
 begin_comment
@@ -291,7 +304,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(rw__release) ||	\ 	    !_rw_write_unlock((rw), _tid)))				\ 		_rw_wunlock_hard((rw), _tid, (file), (line));		\ } while (0)
+value|do {				\ 	uintptr_t _v = (uintptr_t)(tid);				\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(rw__release) ||	\ 	    !_rw_write_unlock_fetch((rw),&_v)))			\ 		_rw_wunlock_hard((rw), _v, (file), (line));		\ } while (0)
 end_define
 
 begin_comment
@@ -387,6 +400,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|__rw_try_wlock_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|__rw_try_wlock
 parameter_list|(
 specifier|volatile
@@ -427,6 +453,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|__rw_rlock_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|__rw_rlock
 parameter_list|(
 specifier|volatile
@@ -447,6 +486,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|__rw_try_rlock_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|__rw_try_rlock
 parameter_list|(
 specifier|volatile
@@ -461,6 +513,19 @@ name|file
 parameter_list|,
 name|int
 name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_rw_runlock_cookie_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -496,17 +561,7 @@ name|c
 parameter_list|,
 name|uintptr_t
 name|v
-parameter_list|,
-name|uintptr_t
-name|tid
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
+name|LOCK_FILE_LINE_ARG_DEF
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -521,15 +576,21 @@ modifier|*
 name|c
 parameter_list|,
 name|uintptr_t
-name|tid
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
+name|v
+name|LOCK_FILE_LINE_ARG_DEF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
-name|line
+name|__rw_try_upgrade_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -550,6 +611,19 @@ name|file
 parameter_list|,
 name|int
 name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__rw_downgrade_int
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+name|LOCK_FILE_LINE_ARG_DEF
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -719,21 +793,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_rw_rlock
-parameter_list|(
-name|rw
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|__rw_rlock(&(rw)->rw_lock, f, l)
-end_define
-
-begin_define
-define|#
-directive|define
 name|_rw_try_rlock
 parameter_list|(
 name|rw
@@ -744,6 +803,29 @@ name|l
 parameter_list|)
 define|\
 value|__rw_try_rlock(&(rw)->rw_lock, f, l)
+end_define
+
+begin_if
+if|#
+directive|if
+name|LOCK_DEBUG
+operator|>
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|_rw_rlock
+parameter_list|(
+name|rw
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_rlock(&(rw)->rw_lock, f, l)
 end_define
 
 begin_define
@@ -761,6 +843,54 @@ define|\
 value|_rw_runlock_cookie(&(rw)->rw_lock, f, l)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_rw_rlock
+parameter_list|(
+name|rw
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_rlock_int((struct rwlock *)rw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_rw_runlock
+parameter_list|(
+name|rw
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|_rw_runlock_cookie_int((struct rwlock *)rw)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|LOCK_DEBUG
+operator|>
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -770,14 +900,12 @@ name|rw
 parameter_list|,
 name|v
 parameter_list|,
-name|t
-parameter_list|,
 name|f
 parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__rw_wlock_hard(&(rw)->rw_lock, v, t, f, l)
+value|__rw_wlock_hard(&(rw)->rw_lock, v, f, l)
 end_define
 
 begin_define
@@ -787,14 +915,14 @@ name|_rw_wunlock_hard
 parameter_list|(
 name|rw
 parameter_list|,
-name|t
+name|v
 parameter_list|,
 name|f
 parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__rw_wunlock_hard(&(rw)->rw_lock, t, f, l)
+value|__rw_wunlock_hard(&(rw)->rw_lock, v, f, l)
 end_define
 
 begin_define
@@ -826,6 +954,80 @@ parameter_list|)
 define|\
 value|__rw_downgrade(&(rw)->rw_lock, f, l)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_rw_wlock_hard
+parameter_list|(
+name|rw
+parameter_list|,
+name|v
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_wlock_hard(&(rw)->rw_lock, v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_rw_wunlock_hard
+parameter_list|(
+name|rw
+parameter_list|,
+name|v
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_wunlock_hard(&(rw)->rw_lock, v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_rw_try_upgrade
+parameter_list|(
+name|rw
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_try_upgrade_int(rw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_rw_downgrade
+parameter_list|(
+name|rw
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__rw_downgrade_int(rw)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -1061,44 +1263,12 @@ name|char
 modifier|*
 name|ra_desc
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|rw_args_flags
-block|{
-name|void
-modifier|*
-name|ra_rw
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|ra_desc
-decl_stmt|;
 name|int
 name|ra_flags
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|RW_SYSINIT
-parameter_list|(
-name|name
-parameter_list|,
-name|rw
-parameter_list|,
-name|desc
-parameter_list|)
-define|\
-value|static struct rw_args name##_args = {				\ 		(rw),							\ 		(desc),							\ 	};								\ 	SYSINIT(name##_rw_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_sysinit,&name##_args);					\ 	SYSUNINIT(name##_rw_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    _rw_destroy, __DEVOLATILE(void *,&(rw)->rw_lock))
-end_define
 
 begin_define
 define|#
@@ -1114,7 +1284,21 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static struct rw_args_flags name##_args = {			\ 		(rw),							\ 		(desc),							\ 		(flags),						\ 	};								\ 	SYSINIT(name##_rw_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_sysinit_flags,&name##_args);				\ 	SYSUNINIT(name##_rw_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    _rw_destroy, __DEVOLATILE(void *,&(rw)->rw_lock))
+value|static struct rw_args name##_args = {				\ 		(rw),							\ 		(desc),							\ 		(flags),						\ 	};								\ 	SYSINIT(name##_rw_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    rw_sysinit,&name##_args);					\ 	SYSUNINIT(name##_rw_sysuninit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    _rw_destroy, __DEVOLATILE(void *,&(rw)->rw_lock))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_SYSINIT
+parameter_list|(
+name|name
+parameter_list|,
+name|rw
+parameter_list|,
+name|desc
+parameter_list|)
+value|RW_SYSINIT_FLAGS(name, rw, desc, 0)
 end_define
 
 begin_comment

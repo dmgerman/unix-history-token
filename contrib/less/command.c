@@ -102,6 +102,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|kent
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|swindow
 decl_stmt|;
@@ -179,8 +187,29 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|status_col
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|POSITION
 name|highest_hilite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|POSITION
+name|start_attnpos
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|POSITION
+name|end_attnpos
 decl_stmt|;
 end_decl_stmt
 
@@ -189,14 +218,6 @@ specifier|extern
 name|char
 modifier|*
 name|every_first_cmd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|curr_altfilename
 decl_stmt|;
 end_decl_stmt
 
@@ -316,13 +337,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|forw_prompt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|same_pos_bell
 decl_stmt|;
 end_decl_stmt
 
@@ -464,6 +478,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Stack of ungotten chars (via ungetcc) */
+end_comment
+
 begin_struct
 struct|struct
 name|ungot
@@ -473,11 +491,8 @@ name|ungot
 modifier|*
 name|ug_next
 decl_stmt|;
-name|char
+name|LWCHAR
 name|ug_char
-decl_stmt|;
-name|char
-name|ug_end_command
 decl_stmt|;
 block|}
 struct|;
@@ -512,14 +527,9 @@ name|void
 name|cmd_exec
 parameter_list|()
 block|{
-if|#
-directive|if
-name|HILITE_SEARCH
 name|clear_attn
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|clear_bot
 argument_list|()
 expr_stmt|;
@@ -1220,6 +1230,35 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Is a character a carriage return or newline?  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|is_newline_char
+parameter_list|(
+name|c
+parameter_list|)
+name|int
+name|c
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|c
+operator|==
+literal|'\n'
+operator|||
+name|c
+operator|==
+literal|'\r'
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Handle the first char of an option (after the initial dash).  */
 end_comment
 
@@ -1600,13 +1639,11 @@ block|{
 comment|/* We're getting a long option name.  */
 if|if
 condition|(
+operator|!
+name|is_newline_char
+argument_list|(
 name|c
-operator|!=
-literal|'\n'
-operator|&&
-name|c
-operator|!=
-literal|'\r'
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2106,13 +2143,10 @@ block|}
 comment|/* 	 * The multichar command is terminated by a newline. 	 */
 if|if
 condition|(
+name|is_newline_char
+argument_list|(
 name|c
-operator|==
-literal|'\n'
-operator|||
-name|c
-operator|==
-literal|'\r'
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * Execute the command. 		 */
@@ -2338,10 +2372,11 @@ name|ungot
 operator|!=
 name|NULL
 operator|&&
-operator|!
 name|ungot
 operator|->
-name|ug_end_command
+name|ug_char
+operator|!=
+name|CHAR_END_COMMAND
 condition|)
 block|{
 comment|/* 		 * No prompt necessary if commands are from  		 * ungotten chars rather than from the user. 		 */
@@ -2546,23 +2581,43 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get command character.  * The character normally comes from the keyboard,  * but may come from ungotten characters  * (characters previously given to ungetcc or ungetsc).  */
+comment|/*  * Return a character to complete a partial command, if possible.  */
 end_comment
 
 begin_function
-name|public
-name|int
-name|getcc
+specifier|static
+name|LWCHAR
+name|getcc_end_command
 parameter_list|()
 block|{
-if|if
+switch|switch
 condition|(
-name|ungot
-operator|==
-name|NULL
+name|mca
 condition|)
 block|{
-comment|/* 		 * Normal case: no ungotten chars, so get one from the user. 		 */
+case|case
+name|A_DIGIT
+case|:
+comment|/* We have a number but no command.  Treat as #g. */
+return|return
+operator|(
+literal|'g'
+operator|)
+return|;
+case|case
+name|A_F_SEARCH
+case|:
+case|case
+name|A_B_SEARCH
+case|:
+comment|/* We have "/string" but no newline.  Add the \n. */
+return|return
+operator|(
+literal|'\n'
+operator|)
+return|;
+default|default:
+comment|/* Some other incomplete command.  Let user complete it. */
 return|return
 operator|(
 name|getchr
@@ -2570,8 +2625,39 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/* 	 * Return the next ungotten char. 	 */
+block|}
+end_function
+
+begin_comment
+comment|/*  * Get command character.  * The character normally comes from the keyboard,  * but may come from ungotten characters  * (characters previously given to ungetcc or ungetsc).  */
+end_comment
+
+begin_function
+specifier|static
+name|LWCHAR
+name|getccu
+parameter_list|()
 block|{
+name|LWCHAR
+name|c
+decl_stmt|;
+if|if
+condition|(
+name|ungot
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Normal case: no ungotten chars. 		 * Get char from the user. */
+name|c
+operator|=
+name|getchr
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Ungotten chars available: 		 * Take the top of stack (most recent). */
 name|struct
 name|ungot
 modifier|*
@@ -2579,20 +2665,12 @@ name|ug
 init|=
 name|ungot
 decl_stmt|;
-name|char
 name|c
-init|=
+operator|=
 name|ug
 operator|->
 name|ug_char
-decl_stmt|;
-name|int
-name|end_command
-init|=
-name|ug
-operator|->
-name|ug_end_command
-decl_stmt|;
+expr_stmt|;
 name|ungot
 operator|=
 name|ug
@@ -2606,45 +2684,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|end_command
+name|c
+operator|==
+name|CHAR_END_COMMAND
 condition|)
-block|{
-comment|/* 			 * Command is incomplete, so try to complete it. 			 */
-switch|switch
-condition|(
-name|mca
-condition|)
-block|{
-case|case
-name|A_DIGIT
-case|:
-comment|/* 				 * We have a number but no command.  Treat as #g. 				 */
-return|return
-operator|(
-literal|'g'
-operator|)
-return|;
-case|case
-name|A_F_SEARCH
-case|:
-case|case
-name|A_B_SEARCH
-case|:
-comment|/* 				 * We have "/string" but no newline.  Add the \n. 				 */
-return|return
-operator|(
-literal|'\n'
-operator|)
-return|;
-default|default:
-comment|/* 				 * Some other incomplete command.  Let user complete it. 				 */
-return|return
-operator|(
-name|getchr
+name|c
+operator|=
+name|getcc_end_command
 argument_list|()
-operator|)
-return|;
-block|}
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2652,6 +2700,244 @@ name|c
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/*  * Get a command character, but if we receive the orig sequence,  * convert it to the repl sequence.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|LWCHAR
+name|getcc_repl
+argument_list|(
+name|orig
+argument_list|,
+name|repl
+argument_list|,
+name|gr_getc
+argument_list|,
+name|gr_ungetc
+argument_list|)
+name|char
+decl|const
+modifier|*
+name|orig
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+specifier|const
+modifier|*
+name|repl
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|LWCHAR
+function_decl|(
+modifier|*
+name|gr_getc
+function_decl|)
+parameter_list|(
+name|VOID_PARAM
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|gr_ungetc
+function_decl|)
+parameter_list|(
+name|LWCHAR
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_block
+block|{
+name|LWCHAR
+name|c
+decl_stmt|;
+name|LWCHAR
+name|keys
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|int
+name|ki
+init|=
+literal|0
+decl_stmt|;
+name|c
+operator|=
+call|(
+modifier|*
+name|gr_getc
+call|)
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|orig
+operator|==
+name|NULL
+operator|||
+name|orig
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return
+name|c
+return|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|keys
+index|[
+name|ki
+index|]
+operator|=
+name|c
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+name|orig
+index|[
+name|ki
+index|]
+operator|||
+name|ki
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|keys
+argument_list|)
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* This is not orig we have been receiving. 			 * If we have stashed chars in keys[], 			 * unget them and return the first one. */
+while|while
+condition|(
+name|ki
+operator|>
+literal|0
+condition|)
+call|(
+modifier|*
+name|gr_ungetc
+call|)
+argument_list|(
+name|keys
+index|[
+name|ki
+operator|--
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+name|keys
+index|[
+literal|0
+index|]
+return|;
+block|}
+if|if
+condition|(
+name|orig
+index|[
+operator|++
+name|ki
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* We've received the full orig sequence. 			 * Return the repl sequence. */
+name|ki
+operator|=
+name|strlen
+argument_list|(
+name|repl
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|ki
+operator|>
+literal|0
+condition|)
+call|(
+modifier|*
+name|gr_ungetc
+call|)
+argument_list|(
+name|repl
+index|[
+name|ki
+operator|--
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+name|repl
+index|[
+literal|0
+index|]
+return|;
+block|}
+comment|/* We've received a partial orig sequence (ki chars of it). 		 * Get next char and see if it continues to match orig. */
+name|c
+operator|=
+call|(
+modifier|*
+name|gr_getc
+call|)
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_block
+
+begin_comment
+comment|/*  * Get command character.  */
+end_comment
+
+begin_function
+name|public
+name|int
+name|getcc
+parameter_list|()
+block|{
+comment|/* Replace kent (keypad Enter) with a newline. */
+return|return
+name|getcc_repl
+argument_list|(
+name|kent
+argument_list|,
+literal|"\n"
+argument_list|,
+name|getccu
+argument_list|,
+name|ungetcc
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -2666,7 +2952,7 @@ name|ungetcc
 parameter_list|(
 name|c
 parameter_list|)
-name|int
+name|LWCHAR
 name|c
 decl_stmt|;
 block|{
@@ -2695,20 +2981,7 @@ name|ug
 operator|->
 name|ug_char
 operator|=
-operator|(
-name|char
-operator|)
 name|c
-expr_stmt|;
-name|ug
-operator|->
-name|ug_end_command
-operator|=
-operator|(
-name|c
-operator|==
-name|CHAR_END_COMMAND
-operator|)
 expr_stmt|;
 name|ug
 operator|->
@@ -2769,6 +3042,33 @@ operator|*
 name|p
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Peek the next command character, without consuming it.  */
+end_comment
+
+begin_function
+name|public
+name|LWCHAR
+name|peekcc
+parameter_list|()
+block|{
+name|LWCHAR
+name|c
+init|=
+name|getcc
+argument_list|()
+decl_stmt|;
+name|ungetcc
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+return|return
+name|c
+return|;
 block|}
 end_function
 
@@ -4258,6 +4558,7 @@ break|break;
 case|case
 name|A_UNDO_SEARCH
 case|:
+comment|/* 			 * Clear search string highlighting. 			 */
 name|undo_search
 argument_list|()
 expr_stmt|;
@@ -4305,24 +4606,16 @@ break|break;
 case|case
 name|A_EXAMINE
 case|:
+comment|/* 			 * Edit a new file.  Get the filename. 			 */
 if|#
 directive|if
 name|EXAMINE
-comment|/* 			 * Edit a new file.  Get the filename. 			 */
 if|if
 condition|(
+operator|!
 name|secure
 condition|)
 block|{
-name|error
-argument_list|(
-literal|"Command not available"
-argument_list|,
-name|NULL_PARG
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|start_mca
 argument_list|(
 name|A_EXAMINE
@@ -4342,8 +4635,9 @@ expr_stmt|;
 goto|goto
 name|again
 goto|;
-else|#
-directive|else
+block|}
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|"Command not available"
@@ -4352,8 +4646,6 @@ name|NULL_PARG
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|A_VISUAL
 case|:
@@ -4363,18 +4655,10 @@ directive|if
 name|EDITOR
 if|if
 condition|(
+operator|!
 name|secure
 condition|)
 block|{
-name|error
-argument_list|(
-literal|"Command not available"
-argument_list|,
-name|NULL_PARG
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 if|if
 condition|(
 name|ch_getflags
@@ -4409,7 +4693,10 @@ break|break;
 block|}
 if|if
 condition|(
-name|curr_altfilename
+name|get_altfilename
+argument_list|(
+name|curr_ifile
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -4433,7 +4720,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Expand the editor prototype string 			 * and pass it to the system to execute. 			 * (Make sure the screen is displayed so the 			 * expansion of "+%lm" works.) 			 */
+comment|/* 				 * Expand the editor prototype string 				 * and pass it to the system to execute. 				 * (Make sure the screen is displayed so the 				 * expansion of "+%lm" works.) 				 */
 name|make_display
 argument_list|()
 expr_stmt|;
@@ -4457,8 +4744,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
-else|#
-directive|else
+block|}
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|"Command not available"
@@ -4467,8 +4755,6 @@ name|NULL_PARG
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|A_NEXT_FILE
 case|:
@@ -4631,6 +4917,7 @@ break|break;
 case|case
 name|A_NEXT_TAG
 case|:
+comment|/* 			 * Jump to the next tag in the current tag list. 			 */
 if|#
 directive|if
 name|TAGS
@@ -4670,6 +4957,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|cmd_exec
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|edit
@@ -4715,6 +5005,7 @@ break|break;
 case|case
 name|A_PREV_TAG
 case|:
+comment|/* 			 * Jump to the previous tag in the current tag list. 			 */
 if|#
 directive|if
 name|TAGS
@@ -4754,6 +5045,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|cmd_exec
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|edit
@@ -4831,6 +5125,7 @@ break|break;
 case|case
 name|A_REMOVE_FILE
 case|:
+comment|/* 			 * Remove a file from the input file list. 			 */
 if|if
 condition|(
 name|ch_getflags
@@ -4888,6 +5183,7 @@ break|break;
 case|case
 name|A_OPT_TOGGLE
 case|:
+comment|/* 			 * Change the setting of an  option. 			 */
 name|optflag
 operator|=
 name|OPT_TOGGLE
@@ -4910,7 +5206,7 @@ goto|;
 case|case
 name|A_DISP_OPTION
 case|:
-comment|/* 			 * Report a flag setting. 			 */
+comment|/* 			 * Report the setting of an option. 			 */
 name|optflag
 operator|=
 name|OPT_NO_TOGGLE
@@ -4966,18 +5262,10 @@ directive|if
 name|SHELL_ESCAPE
 if|if
 condition|(
+operator|!
 name|secure
 condition|)
 block|{
-name|error
-argument_list|(
-literal|"Command not available"
-argument_list|,
-name|NULL_PARG
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|start_mca
 argument_list|(
 name|A_SHELL
@@ -4997,8 +5285,9 @@ expr_stmt|;
 goto|goto
 name|again
 goto|;
-else|#
-directive|else
+block|}
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|"Command not available"
@@ -5007,10 +5296,11 @@ name|NULL_PARG
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|A_SETMARK
+case|:
+case|case
+name|A_SETMARKBOT
 case|:
 comment|/* 			 * Set a mark. 			 */
 if|if
@@ -5025,7 +5315,7 @@ name|start_mca
 argument_list|(
 name|A_SETMARK
 argument_list|,
-literal|"mark: "
+literal|"set mark: "
 argument_list|,
 operator|(
 name|void
@@ -5043,37 +5333,84 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|is_erase_char
+argument_list|(
 name|c
-operator|==
-name|erase_char
+argument_list|)
 operator|||
+name|is_newline_char
+argument_list|(
 name|c
-operator|==
-name|erase2_char
-operator|||
-name|c
-operator|==
-name|kill_char
-operator|||
-name|c
-operator|==
-literal|'\n'
-operator|||
-name|c
-operator|==
-literal|'\r'
+argument_list|)
 condition|)
 break|break;
 name|setmark
 argument_list|(
 name|c
+argument_list|,
+name|action
+operator|==
+name|A_SETMARKBOT
+condition|?
+name|BOTTOM
+else|:
+name|TOP
 argument_list|)
+expr_stmt|;
+name|repaint
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|A_CLRMARK
+case|:
+comment|/* 			 * Clear a mark. 			 */
+name|start_mca
+argument_list|(
+name|A_CLRMARK
+argument_list|,
+literal|"clear mark: "
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|getcc
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|is_erase_char
+argument_list|(
+name|c
+argument_list|)
+operator|||
+name|is_newline_char
+argument_list|(
+name|c
+argument_list|)
+condition|)
+break|break;
+name|clrmark
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|repaint
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
 name|A_GOMARK
 case|:
-comment|/* 			 * Go to a mark. 			 */
+comment|/* 			 * Jump to a marked position. 			 */
 name|start_mca
 argument_list|(
 name|A_GOMARK
@@ -5096,25 +5433,15 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|is_erase_char
+argument_list|(
 name|c
-operator|==
-name|erase_char
+argument_list|)
 operator|||
+name|is_newline_char
+argument_list|(
 name|c
-operator|==
-name|erase2_char
-operator|||
-name|c
-operator|==
-name|kill_char
-operator|||
-name|c
-operator|==
-literal|'\n'
-operator|||
-name|c
-operator|==
-literal|'\r'
+argument_list|)
 condition|)
 break|break;
 name|cmd_exec
@@ -5129,23 +5456,16 @@ break|break;
 case|case
 name|A_PIPE
 case|:
+comment|/* 			 * Write part of the input to a pipe to a shell command. 			 */
 if|#
 directive|if
 name|PIPEC
 if|if
 condition|(
+operator|!
 name|secure
 condition|)
 block|{
-name|error
-argument_list|(
-literal|"Command not available"
-argument_list|,
-name|NULL_PARG
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|start_mca
 argument_list|(
 name|A_PIPE
@@ -5168,28 +5488,18 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|is_erase_char
+argument_list|(
 name|c
-operator|==
-name|erase_char
-operator|||
-name|c
-operator|==
-name|erase2_char
-operator|||
-name|c
-operator|==
-name|kill_char
+argument_list|)
 condition|)
 break|break;
 if|if
 condition|(
+name|is_newline_char
+argument_list|(
 name|c
-operator|==
-literal|'\n'
-operator|||
-name|c
-operator|==
-literal|'\r'
+argument_list|)
 condition|)
 name|c
 operator|=
@@ -5226,8 +5536,9 @@ expr_stmt|;
 goto|goto
 name|again
 goto|;
-else|#
-directive|else
+block|}
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|"Command not available"
@@ -5236,8 +5547,6 @@ name|NULL_PARG
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|A_B_BRACKET
 case|:
@@ -5270,6 +5579,7 @@ goto|;
 case|case
 name|A_LSHIFT
 case|:
+comment|/* 			 * Shift view left. 			 */
 if|if
 condition|(
 name|number
@@ -5317,6 +5627,7 @@ break|break;
 case|case
 name|A_RSHIFT
 case|:
+comment|/* 			 * Shift view right. 			 */
 if|if
 condition|(
 name|number
@@ -5354,6 +5665,7 @@ break|break;
 case|case
 name|A_LLSHIFT
 case|:
+comment|/* 			 * Shift view left to margin. 			 */
 name|hshift
 operator|=
 literal|0
@@ -5366,6 +5678,7 @@ break|break;
 case|case
 name|A_RRSHIFT
 case|:
+comment|/* 			 * Shift view right to view rightmost char on screen. 			 */
 name|hshift
 operator|=
 name|rrshift

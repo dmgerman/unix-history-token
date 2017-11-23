@@ -4489,6 +4489,21 @@ comment|/**< bcma(4) interconnect */
 end_comment
 
 begin_comment
+comment|/** Evaluates to true if @p _type is a BCMA or BCMA-compatible interconenct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIPTYPE_IS_BCMA_COMPATIBLE
+parameter_list|(
+name|_type
+parameter_list|)
+define|\
+value|((_type) == BHND_CHIPTYPE_BCMA ||	\ 	 (_type) == BHND_CHIPTYPE_BCMA_ALT ||	\ 	 (_type) == BHND_CHIPTYPE_UBUS)
+end_define
+
+begin_comment
 comment|/** Evaluates to true if @p _type uses a BCMA EROM table */
 end_comment
 
@@ -4500,7 +4515,7 @@ parameter_list|(
 name|_type
 parameter_list|)
 define|\
-value|((_type) == BHND_CHIPTYPE_BCMA ||	\ 	 (_type) == BHND_CHIPTYPE_BCMA_ALT ||	\ 	 (_type) == BHND_CHIPTYPE_UBUS)
+value|BHND_CHIPTYPE_IS_BCMA_COMPATIBLE(_type)
 end_define
 
 begin_comment

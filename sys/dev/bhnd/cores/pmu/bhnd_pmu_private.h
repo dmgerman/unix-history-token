@@ -140,7 +140,7 @@ parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|BHND_PMU_IND_READ((_sc), CHIPCTL, (_reg))
+value|BHND_PMU_IND_READ((_sc), CHIP_CONTROL, (_reg))
 end_define
 
 begin_define
@@ -157,11 +157,11 @@ parameter_list|,
 name|_mask
 parameter_list|)
 define|\
-value|BHND_PMU_IND_WRITE((_sc), CHIPCTL, (_reg), (_val), (_mask))
+value|BHND_PMU_IND_WRITE((_sc), CHIP_CONTROL, (_reg), (_val), (_mask))
 end_define
 
 begin_comment
-comment|/* Register Control indirect registers */
+comment|/* Regulator Control indirect registers */
 end_comment
 
 begin_define
@@ -376,35 +376,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
-name|bhnd_pmu_wait_clkst
-parameter_list|(
-name|struct
-name|bhnd_pmu_softc
-modifier|*
-name|sc
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|,
-name|struct
-name|bhnd_resource
-modifier|*
-name|r
-parameter_list|,
-name|bus_size_t
-name|clkst_reg
-parameter_list|,
-name|uint32_t
-name|value
-parameter_list|,
-name|uint32_t
-name|mask
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|bhnd_pmu_init
 parameter_list|(
@@ -489,7 +460,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|bhnd_pmu_set_ldo_voltage
 parameter_list|(
 name|struct
@@ -515,7 +486,7 @@ name|bhnd_pmu_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint16_t
+name|u_int
 modifier|*
 name|pwrup_delay
 parameter_list|)
@@ -535,15 +506,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|bhnd_pmu_spuravoid
+name|int
+name|bhnd_pmu_set_spuravoid
 parameter_list|(
 name|struct
 name|bhnd_pmu_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint8_t
+name|bhnd_pmu_spuravoid
 name|spuravoid
 parameter_list|)
 function_decl|;
@@ -640,7 +611,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|bhnd_pmu_paref_ldo_enable
 parameter_list|(
 name|struct

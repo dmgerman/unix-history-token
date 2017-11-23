@@ -3636,6 +3636,36 @@ name|CHIPC_GPIO_ONTIME_SHIFT
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIOTIMERVAL_DEFAULT_ON
+value|10
+end_define
+
+begin_comment
+comment|/**< default 10% on duty cycle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIOTIMERVAL_DEFAULT_OFF
+value|90
+end_define
+
+begin_comment
+comment|/**< default 90% off duty cycle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_GPIOTIMERVAL_DEFAULT
+define|\
+value|((CHIPC_GPIOTIMERVAL_DEFAULT_ON<< CHIPC_GPIO_ONTIME_SHIFT) |	\      (CHIPC_GPIOTIMERVAL_DEFAULT_OFF))
+end_define
+
 begin_comment
 comment|/* clockcontrol_n */
 end_comment

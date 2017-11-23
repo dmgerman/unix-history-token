@@ -271,6 +271,36 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* Allocate our per-core PMU state */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|bhnd_alloc_pmu
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"failed to allocate PMU state: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* Delegate to common driver implementation */
 if|if
 condition|(

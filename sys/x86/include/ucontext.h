@@ -411,30 +411,6 @@ begin_comment
 comment|/* __amd64__ */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__LINT__
-end_ifdef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|__mcontext
-block|{ }
-name|mcontext_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __LINT__ */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

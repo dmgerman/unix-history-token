@@ -653,6 +653,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BHNDB_PCI_SBIM_COREIDX_MAX
+value|15
+end_define
+
+begin_comment
+comment|/**< maximum representible core index (in 16 bit field) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BHNDB_PCI_SBIM_MASK
 value|0xff00
 end_define

@@ -1724,7 +1724,7 @@ case|:
 operator|*
 name|wp
 operator|=
-name|adjsline
+name|sindex_from_sline
 argument_list|(
 name|jump_sline
 argument_list|)

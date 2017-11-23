@@ -136,6 +136,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EVDEV_SUPPORT
+end_ifdef
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|evdev_support
+argument_list|,
+literal|"Evdev support in hybrid drivers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

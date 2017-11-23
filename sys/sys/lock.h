@@ -584,6 +584,20 @@ end_if
 begin_define
 define|#
 directive|define
+name|LOCK_FILE_LINE_ARG_DEF
+value|, const char *file, int line
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_FILE_LINE_ARG
+value|, file, line
+end_define
+
+begin_define
+define|#
+directive|define
 name|LOCK_FILE
 value|__FILE__
 end_define
@@ -599,6 +613,18 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|LOCK_FILE_LINE_ARG_DEF
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_FILE_LINE_ARG
+end_define
 
 begin_define
 define|#

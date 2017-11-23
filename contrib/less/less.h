@@ -2502,26 +2502,50 @@ begin_comment
 comment|/* Functions not included in funcs.h */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|postoa
-parameter_list|()
-function_decl|;
-end_function_decl
+name|LESSPARAMS
+argument_list|(
+operator|(
+name|POSITION
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|linenumtoa
-parameter_list|()
-function_decl|;
-end_function_decl
+name|LESSPARAMS
+argument_list|(
+operator|(
+name|LINENUM
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|inttoa
-parameter_list|()
-function_decl|;
-end_function_decl
+name|LESSPARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

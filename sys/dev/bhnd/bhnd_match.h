@@ -342,9 +342,13 @@ name|chip_pkg
 range|:
 literal|1
 decl_stmt|,
+name|chip_type
+range|:
+literal|1
+decl_stmt|,
 name|flags_unused
 range|:
-literal|5
+literal|4
 decl_stmt|;
 block|}
 name|match
@@ -365,6 +369,10 @@ name|uint8_t
 name|chip_pkg
 decl_stmt|;
 comment|/**< required package */
+name|uint8_t
+name|chip_type
+decl_stmt|;
+comment|/**< required chip type (BHND_CHIPTYPE_*) */
 block|}
 struct|;
 end_struct
@@ -377,7 +385,7 @@ parameter_list|(
 name|_src
 parameter_list|)
 define|\
-value|_BHND_COPY_MATCH_FIELD(_src, chip_id),	\ 	_BHND_COPY_MATCH_FIELD(_src, chip_rev),	\ 	_BHND_COPY_MATCH_FIELD(_src, chip_pkg)
+value|_BHND_COPY_MATCH_FIELD(_src, chip_id),	\ 	_BHND_COPY_MATCH_FIELD(_src, chip_rev),	\ 	_BHND_COPY_MATCH_FIELD(_src, chip_pkg),	\ 	_BHND_COPY_MATCH_FIELD(_src, chip_type),
 end_define
 
 begin_comment
@@ -388,7 +396,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_CHIP_ID
+name|BHND_MATCH_CHIP_ID
 parameter_list|(
 name|_cid
 parameter_list|)
@@ -402,7 +410,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_CHIP_REV
+name|BHND_MATCH_CHIP_REV
 parameter_list|(
 name|_rev
 parameter_list|)
@@ -416,11 +424,25 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_CHIP_PKG
+name|BHND_MATCH_CHIP_PKG
 parameter_list|(
 name|_pkg
 parameter_list|)
 value|_BHND_SET_MATCH_FIELD(chip_pkg,	\ 					    BHND_PKGID_ ## _pkg)
+end_define
+
+begin_comment
+comment|/** Set the required chip type within a bhnd match descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_MATCH_CHIP_TYPE
+parameter_list|(
+name|_type
+parameter_list|)
+value|_BHND_SET_MATCH_FIELD(chip_type,	\ 					    BHND_CHIPTYPE_ ## _type)
 end_define
 
 begin_comment
@@ -430,14 +452,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_CHIP_IP
+name|BHND_MATCH_CHIP_IP
 parameter_list|(
 name|_cid
 parameter_list|,
 name|_pkg
 parameter_list|)
 define|\
-value|BHND_CHIP_ID(_cid), BHND_CHIP_PKG(_pkg)
+value|BHND_MATCH_CHIP_ID(_cid), BHND_MATCH_CHIP_PKG(_pkg)
 end_define
 
 begin_comment
@@ -447,7 +469,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_CHIP_IPR
+name|BHND_MATCH_CHIP_IPR
 parameter_list|(
 name|_cid
 parameter_list|,
@@ -456,7 +478,7 @@ parameter_list|,
 name|_rev
 parameter_list|)
 define|\
-value|BHND_CHIP_ID(_cid), BHND_CHIP_PKG(_pkg), BHND_CHIP_REV(_rev)
+value|BHND_MATCH_CHIP_ID(_cid),			\     BHND_MATCH_CHIP_PKG(_pkg),			\     BHND_MATCH_CHIP_REV(_rev)
 end_define
 
 begin_comment
@@ -466,14 +488,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_CHIP_IR
+name|BHND_MATCH_CHIP_IR
 parameter_list|(
 name|_cid
 parameter_list|,
 name|_rev
 parameter_list|)
 define|\
-value|BHND_CHIP_ID(_cid), BHND_CHIP_REV(_rev)
+value|BHND_MATCH_CHIP_ID(_cid), BHND_MATCH_CHIP_REV(_rev)
 end_define
 
 begin_comment
@@ -636,12 +658,12 @@ block|{
 comment|/** Select fields to be matched */
 union|union
 block|{
-name|uint16_t
+name|uint32_t
 name|match_flags
 decl_stmt|;
 struct|struct
 block|{
-name|uint16_t
+name|uint32_t
 name|core_vendor
 range|:
 literal|1
@@ -678,6 +700,10 @@ name|chip_pkg
 range|:
 literal|1
 decl_stmt|,
+name|chip_type
+range|:
+literal|1
+decl_stmt|,
 name|board_vendor
 range|:
 literal|1
@@ -696,7 +722,7 @@ literal|1
 decl_stmt|,
 name|flags_unused
 range|:
-literal|1
+literal|16
 decl_stmt|;
 block|}
 name|match
@@ -742,6 +768,10 @@ name|uint8_t
 name|chip_pkg
 decl_stmt|;
 comment|/**< required package */
+name|uint8_t
+name|chip_type
+decl_stmt|;
+comment|/**< required chip type (BHND_CHIPTYPE_*) */
 name|uint16_t
 name|board_vendor
 decl_stmt|;

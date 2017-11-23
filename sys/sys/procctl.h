@@ -292,6 +292,13 @@ name|REAPER_PIDINFO_CHILD
 value|0x00000002
 end_define
 
+begin_define
+define|#
+directive|define
+name|REAPER_PIDINFO_REAPER
+value|0x00000004
+end_define
+
 begin_struct
 struct|struct
 name|procctl_reaper_pids

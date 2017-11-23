@@ -122,10 +122,8 @@ name|NULL_POSITION
 condition|)
 name|jump_loc
 argument_list|(
-operator|(
-name|POSITION
-operator|)
-literal|0
+name|ch_zero
+argument_list|()
 argument_list|,
 name|sc_height
 operator|-
@@ -346,6 +344,8 @@ name|get_scrpos
 argument_list|(
 operator|&
 name|scrpos
+argument_list|,
+name|TOP
 argument_list|)
 expr_stmt|;
 name|pos_clear
@@ -362,9 +362,10 @@ condition|)
 comment|/* Screen hasn't been drawn yet. */
 name|jump_loc
 argument_list|(
-literal|0
+name|ch_zero
+argument_list|()
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -595,6 +596,9 @@ block|{
 name|int
 name|nline
 decl_stmt|;
+name|int
+name|sindex
+decl_stmt|;
 name|POSITION
 name|tpos
 decl_stmt|;
@@ -602,9 +606,9 @@ name|POSITION
 name|bpos
 decl_stmt|;
 comment|/* 	 * Normalize sline. 	 */
-name|sline
+name|sindex
 operator|=
-name|adjsline
+name|sindex_from_sline
 argument_list|(
 name|sline
 argument_list|)
@@ -626,7 +630,7 @@ block|{
 comment|/* 		 * The line is currently displayed.   		 * Just scroll there. 		 */
 name|nline
 operator|-=
-name|sline
+name|sindex
 expr_stmt|;
 if|if
 condition|(
@@ -650,7 +654,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|nline
+operator|<
+literal|0
+condition|)
 name|back
 argument_list|(
 operator|-
@@ -735,7 +745,7 @@ literal|0
 init|;
 name|nline
 operator|<
-name|sline
+name|sindex
 condition|;
 name|nline
 operator|++
@@ -757,7 +767,7 @@ name|forw
 argument_list|(
 name|sc_height
 operator|-
-name|sline
+name|sindex
 operator|+
 name|nline
 operator|-
@@ -829,7 +839,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|sline
+name|sindex
 operator|-
 name|nline
 argument_list|)
@@ -837,12 +847,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * The desired line is before the current screen. 		 * Move forward in the file far enough so that we 		 * can call back() and put the desired line at the  		 * sline-th line on the screen. 		 */
+comment|/* 		 * The desired line is before the current screen. 		 * Move forward in the file far enough so that we 		 * can call back() and put the desired line at the  		 * sindex-th line on the screen. 		 */
 for|for
 control|(
 name|nline
 operator|=
-name|sline
+name|sindex
 init|;
 name|nline
 operator|<

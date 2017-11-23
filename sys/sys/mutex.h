@@ -274,6 +274,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|_mtx_trylock_flags_int
+parameter_list|(
+name|struct
+name|mtx
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|opts
+name|LOCK_FILE_LINE_ARG_DEF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|_mtx_trylock_flags_
 parameter_list|(
 specifier|volatile
@@ -347,6 +363,9 @@ name|uintptr_t
 modifier|*
 name|c
 parameter_list|,
+name|uintptr_t
+name|v
+parameter_list|,
 name|int
 name|opts
 parameter_list|,
@@ -389,6 +408,9 @@ specifier|volatile
 name|uintptr_t
 modifier|*
 name|c
+parameter_list|,
+name|uintptr_t
+name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -869,6 +891,8 @@ name|_mtx_unlock_sleep
 parameter_list|(
 name|m
 parameter_list|,
+name|v
+parameter_list|,
 name|o
 parameter_list|,
 name|f
@@ -876,7 +900,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__mtx_unlock_sleep(&(m)->mtx_lock, o, f, l)
+value|__mtx_unlock_sleep(&(m)->mtx_lock, v, o, f, l)
 end_define
 
 begin_else
@@ -910,6 +934,8 @@ name|_mtx_unlock_sleep
 parameter_list|(
 name|m
 parameter_list|,
+name|v
+parameter_list|,
 name|o
 parameter_list|,
 name|f
@@ -917,7 +943,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__mtx_unlock_sleep(&(m)->mtx_lock)
+value|__mtx_unlock_sleep(&(m)->mtx_lock, v)
 end_define
 
 begin_endif
@@ -1188,6 +1214,19 @@ define|\
 value|atomic_store_rel_ptr(&(mp)->mtx_lock, MTX_UNOWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|_mtx_release_lock_fetch
+parameter_list|(
+name|mp
+parameter_list|,
+name|vp
+parameter_list|)
+define|\
+value|atomic_fcmpset_rel_ptr(&(mp)->mtx_lock, (vp), MTX_UNOWNED)
+end_define
+
 begin_comment
 comment|/*  * Full lock operations that are suitable to be inlined in non-debug  * kernels.  If the lock cannot be acquired or released trivially then  * the work is deferred to another function.  */
 end_comment
@@ -1333,7 +1372,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(adaptive__release) ||\ 	    !_mtx_release_lock((mp), _tid)))				\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
+value|do {			\ 	uintptr_t _v = (uintptr_t)(tid);				\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(adaptive__release) ||\ 	    !_mtx_release_lock_fetch((mp),&_v)))			\ 		_mtx_unlock_sleep((mp), _v, (opts), (file), (line));	\ } while (0)
 end_define
 
 begin_comment

@@ -155,20 +155,32 @@ directive|if
 name|HAVE_RE_COMP
 end_if
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|re_comp
-parameter_list|()
-function_decl|;
-end_function_decl
+name|LESSPARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|re_exec
-parameter_list|()
-function_decl|;
-end_function_decl
+name|LESSPARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -198,21 +210,37 @@ directive|if
 name|HAVE_REGCMP
 end_if
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|regcmp
-parameter_list|()
-function_decl|;
-end_function_decl
+name|LESSPARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|regex
-parameter_list|()
-function_decl|;
-end_function_decl
+name|LESSPARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

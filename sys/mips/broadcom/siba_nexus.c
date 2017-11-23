@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bhnd/siba/sibareg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/bhnd/siba/sibavar.h>
 end_include
 
@@ -80,12 +86,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bcm_mipsvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhnd_nexusvar.h"
 end_include
 
 begin_comment
 comment|/*  * Supports siba(4) attachment to a MIPS nexus bus.  *   * Derived from Bruce M. Simpson' original siba(4) driver.  */
 end_comment
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|SIBA_MAX_INTR
+operator|==
+name|BCM_MIPS_NINTR
+argument_list|,
+literal|"SIBA incompatible with "
+literal|"generic NINTR"
+argument_list|)
+assert|;
+end_assert
 
 begin_function
 specifier|static
@@ -177,9 +202,11 @@ name|dev
 argument_list|)
 operator|)
 condition|)
-goto|goto
-name|failed
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* Delegate remainder to standard bhnd method implementation */
 if|if
 condition|(
@@ -202,7 +229,7 @@ operator|)
 return|;
 name|failed
 label|:
-name|device_delete_children
+name|siba_detach
 argument_list|(
 name|dev
 argument_list|)

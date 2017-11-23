@@ -74,6 +74,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bhnd/bcma/bcma_dmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bcm_mipsvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bcm_machdep.h"
 end_include
 
@@ -106,6 +118,19 @@ name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|BCMA_OOB_NUM_BUSLINES
+operator|==
+name|BCM_MIPS_NINTR
+argument_list|,
+literal|"BCMA incompatible "
+literal|"with generic NINTR"
+argument_list|)
+assert|;
+end_assert
 
 begin_function
 specifier|static

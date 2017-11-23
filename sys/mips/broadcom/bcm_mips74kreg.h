@@ -132,6 +132,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BCM_MIPS74K_NUM_INTR
+value|6
+end_define
+
+begin_comment
+comment|/**< routable CPU interrupt count */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BCM_MIPS74K_INTR_SEL
 parameter_list|(
 name|_intr
@@ -139,6 +150,27 @@ parameter_list|)
 define|\
 value|(BCM_MIPS74K_INTR0_SEL + ((_intr) * 4))
 end_define
+
+begin_define
+define|#
+directive|define
+name|BCM_MIPS74K_INTR_SEL_FLAG
+parameter_list|(
+name|_i
+parameter_list|)
+value|(1<<_i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM_MIPS74K_TIMER_IVEC
+value|31
+end_define
+
+begin_comment
+comment|/**< MIPS timer's bus interrupt vector */
+end_comment
 
 begin_define
 define|#
@@ -184,16 +216,18 @@ begin_comment
 comment|/**< gpio enable */
 end_comment
 
+begin_comment
+comment|/** The MIPS timer interrupt IRQ assignment */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|BCM_MIPS74K_TIMER_IVEC
-value|31
+name|BCM_MIPS74K_GET_TIMER_IRQ
+parameter_list|()
+define|\
+value|((mips_rd_intctl()& MIPS_INTCTL_IPTI_MASK)>> MIPS_INTCTL_IPTI_SHIFT)
 end_define
-
-begin_comment
-comment|/**< MIPS timer OOBSEL value */
-end_comment
 
 begin_endif
 endif|#

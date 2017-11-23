@@ -9344,7 +9344,7 @@ name|B_INVAL
 operator|)
 condition|)
 block|{
-comment|/* 		 * Failed write, redirty.  All errors except ENXIO (which 		 * means the device is gone) are expected to be potentially 		 * transient - underlying media might work if tried again 		 * after EIO, and memory might be available after an ENOMEM. 		 * 		 * Do this also for buffers that failed with ENXIO, but have 		 * non-empty dependencies - the soft updates code might need 		 * to access the buffer to untangle them. 		 * 		 * Must clear BIO_ERROR to prevent pages from being scrapped. 		 */
+comment|/* 		 * Failed write, redirty.  All errors except ENXIO (which 		 * means the device is gone) are treated as being 		 * transient. 		 * 		 * XXX Treating EIO as transient is not correct; the 		 * contract with the local storage device drivers is that 		 * they will only return EIO once the I/O is no longer 		 * retriable.  Network I/O also respects this through the 		 * guarantees of TCP and/or the internal retries of NFS. 		 * ENOMEM might be transient, but we also have no way of 		 * knowing when its ok to retry/reschedule.  In general, 		 * this entire case should be made obsolete through better 		 * error handling/recovery and resource scheduling. 		 * 		 * Do this also for buffers that failed with ENXIO, but have 		 * non-empty dependencies - the soft updates code might need 		 * to access the buffer to untangle them. 		 * 		 * Must clear BIO_ERROR to prevent pages from being scrapped. 		 */
 name|bp
 operator|->
 name|b_ioflags

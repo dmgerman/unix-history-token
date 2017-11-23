@@ -4335,6 +4335,12 @@ literal|0x6481
 block|,
 literal|"Chelsio T62100 81"
 block|}
+block|,
+block|{
+literal|0x6484
+block|,
+literal|"Chelsio T62100 84"
+block|}
 block|, }
 struct|;
 end_struct

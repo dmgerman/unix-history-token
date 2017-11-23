@@ -6497,7 +6497,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"argument must be a positive number"
+literal|"argument must not be less than zero"
 argument_list|)
 expr_stmt|;
 block|}

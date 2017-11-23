@@ -72,6 +72,167 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/**  * bhnd(4) per-core PMU clkctl quirks.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+comment|/** On BCM4328-derived chipsets, the CLK_CTL_ST register CCS_HTAVAIL 	 *  and CCS_ALPAVAIL bits are swapped in the ChipCommon and PCMCIA 	 *  cores; the BHND_CCS0_* constants should be used. */
+name|BHND_CLKCTL_QUIRK_CCS0
+init|=
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/**  * Per-core bhnd(4) PMU clkctl registers.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bhnd_core_clkctl
+block|{
+name|device_t
+name|cc_dev
+decl_stmt|;
+comment|/**< core device */
+name|device_t
+name|cc_pmu_dev
+decl_stmt|;
+comment|/**< pmu device */
+name|uint32_t
+name|cc_quirks
+decl_stmt|;
+comment|/**< core-specific clkctl quirks */
+name|struct
+name|bhnd_resource
+modifier|*
+name|cc_res
+decl_stmt|;
+comment|/**< resource mapping core's clkctl register */
+name|bus_size_t
+name|cc_res_offset
+decl_stmt|;
+comment|/**< offset to clkctl register */
+name|u_int
+name|cc_max_latency
+decl_stmt|;
+comment|/**< maximum PMU transition latency, in microseconds */
+name|struct
+name|mtx
+name|cc_mtx
+decl_stmt|;
+comment|/**< register read/modify/write lock */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BHND_ASSERT_CLKCTL_AVAIL
+parameter_list|(
+name|_clkctl
+parameter_list|)
+define|\
+value|KASSERT(!bhnd_is_hw_suspended((_clkctl)->cc_dev),	\ 	    ("reading clkctl on suspended core will trigger system livelock"))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CLKCTL_LOCK_INIT
+parameter_list|(
+name|_clkctl
+parameter_list|)
+value|mtx_init(&(_clkctl)->cc_mtx, \     device_get_nameunit((_clkctl)->cc_dev), NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CLKCTL_LOCK
+parameter_list|(
+name|_clkctl
+parameter_list|)
+value|mtx_lock(&(_clkctl)->cc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CLKCTL_UNLOCK
+parameter_list|(
+name|_clkctl
+parameter_list|)
+value|mtx_unlock(&(_clkctl)->cc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CLKCTL_LOCK_ASSERT
+parameter_list|(
+name|_clkctl
+parameter_list|,
+name|what
+parameter_list|)
+define|\
+value|mtx_assert(&(_clkctl)->cc_mtx, what)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CLKCTL_LOCK_DESTROY
+parameter_list|(
+name|_clkctl
+parameter_list|)
+value|mtx_destroy(&(_clkctl->cc_mtx))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CLKCTL_READ_4
+parameter_list|(
+name|_clkctl
+parameter_list|)
+define|\
+value|bhnd_bus_read_4((_clkctl)->cc_res, (_clkctl)->cc_res_offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CLKCTL_WRITE_4
+parameter_list|(
+name|_clkctl
+parameter_list|,
+name|_val
+parameter_list|)
+define|\
+value|bhnd_bus_write_4((_clkctl)->cc_res, (_clkctl)->cc_res_offset, (_val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_CLKCTL_SET_4
+parameter_list|(
+name|_clkctl
+parameter_list|,
+name|_val
+parameter_list|,
+name|_mask
+parameter_list|)
+define|\
+value|BHND_CLKCTL_WRITE_4((_clkctl),		\ 	    ((_val)& (_mask)) | (BHND_CLKCTL_READ_4(_clkctl)& ~(_mask)))
+end_define
+
 begin_endif
 endif|#
 directive|endif

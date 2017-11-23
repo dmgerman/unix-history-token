@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landon@landonf.org>  * All rights reserved.  *  * Portions of this software were developed by Landon Fuller  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *   * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landon@landonf.org>  * Copyright (c) 2017 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by Landon Fuller  * under sponsorship from the FreeBSD Foundation.  *  * Portions of this software were developed by Landon Fuller  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *   * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -70,6 +70,12 @@ end_comment
 begin_struct_decl
 struct_decl|struct
 name|bhndb_dw_alloc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|bhndb_intr_handler
 struct_decl|;
 end_struct_decl
 
@@ -154,6 +160,9 @@ name|bhndb_resources
 modifier|*
 name|br
 parameter_list|,
+name|int
+name|type
+parameter_list|,
 name|struct
 name|resource
 modifier|*
@@ -166,6 +175,92 @@ parameter_list|,
 name|rman_res_t
 modifier|*
 name|end
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|bhndb_intr_handler
+modifier|*
+name|bhndb_alloc_intr_handler
+parameter_list|(
+name|device_t
+name|owner
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|,
+name|struct
+name|bhndb_intr_isrc
+modifier|*
+name|isrc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bhndb_free_intr_handler
+parameter_list|(
+name|struct
+name|bhndb_intr_handler
+modifier|*
+name|ih
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bhndb_register_intr_handler
+parameter_list|(
+name|struct
+name|bhndb_resources
+modifier|*
+name|br
+parameter_list|,
+name|struct
+name|bhndb_intr_handler
+modifier|*
+name|ih
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bhndb_deregister_intr_handler
+parameter_list|(
+name|struct
+name|bhndb_resources
+modifier|*
+name|br
+parameter_list|,
+name|struct
+name|bhndb_intr_handler
+modifier|*
+name|ih
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|bhndb_intr_handler
+modifier|*
+name|bhndb_find_intr_handler
+parameter_list|(
+name|struct
+name|bhndb_resources
+modifier|*
+name|br
+parameter_list|,
+name|void
+modifier|*
+name|cookiep
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -423,6 +518,49 @@ struct|;
 end_struct
 
 begin_comment
+comment|/**  * Attached interrupt handler state  */
+end_comment
+
+begin_struct
+struct|struct
+name|bhndb_intr_handler
+block|{
+name|device_t
+name|ih_owner
+decl_stmt|;
+comment|/**< child device */
+name|struct
+name|resource
+modifier|*
+name|ih_res
+decl_stmt|;
+comment|/**< child resource */
+name|void
+modifier|*
+name|ih_cookiep
+decl_stmt|;
+comment|/**< hostb-assigned cookiep, or NULL if bus_setup_intr() incomplete. */
+name|struct
+name|bhndb_intr_isrc
+modifier|*
+name|ih_isrc
+decl_stmt|;
+comment|/**< host interrupt source routing the child's interrupt  */
+name|bool
+name|ih_active
+decl_stmt|;
+comment|/**< handler has been registered via bhndb_register_intr_handler */
+name|STAILQ_ENTRY
+argument_list|(
+argument|bhndb_intr_handler
+argument_list|)
+name|ih_link
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/**  * BHNDB resource allocation state.  */
 end_comment
 
@@ -457,6 +595,11 @@ name|rman
 name|br_mem_rman
 decl_stmt|;
 comment|/**< bridged memory manager */
+name|struct
+name|rman
+name|br_irq_rman
+decl_stmt|;
+comment|/**< bridged irq manager */
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -484,6 +627,14 @@ name|bhndb_priority_t
 name|min_prio
 decl_stmt|;
 comment|/**< minimum resource priority required to 							     allocate a dynamic window */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|bhndb_intr_handler
+argument_list|)
+name|bus_intrs
+expr_stmt|;
+comment|/**< attached child interrupt handlers */
 block|}
 struct|;
 end_struct

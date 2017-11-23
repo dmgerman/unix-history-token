@@ -217,26 +217,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * BHND PMU device quirks / features  */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-comment|/** No quirks */
-name|BPMU_QUIRK_NONE
-init|=
-literal|0
-block|,
-comment|/** On BCM4328-derived chipsets, the CLK_CTL_ST register CCS_HTAVAIL 	 *  and CCS_ALPAVAIL bits are swapped; the BHND_CCS0_* constants should 	 *  be used. */
-name|BPMU_QUIRK_CLKCTL_CCS0
-init|=
-literal|1
-block|}
-enum|;
-end_enum
-
-begin_comment
 comment|/**  * PMU read-only query support.  *   * Provides support for querying PMU information prior to availability of  * the bhnd(4) bus.  */
 end_comment
 
@@ -346,10 +326,6 @@ name|device_t
 name|dev
 decl_stmt|;
 name|uint32_t
-name|quirks
-decl_stmt|;
-comment|/**< device quirk flags */
-name|uint32_t
 name|caps
 decl_stmt|;
 comment|/**< pmu capability flags. */
@@ -383,6 +359,12 @@ name|rid
 decl_stmt|;
 comment|/**< pmu register RID */
 name|struct
+name|bhnd_core_clkctl
+modifier|*
+name|clkctl
+decl_stmt|;
+comment|/**< pmu clkctl register */
+name|struct
 name|mtx
 name|mtx
 decl_stmt|;
@@ -410,7 +392,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|mtx_init(&(sc)->mtx, device_get_nameunit((sc)->dev), \ 	    "BHND chipc driver lock", MTX_DEF)
+value|mtx_init(&(sc)->mtx, device_get_nameunit((sc)->dev), NULL, MTX_DEF)
 end_define
 
 begin_define

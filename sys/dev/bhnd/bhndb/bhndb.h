@@ -220,7 +220,7 @@ value|{ BHNDB_REGWIN_T_INVALID, 0, 0, { 0, 0 } }
 end_define
 
 begin_comment
-comment|/**  * Bridge hardware configuration.  *   * Provides the bridge's register/address mappings, and the resources  * via which those mappings may be accessed.  */
+comment|/**  * Bridge hardware configuration.  *   * Provides the bridge's DMA address translation descriptions, register/address  * mappings, and the resources via which those mappings may be accessed.  */
 end_comment
 
 begin_struct
@@ -233,12 +233,21 @@ name|resource_spec
 modifier|*
 name|resource_specs
 decl_stmt|;
+comment|/**< resources required by our register windows */
 specifier|const
 name|struct
 name|bhndb_regwin
 modifier|*
 name|register_windows
 decl_stmt|;
+comment|/**< register window table */
+specifier|const
+name|struct
+name|bhnd_dma_translation
+modifier|*
+name|dma_translations
+decl_stmt|;
+comment|/**< DMA address translation table, or NULL if DMA is not supported */
 block|}
 struct|;
 end_struct

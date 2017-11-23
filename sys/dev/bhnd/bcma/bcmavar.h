@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015 Landon Fuller<landon@landonf.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *   * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landon@landonf.org>  * Copyright (c) 2017 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by Landon Fuller  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *   * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -139,6 +139,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|bcma_intr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|bcma_map
 struct_decl|;
 end_struct_decl
@@ -186,7 +192,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|u_int
 name|bcma_get_intr_count
 parameter_list|(
 name|device_t
@@ -200,7 +206,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bcma_get_core_ivec
+name|bcma_get_intr_ivec
 parameter_list|(
 name|device_t
 name|dev
@@ -264,6 +270,9 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
+name|device_t
+name|child
+parameter_list|,
 name|struct
 name|bcma_devinfo
 modifier|*
@@ -278,29 +287,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|bcma_dinfo_alloc_agent
+name|void
+name|bcma_free_dinfo
 parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
 name|device_t
 name|child
-parameter_list|,
-name|struct
-name|bcma_devinfo
-modifier|*
-name|dinfo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|bcma_free_dinfo
-parameter_list|(
-name|device_t
-name|bus
 parameter_list|,
 name|struct
 name|bcma_devinfo
@@ -342,6 +336,36 @@ name|struct
 name|bcma_corecfg
 modifier|*
 name|corecfg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|bcma_intr
+modifier|*
+name|bcma_alloc_intr
+parameter_list|(
+name|uint8_t
+name|bank
+parameter_list|,
+name|uint8_t
+name|sel
+parameter_list|,
+name|uint8_t
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bcma_free_intr
+parameter_list|(
+name|struct
+name|bcma_intr
+modifier|*
+name|intr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -467,6 +491,48 @@ struct|;
 end_struct
 
 begin_comment
+comment|/** BCMA interrupt descriptor */
+end_comment
+
+begin_struct
+struct|struct
+name|bcma_intr
+block|{
+name|uint8_t
+name|i_bank
+decl_stmt|;
+comment|/**< OOB bank (see BCMA_OOB_BANK[A-D]) */
+name|uint8_t
+name|i_sel
+decl_stmt|;
+comment|/**< OOB selector (0-7) */
+name|uint8_t
+name|i_busline
+decl_stmt|;
+comment|/**< OOB bus line assigned to this selector */
+name|bool
+name|i_mapped
+decl_stmt|;
+comment|/**< if an irq has been mapped for this selector */
+name|int
+name|i_rid
+decl_stmt|;
+comment|/**< bus resource id, or -1 */
+name|rman_res_t
+name|i_irq
+decl_stmt|;
+comment|/**< the mapped bus irq, if any */
+name|STAILQ_ENTRY
+argument_list|(
+argument|bcma_intr
+argument_list|)
+name|i_link
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/** BCMA slave port descriptor */
 end_comment
 
@@ -509,6 +575,16 @@ argument_list|(
 name|bcma_mport_list
 argument_list|,
 name|bcma_mport
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|STAILQ_HEAD
+argument_list|(
+name|bcma_intr_list
+argument_list|,
+name|bcma_intr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -600,13 +676,21 @@ name|bhnd_resource
 modifier|*
 name|res_agent
 decl_stmt|;
-comment|/**< Agent (wrapper) resource, or NULL. Not 							  *  all bcma(4) cores have or require an agent. */
+comment|/**< Agent (wrapper) resource, or NULL. Not 						  *  all bcma(4) cores have or require an agent. */
 name|int
 name|rid_agent
 decl_stmt|;
 comment|/**< Agent resource ID, or -1 */
+name|u_int
+name|num_intrs
+decl_stmt|;
+comment|/**< number of interrupt descriptors. */
 name|struct
-name|bhnd_core_pmu_info
+name|bcma_intr_list
+name|intrs
+decl_stmt|;
+comment|/**< interrupt descriptors */
+name|void
 modifier|*
 name|pmu_info
 decl_stmt|;

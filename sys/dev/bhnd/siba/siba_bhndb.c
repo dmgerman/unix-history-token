@@ -81,45 +81,11 @@ begin_comment
 comment|/*  * Supports attachment of siba(4) bus devices via a bhndb bridge.  */
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// TODO: PCI rev< 6 interrupt handling
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// On early PCI cores (rev< 6) interrupt masking is handled via interconnect
-end_comment
-
-begin_comment
-comment|// configuration registers (SBINTVEC), rather than the PCI_INT_MASK
-end_comment
-
-begin_comment
-comment|// config register.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// On those devices, we should handle interrupts locally using SBINTVEC, rather
-end_comment
-
-begin_comment
-comment|// than delegating to our parent bhndb device.
-end_comment
-
-begin_comment
-comment|//
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|siba_bhndb_softc
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 specifier|static
@@ -127,7 +93,7 @@ name|int
 name|siba_bhndb_wars_hwup
 parameter_list|(
 name|struct
-name|siba_softc
+name|siba_bhndb_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -135,7 +101,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Bridge-specific core device quirks */
+comment|/* siba_bhndb per-instance state */
+end_comment
+
+begin_struct
+struct|struct
+name|siba_bhndb_softc
+block|{
+name|struct
+name|siba_softc
+name|siba
+decl_stmt|;
+comment|/**< common siba per-instance state */
+name|uint32_t
+name|quirks
+decl_stmt|;
+comment|/**< bus-level quirks */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* siba_bhndb quirks */
 end_comment
 
 begin_enum
@@ -153,11 +140,32 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* Bus-level quirks when bridged via a PCI host bridge core */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
 name|bhnd_device_quirk
-name|bridge_quirks
+name|pci_bridge_quirks
+index|[]
+init|=
+block|{
+name|BHND_DEVICE_QUIRK_END
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Bus-level quirks when bridged via a PCIe host bridge core */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|bhnd_device_quirk
+name|pcie_bridge_quirks
 index|[]
 init|=
 block|{
@@ -190,6 +198,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Bus-level quirks specific to a particular host bridge core */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -206,7 +218,18 @@ name|PCI
 argument_list|,
 name|NULL
 argument_list|,
-name|bridge_quirks
+name|pci_bridge_quirks
+argument_list|)
+block|,
+name|BHND_DEVICE
+argument_list|(
+name|BCM
+argument_list|,
+name|PCIE
+argument_list|,
+name|NULL
+argument_list|,
+name|pcie_bridge_quirks
 argument_list|)
 block|,
 name|BHND_DEVICE_END
@@ -303,9 +326,12 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|siba_softc
+name|siba_bhndb_softc
 modifier|*
 name|sc
+decl_stmt|;
+name|device_t
+name|hostb
 decl_stmt|;
 name|int
 name|error
@@ -316,6 +342,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|quirks
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Perform initial attach and enumerate our children. */
 if|if
@@ -329,9 +361,46 @@ name|dev
 argument_list|)
 operator|)
 condition|)
-goto|goto
-name|failed
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* Fetch bus-level quirks required by the host bridge core */
+if|if
+condition|(
+operator|(
+name|hostb
+operator|=
+name|bhnd_bus_find_hostb_device
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|sc
+operator|->
+name|quirks
+operator||=
+name|bhnd_device_quirks
+argument_list|(
+name|hostb
+argument_list|,
+name|bridge_devs
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bridge_devs
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Apply attach/resume workarounds before any child drivers attach */
 if|if
 condition|(
@@ -369,7 +438,7 @@ operator|)
 return|;
 name|failed
 label|:
-name|device_delete_children
+name|siba_detach
 argument_list|(
 name|dev
 argument_list|)
@@ -392,7 +461,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|siba_softc
+name|siba_bhndb_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -476,7 +545,7 @@ if|if
 condition|(
 name|dinfo
 operator|->
-name|cfg
+name|cfg_res
 index|[
 name|i
 index|]
@@ -497,7 +566,7 @@ name|SYS_RES_MEMORY
 argument_list|,
 name|dinfo
 operator|->
-name|cfg
+name|cfg_res
 index|[
 name|i
 index|]
@@ -673,7 +742,7 @@ if|if
 condition|(
 name|dinfo
 operator|->
-name|cfg
+name|cfg_res
 index|[
 name|i
 index|]
@@ -696,7 +765,7 @@ name|SYS_RES_MEMORY
 argument_list|,
 name|dinfo
 operator|->
-name|cfg
+name|cfg_res
 index|[
 name|i
 index|]
@@ -769,7 +838,7 @@ name|int
 name|siba_bhndb_wars_pcie_clear_d11_timeout
 parameter_list|(
 name|struct
-name|siba_softc
+name|siba_bhndb_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -780,56 +849,20 @@ modifier|*
 name|dinfo
 decl_stmt|;
 name|device_t
-name|hostb_dev
-decl_stmt|;
-name|device_t
 name|d11
 decl_stmt|;
 name|uint32_t
 name|imcfg
 decl_stmt|;
-comment|/* Only applies when bridged by PCIe */
-if|if
-condition|(
-operator|(
-name|hostb_dev
-operator|=
-name|bhnd_bus_find_hostb_device
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-if|if
-condition|(
-name|bhnd_get_class
-argument_list|(
-name|hostb_dev
-argument_list|)
-operator|!=
-name|BHND_DEVCLASS_PCIE
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Only applies if there's a D11 core */
+comment|/* Only applicable if there's a D11 core */
 name|d11
 operator|=
 name|bhnd_bus_match_child
 argument_list|(
 name|sc
 operator|->
+name|siba
+operator|.
 name|dev
 argument_list|,
 operator|&
@@ -875,7 +908,7 @@ name|KASSERT
 argument_list|(
 name|dinfo
 operator|->
-name|cfg
+name|cfg_res
 index|[
 literal|0
 index|]
@@ -893,7 +926,7 @@ name|bhnd_bus_read_4
 argument_list|(
 name|dinfo
 operator|->
-name|cfg
+name|cfg_res
 index|[
 literal|0
 index|]
@@ -910,7 +943,7 @@ name|bhnd_bus_write_4
 argument_list|(
 name|dinfo
 operator|->
-name|cfg
+name|cfg_res
 index|[
 literal|0
 index|]
@@ -938,59 +971,18 @@ name|int
 name|siba_bhndb_wars_hwup
 parameter_list|(
 name|struct
-name|siba_softc
+name|siba_bhndb_softc
 modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_t
-name|hostb_dev
-decl_stmt|;
-name|uint32_t
-name|quirks
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|hostb_dev
-operator|=
-name|bhnd_bus_find_hostb_device
-argument_list|(
 name|sc
 operator|->
-name|dev
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-name|quirks
-operator|=
-name|bhnd_device_quirks
-argument_list|(
-name|hostb_dev
-argument_list|,
-name|bridge_devs
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bridge_devs
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|quirks
 operator|&
 name|SIBA_QUIRK_PCIE_D11_SB_TIMEOUT

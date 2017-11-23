@@ -2185,7 +2185,7 @@ name|SIP_MEDIA_FIXED
 block|,
 literal|"*"
 block|,
-literal|"ST8000AS0002*"
+literal|"ST8000AS000[23]*"
 block|,
 literal|"*"
 block|}

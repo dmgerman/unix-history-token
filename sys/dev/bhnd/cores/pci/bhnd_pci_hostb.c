@@ -438,7 +438,7 @@ block|,
 comment|/* Apple BCM4322 boards that require 700mV SerDes TX drive strength. */
 block|{
 block|{
-name|BHND_CHIP_ID
+name|BHND_MATCH_CHIP_ID
 argument_list|(
 name|BCM4322
 argument_list|)
@@ -464,7 +464,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|{{ BHND_CHIP_ID(BCM4331),		\ 	    BHND_MATCH_BOARD(PCI_VENDOR_APPLE, _board) }, __VA_ARGS__ }
+value|{{ BHND_MATCH_CHIP_ID(BCM4331),		\ 	    BHND_MATCH_BOARD(PCI_VENDOR_APPLE, _board) }, __VA_ARGS__ }
 name|BHND_A4331_QUIRK
 argument_list|(
 name|BCM94331X19

@@ -87,12 +87,6 @@ directive|include
 file|"nvram/bhnd_nvram.h"
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|bhnd_core_pmu_info
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 specifier|extern
 name|devclass_t
@@ -438,8 +432,7 @@ name|pmu_info
 argument_list|,
 name|PMU_INFO
 argument_list|,
-expr|struct
-name|bhnd_core_pmu_info
+name|void
 operator|*
 argument_list|)
 expr_stmt|;
@@ -560,6 +553,125 @@ struct|;
 end_struct
 
 begin_comment
+comment|/**  * bhnd(4) DMA address widths.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|BHND_DMA_ADDR_30BIT
+init|=
+literal|30
+block|,
+comment|/**< 30-bit DMA */
+name|BHND_DMA_ADDR_32BIT
+init|=
+literal|32
+block|,
+comment|/**< 32-bit DMA */
+name|BHND_DMA_ADDR_64BIT
+init|=
+literal|64
+block|,
+comment|/**< 64-bit DMA */
+block|}
+name|bhnd_dma_addrwidth
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**  * Convert an address width (in bits) to its corresponding mask.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_DMA_ADDR_BITMASK
+parameter_list|(
+name|_width
+parameter_list|)
+define|\
+value|((_width>= 64) ? ~0ULL :	\ 	 (_width == 0) ? 0x0 :		\ 	 ((1ULL<< (_width)) - 1))
+end_define
+
+begin_comment
+unit|\
+comment|/**  * bhnd(4) DMA address translation descriptor.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bhnd_dma_translation
+block|{
+comment|/** 	 * Host-to-device physical address translation. 	 *  	 * This may be added to the host physical address to produce a device 	 * DMA address. 	 */
+name|bhnd_addr_t
+name|base_addr
+decl_stmt|;
+comment|/** 	 * Device-addressable address mask. 	 *  	 * This defines the device's DMA address range, excluding any bits 	 * reserved for mapping the address to the base_addr. 	 */
+name|bhnd_addr_t
+name|addr_mask
+decl_stmt|;
+comment|/** 	 * Device-addressable extended address mask. 	 * 	 * If a per-core bhnd(4) DMA engine supports the 'addrext' control 	 * field, it can be used to provide address bits excluded by addr_mask. 	 * 	 * Support for DMA extended address changes â including coordination 	 * with the core providing DMA translation â is handled transparently by 	 * the DMA engine. For example, on PCI(e) Wi-Fi chipsets, the Wi-Fi 	 * core DMA engine will (in effect) update the PCI core's DMA 	 * sbtopcitranslation base address to map the full address prior to 	 * performing a DMA transaction. 	 */
+name|bhnd_addr_t
+name|addrext_mask
+decl_stmt|;
+comment|/** 	 * Translation flags (see bhnd_dma_translation_flags) 	 */
+name|uint32_t
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BHND_DMA_TRANSLATION_TABLE_END
+value|{ 0, 0, 0, 0 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_DMA_IS_TRANSLATION_TABLE_END
+parameter_list|(
+name|_dt
+parameter_list|)
+define|\
+value|((_dt)->base_addr == 0&& (_dt)->addr_mask == 0&&	\ 	 (_dt)->addrext_mask == 0&& (_dt)->flags == 0)
+end_define
+
+begin_comment
+comment|/**  * bhnd(4) DMA address translation flags.  */
+end_comment
+
+begin_enum
+enum|enum
+name|bhnd_dma_translation_flags
+block|{
+comment|/** 	 * The translation remaps the device's physical address space. 	 *  	 * This is used in conjunction with BHND_DMA_TRANSLATION_BYTESWAPPED to 	 * define a DMA translation that provides byteswapped access to 	 * physical memory on big-endian MIPS SoCs. 	 */
+name|BHND_DMA_TRANSLATION_PHYSMAP
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+comment|/** 	 * Provides a byte-swapped mapping; write requests will be byte-swapped 	 * before being written to memory, and read requests will be 	 * byte-swapped before being returned. 	 * 	 * This is primarily used to perform efficient byte swapping of DMA 	 * data on embedded MIPS SoCs executing in big-endian mode. 	 */
+name|BHND_DMA_TRANSLATION_BYTESWAPPED
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,	 }
+enum|;
+end_enum
+
+begin_comment
 comment|/** * A bhnd(4) bus resource. *  * This provides an abstract interface to per-core resources that may require * bus-level remapping of address windows prior to access. */
 end_comment
 
@@ -641,7 +753,7 @@ parameter_list|,
 name|_flags
 parameter_list|)
 define|\
-value|{{ BHND_CHIP_IR(BCM ## _chip, _rev) }, (_flags) }
+value|{{ BHND_MATCH_CHIP_IR(BCM ## _chip, _rev) }, (_flags) }
 end_define
 
 begin_define
@@ -656,7 +768,7 @@ parameter_list|,
 name|_flags
 parameter_list|)
 define|\
-value|{{ BHND_CHIP_IP(BCM ## _chip, BCM ## _chip ## _pkg) }, (_flags) }
+value|{{ BHND_MATCH_CHIP_IP(BCM ## _chip, BCM ## _chip ## _pkg) }, (_flags) }
 end_define
 
 begin_define
@@ -1994,6 +2106,34 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|bhnd_bus_generic_get_dma_translation
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|u_int
+name|width
+parameter_list|,
+name|uint32_t
+name|flags
+parameter_list|,
+name|bus_dma_tag_t
+modifier|*
+name|dmat
+parameter_list|,
+name|struct
+name|bhnd_dma_translation
+modifier|*
+name|translation
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|bhnd_bus_generic_read_board_info
 parameter_list|(
 name|device_t
@@ -2117,14 +2257,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bhnd_attach_type
-name|bhnd_bus_generic_get_attach_type
+name|uintptr_t
+name|bhnd_bus_generic_get_intr_domain
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
 name|device_t
 name|child
+parameter_list|,
+name|bool
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2605,111 +2748,6 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * If supported by the chipset, return the clock source for the given clock.  *  * This function is only supported on early PWRCTL-equipped chipsets  * that expose clock management via their host bridge interface. Currently,  * this includes PCI (not PCIe) devices, with ChipCommon core revisions 0-9.  *  * @param dev A bhnd bus child device.  * @param clock The clock for which a clock source will be returned.  *  * @retval	bhnd_clksrc		The clock source for @p clock.  * @retval	BHND_CLKSRC_UNKNOWN	If @p clock is unsupported, or its  *					clock source is not known to the bus.  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|bhnd_clksrc
-name|bhnd_pwrctl_get_clksrc
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|bhnd_clock
-name|clock
-parameter_list|)
-block|{
-return|return
-operator|(
-name|BHND_BUS_PWRCTL_GET_CLKSRC
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|clock
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/**  * If supported by the chipset, gate @p clock  *  * This function is only supported on early PWRCTL-equipped chipsets  * that expose clock management via their host bridge interface. Currently,  * this includes PCI (not PCIe) devices, with ChipCommon core revisions 0-9.  *  * @param dev A bhnd bus child device.  * @param clock The clock to be disabled.  *  * @retval 0 success  * @retval ENODEV If bus-level clock source management is not supported.  * @retval ENXIO If bus-level management of @p clock is not supported.  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|bhnd_pwrctl_gate_clock
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|bhnd_clock
-name|clock
-parameter_list|)
-block|{
-return|return
-operator|(
-name|BHND_BUS_PWRCTL_GATE_CLOCK
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|clock
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/**  * If supported by the chipset, ungate @p clock  *  * This function is only supported on early PWRCTL-equipped chipsets  * that expose clock management via their host bridge interface. Currently,  * this includes PCI (not PCIe) devices, with ChipCommon core revisions 0-9.  *  * @param dev A bhnd bus child device.  * @param clock The clock to be enabled.  *  * @retval 0 success  * @retval ENODEV If bus-level clock source management is not supported.  * @retval ENXIO If bus-level management of @p clock is not supported.  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|bhnd_pwrctl_ungate_clock
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|bhnd_clock
-name|clock
-parameter_list|)
-block|{
-return|return
-operator|(
-name|BHND_BUS_PWRCTL_UNGATE_CLOCK
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|clock
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/**  * Return the BHND attachment type of the parent bhnd bus.  *  * @param dev A bhnd bus child device.  *  * @retval BHND_ATTACH_ADAPTER if the bus is resident on a bridged adapter,  * such as a WiFi chipset.  * @retval BHND_ATTACH_NATIVE if the bus provides hardware services (clock,  * CPU, etc) to a directly attached native host.  */
 end_comment
 
@@ -2733,6 +2771,59 @@ name|dev
 argument_list|)
 argument_list|,
 name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Find the best available DMA address translation capable of mapping a  * physical host address to a BHND DMA device address of @p width with  * @p flags.  *  * @param dev A bhnd bus child device.  * @param width The address width within which the translation window must  * reside (see BHND_DMA_ADDR_*).  * @param flags Required translation flags (see BHND_DMA_TRANSLATION_*).  * @param[out] dmat On success, will be populated with a DMA tag specifying the  * @p translation DMA address restrictions. This argment may be NULL if the DMA  * tag is not desired.  * the set of valid host DMA addresses reachable via @p translation.  * @param[out] translation On success, will be populated with a DMA address  * translation descriptor for @p child. This argment may be NULL if the  * descriptor is not desired.  *  * @retval 0 success  * @retval ENODEV If DMA is not supported.  * @retval ENOENT If no DMA translation matching @p width and @p flags is  * available.  * @retval non-zero If determining the DMA address translation for @p child  * otherwise fails, a regular unix error code will be returned.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_get_dma_translation
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|width
+parameter_list|,
+name|uint32_t
+name|flags
+parameter_list|,
+name|bus_dma_tag_t
+modifier|*
+name|dmat
+parameter_list|,
+name|struct
+name|bhnd_dma_translation
+modifier|*
+name|translation
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_GET_DMA_TRANSLATION
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|width
+argument_list|,
+name|flags
+argument_list|,
+name|dmat
+argument_list|,
+name|translation
 argument_list|)
 operator|)
 return|;
@@ -2777,13 +2868,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Return the number of interrupts to be assigned to @p child via  * BHND_BUS_ASSIGN_INTR().  *   * @param dev A bhnd bus child device.  */
+comment|/**  * Return the number of interrupt lines assigned to @p dev.  *   * @param dev A bhnd bus child device.  */
 end_comment
 
 begin_function
 specifier|static
 specifier|inline
-name|int
+name|u_int
 name|bhnd_get_intr_count
 parameter_list|(
 name|device_t
@@ -2807,14 +2898,14 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Return the backplane interrupt vector corresponding to @p dev's given  * @p intr number.  *   * @param dev A bhnd bus child device.  * @param intr The interrupt number being queried. This is equivalent to the  * bus resource ID for the interrupt.  * @param[out] ivec On success, the assigned hardware interrupt vector be  * written to this pointer.  *  * On bcma(4) devices, this returns the OOB bus line assigned to the  * interrupt.  *  * On siba(4) devices, this returns the target OCP slave flag number assigned  * to the interrupt.  *  * @retval 0		success  * @retval ENXIO	If @p intr exceeds the number of interrupts available  *			to @p child.  */
+comment|/**  * Get the backplane interrupt vector of the @p intr line attached to @p dev.  *   * @param dev A bhnd bus child device.  * @param intr The index of the interrupt line being queried.  * @param[out] ivec On success, the assigned hardware interrupt vector will be  * written to this pointer.  *  * On bcma(4) devices, this returns the OOB bus line assigned to the  * interrupt.  *  * On siba(4) devices, this returns the target OCP slave flag number assigned  * to the interrupt.  *  * @retval 0		success  * @retval ENXIO	If @p intr exceeds the number of interrupt lines  *			assigned to @p child.  */
 end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|int
-name|bhnd_get_core_ivec
+name|bhnd_get_intr_ivec
 parameter_list|(
 name|device_t
 name|dev
@@ -2822,14 +2913,14 @@ parameter_list|,
 name|u_int
 name|intr
 parameter_list|,
-name|uint32_t
+name|u_int
 modifier|*
 name|ivec
 parameter_list|)
 block|{
 return|return
 operator|(
-name|BHND_BUS_GET_CORE_IVEC
+name|BHND_BUS_GET_INTR_IVEC
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -2848,7 +2939,83 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Allocate and enable per-core PMU request handling for @p child.  *  * The region containing the core's PMU register block (if any) must be  * allocated via bus_alloc_resource(9) (or bhnd_alloc_resource) before  * calling bhnd_alloc_pmu(), and must not be released until after  * calling bhnd_release_pmu().  *  * @param dev The parent of @p child.  * @param child The requesting bhnd device.  *   * @retval 0           success  * @retval non-zero    If allocating PMU request state otherwise fails, a  *                     regular unix error code will be returned.  */
+comment|/**  * Map the given @p intr to an IRQ number; until unmapped, this IRQ may be used  * to allocate a resource of type SYS_RES_IRQ.  *   * On success, the caller assumes ownership of the interrupt mapping, and  * is responsible for releasing the mapping via bhnd_unmap_intr().  *   * @param dev The requesting device.  * @param intr The interrupt being mapped.  * @param[out] irq On success, the bus interrupt value mapped for @p intr.  *  * @retval 0		If an interrupt was assigned.  * @retval non-zero	If mapping an interrupt otherwise fails, a regular  *			unix error code will be returned.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_map_intr
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|intr
+parameter_list|,
+name|rman_res_t
+modifier|*
+name|irq
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_MAP_INTR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|intr
+argument_list|,
+name|irq
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Unmap an bus interrupt previously mapped via bhnd_map_intr().  *   * @param dev The requesting device.  * @param intr The interrupt number being unmapped. This is equivalent to the  * bus resource ID for the interrupt.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|bhnd_unmap_intr
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|rman_res_t
+name|irq
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_UNMAP_INTR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|irq
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Allocate and enable per-core PMU request handling for @p child.  *  * The region containing the core's PMU register block (if any) must be  * allocated via bus_alloc_resource(9) (or bhnd_alloc_resource) before  * calling bhnd_alloc_pmu(), and must not be released until after  * calling bhnd_release_pmu().  *  * @param dev The requesting bhnd device.  *   * @retval 0           success  * @retval non-zero    If allocating PMU request state otherwise fails, a  *                     regular unix error code will be returned.  */
 end_comment
 
 begin_function
@@ -2878,7 +3045,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Release any per-core PMU resources allocated for @p child. Any outstanding  * PMU requests are are discarded.  *  * @param dev The parent of @p child.  * @param child The requesting bhnd device.  *   * @retval 0           success  * @retval non-zero    If releasing PMU request state otherwise fails, a  *                     regular unix error code will be returned, and  *                     the core state will be left unmodified.  */
+comment|/**  * Release any per-core PMU resources allocated for @p child. Any outstanding  * PMU requests are are discarded.  *  * @param dev The requesting bhnd device.  *   * @retval 0           success  * @retval non-zero    If releasing PMU request state otherwise fails, a  *                     regular unix error code will be returned, and  *                     the core state will be left unmodified.  */
 end_comment
 
 begin_function
@@ -2901,6 +3068,88 @@ name|dev
 argument_list|)
 argument_list|,
 name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Return the transition latency required for @p clock in microseconds, if  * known.  *  * The BHND_CLOCK_HT latency value is suitable for use as the D11 core's  * 'fastpwrup_dly' value.   *  * @note A driver must ask the bhnd bus to allocate PMU request state  * via BHND_BUS_ALLOC_PMU() before querying PMU clocks.  *  * @param dev The requesting bhnd device.  * @param clock	The clock to be queried for transition latency.  * @param[out] latency On success, the transition latency of @p clock in  * microseconds.  *   * @retval 0		success  * @retval ENODEV	If the transition latency for @p clock is not available.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_get_clock_latency
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|bhnd_clock
+name|clock
+parameter_list|,
+name|u_int
+modifier|*
+name|latency
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_GET_CLOCK_LATENCY
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|clock
+argument_list|,
+name|latency
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Return the frequency for @p clock in Hz, if known.  *  * @param dev The requesting bhnd device.  * @param clock The clock to be queried.  * @param[out] freq On success, the frequency of @p clock in Hz.  *  * @note A driver must ask the bhnd bus to allocate PMU request state  * via BHND_BUS_ALLOC_PMU() before querying PMU clocks.  *   * @retval 0		success  * @retval ENODEV	If the frequency for @p clock is not available.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_get_clock_freq
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|bhnd_clock
+name|clock
+parameter_list|,
+name|u_int
+modifier|*
+name|freq
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_GET_CLOCK_FREQ
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|clock
+argument_list|,
+name|freq
 argument_list|)
 operator|)
 return|;

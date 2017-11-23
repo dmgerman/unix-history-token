@@ -3724,7 +3724,7 @@ name|SIP_MEDIA_FIXED
 block|,
 literal|"ATA"
 block|,
-literal|"ST8000AS0002*"
+literal|"ST8000AS000[23]*"
 block|,
 literal|"*"
 block|}
@@ -11358,6 +11358,39 @@ block|}
 case|case
 name|BIO_FLUSH
 case|:
+comment|/* 			 * If we don't support sync cache, or the disk 			 * isn't dirty, FLUSH is a no-op.  Use the 			 * allocated * CCB for the next bio if one is 			 * available. 			 */
+if|if
+condition|(
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_NO_SYNC_CACHE
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|DA_FLAG_DIRTY
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|biodone
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|skipstate
+goto|;
+block|}
 comment|/* 			 * BIO_FLUSH doesn't currently communicate 			 * range data, so we synchronize the cache 			 * over the whole disk.  We also force 			 * ordered tag semantics the flush applies 			 * to all previously queued I/O. 			 */
 name|scsi_synchronize_cache
 argument_list|(
@@ -11386,6 +11419,14 @@ name|da_default_timeout
 operator|*
 literal|1000
 argument_list|)
+expr_stmt|;
+comment|/* 			 * Clear the dirty flag before sending the command. 			 * Either this sync cache will be successful, or it 			 * will fail after a retry.  If it fails, it is 			 * unlikely to be successful if retried later, so 			 * we'll save ourselves time by just marking the 			 * device clean. 			 */
+name|softc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|DA_FLAG_DIRTY
 expr_stmt|;
 break|break;
 case|case
