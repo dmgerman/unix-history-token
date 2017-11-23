@@ -3211,7 +3211,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|val
 parameter_list|,
 name|int
@@ -3987,7 +3987,7 @@ operator|.
 name|t_avm
 operator|*
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|sum
 operator|.
@@ -4010,7 +4010,7 @@ operator|.
 name|t_free
 operator|*
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|sum
 operator|.
