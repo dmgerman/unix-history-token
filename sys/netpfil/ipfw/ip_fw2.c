@@ -4895,7 +4895,8 @@ name|dyn_name
 init|=
 literal|0
 decl_stmt|;
-name|ipfw_dyn_rule
+name|struct
+name|ip_fw
 modifier|*
 name|q
 init|=
@@ -10008,7 +10009,7 @@ name|O_KEEP_STATE
 case|:
 if|if
 condition|(
-name|ipfw_install_state
+name|ipfw_dyn_install_state
 argument_list|(
 name|chain
 argument_list|,
@@ -10077,26 +10078,19 @@ operator|&&
 operator|(
 name|q
 operator|=
-name|ipfw_lookup_dyn_rule
+name|ipfw_dyn_lookup_state
 argument_list|(
 operator|&
 name|args
 operator|->
 name|f_id
 argument_list|,
+name|ulp
+argument_list|,
+name|pktlen
+argument_list|,
 operator|&
 name|dyn_dir
-argument_list|,
-name|proto
-operator|==
-name|IPPROTO_TCP
-condition|?
-name|TCP
-argument_list|(
-name|ulp
-argument_list|)
-else|:
-name|NULL
 argument_list|,
 operator|(
 name|dyn_name
@@ -10111,21 +10105,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 					 * Found dynamic entry, update stats 					 * and jump to the 'action' part of 					 * the parent rule by setting 					 * f, cmd, l and clearing cmdlen. 					 */
-name|IPFW_INC_DYN_COUNTER
-argument_list|(
-name|q
-argument_list|,
-name|pktlen
-argument_list|)
-expr_stmt|;
-comment|/* XXX we would like to have f_pos 					 * readily accessible in the dynamic 				         * rule, instead of having to 					 * lookup q->rule. 					 */
+comment|/* 					 * Found dynamic entry, jump to the 					 * 'action' part of the parent rule 					 * by setting f, cmd, l and clearing 					 * cmdlen. 					 */
 name|f
 operator|=
 name|q
-operator|->
-name|rule
 expr_stmt|;
+comment|/* XXX we would like to have f_pos 					 * readily accessible in the dynamic 				         * rule, instead of having to 					 * lookup q->rule. 					 */
 name|f_pos
 operator|=
 name|ipfw_find_rule
@@ -10157,11 +10142,6 @@ operator|-
 name|f
 operator|->
 name|act_ofs
-expr_stmt|;
-name|ipfw_dyn_unlock
-argument_list|(
-name|q
-argument_list|)
 expr_stmt|;
 name|cmdlen
 operator|=
@@ -10978,12 +10958,6 @@ break|break;
 if|if
 condition|(
 name|q
-operator|==
-name|NULL
-operator|||
-name|q
-operator|->
-name|rule
 operator|!=
 name|f
 operator|||
@@ -11213,12 +11187,6 @@ break|break;
 if|if
 condition|(
 name|q
-operator|==
-name|NULL
-operator|||
-name|q
-operator|->
-name|rule
 operator|!=
 name|f
 operator|||

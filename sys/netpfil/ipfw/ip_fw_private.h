@@ -567,17 +567,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|ipfw_dyn_unlock
-parameter_list|(
-name|ipfw_dyn_rule
-modifier|*
-name|q
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct_decl
 struct_decl|struct
 name|tcphdr
@@ -609,7 +598,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ipfw_install_state
+name|ipfw_dyn_install_state
 parameter_list|(
 name|struct
 name|ip_fw_chain
@@ -637,23 +626,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ipfw_dyn_rule
+name|struct
+name|ip_fw
 modifier|*
-name|ipfw_lookup_dyn_rule
+name|ipfw_dyn_lookup_state
 parameter_list|(
+specifier|const
 name|struct
 name|ipfw_flow_id
 modifier|*
 name|pkt
 parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|ulp
+parameter_list|,
+name|int
+name|pktlen
+parameter_list|,
 name|int
 modifier|*
 name|match_direction
-parameter_list|,
-name|struct
-name|tcphdr
-modifier|*
-name|tcp
 parameter_list|,
 name|uint16_t
 name|kidx
