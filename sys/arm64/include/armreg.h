@@ -3743,6 +3743,13 @@ name|PSR_N
 value|0x80000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|PSR_FLAGS
+value|0xf0000000
+end_define
+
 begin_comment
 comment|/* TCR_EL1 - Translation Control Register */
 end_comment
