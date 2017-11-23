@@ -542,7 +542,7 @@ name|OID_AUTO
 argument_list|,
 name|pageout_wakeup_thresh
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|vm_pageout_wakeup_thresh
@@ -563,7 +563,7 @@ name|OID_AUTO
 argument_list|,
 name|pageout_update_period
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|vm_pageout_update_period
@@ -584,7 +584,7 @@ name|OID_AUTO
 argument_list|,
 name|lowmem_period
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|lowmem_period
@@ -605,7 +605,7 @@ name|OID_AUTO
 argument_list|,
 name|disable_swapspace_pageouts
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|disable_swap_pageouts
@@ -654,7 +654,7 @@ name|OID_AUTO
 argument_list|,
 name|pageout_oom_seq
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|vm_pageout_oom_seq
@@ -684,7 +684,7 @@ name|OID_AUTO
 argument_list|,
 name|act_scan_laundry_weight
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|act_scan_laundry_weight
@@ -712,7 +712,7 @@ name|OID_AUTO
 argument_list|,
 name|background_launder_target
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|vm_background_launder_target
@@ -742,7 +742,7 @@ name|OID_AUTO
 argument_list|,
 name|background_launder_rate
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|vm_background_launder_rate
@@ -774,7 +774,7 @@ name|OID_AUTO
 argument_list|,
 name|background_launder_max
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|vm_background_launder_max
