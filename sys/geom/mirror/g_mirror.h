@@ -186,7 +186,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|u_int
+name|int
 name|g_mirror_debug
 decl_stmt|;
 end_decl_stmt

@@ -182,7 +182,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|u_int
+name|int
 name|g_mirror_debug
 init|=
 literal|0
@@ -190,7 +190,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_kern_geom_mirror
 argument_list|,
