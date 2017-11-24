@@ -2729,7 +2729,7 @@ name|AMDVI_EVENT_FLAG_MASK
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%b]\n"
+literal|" 0x%b]\n"
 argument_list|,
 name|flag
 argument_list|,
@@ -3101,7 +3101,7 @@ name|AMDVI_EVENT_CMD_HW_ERROR
 case|:
 name|printf
 argument_list|(
-literal|"\t[%s EVT]"
+literal|"\t[%s EVT]\n"
 argument_list|,
 operator|(
 name|evt
@@ -3157,7 +3157,7 @@ name|AMDVI_EVENT_IOTLB_TIMEOUT
 case|:
 name|printf
 argument_list|(
-literal|"\t[IOTLB_INV_TIMEOUT devid:0x%x addr:0x%lx"
+literal|"\t[IOTLB_INV_TIMEOUT devid:0x%x addr:0x%lx]\n"
 argument_list|,
 name|evt
 operator|->
@@ -3217,7 +3217,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Unsupported AMD-Vi event:%d"
+literal|"Unsupported AMD-Vi event:%d\n"
 argument_list|,
 name|evt
 operator|->
