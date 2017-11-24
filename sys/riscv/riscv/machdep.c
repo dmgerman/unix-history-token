@@ -1173,17 +1173,9 @@ name|trapframe
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We need to set a0 for init as it doesn't call 	 * cpu_set_syscall_retval to copy the value. We also 	 * need to set td_retval for the cases where we do. 	 */
 name|tf
 operator|->
 name|tf_a
-index|[
-literal|0
-index|]
-operator|=
-name|td
-operator|->
-name|td_retval
 index|[
 literal|0
 index|]

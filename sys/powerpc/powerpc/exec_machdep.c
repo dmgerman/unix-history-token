@@ -2431,7 +2431,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Set up arguments for _start(): 	 *	_start(argc, argv, envp, obj, cleanup, ps_strings); 	 * 	 * Notes: 	 *	- obj and cleanup are the auxilliary and termination 	 *	  vectors.  They are fixed up by ld.elf_so. 	 *	- ps_strings is a NetBSD extention, and will be 	 * 	  ignored by executables which are strictly 	 *	  compliant with the SVR4 ABI. 	 * 	 * XXX We have to set both regs and retval here due to different 	 * XXX calling convention in trap.c and init_main.c. 	 */
+comment|/* 	 * Set up arguments for _start(): 	 *	_start(argc, argv, envp, obj, cleanup, ps_strings); 	 * 	 * Notes: 	 *	- obj and cleanup are the auxilliary and termination 	 *	  vectors.  They are fixed up by ld.elf_so. 	 *	- ps_strings is a NetBSD extention, and will be 	 * 	  ignored by executables which are strictly 	 *	  compliant with the SVR4 ABI. 	 */
 comment|/* Collect argc from the user stack */
 name|argc
 operator|=
@@ -2442,30 +2442,6 @@ name|void
 operator|*
 operator|)
 name|stack
-argument_list|)
-expr_stmt|;
-comment|/*          * XXX PG: these get overwritten in the syscall return code.          * execve() should return EJUSTRETURN, like it does on NetBSD.          * Emulate by setting the syscall return value cells. The          * registers still have to be set for init's fork trampoline.          */
-name|td
-operator|->
-name|td_retval
-index|[
-literal|0
-index|]
-operator|=
-name|argc
-expr_stmt|;
-name|td
-operator|->
-name|td_retval
-index|[
-literal|1
-index|]
-operator|=
-name|stack
-operator|+
-sizeof|sizeof
-argument_list|(
-name|register_t
 argument_list|)
 expr_stmt|;
 name|tf
@@ -2710,29 +2686,6 @@ name|void
 operator|*
 operator|)
 name|stack
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_retval
-index|[
-literal|0
-index|]
-operator|=
-name|argc
-expr_stmt|;
-name|td
-operator|->
-name|td_retval
-index|[
-literal|1
-index|]
-operator|=
-name|stack
-operator|+
-sizeof|sizeof
-argument_list|(
-name|uint32_t
 argument_list|)
 expr_stmt|;
 name|tf

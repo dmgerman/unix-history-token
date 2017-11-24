@@ -3719,7 +3719,7 @@ name|args
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|EJUSTRETURN
 condition|)
 block|{
 name|mtx_unlock

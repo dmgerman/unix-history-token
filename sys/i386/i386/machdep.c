@@ -6110,6 +6110,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Make sure edx is 0x0 on entry. Linux binaries depend on it. */
 name|bzero
 argument_list|(
 operator|(
@@ -6269,16 +6270,6 @@ name|fpstate_drop
 argument_list|(
 name|td
 argument_list|)
-expr_stmt|;
-comment|/* 	 * XXX - Linux emulator 	 * Make sure sure edx is 0x0 on entry. Linux binaries depend 	 * on it. 	 */
-name|td
-operator|->
-name|td_retval
-index|[
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function

@@ -5859,15 +5859,6 @@ operator||
 name|PCB_FULL_IRET
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|td_retval
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 
