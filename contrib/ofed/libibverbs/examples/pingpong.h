@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<infiniband/verbs.h>
 end_include
 
@@ -34,21 +28,6 @@ name|pp_mtu_to_enum
 parameter_list|(
 name|int
 name|mtu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint16_t
-name|pp_get_local_lid
-parameter_list|(
-name|struct
-name|ibv_context
-modifier|*
-name|context
-parameter_list|,
-name|int
-name|port
 parameter_list|)
 function_decl|;
 end_function_decl

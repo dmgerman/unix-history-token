@@ -2893,6 +2893,10 @@ name|struct
 name|tom_tunables
 name|tt
 decl_stmt|;
+name|struct
+name|iw_tunables
+name|iwt
+decl_stmt|;
 name|void
 modifier|*
 name|iwarp_softc

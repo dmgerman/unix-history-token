@@ -1310,7 +1310,9 @@ name|likely
 argument_list|(
 name|wc
 operator|->
-name|csum_ok
+name|wc_flags
+operator|&
+name|IB_WC_IP_CSUM_OK
 argument_list|)
 condition|)
 name|mb
@@ -2444,6 +2446,8 @@ name|priv
 operator|->
 name|tx_wr
 operator|.
+name|wr
+operator|.
 name|num_sge
 operator|=
 name|i
@@ -2452,6 +2456,8 @@ name|priv
 operator|->
 name|tx_wr
 operator|.
+name|wr
+operator|.
 name|wr_id
 operator|=
 name|wr_id
@@ -2459,10 +2465,6 @@ expr_stmt|;
 name|priv
 operator|->
 name|tx_wr
-operator|.
-name|wr
-operator|.
-name|ud
 operator|.
 name|remote_qpn
 operator|=
@@ -2471,10 +2473,6 @@ expr_stmt|;
 name|priv
 operator|->
 name|tx_wr
-operator|.
-name|wr
-operator|.
-name|ud
 operator|.
 name|ah
 operator|=
@@ -2489,10 +2487,6 @@ name|priv
 operator|->
 name|tx_wr
 operator|.
-name|wr
-operator|.
-name|ud
-operator|.
 name|mss
 operator|=
 literal|0
@@ -2502,10 +2496,6 @@ name|priv
 operator|->
 name|tx_wr
 operator|.
-name|wr
-operator|.
-name|ud
-operator|.
 name|header
 operator|=
 name|head
@@ -2514,10 +2504,6 @@ name|priv
 operator|->
 name|tx_wr
 operator|.
-name|wr
-operator|.
-name|ud
-operator|.
 name|hlen
 operator|=
 name|hlen
@@ -2525,6 +2511,8 @@ expr_stmt|;
 name|priv
 operator|->
 name|tx_wr
+operator|.
+name|wr
 operator|.
 name|opcode
 operator|=
@@ -2535,6 +2523,8 @@ else|else
 name|priv
 operator|->
 name|tx_wr
+operator|.
+name|wr
 operator|.
 name|opcode
 operator|=
@@ -2551,6 +2541,8 @@ operator|&
 name|priv
 operator|->
 name|tx_wr
+operator|.
+name|wr
 argument_list|,
 operator|&
 name|bad_wr
@@ -2862,6 +2854,8 @@ name|priv
 operator|->
 name|tx_wr
 operator|.
+name|wr
+operator|.
 name|send_flags
 operator||=
 name|IB_SEND_IP_CSUM
@@ -2870,6 +2864,8 @@ else|else
 name|priv
 operator|->
 name|tx_wr
+operator|.
+name|wr
 operator|.
 name|send_flags
 operator|&=

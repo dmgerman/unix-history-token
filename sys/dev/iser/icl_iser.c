@@ -1799,6 +1799,9 @@ name|cma_id
 operator|=
 name|rdma_create_id
 argument_list|(
+operator|&
+name|init_net
+argument_list|,
 name|iser_cma_handler
 argument_list|,
 operator|(

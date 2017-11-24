@@ -2383,7 +2383,7 @@ specifier|static
 name|int
 name|t5_write_combine
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -12475,6 +12475,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|t5_write_combine
+operator|=
+literal|0
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -12519,8 +12523,22 @@ name|mode
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|t5_write_combine
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|iwt
+operator|.
+name|wc_en
+operator|=
+name|t5_write_combine
+expr_stmt|;
 block|}
 return|return
 operator|(

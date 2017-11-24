@@ -420,6 +420,21 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* iWARP driver tunables */
+end_comment
+
+begin_struct
+struct|struct
+name|iw_tunables
+block|{
+name|int
+name|wc_en
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef

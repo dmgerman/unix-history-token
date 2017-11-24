@@ -693,10 +693,6 @@ name|priv
 operator|->
 name|tx_wr
 operator|.
-name|wr
-operator|.
-name|ud
-operator|.
 name|remote_qkey
 operator|=
 name|priv
@@ -2296,6 +2292,8 @@ operator|&
 name|priv
 operator|->
 name|local_gid
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|ipoib_warn

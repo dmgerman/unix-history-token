@@ -203,11 +203,7 @@ block|,
 name|IB_CM_SIDR_REP_INFO_LENGTH
 init|=
 literal|72
-block|,
-name|IB_CM_COMPARE_SIZE
-init|=
-literal|64
-block|}
+block|, }
 enum|;
 end_enum
 
@@ -225,6 +221,10 @@ name|struct
 name|ib_cm_id
 modifier|*
 name|listen_id
+decl_stmt|;
+comment|/* P_Key that was used by the GMP's BTH header */
+name|u16
+name|bth_pkey
 decl_stmt|;
 name|u8
 name|port
@@ -602,6 +602,13 @@ name|ib_cm_id
 modifier|*
 name|listen_id
 decl_stmt|;
+name|__be64
+name|service_id
+decl_stmt|;
+comment|/* P_Key that was used by the GMP's BTH header */
+name|u16
+name|bth_pkey
+decl_stmt|;
 name|u8
 name|port
 decl_stmt|;
@@ -946,28 +953,8 @@ name|IB_SDP_SERVICE_ID_MASK
 value|cpu_to_be64(0xFFFFFFFFFFFF0000ULL)
 end_define
 
-begin_struct
-struct|struct
-name|ib_cm_compare_data
-block|{
-name|u8
-name|data
-index|[
-name|IB_CM_COMPARE_SIZE
-index|]
-decl_stmt|;
-name|u8
-name|mask
-index|[
-name|IB_CM_COMPARE_SIZE
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
-comment|/**  * ib_cm_listen - Initiates listening on the specified service ID for  *   connection and service ID resolution requests.  * @cm_id: Connection identifier associated with the listen request.  * @service_id: Service identifier matched against incoming connection  *   and service ID resolution requests.  The service ID should be specified  *   network-byte order.  If set to IB_CM_ASSIGN_SERVICE_ID, the CM will  *   assign a service ID to the caller.  * @service_mask: Mask applied to service ID used to listen across a  *   range of service IDs.  If set to 0, the service ID is matched  *   exactly.  This parameter is ignored if %service_id is set to  *   IB_CM_ASSIGN_SERVICE_ID.  * @compare_data: This parameter is optional.  It specifies data that must  *   appear in the private data of a connection request for the specified  *   listen request.  */
+comment|/**  * ib_cm_listen - Initiates listening on the specified service ID for  *   connection and service ID resolution requests.  * @cm_id: Connection identifier associated with the listen request.  * @service_id: Service identifier matched against incoming connection  *   and service ID resolution requests.  The service ID should be specified  *   network-byte order.  If set to IB_CM_ASSIGN_SERVICE_ID, the CM will  *   assign a service ID to the caller.  * @service_mask: Mask applied to service ID used to listen across a  *   range of service IDs.  If set to 0, the service ID is matched  *   exactly.  This parameter is ignored if %service_id is set to  *   IB_CM_ASSIGN_SERVICE_ID.  */
 end_comment
 
 begin_function_decl
@@ -984,11 +971,26 @@ name|service_id
 parameter_list|,
 name|__be64
 name|service_mask
-parameter_list|,
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
-name|ib_cm_compare_data
+name|ib_cm_id
 modifier|*
-name|compare_data
+name|ib_cm_insert_listen
+parameter_list|(
+name|struct
+name|ib_device
+modifier|*
+name|device
+parameter_list|,
+name|ib_cm_handler
+name|cm_handler
+parameter_list|,
+name|__be64
+name|service_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1500,28 +1502,6 @@ name|struct
 name|ib_cm_sidr_rep_param
 modifier|*
 name|param
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ib_update_cm_av
-parameter_list|(
-name|struct
-name|ib_cm_id
-modifier|*
-name|id
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|smac
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|alt_smac
 parameter_list|)
 function_decl|;
 end_function_decl

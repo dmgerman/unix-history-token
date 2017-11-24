@@ -40,7 +40,8 @@ name|ib_umem
 modifier|*
 name|umem
 decl_stmt|;
-name|uintptr_t
+name|unsigned
+name|long
 name|user_virt
 decl_stmt|;
 name|int
@@ -59,7 +60,8 @@ name|mlx5_ib_ucontext
 modifier|*
 name|context
 parameter_list|,
-name|uintptr_t
+name|unsigned
+name|long
 name|virt
 parameter_list|,
 name|struct

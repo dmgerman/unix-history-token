@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|C4IW_UVERBS_ABI_VERSION
-value|2
+value|3
 end_define
 
 begin_comment
@@ -99,6 +99,24 @@ decl_stmt|;
 name|__u32
 name|flags
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|c4iw_alloc_ucontext_resp
+block|{
+name|__u64
+name|status_page_key
+decl_stmt|;
+name|__u32
+name|status_page_size
+decl_stmt|;
+name|__u32
+name|reserved
+decl_stmt|;
+comment|/* explicit padding (optional for i386) */
 block|}
 struct|;
 end_struct

@@ -342,9 +342,6 @@ case|case
 name|MOD_LOAD
 case|:
 comment|/* kldload */
-name|krping_init
-argument_list|()
-expr_stmt|;
 name|krping_dev
 operator|=
 name|make_dev
@@ -977,8 +974,6 @@ argument_list|(
 name|krpingmsg
 operator|->
 name|msg
-argument_list|,
-name|curproc
 argument_list|)
 expr_stmt|;
 name|free

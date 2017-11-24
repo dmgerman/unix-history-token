@@ -179,6 +179,17 @@ block|, }
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|t4_bar2_qtype
+block|{
+name|T4_BAR2_QTYPE_EGRESS
+block|,
+name|T4_BAR2_QTYPE_INGRESS
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|port_stats
@@ -1248,6 +1259,14 @@ name|uint32_t
 name|mps_bg_map
 decl_stmt|;
 comment|/* rx buffer group map for all ports (upto 4) */
+name|bool
+name|ulptx_memwrite_dsgl
+decl_stmt|;
+comment|/* use of T5 DSGL allowed */
+name|bool
+name|fr_nsmr_tpte_wr_support
+decl_stmt|;
+comment|/* FW support for FR_NSMR_TPTE_WR */
 block|}
 struct|;
 end_struct
@@ -6000,6 +6019,38 @@ name|struct
 name|adapter
 modifier|*
 name|adapter
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_bar2_sge_qregs
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|,
+name|unsigned
+name|int
+name|qid
+parameter_list|,
+name|enum
+name|t4_bar2_qtype
+name|qtype
+parameter_list|,
+name|int
+name|user
+parameter_list|,
+name|u64
+modifier|*
+name|pbar2_qoffset
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|pbar2_qid
 parameter_list|)
 function_decl|;
 end_function_decl
