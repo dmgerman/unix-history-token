@@ -2250,10 +2250,16 @@ expr_stmt|;
 comment|/*      * Get the section headers.  We need this for finding the .ctors      * section as well as for loading any symbols.  Both may be hard      * to do if reading from a .gz file as it involves seeking.  I      * think the rule is going to have to be that you must strip a      * file to remove symbols before gzipping it.      */
 name|chunk
 operator|=
+operator|(
+name|size_t
+operator|)
 name|ehdr
 operator|->
 name|e_shnum
 operator|*
+operator|(
+name|size_t
+operator|)
 name|ehdr
 operator|->
 name|e_shentsize
@@ -4022,12 +4028,18 @@ goto|;
 block|}
 name|size
 operator|=
+operator|(
+name|size_t
+operator|)
 name|ef
 operator|.
 name|ehdr
 operator|->
 name|e_shnum
 operator|*
+operator|(
+name|size_t
+operator|)
 name|ef
 operator|.
 name|ehdr
