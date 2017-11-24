@@ -355,10 +355,7 @@ literal|0
 operator|,
 name|mdp
 operator|,
-sizeof|sizeof
-argument_list|(
-name|mdp
-argument_list|)
+literal|0xfb5d104d
 operator|)
 expr_stmt|;
 block|}
@@ -392,10 +389,7 @@ operator|*
 operator|)
 name|mdp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mdp
-argument_list|)
+literal|0xfb5d104d
 argument_list|)
 expr_stmt|;
 block|}

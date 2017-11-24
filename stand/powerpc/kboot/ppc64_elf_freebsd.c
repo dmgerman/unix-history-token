@@ -366,10 +366,7 @@ index|[
 literal|7
 index|]
 operator|=
-sizeof|sizeof
-argument_list|(
-name|mdp
-argument_list|)
+literal|0xfb5d104d
 expr_stmt|;
 name|printf
 argument_list|(
