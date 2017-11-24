@@ -395,10 +395,13 @@ block|{
 name|pr_warn
 argument_list|(
 name|PFX
-literal|"Unmapping FMR 0x%08x with ref count %d\n"
+literal|"Unmapping FMR %p with ref count %d\n"
 argument_list|,
 name|fmr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fmr
 operator|->
 name|ref_count
