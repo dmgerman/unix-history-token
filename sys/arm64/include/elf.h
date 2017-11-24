@@ -39,6 +39,12 @@ begin_comment
 comment|/* Definitions common to all 64 bit architectures. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ELF_WORD_SIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -49,6 +55,11 @@ end_define
 begin_comment
 comment|/* Used by<sys/elf_generic.h> */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -462,6 +473,14 @@ begin_comment
 comment|/* Define "machine" characteristics */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|==
+literal|64
+end_if
+
 begin_define
 define|#
 directive|define
@@ -489,6 +508,44 @@ directive|define
 name|ELF_TARG_VER
 value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_CLASS
+value|ELFCLASS32
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_DATA
+value|ELFDATA2LSB
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_MACH
+value|EM_ARM
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_VER
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

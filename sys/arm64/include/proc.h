@@ -52,6 +52,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|KINFO_PROC32_SIZE
+value|816
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAXARGS
 value|8
 end_define

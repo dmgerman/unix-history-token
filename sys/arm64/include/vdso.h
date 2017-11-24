@@ -30,6 +30,13 @@ name|VDSO_TH_ALGO_ARM_GENTIM
 value|VDSO_TH_ALGO_1
 end_define
 
+begin_define
+define|#
+directive|define
+name|VDSO_TIMEHANDS_MD32
+value|VDSO_TIMEHANDS_MD
+end_define
+
 begin_endif
 endif|#
 directive|endif
