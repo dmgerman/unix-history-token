@@ -4541,7 +4541,7 @@ argument_list|,
 literal|"Command submitted count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_U16
 argument_list|(
 name|ctx
 argument_list|,
@@ -4553,10 +4553,6 @@ literal|"pci_rid"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|softc
 operator|->
@@ -4567,7 +4563,7 @@ argument_list|,
 literal|"IOMMU RID"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_U16
 argument_list|(
 name|ctx
 argument_list|,
@@ -4579,10 +4575,6 @@ literal|"start_dev_rid"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|softc
 operator|->
@@ -4593,7 +4585,7 @@ argument_list|,
 literal|"Start of device under this IOMMU"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_U16
 argument_list|(
 name|ctx
 argument_list|,
@@ -4605,10 +4597,6 @@ literal|"end_dev_rid"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|softc
 operator|->
