@@ -1399,6 +1399,17 @@ modifier|*
 name|header
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|struct
 name|ip
 name|iph
@@ -1512,6 +1523,13 @@ operator|&
 name|iph
 argument_list|)
 return|;
+else|#
+directive|else
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

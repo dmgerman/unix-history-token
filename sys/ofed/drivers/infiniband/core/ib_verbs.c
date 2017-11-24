@@ -1457,6 +1457,17 @@ name|ip_sum
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|ip4h_checked
 operator|.
 name|ip_sum
@@ -1467,6 +1478,8 @@ operator|&
 name|ip4h_checked
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* if IPv4 header checksum is OK, believe it */
 if|if
 condition|(
