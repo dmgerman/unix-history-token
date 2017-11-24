@@ -1081,7 +1081,7 @@ name|uint64_t
 label|:
 literal|45
 expr_stmt|;
-name|uint8_t
+name|uint32_t
 name|status
 range|:
 literal|19
