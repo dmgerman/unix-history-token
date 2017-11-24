@@ -4474,7 +4474,7 @@ argument_list|(
 name|priv
 argument_list|)
 expr_stmt|;
-name|cancel_delayed_work
+name|cancel_delayed_work_sync
 argument_list|(
 operator|&
 name|priv
