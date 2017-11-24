@@ -8715,7 +8715,7 @@ argument_list|(
 name|sxlock_str
 argument_list|)
 argument_list|,
-literal|"int(%s`struct sxlock *)"
+literal|"int(%s`struct sx *)"
 argument_list|,
 name|p
 argument_list|)
