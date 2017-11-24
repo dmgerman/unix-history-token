@@ -6836,10 +6836,15 @@ name|mlx5_ib_err
 argument_list|(
 name|dev
 argument_list|,
-literal|"io_remap_pfn_range failed with error=%d, vm_start=0x%lx, pfn=%pa, mmap_cmd=%s\n"
+literal|"io_remap_pfn_range failed with error=%d, vm_start=0x%llx, pfn=%pa, mmap_cmd=%s\n"
 argument_list|,
 name|err
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|vma
 operator|->
 name|vm_start
@@ -6868,13 +6873,18 @@ name|mlx5_ib_dbg
 argument_list|(
 name|dev
 argument_list|,
-literal|"mapped %s at 0x%lx, PA %pa\n"
+literal|"mapped %s at 0x%llx, PA %pa\n"
 argument_list|,
 name|mmap_cmd2str
 argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|vma
 operator|->
 name|vm_start
@@ -7081,8 +7091,13 @@ name|mlx5_ib_dbg
 argument_list|(
 name|dev
 argument_list|,
-literal|"mapped internal timer at 0x%lx, PA 0x%llx\n"
+literal|"mapped internal timer at 0x%llx, PA 0x%llx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|vma
 operator|->
 name|vm_start

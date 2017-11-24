@@ -8505,7 +8505,10 @@ operator|&
 name|sg
 argument_list|)
 operator|=
-literal|0xcafebabe0000UL
+operator|(
+name|dma_addr_t
+operator|)
+literal|0xcafebabe0000ULL
 expr_stmt|;
 name|sg_dma_len
 argument_list|(
