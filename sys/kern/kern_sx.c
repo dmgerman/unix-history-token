@@ -5494,15 +5494,6 @@ name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
-name|LOCKSTAT_PROFILE_RELEASE_RWLOCK
-argument_list|(
-name|sx__release
-argument_list|,
-name|sx
-argument_list|,
-name|LOCKSTAT_READER
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -5639,6 +5630,15 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
+name|LOCKSTAT_PROFILE_RELEASE_RWLOCK
+argument_list|(
+name|sx__release
+argument_list|,
+name|sx
+argument_list|,
+name|LOCKSTAT_READER
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
