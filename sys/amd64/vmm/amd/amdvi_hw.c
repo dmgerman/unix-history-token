@@ -3174,7 +3174,7 @@ name|AMDVI_EVENT_INVALID_DTE_REQ
 case|:
 name|printf
 argument_list|(
-literal|"\t[INV_DTE devid:0x%x addr:0x%lx"
+literal|"\t[INV_DTE devid:0x%x addr:0x%lx type:0x%x tr:%d]\n"
 argument_list|,
 name|evt
 operator|->
@@ -3183,6 +3183,22 @@ argument_list|,
 name|evt
 operator|->
 name|addr
+argument_list|,
+name|evt
+operator|->
+name|flag
+operator|>>
+literal|9
+argument_list|,
+operator|(
+name|evt
+operator|->
+name|flag
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
