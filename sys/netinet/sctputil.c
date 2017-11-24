@@ -24944,7 +24944,7 @@ name|asoc
 operator|.
 name|strmout
 index|[
-name|stream
+name|sid
 index|]
 operator|.
 name|abandoned_sent
@@ -25015,7 +25015,7 @@ name|asoc
 operator|.
 name|strmout
 index|[
-name|stream
+name|sid
 index|]
 operator|.
 name|abandoned_unsent
