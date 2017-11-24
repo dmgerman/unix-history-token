@@ -294,14 +294,14 @@ begin_define
 define|#
 directive|define
 name|IXP425_NPE_B_IMAGEID
-value|0x01020201
+value|0x01000201
 end_define
 
 begin_define
 define|#
 directive|define
 name|IXP425_NPE_C_IMAGEID
-value|0x02050201
+value|0x02000201
 end_define
 
 begin_struct_decl
