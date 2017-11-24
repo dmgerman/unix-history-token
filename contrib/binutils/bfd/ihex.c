@@ -803,7 +803,7 @@ name|abfd
 argument_list|,
 name|lineno
 argument_list|,
-name|hdr
+name|buf
 index|[
 name|i
 index|]

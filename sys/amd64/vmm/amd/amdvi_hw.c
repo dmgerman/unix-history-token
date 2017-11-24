@@ -2729,7 +2729,7 @@ name|AMDVI_EVENT_FLAG_MASK
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%b]\n"
+literal|" 0x%b]\n"
 argument_list|,
 name|flag
 argument_list|,
@@ -3101,7 +3101,7 @@ name|AMDVI_EVENT_CMD_HW_ERROR
 case|:
 name|printf
 argument_list|(
-literal|"\t[%s EVT]"
+literal|"\t[%s EVT]\n"
 argument_list|,
 operator|(
 name|evt
@@ -3157,7 +3157,7 @@ name|AMDVI_EVENT_IOTLB_TIMEOUT
 case|:
 name|printf
 argument_list|(
-literal|"\t[IOTLB_INV_TIMEOUT devid:0x%x addr:0x%lx"
+literal|"\t[IOTLB_INV_TIMEOUT devid:0x%x addr:0x%lx]\n"
 argument_list|,
 name|evt
 operator|->
@@ -3174,7 +3174,7 @@ name|AMDVI_EVENT_INVALID_DTE_REQ
 case|:
 name|printf
 argument_list|(
-literal|"\t[INV_DTE devid:0x%x addr:0x%lx"
+literal|"\t[INV_DTE devid:0x%x addr:0x%lx type:0x%x tr:%d]\n"
 argument_list|,
 name|evt
 operator|->
@@ -3183,6 +3183,22 @@ argument_list|,
 name|evt
 operator|->
 name|addr
+argument_list|,
+name|evt
+operator|->
+name|flag
+operator|>>
+literal|9
+argument_list|,
+operator|(
+name|evt
+operator|->
+name|flag
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3201,7 +3217,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Unsupported AMD-Vi event:%d"
+literal|"Unsupported AMD-Vi event:%d\n"
 argument_list|,
 name|evt
 operator|->
@@ -4525,7 +4541,7 @@ argument_list|,
 literal|"Command submitted count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_U16
 argument_list|(
 name|ctx
 argument_list|,
@@ -4537,10 +4553,6 @@ literal|"pci_rid"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|softc
 operator|->
@@ -4551,7 +4563,7 @@ argument_list|,
 literal|"IOMMU RID"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_U16
 argument_list|(
 name|ctx
 argument_list|,
@@ -4563,10 +4575,6 @@ literal|"start_dev_rid"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|softc
 operator|->
@@ -4577,7 +4585,7 @@ argument_list|,
 literal|"Start of device under this IOMMU"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_U16
 argument_list|(
 name|ctx
 argument_list|,
@@ -4589,10 +4597,6 @@ literal|"end_dev_rid"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|softc
 operator|->

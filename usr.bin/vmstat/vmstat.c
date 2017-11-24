@@ -3211,7 +3211,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|val
 parameter_list|,
 name|int
@@ -3959,7 +3959,7 @@ name|vmstat_pgtok
 parameter_list|(
 name|a
 parameter_list|)
-value|((a) * (sum.v_page_size>> 10))
+value|((uintmax_t)(a) * (sum.v_page_size>> 10))
 define|#
 directive|define
 name|rate
@@ -3987,7 +3987,7 @@ operator|.
 name|t_avm
 operator|*
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|sum
 operator|.
@@ -4010,7 +4010,7 @@ operator|.
 name|t_free
 operator|*
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 name|sum
 operator|.
@@ -4034,7 +4034,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:available-memory/%7d}"
+literal|"{:available-memory/%7ju}"
 argument_list|,
 name|vmstat_pgtok
 argument_list|(
@@ -4051,7 +4051,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:free-memory/%7d}"
+literal|"{:free-memory/%7ju}"
 argument_list|,
 name|vmstat_pgtok
 argument_list|(
@@ -7890,7 +7890,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:resident/%5jd} "
+literal|"{:resident/%5ju} "
 argument_list|,
 operator|(
 name|uintmax_t
@@ -7902,7 +7902,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:active/%5jd} "
+literal|"{:active/%5ju} "
 argument_list|,
 operator|(
 name|uintmax_t
@@ -7914,7 +7914,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:inactive/%5jd} "
+literal|"{:inactive/%5ju} "
 argument_list|,
 operator|(
 name|uintmax_t

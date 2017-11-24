@@ -1615,7 +1615,7 @@ if|if
 condition|(
 name|error
 operator|==
-literal|0
+name|EJUSTRETURN
 condition|)
 name|thread_single
 argument_list|(
@@ -4184,8 +4184,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * We don't want cpu_set_syscall_retval() to overwrite any of 	 * the register values put in place by exec_setregs(). 	 * Implementations of cpu_set_syscall_retval() will leave 	 * registers unmodified when returning EJUSTRETURN. 	 */
 return|return
 operator|(
+name|error
+operator|==
+literal|0
+condition|?
+name|EJUSTRETURN
+else|:
 name|error
 operator|)
 return|;

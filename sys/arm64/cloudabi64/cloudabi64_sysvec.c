@@ -162,13 +162,6 @@ index|[
 literal|0
 index|]
 operator|=
-name|td
-operator|->
-name|td_retval
-index|[
-literal|0
-index|]
-operator|=
 name|stack
 operator|+
 name|roundup

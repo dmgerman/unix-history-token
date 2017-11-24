@@ -708,7 +708,7 @@ if|if
 condition|(
 name|error
 operator|!=
-literal|0
+name|EJUSTRETURN
 condition|)
 return|return
 operator|(
@@ -828,7 +828,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|EJUSTRETURN
 operator|)
 return|;
 block|}
