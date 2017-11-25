@@ -770,9 +770,9 @@ argument|);
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
 argument|bufinit(); 	vm_pager_bufferinit(); }  extern vm_offset_t	__startkernel
 argument_list|,
-argument|__endkernel; extern unsigned char	__bss_start[]; extern unsigned char	__sbss_start[]; extern unsigned char	__sbss_end[]; extern unsigned char	_end[];  void aim_cpu_init(vm_offset_t toc); void booke_cpu_init(void);  uintptr_t powerpc_init(vm_offset_t fdt, vm_offset_t toc, vm_offset_t ofentry, void *mdp) { 	struct		pcpu *pc; 	vm_offset_t	startkernel
+argument|__endkernel; extern unsigned char	__bss_start[]; extern unsigned char	__sbss_start[]; extern unsigned char	__sbss_end[]; extern unsigned char	_end[];  void aim_cpu_init(vm_offset_t toc); void booke_cpu_init(void);  uintptr_t powerpc_init(vm_offset_t fdt, vm_offset_t toc, vm_offset_t ofentry, void *mdp) { 	struct		pcpu *pc; 	struct cpuref	bsp; 	vm_offset_t	startkernel
 argument_list|,
-argument|endkernel; 	void		*kmdp;         char		*env;         bool		ofw_bootargs = false;
+argument|endkernel; 	void		*kmdp; 	char		*env;         bool		ofw_bootargs = false;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -826,35 +826,21 @@ comment|/* 	 * Init params/tunables that can be overridden by the loader 	 */
 argument|init_param1();
 comment|/* 	 * Start initializing proc0 and thread0. 	 */
 argument|proc_linkup0(&proc0,&thread0); 	thread0.td_frame =&frame0;
-comment|/* 	 * Set up per-cpu data. 	 */
-argument|pc = __pcpu; 	pcpu_init(pc,
-literal|0
-argument|, sizeof(struct pcpu)); 	pc->pc_curthread =&thread0;
 ifdef|#
 directive|ifdef
 name|__powerpc64__
-asm|__asm __volatile("mr 13,%0" :: "r"(pc->pc_curthread));
+asm|__asm __volatile("mr 13,%0" :: "r"(&thread0));
 else|#
 directive|else
-asm|__asm __volatile("mr 2,%0" :: "r"(pc->pc_curthread));
+asm|__asm __volatile("mr 2,%0" :: "r"(&thread0));
 endif|#
 directive|endif
-argument|pc->pc_cpuid =
-literal|0
-argument|;
-asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
 comment|/* 	 * Init mutexes, which we use heavily in PMAP 	 */
 argument|mutex_init();
 comment|/* 	 * Install the OF client interface 	 */
 argument|OF_bootstrap();  	if (ofw_bootargs) 		ofw_parse_bootargs();
 comment|/* 	 * Initialize the console before printing anything. 	 */
 argument|cninit();
-comment|/* 	 * Complain if there is no metadata. 	 */
-argument|if (mdp == NULL || kmdp == NULL) { 		printf(
-literal|"powerpc_init: no loader metadata.\n"
-argument|); 	}
-comment|/* 	 * Init KDB 	 */
-argument|kdb_init();
 ifdef|#
 directive|ifdef
 name|AIM
@@ -869,6 +855,15 @@ endif|#
 directive|endif
 comment|/* 	 * Choose a platform module so we can get the physical memory map. 	 */
 argument|platform_probe_and_attach();
+comment|/* 	 * Set up real per-cpu data. 	 */
+argument|if (platform_smp_get_bsp(&bsp) !=
+literal|0
+argument|) 		bsp.cr_cpuid =
+literal|0
+argument|; 	pc =&__pcpu[bsp.cr_cpuid]; 	pcpu_init(pc, bsp.cr_cpuid, sizeof(struct pcpu)); 	pc->pc_curthread =&thread0; 	thread0.td_oncpu = bsp.cr_cpuid; 	pc->pc_cpuid = bsp.cr_cpuid; 	pc->pc_hwref = bsp.cr_hwref; 	pc->pc_pir = mfspr(SPR_PIR);
+asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
+comment|/* 	 * Init KDB 	 */
+argument|kdb_init();
 comment|/* 	 * Bring up MMU 	 */
 argument|pmap_bootstrap(startkernel, endkernel); 	mtmsr(PSL_KERNSET& ~PSL_EE);
 comment|/* 	 * Initialize params/tunables that are derived from memsize 	 */
