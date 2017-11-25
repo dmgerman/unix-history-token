@@ -368,6 +368,23 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|s
+operator|->
+name|mode
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Potemkin timer ran out without an event. Just reset it. */
+name|decr_et_stop
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|nticks
