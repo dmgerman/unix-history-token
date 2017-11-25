@@ -570,6 +570,29 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * KTR_STRUCT_ARRAY - array of misc. structs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_STRUCT_ARRAY
+value|15
+end_define
+
+begin_struct
+struct|struct
+name|ktr_struct_array
+block|{
+name|size_t
+name|struct_size
+decl_stmt|;
+comment|/* 	 * Followed by null-terminated structure name and then payload 	 * contents. 	 */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * KTR_DROP - If this bit is set in ktr_type, then at least one event  * between the previous record and this record was dropped.  */
 end_comment
 
@@ -687,6 +710,13 @@ define|#
 directive|define
 name|KTRFAC_FAULTEND
 value|(1<<KTR_FAULTEND)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_STRUCT_ARRAY
+value|(1<<KTR_STRUCT_ARRAY)
 end_define
 
 begin_comment
@@ -931,8 +961,31 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ktrstructarray
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|enum
+name|uio_seg
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|size_t
 parameter_list|)

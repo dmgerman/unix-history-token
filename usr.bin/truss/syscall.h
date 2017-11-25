@@ -201,6 +201,8 @@ name|PSig
 block|,
 name|Siginfo
 block|,
+name|Kevent11
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
