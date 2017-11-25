@@ -9105,7 +9105,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Allocate ISS/BSS first. */
+comment|/* Allocate ISS/OSS first. */
 if|if
 condition|(
 name|dir
@@ -9497,7 +9497,7 @@ operator|-
 name|sc
 operator|->
 name|num_iss
-operator|+
+operator|-
 name|sc
 operator|->
 name|num_oss
