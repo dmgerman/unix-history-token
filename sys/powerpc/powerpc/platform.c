@@ -1103,6 +1103,29 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|platform_smp_timebase_sync
+parameter_list|(
+name|u_long
+name|tb
+parameter_list|,
+name|int
+name|ap
+parameter_list|)
+block|{
+name|PLATFORM_SMP_TIMEBASE_SYNC
+argument_list|(
+name|plat_obj
+argument_list|,
+name|tb
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Platform install routines. Highest priority wins, using the same  * algorithm as bus attachment.  */
 end_comment

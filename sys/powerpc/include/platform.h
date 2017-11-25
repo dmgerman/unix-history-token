@@ -41,6 +41,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Documentation for these functions is in platform_if.m */
+end_comment
+
 begin_function_decl
 name|void
 name|mem_regions
@@ -124,6 +128,19 @@ parameter_list|(
 name|struct
 name|pcpu
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|platform_smp_timebase_sync
+parameter_list|(
+name|u_long
+name|tb
+parameter_list|,
+name|int
+name|ap
 parameter_list|)
 function_decl|;
 end_function_decl
