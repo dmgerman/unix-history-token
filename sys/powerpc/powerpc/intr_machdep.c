@@ -511,6 +511,12 @@ name|NULL
 operator|&&
 name|i
 operator|->
+name|event
+operator|!=
+name|NULL
+operator|&&
+name|i
+operator|->
 name|pic
 operator|==
 name|root_pic
@@ -1338,7 +1344,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|u_int
 name|powerpc_register_pic
 parameter_list|(
 name|device_t
@@ -1526,6 +1532,13 @@ operator|&
 name|intr_table_lock
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|p
+operator|->
+name|base
+operator|)
+return|;
 block|}
 end_function
 
@@ -1654,7 +1667,11 @@ name|nirqs
 expr_stmt|;
 name|nirqs
 operator|+=
-literal|128
+operator|(
+literal|1
+operator|<<
+literal|25
+operator|)
 expr_stmt|;
 name|npics
 operator|++
