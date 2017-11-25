@@ -280,7 +280,8 @@ name|ap_letgo
 operator|==
 literal|0
 condition|)
-empty_stmt|;
+asm|__asm __volatile("or 27,27,27");
+asm|__asm __volatile("or 6,6,6");
 comment|/* Initialize DEC and TB, sync with the BSP values */
 name|platform_smp_timebase_sync
 argument_list|(
@@ -663,6 +664,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|bootverbose
+condition|)
+return|return;
 name|CPU_FOREACH
 argument_list|(
 argument|i
