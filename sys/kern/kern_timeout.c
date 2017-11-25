@@ -1179,7 +1179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Kernel low level callwheel initialization  * called on cpu0 during kernel startup.  */
+comment|/*  * Kernel low level callwheel initialization  * called on the BSP during kernel startup.  */
 end_comment
 
 begin_function
@@ -1202,7 +1202,7 @@ name|memset
 argument_list|(
 name|CC_CPU
 argument_list|(
-literal|0
+name|curcpu
 argument_list|)
 argument_list|,
 literal|0
@@ -1267,7 +1267,7 @@ operator|&
 name|pin_pcpu_swi
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Only cpu0 handles timeout(9) and receives a preallocation. 	 * 	 * XXX: Once all timeout(9) consumers are converted this can 	 * be removed. 	 */
+comment|/* 	 * Only BSP handles timeout(9) and receives a preallocation. 	 * 	 * XXX: Once all timeout(9) consumers are converted this can 	 * be removed. 	 */
 name|timeout_cpu
 operator|=
 name|PCPU_GET
@@ -1486,7 +1486,7 @@ name|cc_callout
 operator|==
 name|NULL
 condition|)
-comment|/* Only cpu0 handles timeout(9) */
+comment|/* Only BSP handles timeout(9) */
 return|return;
 for|for
 control|(
@@ -1785,7 +1785,7 @@ name|cc_callout
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Only cpu0 handles timeout(9). */
+comment|/* Only BSP handles timeout(9). */
 name|callout_cpu_init
 argument_list|(
 name|cc

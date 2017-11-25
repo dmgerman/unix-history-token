@@ -1700,7 +1700,7 @@ name|defined
 argument_list|(
 name|SMP
 argument_list|)
-comment|/* 	 * Bind us to CPU 0 so that all shutdown code runs there.  Some 	 * systems don't shutdown properly (i.e., ACPI power off) if we 	 * run on another processor. 	 */
+comment|/* 	 * Bind us to the first CPU so that all shutdown code runs there.  Some 	 * systems don't shutdown properly (i.e., ACPI power off) if we 	 * run on another processor. 	 */
 if|if
 condition|(
 operator|!
@@ -1717,7 +1717,8 @@ name|sched_bind
 argument_list|(
 name|curthread
 argument_list|,
-literal|0
+name|CPU_FIRST
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|thread_unlock
@@ -1732,7 +1733,8 @@ argument_list|(
 name|cpuid
 argument_list|)
 operator|==
-literal|0
+name|CPU_FIRST
+argument_list|()
 argument_list|,
 operator|(
 literal|"boot: not running on cpu 0"

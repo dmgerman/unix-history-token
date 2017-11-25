@@ -5704,6 +5704,30 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|CPU_ABSENT
+argument_list|(
+name|ts
+operator|->
+name|ts_cpu
+argument_list|)
+argument_list|,
+operator|(
+literal|"sched_pickcpu: Start scheduler on "
+literal|"absent CPU %d for thread %s."
+operator|,
+name|ts
+operator|->
+name|ts_cpu
+operator|,
+name|td
+operator|->
+name|td_name
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|smp_started
@@ -6080,6 +6104,21 @@ literal|1
 argument_list|,
 operator|(
 literal|"sched_pickcpu: Failed to find a cpu."
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|CPU_ABSENT
+argument_list|(
+name|cpu
+argument_list|)
+argument_list|,
+operator|(
+literal|"sched_pickcpu: Picked absent CPU %d."
+operator|,
+name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6571,6 +6610,17 @@ argument_list|(
 name|tdq
 argument_list|)
 expr_stmt|;
+name|td_get_sched
+argument_list|(
+operator|&
+name|thread0
+argument_list|)
+operator|->
+name|ts_cpu
+operator|=
+name|curcpu
+expr_stmt|;
+comment|/* Something valid to start */
 name|thread0
 operator|.
 name|td_lock
@@ -8139,6 +8189,36 @@ name|tdq
 modifier|*
 name|tdn
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|CPU_ABSENT
+argument_list|(
+name|td_get_sched
+argument_list|(
+name|td
+argument_list|)
+operator|->
+name|ts_cpu
+argument_list|)
+argument_list|,
+operator|(
+literal|"sched_switch_migrate: "
+literal|"thread %s queued on absent CPU %d."
+operator|,
+name|td
+operator|->
+name|td_name
+operator|,
+name|td_get_sched
+argument_list|(
+name|td
+argument_list|)
+operator|->
+name|ts_cpu
+operator|)
+argument_list|)
+expr_stmt|;
 name|tdn
 operator|=
 name|TDQ_CPU
@@ -10600,6 +10680,16 @@ ifdef|#
 directive|ifdef
 name|SMP
 comment|/* 	 * Pick the destination cpu and if it isn't ours transfer to the 	 * target cpu. 	 */
+name|td_get_sched
+argument_list|(
+name|td
+argument_list|)
+operator|->
+name|ts_cpu
+operator|=
+name|curcpu
+expr_stmt|;
+comment|/* Pick something valid to start */
 name|cpu
 operator|=
 name|sched_pickcpu

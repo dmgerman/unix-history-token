@@ -3714,6 +3714,21 @@ literal|0xffffffff
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|CPU_ABSENT
+argument_list|(
+name|cpu
+argument_list|)
+argument_list|,
+operator|(
+literal|"Absent CPU %d"
+operator|,
+name|cpu
+operator|)
+argument_list|)
+expr_stmt|;
 name|state
 operator|=
 name|DPCPU_ID_PTR
