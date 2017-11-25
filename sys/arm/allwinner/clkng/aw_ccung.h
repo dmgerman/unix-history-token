@@ -15,6 +15,31 @@ directive|define
 name|__CCU_NG_H__
 end_define
 
+begin_enum
+enum|enum
+name|aw_ccung_type
+block|{
+name|H3_CCU
+init|=
+literal|1
+block|,
+name|H3_R_CCU
+block|,
+name|A31_CCU
+block|,
+name|A64_CCU
+block|,
+name|A64_R_CCU
+block|,
+name|A13_CCU
+block|,
+name|A83T_CCU
+block|,
+name|A83T_R_CCU
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|aw_ccung_softc

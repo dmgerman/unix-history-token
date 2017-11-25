@@ -279,6 +279,26 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|a83t_ar100_parents
+index|[]
+init|=
+block|{
+literal|"osc16M-d512"
+block|,
+literal|"osc24M"
+block|,
+literal|"pll_periph"
+block|,
+literal|"osc16M"
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|PREDIV_CLK
 argument_list|(
@@ -290,6 +310,58 @@ comment|/* id */
 literal|"ar100"
 argument_list|,
 name|ar100_parents
+argument_list|,
+comment|/* name, parents */
+literal|0x00
+argument_list|,
+comment|/* offset */
+literal|16
+argument_list|,
+literal|2
+argument_list|,
+comment|/* mux */
+literal|4
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+name|AW_CLK_FACTOR_POWER_OF_TWO
+argument_list|,
+comment|/* div */
+literal|8
+argument_list|,
+literal|5
+argument_list|,
+literal|0
+argument_list|,
+name|AW_CLK_FACTOR_HAS_COND
+argument_list|,
+comment|/* prediv */
+literal|16
+argument_list|,
+literal|2
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* prediv condition */
+end_comment
+
+begin_expr_stmt
+name|PREDIV_CLK
+argument_list|(
+name|a83t_ar100_clk
+argument_list|,
+name|CLK_AR100
+argument_list|,
+comment|/* id */
+literal|"ar100"
+argument_list|,
+name|a83t_ar100_parents
 argument_list|,
 comment|/* name, parents */
 literal|0x00
@@ -428,12 +500,27 @@ specifier|static
 name|struct
 name|aw_clk_prediv_mux_def
 modifier|*
-name|prediv_mux_clks
+name|r_ccu_prediv_mux_clks
 index|[]
 init|=
 block|{
 operator|&
 name|ar100_clk
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|aw_clk_prediv_mux_def
+modifier|*
+name|a83t_r_ccu_prediv_mux_clks
+index|[]
+init|=
+block|{
+operator|&
+name|a83t_ar100_clk
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -481,6 +568,12 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|aw_clk_prediv_mux_def
+modifier|*
+modifier|*
+name|prediv_mux_clks
+decl_stmt|;
 name|sc
 operator|->
 name|resets
@@ -510,6 +603,24 @@ name|nitems
 argument_list|(
 name|ccu_sun8i_r_gates
 argument_list|)
+expr_stmt|;
+comment|/* a83t names the parents differently than the others */
+if|if
+condition|(
+name|sc
+operator|->
+name|type
+operator|==
+name|A83T_R_CCU
+condition|)
+name|prediv_mux_clks
+operator|=
+name|a83t_r_ccu_prediv_mux_clks
+expr_stmt|;
+else|else
+name|prediv_mux_clks
+operator|=
+name|r_ccu_prediv_mux_clks
 expr_stmt|;
 for|for
 control|(
