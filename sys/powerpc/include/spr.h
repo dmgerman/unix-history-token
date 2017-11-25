@@ -1133,6 +1133,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_LPCR
+value|0x13e
+end_define
+
+begin_comment
+comment|/* Logical Partitioning Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPCR_LPES
+value|0x008
+end_define
+
+begin_comment
+comment|/* Bit 60 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_LPID
+value|0x13f
+end_define
+
+begin_comment
+comment|/* Logical Partitioning Control */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_IBAT0U
 value|0x210
 end_define

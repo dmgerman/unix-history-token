@@ -332,6 +332,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXC_HEA
+value|0x0e40
+end_define
+
+begin_comment
+comment|/* Hypervisor Emulation Assistance */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EXC_VSX
 value|0x0f40
 end_define
