@@ -1290,7 +1290,7 @@ block|{
 comment|/* Bad stream. */
 name|errno
 operator|=
-name|EINVAL
+name|EFTYPE
 expr_stmt|;
 return|return
 operator|(
