@@ -775,6 +775,24 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* Skip SMT CPUs, which we can't reasonably represent with this code */
+if|if
+condition|(
+name|OF_hasprop
+argument_list|(
+name|ofw_bus_get_node
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"ibm,ppc-interrupt-server#s"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|dev
