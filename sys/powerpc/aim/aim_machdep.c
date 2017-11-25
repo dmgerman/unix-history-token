@@ -2653,9 +2653,11 @@ name|msr
 argument_list|)
 expr_stmt|;
 block|}
-name|mttb
+name|platform_smp_timebase_sync
 argument_list|(
 name|timebase
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|PCPU_SET
