@@ -1620,6 +1620,12 @@ name|IBMPOWER8E
 case|:
 end_case
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
 begin_if
 if|if
 condition|(
@@ -1641,6 +1647,11 @@ name|LPCR_LPES
 argument_list|)
 expr_stmt|;
 end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_break
 break|break;
