@@ -784,6 +784,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|LOCK_DEBUG
+operator|>
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -796,6 +804,29 @@ parameter_list|)
 define|\
 value|thread_lock_flags_((tdp), (opt), __FILE__, __LINE__)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|thread_lock_flags
+parameter_list|(
+name|tdp
+parameter_list|,
+name|opt
+parameter_list|)
+define|\
+value|_thread_lock(tdp)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
