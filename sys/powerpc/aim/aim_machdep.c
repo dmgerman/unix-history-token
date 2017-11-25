@@ -416,12 +416,11 @@ directive|ifdef
 name|__powerpc64__
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|n_slbs
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"mmu_oea64.h"
+end_include
 
 begin_endif
 endif|#

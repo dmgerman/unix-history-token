@@ -189,6 +189,13 @@ name|moea64_pteg_mask
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|n_slbs
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
