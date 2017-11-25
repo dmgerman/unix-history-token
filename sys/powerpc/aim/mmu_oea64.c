@@ -3273,6 +3273,13 @@ argument_list|()
 expr_stmt|;
 comment|/* FALLTHROUGH */
 default|default:
+if|if
+condition|(
+name|moea64_large_page_size
+operator|==
+literal|0
+condition|)
+block|{
 name|moea64_large_page_size
 operator|=
 literal|0x1000000
@@ -3282,6 +3289,7 @@ name|moea64_large_page_shift
 operator|=
 literal|24
 expr_stmt|;
+block|}
 block|}
 name|moea64_large_page_mask
 operator|=
@@ -4658,6 +4666,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Calculate the last available physical address. 	 */
+name|Maxmem
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4677,9 +4689,12 @@ name|i
 operator|+=
 literal|2
 control|)
-empty_stmt|;
 name|Maxmem
 operator|=
+name|max
+argument_list|(
+name|Maxmem
+argument_list|,
 name|powerpc_btop
 argument_list|(
 name|phys_avail
@@ -4688,6 +4703,7 @@ name|i
 operator|+
 literal|1
 index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize MMU and remap early physical mappings 	 */
@@ -4983,7 +4999,7 @@ name|dpcpu_init
 argument_list|(
 name|dpcpu
 argument_list|,
-literal|0
+name|curcpu
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate some things for page zeroing. We put this directly 	 * in the page table and use MOEA64_PTE_REPLACE to avoid any 	 * of the PVO book-keeping or other parts of the VM system 	 * from even knowing that this hack exists. 	 */
