@@ -1632,9 +1632,7 @@ return|return
 operator|(
 name|__rw_try_wlock_int
 argument_list|(
-name|rw
-argument_list|,
-name|LOCK_FILE_LINE_ARG
+argument|rw LOCK_FILE_LINE_ARG
 argument_list|)
 operator|)
 return|;
@@ -3337,9 +3335,7 @@ return|return
 operator|(
 name|__rw_try_rlock_int
 argument_list|(
-name|rw
-argument_list|,
-name|LOCK_FILE_LINE_ARG
+argument|rw LOCK_FILE_LINE_ARG
 argument_list|)
 operator|)
 return|;
