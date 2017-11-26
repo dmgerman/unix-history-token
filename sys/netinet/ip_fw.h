@@ -2358,6 +2358,28 @@ begin_comment
 comment|/* fake ICMPv6 code (send a TCP RST) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ICMP_REJECT_ABORT
+value|0x101
+end_define
+
+begin_comment
+comment|/* fake ICMP code (send an SCTP ABORT) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP6_UNREACH_ABORT
+value|0x101
+end_define
+
+begin_comment
+comment|/* fake ICMPv6 code (send an SCTP ABORT) */
+end_comment
+
 begin_comment
 comment|/*  * These are used for lookup tables.  */
 end_comment

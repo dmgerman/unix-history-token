@@ -136,6 +136,10 @@ name|TOK_STARTBRACE
 block|,
 name|TOK_ENDBRACE
 block|,
+name|TOK_ABORT6
+block|,
+name|TOK_ABORT
+block|,
 name|TOK_ACCEPT
 block|,
 name|TOK_COUNT
