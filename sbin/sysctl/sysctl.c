@@ -2999,21 +2999,9 @@ name|struct
 name|vmtotal
 modifier|*
 name|v
-init|=
-operator|(
-expr|struct
-name|vmtotal
-operator|*
-operator|)
-name|p
 decl_stmt|;
 name|int
 name|pageKilo
-init|=
-name|getpagesize
-argument_list|()
-operator|/
-literal|1024
 decl_stmt|;
 if|if
 condition|(
@@ -3045,6 +3033,24 @@ literal|1
 operator|)
 return|;
 block|}
+name|v
+operator|=
+name|p
+expr_stmt|;
+name|pageKilo
+operator|=
+name|getpagesize
+argument_list|()
+operator|/
+literal|1024
+expr_stmt|;
+define|#
+directive|define
+name|pg2k
+parameter_list|(
+name|a
+parameter_list|)
+value|((uintmax_t)(a) * pageKilo)
 name|printf
 argument_list|(
 literal|"\nSystem wide totals computed every five seconds:"
@@ -3058,8 +3064,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Processes:\t\t(RUNQ: %hd Disk Wait: %hd Page Wait: "
-literal|"%hd Sleep: %hd)\n"
+literal|"Processes:\t\t(RUNQ: %d Disk Wait: %d Page Wait: "
+literal|"%d Sleep: %d)\n"
 argument_list|,
 name|v
 operator|->
@@ -3080,108 +3086,90 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Virtual Memory:\t\t(Total: %jdK Active: %jdK)\n"
+literal|"Virtual Memory:\t\t(Total: %juK Active: %juK)\n"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
+name|pg2k
+argument_list|(
 name|v
 operator|->
 name|t_vm
-operator|*
-name|pageKilo
+argument_list|)
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
+name|pg2k
+argument_list|(
 name|v
 operator|->
 name|t_avm
-operator|*
-name|pageKilo
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Real Memory:\t\t(Total: %jdK Active: %jdK)\n"
+literal|"Real Memory:\t\t(Total: %juK Active: %juK)\n"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
+name|pg2k
+argument_list|(
 name|v
 operator|->
 name|t_rm
-operator|*
-name|pageKilo
+argument_list|)
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
+name|pg2k
+argument_list|(
 name|v
 operator|->
 name|t_arm
-operator|*
-name|pageKilo
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shared Virtual Memory:\t(Total: %jdK Active: %jdK)\n"
+literal|"Shared Virtual Memory:\t(Total: %juK Active: %juK)\n"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
+name|pg2k
+argument_list|(
 name|v
 operator|->
 name|t_vmshr
-operator|*
-name|pageKilo
+argument_list|)
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
+name|pg2k
+argument_list|(
 name|v
 operator|->
 name|t_avmshr
-operator|*
-name|pageKilo
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shared Real Memory:\t(Total: %jdK Active: %jdK)\n"
+literal|"Shared Real Memory:\t(Total: %juK Active: %juK)\n"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
+name|pg2k
+argument_list|(
 name|v
 operator|->
 name|t_rmshr
-operator|*
-name|pageKilo
+argument_list|)
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
+name|pg2k
+argument_list|(
 name|v
 operator|->
 name|t_armshr
-operator|*
-name|pageKilo
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Free Memory:\t%jdK"
+literal|"Free Memory:\t%juK"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
+name|pg2k
+argument_list|(
 name|v
 operator|->
 name|t_free
-operator|*
-name|pageKilo
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3447,10 +3435,13 @@ literal|"<INVALID>"
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n%23s %012lx %12p %08lx "
+literal|"\n%23s %012jx %12p %08jx "
 argument_list|,
 name|type
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|map
 operator|->
 name|md_phys
@@ -3459,6 +3450,9 @@ name|map
 operator|->
 name|md_virt
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|map
 operator|->
 name|md_pages
