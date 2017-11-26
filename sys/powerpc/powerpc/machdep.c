@@ -589,6 +589,8 @@ name|vm_offset_t
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -770,7 +772,7 @@ argument|);
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
 argument|bufinit(); 	vm_pager_bufferinit(); }  extern vm_offset_t	__startkernel
 argument_list|,
-argument|__endkernel; extern unsigned char	__bss_start[]; extern unsigned char	__sbss_start[]; extern unsigned char	__sbss_end[]; extern unsigned char	_end[];  void aim_cpu_init(vm_offset_t toc); void booke_cpu_init(void);  uintptr_t powerpc_init(vm_offset_t fdt, vm_offset_t toc, vm_offset_t ofentry, void *mdp) { 	struct		pcpu *pc; 	struct cpuref	bsp; 	vm_offset_t	startkernel
+argument|__endkernel; extern unsigned char	__bss_start[]; extern unsigned char	__sbss_start[]; extern unsigned char	__sbss_end[]; extern unsigned char	_end[];  void aim_cpu_init(vm_offset_t toc); void booke_cpu_init(void);  uintptr_t powerpc_init(vm_offset_t fdt, vm_offset_t toc, vm_offset_t ofentry, void *mdp,     vm_offset_t mdp_cookie) { 	struct		pcpu *pc; 	struct cpuref	bsp; 	vm_offset_t	startkernel
 argument_list|,
 argument|endkernel; 	void		*kmdp; 	char		*env;         bool		ofw_bootargs = false;
 ifdef|#
@@ -782,9 +784,9 @@ directive|endif
 argument|kmdp = NULL;
 comment|/* First guess at start/end kernel positions */
 argument|startkernel = __startkernel; 	endkernel = __endkernel;
-comment|/* Check for ePAPR loader, which puts a magic value into r6 */
-argument|if (mdp == (void *)
-literal|0x65504150
+comment|/* 	 * If the metadata pointer cookie is not set to the magic value, 	 * the number in mdp should be treated as nonsense. 	 */
+argument|if (mdp_cookie !=
+literal|0xfb5d104d
 argument|) 		mdp = NULL;
 ifdef|#
 directive|ifdef
@@ -855,7 +857,7 @@ endif|#
 directive|endif
 comment|/* 	 * Choose a platform module so we can get the physical memory map. 	 */
 argument|platform_probe_and_attach();
-comment|/* 	 * Set up real per-cpu data. 	 */
+comment|/* 	 * Set up per-cpu data for the BSP now that the platform can tell 	 * us which that is. 	 */
 argument|if (platform_smp_get_bsp(&bsp) !=
 literal|0
 argument|) 		bsp.cr_cpuid =

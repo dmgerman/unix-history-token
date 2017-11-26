@@ -721,6 +721,9 @@ parameter_list|,
 name|void
 modifier|*
 name|mdp
+parameter_list|,
+name|vm_offset_t
+name|mdp_cookie
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1291,6 +1294,7 @@ literal|64
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * Last element is a magic cookie that indicates that the metadata 	 * pointer is meaningful. 	 */
 name|ret
 operator|=
 name|powerpc_init
@@ -1302,6 +1306,16 @@ argument_list|,
 literal|0
 argument_list|,
 name|mdp
+argument_list|,
+operator|(
+name|mdp
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|0
+else|:
+literal|0xfb5d104d
 argument_list|)
 expr_stmt|;
 comment|/* Enable caches */
