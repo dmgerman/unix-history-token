@@ -184,11 +184,10 @@ name|cpu_set_user_tls
 argument_list|(
 name|td
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
+name|TO_PTR
+argument_list|(
 name|stack
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
