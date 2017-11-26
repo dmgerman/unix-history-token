@@ -1819,6 +1819,8 @@ operator|(
 name|spsr
 operator|&
 operator|(
+name|PSR_AARCH32
+operator||
 name|PSR_F
 operator||
 name|PSR_I

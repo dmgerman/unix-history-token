@@ -3639,7 +3639,7 @@ comment|/* SPSR_EL1 */
 end_comment
 
 begin_comment
-comment|/*  * When the exception is taken in AArch64:  * M[4]   is 0 for AArch64 mode  * M[3:2] is the exception level  * M[1]   is unused  * M[0]   is the SP select:  *         0: always SP0  *         1: current ELs SP  */
+comment|/*  * When the exception is taken in AArch64:  * M[3:2] is the exception level  * M[1]   is unused  * M[0]   is the SP select:  *         0: always SP0  *         1: current ELs SP  */
 end_comment
 
 begin_define
@@ -3681,7 +3681,14 @@ begin_define
 define|#
 directive|define
 name|PSR_M_MASK
-value|0x0000001f
+value|0x0000000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSR_AARCH32
+value|0x00000010
 end_define
 
 begin_define
