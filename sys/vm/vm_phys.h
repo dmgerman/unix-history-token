@@ -292,8 +292,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vm_phys_init_page
+name|int
+name|vm_phys_paddr_to_segind
 parameter_list|(
 name|vm_paddr_t
 name|pa
