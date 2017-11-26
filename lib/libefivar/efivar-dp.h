@@ -101,6 +101,26 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
+name|efidp_format_device_path_node
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|const_efidp
+name|dp
+parameter_list|,
+name|ssize_t
+name|max
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ssize_t
 name|efidp_parse_device_path
 parameter_list|(
 name|char
