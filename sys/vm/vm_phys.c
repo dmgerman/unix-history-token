@@ -3437,14 +3437,6 @@ name|m
 operator|->
 name|flags
 operator|=
-name|m
-operator|->
-name|aflags
-operator|=
-name|m
-operator|->
-name|oflags
-operator|=
 literal|0
 expr_stmt|;
 name|m
