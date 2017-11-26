@@ -3927,7 +3927,8 @@ comment|/*  * Invalidate a single TLB entry.  */
 end_comment
 
 begin_function
-name|PMAP_INLINE
+specifier|static
+name|__inline
 name|void
 name|pmap_invalidate_page
 parameter_list|(
@@ -3965,7 +3966,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-unit|}  PMAP_INLINE
+unit|}  static
+name|__inline
 name|void
 name|pmap_invalidate_range
 parameter_list|(
@@ -4041,7 +4043,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-unit|}  PMAP_INLINE
+unit|}  static
+name|__inline
 name|void
 name|pmap_invalidate_all
 parameter_list|(
