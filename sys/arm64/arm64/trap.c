@@ -1637,7 +1637,10 @@ endif|#
 directive|endif
 break|break;
 case|case
-name|EXCP_SVC
+name|EXCP_SVC32
+case|:
+case|case
+name|EXCP_SVC64
 case|:
 name|svc_handler
 argument_list|(

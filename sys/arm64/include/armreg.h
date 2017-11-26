@@ -630,12 +630,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXCP_SVC
+name|EXCP_SVC32
+value|0x11
+end_define
+
+begin_comment
+comment|/* SVC trap for AArch32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXCP_SVC64
 value|0x15
 end_define
 
 begin_comment
-comment|/* SVC trap */
+comment|/* SVC trap for AArch64 */
 end_comment
 
 begin_define
