@@ -870,15 +870,9 @@ condition|(
 operator|!
 name|endring
 condition|)
-block|{
 name|initring
 argument_list|()
 expr_stmt|;
-name|rs
-operator|=
-name|ring
-expr_stmt|;
-block|}
 name|text
 index|[
 name|LINESIZ
