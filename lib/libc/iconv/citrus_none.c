@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_none.c,v 1.18 2008/06/14 16:01:07 tnozaki Exp $ */
+comment|/*	$NetBSD: citrus_none.c,v 1.22 2017/07/13 16:00:30 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -764,6 +764,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|*
 name|s
 operator|==
 name|NULL
@@ -825,6 +826,7 @@ expr_stmt|;
 operator|*
 name|nresult
 operator|=
+operator|*
 operator|*
 name|s
 operator|==
