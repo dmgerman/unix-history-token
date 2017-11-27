@@ -10265,14 +10265,14 @@ condition|(
 name|req
 operator|->
 name|newlen
-operator|+
+operator|>
+name|ps_arg_cache_limit
+operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|pargs
 argument_list|)
-operator|>
-name|ps_arg_cache_limit
 condition|)
 return|return
 operator|(
